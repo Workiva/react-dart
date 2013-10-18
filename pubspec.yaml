@@ -1,0 +1,9 @@
+name: react
+version: 0.1.0
+author: Samuel Hapák <samuel.hapak@vacuumlabs.com>
+description: Bindings of the ReactJS library for building interactive interfaces.
+dependencies:
+  browser: any
+  js: any
+dev_dependencies:
+  unittest: any
