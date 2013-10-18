@@ -1,4 +1,5 @@
 import "package:react/react.dart" as react;
+import "dart:js";
 import "dart:html";
 import "dart:async";
 
@@ -14,7 +15,7 @@ class MyComponent extends react.Component {
   tick(Timer timer) {
     setState({'secondsElapsed': state['secondsElapsed'] + 1});
   }
-  react.Proxy render() {
+  JsObject render() {
     return react.div({}, "Seconds elapsed: ${state['secondsElapsed']}");
   }
 }
@@ -22,5 +23,5 @@ class MyComponent extends react.Component {
 var myComponent = react.registerComponent((props, jsThis) => new MyComponent(props, jsThis));
 
 void main() {
-  react.renderComponent(myComponent({}, {}), query('#content'));
+  react.renderComponent(myComponent({}, {}), context['document'].callMethod('getElementById', ['content']));
 }

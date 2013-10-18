@@ -7,10 +7,9 @@
  */
 library react;
 
-import "package:js/js.dart" as js;
-//import "dart:js" as js;
+//import "package:js/js.dart" as js;
+import "dart:js" as js;
 import "dart:html";
-export "package:js/js.dart" show Proxy;
 
 var _lastId = 0;
 var _componentStore = {};
@@ -33,12 +32,12 @@ abstract class Component {
 
   void setState(Map newState) {
     state.addAll(newState);
-    _jsThis.setState(js.map({"__version__": _stateVersion++}));
+    _jsThis.callMethod('setState', [js.jsify({"__version__": _stateVersion++})]);
   }
 
   void replaceState(Map newState) {
     state = new Map.from(newState);
-    _jsThis.setState(js.map({"__version__": _stateVersion++}));
+    _jsThis.callMethod('setState', [js.jsify({"__version__": _stateVersion++})]);
   }
   void componentWillReceiveProps(newProps) {
 
@@ -47,75 +46,60 @@ abstract class Component {
   void componentWillMount() {
 
   }
-  js.Proxy render();
+  js.JsObject render();
 
 }
 
-typedef js.Proxy ReactComponentFactory(Map args, Map props, [List<js.Proxy> children]);
-typedef Component ComponentFactory(Map props, js.Proxy jsThis);
+typedef js.JsObject ReactComponentFactory(Map args, Map props, [List<js.JsObject> children]);
+typedef Component ComponentFactory(Map props, js.JsObject jsThis);
 
-
-
-js.Proxy _convertArgs(Map args) {
-  var newArgs = {};
-  args.forEach((k, v) {
-    var value = v;
-    if (v is Function) {
-      value = new js.Callback.many(v); // TODO Fix this memory leak
-    }
-    newArgs[k] = value;
-  });
-  return js.map(newArgs);
-}
 
 ReactComponentFactory registerComponent(componentFactory) {
-  var componentWillMount = new js.Callback.many((jsThis) {
-    var id = jsThis.props['__id__'];
+  var componentWillMount = new js.Callback.withThis((jsThis) {
+    var id = jsThis['props']['__id__'];
     var props = _componentStore[id];
     var component = componentFactory(props, jsThis);
     _componentStore[id] = component;
     component.componentWillMount();
-    js.retain(jsThis);
-  }, withThis: true);
-
-  var componentWillUnmount = new js.Callback.many((jsThis) {
-    var component = _componentStore[jsThis.props['__id__']];
   });
 
-  var componentWillReceiveProps = new js.Callback.many((jsThis, newArgs) {
-    var component = _componentStore[jsThis.props['__id__']];
+  var componentWillUnmount = new js.Callback.withThis((jsThis) {
+    var component = _componentStore[jsThis['props']['__id__']];
+  });
+
+  var componentWillReceiveProps = new js.Callback.withThis((jsThis, newArgs) {
+    var component = _componentStore[jsThis['props']['__id__']];
     var newProps = _componentStore[newArgs['__id__']];
     component.componentWillReceiveProps(newProps);
     component.props = newProps;
-  }, withThis: true);
+  });
 
-  var render = new js.Callback.many((jsThis) {
-    return _componentStore[jsThis.props['__id__']].render();
-  }, withThis: true);
+  var render = new js.Callback.withThis((jsThis) {
+    return _componentStore[jsThis['props']['__id__']].render();
+  });
 
-  var reactComponent = js.context.React.createClass(js.map({
+  var reactComponent = js.context['React'].callMethod('createClass', [js.jsify({
     'componentWillMount': componentWillMount,
     'componentWillReceiveProps': componentWillReceiveProps,
     'render': render
-  })); //TODO add all lifecycle methods
+  })]); //TODO add all lifecycle methods
 
-  js.retain(reactComponent);
 
   return (args, props, [children]) {
     var extendedProps = new Map.from(props)
         ..addAll(args);
 
-    var convertedArgs = _convertArgs(args);
+    var convertedArgs = js.jsify(args);
     convertedArgs['__id__'] = _addToStore(extendedProps);
-    return reactComponent(convertedArgs, children);
+    return reactComponent.apply(null, [convertedArgs, children]);
   };
 
 }
 
-js.Proxy div(args, [children]) {
-  return js.context.React.DOM.div(_convertArgs(args), children);
+js.JsObject div(args, [children]) {
+  return js.context['React']['DOM'].callMethod('div', [js.jsify(args), children]);
 }
 
-void renderComponent(js.Proxy component, Element element) {
-  js.context.React.renderComponent(component, element);
+void renderComponent(js.JsObject component, js.JsObject element) {
+  js.context['React'].callMethod('renderComponent', [component, element]);
 }
