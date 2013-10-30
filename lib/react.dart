@@ -7,10 +7,6 @@
  */
 library react;
 
-import "dart:js";
-import "dart:html";
-
-
 abstract class Component {
   Map props;
   final _jsThis;
@@ -34,62 +30,25 @@ abstract class Component {
   void componentWillMount() {
 
   }
-  JsObject render();
+
+  dynamic render();
 
 }
 
-typedef JsObject ReactComponentFactory(Map args, Map props, [List<JsObject> children]);
-typedef Component ComponentFactory(Map props, JsObject jsThis);
+var renderComponent;
+var registerComponent;
 
-_getInternal(JsObject jsThis) => jsThis['props']['__internal__'];
-_getProps(JsObject jsThis) => _getInternal(jsThis)['props'];
-_getComponent(JsObject jsThis) => _getInternal(jsThis)['component'];
+/** Basic DOM elements
+ * <var> is renamed to <variable> because var is reserved word in Dart.
+ */
+var a, abbr, address, area, article, aside, audio, b, base, bdi, bdo, big, blockquote, body, br,
+button, canvas, caption, cite, code, col, colgroup, data, datalist, dd, del, details, dfn,
+div, dl, dt, em, embed, fieldset, figcaption, figure, footer, form, h1, h2, h3, h4, h5, h6,
+head, header, hr, html, i, iframe, img, input, ins, kbd, keygen, label, legend, li, link, main,
+map, mark, menu, menuitem, meta, meter, nav, noscript, object, ol, optgroup, option, output,
+p, param, pre, progress, q, rp, rt, ruby, s, samp, script, section, select, small, source,
+span, strong, style, sub, summary, sup, table, tbody, td, textarea, tfoot, th, thead, time,
+title, tr, track, u, ul, variable, video, wbr;
 
-ReactComponentFactory registerComponent(componentFactory) {
-  var componentWillMount = new JsFunction.withThis((jsThis) {
-    var internal = _getInternal(jsThis);
-
-    internal['component'] = componentFactory(internal['props'], jsThis);
-    internal['component'].componentWillMount();
-  });
-
-  var componentWillUnmount = new JsFunction.withThis((jsThis) {
-    var component = _getComponent(jsThis);
-  });
-
-  var componentWillReceiveProps = new JsFunction.withThis((jsThis, newArgs) {
-    var component = _getComponent(jsThis);
-    var newProps = newArgs['__internal__']['props'];
-    component.componentWillReceiveProps(newProps);
-    component.props = newProps;
-  });
-
-  var render = new JsFunction.withThis((jsThis) {
-    return _getComponent(jsThis).render();
-  });
-
-  var reactComponent = context['React'].callMethod('createClass', [new JsObject.jsify({
-    'componentWillMount': componentWillMount,
-    'componentWillReceiveProps': componentWillReceiveProps,
-    'render': render
-  })]); //TODO add all lifecycle methods
-
-
-  return (args, props, [children]) {
-    var extendedProps = new Map.from(props)
-        ..addAll(args);
-
-    var convertedArgs = new JsObject.jsify(args);
-    convertedArgs['__internal__'] = {'props': extendedProps};
-    return reactComponent.apply([convertedArgs, children]);
-  };
-
-}
-
-JsObject div(args, [children]) {
-  return context['React']['DOM'].callMethod('div', [new JsObject.jsify(args), children]);
-}
-
-void renderComponent(JsObject component, HtmlElement element) {
-  context['React'].callMethod('renderComponent', [component, element]);
-}
+/** SVG elements */
+var circle, g, line, path, polyline, rect, svg, text;
