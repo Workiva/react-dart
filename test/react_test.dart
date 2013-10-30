@@ -23,5 +23,5 @@ class MyComponent extends react.Component {
 var myComponent = react.registerComponent((props, jsThis) => new MyComponent(props, jsThis));
 
 void main() {
-  react.renderComponent(myComponent({}, {}), context['document'].callMethod('getElementById', ['content']));
+  react.renderComponent(myComponent({}, {}), querySelector('#content'));
 }
