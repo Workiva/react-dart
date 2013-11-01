@@ -53,9 +53,12 @@ ReactComponentFactory _registerComponent(ComponentFactory componentFactory) {
   return (Map props, [dynamic children]) {
     var extendedProps = new Map.from(props);
 
-    var convertedArgs = new JsObject.jsify(new Map.from({"key": extendedProps["key"]}));
+    var convertedArgs = new JsObject.jsify({});
+    if (extendedProps.containsKey("key")) {
+      convertedArgs["key"] =  extendedProps["key"];
+    }
     convertedArgs['__internal__'] = {'props': extendedProps};
-    if(children is List){
+    if (children is List) {
       children = new JsObject.jsify(children);
     }
     return reactComponent.apply([convertedArgs, children]);
