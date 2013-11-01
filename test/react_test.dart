@@ -24,13 +24,8 @@ class MyComponent extends react.Component {
   }
   JsObject render() {
     return react.span(
-        {
-//            'onClick': (event, domId) => window.alert("Hello World!")
-        },
-        [
-          "Seconds elapsed: ", 
-          "${state['secondsElapsed']}"
-        ]
+        { 'onClick': (event, domId) => window.alert("Hello World!") },
+        [ "Seconds elapsed: ", "${state['secondsElapsed']}" ]
     );
   }
 }

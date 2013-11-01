@@ -55,8 +55,9 @@ ReactComponentFactory _registerComponent(ComponentFactory componentFactory) {
 
     var convertedArgs = new JsObject.jsify(new Map.from({"key": extendedProps["key"]}));
     convertedArgs['__internal__'] = {'props': extendedProps};
-    if(children is List)
+    if(children is List){
       children = new JsObject.jsify(children);
+    }
     return reactComponent.apply([convertedArgs, children]);
   };
 
@@ -64,8 +65,9 @@ ReactComponentFactory _registerComponent(ComponentFactory componentFactory) {
 
 ComponentFactory _reactDom(String name) {
   return (args, [children]) {
-    if(children is List)
+    if(children is List){
       children = new JsObject.jsify(children);
+    }
     return context['React']['DOM'].callMethod(name, [new JsObject.jsify(args), children]);
   };
 }
