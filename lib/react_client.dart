@@ -8,14 +8,17 @@ import "package:react/react.dart";
 import "dart:js";
 import "dart:html";
 
-typedef JsObject ReactComponentFactory(Map args, Map props, [List<JsObject> children]);
+/**
+ * Type of [children] must be child or list of childs, when child is JsObject or String
+ */
+typedef JsObject ReactComponentFactory(Map props, [dynamic children]);
 typedef Component ComponentFactory(Map props, JsObject jsThis);
 
 _getInternal(JsObject jsThis) => jsThis['props']['__internal__'];
 _getProps(JsObject jsThis) => _getInternal(jsThis)['props'];
 _getComponent(JsObject jsThis) => _getInternal(jsThis)['component'];
 
-ReactComponentFactory _registerComponent(componentFactory) {
+ReactComponentFactory _registerComponent(ComponentFactory componentFactory) {
   var componentWillMount = new JsFunction.withThis((jsThis) {
     var internal = _getInternal(jsThis);
 
@@ -24,12 +27,13 @@ ReactComponentFactory _registerComponent(componentFactory) {
   });
 
   var componentWillUnmount = new JsFunction.withThis((jsThis) {
-    var component = _getComponent(jsThis);
+    _getComponent(jsThis).componentWillUnmount();
   });
 
-  var componentWillReceiveProps = new JsFunction.withThis((jsThis, newArgs) {
+  var componentWillReceiveProps = new JsFunction.withThis((jsThis, newArgs, reactInternal) {
     var component = _getComponent(jsThis);
     var newProps = newArgs['__internal__']['props'];
+    newArgs['__internal__']['component'] = component;
     component.componentWillReceiveProps(newProps);
     component.props = newProps;
   });
@@ -40,25 +44,29 @@ ReactComponentFactory _registerComponent(componentFactory) {
 
   var reactComponent = context['React'].callMethod('createClass', [new JsObject.jsify({
     'componentWillMount': componentWillMount,
+    'componentWillUnmount': componentWillUnmount,
     'componentWillReceiveProps': componentWillReceiveProps,
     'render': render
   })]); //TODO add all lifecycle methods
 
 
-  return (args, props, [children]) {
-    var extendedProps = new Map.from(props)
-        ..addAll(args);
+  return (Map props, [dynamic children]) {
+    var extendedProps = new Map.from(props);
 
-    var convertedArgs = new JsObject.jsify(args);
+    var convertedArgs = new JsObject.jsify(new Map.from({"key": extendedProps["key"]}));
     convertedArgs['__internal__'] = {'props': extendedProps};
+    if(children is List)
+      children = new JsObject.jsify(children);
     return reactComponent.apply([convertedArgs, children]);
   };
 
 }
 
-_reactDom(String name) {
+ComponentFactory _reactDom(String name) {
   return (args, [children]) {
-    return context['React']['DOM'].callMethod('div', [new JsObject.jsify(args), children]);
+    if(children is List)
+      children = new JsObject.jsify(children);
+    return context['React']['DOM'].callMethod(name, [new JsObject.jsify(args), children]);
   };
 }
 
