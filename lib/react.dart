@@ -23,6 +23,7 @@ abstract class Component {
     state = new Map.from(newState);
     _jsThis.callMethod('setState', [null]);
   }
+  
   void componentWillReceiveProps(newProps) {
 
   }
