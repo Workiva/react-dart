@@ -39,13 +39,13 @@ class MyOtherComponent extends react.Component {
   
   int iterator = 3;
 
-  void addItem(JsObject jsThis, JsObject event, String domId){
+  void addItem(event) {
     List items = new List.from(state["items"]);
     items.add(++iterator);
     setState({"items": items});
   }
   
-  void removeItem(JsObject jsThis, JsObject event, String domId){
+  void removeItem(event) {
     List items = new List.from(state["items"]);
     items.removeAt(0);
     setState({"items": items});
@@ -58,13 +58,14 @@ class MyOtherComponent extends react.Component {
         (item) => itemLis.add(react.li({"key": item}, item.toString()))
             );
     
-    var self = this;
     
     return react.div({}, [
-        react.button({"onClick": new JsFunction.withThis(addItem) }, "addItem"),
-        react.button({"onClick": new JsFunction.withThis(removeItem) }, "removeItem"),
+        react.button({"onClick": addItem }, "addItem"),
+        react.button({"onClick": removeItem }, "removeItem"),
         react.ul({}, itemLis),
         react.div({}, "name is ${this.props["name"]}"),
+        react.a({"href": "http://google.com", "onClick": (react.SyntheticEvent e) => e.preventDefault()}, " google "),
+        react.a({"href": "http://google.com", "onClick": (react.SyntheticEvent e) => window.alert("google 2 click")}, " google2 "),
         myComponent({"duration": 1000}, [])
     ]); 
   }

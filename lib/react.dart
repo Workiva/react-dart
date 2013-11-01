@@ -36,6 +36,123 @@ abstract class Component {
 
 }
 
+/** Syntetic event */
+
+class SyntheticEvent {
+  final bool bubbles;
+  final bool cancelable;
+  final currentTarget;
+  bool _defaultPrevented;
+  dynamic _preventDefault;
+  final dynamic stopPropagation;
+  bool get defaultPrevented => _defaultPrevented;
+  final num eventPhase;
+  final bool isTrusted;
+  final nativeEvent;
+  void preventDefault() {
+    _defaultPrevented = true;
+    _preventDefault();
+  }
+  final target;
+  final num timeStamp;
+  final String type;
+  
+  SyntheticEvent(
+      this.bubbles, 
+      this.cancelable, 
+      this.currentTarget, 
+      this._defaultPrevented, 
+      this._preventDefault, 
+      this.stopPropagation, 
+      this.eventPhase,
+      this.isTrusted,
+      this.nativeEvent,
+      this.target,
+      this.timeStamp,
+      this.type){}
+}
+
+class SyntheticClipboardEvent extends SyntheticEvent {
+
+  SyntheticClipboardEvent(bubbles, cancelable, currentTarget, _defaultPrevented,
+      _preventDefault, stopPropagation, eventPhase, isTrusted, nativeEvent, target,
+      timeStamp, type) : super( bubbles, cancelable, currentTarget, _defaultPrevented,
+          _preventDefault, stopPropagation, eventPhase, isTrusted, nativeEvent, target, 
+          timeStamp, type){}
+
+}
+
+class SyntheticKeyboardEvent extends SyntheticEvent {
+
+  SyntheticKeyboardEvent(bubbles, cancelable, currentTarget, _defaultPrevented,
+      _preventDefault, stopPropagation, eventPhase, isTrusted, nativeEvent, target,
+      timeStamp, type) : super( bubbles, cancelable, currentTarget, _defaultPrevented,
+          _preventDefault, stopPropagation, eventPhase, isTrusted, nativeEvent, target, 
+          timeStamp, type){}
+  
+}
+
+class SyntheticFocusEvent extends SyntheticEvent {
+  
+  SyntheticFocusEvent(bubbles, cancelable, currentTarget, _defaultPrevented,
+      _preventDefault, stopPropagation, eventPhase, isTrusted, nativeEvent, target,
+      timeStamp, type) : super( bubbles, cancelable, currentTarget, _defaultPrevented,
+          _preventDefault, stopPropagation, eventPhase, isTrusted, nativeEvent, target, 
+          timeStamp, type){}
+
+}
+
+class SyntheticFormEvent extends SyntheticEvent {
+
+  SyntheticFormEvent(bubbles, cancelable, currentTarget, _defaultPrevented,
+      _preventDefault, stopPropagation, eventPhase, isTrusted, nativeEvent, target,
+      timeStamp, type) : super( bubbles, cancelable, currentTarget, _defaultPrevented,
+          _preventDefault, stopPropagation, eventPhase, isTrusted, nativeEvent, target, 
+          timeStamp, type){}
+  
+}
+
+class SyntheticMouseEvent extends SyntheticEvent {
+
+  SyntheticMouseEvent(bubbles, cancelable, currentTarget, _defaultPrevented,
+      _preventDefault, stopPropagation, eventPhase, isTrusted, nativeEvent, target,
+      timeStamp, type) : super( bubbles, cancelable, currentTarget, _defaultPrevented,
+          _preventDefault, stopPropagation, eventPhase, isTrusted, nativeEvent, target, 
+          timeStamp, type){}
+  
+}
+
+class SyntheticTouchEvent extends SyntheticEvent {
+
+  SyntheticTouchEvent(bubbles, cancelable, currentTarget, _defaultPrevented,
+      _preventDefault, stopPropagation, eventPhase, isTrusted, nativeEvent, target,
+      timeStamp, type) : super( bubbles, cancelable, currentTarget, _defaultPrevented,
+          _preventDefault, stopPropagation, eventPhase, isTrusted, nativeEvent, target, 
+          timeStamp, type){}
+  
+}
+
+class SyntheticUIEvent extends SyntheticEvent {
+
+  SyntheticUIEvent(bubbles, cancelable, currentTarget, _defaultPrevented,
+      _preventDefault, stopPropagation, eventPhase, isTrusted, nativeEvent, target,
+      timeStamp, type) : super( bubbles, cancelable, currentTarget, _defaultPrevented,
+          _preventDefault, stopPropagation, eventPhase, isTrusted, nativeEvent, target, 
+          timeStamp, type){}
+  
+}
+
+class SyntheticWheelEvent extends SyntheticEvent {
+
+  SyntheticWheelEvent(bubbles, cancelable, currentTarget, _defaultPrevented,
+      _preventDefault, stopPropagation, eventPhase, isTrusted, nativeEvent, target,
+      timeStamp, type) : super( bubbles, cancelable, currentTarget, _defaultPrevented,
+          _preventDefault, stopPropagation, eventPhase, isTrusted, nativeEvent, target, 
+          timeStamp, type){}
+  
+  
+}
+
 var renderComponent;
 var registerComponent;
 
