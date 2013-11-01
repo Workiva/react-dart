@@ -58,7 +58,12 @@ ReactComponentFactory _registerComponent(componentFactory) {
 
 _reactDom(String name) {
   return (args, [children]) {
-    return context['React']['DOM'].callMethod('div', [new JsObject.jsify(args), children]);
+    // if the second argument is not a List, let's make it one  
+    if (!(children is List)){
+      children = [children];
+    } 
+    var argList = [new JsObject.jsify(args)]..addAll(children);
+    return context['React']['DOM'].callMethod(name, argList);
   };
 }
 

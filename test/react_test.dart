@@ -16,8 +16,15 @@ class MyComponent extends react.Component {
   tick(Timer timer) {
     setState({'secondsElapsed': state['secondsElapsed'] + 1});
   }
+  
   JsObject render() {
-    return react.span({'onClick': (event, domId) => window.alert("Hello World!")}, "Seconds elapsed: ${state['secondsElapsed']}");
+    return react.div(
+              {'onClick': (event, domId) => window.alert("Hello World!")},
+                  [
+                    react.div({'className': 'div1'}, react.span({}, "Name: ${props['name']}")),
+                    react.div({'className': 'div2'}, react.span({}, "Seconds elapsed: ${state['secondsElapsed']}"))
+                  ]                           
+           );
   }
 }
 
@@ -25,5 +32,5 @@ var myComponent = react.registerComponent((props, jsThis) => new MyComponent(pro
 
 void main() {
   setClientConfiguration();
-  react.renderComponent(myComponent({}, {}), querySelector('#content'));
+  react.renderComponent(myComponent({'name': 'johny'}, {}), querySelector('#content'));
 }
