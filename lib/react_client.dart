@@ -113,21 +113,22 @@ SyntheticEvent syntheticClipboardEventFactory(JsObject e) {
   return new SyntheticClipboardEvent(e["bubbles"], e["cancelable"], e["currentTarget"],
       e["defaultPrevented"], () => e.callMethod("preventDefault", []),
       () => e.callMethod("stopPropagation", []), e["eventPhase"], e["isTrusted"], e["nativeEvent"],
-      e["target"], e["timeStamp"], e["type"]); 
+      e["target"], e["timeStamp"], e["type"], e["clipboardData"]); 
 }
 
 SyntheticEvent syntheticKeyboardEventFactory(JsObject e) {
   return new SyntheticKeyboardEvent(e["bubbles"], e["cancelable"], e["currentTarget"],
       e["defaultPrevented"], () => e.callMethod("preventDefault", []),
       () => e.callMethod("stopPropagation", []), e["eventPhase"], e["isTrusted"], e["nativeEvent"],
-      e["target"], e["timeStamp"], e["type"]); 
+      e["target"], e["timeStamp"], e["type"], e["altKey"], e["char"], e["ctrlKey"], e["locale"], 
+      e["location"], e["key"], e["metaKey"], e["repeat"], e["shiftKey"]); 
 }
 
 SyntheticEvent syntheticFocusEventFactory(JsObject e) {
   return new SyntheticFocusEvent(e["bubbles"], e["cancelable"], e["currentTarget"],
       e["defaultPrevented"], () => e.callMethod("preventDefault", []),
       () => e.callMethod("stopPropagation", []), e["eventPhase"], e["isTrusted"], e["nativeEvent"],
-      e["target"], e["timeStamp"], e["type"]); 
+      e["target"], e["timeStamp"], e["type"], e["relatedTarget"]); 
 }
 
 SyntheticEvent syntheticFormEventFactory(JsObject e) {
@@ -141,28 +142,31 @@ SyntheticEvent syntheticMouseEventFactory(JsObject e) {
   return new SyntheticMouseEvent(e["bubbles"], e["cancelable"], e["currentTarget"],
       e["defaultPrevented"], () => e.callMethod("preventDefault", []),
       () => e.callMethod("stopPropagation", []), e["eventPhase"], e["isTrusted"], e["nativeEvent"],
-      e["target"], e["timeStamp"], e["type"]); 
+      e["target"], e["timeStamp"], e["type"], e["altKey"], e["button"], e["buttons"], e["clientX"], e["clientY"], 
+      e["ctrlKey"], e["metaKey"], e["pageX"], e["pageY"], e["relatedTarget"], e["screenX"], 
+      e["screenY"], e["shiftKey"]); 
 }
 
 SyntheticEvent syntheticTouchEventFactory(JsObject e) {
   return new SyntheticTouchEvent(e["bubbles"], e["cancelable"], e["currentTarget"],
       e["defaultPrevented"], () => e.callMethod("preventDefault", []),
       () => e.callMethod("stopPropagation", []), e["eventPhase"], e["isTrusted"], e["nativeEvent"],
-      e["target"], e["timeStamp"], e["type"]); 
+      e["target"], e["timeStamp"], e["type"], e["altKey"], e["changedTouches"], e["ctrlKey"], e["metaKey"], 
+      e["shiftKey"], e["targetTouches"], e["touches"]); 
 }
 
 SyntheticEvent syntheticUIEventFactory(JsObject e) {
   return new SyntheticUIEvent(e["bubbles"], e["cancelable"], e["currentTarget"],
       e["defaultPrevented"], () => e.callMethod("preventDefault", []),
       () => e.callMethod("stopPropagation", []), e["eventPhase"], e["isTrusted"], e["nativeEvent"],
-      e["target"], e["timeStamp"], e["type"]); 
+      e["target"], e["timeStamp"], e["type"], e["detail"], e["view"]); 
 }
 
 SyntheticEvent syntheticWheelEventFactory(JsObject e) {
   return new SyntheticWheelEvent(e["bubbles"], e["cancelable"], e["currentTarget"],
       e["defaultPrevented"], () => e.callMethod("preventDefault", []),
       () => e.callMethod("stopPropagation", []), e["eventPhase"], e["isTrusted"], e["nativeEvent"],
-      e["target"], e["timeStamp"], e["type"]); 
+      e["target"], e["timeStamp"], e["type"], e["deltaX"], e["deltaMode"], e["deltaY"], e["deltaZ"]); 
 }
 
 Set _syntheticClipboardEvents = new Set.from(["onCopy", "onCut", "onPaste",]);
