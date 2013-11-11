@@ -36,6 +36,176 @@ abstract class Component {
 
 }
 
+/** Syntetic event */
+
+class SyntheticEvent {
+
+  final bool bubbles;
+  final bool cancelable;
+  final /*DOMEventTarget*/ currentTarget;
+  bool _defaultPrevented;
+  dynamic _preventDefault;
+  final dynamic stopPropagation;
+  bool get defaultPrevented => _defaultPrevented;
+  final num eventPhase;
+  final bool isTrusted;
+  final /*DOMEvent*/ nativeEvent;
+  void preventDefault() {
+    _defaultPrevented = true;
+    _preventDefault();
+  }
+  final /*DOMEventTarget*/ target;
+  final num timeStamp;
+  final String type;
+  
+  SyntheticEvent(
+      this.bubbles, 
+      this.cancelable, 
+      this.currentTarget, 
+      this._defaultPrevented, 
+      this._preventDefault, 
+      this.stopPropagation, 
+      this.eventPhase,
+      this.isTrusted,
+      this.nativeEvent,
+      this.target,
+      this.timeStamp,
+      this.type){}
+}
+
+class SyntheticClipboardEvent extends SyntheticEvent {
+  
+  final clipboardData;
+
+  SyntheticClipboardEvent(bubbles, cancelable, currentTarget, _defaultPrevented,
+      _preventDefault, stopPropagation, eventPhase, isTrusted, nativeEvent, target,
+      timeStamp, type, this.clipboardData) : super( bubbles, cancelable, currentTarget, _defaultPrevented,
+          _preventDefault, stopPropagation, eventPhase, isTrusted, nativeEvent, target, 
+          timeStamp, type){}
+
+}
+
+class SyntheticKeyboardEvent extends SyntheticEvent {
+  
+  final bool altKey;
+  final String char;
+  final bool ctrlKey;
+  final String locale;
+  final num location;
+  final String key;
+  final bool metaKey;
+  final bool repeat;
+  final bool shiftKey;
+
+  SyntheticKeyboardEvent(bubbles, cancelable, currentTarget, _defaultPrevented,
+      _preventDefault, stopPropagation, eventPhase, isTrusted, nativeEvent, target,
+      timeStamp, type, this.altKey, this.char, this.ctrlKey, this.locale, this.location, 
+      this.key, this.metaKey, this.repeat, this.shiftKey) : 
+        super( bubbles, cancelable, currentTarget, _defaultPrevented,
+          _preventDefault, stopPropagation, eventPhase, isTrusted, nativeEvent, target, 
+          timeStamp, type){}
+  
+}
+
+class SyntheticFocusEvent extends SyntheticEvent {
+  
+  final /*DOMEventTarget*/ relatedTarget;
+  
+  SyntheticFocusEvent(bubbles, cancelable, currentTarget, _defaultPrevented,
+      _preventDefault, stopPropagation, eventPhase, isTrusted, nativeEvent, target,
+      timeStamp, type, this.relatedTarget) : 
+        super( bubbles, cancelable, currentTarget, _defaultPrevented,
+            _preventDefault, stopPropagation, eventPhase, isTrusted, nativeEvent, target, 
+            timeStamp, type){}
+
+}
+
+class SyntheticFormEvent extends SyntheticEvent {
+
+  SyntheticFormEvent(bubbles, cancelable, currentTarget, _defaultPrevented,
+      _preventDefault, stopPropagation, eventPhase, isTrusted, nativeEvent, target,
+      timeStamp, type) : super( bubbles, cancelable, currentTarget, _defaultPrevented,
+          _preventDefault, stopPropagation, eventPhase, isTrusted, nativeEvent, target, 
+          timeStamp, type){}
+  
+}
+
+class SyntheticMouseEvent extends SyntheticEvent {
+  
+  final bool altKey;
+  final num button;
+  final num buttons;
+  final num clientX;
+  final num clientY;
+  final bool ctrlKey;
+  final bool metaKey;
+  final num pageX;
+  final num pageY;
+  final /*DOMEventTarget*/relatedTarget;
+  final num screenX;
+  final num screenY;
+  final bool shiftKey;
+
+  SyntheticMouseEvent(bubbles, cancelable, currentTarget, _defaultPrevented,
+      _preventDefault, stopPropagation, eventPhase, isTrusted, nativeEvent, target,
+      timeStamp, type, this.altKey, this.button, this.buttons, this.clientX, this.clientY, 
+      this.ctrlKey, this.metaKey, this.pageX, this.pageY, this.relatedTarget, this.screenX, 
+      this.screenY, this.shiftKey) : 
+        super( bubbles, cancelable, currentTarget, _defaultPrevented,
+            _preventDefault, stopPropagation, eventPhase, isTrusted, nativeEvent, target, 
+            timeStamp, type){}
+  
+}
+
+class SyntheticTouchEvent extends SyntheticEvent {
+
+  final bool altKey;
+  final /*DOMTouchList*/ changedTouches;
+  final bool ctrlKey;
+  final bool metaKey;
+  final bool shiftKey;
+  final /*DOMTouchList*/ targetTouches;
+  final /*DOMTouchList*/ touches;
+  
+  SyntheticTouchEvent(bubbles, cancelable, currentTarget, _defaultPrevented,
+      _preventDefault, stopPropagation, eventPhase, isTrusted, nativeEvent, target,
+      timeStamp, type, this.altKey, this.changedTouches, this.ctrlKey, this.metaKey, 
+      this.shiftKey, this.targetTouches, this.touches) : 
+        super( bubbles, cancelable, currentTarget, _defaultPrevented,
+            _preventDefault, stopPropagation, eventPhase, isTrusted, nativeEvent, target, 
+            timeStamp, type){}
+  
+}
+
+class SyntheticUIEvent extends SyntheticEvent {
+  
+  final num detail;
+  final /*DOMAbstractView*/ view;
+
+  SyntheticUIEvent(bubbles, cancelable, currentTarget, _defaultPrevented,
+      _preventDefault, stopPropagation, eventPhase, isTrusted, nativeEvent, target,
+      timeStamp, type, this.detail, this.view) : super( bubbles, cancelable, currentTarget, _defaultPrevented,
+          _preventDefault, stopPropagation, eventPhase, isTrusted, nativeEvent, target, 
+          timeStamp, type){}
+  
+}
+
+class SyntheticWheelEvent extends SyntheticEvent {
+  
+  final num deltaX;
+  final num deltaMode;
+  final num deltaY;
+  final num deltaZ;
+
+  SyntheticWheelEvent(bubbles, cancelable, currentTarget, _defaultPrevented,
+      _preventDefault, stopPropagation, eventPhase, isTrusted, nativeEvent, target,
+      timeStamp, type, this.deltaX, this.deltaMode, this.deltaY, this.deltaZ) : super( bubbles, cancelable, currentTarget, _defaultPrevented,
+          _preventDefault, stopPropagation, eventPhase, isTrusted, nativeEvent, target, 
+          timeStamp, type){}
+  
+  
+}
+
 var renderComponent;
 var registerComponent;
 
