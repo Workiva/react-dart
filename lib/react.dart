@@ -7,29 +7,63 @@
  */
 library react;
 
-import "dart:js";
-
-
 abstract class Component {
   Map props;
   final _jsThis;
   Map state = {};
+  
+  /**
+   * private _nextState and _prevState are usefull for methods shouldComponentUpdate, 
+   * componentWillUpdate and componentDidUpdate.
+   *  
+   * Use of theese private variables is implemented in react_client or react_server
+   */
+  Map _prevState;
+  Map _nextState;
+  /**
+   * nextState and prevState are just getters for previous private variables _prevState 
+   * and _nextState
+   * 
+   * if _nextState is null, then next state will be same as actual state, 
+   * so return state as nextState 
+   */
+  Map get prevState => _prevState;
+  Map get nextState => _nextState == null ? state : _nextState;
+  
+  /**
+   * Transfers component _nextState to state and state to _prevState. 
+   * This is only way how to set _prevState.  
+   */
+  void transferComponentState(){
+    _prevState = state;
+    if(_nextState != null)
+      state = _nextState;
+    _nextState = null;
+  }
 
   Component(this.props, this._jsThis);
 
+  /**
+   * set _nextState to state updated by newState 
+   * and call React original setState method with no parameter
+   */
   void setState(Map newState) {
     Map nextState =  new Map.from(state);
-    nextState.addAll(newState);
-    JsObject jsState = new JsObject.jsify({});
-    jsState["__internal__"] = nextState;
-    _jsThis.callMethod('setState', [jsState]);
+    if (newState != null)
+      nextState.addAll(newState);
+    _nextState = nextState;
+    
+    _jsThis.callMethod('setState', []);
   }
 
+  /**
+   * set _nextState to newState 
+   * and call React original setState method with no parameter
+   */
   void replaceState(Map newState) {
-    Map nextState =  new Map.from(newState);
-    JsObject jsState = new JsObject.jsify({});
-    jsState["__internal__"] = nextState;
-    _jsThis.callMethod('setState', [jsState]);
+    Map nextState = newState == null ? {} : new Map.from(newState);
+    _nextState = nextState;
+    _jsThis.callMethod('setState', []);
   }
   
   void componentWillMount() {}
