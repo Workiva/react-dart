@@ -78,15 +78,20 @@ ReactComponentFactory _registerComponent(ComponentFactory componentFactory) {
   var componentWillReceiveProps = new JsFunction.withThis((jsThis, newArgs, reactInternal) {
     var component = _getComponent(jsThis);
     var newProps = _getInternalProps(newArgs);
+    var nextProps = {};
+    nextProps.addAll(component.props);
+    nextProps.addAll(newProps != null ? newProps : {});
+    
+
     
     /** add component to newArgs to keep component in internal */
     newArgs['__internal__']['component'] = component;
     
     /** call wrapped method */
-    component.componentWillReceiveProps(newProps);
+    component.componentWillReceiveProps(nextProps);
     
     /** update component.props */
-    component.props = newProps;
+    component.props = nextProps;
   });
   
   /**
@@ -94,9 +99,13 @@ ReactComponentFactory _registerComponent(ComponentFactory componentFactory) {
    * and if shoudln't update, update props and transfer state.
    */
   var shouldComponentUpdate = new JsFunction.withThis((jsThis, jsNextProps, nextState){
-    var nextProps = _getInternalProps(jsNextProps);
+    var newProps = _getInternalProps(jsNextProps);
     Component component  = _getComponent(jsThis);
     
+    var nextProps = {};
+    nextProps.addAll(component.props);
+    nextProps.addAll(newProps != null ? newProps : {});
+
     /** use component.nextState where are stored nextState */
     if (component.shouldComponentUpdate(nextProps, component.nextState)){
       return true;
@@ -114,12 +123,16 @@ ReactComponentFactory _registerComponent(ComponentFactory componentFactory) {
   /**
    * wrap component.componentWillUpdate and after that update props and transfer state
    */
-  var componentWillUpdate = new JsFunction.withThis((jsThis, nextProps, nextState, reactInternal){
-    var nextInternalProps = _getInternalProps(nextProps);
+  var componentWillUpdate = new JsFunction.withThis((jsThis,jsNextProps, nextState, reactInternal){
     Component component  = _getComponent(jsThis);
     
-    component.componentWillUpdate(nextInternalProps, component.nextState);
-    component.props = nextInternalProps;
+    var newProps = _getInternalProps(jsNextProps);
+    var nextProps = {};
+    nextProps.addAll(component.props);
+    nextProps.addAll(newProps != null ? newProps : {});
+    
+    component.componentWillUpdate(nextProps, component.nextState);
+    component.props = nextProps;
     component.transferComponentState();
   });
 
