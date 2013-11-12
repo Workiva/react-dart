@@ -6,8 +6,10 @@ import "dart:async";
 
 class MyComponent extends react.Component {
   MyComponent(props, jsThis) : super(props, jsThis) {
-    setState({'secondsElapsed': 0});
   }
+  
+  dynamic getInitialState() => {'secondsElapsed': 0};
+
   
   Timer timer;
 
@@ -34,7 +36,10 @@ var myComponent = react.registerComponent((props, jsThis) => new MyComponent(pro
 
 class MyOtherComponent extends react.Component {
   MyOtherComponent(props, jsThis): super(props, jsThis){
-    setState({"items": new List.from([0, 1, 2, 3]), "state": "steteeee", "myComponent": myComponent});
+  }
+  
+  dynamic getInitialState(){
+    return     {"items": new List.from([0, 1, 2, 3]), "state": "steteeee", "myComponent": myComponent};
   }
   
   int iterator = 3;

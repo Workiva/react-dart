@@ -17,37 +17,100 @@ typedef Component ComponentFactory(Map props, JsObject jsThis);
 _getInternal(JsObject jsThis) => jsThis['props']['__internal__'];
 _getProps(JsObject jsThis) => _getInternal(jsThis)['props'];
 _getComponent(JsObject jsThis) => _getInternal(jsThis)['component'];
+_getInternalState(JsObject jsState) => jsState["__internal__"];
+_getInternalProps(JsObject jsProps) => jsProps["__internal__"]["props"];
 
 ReactComponentFactory _registerComponent(ComponentFactory componentFactory) {
-  var componentWillMount = new JsFunction.withThis((jsThis) {
+
+  var getDefaultProps = new JsFunction.withThis((jsThis){
     var internal = _getInternal(jsThis);
 
-    internal['component'] = componentFactory(internal['props'], jsThis);
-    internal['component'].componentWillMount();
+    Component component = componentFactory(internal['props'], jsThis);
+
+    internal['component'] = component; 
+
+    component.props = component.getDefaultProps()..addAll(component.props);
+    JsObject jsProps = new JsObject.jsify({});
+    jsProps["__internal__"] = {};
+    jsProps["__internal__"]["props"] = component.props;
+    jsProps["__internal__"]["component"] = component;
+    return jsProps;
+  });
+    
+  var getInitialState = new JsFunction.withThis((jsThis){
+    Component component = _getComponent(jsThis);
+    component.state = component.getInitialState();
+    JsObject jsState = new JsObject.jsify({});
+    jsState["__internal__"] = component.state;
+    return jsState;
+  });
+  
+  var componentWillMount = new JsFunction.withThis((jsThis) {
+    _getComponent(jsThis).componentWillMount();
   });
 
-  var componentWillUnmount = new JsFunction.withThis((jsThis) {
-    _getComponent(jsThis).componentWillUnmount();
+  var componentDidMount = new JsFunction.withThis((jsThis, rootNode) {
+    _getComponent(jsThis).componentDidMount(rootNode);
   });
 
   var componentWillReceiveProps = new JsFunction.withThis((jsThis, newArgs, reactInternal) {
     var component = _getComponent(jsThis);
-    var newProps = newArgs['__internal__']['props'];
+    var newProps = _getInternalProps(newArgs);
     newArgs['__internal__']['component'] = component;
     component.componentWillReceiveProps(newProps);
     component.props = newProps;
   });
+  
+  var shouldComponentUpdate = new JsFunction.withThis((jsThis, nextProps, nextState){
+    var nextInternalProps = _getInternalProps(nextProps);
+    var nextInternalState = _getInternalState(nextState);
+    Component component  = _getComponent(jsThis);
+    
+    if (component.shouldComponentUpdate(nextInternalProps, nextInternalState)){
+      return true;
+    } else {
+      component.props = nextInternalProps;
+      component.state = nextInternalState;
+      return false;
+    }
+  });
+  
+  var componentWillUpdate = new JsFunction.withThis((jsThis, nextProps, nextState, reactInternal){
+    var nextInternalProps = _getInternalProps(nextProps);
+    var nextInternalState = _getInternalState(nextState);
+    Component component  = _getComponent(jsThis);
+    
+    component.componentWillUpdate(nextInternalProps, nextInternalState);
+    component.props = nextInternalProps;
+    component.state = nextInternalState;
+  });
 
+  var componentDidUpdate = new JsFunction.withThis((jsThis, prevProps, prevState, HtmlElement rootNode){
+    var prevInternalProps = _getInternalProps(prevProps);
+    var prevInternalState = _getInternalState(prevState);
+    _getComponent(jsThis).componentDidUpdate(prevInternalProps, prevInternalState, rootNode);
+  });
+
+  var componentWillUnmount = new JsFunction.withThis((jsThis, reactInternal) {
+    _getComponent(jsThis).componentWillUnmount();
+  });
+  
   var render = new JsFunction.withThis((jsThis) {
     return _getComponent(jsThis).render();
   });
-
+  
   var reactComponent = context['React'].callMethod('createClass', [new JsObject.jsify({
     'componentWillMount': componentWillMount,
-    'componentWillUnmount': componentWillUnmount,
+    'componentDidMount': componentDidMount,
     'componentWillReceiveProps': componentWillReceiveProps,
+    'shouldComponentUpdate': shouldComponentUpdate,
+    'componentWillUpdate': componentWillUpdate,
+    'componentDidUpdate': componentDidUpdate,
+    'componentWillUnmount': componentWillUnmount,
+    'getDefaultProps': getDefaultProps,
+    'getInitialState': getInitialState,
     'render': render
-  })]); //TODO add all lifecycle methods
+  })]);
 
 
   return (Map props, [dynamic children]) {

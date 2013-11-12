@@ -7,6 +7,9 @@
  */
 library react;
 
+import "dart:js";
+
+
 abstract class Component {
   Map props;
   final _jsThis;
@@ -15,22 +18,37 @@ abstract class Component {
   Component(this.props, this._jsThis);
 
   void setState(Map newState) {
-    state.addAll(newState);
-    _jsThis.callMethod('setState', [null]);
+    Map nextState =  new Map.from(state);
+    nextState.addAll(newState);
+    JsObject jsState = new JsObject.jsify({});
+    jsState["__internal__"] = nextState;
+    _jsThis.callMethod('setState', [jsState]);
   }
 
   void replaceState(Map newState) {
-    state = new Map.from(newState);
-    _jsThis.callMethod('setState', [null]);
+    Map nextState =  new Map.from(newState);
+    JsObject jsState = new JsObject.jsify({});
+    jsState["__internal__"] = nextState;
+    _jsThis.callMethod('setState', [jsState]);
   }
   
-  void componentWillReceiveProps(newProps) {
+  void componentWillMount() {}
 
-  }
+  void componentDidMount(/*DOMElement */ rootNode){}
+  
+  void componentWillReceiveProps(newProps) {}
 
-  void componentWillMount() {
+  bool shouldComponentUpdate(nextProps, nextState) => true;
+  
+  void componentWillUpdate(nextProps, nextState){}
+  
+  void componentDidUpdate(prevProps, prevState, /*DOMElement */ rootNode){}
+  
+  void componentWillUnmount(){}
+  
+  Map getInitialState() => {};
 
-  }
+  Map getDefaultProps() => {};
 
   dynamic render();
 
