@@ -36,8 +36,9 @@ abstract class Component {
    */
   void transferComponentState(){
     _prevState = state;
-    if(_nextState != null)
+    if (_nextState != null){
       state = _nextState;
+    }
     _nextState = null;
   }
 
@@ -49,8 +50,9 @@ abstract class Component {
    */
   void setState(Map newState) {
     Map nextState =  new Map.from(state);
-    if (newState != null)
+    if (newState != null){
       nextState.addAll(newState);
+    }
     _nextState = nextState;
     
     _jsThis.callMethod('setState', []);

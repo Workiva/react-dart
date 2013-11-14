@@ -30,7 +30,7 @@ ReactComponentFactory _registerComponent(ComponentFactory componentFactory) {
    * 
    * @return jsProsp with internal with component.props and component
    */
-  var getDefaultProps = new JsFunction.withThis((jsThis){
+  var getDefaultProps = new JsFunction.withThis((jsThis) {
     var internal = _getInternal(jsThis);
 
     Component component = componentFactory(internal['props'], jsThis);
@@ -208,7 +208,7 @@ ReactComponentFactory _registerComponent(ComponentFactory componentFactory) {
 ComponentFactory _reactDom(String name) {
   return (args, [children]) {
     _convertEventHandlers(args);
-    if(children is List){
+    if (children is List){
       children = new JsObject.jsify(children);
     }
     return context['React']['DOM'].callMethod(name, [new JsObject.jsify(args), children]);
