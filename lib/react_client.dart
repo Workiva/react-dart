@@ -17,47 +17,186 @@ typedef Component ComponentFactory(Map props, JsObject jsThis);
 _getInternal(JsObject jsThis) => jsThis['props']['__internal__'];
 _getProps(JsObject jsThis) => _getInternal(jsThis)['props'];
 _getComponent(JsObject jsThis) => _getInternal(jsThis)['component'];
+_getInternalProps(JsObject jsProps) => jsProps["__internal__"]["props"];
 
 ReactComponentFactory _registerComponent(ComponentFactory componentFactory) {
-  var componentWillMount = new JsFunction.withThis((jsThis) {
+
+  /**
+   * wrapper for getDefaultProps.
+   * Get internal, create component and place it to internal.
+   * 
+   * Next get default props by component method and merge component.props into it 
+   * to update it with passed props from parent.
+   * 
+   * @return jsProsp with internal with component.props and component
+   */
+  var getDefaultProps = new JsFunction.withThis((jsThis) {
     var internal = _getInternal(jsThis);
 
-    internal['component'] = componentFactory(internal['props'], jsThis);
-    internal['component'].componentWillMount();
+    Component component = componentFactory(internal['props'], jsThis);
+
+    internal['component'] = component; 
+
+    component.props = component.getDefaultProps()..addAll(component.props);
+    JsObject jsProps = new JsObject.jsify({});
+    jsProps["__internal__"] = {};
+    jsProps["__internal__"]["props"] = component.props;
+    jsProps["__internal__"]["component"] = component;
+    return jsProps;
+  });
+    
+  /**
+   * get initial state from component.getInitialState, put them to state.
+   * 
+   * @return empty JsObject as default state for javascript react component 
+   */
+  var getInitialState = new JsFunction.withThis((jsThis){
+    Component component = _getComponent(jsThis);
+    component.state = component.getInitialState();
+    /** Call transferComponent to get state also to _prevState */
+    component.transferComponentState();
+    return new JsObject.jsify({});
+  });
+  
+  /**
+   * only wrap componentWillMount
+   */
+  var componentWillMount = new JsFunction.withThis((jsThis) {
+    _getComponent(jsThis).componentWillMount();
   });
 
-  var componentWillUnmount = new JsFunction.withThis((jsThis) {
-    _getComponent(jsThis).componentWillUnmount();
+  /**
+   * only wrap componentDidMount
+   */
+  var componentDidMount = new JsFunction.withThis((jsThis, rootNode) {
+    _getComponent(jsThis).componentDidMount(rootNode);
   });
 
+  /**
+   * wrap componentWillReceiveProps
+   */
   var componentWillReceiveProps = new JsFunction.withThis((jsThis, newArgs, reactInternal) {
     var component = _getComponent(jsThis);
-    var newProps = newArgs['__internal__']['props'];
+    var newProps = _getInternalProps(newArgs);
+    var nextProps = {};
+    nextProps.addAll(component.props);
+    nextProps.addAll(newProps != null ? newProps : {});
+    
+
+    
+    /** add component to newArgs to keep component in internal */
     newArgs['__internal__']['component'] = component;
-    component.componentWillReceiveProps(newProps);
-    component.props = newProps;
+    
+    /** call wrapped method */
+    component.componentWillReceiveProps(nextProps);
+    
+    /** update component.props */
+    component.props = nextProps;
+  });
+  
+  /**
+   * count nextProps from jsNextProps, get result from component, 
+   * and if shoudln't update, update props and transfer state.
+   */
+  var shouldComponentUpdate = new JsFunction.withThis((jsThis, jsNextProps, nextState){
+    var newProps = _getInternalProps(jsNextProps);
+    Component component  = _getComponent(jsThis);
+    
+    var nextProps = {};
+    nextProps.addAll(component.props);
+    nextProps.addAll(newProps != null ? newProps : {});
+
+    /** use component.nextState where are stored nextState */
+    if (component.shouldComponentUpdate(nextProps, component.nextState)){
+      return true;
+    } else {
+      /**
+       * if component shouldnt update, update props and tranfer state, 
+       * becasue willUpdate will not be called and so it will not do it.
+       */
+      component.props = nextProps;
+      component.transferComponentState();
+      return false;
+    }
+  });
+  
+  /**
+   * wrap component.componentWillUpdate and after that update props and transfer state
+   */
+  var componentWillUpdate = new JsFunction.withThis((jsThis,jsNextProps, nextState, reactInternal){
+    Component component  = _getComponent(jsThis);
+    
+    var newProps = _getInternalProps(jsNextProps);
+    var nextProps = {};
+    nextProps.addAll(component.props);
+    nextProps.addAll(newProps != null ? newProps : {});
+    
+    component.componentWillUpdate(nextProps, component.nextState);
+    component.props = nextProps;
+    component.transferComponentState();
   });
 
+  /**
+   * wrap componentDidUpdate and use component.prevState which was trasnfered from state in componentWillUpdate.
+   */
+  var componentDidUpdate = new JsFunction.withThis((jsThis, prevProps, prevState, HtmlElement rootNode){
+    var prevInternalProps = _getInternalProps(prevProps);
+    Component component = _getComponent(jsThis); 
+    component.componentDidUpdate(prevInternalProps, component.prevState, rootNode);
+  });
+
+  /**
+   * only wrap componentWillUnmount
+   */
+  var componentWillUnmount = new JsFunction.withThis((jsThis, reactInternal) {
+    _getComponent(jsThis).componentWillUnmount();
+  });
+  
+  /**
+   * only wrap render
+   */
   var render = new JsFunction.withThis((jsThis) {
     return _getComponent(jsThis).render();
   });
-
+  
+  /**
+   * create reactComponent with wrapped functions
+   */
   var reactComponent = context['React'].callMethod('createClass', [new JsObject.jsify({
     'componentWillMount': componentWillMount,
-    'componentWillUnmount': componentWillUnmount,
+    'componentDidMount': componentDidMount,
     'componentWillReceiveProps': componentWillReceiveProps,
+    'shouldComponentUpdate': shouldComponentUpdate,
+    'componentWillUpdate': componentWillUpdate,
+    'componentDidUpdate': componentDidUpdate,
+    'componentWillUnmount': componentWillUnmount,
+    'getDefaultProps': getDefaultProps,
+    'getInitialState': getInitialState,
     'render': render
-  })]); //TODO add all lifecycle methods
+  })]);
 
 
+  /** 
+   * return ReactComponentFactory which produce react component with seted props and children[s]
+   */
   return (Map props, [dynamic children]) {
     var extendedProps = new Map.from(props);
 
     var convertedArgs = new JsObject.jsify({});
+    /**
+     * add key to args which will be passed to javascript react component
+     */
     if (extendedProps.containsKey("key")) {
       convertedArgs["key"] =  extendedProps["key"];
     }
+    
+    /**
+     * put props to internal part of args
+     */
     convertedArgs['__internal__'] = {'props': extendedProps};
+    /**
+     * convert children to JsObject if it is List
+     */
     if (children is List) {
       children = new JsObject.jsify(children);
     }
@@ -69,7 +208,7 @@ ReactComponentFactory _registerComponent(ComponentFactory componentFactory) {
 ComponentFactory _reactDom(String name) {
   return (args, [children]) {
     _convertEventHandlers(args);
-    if(children is List){
+    if (children is List){
       children = new JsObject.jsify(children);
     }
     return context['React']['DOM'].callMethod(name, [new JsObject.jsify(args), children]);

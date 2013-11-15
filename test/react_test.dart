@@ -6,14 +6,35 @@ import "dart:async";
 
 class MyComponent extends react.Component {
   MyComponent(props, jsThis) : super(props, jsThis) {
-    setState({'secondsElapsed': 0});
   }
+  
+  dynamic getInitialState() => {'secondsElapsed': 0, 'tooLong': false};
+
+  dynamic getDefaultProps() => {'duration': 1000};
+
   
   Timer timer;
 
   void componentWillMount() {
     timer = new Timer.periodic(new Duration(milliseconds: this.props["duration"]), this.tick);
   }
+  
+  void componentDidMount(HtmlElement rootNode) {
+    if(state["tooLong"])
+      rootNode.style.backgroundColor = "#FFAAAA";
+    else
+      rootNode.style.backgroundColor = "#AAFFAA";
+  }
+  
+  /**
+   * after first 10 seconds when receive props, change text to say tool logn
+   */
+  void componentWillReceiveProps(nextProps){
+    if(nextProps["duration"] > 1000)
+      setState({"tooLong": true});
+  }
+  
+  bool shouldComponentUpdate(nextProps, nextState) => nextState['secondsElapsed'] % 2 == 1;
 
   void componentWillUnmount() {
     timer.cancel();
@@ -25,7 +46,7 @@ class MyComponent extends react.Component {
   JsObject render() {
     return react.span(
         { 'onClick': (event, domId) => window.alert("Hello World!") },
-        [ "Seconds elapsed: ", "${state['secondsElapsed']}" ]
+        [ "Seconds elapsed: ", "${state['secondsElapsed']}", state["tooLong"] ? " too long duration" : " not too long duration" ]
     );
   }
 }
@@ -34,7 +55,20 @@ var myComponent = react.registerComponent((props, jsThis) => new MyComponent(pro
 
 class MyOtherComponent extends react.Component {
   MyOtherComponent(props, jsThis): super(props, jsThis){
-    setState({"items": new List.from([0, 1, 2, 3]), "state": "steteeee", "myComponent": myComponent});
+  }
+  
+  dynamic getInitialState(){
+    return     {"items": new List.from([0, 1, 2, 3]), "state": "steteeee", "myComponent": myComponent};
+  }
+  
+  void componentWillUpdate(nextProps, nextState){
+    if(nextState["items"].length > state["items"].length)
+      window.alert("Adding " + nextState["items"].last.toString());
+  }
+  
+  void componentDidUpdate(prevProps, prevState, rootNode){
+    if(prevState["items"].length > state["items"].length)
+      window.alert("Removed " + prevState["items"].first.toString());
   }
   
   int iterator = 3;
@@ -66,7 +100,8 @@ class MyOtherComponent extends react.Component {
         react.div({}, "name is ${this.props["name"]}"),
         react.a({"href": "http://google.com", "onClick": (react.SyntheticEvent e) => e.preventDefault()}, " google "),
         react.a({"href": "http://google.com", "onClick": (react.SyntheticEvent e) => window.alert("google 2 click")}, " google2 "),
-        myComponent({"duration": 1000}, [])
+        myComponent({}, []),
+        myComponent({'duration': 10000}, []),
     ]); 
   }
 }
