@@ -79,9 +79,10 @@ ReactComponentFactory _reactDom(String name) {
     /**
      * add attributes to it
      */
-    args.forEach((key, value) {
-      result.write(" $key=\"$value\"");
+    args.forEach((String key, value) {
+      result.write(" ${key.toLowerCase()}=\"$value\"");
     });
+    
     /**
      * if element is not pair, then close it
      */
@@ -126,6 +127,24 @@ _convertDomArguments(Map args) {
    */
   _syntheticEvents.forEach((key) => args.remove(key));
   args.remove("key");
+  
+  /**
+   * change "className" for class
+   */
+  if(args.containsKey("className")) {
+    args["class"] = args["className"];
+    args.remove("className");
+  }
+  
+  /**
+   * change "htmlFor" for "for"
+   */
+  if(args.containsKey("htmlFor")) {
+    args["for"] = args["htmlFor"];
+    args.remove("htmlFor");
+  }
+  
+  
 }
 
 /**
