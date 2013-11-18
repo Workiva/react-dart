@@ -9,30 +9,36 @@ library react;
 
 abstract class Component {
   Map props;
-  final _jsThis;
+  dynamic _jsThis;
+
+  initComponentInternal(props, _jsThis) {
+    this.props = props;
+    this._jsThis = _jsThis;
+  }
+
   Map state = {};
-  
+
   /**
-   * private _nextState and _prevState are usefull for methods shouldComponentUpdate, 
+   * private _nextState and _prevState are usefull for methods shouldComponentUpdate,
    * componentWillUpdate and componentDidUpdate.
-   *  
+   *
    * Use of theese private variables is implemented in react_client or react_server
    */
   Map _prevState;
   Map _nextState;
   /**
-   * nextState and prevState are just getters for previous private variables _prevState 
+   * nextState and prevState are just getters for previous private variables _prevState
    * and _nextState
-   * 
-   * if _nextState is null, then next state will be same as actual state, 
-   * so return state as nextState 
+   *
+   * if _nextState is null, then next state will be same as actual state,
+   * so return state as nextState
    */
   Map get prevState => _prevState;
   Map get nextState => _nextState == null ? state : _nextState;
-  
+
   /**
-   * Transfers component _nextState to state and state to _prevState. 
-   * This is only way how to set _prevState.  
+   * Transfers component _nextState to state and state to _prevState.
+   * This is only way how to set _prevState.
    */
   void transferComponentState(){
     _prevState = state;
@@ -42,10 +48,8 @@ abstract class Component {
     _nextState = null;
   }
 
-  Component(this.props, this._jsThis);
-
   /**
-   * set _nextState to state updated by newState 
+   * set _nextState to state updated by newState
    * and call React original setState method with no parameter
    */
   void setState(Map newState) {
@@ -54,12 +58,12 @@ abstract class Component {
       nextState.addAll(newState);
     }
     _nextState = nextState;
-    
+
     _jsThis.callMethod('setState', []);
   }
 
   /**
-   * set _nextState to newState 
+   * set _nextState to newState
    * and call React original setState method with no parameter
    */
   void replaceState(Map newState) {
@@ -67,21 +71,21 @@ abstract class Component {
     _nextState = nextState;
     _jsThis.callMethod('setState', []);
   }
-  
+
   void componentWillMount() {}
 
   void componentDidMount(/*DOMElement */ rootNode){}
-  
+
   void componentWillReceiveProps(newProps) {}
 
   bool shouldComponentUpdate(nextProps, nextState) => true;
-  
+
   void componentWillUpdate(nextProps, nextState){}
-  
+
   void componentDidUpdate(prevProps, prevState, /*DOMElement */ rootNode){}
-  
+
   void componentWillUnmount(){}
-  
+
   Map getInitialState() => {};
 
   Map getDefaultProps() => {};
@@ -111,14 +115,14 @@ class SyntheticEvent {
   final /*DOMEventTarget*/ target;
   final num timeStamp;
   final String type;
-  
+
   SyntheticEvent(
-      this.bubbles, 
-      this.cancelable, 
-      this.currentTarget, 
-      this._defaultPrevented, 
-      this._preventDefault, 
-      this.stopPropagation, 
+      this.bubbles,
+      this.cancelable,
+      this.currentTarget,
+      this._defaultPrevented,
+      this._preventDefault,
+      this.stopPropagation,
       this.eventPhase,
       this.isTrusted,
       this.nativeEvent,
@@ -128,19 +132,19 @@ class SyntheticEvent {
 }
 
 class SyntheticClipboardEvent extends SyntheticEvent {
-  
+
   final clipboardData;
 
   SyntheticClipboardEvent(bubbles, cancelable, currentTarget, _defaultPrevented,
       _preventDefault, stopPropagation, eventPhase, isTrusted, nativeEvent, target,
       timeStamp, type, this.clipboardData) : super( bubbles, cancelable, currentTarget, _defaultPrevented,
-          _preventDefault, stopPropagation, eventPhase, isTrusted, nativeEvent, target, 
+          _preventDefault, stopPropagation, eventPhase, isTrusted, nativeEvent, target,
           timeStamp, type){}
 
 }
 
 class SyntheticKeyboardEvent extends SyntheticEvent {
-  
+
   final bool altKey;
   final String char;
   final bool ctrlKey;
@@ -153,23 +157,23 @@ class SyntheticKeyboardEvent extends SyntheticEvent {
 
   SyntheticKeyboardEvent(bubbles, cancelable, currentTarget, _defaultPrevented,
       _preventDefault, stopPropagation, eventPhase, isTrusted, nativeEvent, target,
-      timeStamp, type, this.altKey, this.char, this.ctrlKey, this.locale, this.location, 
-      this.key, this.metaKey, this.repeat, this.shiftKey) : 
+      timeStamp, type, this.altKey, this.char, this.ctrlKey, this.locale, this.location,
+      this.key, this.metaKey, this.repeat, this.shiftKey) :
         super( bubbles, cancelable, currentTarget, _defaultPrevented,
-          _preventDefault, stopPropagation, eventPhase, isTrusted, nativeEvent, target, 
+          _preventDefault, stopPropagation, eventPhase, isTrusted, nativeEvent, target,
           timeStamp, type){}
-  
+
 }
 
 class SyntheticFocusEvent extends SyntheticEvent {
-  
+
   final /*DOMEventTarget*/ relatedTarget;
-  
+
   SyntheticFocusEvent(bubbles, cancelable, currentTarget, _defaultPrevented,
       _preventDefault, stopPropagation, eventPhase, isTrusted, nativeEvent, target,
-      timeStamp, type, this.relatedTarget) : 
+      timeStamp, type, this.relatedTarget) :
         super( bubbles, cancelable, currentTarget, _defaultPrevented,
-            _preventDefault, stopPropagation, eventPhase, isTrusted, nativeEvent, target, 
+            _preventDefault, stopPropagation, eventPhase, isTrusted, nativeEvent, target,
             timeStamp, type){}
 
 }
@@ -179,13 +183,13 @@ class SyntheticFormEvent extends SyntheticEvent {
   SyntheticFormEvent(bubbles, cancelable, currentTarget, _defaultPrevented,
       _preventDefault, stopPropagation, eventPhase, isTrusted, nativeEvent, target,
       timeStamp, type) : super( bubbles, cancelable, currentTarget, _defaultPrevented,
-          _preventDefault, stopPropagation, eventPhase, isTrusted, nativeEvent, target, 
+          _preventDefault, stopPropagation, eventPhase, isTrusted, nativeEvent, target,
           timeStamp, type){}
-  
+
 }
 
 class SyntheticMouseEvent extends SyntheticEvent {
-  
+
   final bool altKey;
   final num button;
   final num buttons;
@@ -202,13 +206,13 @@ class SyntheticMouseEvent extends SyntheticEvent {
 
   SyntheticMouseEvent(bubbles, cancelable, currentTarget, _defaultPrevented,
       _preventDefault, stopPropagation, eventPhase, isTrusted, nativeEvent, target,
-      timeStamp, type, this.altKey, this.button, this.buttons, this.clientX, this.clientY, 
-      this.ctrlKey, this.metaKey, this.pageX, this.pageY, this.relatedTarget, this.screenX, 
-      this.screenY, this.shiftKey) : 
+      timeStamp, type, this.altKey, this.button, this.buttons, this.clientX, this.clientY,
+      this.ctrlKey, this.metaKey, this.pageX, this.pageY, this.relatedTarget, this.screenX,
+      this.screenY, this.shiftKey) :
         super( bubbles, cancelable, currentTarget, _defaultPrevented,
-            _preventDefault, stopPropagation, eventPhase, isTrusted, nativeEvent, target, 
+            _preventDefault, stopPropagation, eventPhase, isTrusted, nativeEvent, target,
             timeStamp, type){}
-  
+
 }
 
 class SyntheticTouchEvent extends SyntheticEvent {
@@ -220,32 +224,32 @@ class SyntheticTouchEvent extends SyntheticEvent {
   final bool shiftKey;
   final /*DOMTouchList*/ targetTouches;
   final /*DOMTouchList*/ touches;
-  
+
   SyntheticTouchEvent(bubbles, cancelable, currentTarget, _defaultPrevented,
       _preventDefault, stopPropagation, eventPhase, isTrusted, nativeEvent, target,
-      timeStamp, type, this.altKey, this.changedTouches, this.ctrlKey, this.metaKey, 
-      this.shiftKey, this.targetTouches, this.touches) : 
+      timeStamp, type, this.altKey, this.changedTouches, this.ctrlKey, this.metaKey,
+      this.shiftKey, this.targetTouches, this.touches) :
         super( bubbles, cancelable, currentTarget, _defaultPrevented,
-            _preventDefault, stopPropagation, eventPhase, isTrusted, nativeEvent, target, 
+            _preventDefault, stopPropagation, eventPhase, isTrusted, nativeEvent, target,
             timeStamp, type){}
-  
+
 }
 
 class SyntheticUIEvent extends SyntheticEvent {
-  
+
   final num detail;
   final /*DOMAbstractView*/ view;
 
   SyntheticUIEvent(bubbles, cancelable, currentTarget, _defaultPrevented,
       _preventDefault, stopPropagation, eventPhase, isTrusted, nativeEvent, target,
       timeStamp, type, this.detail, this.view) : super( bubbles, cancelable, currentTarget, _defaultPrevented,
-          _preventDefault, stopPropagation, eventPhase, isTrusted, nativeEvent, target, 
+          _preventDefault, stopPropagation, eventPhase, isTrusted, nativeEvent, target,
           timeStamp, type){}
-  
+
 }
 
 class SyntheticWheelEvent extends SyntheticEvent {
-  
+
   final num deltaX;
   final num deltaMode;
   final num deltaY;
@@ -254,10 +258,10 @@ class SyntheticWheelEvent extends SyntheticEvent {
   SyntheticWheelEvent(bubbles, cancelable, currentTarget, _defaultPrevented,
       _preventDefault, stopPropagation, eventPhase, isTrusted, nativeEvent, target,
       timeStamp, type, this.deltaX, this.deltaMode, this.deltaY, this.deltaZ) : super( bubbles, cancelable, currentTarget, _defaultPrevented,
-          _preventDefault, stopPropagation, eventPhase, isTrusted, nativeEvent, target, 
+          _preventDefault, stopPropagation, eventPhase, isTrusted, nativeEvent, target,
           timeStamp, type){}
-  
-  
+
+
 }
 
 var renderComponent;

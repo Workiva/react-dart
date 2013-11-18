@@ -12,7 +12,7 @@ import "dart:html";
  * Type of [children] must be child or list of childs, when child is JsObject or String
  */
 typedef JsObject ReactComponentFactory(Map props, [dynamic children]);
-typedef Component ComponentFactory(Map props, JsObject jsThis);
+typedef Component ComponentFactory();
 
 _getInternal(JsObject jsThis) => jsThis['props']['__internal__'];
 _getProps(JsObject jsThis) => _getInternal(jsThis)['props'];
@@ -33,7 +33,8 @@ ReactComponentFactory _registerComponent(ComponentFactory componentFactory) {
   var getDefaultProps = new JsFunction.withThis((jsThis) {
     var internal = _getInternal(jsThis);
 
-    Component component = componentFactory(internal['props'], jsThis);
+    Component component = componentFactory()
+        ..initComponentInternal(internal['props'], jsThis);
 
     internal['component'] = component;
 
@@ -205,7 +206,7 @@ ReactComponentFactory _registerComponent(ComponentFactory componentFactory) {
 
 }
 
-ComponentFactory _reactDom(String name) {
+_reactDom(String name) {
   return (args, [children]) {
     _convertEventHandlers(args);
     if (children is List){

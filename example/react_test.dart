@@ -6,8 +6,6 @@ import "dart:async";
 
 class _HelloComponent extends react.Component {
 
-  _HelloComponent(props, jsThis) : super(props, jsThis);
-
   void componentWillReceiveProps(nextProps){
     if(nextProps["name"].length > 20) {
       window.alert("Too long Hello!");
@@ -19,14 +17,11 @@ class _HelloComponent extends react.Component {
   }
 }
 
-var helloComponent = react.registerComponent((props, jsThis) => new _HelloComponent(props, jsThis));
+var helloComponent = react.registerComponent(() => new _HelloComponent());
 
 class _HelloGreater extends react.Component {
 
-  _HelloGreater(props, jsThis) : super(props, jsThis);
-
   getInitialState() => {"name": "World"};
-
 
   render() {
     onChange(react.SyntheticEvent event) {
@@ -39,13 +34,11 @@ class _HelloGreater extends react.Component {
   }
 }
 
-var helloGreater = react.registerComponent((props, jsThis) => new _HelloGreater(props, jsThis));
+var helloGreater = react.registerComponent(() => new _HelloGreater());
 
 class _ClockComponent extends react.Component {
 
   Timer timer;
-
-  _ClockComponent(props, jsThis) : super(props, jsThis);
 
   getInitialState() => {'secondsElapsed': 0};
 
@@ -82,11 +75,9 @@ class _ClockComponent extends react.Component {
   }
 }
 
-var clockComponent = react.registerComponent((props, jsThis) => new _ClockComponent(props, jsThis));
+var clockComponent = react.registerComponent(() => new _ClockComponent());
 
 class _ListComponent extends react.Component {
-
-  _ListComponent(props, jsThis): super(props, jsThis);
 
   dynamic getInitialState() {
     return {"items": new List.from([0, 1, 2, 3])};
@@ -123,11 +114,10 @@ class _ListComponent extends react.Component {
   }
 }
 
-var listComponent = react.registerComponent((props, jsThis) => new _ListComponent(props, jsThis));
+var listComponent = react.registerComponent(() => new _ListComponent());
 
 class _MainComponent extends react.Component {
 
-  _MainComponent(props, jsThis) : super(props, jsThis);
   render() {
     return react.div({}, [
         helloGreater({}, []),
@@ -137,7 +127,7 @@ class _MainComponent extends react.Component {
   }
 }
 
-var mainComponent = react.registerComponent((props, jsThis) => new _MainComponent(props, jsThis));
+var mainComponent = react.registerComponent(() => new _MainComponent());
 
 void main() {
   setClientConfiguration();
