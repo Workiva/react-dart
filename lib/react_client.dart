@@ -24,10 +24,10 @@ ReactComponentFactory _registerComponent(ComponentFactory componentFactory) {
   /**
    * wrapper for getDefaultProps.
    * Get internal, create component and place it to internal.
-   * 
-   * Next get default props by component method and merge component.props into it 
+   *
+   * Next get default props by component method and merge component.props into it
    * to update it with passed props from parent.
-   * 
+   *
    * @return jsProsp with internal with component.props and component
    */
   var getDefaultProps = new JsFunction.withThis((jsThis) {
@@ -35,7 +35,7 @@ ReactComponentFactory _registerComponent(ComponentFactory componentFactory) {
 
     Component component = componentFactory(internal['props'], jsThis);
 
-    internal['component'] = component; 
+    internal['component'] = component;
 
     component.props = component.getDefaultProps()..addAll(component.props);
     JsObject jsProps = new JsObject.jsify({});
@@ -44,11 +44,11 @@ ReactComponentFactory _registerComponent(ComponentFactory componentFactory) {
     jsProps["__internal__"]["component"] = component;
     return jsProps;
   });
-    
+
   /**
    * get initial state from component.getInitialState, put them to state.
-   * 
-   * @return empty JsObject as default state for javascript react component 
+   *
+   * @return empty JsObject as default state for javascript react component
    */
   var getInitialState = new JsFunction.withThis((jsThis){
     Component component = _getComponent(jsThis);
@@ -57,7 +57,7 @@ ReactComponentFactory _registerComponent(ComponentFactory componentFactory) {
     component.transferComponentState();
     return new JsObject.jsify({});
   });
-  
+
   /**
    * only wrap componentWillMount
    */
@@ -81,27 +81,27 @@ ReactComponentFactory _registerComponent(ComponentFactory componentFactory) {
     var nextProps = {};
     nextProps.addAll(component.props);
     nextProps.addAll(newProps != null ? newProps : {});
-    
 
-    
+
+
     /** add component to newArgs to keep component in internal */
     newArgs['__internal__']['component'] = component;
-    
+
     /** call wrapped method */
     component.componentWillReceiveProps(nextProps);
-    
+
     /** update component.props */
     component.props = nextProps;
   });
-  
+
   /**
-   * count nextProps from jsNextProps, get result from component, 
+   * count nextProps from jsNextProps, get result from component,
    * and if shoudln't update, update props and transfer state.
    */
   var shouldComponentUpdate = new JsFunction.withThis((jsThis, jsNextProps, nextState){
     var newProps = _getInternalProps(jsNextProps);
     Component component  = _getComponent(jsThis);
-    
+
     var nextProps = {};
     nextProps.addAll(component.props);
     nextProps.addAll(newProps != null ? newProps : {});
@@ -111,7 +111,7 @@ ReactComponentFactory _registerComponent(ComponentFactory componentFactory) {
       return true;
     } else {
       /**
-       * if component shouldnt update, update props and tranfer state, 
+       * if component shouldnt update, update props and tranfer state,
        * becasue willUpdate will not be called and so it will not do it.
        */
       component.props = nextProps;
@@ -119,18 +119,18 @@ ReactComponentFactory _registerComponent(ComponentFactory componentFactory) {
       return false;
     }
   });
-  
+
   /**
    * wrap component.componentWillUpdate and after that update props and transfer state
    */
   var componentWillUpdate = new JsFunction.withThis((jsThis,jsNextProps, nextState, reactInternal){
     Component component  = _getComponent(jsThis);
-    
+
     var newProps = _getInternalProps(jsNextProps);
     var nextProps = {};
     nextProps.addAll(component.props);
     nextProps.addAll(newProps != null ? newProps : {});
-    
+
     component.componentWillUpdate(nextProps, component.nextState);
     component.props = nextProps;
     component.transferComponentState();
@@ -141,7 +141,7 @@ ReactComponentFactory _registerComponent(ComponentFactory componentFactory) {
    */
   var componentDidUpdate = new JsFunction.withThis((jsThis, prevProps, prevState, HtmlElement rootNode){
     var prevInternalProps = _getInternalProps(prevProps);
-    Component component = _getComponent(jsThis); 
+    Component component = _getComponent(jsThis);
     component.componentDidUpdate(prevInternalProps, component.prevState, rootNode);
   });
 
@@ -151,14 +151,14 @@ ReactComponentFactory _registerComponent(ComponentFactory componentFactory) {
   var componentWillUnmount = new JsFunction.withThis((jsThis, reactInternal) {
     _getComponent(jsThis).componentWillUnmount();
   });
-  
+
   /**
    * only wrap render
    */
   var render = new JsFunction.withThis((jsThis) {
     return _getComponent(jsThis).render();
   });
-  
+
   /**
    * create reactComponent with wrapped functions
    */
@@ -176,7 +176,7 @@ ReactComponentFactory _registerComponent(ComponentFactory componentFactory) {
   })]);
 
 
-  /** 
+  /**
    * return ReactComponentFactory which produce react component with seted props and children[s]
    */
   return (Map props, [dynamic children]) {
@@ -189,7 +189,7 @@ ReactComponentFactory _registerComponent(ComponentFactory componentFactory) {
     if (extendedProps.containsKey("key")) {
       convertedArgs["key"] =  extendedProps["key"];
     }
-    
+
     /**
      * put props to internal part of args
      */
@@ -235,7 +235,7 @@ _convertEventHandlers(Map args) {
     } else if (_syntheticWheelEvents.contains(key)) {
       eventFactory = syntheticWheelEventFactory;
     } else return;
-    args[key] = (JsObject e, String domId) {
+    args[key] = (JsObject e, [String domId]) {
       value(eventFactory(e));
     };
   });
@@ -245,67 +245,67 @@ SyntheticEvent syntheticEventFactory(JsObject e) {
   return new SyntheticEvent(e["bubbles"], e["cancelable"], e["currentTarget"],
       e["defaultPrevented"], () => e.callMethod("preventDefault", []),
       () => e.callMethod("stopPropagation", []), e["eventPhase"], e["isTrusted"], e["nativeEvent"],
-      e["target"], e["timeStamp"], e["type"]); 
+      e["target"], e["timeStamp"], e["type"]);
 }
 
 SyntheticEvent syntheticClipboardEventFactory(JsObject e) {
   return new SyntheticClipboardEvent(e["bubbles"], e["cancelable"], e["currentTarget"],
       e["defaultPrevented"], () => e.callMethod("preventDefault", []),
       () => e.callMethod("stopPropagation", []), e["eventPhase"], e["isTrusted"], e["nativeEvent"],
-      e["target"], e["timeStamp"], e["type"], e["clipboardData"]); 
+      e["target"], e["timeStamp"], e["type"], e["clipboardData"]);
 }
 
 SyntheticEvent syntheticKeyboardEventFactory(JsObject e) {
   return new SyntheticKeyboardEvent(e["bubbles"], e["cancelable"], e["currentTarget"],
       e["defaultPrevented"], () => e.callMethod("preventDefault", []),
       () => e.callMethod("stopPropagation", []), e["eventPhase"], e["isTrusted"], e["nativeEvent"],
-      e["target"], e["timeStamp"], e["type"], e["altKey"], e["char"], e["ctrlKey"], e["locale"], 
-      e["location"], e["key"], e["metaKey"], e["repeat"], e["shiftKey"]); 
+      e["target"], e["timeStamp"], e["type"], e["altKey"], e["char"], e["ctrlKey"], e["locale"],
+      e["location"], e["key"], e["metaKey"], e["repeat"], e["shiftKey"]);
 }
 
 SyntheticEvent syntheticFocusEventFactory(JsObject e) {
   return new SyntheticFocusEvent(e["bubbles"], e["cancelable"], e["currentTarget"],
       e["defaultPrevented"], () => e.callMethod("preventDefault", []),
       () => e.callMethod("stopPropagation", []), e["eventPhase"], e["isTrusted"], e["nativeEvent"],
-      e["target"], e["timeStamp"], e["type"], e["relatedTarget"]); 
+      e["target"], e["timeStamp"], e["type"], e["relatedTarget"]);
 }
 
 SyntheticEvent syntheticFormEventFactory(JsObject e) {
   return new SyntheticFormEvent(e["bubbles"], e["cancelable"], e["currentTarget"],
       e["defaultPrevented"], () => e.callMethod("preventDefault", []),
       () => e.callMethod("stopPropagation", []), e["eventPhase"], e["isTrusted"], e["nativeEvent"],
-      e["target"], e["timeStamp"], e["type"]); 
+      e["target"], e["timeStamp"], e["type"]);
 }
 
 SyntheticEvent syntheticMouseEventFactory(JsObject e) {
   return new SyntheticMouseEvent(e["bubbles"], e["cancelable"], e["currentTarget"],
       e["defaultPrevented"], () => e.callMethod("preventDefault", []),
       () => e.callMethod("stopPropagation", []), e["eventPhase"], e["isTrusted"], e["nativeEvent"],
-      e["target"], e["timeStamp"], e["type"], e["altKey"], e["button"], e["buttons"], e["clientX"], e["clientY"], 
-      e["ctrlKey"], e["metaKey"], e["pageX"], e["pageY"], e["relatedTarget"], e["screenX"], 
-      e["screenY"], e["shiftKey"]); 
+      e["target"], e["timeStamp"], e["type"], e["altKey"], e["button"], e["buttons"], e["clientX"], e["clientY"],
+      e["ctrlKey"], e["metaKey"], e["pageX"], e["pageY"], e["relatedTarget"], e["screenX"],
+      e["screenY"], e["shiftKey"]);
 }
 
 SyntheticEvent syntheticTouchEventFactory(JsObject e) {
   return new SyntheticTouchEvent(e["bubbles"], e["cancelable"], e["currentTarget"],
       e["defaultPrevented"], () => e.callMethod("preventDefault", []),
       () => e.callMethod("stopPropagation", []), e["eventPhase"], e["isTrusted"], e["nativeEvent"],
-      e["target"], e["timeStamp"], e["type"], e["altKey"], e["changedTouches"], e["ctrlKey"], e["metaKey"], 
-      e["shiftKey"], e["targetTouches"], e["touches"]); 
+      e["target"], e["timeStamp"], e["type"], e["altKey"], e["changedTouches"], e["ctrlKey"], e["metaKey"],
+      e["shiftKey"], e["targetTouches"], e["touches"]);
 }
 
 SyntheticEvent syntheticUIEventFactory(JsObject e) {
   return new SyntheticUIEvent(e["bubbles"], e["cancelable"], e["currentTarget"],
       e["defaultPrevented"], () => e.callMethod("preventDefault", []),
       () => e.callMethod("stopPropagation", []), e["eventPhase"], e["isTrusted"], e["nativeEvent"],
-      e["target"], e["timeStamp"], e["type"], e["detail"], e["view"]); 
+      e["target"], e["timeStamp"], e["type"], e["detail"], e["view"]);
 }
 
 SyntheticEvent syntheticWheelEventFactory(JsObject e) {
   return new SyntheticWheelEvent(e["bubbles"], e["cancelable"], e["currentTarget"],
       e["defaultPrevented"], () => e.callMethod("preventDefault", []),
       () => e.callMethod("stopPropagation", []), e["eventPhase"], e["isTrusted"], e["nativeEvent"],
-      e["target"], e["timeStamp"], e["type"], e["deltaX"], e["deltaMode"], e["deltaY"], e["deltaZ"]); 
+      e["target"], e["timeStamp"], e["type"], e["deltaX"], e["deltaMode"], e["deltaY"], e["deltaZ"]);
 }
 
 Set _syntheticClipboardEvents = new Set.from(["onCopy", "onCut", "onPaste",]);
