@@ -181,7 +181,13 @@ ReactComponentFactory _registerComponent(ComponentFactory componentFactory) {
    * return ReactComponentFactory which produce react component with seted props and children[s]
    */
   return (Map props, [dynamic children]) {
+    if (children == null) {
+      children = [];
+    } else if (children is! List) {
+      children = [children];
+    }
     var extendedProps = new Map.from(props);
+    extendedProps['children'] = children;
 
     var convertedArgs = new JsObject.jsify({});
     /**
@@ -195,13 +201,8 @@ ReactComponentFactory _registerComponent(ComponentFactory componentFactory) {
      * put props to internal part of args
      */
     convertedArgs['__internal__'] = {'props': extendedProps};
-    /**
-     * convert children to JsObject if it is List
-     */
-    if (children is List) {
-      children = new JsObject.jsify(children);
-    }
-    return reactComponent.apply([convertedArgs, children]);
+
+    return reactComponent.apply([convertedArgs, new JsObject.jsify(children)]);
   };
 
 }

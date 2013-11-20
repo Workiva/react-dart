@@ -119,11 +119,7 @@ var listComponent = react.registerComponent(() => new _ListComponent());
 class _MainComponent extends react.Component {
 
   render() {
-    return react.div({}, [
-        helloGreater({}, []),
-        listComponent({}, [])
-    ]);
-
+    return react.div({}, props['children']);
   }
 }
 
@@ -131,5 +127,9 @@ var mainComponent = react.registerComponent(() => new _MainComponent());
 
 void main() {
   setClientConfiguration();
-  react.renderComponent(mainComponent({"name": "peter"}), querySelector('#content'));
+  react.renderComponent(mainComponent({}, [
+                                            helloGreater({}, []),
+                                            listComponent({}, [])
+                                          ]
+    ), querySelector('#content'));
 }
