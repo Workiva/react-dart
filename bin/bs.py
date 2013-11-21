@@ -1,4 +1,5 @@
 html = """
+
 <html lang="en">
 <head>
     <meta charset="UTF-8" />
@@ -170,6 +171,11 @@ html="""
     </div>
 </body>
 """
+
+import sys
+if len(sys.argv)>=2:
+    filename=sys.argv[1]
+    html=open(filename,'r').read()
 
 from bs4 import BeautifulSoup as BS
 from bs4 import NavigableString, Comment
