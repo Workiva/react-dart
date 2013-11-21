@@ -24,11 +24,8 @@ class _HelloGreater extends react.Component {
   getInitialState() => {"name": "World"};
 
   render() {
-    onChange(react.SyntheticEvent event) {
-      setState({'name': event.target.value});
-    }
     return react.div({}, [
-        react.input({'defaultValue': state['name'], 'onChange': onChange}),
+        react.input({'value': bind('name')}),
         helloComponent({'name': state['name']})
     ]);
   }

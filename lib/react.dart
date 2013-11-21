@@ -11,6 +11,11 @@ abstract class Component {
   Map props;
   dynamic _jsThis;
 
+  /**
+   * Bind the value of input to [state[key]].
+   */
+  bind(key) => [state[key], (value) => setState({key: value})];
+
   initComponentInternal(props, _jsThis) {
     this.props = props;
     this._jsThis = _jsThis;
@@ -46,6 +51,10 @@ abstract class Component {
       state = _nextState;
     }
     _nextState = null;
+  }
+
+  void redraw() {
+    setState({});
   }
 
   /**

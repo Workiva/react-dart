@@ -209,12 +209,21 @@ ReactComponentFactory _registerComponent(ComponentFactory componentFactory) {
 
 _reactDom(String name) {
   return (args, [children]) {
+    _convertBoundValues(args);
     _convertEventHandlers(args);
     if (children is List){
       children = new JsObject.jsify(children);
     }
     return context['React']['DOM'].callMethod(name, [new JsObject.jsify(args), children]);
   };
+}
+
+_convertBoundValues(Map args) {
+  var boundValue = args['value'];
+  if (args['value'] is List) {
+    args['value'] = boundValue[0];
+    args['onChange'] = (e) => boundValue[1](e.target.value);
+  }
 }
 
 _convertEventHandlers(Map args) {
