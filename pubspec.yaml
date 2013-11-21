@@ -1,5 +1,5 @@
 name: react
-version: 0.2.0
+version: 0.2.1
 author: Samuel Hapák <samuel.hapak@vacuumlabs.com>
 description: Bindings of the ReactJS library for building interactive interfaces.
 homepage: http://hleumas.github.io/react-dart
