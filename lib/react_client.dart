@@ -63,7 +63,9 @@ ReactComponentFactory _registerComponent(ComponentFactory componentFactory) {
    * only wrap componentWillMount
    */
   var componentWillMount = new JsFunction.withThis((jsThis) {
-    _getComponent(jsThis).componentWillMount();
+    _getComponent(jsThis)
+        ..componentWillMount()
+        ..transferComponentState();
   });
 
   /**

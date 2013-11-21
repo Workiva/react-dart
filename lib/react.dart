@@ -45,7 +45,7 @@ abstract class Component {
    * Transfers component _nextState to state and state to _prevState.
    * This is only way how to set _prevState.
    */
-  void transferComponentState(){
+  void transferComponentState() {
     _prevState = state;
     if (_nextState != null){
       state = _nextState;
