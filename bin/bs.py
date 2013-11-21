@@ -163,13 +163,11 @@ html = """
 """
 
 html="""
-<body pokus='true'>
-    <!-- zis is chinglish comet -->
     <div class='container', onclick={handler} >
+    <!-- zis is chinglish comet -->
         <div id='class'>Something here</div>
         <div>Something else</div>
     </div>
-</body>
 """
 
 import sys
@@ -203,7 +201,7 @@ def to_react(node, indent=0):
         if len(str(node).strip(' \n\t'))==0:
              return None
         else:
-             return indent_str+'''"%s"'''%str(node).strip(' \n\t')
+             return indent_str+'"%s"'%str(node).strip(' \n\t')
     props = ', '.join("%s: %s"%(_key(key), _val(val)) for key, val in node.attrs.items())
     children = ',\n'.join(to_react(child, indent+1) for child in node.children if to_react(child))
     return '%s%s({%s}, [\n%s\n%s])'%(indent_str,node.name,props,children,indent_str)
@@ -211,7 +209,10 @@ def to_react(node, indent=0):
 
 soup = BS(html)
 
-parent = soup.body
+#simple magic to find reasonable root element
+for parent in soup.find_all():
+    if parent.name!='html' and parent.name!='body':
+        break
 print(to_react(parent))
 
 
