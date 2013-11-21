@@ -29,8 +29,8 @@ abstract class Component {
    *
    * Use of theese private variables is implemented in react_client or react_server
    */
-  Map _prevState = {};
-  Map _nextState = {};
+  Map _prevState = null;
+  Map _nextState = null;
   /**
    * nextState and prevState are just getters for previous private variables _prevState
    * and _nextState
