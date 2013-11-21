@@ -29,8 +29,8 @@ abstract class Component {
    *
    * Use of theese private variables is implemented in react_client or react_server
    */
-  Map _prevState;
-  Map _nextState;
+  Map _prevState = {};
+  Map _nextState = {};
   /**
    * nextState and prevState are just getters for previous private variables _prevState
    * and _nextState
@@ -50,7 +50,7 @@ abstract class Component {
     if (_nextState != null){
       state = _nextState;
     }
-    _nextState = null;
+    _nextState = new Map.from(state);
   }
 
   void redraw() {
@@ -62,11 +62,9 @@ abstract class Component {
    * and call React original setState method with no parameter
    */
   void setState(Map newState) {
-    Map nextState =  new Map.from(state);
-    if (newState != null){
-      nextState.addAll(newState);
+    if (newState != null) {
+      _nextState.addAll(newState);
     }
-    _nextState = nextState;
 
     _jsThis.callMethod('setState', []);
   }
