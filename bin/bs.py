@@ -196,7 +196,7 @@ def _key(key):
 
 
 def to_react(node, indent=0):
-    indent_str = " "*4*indent
+    indent_str = " "*2*indent
     if isinstance(node,Comment):
         return None
     if isinstance(node,NavigableString):
