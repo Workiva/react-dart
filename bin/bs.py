@@ -1,21 +1,6 @@
 html = """
 
 <html lang="en">
-<head>
-    <meta charset="UTF-8" />
-
-    <meta name="description" content="">
-    <meta name="author" content="MilanDarjanin.com" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-
-    <title>Profile</title>
-
-    <link rel="stylesheet" href="stylesheets/screen.css" />
-    <!-- <link rel="shortcut icon" href="favicon.ico" /> -->
-    <!-- <link rel="icon" type="image/png" href="favicon.png" /> -->
-    <!-- <link rel="apple-touch-icon" href="apple-touch-icon.png" /> -->
-
-</head>
 <body>
     <div id="wrap">
         <header>
@@ -162,7 +147,7 @@ html = """
 </html>
 """
 
-html="""
+html1="""
     <div class='container', onclick={handler} >
     <!-- zis is chinglish comet -->
         <div id='class'>Something here</div>
@@ -195,6 +180,12 @@ def _key(key):
         return "'"+key+"'"
 
 
+def make_comment(node):
+    res = '// ' + node.name
+    if 'class' in node.attrs:
+        res+='(%s)'%node.attrs['class'][0]
+    return res
+
 def to_react(node, indent=0):
     indent_str = " "*2*indent
     if isinstance(node,Comment):
@@ -205,15 +196,25 @@ def to_react(node, indent=0):
         else:
              return indent_str+'"%s"'%str(node).strip(' \n\t')
     props = ', '.join("%s: %s"%(_key(key), _val(val)) for key, val in node.attrs.items())
-    children = ',\n'.join(to_react(child, indent+1) for child in node.children if to_react(child))
-    return '%s%s({%s}, [\n%s\n%s])'%(indent_str,node.name,props,children,indent_str)
+    if len(list(node.children)) > 1:
+        children = '\n'.join(to_react(child, indent+1) for child in node.children if to_react(child))
+        children = '[\n%s\n%s]' % (children, indent_str)
+        comment = make_comment(node)
+    elif len(list(node.children)) == 1:
+        children = to_react(node.children.__next__(),0)
+        comment=''
+    else:
+        children= '[]'
+        comment=''
+    return '%s%s({%s}, %s), %s'%(indent_str,node.name,props,children,comment)
 
 
 soup = BS(html)
 
 #simple magic to find reasonable root element
 for parent in soup.find_all():
-    if parent.name!='html' and parent.name!='body':
+    if parent.name!='html' and parent.name!='body' and parent.name!='head':
+        print(parent.name)
         break
 print(to_react(parent))
 
