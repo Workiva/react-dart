@@ -181,12 +181,12 @@ def _key(key):
 
 
 def make_comment(node):
-    res = '// ' + node.name
+    res = ' // ' + node.name
     if 'class' in node.attrs:
         res+='(%s)'%node.attrs['class'][0]
     return res
 
-def to_react(node, indent=0):
+def to_react(node, indent = 0, trailing_comma = False):
     indent_str = " "*2*indent
     if isinstance(node,Comment):
         return None
@@ -197,7 +197,7 @@ def to_react(node, indent=0):
              return indent_str+'"%s"'%str(node).strip(' \n\t')
     props = ', '.join("%s: %s"%(_key(key), _val(val)) for key, val in node.attrs.items())
     if len(list(node.children)) > 1:
-        children = '\n'.join(to_react(child, indent+1) for child in node.children if to_react(child))
+        children = '\n'.join(to_react(child, indent+1, trailing_comma = True) for child in node.children if to_react(child))
         children = '[\n%s\n%s]' % (children, indent_str)
         comment = make_comment(node)
     elif len(list(node.children)) == 1:
@@ -206,7 +206,11 @@ def to_react(node, indent=0):
     else:
         children= '[]'
         comment=''
-    return '%s%s({%s}, %s), %s'%(indent_str,node.name,props,children,comment)
+    if trailing_comma:
+        comma=', '
+    else:
+        comma=''
+    return '%s%s({%s}, %s)%s%s'%(indent_str,node.name,props,children,comma,comment)
 
 
 soup = BS(html)
