@@ -53,7 +53,7 @@ ReactComponentFactory _registerComponent(ComponentFactory componentFactory) {
    */
   var getInitialState = new JsFunction.withThis((jsThis){
     Component component = _getComponent(jsThis);
-    component.state = component.getInitialState();
+    component.state = new Map.from(component.getInitialState());
     /** Call transferComponent to get state also to _prevState */
     component.transferComponentState();
     return new JsObject.jsify({});
