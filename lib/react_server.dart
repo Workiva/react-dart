@@ -7,7 +7,7 @@ library react_server;
 import "package:react/react.dart";
 
 typedef String ReactComponentFactory(Map props, [dynamic children]);
-typedef Component ComponentFactory(Map props, dynamic children);
+typedef Component ComponentFactory();
 
 /**
  * register component will create method, which create new Component, 
@@ -19,7 +19,7 @@ ReactComponentFactory _registerComponent(ComponentFactory componentFactory) {
    * children[s] and return it's render method result
    */
   return (Map props, [dynamic children]) {
-    Component component = componentFactory(props, children);
+    Component component = componentFactory();
     
     /** 
      * get default props, add children to props and apply props from arguments
@@ -68,6 +68,9 @@ ReactComponentFactory _reactDom(String name) {
      * return false on that event
      */
     _convertDomArguments(args);
+    
+    _convertBoundValues(args);
+
     
     /**
      * create stringbuffer to build result
@@ -145,6 +148,15 @@ _convertDomArguments(Map args) {
   }
   
   
+}
+
+/**
+ * convert bound values to only values
+ */
+_convertBoundValues(Map args){
+  if(args['value'] is List){
+    args['value'] = args['value'][0];
+  }
 }
 
 /**
