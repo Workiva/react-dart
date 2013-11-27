@@ -19,7 +19,7 @@ class _HelloComponent extends react.Component {
 
 var helloComponent = react.registerComponent(() => new _HelloComponent());
 
-class _HelloGreater extends react.Component {
+class _HelloGreeter extends react.Component {
 
   getInitialState() => {"name": "World"};
 
@@ -31,7 +31,24 @@ class _HelloGreater extends react.Component {
   }
 }
 
-var helloGreater = react.registerComponent(() => new _HelloGreater());
+var helloGreeter = react.registerComponent(() => new _HelloGreeter());
+
+class _CheckBoxComponent extends react.Component {
+  getInitialState() => {"checked": false};
+
+  change(e){
+    this.setState({'checked': e.target.checked});
+  }
+
+  render() {
+    return react.div({}, [
+        react.label({'className': this.state["checked"] ? 'striked' : 'not-striked'}, 'do the dishes'),
+        react.input({'type': 'checkbox', 'value': bind('checked')}, [])
+    ]);
+  }
+}
+
+var checkBoxComponent = react.registerComponent(() => new _CheckBoxComponent());
 
 class _ClockComponent extends react.Component {
 
@@ -66,7 +83,8 @@ class _ClockComponent extends react.Component {
 
   render() {
     return react.span(
-        { 'onClick': (event, domId) => window.alert("Hello World!") },
+        { 'onClick': (event, domid) => window.alert("Hello World!") },
+//        { 'onClick': (event, [domid = null]) => window.alert("Hello World!") },
         [ "Seconds elapsed: ", "${state['secondsElapsed']}"]
     );
   }
@@ -125,8 +143,10 @@ var mainComponent = react.registerComponent(() => new _MainComponent());
 void main() {
   setClientConfiguration();
   react.renderComponent(mainComponent({}, [
-                                            helloGreater({}, []),
-                                            listComponent({}, [])
+                                            helloGreeter({}, []),
+                                            listComponent({}, []),
+                                            //clockComponent({}, []),
+                                            checkBoxComponent({}, [])
                                           ]
     ), querySelector('#content'));
 }

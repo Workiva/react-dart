@@ -220,11 +220,39 @@ _reactDom(String name) {
   };
 }
 
+_isCheckbox(props){
+  return props['type'] == 'checkbox';
+}
+
+_getValueFromDom(domElem){
+  var props = domElem.attributes;
+  if (_isCheckbox(props)){
+    return domElem.checked;
+  } else {
+    return domElem.value;
+  }
+}
+
+_setValueToProps(Map props, val){
+  if (_isCheckbox(props)) {
+    if(val){
+      props['checked'] = true;
+    } else {
+      if(props.containsKey('checked')) {
+         props.remove('checked');
+      }
+    }
+  } else {
+    props['value'] = val;
+  }
+}
+
 _convertBoundValues(Map args) {
   var boundValue = args['value'];
   if (args['value'] is List) {
+    _setValueToProps(args, boundValue[0]);
     args['value'] = boundValue[0];
-    args['onChange'] = (e) => boundValue[1](e.target.value);
+    args['onChange'] = (e) => boundValue[1](_getValueFromDom(e.target));
   }
 }
 
