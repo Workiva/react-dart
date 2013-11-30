@@ -1,11 +1,12 @@
 import "package:react/react.dart" as react;
 import "dart:async";
 
+
 class _HelloComponent extends react.Component {
 
   void componentWillReceiveProps(nextProps){
     if(nextProps["name"].length > 20) {
-      window.alert("Too long Hello!");
+      print("Too long Hello!");
     }
   }
 
@@ -16,7 +17,7 @@ class _HelloComponent extends react.Component {
 
 var helloComponent = react.registerComponent(() => new _HelloComponent());
 
-class _HelloGreater extends react.Component {
+class _HelloGreeter extends react.Component {
 
   getInitialState() => {"name": "World"};
 
@@ -28,7 +29,24 @@ class _HelloGreater extends react.Component {
   }
 }
 
-var helloGreater = react.registerComponent(() => new _HelloGreater());
+var helloGreeter = react.registerComponent(() => new _HelloGreeter());
+
+class _CheckBoxComponent extends react.Component {
+  getInitialState() => {"checked": false};
+
+  change(e){
+    this.setState({'checked': e.target.checked});
+  }
+
+  render() {
+    return react.div({}, [
+        react.label({'className': this.state["checked"] ? 'striked' : 'not-striked'}, 'do the dishes'),
+        react.input({'type': 'checkbox', 'value': bind('checked')}, [])
+    ]);
+  }
+}
+
+var checkBoxComponent = react.registerComponent(() => new _CheckBoxComponent());
 
 class _ClockComponent extends react.Component {
 
@@ -63,7 +81,8 @@ class _ClockComponent extends react.Component {
 
   render() {
     return react.span(
-        { 'onClick': (event, domId) => window.alert("Hello World!") },
+        { 'onClick': (event, domid) => print("Hello World!") },
+//        { 'onClick': (event, [domid = null]) => print("Hello World!") },
         [ "Seconds elapsed: ", "${state['secondsElapsed']}"]
     );
   }
@@ -79,12 +98,12 @@ class _ListComponent extends react.Component {
 
   void componentWillUpdate(nextProps, nextState){
     if(nextState["items"].length > state["items"].length)
-      window.alert("Adding " + nextState["items"].last.toString());
+      print("Adding " + nextState["items"].last.toString());
   }
 
   void componentDidUpdate(prevProps, prevState, rootNode){
     if(prevState["items"].length > state["items"].length)
-      window.alert("Removed " + prevState["items"].first.toString());
+      print("Removed " + prevState["items"].first.toString());
   }
 
   int iterator = 3;

@@ -7,8 +7,10 @@ import "react_test_components.dart";
 void main() {
   setClientConfiguration();
   react.renderComponent(mainComponent({}, [
-                                            helloGreater({}, []),
-                                            listComponent({}, [])
+                                            helloGreeter({}, []),
+                                            listComponent({}, []),
+                                            //clockComponent({}, []),
+                                            checkBoxComponent({}, [])
                                           ]
     ), querySelector('#content'));
 }

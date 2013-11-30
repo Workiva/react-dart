@@ -58,7 +58,7 @@ ReactComponentFactory _reactDom(String name) {
     /**
      * unpair elements can't have children
      */
-    if (_unPairElements.contains(name) && children != null){
+    if (_unPairElements.contains(name) && (children != null && children.length > 0)){
       throw new Exception();
     }
 
