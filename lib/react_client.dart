@@ -51,7 +51,7 @@ ReactComponentFactory _registerComponent(ComponentFactory componentFactory) {
    *
    * @return empty JsObject as default state for javascript react component
    */
-  var getInitialState = new JsFunction.withThis((jsThis){
+  var getInitialState = new JsFunction.withThis((jsThis) {
     Component component = _getComponent(jsThis);
     component.state = new Map.from(component.getInitialState());
     /** Call transferComponent to get state also to _prevState */
@@ -101,7 +101,7 @@ ReactComponentFactory _registerComponent(ComponentFactory componentFactory) {
    * count nextProps from jsNextProps, get result from component,
    * and if shoudln't update, update props and transfer state.
    */
-  var shouldComponentUpdate = new JsFunction.withThis((jsThis, jsNextProps, nextState){
+  var shouldComponentUpdate = new JsFunction.withThis((jsThis, jsNextProps, nextState) {
     var newProps = _getInternalProps(jsNextProps);
     Component component  = _getComponent(jsThis);
 
@@ -110,7 +110,7 @@ ReactComponentFactory _registerComponent(ComponentFactory componentFactory) {
     nextProps.addAll(newProps != null ? newProps : {});
 
     /** use component.nextState where are stored nextState */
-    if (component.shouldComponentUpdate(nextProps, component.nextState)){
+    if (component.shouldComponentUpdate(nextProps, component.nextState)) {
       return true;
     } else {
       /**
@@ -126,7 +126,7 @@ ReactComponentFactory _registerComponent(ComponentFactory componentFactory) {
   /**
    * wrap component.componentWillUpdate and after that update props and transfer state
    */
-  var componentWillUpdate = new JsFunction.withThis((jsThis,jsNextProps, nextState, [reactInternal]){
+  var componentWillUpdate = new JsFunction.withThis((jsThis,jsNextProps, nextState, [reactInternal]) {
     Component component  = _getComponent(jsThis);
 
     var newProps = _getInternalProps(jsNextProps);
@@ -142,7 +142,7 @@ ReactComponentFactory _registerComponent(ComponentFactory componentFactory) {
   /**
    * wrap componentDidUpdate and use component.prevState which was trasnfered from state in componentWillUpdate.
    */
-  var componentDidUpdate = new JsFunction.withThis((jsThis, prevProps, prevState, HtmlElement rootNode){
+  var componentDidUpdate = new JsFunction.withThis((jsThis, prevProps, prevState, HtmlElement rootNode) {
     var prevInternalProps = _getInternalProps(prevProps);
     Component component = _getComponent(jsThis);
     component.componentDidUpdate(prevInternalProps, component.prevState, rootNode);
@@ -213,29 +213,29 @@ _reactDom(String name) {
   return (args, [children]) {
     _convertBoundValues(args);
     _convertEventHandlers(args);
-    if (children is List){
+    if (children is List) {
       children = new JsObject.jsify(children);
     }
     return context['React']['DOM'].callMethod(name, [new JsObject.jsify(args), children]);
   };
 }
 
-_isCheckbox(props){
+_isCheckbox(props) {
   return props['type'] == 'checkbox';
 }
 
-_getValueFromDom(domElem){
+_getValueFromDom(domElem) {
   var props = domElem.attributes;
-  if (_isCheckbox(props)){
+  if (_isCheckbox(props)) {
     return domElem.checked;
   } else {
     return domElem.value;
   }
 }
 
-_setValueToProps(Map props, val){
+_setValueToProps(Map props, val) {
   if (_isCheckbox(props)) {
-    if(val){
+    if(val) {
       props['checked'] = true;
     } else {
       if(props.containsKey('checked')) {

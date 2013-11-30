@@ -47,7 +47,7 @@ abstract class Component {
    */
   void transferComponentState() {
     _prevState = state;
-    if (_nextState != null){
+    if (_nextState != null) {
       state = _nextState;
     }
     _nextState = new Map.from(state);
@@ -81,17 +81,17 @@ abstract class Component {
 
   void componentWillMount() {}
 
-  void componentDidMount(/*DOMElement */ rootNode){}
+  void componentDidMount(/*DOMElement */ rootNode) {}
 
   void componentWillReceiveProps(newProps) {}
 
   bool shouldComponentUpdate(nextProps, nextState) => true;
 
-  void componentWillUpdate(nextProps, nextState){}
+  void componentWillUpdate(nextProps, nextState) {}
 
-  void componentDidUpdate(prevProps, prevState, /*DOMElement */ rootNode){}
+  void componentDidUpdate(prevProps, prevState, /*DOMElement */ rootNode) {}
 
-  void componentWillUnmount(){}
+  void componentWillUnmount() {}
 
   Map getInitialState() => {};
 
@@ -271,7 +271,7 @@ class SyntheticWheelEvent extends SyntheticEvent {
 
 }
 
-/** 
+/**
  * client side rendering
  */
 var renderComponent;
