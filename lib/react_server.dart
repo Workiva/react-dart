@@ -5,8 +5,21 @@
 library react_server;
 
 import "package:react/react.dart";
+import "dart:math";
 
-typedef String ReactComponentFactory(Map props, [dynamic children]);
+/**
+ * important constants geted from react.js needed to create correct checksum
+ */
+String _SEPARATOR = ".";
+String _ID_ATTR_NAME = "data-reactid";
+String _CHECKSUM_ATTR_NAME = "data-react-checksum"; 
+num    _GLOBAL_MOUNT_POINT_MAX = 9999999;
+num    _MOD = 65521;
+
+
+
+typedef String OwnerFactory([String ownerId, num position, String key]);
+typedef OwnerFactory ReactComponentFactory(Map props, [dynamic children]);
 typedef Component ComponentFactory();
 
 /**
@@ -43,7 +56,7 @@ ReactComponentFactory _registerComponent(ComponentFactory componentFactory) {
     /**
      * return component render method result. (it should be string)
      */
-    return component.render();
+    return ([String ownerId, num position, String key]){return component.render()(ownerId, position, key);};
   };
 
 }
@@ -56,68 +69,115 @@ ReactComponentFactory _registerComponent(ComponentFactory componentFactory) {
 ReactComponentFactory _reactDom(String name) {
   return (Map args, [children]) {
     /**
-     * unpair elements can't have children
+     * pack component string creating into function to easy pass owner id, 
+     * position and key (from its' custom component owner)
      */
-    if (_unPairElements.contains(name) && (children != null && children.length > 0)){
-      throw new Exception();
-    }
-
-    /** 
-     * convert args to eliminate event handlers 
-     * 
-     * return false on that event
-     */
-    _convertDomArguments(args);
-    
-    _convertBoundValues(args);
-
-    
-    /**
-     * create stringbuffer to build result
-     * 
-     * end open tag to it
-     */
-    StringBuffer result = new StringBuffer("<$name");
-    
-    /**
-     * add attributes to it
-     */
-    args.forEach((String key, value) {
-      result.write(" ${key.toLowerCase()}=\"$value\"");
-    });
-    
-    /**
-     * if element is not pair, then close it
-     */
-    if (_unPairElements.contains(name)){
-      result.write(" />");
-    } else {
+    return ([String ownerId, num position, String key]){
       /**
-       * close open tag
+       * unpair elements can't have children
        */
-      result.write(">");
+      if (_unPairElements.contains(name) && (children != null && children.length > 0)){
+        throw new Exception();
+      }
       
       /**
-       * add children (if children is list)
+       * count react id
+       * 
+       * if args contains key, then replace argument key by that key.
        */
-      if (children is List){
-        children.forEach((String component) => result.write(component));
-      } else if (children != null) {
-        /**
-         * or child (if childre is not list and not null
-         */
-        result.write(children);
+      if(args.containsKey("key")){
+        key = args["key"].toString();
       }
+      
       /**
-       * and add close tag
+       * if ownerId is not set, than this is root and create rootId to it. 
        */
-      result.write("</$name>");
-    }
-    
-    /**
-     * return result as strin
-     */
-    return result.toString();
+      String thisId;
+      if(ownerId == null){
+        thisId = _createRootId();
+      } else {
+        /**
+         * else append adequate string to parent id based on position and key.
+         */
+        thisId = ownerId + (key != null ? ".{$key}" : (position != null ? ".[$position]" : ".[0]"));
+      }
+ 
+      /** 
+       * convert args to eliminate event handlers 
+       * 
+       * return false on that event
+       */
+      _convertDomArguments(args);
+      
+      /**
+       * convert bound values to only that values
+       */
+      _convertBoundValues(args);
+  
+      
+      /**
+       * create stringbuffer to build result
+       * 
+       * end open tag to it
+       */
+      StringBuffer result = new StringBuffer("<$name");
+      
+      /**
+       * add attributes to it
+       */
+      args.forEach((String key, value) {
+        result.write(" ${key.toLowerCase()}=\"$value\"");
+      });
+      
+      /** 
+       * add id after attributes
+       */
+      result.write(' $_ID_ATTR_NAME="$thisId"');
+      
+      /**
+       * if element is not pair, then close it
+       */
+      if (_unPairElements.contains(name)){
+        result.write(">");
+      } else {
+        /**
+         * close open tag
+         */
+        result.write(">");
+        
+        /**
+         * add children (if children is list)
+         */
+        if (children is List){
+          for(num i = 0; i < children.length; ++i){
+            var component = children[i]; 
+            if(component is String)
+              result.write(span({}, component)(thisId, i));
+            else 
+              result.write(component(thisId, i)); 
+          }
+        } else if (children != null) {
+          /**
+           * or child (if childre is not list and not null
+           * 
+           * if it is string, add it as it is, if not, add it as component
+           */
+          if(children is String)
+            result.write(children);
+          else 
+            result.write(children(thisId, i)); 
+        }
+        /**
+         * and add close tag
+         */
+        result.write("</$name>");
+      }
+      
+      /**
+       * return result as strin
+       */
+      return result.toString();
+    };
   };
 }
 
@@ -199,18 +259,47 @@ Set _unPairElements = new Set.from(["area", "base", "br", "col", "hr", "img", "i
 /**
  * render component method
  */
-void _renderComponent(String component, [dynamic element]) {
-  /**
-   * TODO
-   *  
-   * Do something with that string, for now, just print it
-   */
-  print(component);
+String _renderComponentToString(OwnerFactory component) {
+  return _addChecksumToMarkup(component());
+}
+
+/**
+ * creates random id based on id creation in react.js
+ */
+String _createRootId(){
+  var rng = new Random();
+  return "${_SEPARATOR}r[${rng.nextInt(_GLOBAL_MOUNT_POINT_MAX).toRadixString(36)}]";
+}
+
+/**
+ * count checksumm and add it to markup as last attribute of root element 
+ */
+String _addChecksumToMarkup(String markup){
+  var checksum = _adler32(markup);
+  return markup.replaceFirst(
+      '>',
+      ' $_CHECKSUM_ATTR_NAME="$checksum">'
+    );
+
+}
+
+/**
+ * checksum algorithm copied from react.js 
+ * ( must be the same to enable react.js recognize it as ok)
+ */
+_adler32(String data){
+  num a = 1;
+  num b = 0;
+  for (var i = 0; i < data.length; i++) {
+    a = (a + data.codeUnitAt(i)) % _MOD;
+    b = (b + a) % _MOD;
+  }
+  return a | b << 16;
 }
 
 void setServerConfiguration() {
   registerComponent = _registerComponent;
-  renderComponent = _renderComponent;
+  renderComponentToString = _renderComponentToString;
 
   // HTML Elements
   a = _reactDom('a');

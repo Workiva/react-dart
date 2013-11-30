@@ -271,7 +271,19 @@ class SyntheticWheelEvent extends SyntheticEvent {
 
 }
 
+/** 
+ * client side rendering
+ */
 var renderComponent;
+
+/**
+ * server side rendering
+ */
+var renderComponentToString;
+
+/**
+ * register component method to register component on both, client-side and server-side.
+ */
 var registerComponent;
 
 /** Basic DOM elements

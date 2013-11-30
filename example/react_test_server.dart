@@ -5,11 +5,11 @@ import "react_test_components.dart";
 
 void main() {
   setServerConfiguration();
-  react.renderComponent(mainComponent({}, [
+  print(react.renderComponentToString(mainComponent({}, [
                                            helloGreeter({}, []),
                                            listComponent({}, []),
                                            //clockComponent({}, []),
                                            checkBoxComponent({}, [])
                                            ]
-  ), null);
+  )));
 }
