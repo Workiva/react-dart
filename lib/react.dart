@@ -9,16 +9,16 @@ library react;
 
 abstract class Component {
   Map props;
-  dynamic _jsThis;
+  dynamic _jsRedraw;
 
   /**
    * Bind the value of input to [state[key]].
    */
   bind(key) => [state[key], (value) => setState({key: value})];
 
-  initComponentInternal(props, _jsThis) {
+  initComponentInternal(props, _jsRedraw) {
     this.props = props;
-    this._jsThis = _jsThis;
+    this._jsRedraw = _jsRedraw;
   }
 
   Map state = {};
@@ -66,7 +66,7 @@ abstract class Component {
       _nextState.addAll(newState);
     }
 
-    _jsThis.callMethod('setState', []);
+    _jsRedraw();
   }
 
   /**
@@ -76,7 +76,7 @@ abstract class Component {
   void replaceState(Map newState) {
     Map nextState = newState == null ? {} : new Map.from(newState);
     _nextState = nextState;
-    _jsThis.callMethod('setState', []);
+    _jsRedraw();
   }
 
   void componentWillMount() {}

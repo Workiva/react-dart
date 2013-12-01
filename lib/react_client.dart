@@ -33,8 +33,9 @@ ReactComponentFactory _registerComponent(ComponentFactory componentFactory) {
   var getDefaultProps = new JsFunction.withThis((jsThis) {
     var internal = _getInternal(jsThis);
 
+    var redraw = () => jsThis.callMethod('setState', []);
     Component component = componentFactory()
-        ..initComponentInternal(internal['props'], jsThis);
+        ..initComponentInternal(internal['props'], redraw);
 
     internal['component'] = component;
 
