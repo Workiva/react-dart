@@ -209,6 +209,9 @@ ReactComponentFactory _registerComponent(ComponentFactory componentFactory) {
 
 }
 
+/**
+ * create dart-react registered component for html tag.
+ */
 _reactDom(String name) {
   return (args, [children]) {
     _convertBoundValues(args);
@@ -220,10 +223,18 @@ _reactDom(String name) {
   };
 }
 
+/**
+ * Recognize if type of input (or other element) is checkbox by it's props.
+ */
 _isCheckbox(props) {
   return props['type'] == 'checkbox';
 }
 
+/**
+ * get value from DOM element.
+ *
+ * If element is checkbox, return bool, else return value of "value" attribute
+ */
 _getValueFromDom(domElem) {
   var props = domElem.attributes;
   if (_isCheckbox(props)) {
@@ -233,6 +244,11 @@ _getValueFromDom(domElem) {
   }
 }
 
+/**
+ * set value to props based on type of input.
+ *
+ * Specialy, it recognized chceckbox.
+ */
 _setValueToProps(Map props, val) {
   if (_isCheckbox(props)) {
     if(val) {
@@ -247,15 +263,36 @@ _setValueToProps(Map props, val) {
   }
 }
 
+/**
+ * convert bound values to pure value
+ * and packed onchanged function
+ */
 _convertBoundValues(Map args) {
   var boundValue = args['value'];
   if (args['value'] is List) {
     _setValueToProps(args, boundValue[0]);
     args['value'] = boundValue[0];
-    args['onChange'] = (e) => boundValue[1](_getValueFromDom(e.target));
+    var onChange = args["onChange"];
+    /**
+     * put new function into onChange event hanlder.
+     *
+     * If there was something listening for taht event,
+     * trigger it and return it's return value.
+     */
+    args['onChange'] = (e) {
+      boundValue[1](_getValueFromDom(e.target));
+      if(onChange != null)
+        return onChange(e);
+    };
   }
 }
 
+
+/**
+ * Convert event pack event handler into wrapper
+ * and pass it only dart object of event
+ * converted from JsObject of event.
+ */
 _convertEventHandlers(Map args) {
   args.forEach((key, value) {
     var eventFactory;

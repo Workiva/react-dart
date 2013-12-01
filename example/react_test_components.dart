@@ -4,7 +4,7 @@ import "dart:async";
 
 class _HelloComponent extends react.Component {
 
-  void componentWillReceiveProps(nextProps){
+  void componentWillReceiveProps(nextProps) {
     if(nextProps["name"].length > 20) {
       print("Too long Hello!");
     }
@@ -23,7 +23,7 @@ class _HelloGreeter extends react.Component {
 
   render() {
     return react.div({}, [
-        react.input({'value': bind('name')}),
+        react.input({'value': bind('name'), 'onChange': (e) {print(e.target.value);}}),
         helloComponent({'name': state['name']})
     ]);
   }
@@ -34,7 +34,7 @@ var helloGreeter = react.registerComponent(() => new _HelloGreeter());
 class _CheckBoxComponent extends react.Component {
   getInitialState() => {"checked": false};
 
-  change(e){
+  change(e) {
     this.setState({'checked': e.target.checked});
   }
 
@@ -96,12 +96,12 @@ class _ListComponent extends react.Component {
     return {"items": new List.from([0, 1, 2, 3])};
   }
 
-  void componentWillUpdate(nextProps, nextState){
+  void componentWillUpdate(nextProps, nextState) {
     if(nextState["items"].length > state["items"].length)
       print("Adding " + nextState["items"].last.toString());
   }
 
-  void componentDidUpdate(prevProps, prevState, rootNode){
+  void componentDidUpdate(prevProps, prevState, rootNode) {
     if(prevState["items"].length > state["items"].length)
       print("Removed " + prevState["items"].first.toString());
   }
