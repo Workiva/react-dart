@@ -25,7 +25,7 @@ _reactDom(String name) {
     if (children is! Iterable) {
       children = [children];
     }
-    return new MarkupDescription(name, args, children);
+    return new MarkupDescription(name, new Map.from(args), children.toList());
   };
 }
 
