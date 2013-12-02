@@ -2,3 +2,4 @@ packages
 .buildlog
 lib/docs/
 pubspec.lock
+.idea
