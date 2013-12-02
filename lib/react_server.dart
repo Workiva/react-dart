@@ -37,22 +37,20 @@ ReactComponentFactory _registerComponent(ComponentFactory componentFactory) {
     /**
      * get default props, add children to props and apply props from arguments
      */
-    component.props = component.getDefaultProps();
-    component.props["children"] = children;
-    component.props.addAll(props);
+    props['children'] = children;
+    component.initComponentInternal(props, () {});
 
     /**
      * get initial state and run componentWillMount lifecycle method
      */
-    component.state = component.getInitialState();
+    component.initStateInternal();
     component.componentWillMount();
 
     /**
-     * if component will mount called setState or replaceState, then transfer this state to actual state.
+     * if component will mount called setState or replaceState, then transfer
+     * this state to actual state.
      */
-    if (component.nextState != null) {
-      component.transferComponentState();
-    }
+    component.transferComponentState();
 
     /**
      * return component render method result. (it should be string)

@@ -39,7 +39,6 @@ ReactComponentFactory _registerComponent(ComponentFactory componentFactory) {
 
     internal['component'] = component;
 
-    component.props = component.getDefaultProps()..addAll(component.props);
     JsObject jsProps = new JsObject.jsify({});
     jsProps["__internal__"] = {};
     jsProps["__internal__"]["props"] = component.props;
@@ -53,10 +52,7 @@ ReactComponentFactory _registerComponent(ComponentFactory componentFactory) {
    * @return empty JsObject as default state for javascript react component
    */
   var getInitialState = new JsFunction.withThis((jsThis) {
-    Component component = _getComponent(jsThis);
-    component.state = new Map.from(component.getInitialState());
-    /** Call transferComponent to get state also to _prevState */
-    component.transferComponentState();
+    _getComponent(jsThis).initStateInternal();
     return new JsObject.jsify({});
   });
 

@@ -17,8 +17,20 @@ abstract class Component {
   bind(key) => [state[key], (value) => setState({key: value})];
 
   initComponentInternal(props, _jsRedraw) {
-    this.props = props;
     this._jsRedraw = _jsRedraw;
+    _initProps(props);
+  }
+
+  _initProps(props) {
+    this.props = {}
+      ..addAll(getDefaultProps())
+      ..addAll(props);
+  }
+
+  initStateInternal() {
+    this.state = new Map.from(getInitialState());
+    /** Call transferComponent to get state also to _prevState */
+    transferComponentState();
   }
 
   Map state = {};
@@ -431,7 +443,7 @@ _createDOMComponents(creator){
 /**
  * set configuration based on passed functions.
  *
- * It pass arguments to global variables and run DOM components creation by dom Creator. 
+ * It pass arguments to global variables and run DOM components creation by dom Creator.
  */
 setReactConfiguration(domCreator, customRegisterComponent, customRenderComponent, customRenderComponentToString){
   registerComponent = customRegisterComponent;
