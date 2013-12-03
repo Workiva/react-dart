@@ -32,11 +32,78 @@ html = """
                 </div>
                 <div class="wide-column">
                     <div class="profile-row">
+                        <label for="name">Meno a Priezvisko</label>
+                        <span class="help-icon"><span class="help-message">Some message on hover for now. And another text for test.</span></span>
+                        <input type="text" value="Meno Priezvisko" name="name" id="name"/>
+                    </div>
+                    <div class="profile-row">
+                        <label for="email">Emailova adresa</label>
+                        <span class="help-icon"><span class="help-message">Some message on hover for now. And another text for test.</span></span>
+                        <input type="text" value="email@email.com" name="email" id="email"/>
+                    </div>
+
+                    <div class="profile-row">
+                        <label for="birthdate">Datum narodenia</label>
+                        <span class="help-icon"><span class="help-message">Some message on hover for now. And another text for test.</span></span>
+                        <div>
+                        <div class="styled-select select-days">
+                            <select name="day">
+                                <option value="">1</option>
+                                <option value="">2</option>
+                                <option value="">3</option>
+                                <option value="">4</option>
+                                <option value="">5</option>
+                                <option value="">6</option>
+                                <option value="">7</option>
+                                <option value="">8</option>
+                                <option value="">9</option>
+                                <option value="">10</option>
+                                <option value="">11</option>
+                                <option value="">12</option>
+                                <option value="">13</option>
+                                <option value="">14</option>
+                                <option value="">15</option>
+                                <option value="">16</option>
+                                <option value="">17</option>
+                                <option value="">18</option>
+                                <option value="">19</option>
+                                <option value="">20</option>
+                                <option value="">21</option>
+                                <option value="">22</option>
+                                <option value="">23</option>
+                                <option value="">24</option>
+                                <option value="">25</option>
+                                <option value="">26</option>
+                                <option value="">27</option>
+                                <option value="">28</option>
+                                <option value="">29</option>
+                                <option value="">30</option>
+                            </select>
+                        </div>
+                        <div class="styled-select select-months">
+                            <select name="month">
+                                <option value="">Januar</option>
+                                <option value="">Februar</option>
+                                <option value="">Marec</option>
+                            </select>
+                        </div>
+                        <div class="styled-select select-years">
+                            <select name="year">
+                                <option value="">2013</option>
+                                <option value="">2000</option>
+                                <option value="">1998</option>
+                                <option value="">1992</option>
+                                <option value="">1963</option>
+                            </select>
+                        </div>
+                        </div>
+                    </div>
+                    <div class="profile-row">
                         <label>Pohlavie</label>
                         <span class="help-icon"><span class="help-message">Some message on hover for now. And another text for test.</span></span>
                         <div class="checkbox-group">
-                            <input type="radio" name="gender" value="muz" id="gender-male" /><label for="gender-male" tabindex="0"><i></i><span>Muz</span></label>
-                            <input type="radio" name="gender" value="zena" id="gender-female" /><label for="gender-female" tabindex="0"><i></i><span>Zena</span></label>
+                            <input type="radio" name="gender" value="muz" id="gender-male"><label for="gender-male" tabindex="0"><i></i><span>Muz</span></label>
+                            <input type="radio" name="gender" value="zena" id="gender-female"><label for="gender-female" tabindex="0"><i></i><span>Zena</span></label>
                         </div>
                     </div>
                 </div>
@@ -81,13 +148,9 @@ html = """
 """
 
 html1="""
-    <div class='container' onclick="{handler}" >
+    <div class='container', onclick={handler} >
     <!-- zis is chinglish comet -->
-        <MyTag> mytag </MyTag>
-        <MyTag name = "{jozo}" /> 
-        <div id='class'>
-           <span> Something here </span>
-        </div>
+        <div id='class'>Something here</div>
         <div>Something else</div>
     </div>
 """
@@ -110,9 +173,9 @@ def _val(val):
 
 def _key(key):
     if key=='class':
-        return "'className'"
+        return '"className"'
     if key=='for':
-        return "'htmlFor'"
+        return '"htmlFor"'
     else:
         return "'"+key+"'"
 
@@ -120,10 +183,7 @@ def _key(key):
 def make_comment(node):
     res = ' // ' + node.name
     if 'class' in node.attrs:
-        cl = node.attrs['class']
-        if isinstance(cl, list):
-            cl = cl[0]
-        res+='(%s)'%cl
+        res+='(%s)'%node.attrs['class'][0]
     return res
 
 def to_react(node, indent = 0, trailing_comma = False):
@@ -153,11 +213,12 @@ def to_react(node, indent = 0, trailing_comma = False):
     return '%s%s({%s}, %s)%s%s'%(indent_str,node.name,props,children,comma,comment)
 
 
-soup = BS(html, 'xml')
+soup = BS(html)
 
 #simple magic to find reasonable root element
 for parent in soup.find_all():
     if parent.name!='html' and parent.name!='body' and parent.name!='head':
+        print(parent.name)
         break
 print(to_react(parent))
 
