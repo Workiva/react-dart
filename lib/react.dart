@@ -9,16 +9,28 @@ library react;
 
 abstract class Component {
   Map props;
-  dynamic _jsThis;
+  dynamic _jsRedraw;
 
   /**
    * Bind the value of input to [state[key]].
    */
   bind(key) => [state[key], (value) => setState({key: value})];
 
-  initComponentInternal(props, _jsThis) {
-    this.props = props;
-    this._jsThis = _jsThis;
+  initComponentInternal(props, _jsRedraw) {
+    this._jsRedraw = _jsRedraw;
+    _initProps(props);
+  }
+
+  _initProps(props) {
+    this.props = {}
+      ..addAll(getDefaultProps())
+      ..addAll(props);
+  }
+
+  initStateInternal() {
+    this.state = new Map.from(getInitialState());
+    /** Call transferComponent to get state also to _prevState */
+    transferComponentState();
   }
 
   Map state = {};
@@ -47,7 +59,7 @@ abstract class Component {
    */
   void transferComponentState() {
     _prevState = state;
-    if (_nextState != null){
+    if (_nextState != null) {
       state = _nextState;
     }
     _nextState = new Map.from(state);
@@ -66,7 +78,7 @@ abstract class Component {
       _nextState.addAll(newState);
     }
 
-    _jsThis.callMethod('setState', []);
+    _jsRedraw();
   }
 
   /**
@@ -76,22 +88,22 @@ abstract class Component {
   void replaceState(Map newState) {
     Map nextState = newState == null ? {} : new Map.from(newState);
     _nextState = nextState;
-    _jsThis.callMethod('setState', []);
+    _jsRedraw();
   }
 
   void componentWillMount() {}
 
-  void componentDidMount(/*DOMElement */ rootNode){}
+  void componentDidMount(/*DOMElement */ rootNode) {}
 
   void componentWillReceiveProps(newProps) {}
 
   bool shouldComponentUpdate(nextProps, nextState) => true;
 
-  void componentWillUpdate(nextProps, nextState){}
+  void componentWillUpdate(nextProps, nextState) {}
 
-  void componentDidUpdate(prevProps, prevState, /*DOMElement */ rootNode){}
+  void componentDidUpdate(prevProps, prevState, /*DOMElement */ rootNode) {}
 
-  void componentWillUnmount(){}
+  void componentWillUnmount() {}
 
   Map getInitialState() => {};
 
@@ -271,7 +283,19 @@ class SyntheticWheelEvent extends SyntheticEvent {
 
 }
 
+/**
+ * client side rendering
+ */
 var renderComponent;
+
+/**
+ * server side rendering
+ */
+var renderComponentToString;
+
+/**
+ * register component method to register component on both, client-side and server-side.
+ */
 var registerComponent;
 
 /** Basic DOM elements
@@ -288,3 +312,145 @@ title, tr, track, u, ul, variable, video, wbr;
 
 /** SVG elements */
 var circle, g, line, path, polyline, rect, svg, text;
+
+
+/**
+ * Create DOM components by creator passed
+ */
+_createDOMComponents(creator){
+  a = creator('a');
+  abbr = creator('abbr');
+  address = creator('address');
+  area = creator('area');
+  article = creator('article');
+  aside = creator('aside');
+  audio = creator('audio');
+  b = creator('b');
+  base = creator('base');
+  bdi = creator('bdi');
+  bdo = creator('bdo');
+  big = creator('big');
+  blockquote = creator('blockquote');
+  body = creator('body');
+  br = creator('br');
+  button = creator('button');
+  canvas = creator('canvas');
+  caption = creator('caption');
+  cite = creator('cite');
+  code = creator('code');
+  col = creator('col');
+  colgroup = creator('colgroup');
+  data = creator('data');
+  datalist = creator('datalist');
+  dd = creator('dd');
+  del = creator('del');
+  details = creator('details');
+  dfn = creator('dfn');
+  div = creator('div');
+  dl = creator('dl');
+  dt = creator('dt');
+  em = creator('em');
+  embed = creator('embed');
+  fieldset = creator('fieldset');
+  figcaption = creator('figcaption');
+  figure = creator('figure');
+  footer = creator('footer');
+  form = creator('form');
+  h1 = creator('h1');
+  h2 = creator('h2');
+  h3 = creator('h3');
+  h4 = creator('h4');
+  h5 = creator('h5');
+  h6 = creator('h6');
+  head = creator('head');
+  header = creator('header');
+  hr = creator('hr');
+  html = creator('html');
+  i = creator('i');
+  iframe = creator('iframe');
+  img = creator('img');
+  input = creator('input');
+  ins = creator('ins');
+  kbd = creator('kbd');
+  keygen = creator('keygen');
+  label = creator('label');
+  legend = creator('legend');
+  li = creator('li');
+  link = creator('link');
+  main = creator('main');
+  map = creator('map');
+  mark = creator('mark');
+  menu = creator('menu');
+  menuitem = creator('menuitem');
+  meta = creator('meta');
+  meter = creator('meter');
+  nav = creator('nav');
+  noscript = creator('noscript');
+  object = creator('object');
+  ol = creator('ol');
+  optgroup = creator('optgroup');
+  option = creator('option');
+  output = creator('output');
+  p = creator('p');
+  param = creator('param');
+  pre = creator('pre');
+  progress = creator('progress');
+  q = creator('q');
+  rp = creator('rp');
+  rt = creator('rt');
+  ruby = creator('ruby');
+  s = creator('s');
+  samp = creator('samp');
+  script = creator('script');
+  section = creator('section');
+  select = creator('select');
+  small = creator('small');
+  source = creator('source');
+  span = creator('span');
+  strong = creator('strong');
+  style = creator('style');
+  sub = creator('sub');
+  summary = creator('summary');
+  sup = creator('sup');
+  table = creator('table');
+  tbody = creator('tbody');
+  td = creator('td');
+  textarea = creator('textarea');
+  tfoot = creator('tfoot');
+  th = creator('th');
+  thead = creator('thead');
+  time = creator('time');
+  title = creator('title');
+  tr = creator('tr');
+  track = creator('track');
+  u = creator('u');
+  ul = creator('ul');
+  variable = creator('var');
+  video = creator('video');
+  wbr = creator('wbr');
+
+  // SVG Elements
+  circle = creator('circle');
+  g = creator('g');
+  line = creator('line');
+  path = creator('path');
+  polyline = creator('polyline');
+  rect = creator('rect');
+  svg = creator('svg');
+  text = creator('text');
+}
+
+/**
+ * set configuration based on passed functions.
+ *
+ * It pass arguments to global variables and run DOM components creation by dom Creator.
+ */
+setReactConfiguration(domCreator, customRegisterComponent, customRenderComponent, customRenderComponentToString){
+  registerComponent = customRegisterComponent;
+  renderComponent = customRenderComponent;
+  renderComponentToString = customRenderComponentToString;
+
+  // HTML Elements
+  _createDOMComponents(domCreator);
+}
+

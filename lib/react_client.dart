@@ -33,12 +33,12 @@ ReactComponentFactory _registerComponent(ComponentFactory componentFactory) {
   var getDefaultProps = new JsFunction.withThis((jsThis) {
     var internal = _getInternal(jsThis);
 
+    var redraw = () => jsThis.callMethod('setState', []);
     Component component = componentFactory()
-        ..initComponentInternal(internal['props'], jsThis);
+        ..initComponentInternal(internal['props'], redraw);
 
     internal['component'] = component;
 
-    component.props = component.getDefaultProps()..addAll(component.props);
     JsObject jsProps = new JsObject.jsify({});
     jsProps["__internal__"] = {};
     jsProps["__internal__"]["props"] = component.props;
@@ -51,11 +51,8 @@ ReactComponentFactory _registerComponent(ComponentFactory componentFactory) {
    *
    * @return empty JsObject as default state for javascript react component
    */
-  var getInitialState = new JsFunction.withThis((jsThis){
-    Component component = _getComponent(jsThis);
-    component.state = component.getInitialState();
-    /** Call transferComponent to get state also to _prevState */
-    component.transferComponentState();
+  var getInitialState = new JsFunction.withThis((jsThis) {
+    _getComponent(jsThis).initStateInternal();
     return new JsObject.jsify({});
   });
 
@@ -101,7 +98,7 @@ ReactComponentFactory _registerComponent(ComponentFactory componentFactory) {
    * count nextProps from jsNextProps, get result from component,
    * and if shoudln't update, update props and transfer state.
    */
-  var shouldComponentUpdate = new JsFunction.withThis((jsThis, jsNextProps, nextState){
+  var shouldComponentUpdate = new JsFunction.withThis((jsThis, jsNextProps, nextState) {
     var newProps = _getInternalProps(jsNextProps);
     Component component  = _getComponent(jsThis);
 
@@ -110,7 +107,7 @@ ReactComponentFactory _registerComponent(ComponentFactory componentFactory) {
     nextProps.addAll(newProps != null ? newProps : {});
 
     /** use component.nextState where are stored nextState */
-    if (component.shouldComponentUpdate(nextProps, component.nextState)){
+    if (component.shouldComponentUpdate(nextProps, component.nextState)) {
       return true;
     } else {
       /**
@@ -126,7 +123,7 @@ ReactComponentFactory _registerComponent(ComponentFactory componentFactory) {
   /**
    * wrap component.componentWillUpdate and after that update props and transfer state
    */
-  var componentWillUpdate = new JsFunction.withThis((jsThis,jsNextProps, nextState, [reactInternal]){
+  var componentWillUpdate = new JsFunction.withThis((jsThis,jsNextProps, nextState, [reactInternal]) {
     Component component  = _getComponent(jsThis);
 
     var newProps = _getInternalProps(jsNextProps);
@@ -142,7 +139,7 @@ ReactComponentFactory _registerComponent(ComponentFactory componentFactory) {
   /**
    * wrap componentDidUpdate and use component.prevState which was trasnfered from state in componentWillUpdate.
    */
-  var componentDidUpdate = new JsFunction.withThis((jsThis, prevProps, prevState, HtmlElement rootNode){
+  var componentDidUpdate = new JsFunction.withThis((jsThis, prevProps, prevState, HtmlElement rootNode) {
     var prevInternalProps = _getInternalProps(prevProps);
     Component component = _getComponent(jsThis);
     component.componentDidUpdate(prevInternalProps, component.prevState, rootNode);
@@ -209,25 +206,90 @@ ReactComponentFactory _registerComponent(ComponentFactory componentFactory) {
 
 }
 
+/**
+ * create dart-react registered component for html tag.
+ */
 _reactDom(String name) {
   return (args, [children]) {
     _convertBoundValues(args);
     _convertEventHandlers(args);
-    if (children is List){
+    if (children is List) {
       children = new JsObject.jsify(children);
     }
     return context['React']['DOM'].callMethod(name, [new JsObject.jsify(args), children]);
   };
 }
 
-_convertBoundValues(Map args) {
-  var boundValue = args['value'];
-  if (args['value'] is List) {
-    args['value'] = boundValue[0];
-    args['onChange'] = (e) => boundValue[1](e.target.value);
+/**
+ * Recognize if type of input (or other element) is checkbox by it's props.
+ */
+_isCheckbox(props) {
+  return props['type'] == 'checkbox';
+}
+
+/**
+ * get value from DOM element.
+ *
+ * If element is checkbox, return bool, else return value of "value" attribute
+ */
+_getValueFromDom(domElem) {
+  var props = domElem.attributes;
+  if (_isCheckbox(props)) {
+    return domElem.checked;
+  } else {
+    return domElem.value;
   }
 }
 
+/**
+ * set value to props based on type of input.
+ *
+ * Specialy, it recognized chceckbox.
+ */
+_setValueToProps(Map props, val) {
+  if (_isCheckbox(props)) {
+    if(val) {
+      props['checked'] = true;
+    } else {
+      if(props.containsKey('checked')) {
+         props.remove('checked');
+      }
+    }
+  } else {
+    props['value'] = val;
+  }
+}
+
+/**
+ * convert bound values to pure value
+ * and packed onchanged function
+ */
+_convertBoundValues(Map args) {
+  var boundValue = args['value'];
+  if (args['value'] is List) {
+    _setValueToProps(args, boundValue[0]);
+    args['value'] = boundValue[0];
+    var onChange = args["onChange"];
+    /**
+     * put new function into onChange event hanlder.
+     *
+     * If there was something listening for taht event,
+     * trigger it and return it's return value.
+     */
+    args['onChange'] = (e) {
+      boundValue[1](_getValueFromDom(e.target));
+      if(onChange != null)
+        return onChange(e);
+    };
+  }
+}
+
+
+/**
+ * Convert event pack event handler into wrapper
+ * and pass it only dart object of event
+ * converted from JsObject of event.
+ */
 _convertEventHandlers(Map args) {
   args.forEach((key, value) {
     var eventFactory;
@@ -349,128 +411,5 @@ void _renderComponent(JsObject component, HtmlElement element) {
 }
 
 void setClientConfiguration() {
-  registerComponent = _registerComponent;
-  renderComponent = _renderComponent;
-
-  // HTML Elements
-  a = _reactDom('a');
-  abbr = _reactDom('abbr');
-  address = _reactDom('address');
-  area = _reactDom('area');
-  article = _reactDom('article');
-  aside = _reactDom('aside');
-  audio = _reactDom('audio');
-  b = _reactDom('b');
-  base = _reactDom('base');
-  bdi = _reactDom('bdi');
-  bdo = _reactDom('bdo');
-  big = _reactDom('big');
-  blockquote = _reactDom('blockquote');
-  body = _reactDom('body');
-  br = _reactDom('br');
-  button = _reactDom('button');
-  canvas = _reactDom('canvas');
-  caption = _reactDom('caption');
-  cite = _reactDom('cite');
-  code = _reactDom('code');
-  col = _reactDom('col');
-  colgroup = _reactDom('colgroup');
-  data = _reactDom('data');
-  datalist = _reactDom('datalist');
-  dd = _reactDom('dd');
-  del = _reactDom('del');
-  details = _reactDom('details');
-  dfn = _reactDom('dfn');
-  div = _reactDom('div');
-  dl = _reactDom('dl');
-  dt = _reactDom('dt');
-  em = _reactDom('em');
-  embed = _reactDom('embed');
-  fieldset = _reactDom('fieldset');
-  figcaption = _reactDom('figcaption');
-  figure = _reactDom('figure');
-  footer = _reactDom('footer');
-  form = _reactDom('form');
-  h1 = _reactDom('h1');
-  h2 = _reactDom('h2');
-  h3 = _reactDom('h3');
-  h4 = _reactDom('h4');
-  h5 = _reactDom('h5');
-  h6 = _reactDom('h6');
-  head = _reactDom('head');
-  header = _reactDom('header');
-  hr = _reactDom('hr');
-  html = _reactDom('html');
-  i = _reactDom('i');
-  iframe = _reactDom('iframe');
-  img = _reactDom('img');
-  input = _reactDom('input');
-  ins = _reactDom('ins');
-  kbd = _reactDom('kbd');
-  keygen = _reactDom('keygen');
-  label = _reactDom('label');
-  legend = _reactDom('legend');
-  li = _reactDom('li');
-  link = _reactDom('link');
-  main = _reactDom('main');
-  map = _reactDom('map');
-  mark = _reactDom('mark');
-  menu = _reactDom('menu');
-  menuitem = _reactDom('menuitem');
-  meta = _reactDom('meta');
-  meter = _reactDom('meter');
-  nav = _reactDom('nav');
-  noscript = _reactDom('noscript');
-  object = _reactDom('object');
-  ol = _reactDom('ol');
-  optgroup = _reactDom('optgroup');
-  option = _reactDom('option');
-  output = _reactDom('output');
-  p = _reactDom('p');
-  param = _reactDom('param');
-  pre = _reactDom('pre');
-  progress = _reactDom('progress');
-  q = _reactDom('q');
-  rp = _reactDom('rp');
-  rt = _reactDom('rt');
-  ruby = _reactDom('ruby');
-  s = _reactDom('s');
-  samp = _reactDom('samp');
-  script = _reactDom('script');
-  section = _reactDom('section');
-  select = _reactDom('select');
-  small = _reactDom('small');
-  source = _reactDom('source');
-  span = _reactDom('span');
-  strong = _reactDom('strong');
-  style = _reactDom('style');
-  sub = _reactDom('sub');
-  summary = _reactDom('summary');
-  sup = _reactDom('sup');
-  table = _reactDom('table');
-  tbody = _reactDom('tbody');
-  td = _reactDom('td');
-  textarea = _reactDom('textarea');
-  tfoot = _reactDom('tfoot');
-  th = _reactDom('th');
-  thead = _reactDom('thead');
-  time = _reactDom('time');
-  title = _reactDom('title');
-  tr = _reactDom('tr');
-  track = _reactDom('track');
-  u = _reactDom('u');
-  ul = _reactDom('ul');
-  variable = _reactDom('var');
-  video = _reactDom('video');
-  wbr = _reactDom('wbr');
-
-  // SVG Elements
-  circle = _reactDom('circle');
-  g = _reactDom('g');
-  line = _reactDom('line');
-  path = _reactDom('path');
-  polyline = _reactDom('polyline');
-  rect = _reactDom('rect');
-  svg = _reactDom('svg');
-  text = _reactDom('text');
+  setReactConfiguration(_reactDom, _registerComponent, _renderComponent, null);
 }
