@@ -33,16 +33,21 @@ ReactComponentFactory _registerComponent(ComponentFactory componentFactory) {
   var getDefaultProps = new JsFunction.withThis((jsThis) {
     var internal = _getInternal(jsThis);
 
-    var redraw = () => jsThis.callMethod('setState', []);
+    JsObject jsProps = new JsObject.jsify({});
+    var redraw = (){
+      if (internal["isMounted"]) {
+        jsThis.callMethod('setState', []);
+      }
+    };
     Component component = componentFactory()
         ..initComponentInternal(internal['props'], redraw);
 
     internal['component'] = component;
-
-    JsObject jsProps = new JsObject.jsify({});
     jsProps["__internal__"] = {};
     jsProps["__internal__"]["props"] = component.props;
     jsProps["__internal__"]["component"] = component;
+    internal["isMounted"] = false;
+
     return jsProps;
   });
 
@@ -60,6 +65,7 @@ ReactComponentFactory _registerComponent(ComponentFactory componentFactory) {
    * only wrap componentWillMount
    */
   var componentWillMount = new JsFunction.withThis((jsThis) {
+    _getInternal(jsThis)["isMounted"] = true;
     _getComponent(jsThis)
         ..componentWillMount()
         ..transferComponentState();
@@ -149,6 +155,7 @@ ReactComponentFactory _registerComponent(ComponentFactory componentFactory) {
    * only wrap componentWillUnmount
    */
   var componentWillUnmount = new JsFunction.withThis((jsThis, [reactInternal]) {
+    _getInternal(jsThis)["isMounted"] = false;
     _getComponent(jsThis).componentWillUnmount();
   });
 
