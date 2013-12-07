@@ -1,0 +1,140 @@
+div({'id': 'wrap'}, [
+  header({}, [
+    div({'className': 'logo'}, []), 
+    div({'className': 'registration-header'}, [
+      a({'href': '', 'className': 'login-btn'}, "prihlásenie"), 
+      a({'href': '', 'className': 'registration-btn'}, "registrácia"), 
+    ]),  // div(registration-header)
+    nav({}, [
+      ul({}, [
+        li({}, a({'href': ''}, "moja zostava")), 
+        li({}, a({'href': ''}, "umiestnenie")), 
+        li({}, a({'href': ''}, "liga")), 
+        li({}, a({'href': ''}, "odmeny a pravidla")), 
+      ]),  // ul
+    ]),  // nav
+  ]),  // header
+  div({'className': 'main'}, [
+    h1({}, "Moj profil"), 
+    div({'className': 'profile'}, [
+      div({'className': 'narrow-column'}, [
+        label({}, "Profilova fotografia"), 
+        img({'alt': 'profilova fotka', 'src': 'images/chuck.jpg'}, []), 
+      ]),  // div(narrow-column)
+      div({'className': 'wide-column'}, [
+        div({'className': 'profile-row'}, [
+          label({'htmlFor': 'email'}, "Emailova adresa"), 
+          span({'className': 'help-icon'}, span({'className': 'help-message'}, "Some message on hover for now. And another text for test.")), 
+          input({'type': 'text', 'value': 'email@email.com', 'id': 'email', 'name': 'email'}, []), 
+        ]),  // div(profile-row)
+        div({'className': 'profile-row'}, [
+          label({'htmlFor': 'birthdate'}, "Datum narodenia"), 
+          span({'className': 'help-icon'}, span({'className': 'help-message'}, "Some message on hover for now. And another text for test.")), 
+          div({}, [
+            div({'className': 'styled-select select-days'}, [
+              select({'name': 'day'}, [
+                option({'value': ''}, "1"), 
+                option({'value': ''}, "2"), 
+                option({'value': ''}, "3"), 
+                option({'value': ''}, "4"), 
+                option({'value': ''}, "5"), 
+                option({'value': ''}, "6"), 
+                option({'value': ''}, "7"), 
+                option({'value': ''}, "8"), 
+                option({'value': ''}, "9"), 
+                option({'value': ''}, "10"), 
+                option({'value': ''}, "11"), 
+                option({'value': ''}, "12"), 
+                option({'value': ''}, "13"), 
+                option({'value': ''}, "14"), 
+                option({'value': ''}, "15"), 
+                option({'value': ''}, "16"), 
+                option({'value': ''}, "17"), 
+                option({'value': ''}, "18"), 
+                option({'value': ''}, "19"), 
+                option({'value': ''}, "20"), 
+                option({'value': ''}, "21"), 
+                option({'value': ''}, "22"), 
+                option({'value': ''}, "23"), 
+                option({'value': ''}, "24"), 
+                option({'value': ''}, "25"), 
+                option({'value': ''}, "26"), 
+                option({'value': ''}, "27"), 
+                option({'value': ''}, "28"), 
+                option({'value': ''}, "29"), 
+                option({'value': ''}, "30"), 
+              ]),  // select
+            ]),  // div(styled-select select-days)
+            div({'className': 'styled-select select-months'}, [
+              select({'name': 'month'}, [
+                option({'value': ''}, "Januar"), 
+                option({'value': ''}, "Februar"), 
+                option({'value': ''}, "Marec"), 
+              ]),  // select
+            ]),  // div(styled-select select-months)
+            div({'className': 'styled-select select-years'}, [
+              select({'name': 'year'}, [
+                option({'value': ''}, "2013"), 
+                option({'value': ''}, "2000"), 
+                option({'value': ''}, "1998"), 
+                option({'value': ''}, "1992"), 
+                option({'value': ''}, "1963"), 
+              ]),  // select
+            ]),  // div(styled-select select-years)
+          ]),  // div
+        ]),  // div(profile-row)
+        div({'className': 'profile-row'}, [
+          label({}, "Pohlavie"), 
+          span({'className': 'help-icon'}, span({'className': 'help-message'}, "Some message on hover for now. And another text for test.")), 
+          div({'className': 'checkbox-group'}, [
+            input({'name': 'gender', 'type': 'radio', 'id': 'gender-male', 'value': 'muz'}, [
+              label({'htmlFor': 'gender-male', 'tabindex': '0'}, [
+                i({}, []), 
+                span({}, "Muz"), 
+              ]),  // label
+              input({'name': 'gender', 'type': 'radio', 'id': 'gender-female', 'value': 'zena'}, [
+                label({'htmlFor': 'gender-female', 'tabindex': '0'}, [
+                  i({}, []), 
+                  span({}, "Zena"), 
+                ]),  // label
+              ]),  // input
+            ]),  // input
+          ]),  // div(checkbox-group)
+          div({'className': 'wide-column'}, [
+            div({'className': 'profile-row'}, [
+              label({'htmlFor': 'team-name'}, "Nazov timu"), 
+              span({'className': 'help-icon'}, span({'className': 'help-message'}, "Some message on hover for now. And another text for test.")), 
+              input({'type': 'text', 'value': 'Nazov timu', 'id': 'team-name', 'name': 'team-name'}, []), 
+            ]),  // div(profile-row)
+            div({'className': 'profile-row'}, [
+              label({'htmlFor': 'psc'}, "PSC"), 
+              span({'className': 'help-icon'}, span({'className': 'help-message'}, "Some message on hover for now. And another text for test.")), 
+              input({'name': 'psc', 'type': 'text', 'id': 'psc', 'value': 'PSC', 'className': 'small-input'}, []), 
+            ]),  // div(profile-row)
+            div({'className': 'profile-row'}, [
+              div({}, [
+                label({}, "Zasielanie informacii emailom"), 
+                span({'className': 'help-icon'}, span({'className': 'help-message'}, "Some message on hover for now. And another text for test.")), 
+              ]),  // div
+              div({'className': 'input-style-line'}, [
+                input({'name': 'newsletter', 'type': 'checkbox', 'id': 'newsletter', 'value': 'agree'}, []), 
+                label({'htmlFor': 'newsletter'}, [
+                  i({}, []), 
+                  span({}, "Posielat informacie lorem ipsum"), 
+                ]),  // label
+              ]),  // div(input-style-line)
+            ]),  // div(profile-row)
+          ]),  // div(wide-column)
+          div({'className': 'full'}, [
+            div({'className': 'wide-column right'}, [
+              button({'className': 'save-changes-btn'}, "Ulozit zmeny"), 
+            ]),  // div(wide-column right)
+          ]),  // div(full)
+        ]),  // div(profile-row)
+      ]),  // div(wide-column)
+    ]),  // div(profile)
+    footer({}, [
+      div({'className': 'center-block'}, "2.13 nazov spolocnosti, all rights reserved"), 
+    ]),  // footer
+  ]),  // div(main)
+]) // div
