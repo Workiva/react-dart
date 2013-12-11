@@ -8,6 +8,9 @@ import "package:react/react.dart";
 import "dart:js";
 import "dart:html";
 
+var React;
+var DOM;
+
 /**
  * Type of [children] must be child or list of childs, when child is JsObject or String
  */
@@ -169,7 +172,7 @@ ReactComponentFactory _registerComponent(ComponentFactory componentFactory) {
   /**
    * create reactComponent with wrapped functions
    */
-  var reactComponent = context['React'].callMethod('createClass', [new JsObject.jsify({
+  var reactComponent = React.callMethod('createClass', [new JsObject.jsify({
     'componentWillMount': componentWillMount,
     'componentDidMount': componentDidMount,
     'componentWillReceiveProps': componentWillReceiveProps,
@@ -213,17 +216,20 @@ ReactComponentFactory _registerComponent(ComponentFactory componentFactory) {
 
 }
 
+
 /**
  * create dart-react registered component for html tag.
  */
 _reactDom(String name) {
+  JsFunction method = DOM[name];
   return (args, [children]) {
     _convertBoundValues(args);
     _convertEventHandlers(args);
     if (children is List) {
-      children = new JsObject.jsify(children);
+
+      children = new JsArray.from(children);
     }
-    return context['React']['DOM'].callMethod(name, [new JsObject.jsify(args), children]);
+    return method.apply([new JsObject.jsify(args), children]);
   };
 }
 
@@ -414,9 +420,11 @@ Set _syntheticWheelEvents = new Set.from(["onWheel",]);
 
 
 void _renderComponent(JsObject component, HtmlElement element) {
-  context['React'].callMethod('renderComponent', [component, element]);
+  React.callMethod('renderComponent', [component, element]);
 }
 
 void setClientConfiguration() {
+  React = context['React'];
+  DOM = context['React']['DOM'];
   setReactConfiguration(_reactDom, _registerComponent, _renderComponent, null);
 }

@@ -55,15 +55,26 @@ class _Hello extends react.Component {
     timeprint("rendering start");
     List<List<String>> data = props['data'];
     var children = [];
-    data.forEach((elem) => children.add(
-        react.div({'key': elem[0]},[
-          react.span({}, elem[0]),
-          " ",
-          react.span({}, elem[1])
-        ]))
-    );
+    for(var elem in data){
+      children.add(
+          react.div({'key': elem[0]},[
+            react.span({}, elem[0]),
+            " ",
+            react.span({}, elem[1])
+          ])
+      );
+    }
+//    data.forEach((elem) => children.add(
+//        react.div({'key': elem[0]},[
+//          react.span({}, elem[0]),
+//          " ",
+//          react.span({}, elem[1])
+//        ]))
+//    );
+    timeprint("rendering almost ends");
+    var res = react.div({}, children);
     timeprint("rendering ends");
-    return react.div({}, children);
+    return res;
   }
 }
 
