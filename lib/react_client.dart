@@ -241,9 +241,12 @@ ReactComponentFactory _registerComponent(ComponentFactory componentFactory) {
  */
 _reactDom(String name) {
   JsFunction method = _DOM[name];
-  return (args, [children]) {
+  return (Map args, [children]) {
     _convertBoundValues(args);
     _convertEventHandlers(args);
+    if (args.containsKey('style')) {
+      args['style'] = new JsObject.jsify(args['style']);
+    }
     if (children is List) {
 
       children = new JsArray.from(children);
