@@ -8,8 +8,26 @@ import "package:react/react.dart";
 import "dart:js";
 import "dart:html";
 
-var React;
-var DOM;
+var _React = context['React'];
+var _DOM = context['React']['DOM'];
+var _Object = context['Object'];
+
+const PROPS = 'props';
+const INTERNAL = '__internal__';
+const COMPONENT = 'component';
+const IS_MOUNTED = 'isMounted';
+
+newJsObjectEmpty() {
+  return new JsObject(_Object);
+}
+
+newJsMap(Map map) {
+  var JsMap = newJsObjectEmpty();
+  for (var key in map.keys) {
+    JsMap[key] = map[key];
+  }
+  return JsMap;
+}
 
 /**
  * Type of [children] must be child or list of childs, when child is JsObject or String
@@ -17,10 +35,12 @@ var DOM;
 typedef JsObject ReactComponentFactory(Map props, [dynamic children]);
 typedef Component ComponentFactory();
 
-_getInternal(JsObject jsThis) => jsThis['props']['__internal__'];
-_getProps(JsObject jsThis) => _getInternal(jsThis)['props'];
-_getComponent(JsObject jsThis) => _getInternal(jsThis)['component'];
-_getInternalProps(JsObject jsProps) => jsProps["__internal__"]["props"];
+
+/** TODO Think about using Expandos */
+_getInternal(JsObject jsThis) => jsThis[PROPS][INTERNAL];
+_getProps(JsObject jsThis) => _getInternal(jsThis)[PROPS];
+_getComponent(JsObject jsThis) => _getInternal(jsThis)[COMPONENT];
+_getInternalProps(JsObject jsProps) => jsProps[INTERNAL][PROPS];
 
 ReactComponentFactory _registerComponent(ComponentFactory componentFactory) {
 
@@ -35,21 +55,19 @@ ReactComponentFactory _registerComponent(ComponentFactory componentFactory) {
    */
   var getDefaultProps = new JsFunction.withThis((jsThis) {
     var internal = _getInternal(jsThis);
-
-    JsObject jsProps = new JsObject.jsify({});
-    var redraw = (){
-      if (internal["isMounted"]) {
+    var redraw = () {
+      if (internal[IS_MOUNTED]) {
         jsThis.callMethod('setState', []);
       }
     };
     Component component = componentFactory()
-        ..initComponentInternal(internal['props'], redraw);
+        ..initComponentInternal(internal[PROPS], redraw);
 
-    internal['component'] = component;
-    jsProps["__internal__"] = {};
-    jsProps["__internal__"]["props"] = component.props;
-    jsProps["__internal__"]["component"] = component;
-    internal["isMounted"] = false;
+    internal[COMPONENT] = component;
+    internal[IS_MOUNTED] = false;
+
+    JsObject jsProps = newJsObjectEmpty();
+    jsProps[INTERNAL] = {PROPS: component.props, COMPONENT: component};
 
     return jsProps;
   });
@@ -61,14 +79,14 @@ ReactComponentFactory _registerComponent(ComponentFactory componentFactory) {
    */
   var getInitialState = new JsFunction.withThis((jsThis) {
     _getComponent(jsThis).initStateInternal();
-    return new JsObject.jsify({});
+    return newJsObjectEmpty();
   });
 
   /**
    * only wrap componentWillMount
    */
   var componentWillMount = new JsFunction.withThis((jsThis) {
-    _getInternal(jsThis)["isMounted"] = true;
+    _getInternal(jsThis)[IS_MOUNTED] = true;
     _getComponent(jsThis)
         ..componentWillMount()
         ..transferComponentState();
@@ -94,7 +112,7 @@ ReactComponentFactory _registerComponent(ComponentFactory componentFactory) {
 
 
     /** add component to newArgs to keep component in internal */
-    newArgs['__internal__']['component'] = component;
+    newArgs[INTERNAL][COMPONENT] = component;
 
     /** call wrapped method */
     component.componentWillReceiveProps(nextProps);
@@ -158,7 +176,7 @@ ReactComponentFactory _registerComponent(ComponentFactory componentFactory) {
    * only wrap componentWillUnmount
    */
   var componentWillUnmount = new JsFunction.withThis((jsThis, [reactInternal]) {
-    _getInternal(jsThis)["isMounted"] = false;
+    _getInternal(jsThis)[IS_MOUNTED] = false;
     _getComponent(jsThis).componentWillUnmount();
   });
 
@@ -172,7 +190,7 @@ ReactComponentFactory _registerComponent(ComponentFactory componentFactory) {
   /**
    * create reactComponent with wrapped functions
    */
-  var reactComponent = React.callMethod('createClass', [new JsObject.jsify({
+  var reactComponent = _React.callMethod('createClass', [newJsMap({
     'componentWillMount': componentWillMount,
     'componentDidMount': componentDidMount,
     'componentWillReceiveProps': componentWillReceiveProps,
@@ -198,7 +216,8 @@ ReactComponentFactory _registerComponent(ComponentFactory componentFactory) {
     var extendedProps = new Map.from(props);
     extendedProps['children'] = children;
 
-    var convertedArgs = new JsObject.jsify({});
+    var convertedArgs = newJsObjectEmpty();
+
     /**
      * add key to args which will be passed to javascript react component
      */
@@ -209,9 +228,9 @@ ReactComponentFactory _registerComponent(ComponentFactory componentFactory) {
     /**
      * put props to internal part of args
      */
-    convertedArgs['__internal__'] = {'props': extendedProps};
+    convertedArgs[INTERNAL] = {PROPS: extendedProps};
 
-    return reactComponent.apply([convertedArgs, new JsObject.jsify(children)]);
+    return reactComponent.apply([convertedArgs, new JsArray.from(children)]);
   };
 
 }
@@ -221,7 +240,7 @@ ReactComponentFactory _registerComponent(ComponentFactory componentFactory) {
  * create dart-react registered component for html tag.
  */
 _reactDom(String name) {
-  JsFunction method = DOM[name];
+  JsFunction method = _DOM[name];
   return (args, [children]) {
     _convertBoundValues(args);
     _convertEventHandlers(args);
@@ -229,7 +248,7 @@ _reactDom(String name) {
 
       children = new JsArray.from(children);
     }
-    return method.apply([new JsObject.jsify(args), children]);
+    return method.apply([newJsMap(args), children]);
   };
 }
 
@@ -420,11 +439,9 @@ Set _syntheticWheelEvents = new Set.from(["onWheel",]);
 
 
 void _renderComponent(JsObject component, HtmlElement element) {
-  React.callMethod('renderComponent', [component, element]);
+  _React.callMethod('renderComponent', [component, element]);
 }
 
 void setClientConfiguration() {
-  React = context['React'];
-  DOM = context['React']['DOM'];
   setReactConfiguration(_reactDom, _registerComponent, _renderComponent, null);
 }
