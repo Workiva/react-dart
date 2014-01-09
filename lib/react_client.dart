@@ -106,7 +106,6 @@ ReactComponentFactory _registerComponent(ComponentFactory componentFactory) {
     var component = _getComponent(jsThis);
     var newProps = _getInternalProps(newArgs);
     var nextProps = {};
-    nextProps.addAll(component.props);
     nextProps.addAll(newProps != null ? newProps : {});
 
 
