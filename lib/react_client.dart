@@ -210,7 +210,7 @@ ReactComponentFactory _registerComponent(ComponentFactory componentFactory) {
   return (Map props, [dynamic children]) {
     if (children == null) {
       children = [];
-    } else if (children is! List) {
+    } else if (children is! Iterable) {
       children = [children];
     }
     var extendedProps = new Map.from(props);
@@ -247,8 +247,7 @@ _reactDom(String name) {
     if (args.containsKey('style')) {
       args['style'] = new JsObject.jsify(args['style']);
     }
-    if (children is List) {
-
+    if (children is Iterable) {
       children = new JsArray.from(children);
     }
     return method.apply([newJsMap(args), children]);
