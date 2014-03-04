@@ -16,6 +16,7 @@ const PROPS = 'props';
 const INTERNAL = '__internal__';
 const COMPONENT = 'component';
 const IS_MOUNTED = 'isMounted';
+const REFS = 'refs';
 
 newJsObjectEmpty() {
   return new JsObject(_Object);
@@ -60,8 +61,15 @@ ReactComponentFactory _registerComponent(ComponentFactory componentFactory) {
         jsThis.callMethod('setState', []);
       }
     };
+
+    var getRef = (name) {
+      var ref = jsThis['refs'][name] as JsObject;
+      if (ref[PROPS][INTERNAL] != null) return ref[PROPS][INTERNAL][COMPONENT];
+      else return ref.callMethod('getDOMNode', []);
+    };
+
     Component component = componentFactory()
-        ..initComponentInternal(internal[PROPS], redraw);
+        ..initComponentInternal(internal[PROPS], redraw, getRef);
 
     internal[COMPONENT] = component;
     internal[IS_MOUNTED] = false;
@@ -220,8 +228,12 @@ ReactComponentFactory _registerComponent(ComponentFactory componentFactory) {
     /**
      * add key to args which will be passed to javascript react component
      */
-    if (extendedProps.containsKey("key")) {
-      convertedArgs["key"] =  extendedProps["key"];
+    if (extendedProps.containsKey('key')) {
+      convertedArgs['key'] = extendedProps['key'];
+    }
+
+    if (extendedProps.containsKey('ref')) {
+      convertedArgs['ref'] = extendedProps['ref'];
     }
 
     /**

@@ -9,6 +9,8 @@ library react;
 
 abstract class Component {
   Map props;
+
+  dynamic ref;
   dynamic _jsRedraw;
 
   /**
@@ -16,8 +18,9 @@ abstract class Component {
    */
   bind(key) => [state[key], (value) => setState({key: value})];
 
-  initComponentInternal(props, _jsRedraw) {
+  initComponentInternal(props, _jsRedraw, [ref = null]) {
     this._jsRedraw = _jsRedraw;
+    this.ref = ref;
     _initProps(props);
   }
 

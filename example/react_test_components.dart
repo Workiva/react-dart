@@ -1,5 +1,6 @@
 import "package:react/react.dart" as react;
 import "dart:async";
+import 'dart:html';
 
 
 class _HelloComponent extends react.Component {
@@ -21,9 +22,14 @@ class _HelloGreeter extends react.Component {
 
   getInitialState() => {"name": "World"};
 
+  onInputChange(e) {
+    var input = ref('myInput') as InputElement;
+    print(input.borderEdge);
+  }
+
   render() {
     return react.div({}, [
-        react.input({'value': bind('name'), 'onChange': (e) {print(e.target.value);}}),
+        react.input({'ref': 'myInput', 'value': bind('name'), 'onChange': onInputChange}),
         helloComponent({'name': state['name']})
     ]);
   }
@@ -132,7 +138,7 @@ var listComponent = react.registerComponent(() => new _ListComponent());
 class _MainComponent extends react.Component {
 
   render() {
-    return react.div({}, props['children']);
+    return react.div({'ref': 'myDiv'}, props['children']);
   }
 }
 
