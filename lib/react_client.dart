@@ -378,9 +378,10 @@ SyntheticEvent syntheticClipboardEventFactory(JsObject e) {
 SyntheticEvent syntheticKeyboardEventFactory(JsObject e) {
   return new SyntheticKeyboardEvent(e["bubbles"], e["cancelable"], e["currentTarget"],
       e["defaultPrevented"], () => e.callMethod("preventDefault", []),
-      () => e.callMethod("stopPropagation", []), e["eventPhase"], e["isTrusted"], e["nativeEvent"],
-      e["target"], e["timeStamp"], e["type"], e["altKey"], e["char"], e["ctrlKey"], e["locale"],
-      e["location"], e["key"], e["metaKey"], e["repeat"], e["shiftKey"]);
+      () => e.callMethod("stopPropagation", []), e["eventPhase"], e["isTrusted"],
+      e["nativeEvent"], e["target"], e["timeStamp"], e["type"], e["altKey"],
+      e["char"], e["charCode"], e["ctrlKey"], e["locale"], e["location"],
+      e["key"], e["keyCode"], e["metaKey"], e["repeat"], e["shiftKey"]);
 }
 
 SyntheticEvent syntheticFocusEventFactory(JsObject e) {

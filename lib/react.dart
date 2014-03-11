@@ -176,11 +176,14 @@ class SyntheticKeyboardEvent extends SyntheticEvent {
   final bool metaKey;
   final bool repeat;
   final bool shiftKey;
+  final num keyCode;
+  final num charCode;
 
   SyntheticKeyboardEvent(bubbles, cancelable, currentTarget, _defaultPrevented,
       _preventDefault, stopPropagation, eventPhase, isTrusted, nativeEvent, target,
-      timeStamp, type, this.altKey, this.char, this.ctrlKey, this.locale, this.location,
-      this.key, this.metaKey, this.repeat, this.shiftKey) :
+      timeStamp, type, this.altKey, this.char, this.charCode, this.ctrlKey,
+      this.locale, this.location, this.key, this.keyCode, this.metaKey,
+      this.repeat, this.shiftKey) :
         super( bubbles, cancelable, currentTarget, _defaultPrevented,
           _preventDefault, stopPropagation, eventPhase, isTrusted, nativeEvent, target,
           timeStamp, type){}
