@@ -457,5 +457,6 @@ void _renderComponent(JsObject component, HtmlElement element) {
 }
 
 void setClientConfiguration() {
+  _React.callMethod('initializeTouchEvents', [true]);
   setReactConfiguration(_reactDom, _registerComponent, _renderComponent, null);
 }
