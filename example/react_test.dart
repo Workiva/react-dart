@@ -9,7 +9,7 @@ void main() {
   react.renderComponent(mainComponent({}, [
                                             helloGreeter({}, []),
                                             listComponent({}, []),
-                                            //clockComponent({}, []),
+                                            clockComponent({"name": 'my-clock'}, []),
                                             checkBoxComponent({}, [])
                                           ]
     ), querySelector('#content'));

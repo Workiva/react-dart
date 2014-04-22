@@ -78,8 +78,15 @@ class _ClockComponent extends react.Component {
       rootNode.style.backgroundColor = "#FFAAAA";
   }
 
-  bool shouldComponentUpdate(nextProps, nextState) => nextState['secondsElapsed'] % 2 == 1;
+  bool shouldComponentUpdate(nextProps, nextState) {
+    print("Next state: $nextState, props: $nextProps");
+    print("Old state: $state, props: $props");
+    return nextState['secondsElapsed'] % 2 == 1;
+  }
 
+  void componentWillReceiveProps(nextProps) {
+    print("Received props: $nextProps");
+  }
 
   tick(Timer timer) {
     setState({'secondsElapsed': state['secondsElapsed'] + 1});

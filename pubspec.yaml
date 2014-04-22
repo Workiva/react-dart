@@ -1,8 +1,8 @@
 name: react
+version: 0.3.5
 author: Clean Team <clean@vacuumlabs.com>
-version: 0.3.4
-homepage: http://cleandart.github.io/react-dart/
 description: Bindings of the ReactJS library for building interactive interfaces.
+homepage: http://cleandart.github.io/react-dart/
 environment:
   sdk: '>=0.8.10+6 <2.0.0'
 dependencies:
