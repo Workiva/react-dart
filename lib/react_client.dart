@@ -7,6 +7,7 @@ library react_client;
 import "package:react/react.dart";
 import "dart:js";
 import "dart:html";
+import "dart:async";
 
 var _React = context['React'];
 var _DOM = context['React']['DOM'];
@@ -45,6 +46,8 @@ _getInternalProps(JsObject jsProps) => jsProps[INTERNAL][PROPS];
 
 ReactComponentFactory _registerComponent(ComponentFactory componentFactory) {
 
+  var zone = Zone.current;
+
   /**
    * wrapper for getDefaultProps.
    * Get internal, create component and place it to internal.
@@ -54,7 +57,7 @@ ReactComponentFactory _registerComponent(ComponentFactory componentFactory) {
    *
    * @return jsProsp with internal with component.props and component
    */
-  var getDefaultProps = new JsFunction.withThis((jsThis) {
+  var getDefaultProps = new JsFunction.withThis((jsThis) => zone.run(() {
     var internal = _getInternal(jsThis);
     var redraw = () {
       if (internal[IS_MOUNTED]) {
@@ -78,34 +81,34 @@ ReactComponentFactory _registerComponent(ComponentFactory componentFactory) {
     jsProps[INTERNAL] = {PROPS: component.props, COMPONENT: component};
 
     return jsProps;
-  });
+  }));
 
   /**
    * get initial state from component.getInitialState, put them to state.
    *
    * @return empty JsObject as default state for javascript react component
    */
-  var getInitialState = new JsFunction.withThis((jsThis) {
+  var getInitialState = new JsFunction.withThis((jsThis) => zone.run(() {
     _getComponent(jsThis).initStateInternal();
     return newJsObjectEmpty();
-  });
+  }));
 
   /**
    * only wrap componentWillMount
    */
-  var componentWillMount = new JsFunction.withThis((jsThis) {
+  var componentWillMount = new JsFunction.withThis((jsThis) => zone.run(() {
     _getInternal(jsThis)[IS_MOUNTED] = true;
     _getComponent(jsThis)
         ..componentWillMount()
         ..transferComponentState();
-  });
+  }));
 
   /**
    * only wrap componentDidMount
    */
-  var componentDidMount = new JsFunction.withThis((jsThis, rootNode) {
+  var componentDidMount = new JsFunction.withThis((jsThis, rootNode) => zone.run(() {
     _getComponent(jsThis).componentDidMount(rootNode);
-  });
+  }));
 
   _getNextProps(Component component, newArgs) {
     var newProps = _getInternalProps(newArgs);
@@ -127,16 +130,18 @@ ReactComponentFactory _registerComponent(ComponentFactory componentFactory) {
   /**
    * Wrap componentWillReceiveProps
    */
-  var componentWillReceiveProps = new JsFunction.withThis((jsThis, newArgs, [reactInternal]) {
+  var componentWillReceiveProps =
+      new JsFunction.withThis((jsThis, newArgs, [reactInternal]) => zone.run(() {
     var component = _getComponent(jsThis);
     component.componentWillReceiveProps(_getNextProps(component, newArgs));
-  });
+  }));
 
   /**
    * count nextProps from jsNextProps, get result from component,
    * and if shoudln't update, update props and transfer state.
    */
-  var shouldComponentUpdate = new JsFunction.withThis((jsThis, newArgs, nextState) {
+  var shouldComponentUpdate =
+      new JsFunction.withThis((jsThis, newArgs, nextState) => zone.run(() {
     Component component  = _getComponent(jsThis);
 
     /** use component.nextState where are stored nextState */
@@ -151,41 +156,44 @@ ReactComponentFactory _registerComponent(ComponentFactory componentFactory) {
       _afterPropsChange(component, newArgs);
       return false;
     }
-  });
+  }));
 
   /**
    * wrap component.componentWillUpdate and after that update props and transfer state
    */
-  var componentWillUpdate = new JsFunction.withThis((jsThis, newArgs, nextState, [reactInternal]) {
+  var componentWillUpdate =
+      new JsFunction.withThis((jsThis, newArgs, nextState, [reactInternal]) => zone.run(() {
     Component component  = _getComponent(jsThis);
     component.componentWillUpdate(_getNextProps(component, newArgs),
                                   component.nextState);
     _afterPropsChange(component, newArgs);
-  });
+  }));
 
   /**
    * wrap componentDidUpdate and use component.prevState which was trasnfered from state in componentWillUpdate.
    */
-  var componentDidUpdate = new JsFunction.withThis((jsThis, prevProps, prevState, HtmlElement rootNode) {
+  var componentDidUpdate =
+      new JsFunction.withThis((jsThis, prevProps, prevState, HtmlElement rootNode) => zone.run(() {
     var prevInternalProps = _getInternalProps(prevProps);
     Component component = _getComponent(jsThis);
     component.componentDidUpdate(prevInternalProps, component.prevState, rootNode);
-  });
+  }));
 
   /**
    * only wrap componentWillUnmount
    */
-  var componentWillUnmount = new JsFunction.withThis((jsThis, [reactInternal]) {
+  var componentWillUnmount =
+      new JsFunction.withThis((jsThis, [reactInternal]) => zone.run(() {
     _getInternal(jsThis)[IS_MOUNTED] = false;
     _getComponent(jsThis).componentWillUnmount();
-  });
+  }));
 
   /**
    * only wrap render
    */
-  var render = new JsFunction.withThis((jsThis) {
+  var render = new JsFunction.withThis((jsThis) => zone.run(() {
     return _getComponent(jsThis).render();
-  });
+  }));
 
   /**
    * create reactComponent with wrapped functions
@@ -329,6 +337,7 @@ _convertBoundValues(Map args) {
  * converted from JsObject of event.
  */
 _convertEventHandlers(Map args) {
+  var zone = Zone.current;
   args.forEach((key, value) {
     var eventFactory;
     if (_syntheticClipboardEvents.contains(key)) {
@@ -348,9 +357,9 @@ _convertEventHandlers(Map args) {
     } else if (_syntheticWheelEvents.contains(key)) {
       eventFactory = syntheticWheelEventFactory;
     } else return;
-    args[key] = (JsObject e, [String domId]) {
+    args[key] = (JsObject e, [String domId]) => zone.run(() {
       value(eventFactory(e));
-    };
+    });
   });
 }
 
