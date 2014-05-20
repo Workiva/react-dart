@@ -23,6 +23,7 @@ newJsObjectEmpty() {
   return new JsObject(_Object);
 }
 
+final emptyJsMap = newJsObjectEmpty();
 newJsMap(Map map) {
   var JsMap = newJsObjectEmpty();
   for (var key in map.keys) {
@@ -61,7 +62,7 @@ ReactComponentFactory _registerComponent(ComponentFactory componentFactory) {
     var internal = _getInternal(jsThis);
     var redraw = () {
       if (internal[IS_MOUNTED]) {
-        jsThis.callMethod('setState', []);
+        jsThis.callMethod('setState', [emptyJsMap]);
       }
     };
 
@@ -106,7 +107,9 @@ ReactComponentFactory _registerComponent(ComponentFactory componentFactory) {
   /**
    * only wrap componentDidMount
    */
-  var componentDidMount = new JsFunction.withThis((jsThis, rootNode) => zone.run(() {
+  var componentDidMount = new JsFunction.withThis((JsObject jsThis) => zone.run(() {
+    //you need to get dom node by calling getDOMNode
+    var rootNode = jsThis.callMethod("getDOMNode");
     _getComponent(jsThis).componentDidMount(rootNode);
   }));
 
@@ -141,9 +144,8 @@ ReactComponentFactory _registerComponent(ComponentFactory componentFactory) {
    * and if shoudln't update, update props and transfer state.
    */
   var shouldComponentUpdate =
-      new JsFunction.withThis((jsThis, newArgs, nextState) => zone.run(() {
+      new JsFunction.withThis((jsThis, newArgs, nextState, nextContext) => zone.run(() {
     Component component  = _getComponent(jsThis);
-
     /** use component.nextState where are stored nextState */
     if (component.shouldComponentUpdate(_getNextProps(component, newArgs),
                                         component.nextState)) {
@@ -173,8 +175,10 @@ ReactComponentFactory _registerComponent(ComponentFactory componentFactory) {
    * wrap componentDidUpdate and use component.prevState which was trasnfered from state in componentWillUpdate.
    */
   var componentDidUpdate =
-      new JsFunction.withThis((jsThis, prevProps, prevState, HtmlElement rootNode) => zone.run(() {
+      new JsFunction.withThis((JsObject jsThis, prevProps, prevState, prevContext) => zone.run(() {
     var prevInternalProps = _getInternalProps(prevProps);
+    //you dont get root node as paramter but need to get it directly
+    var rootNode = jsThis.callMethod("getDOMNode");
     Component component = _getComponent(jsThis);
     component.componentDidUpdate(prevInternalProps, component.prevState, rootNode);
   }));

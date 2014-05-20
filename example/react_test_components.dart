@@ -79,8 +79,8 @@ class _ClockComponent extends react.Component {
   }
 
   bool shouldComponentUpdate(nextProps, nextState) {
-    print("Next state: $nextState, props: $nextProps");
-    print("Old state: $state, props: $props");
+    //print("Next state: $nextState, props: $nextProps");
+    //print("Old state: $state, props: $props");
     return nextState['secondsElapsed'] % 2 == 1;
   }
 
@@ -94,7 +94,7 @@ class _ClockComponent extends react.Component {
 
   render() {
     return react.span(
-        { 'onClick': (event, domid) => print("Hello World!") },
+        { 'onClick': (event) => print("Hello World!") },
 //        { 'onClick': (event, [domid = null]) => print("Hello World!") },
         [ "Seconds elapsed: ", "${state['secondsElapsed']}"]
     );
