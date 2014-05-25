@@ -45,7 +45,7 @@ _getProps(JsObject jsThis) => _getInternal(jsThis)[PROPS];
 _getComponent(JsObject jsThis) => _getInternal(jsThis)[COMPONENT];
 _getInternalProps(JsObject jsProps) => jsProps[INTERNAL][PROPS];
 
-ReactComponentFactory _registerComponent(ComponentFactory componentFactory) {
+ReactComponentFactory _registerComponent(ComponentFactory componentFactory, [Iterable<String> skipMethods = const []]) {
 
   var zone = Zone.current;
 
@@ -199,10 +199,20 @@ ReactComponentFactory _registerComponent(ComponentFactory componentFactory) {
     return _getComponent(jsThis).render();
   }));
 
+  var skipableMethods = ['componentDidMount', 'componentWillReceiveProps',
+                         'shouldComponentUpdate', 'componentDidUpdate',
+                         'componentWillUnmount'];
+
+  removeUnusedMethods(Map originalMap, Iterable removeMethods) {
+    removeMethods.where((m) => skipableMethods.contains(m)).forEach((m) => originalMap.remove(m));
+    return originalMap;
+  }
+
   /**
    * create reactComponent with wrapped functions
    */
-  var reactComponent = _React.callMethod('createClass', [newJsMap({
+  var reactComponent = _React.callMethod('createClass', [newJsMap(
+      removeUnusedMethods({
     'componentWillMount': componentWillMount,
     'componentDidMount': componentDidMount,
     'componentWillReceiveProps': componentWillReceiveProps,
@@ -213,7 +223,8 @@ ReactComponentFactory _registerComponent(ComponentFactory componentFactory) {
     'getDefaultProps': getDefaultProps,
     'getInitialState': getInitialState,
     'render': render
-  })]);
+  },skipMethods))]);
+
 
 
   /**
