@@ -6,6 +6,7 @@ library react_server;
 
 import "package:react/react.dart";
 import "dart:math";
+import "package:quiver/iterables.dart";
 
 /**
  * important constants geted from react.js needed to create correct checksum
@@ -147,15 +148,16 @@ ReactComponentFactory _reactDom(String name) {
         /**
          * add children (if children is list)
          */
-        if (children is List) {
-          for(num i = 0; i < children.length; ++i) {
-            var component = children[i];
+        if (children is Iterable) {
+          enumerate(children).forEach((value) {
+            num i = value.index;
+            var component = value.value;
             if (component is String) {
               result.write(span({}, component)(thisId, i));
             } else {
               result.write(component(thisId, i));
             }
-          }
+          });
         } else if (children != null) {
           /**
            * or child (if childre is not list and not null
@@ -164,8 +166,10 @@ ReactComponentFactory _reactDom(String name) {
            */
           if (children is String) {
             result.write(children);
+          } else if (children is Function) {
+            result.write(children(thisId, 0));
           } else {
-            result.write(children(thisId, i));
+            result.write(children);
           }
         }
         /**
@@ -206,6 +210,13 @@ _convertDomArguments(Map args) {
   if (args.containsKey("htmlFor")) {
     args["for"] = args["htmlFor"];
     args.remove("htmlFor");
+  }
+  
+  if (args.containsKey("style") && args["style"] is Map) {
+    Map style = args["style"];
+    String newStyle = style.keys.map((key) => "$key:${style[key]};").join("");
+    args["style"] = newStyle;
+    
   }
 
 
