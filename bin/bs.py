@@ -165,7 +165,7 @@ from bs4 import NavigableString, Comment
 
 def _val(val):
     if isinstance(val, list):
-        val = val[0]
+        val = ' '.join(val)
     if len(val)>2 and val[0]=='{' and val[-1]=='}':
         return val[1:-1]
     else:

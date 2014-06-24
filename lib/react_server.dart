@@ -27,7 +27,7 @@ typedef Component ComponentFactory();
  * register component will create method, which create new Component,
  * run lifecycle methods and return it's render method result
  */
-ReactComponentFactory _registerComponent(ComponentFactory componentFactory) {
+ReactComponentFactory _registerComponent(ComponentFactory componentFactory, [Iterable<String> skipMethods = const []]) {
   /**
    * return ReactComponentFactory which produce react component with seted props and
    * children[s] and return it's render method result
@@ -149,7 +149,7 @@ ReactComponentFactory _reactDom(String name) {
          * add children (if children is list)
          */
         if (children is Iterable) {
-          enumerate(children).forEach((value) {
+          enumerate(children.where((child) => child!=null)).forEach((value) {
             num i = value.index;
             var component = value.value;
             if (component is String) {
@@ -211,12 +211,12 @@ _convertDomArguments(Map args) {
     args["for"] = args["htmlFor"];
     args.remove("htmlFor");
   }
-  
+
   if (args.containsKey("style") && args["style"] is Map) {
     Map style = args["style"];
     String newStyle = style.keys.map((key) => "$key:${style[key]};").join("");
     args["style"] = newStyle;
-    
+
   }
 
 
