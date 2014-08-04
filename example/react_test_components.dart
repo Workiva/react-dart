@@ -1,6 +1,5 @@
 import "package:react/react.dart" as react;
 import "dart:async";
-import 'dart:html';
 
 
 class _HelloComponent extends react.Component {
@@ -23,7 +22,7 @@ class _HelloGreeter extends react.Component {
   getInitialState() => {"name": "World"};
 
   onInputChange(e) {
-    var input = ref('myInput') as InputElement;
+    var input = ref('myInput');
     print(input.borderEdge);
   }
 
@@ -74,7 +73,7 @@ class _ClockComponent extends react.Component {
     timer.cancel();
   }
 
-  void componentDidMount(HtmlElement rootNode) {
+  void componentDidMount(rootNode) {
       rootNode.style.backgroundColor = "#FFAAAA";
   }
 
@@ -128,7 +127,7 @@ class _ListComponent extends react.Component {
   }
 
   dynamic render() {
-    var items = [];
+    var items = ["\\", "&",">","<","\"", "'", "/"];
     for (var item in state['items']) {
       items.add(react.li({"key": item}, "$item"));
     }

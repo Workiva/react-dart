@@ -7,6 +7,7 @@ library react_server;
 import "package:react/react.dart";
 import "dart:math";
 import "package:quiver/iterables.dart";
+import 'dart:typed_data';
 
 /**
  * important constants geted from react.js needed to create correct checksum
@@ -72,7 +73,7 @@ ReactComponentFactory _reactDom(String name) {
      * pack component string creating into function to easy pass owner id,
      * position and key (from its' custom component owner)
      */
-    return ([String ownerId, num position, String key]) {
+    return ([String ownerId, int position, String key]) {
       /**
        * unpair elements can't have children
        */
@@ -99,21 +100,8 @@ ReactComponentFactory _reactDom(String name) {
         /**
          * else append adequate string to parent id based on position and key.
          */
-        thisId = ownerId + (key != null ? ".{$key}" : (position != null ? ".[$position]" : ".[0]"));
+        thisId = ownerId + (key != null ? ".\$$key" : (position != null ? ".${position.toRadixString(36)}" : ".0"));
       }
-
-      /**
-       * convert args to eliminate event handlers
-       *
-       * return false on that event
-       */
-      _convertDomArguments(args);
-
-      /**
-       * convert bound values to only that values
-       */
-      _convertBoundValues(args);
-
 
       /**
        * create stringbuffer to build result
@@ -123,10 +111,12 @@ ReactComponentFactory _reactDom(String name) {
       StringBuffer result = new StringBuffer("<$name");
 
       /**
-       * add attributes to it
+       * add attributes to it and prepare args to be
+       * same as in react.js
        */
-      args.forEach((String key, value) {
-        result.write(" ${key.toLowerCase()}=\"$value\"");
+      args.forEach((key,value) {
+        String toWrite = _parseDomArgument(key, value);
+        if(toWrite != null) result.write(toWrite);
       });
 
       /**
@@ -165,7 +155,7 @@ ReactComponentFactory _reactDom(String name) {
            * if it is string, add it as it is, if not, add it as component
            */
           if (children is String) {
-            result.write(children);
+            result.write(_escapeTextForBrowser(children));
           } else if (children is Function) {
             result.write(children(thisId, 0));
           } else {
@@ -189,46 +179,64 @@ ReactComponentFactory _reactDom(String name) {
 /**
  * convert DOM arguments (delete event handlers and key)
  */
-_convertDomArguments(Map args) {
+String _parseDomArgument(String key, dynamic value) {
   /**
    * synthetic events must not pass to string and key too
    */
-  _syntheticEvents.forEach((key) => args.remove(key));
-  args.remove("key");
+  if(_syntheticEvents.contains(key)) return null;
+  if(key == 'key') return null;
+  if(key == 'ref') return null;
 
   /**
    * change "className" for class
    */
-  if (args.containsKey("className")) {
-    args["class"] = args["className"];
-    args.remove("className");
+  if (key == "className") {
+    key = 'class';
   }
 
   /**
    * change "htmlFor" for "for"
    */
-  if (args.containsKey("htmlFor")) {
-    args["for"] = args["htmlFor"];
-    args.remove("htmlFor");
+  if (key == "htmlFor") {
+    key = 'for';
   }
 
-  if (args.containsKey("style") && args["style"] is Map) {
-    Map style = args["style"];
-    String newStyle = style.keys.map((key) => "$key:${style[key]};").join("");
-    args["style"] = newStyle;
-
+  if (key == "style" && value is Map) {
+    Map style = value;
+    value = style.keys.map((key) => "$key:${style[key]};").join("");
   }
 
+  if(key == 'value' && value is List)
+    value = value[0];
 
+  value = _escapeTextForBrowser(value);
+  return " ${key.toLowerCase()}=\"${value}\"";
+}
+
+var _ESCAPE_LOOKUP = {
+  "&": "&amp;",
+  ">": "&gt;",
+  "<": "&lt;",
+  "\"": "&quot;",
+  "'": "&#x27;",
+  "/": "&#x2f;"
+};
+
+var _ESCAPE_REGEX = new RegExp('[&><\\\'/]');
+
+String _escaper(Match match) {
+  return _ESCAPE_LOOKUP[match.group(0)];
 }
 
 /**
- * convert bound values to only values
+ * Escapes text to prevent scripting attacks.
+ * Same as in react.js
+ *
+ * @param {*} text Text value to escape.
+ * @return {string} An escaped string.
  */
-_convertBoundValues(Map args) {
-  if (args['value'] is List) {
-    args['value'] = args['value'][0];
-  }
+String _escapeTextForBrowser(text) {
+  return ('' + text).replaceAllMapped(_ESCAPE_REGEX, _escaper);
 }
 
 /**
@@ -298,15 +306,19 @@ String _addChecksumToMarkup(String markup) {
 /**
  * checksum algorithm copied from react.js
  * ( must be the same to enable react.js recognize it as ok)
+ * javacript uses 4-byte signed integers for binary operations
+ * while dart adjusts it, so Int32x4 is used for it
  */
 _adler32(String data) {
-  num a = 1;
-  num b = 0;
+  int a = 1;
+  int b = 0;
   for (var i = 0; i < data.length; i++) {
     a = (a + data.codeUnitAt(i)) % _MOD;
     b = (b + a) % _MOD;
   }
-  return a | b << 16;
+  var A = new Int32x4(a, 0, 0, 0);
+  var B = new Int32x4(b << 16, 0, 0, 0);
+  return (A | B).x;
 }
 
 void setServerConfiguration() {
