@@ -180,6 +180,7 @@ ReactComponentFactory _reactDom(String name) {
  * convert DOM arguments (delete event handlers and key)
  */
 String _parseDomArgument(String key, dynamic value) {
+  if(value == null) return '';
   /**
    * synthetic events must not pass to string and key too
    */
