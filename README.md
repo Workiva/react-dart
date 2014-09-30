@@ -2,11 +2,11 @@
 
 ##Getting started
 
-If you are not familiar with react library read their [react tutorial](http://facebook.github.io/react/docs/getting-started.html).
+If you are not familiar with React library read [react tutorial](http://facebook.github.io/react/docs/getting-started.html) first.
 
-To integrate it in dart project add dependency on [react](https://pub.dartlang.org/packages/react) to pubspec.yaml.
+To integrate in Dart project add dependency [react](https://pub.dartlang.org/packages/react) to pubspec.yaml.
 
-Include native react library(providet with this library for compatibility reasons) to index.html and create element where our react components will live.
+Include native react library (provided with this library for compatibility reasons) to index.html and create element where you'll mount the react component you'll create.
 
     <html>
       <head>
@@ -19,7 +19,7 @@ Include native react library(providet with this library for compatibility reason
       </body>
     </html>  
 
-Iniciliaze react in our dart application. And put simple component into our html.
+Initialize React in our Dart application. Mount simple component into '#content' div.
 
     import 'dart:html';
     import 'package:react/react_client.dart' as reactClient;
@@ -34,8 +34,8 @@ Iniciliaze react in our dart application. And put simple component into our html
 
 ##Using browser native elements
 
-If you are famliliar with react without JSX extension then its almost same with react-dart. All elements are defined as 
-functions that take props as first argument and children as optional second argument. Props are normal dart map and children is one react element or dart list with multiple elements.
+If you are familiar with React (without JSX extension) React-dart shouldn't surprise you much. All elements are defined as 
+functions that take `props` as first argument and `children` as optional second argument. `props` should implement `Map` and `children` is either one React element or `List` with multiple elements.
 
     div({"className": "somehing"}, [
       h1({"style": {"height": "20px"}}, "Headline"),
@@ -43,7 +43,7 @@ functions that take props as first argument and children as optional second argu
       "Some text"
     ])
 
-For event handlers you must provide function that take SynteticEvents defined in this library.
+For event handlers you must provide function that take `SyntheticEvent` (defined in this library).
 
     div({"onClick": (SyntheticMouseEvent e) => print(e)})
 
@@ -56,11 +56,11 @@ Define custom class that extends Component and implements at least render.
      render() => div({}, "MyComponent");
     }
     
-Register this class so react can reacoginze it.
+Register this class so React can recognize it.
 
     var myComponent = registerComponent(() => new MyComponent());
 
-Use this registered component as native elements.
+Use this registered component similarly as native elements.
 
     renderComponent(myComponent({}), querySelector('#content'));
     // or
@@ -68,7 +68,7 @@ Use this registered component as native elements.
       myComponent({})
     ])
 
-Warning: registerComponent should be called only once per component and lifetime of application.
+Warning: `registerComponent` should be called only once per component and lifetime of application.
 
 ### Custom element with props
 
@@ -101,9 +101,10 @@ Warning: registerComponent should be called only once per component and lifetime
       );
     }
 
-## Life time functions of component
+## Life-cycle methods of a component
 
-If you are familiar wiht react lifetime methods then here are their dart signatures.
+These are quite similar to React life-cycle methods, so refer to React tutorial for further
+explanation/spec. Their signatures in Dart are as:
 
     class MyComponent extends Component {
       void componentWillMount() {}
