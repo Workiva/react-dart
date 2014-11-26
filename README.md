@@ -8,6 +8,7 @@ To integrate in Dart project add dependency [react](https://pub.dartlang.org/pac
 
 Include native react library (provided with this library for compatibility reasons) to index.html and create element where you'll mount the react component you'll create.
 
+```html
     <html>
       <head>
         <script async src="packages/react/react.js"></script>
@@ -17,10 +18,12 @@ Include native react library (provided with this library for compatibility reaso
       <body>
         <div id="content">Here will be react content</div>
       </body>
-    </html>  
+    </html>
+```
 
 Initialize React in our Dart application. Mount simple component into '#content' div.
 
+```dart
     import 'dart:html';
     import 'package:react/react_client.dart' as reactClient;
     import 'package:react/react.dart';
@@ -31,55 +34,69 @@ Initialize React in our Dart application. Mount simple component into '#content'
       var component = div({}, "Hello world!");
       renderComponent(component, querySelector('#content'));
     }
+```
 
 ##Using browser native elements
 
 If you are familiar with React (without JSX extension) React-dart shouldn't surprise you much. All elements are defined as 
 functions that take `props` as first argument and `children` as optional second argument. `props` should implement `Map` and `children` is either one React element or `List` with multiple elements.
 
+```dart
     div({"className": "somehing"}, [
       h1({"style": {"height": "20px"}}, "Headline"),
       a({"href":"something.com"}, "Something"),
       "Some text"
     ])
+```
 
 For event handlers you must provide function that take `SyntheticEvent` (defined in this library).
 
+```dart
     div({"onClick": (SyntheticMouseEvent e) => print(e)})
+```
 
 ##Defining custom elements
 
 Define custom class that extends Component and implements at least render.
 
+```dart
     import 'package:react/react.dart';
     class MyComponent extends Component {
-     render() => div({}, "MyComponent");
+      render() => div({}, "MyComponent");
     }
+```
     
 Register this class so React can recognize it.
 
+```dart
     var myComponent = registerComponent(() => new MyComponent());
+```
 
 Use this registered component similarly as native elements.
 
+```dart
     renderComponent(myComponent({}), querySelector('#content'));
     // or
     div({}, [
       myComponent({})
     ])
+```
 
 Warning: `registerComponent` should be called only once per component and lifetime of application.
 
 ### Custom element with props
 
+```dart
     var myComponent = registerComponent(() => new MyComponent());
     class MyComponent extends Component {
       render() => div({}, props['text']);
     }
     myComponent({"text":"Somehting"})
+```
 
 ####Creating components with richer interface than just props and children and with type control
 
+```dart
     typedef MyComponentType({String headline, String text});
     MyComponentType myComponent = ({headline, text}) =>
         registerComponent(() => new MyComponent())({'headline':headline, 'text':text});
@@ -100,12 +117,14 @@ Warning: `registerComponent` should be called only once per component and lifeti
         querySelector('#content')
       );
     }
+```
 
 ## Life-cycle methods of a component
 
 These are quite similar to React life-cycle methods, so refer to React tutorial for further
 explanation/spec. Their signatures in Dart are as:
 
+```dart
     class MyComponent extends Component {
       void componentWillMount() {}
       void componentDidMount(/*DOMElement*/rootNode) {}
@@ -118,4 +137,5 @@ explanation/spec. Their signatures in Dart are as:
       Map getDefaultProps() => {};
       render() => div({}, props['text']);
     }
+```
 
