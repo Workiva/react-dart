@@ -86,5 +86,5 @@ void main() {
   for(num i=0; i<1000; i++){
     data.add(["name_$i", "value_$i"]);
   }
-  react.renderComponent(Hello({"data": data}, []), querySelector('#content'));
+  react.render(Hello({"data": data}, []), querySelector('#content'));
 }

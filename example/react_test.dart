@@ -6,7 +6,7 @@ import "react_test_components.dart";
 
 void main() {
   setClientConfiguration();
-  react.renderComponent(mainComponent({}, [
+  react.render(mainComponent({}, [
                                             helloGreeter({}, []),
                                             listComponent({}, []),
                                             //clockComponent({"name": 'my-clock'}, []),

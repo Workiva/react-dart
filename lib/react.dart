@@ -292,12 +292,12 @@ class SyntheticWheelEvent extends SyntheticEvent {
 /**
  * client side rendering
  */
-var renderComponent;
+var render;
 
 /**
  * server side rendering
  */
-var renderComponentToString;
+var renderToString;
 
 /**
  * register component method to register component on both, client-side and server-side.
@@ -308,16 +308,17 @@ var registerComponent;
  * <var> is renamed to <variable> because var is reserved word in Dart.
  */
 var a, abbr, address, area, article, aside, audio, b, base, bdi, bdo, big, blockquote, body, br,
-button, canvas, caption, cite, code, col, colgroup, data, datalist, dd, del, details, dfn,
+button, canvas, caption, cite, code, col, colgroup, data, datalist, dd, del, details, dfn, dialog,
 div, dl, dt, em, embed, fieldset, figcaption, figure, footer, form, h1, h2, h3, h4, h5, h6,
 head, header, hr, html, i, iframe, img, input, ins, kbd, keygen, label, legend, li, link, main,
 map, mark, menu, menuitem, meta, meter, nav, noscript, object, ol, optgroup, option, output,
-p, param, pre, progress, q, rp, rt, ruby, s, samp, script, section, select, small, source,
+p, param, picture, pre, progress, q, rp, rt, ruby, s, samp, script, section, select, small, source,
 span, strong, style, sub, summary, sup, table, tbody, td, textarea, tfoot, th, thead, time,
 title, tr, track, u, ul, variable, video, wbr;
 
 /** SVG elements */
-var circle, g, line, path, polyline, rect, svg, text;
+var circle, defs, ellipse, g, line, linearGradient, mask, path, pattern, polygon, polyline,
+radialGradient, rect, stop, svg, text, tspan;
 
 
 /**
@@ -352,6 +353,7 @@ _createDOMComponents(creator){
   del = creator('del');
   details = creator('details');
   dfn = creator('dfn');
+  dialog = creator('dialog');
   div = creator('div');
   dl = creator('dl');
   dt = creator('dt');
@@ -399,6 +401,7 @@ _createDOMComponents(creator){
   output = creator('output');
   p = creator('p');
   param = creator('param');
+  picture = creator('picture');
   pre = creator('pre');
   progress = creator('progress');
   q = creator('q');
@@ -438,12 +441,21 @@ _createDOMComponents(creator){
   // SVG Elements
   circle = creator('circle');
   g = creator('g');
+  defs = creator('defs');
+  ellipse = creator('ellipse');
   line = creator('line');
+  linearGradient = creator('linearGradient');
+  mask = creator('mask');
   path = creator('path');
+  pattern = creator('pattern');
+  polygon = creator('polygon');
   polyline = creator('polyline');
+  radialGradient = creator('radialGradient');
   rect = creator('rect');
   svg = creator('svg');
+  stop = creator('stop');
   text = creator('text');
+  tspan = creator('tspan');
 }
 
 /**
@@ -451,10 +463,10 @@ _createDOMComponents(creator){
  *
  * It pass arguments to global variables and run DOM components creation by dom Creator.
  */
-setReactConfiguration(domCreator, customRegisterComponent, customRenderComponent, customRenderComponentToString){
+setReactConfiguration(domCreator, customRegisterComponent, customRender, customRenderToString){
   registerComponent = customRegisterComponent;
-  renderComponent = customRenderComponent;
-  renderComponentToString = customRenderComponentToString;
+  render = customRender;
+  renderToString = customRenderToString;
 
   // HTML Elements
   _createDOMComponents(domCreator);

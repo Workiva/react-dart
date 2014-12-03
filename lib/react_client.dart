@@ -10,7 +10,6 @@ import "dart:html";
 import "dart:async";
 
 var _React = context['React'];
-var _DOM = context['React']['DOM'];
 var _Object = context['Object'];
 
 const PROPS = 'props';
@@ -59,6 +58,16 @@ ReactComponentFactory _registerComponent(ComponentFactory componentFactory, [Ite
    * @return jsProsp with internal with component.props and component
    */
   var getDefaultProps = new JsFunction.withThis((jsThis) => zone.run(() {
+    return newJsObjectEmpty();
+  }));
+
+  /**
+   * get initial state from component.getInitialState, put them to state.
+   *
+   * @return empty JsObject as default state for javascript react component
+   */
+  var getInitialState = new JsFunction.withThis((jsThis) => zone.run(() {
+
     var internal = _getInternal(jsThis);
     var redraw = () {
       if (internal[IS_MOUNTED]) {
@@ -77,19 +86,8 @@ ReactComponentFactory _registerComponent(ComponentFactory componentFactory, [Ite
 
     internal[COMPONENT] = component;
     internal[IS_MOUNTED] = false;
+    internal[PROPS] = component.props;
 
-    JsObject jsProps = newJsObjectEmpty();
-    jsProps[INTERNAL] = {PROPS: component.props, COMPONENT: component};
-
-    return jsProps;
-  }));
-
-  /**
-   * get initial state from component.getInitialState, put them to state.
-   *
-   * @return empty JsObject as default state for javascript react component
-   */
-  var getInitialState = new JsFunction.withThis((jsThis) => zone.run(() {
     _getComponent(jsThis).initStateInternal();
     return newJsObjectEmpty();
   }));
@@ -130,6 +128,7 @@ ReactComponentFactory _registerComponent(ComponentFactory componentFactory, [Ite
     /** update component.state */
     component.transferComponentState();
   }
+
   /**
    * Wrap componentWillReceiveProps
    */
@@ -177,7 +176,7 @@ ReactComponentFactory _registerComponent(ComponentFactory componentFactory, [Ite
   var componentDidUpdate =
       new JsFunction.withThis((JsObject jsThis, prevProps, prevState, prevContext) => zone.run(() {
     var prevInternalProps = _getInternalProps(prevProps);
-    //you dont get root node as paramter but need to get it directly
+    //you don't get root node as parameter but need to get it directly
     var rootNode = jsThis.callMethod("getDOMNode");
     Component component = _getComponent(jsThis);
     component.componentDidUpdate(prevInternalProps, component.prevState, rootNode);
@@ -211,24 +210,25 @@ ReactComponentFactory _registerComponent(ComponentFactory componentFactory, [Ite
   /**
    * create reactComponent with wrapped functions
    */
-  var reactComponent = _React.callMethod('createClass', [newJsMap(
+  var reactComponentFactory = _React.callMethod('createFactory', [
+    _React.callMethod('createClass', [newJsMap(
       removeUnusedMethods({
-    'componentWillMount': componentWillMount,
-    'componentDidMount': componentDidMount,
-    'componentWillReceiveProps': componentWillReceiveProps,
-    'shouldComponentUpdate': shouldComponentUpdate,
-    'componentWillUpdate': componentWillUpdate,
-    'componentDidUpdate': componentDidUpdate,
-    'componentWillUnmount': componentWillUnmount,
-    'getDefaultProps': getDefaultProps,
-    'getInitialState': getInitialState,
-    'render': render
-  },skipMethods))]);
-
-
+        'componentWillMount': componentWillMount,
+        'componentDidMount': componentDidMount,
+        'componentWillReceiveProps': componentWillReceiveProps,
+        'shouldComponentUpdate': shouldComponentUpdate,
+        'componentWillUpdate': componentWillUpdate,
+        'componentDidUpdate': componentDidUpdate,
+        'componentWillUnmount': componentWillUnmount,
+        'getDefaultProps': getDefaultProps,
+        'getInitialState': getInitialState,
+        'render': render
+      }, skipMethods)
+    )])
+  ]);
 
   /**
-   * return ReactComponentFactory which produce react component with seted props and children[s]
+   * return ReactComponentFactory which produce react component with set props and children[s]
    */
   return (Map props, [dynamic children]) {
     if (children == null) {
@@ -257,7 +257,7 @@ ReactComponentFactory _registerComponent(ComponentFactory componentFactory, [Ite
      */
     convertedArgs[INTERNAL] = {PROPS: extendedProps};
 
-    return reactComponent.apply([convertedArgs, new JsArray.from(children)]);
+    return reactComponentFactory.apply([convertedArgs, new JsArray.from(children)]);
   };
 
 }
@@ -267,7 +267,6 @@ ReactComponentFactory _registerComponent(ComponentFactory componentFactory, [Ite
  * create dart-react registered component for html tag.
  */
 _reactDom(String name) {
-  JsFunction method = _DOM[name];
   return (Map args, [children]) {
     _convertBoundValues(args);
     _convertEventHandlers(args);
@@ -277,7 +276,7 @@ _reactDom(String name) {
     if (children is Iterable) {
       children = new JsArray.from(children);
     }
-    return method.apply([newJsMap(args), children]);
+    return _React['createElement'].apply([name, newJsMap(args), children]);
   };
 }
 
@@ -459,7 +458,7 @@ Set _syntheticFormEvents = new Set.from(["onChange", "onInput", "onSubmit",
 Set _syntheticMouseEvents = new Set.from(["onClick", "onDoubleClick",
     "onDrag", "onDragEnd", "onDragEnter", "onDragExit", "onDragLeave",
     "onDragOver", "onDragStart", "onDrop", "onMouseDown", "onMouseEnter",
-    "onMouseLeave", "onMouseMove", "onMouseUp",]);
+    "onMouseLeave", "onMouseMove", "onMouseOut", "onMouseOver", "onMouseUp",]);
 
 Set _syntheticTouchEvents = new Set.from(["onTouchCancel", "onTouchEnd",
     "onTouchMove", "onTouchStart",]);
@@ -469,11 +468,11 @@ Set _syntheticUIEvents = new Set.from(["onScroll",]);
 Set _syntheticWheelEvents = new Set.from(["onWheel",]);
 
 
-void _renderComponent(JsObject component, HtmlElement element) {
-  _React.callMethod('renderComponent', [component, element]);
+void _render(JsObject component, HtmlElement element) {
+  _React.callMethod('render', [component, element]);
 }
 
 void setClientConfiguration() {
   _React.callMethod('initializeTouchEvents', [true]);
-  setReactConfiguration(_reactDom, _registerComponent, _renderComponent, null);
+  setReactConfiguration(_reactDom, _registerComponent, _render, null);
 }
