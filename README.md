@@ -29,7 +29,7 @@ Initialize React in our Dart application. Mount simple component into '#content'
       //this should be called once at the begging of application
       reactClient.setClientConfiguration();
       var component = div({}, "Hello world!");
-      renderComponent(component, querySelector('#content'));
+      render(component, querySelector('#content'));
     }
 
 ##Using browser native elements
@@ -62,7 +62,7 @@ Register this class so React can recognize it.
 
 Use this registered component similarly as native elements.
 
-    renderComponent(myComponent({}), querySelector('#content'));
+    render(myComponent({}), querySelector('#content'));
     // or
     div({}, [
       myComponent({})
@@ -94,7 +94,7 @@ Warning: `registerComponent` should be called only once per component and lifeti
     }
     void main() {
       reactClient.setClientConfiguration();
-      renderComponent(
+      render(
         myComponent(headline: "My custom headline",
                     text: "My custom text"),
         querySelector('#content')
