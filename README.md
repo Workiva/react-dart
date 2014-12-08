@@ -32,7 +32,7 @@ main() {
   //this should be called once at the begging of application
   reactClient.setClientConfiguration();
   var component = div({}, "Hello world!");
-  renderComponent(component, querySelector('#content'));
+  render(component, querySelector('#content'));
 }
 ```
 
@@ -75,7 +75,7 @@ var myComponent = registerComponent(() => new MyComponent());
 Use this registered component similarly as native elements.
 
 ```dart
-renderComponent(myComponent({}), querySelector('#content'));
+render(myComponent({}), querySelector('#content'));
 // or
 div({}, [
   myComponent({})
@@ -111,7 +111,7 @@ class MyComponent extends Component {
 }
 void main() {
   reactClient.setClientConfiguration();
-  renderComponent(
+  render(
     myComponent(headline: "My custom headline",
                 text: "My custom text"),
     querySelector('#content')

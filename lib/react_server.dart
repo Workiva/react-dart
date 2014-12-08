@@ -248,8 +248,9 @@ Set _syntheticEvents = new Set.from(["onCopy", "onCut", "onPaste",
     "onChange", "onInput", "onSubmit", "onClick", "onDoubleClick",
     "onDrag", "onDragEnd", "onDragEnter", "onDragExit", "onDragLeave",
     "onDragOver", "onDragStart", "onDrop", "onMouseDown", "onMouseEnter",
-    "onMouseLeave", "onMouseMove", "onMouseUp", "onTouchCancel", "onTouchEnd",
-    "onTouchMove", "onTouchStart", "onScroll", "onWheel",]);
+    "onMouseLeave", "onMouseMove", "onMouseOut", "onMouseOver", "onMouseUp",
+    "onTouchCancel", "onTouchEnd", "onTouchMove", "onTouchStart", "onScroll",
+    "onWheel",]);
 
 /**
  * set of al pair elements tags ( which are not void elements )
@@ -257,16 +258,17 @@ Set _syntheticEvents = new Set.from(["onCopy", "onCut", "onPaste",
 Set _pairElements = new Set.from(["a", "abbr", "address", "article", "aside", "audio",
     "b", "bdi", "bdo", "big", "blockquote", "body", "button", "canvas", "caption",
     "cite", "code", "colgroup", "data", "datalist", "dd", "del", "details", "dfn",
-    "div", "dl", "dt", "em", "fieldset", "figcaption", "figure", "footer", "form",
-    "h1", "h2", "h3", "h4", "h5", "h6", "head", "header", "html", "i", "iframe",
+    "dialog", "div", "dl", "dt", "em", "fieldset", "figcaption", "figure", "footer",
+    "form", "h1", "h2", "h3", "h4", "h5", "h6", "head", "header", "html", "i", "iframe",
     "ins", "kbd", "label", "legend", "li", "main", "map", "mark", "menu", "menuitem",
     "meter", "nav", "noscript", "object", "ol", "optgroup", "option", "output", "p",
-    "pre", "progress", "q", "rp", "rt", "ruby", "s", "samp", "script", "section",
+    "picture", "pre", "progress", "q", "rp", "rt", "ruby", "s", "samp", "script", "section",
     "select", "small", "span", "strong", "style", "sub", "summary", "sup", "table",
     "tbody", "td", "textarea", "tfoot", "th", "thead", "time", "title", "tr", "u",
     "ul", "variable", "video",
     /** SVG elements */
-    "g", "svg", "text"]);
+    "defs", "g", "linearGradient", "mask", "pattern", "radialGradient", "svg", "text",
+    "tspan",]);
 
 /**
  * set of empty elements tags based on http://www.w3.org/TR/html-markup/syntax.html#void-element
@@ -274,7 +276,7 @@ Set _pairElements = new Set.from(["a", "abbr", "address", "article", "aside", "a
 Set _unPairElements = new Set.from(["area", "base", "br", "col", "hr", "img", "input", "link",
     "meta", "param", "command", "embed", "keygen", "source","track", "wbr",
     /** SVG elements */
-    "circle",  "line", "path", "polyline", "rect",]);
+    "circle", "ellipse", "line", "path", "polygon", "polyline", "rect", "stop",]);
 
 
 /**

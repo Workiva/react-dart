@@ -5,7 +5,7 @@ import "react_test_components.dart";
 
 void main() {
   setServerConfiguration();
-  print(react.renderComponentToString(mainComponent({}, [
+  print(react.renderToString(mainComponent({}, [
                                            helloGreeter({}, []),
                                            listComponent({}, []),
                                            //clockComponent({}, []),

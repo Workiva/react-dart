@@ -39,5 +39,5 @@ var list = react.registerComponent(() => new _List());
 
 void main() {
   setClientConfiguration();
-  react.renderComponent(list({}), querySelector('#content'));
+  react.render(list({}), querySelector('#content'));
 }
