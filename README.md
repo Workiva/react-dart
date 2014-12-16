@@ -98,8 +98,12 @@ myComponent({"text":"Somehting"})
 
 ```dart
 typedef MyComponentType({String headline, String text});
+
+var _myComponent = registerComponent(() => new MyComponent())
+
 MyComponentType myComponent = ({headline, text}) =>
-    registerComponent(() => new MyComponent())({'headline':headline, 'text':text});
+    _myComponent({'headline':headline, 'text':text});
+
 class MyComponent extends Component {
   get headline => props['headline'];
   get text => props['text'];
@@ -118,6 +122,10 @@ void main() {
   );
 }
 ```
+
+## Geocodes Example
+
+For more robust example take a look at [example/geocodes/geocodes.dart]().
 
 ## Life-cycle methods of a component
 
