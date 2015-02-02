@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+
+<!--
+ * Hello,
+ *
+ * this is a part of the tutorial to the react-dart package. We'll go through
+ * a simple app that is quering Google Maps API and showing the result to the
+ * user. It also stores the search history and allows to reload past queries.
+ *
+ * In this file you'll find the mountpoint of the app. There is also
+ * a `geocodes.dart` file, that contains the structure and the logic.
+ *
+ * Be sure that you understand the basic concepts of
+ * [React](http://facebook.github.io/react/) before reading this tutorial.
+ *
+ * Enjoy!
+-->
+
+<html>
+  <head>
+    <title>Geocode resolver</title>
+    <link
+     rel="stylesheet"
+     href="http://getbootstrap.com/dist/css/bootstrap.min.css"
+    >
+  </head>
+
+  <body>
+    <!--
+      This is the mountpoint. Every app is inside this div.
+      The div is referenced in the Dart code by id.
+    -->
+    <div class="container" id="content"></div>
+
+    <!-- Load React, Your code and Dart -->
+    <script src="packages/react/react.js"></script>
+    <script type="application/dart" src="geocodes.dart"></script>
+    <script src="packages/browser/dart.js"></script>
+  </body>
+</html>
