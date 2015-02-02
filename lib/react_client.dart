@@ -80,9 +80,13 @@ ReactComponentFactory _registerComponent(ComponentFactory componentFactory, [Ite
       if (ref[PROPS][INTERNAL] != null) return ref[PROPS][INTERNAL][COMPONENT];
       else return ref.callMethod('getDOMNode', []);
     };
+    
+    var getDOMNode = () {
+      return jsThis.callMethod("getDOMNode");
+    };
 
     Component component = componentFactory()
-        ..initComponentInternal(internal[PROPS], redraw, getRef);
+        ..initComponentInternal(internal[PROPS], redraw, getRef, getDOMNode);
 
     internal[COMPONENT] = component;
     internal[IS_MOUNTED] = false;
@@ -472,7 +476,11 @@ void _render(JsObject component, HtmlElement element) {
   _React.callMethod('render', [component, element]);
 }
 
+bool _unmountComponentAtNode(HtmlElement element) {
+  return _React.callMethod('unmountComponentAtNode', [element]);
+}
+
 void setClientConfiguration() {
   _React.callMethod('initializeTouchEvents', [true]);
-  setReactConfiguration(_reactDom, _registerComponent, _render, null);
+  setReactConfiguration(_reactDom, _registerComponent, _render, null, _unmountComponentAtNode);
 }

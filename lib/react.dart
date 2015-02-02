@@ -11,6 +11,7 @@ abstract class Component {
   Map props;
 
   dynamic ref;
+  dynamic getDOMNode;
   dynamic _jsRedraw;
 
   /**
@@ -18,9 +19,10 @@ abstract class Component {
    */
   bind(key) => [state[key], (value) => setState({key: value})];
 
-  initComponentInternal(props, _jsRedraw, [ref = null]) {
+  initComponentInternal(props, _jsRedraw, [ref = null, getDOMNode = null]) {
     this._jsRedraw = _jsRedraw;
     this.ref = ref;
+    this.getDOMNode = getDOMNode;
     _initProps(props);
   }
 
@@ -105,7 +107,7 @@ abstract class Component {
   void componentWillUpdate(nextProps, nextState) {}
 
   void componentDidUpdate(prevProps, prevState, /*DOMElement */ rootNode) {}
-
+  
   void componentWillUnmount() {}
 
   Map getInitialState() => {};
@@ -299,6 +301,15 @@ var render;
  */
 var renderToString;
 
+
+/**
+ * bool unmountComponentAtNode(HTMLElement);
+ * 
+ * client side derendering - reverse operation to render
+ * 
+ */
+var unmountComponentAtNode;
+
 /**
  * register component method to register component on both, client-side and server-side.
  */
@@ -463,11 +474,11 @@ _createDOMComponents(creator){
  *
  * It pass arguments to global variables and run DOM components creation by dom Creator.
  */
-setReactConfiguration(domCreator, customRegisterComponent, customRender, customRenderToString){
+setReactConfiguration(domCreator, customRegisterComponent, customRender, customRenderToString, customUnmountComponentAtNode){
   registerComponent = customRegisterComponent;
   render = customRender;
   renderToString = customRenderToString;
-
+  unmountComponentAtNode = customUnmountComponentAtNode;
   // HTML Elements
   _createDOMComponents(domCreator);
 }
