@@ -299,6 +299,15 @@ var render;
  */
 var renderToString;
 
+
+/**
+ * bool unmountComponentAtNode(HTMLElement);
+ * 
+ * client side derendering - reverse operation to render
+ * 
+ */
+var unmountComponentAtNode;
+
 /**
  * register component method to register component on both, client-side and server-side.
  */
@@ -463,11 +472,11 @@ _createDOMComponents(creator){
  *
  * It pass arguments to global variables and run DOM components creation by dom Creator.
  */
-setReactConfiguration(domCreator, customRegisterComponent, customRender, customRenderToString){
+setReactConfiguration(domCreator, customRegisterComponent, customRender, customRenderToString, customUnmountComponentAtNode){
   registerComponent = customRegisterComponent;
   render = customRender;
   renderToString = customRenderToString;
-
+  unmountComponentAtNode = customUnmountComponentAtNode;
   // HTML Elements
   _createDOMComponents(domCreator);
 }

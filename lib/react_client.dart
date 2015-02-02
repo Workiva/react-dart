@@ -472,7 +472,11 @@ void _render(JsObject component, HtmlElement element) {
   _React.callMethod('render', [component, element]);
 }
 
+bool _unmountComponentAtNode(HtmlElement element) {
+  return _React.callMethod('unmountComponentAtNode', [element]);
+}
+
 void setClientConfiguration() {
   _React.callMethod('initializeTouchEvents', [true]);
-  setReactConfiguration(_reactDom, _registerComponent, _render, null);
+  setReactConfiguration(_reactDom, _registerComponent, _render, null, _unmountComponentAtNode);
 }

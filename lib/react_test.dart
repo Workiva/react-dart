@@ -37,5 +37,5 @@ initializeComponent(Component component, [Map props = const {}, List children, r
 }
 
 void setTestConfiguration() {
-  setReactConfiguration(_reactDom, null, null, null);
+  setReactConfiguration(_reactDom, null, null, null, null);
 }
