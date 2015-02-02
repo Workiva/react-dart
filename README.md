@@ -131,7 +131,7 @@ void main() {
 
 ## Geocodes Example
 
-For more robust example take a look at [example/geocodes/geocodes.dart]().
+For more robust example take a look at [example/geocodes/geocodes.dart](https://github.com/cleandart/react-dart/tree/master/example/geocodes).
 
 ## Life-cycle methods of a component
 
