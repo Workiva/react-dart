@@ -29,9 +29,9 @@ _reactDom(String name) {
   };
 }
 
-initializeComponent(Component component, [Map props = const {}, List children, redraw, ref]) {
+initializeComponent(Component component, [Map props = const {}, List children, redraw, ref, getDOMNode]) {
   if (redraw == null) redraw = () {};
-  component.initComponentInternal(props, redraw, ref);
+  component.initComponentInternal(props, redraw, ref, getDOMNode);
   component.initStateInternal();
   component.componentWillMount();
 }

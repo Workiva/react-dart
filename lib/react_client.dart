@@ -80,9 +80,13 @@ ReactComponentFactory _registerComponent(ComponentFactory componentFactory, [Ite
       if (ref[PROPS][INTERNAL] != null) return ref[PROPS][INTERNAL][COMPONENT];
       else return ref.callMethod('getDOMNode', []);
     };
+    
+    var getDOMNode = () {
+      return jsThis.callMethod("getDOMNode");
+    };
 
     Component component = componentFactory()
-        ..initComponentInternal(internal[PROPS], redraw, getRef);
+        ..initComponentInternal(internal[PROPS], redraw, getRef, getDOMNode);
 
     internal[COMPONENT] = component;
     internal[IS_MOUNTED] = false;

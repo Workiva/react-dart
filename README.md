@@ -36,6 +36,12 @@ main() {
 }
 ```
 
+Inverse method to rendering component is unmountComponentAtNode
+
+```dart
+  unmountComponentAtNode(querySelector('#content'));
+```
+
 ##Using browser native elements
 
 If you are familiar with React (without JSX extension) React-dart shouldn't surprise you much. All elements are defined as 
