@@ -26,7 +26,11 @@ final emptyJsMap = newJsObjectEmpty();
 newJsMap(Map map) {
   var JsMap = newJsObjectEmpty();
   for (var key in map.keys) {
-    JsMap[key] = map[key];
+    if(map[key] is Map) {
+      JsMap[key] = newJsMap(map[key]);
+    } else {
+      JsMap[key] = map[key];
+    }
   }
   return JsMap;
 }
