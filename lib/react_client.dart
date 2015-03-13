@@ -463,10 +463,11 @@ Set _syntheticFocusEvents = new Set.from(["onFocus", "onBlur",]);
 Set _syntheticFormEvents = new Set.from(["onChange", "onInput", "onSubmit",
 ]);
 
-Set _syntheticMouseEvents = new Set.from(["onClick", "onDoubleClick",
-    "onDrag", "onDragEnd", "onDragEnter", "onDragExit", "onDragLeave",
-    "onDragOver", "onDragStart", "onDrop", "onMouseDown", "onMouseEnter",
-    "onMouseLeave", "onMouseMove", "onMouseOut", "onMouseOver", "onMouseUp",]);
+Set _syntheticMouseEvents = new Set.from(["onClick", "onContextMenu",
+    "onDoubleClick", "onDrag", "onDragEnd", "onDragEnter", "onDragExit",
+    "onDragLeave", "onDragOver", "onDragStart", "onDrop", "onMouseDown",
+    "onMouseEnter", "onMouseLeave", "onMouseMove", "onMouseOut", 
+    "onMouseOver", "onMouseUp",]);
 
 Set _syntheticTouchEvents = new Set.from(["onTouchCancel", "onTouchEnd",
     "onTouchMove", "onTouchStart",]);
