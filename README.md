@@ -1,4 +1,4 @@
-#Dart wraper library for [facebook/react](http://facebook.github.io/)
+#Dart wrapper library for [facebook/react](http://facebook.github.io/)
 
 ##Getting started
 
