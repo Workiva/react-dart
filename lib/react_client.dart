@@ -41,6 +41,15 @@ newJsMap(Map map) {
 typedef JsObject ReactComponentFactory(Map props, [dynamic children]);
 typedef Component ComponentFactory();
 
+class ReactComponentFactoryProxy implements Function {
+  final ReactComponentFactory _call;
+  final JsFunction reactComponentFactory;
+  ReactComponentFactoryProxy(this.reactComponentFactory, this._call);
+
+  JsObject call(Map props, [dynamic children]) {
+    return this._call(props, children);
+  }
+}
 
 /** TODO Think about using Expandos */
 _getInternal(JsObject jsThis) => jsThis[PROPS][INTERNAL];
@@ -218,7 +227,7 @@ ReactComponentFactory _registerComponent(ComponentFactory componentFactory, [Ite
   /**
    * create reactComponent with wrapped functions
    */
-  var reactComponentFactory = _React.callMethod('createFactory', [
+  JsFunction reactComponentFactory = _React.callMethod('createFactory', [
     _React.callMethod('createClass', [newJsMap(
       removeUnusedMethods({
         'componentWillMount': componentWillMount,
@@ -235,10 +244,7 @@ ReactComponentFactory _registerComponent(ComponentFactory componentFactory, [Ite
     )])
   ]);
 
-  /**
-   * return ReactComponentFactory which produce react component with set props and children[s]
-   */
-  return (Map props, [dynamic children]) {
+  var call = (Map props, [dynamic children]) {
     if (children == null) {
       children = [];
     } else if (children is! Iterable) {
@@ -268,6 +274,10 @@ ReactComponentFactory _registerComponent(ComponentFactory componentFactory, [Ite
     return reactComponentFactory.apply([convertedArgs, new JsArray.from(children)]);
   };
 
+  /**
+   * return ReactComponentFactory which produce react component with set props and children[s]
+   */
+  return new ReactComponentFactoryProxy(reactComponentFactory, call);
 }
 
 
@@ -275,17 +285,19 @@ ReactComponentFactory _registerComponent(ComponentFactory componentFactory, [Ite
  * create dart-react registered component for html tag.
  */
 _reactDom(String name) {
-  return (Map args, [children]) {
-    _convertBoundValues(args);
-    _convertEventHandlers(args);
-    if (args.containsKey('style')) {
-      args['style'] = new JsObject.jsify(args['style']);
+  var call = (Map props, [dynamic children]) {
+    _convertBoundValues(props);
+    _convertEventHandlers(props);
+    if (props.containsKey('style')) {
+      props['style'] = new JsObject.jsify(props['style']);
     }
     if (children is Iterable) {
       children = new JsArray.from(children);
     }
-    return _React['createElement'].apply([name, newJsMap(args), children]);
+    return _React['createElement'].apply([name, newJsMap(props), children]);
   };
+
+  return new ReactComponentFactoryProxy(_React['DOM'][name], call);
 }
 
 /**

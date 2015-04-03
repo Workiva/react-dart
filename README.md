@@ -153,3 +153,57 @@ class MyComponent extends Component {
 }
 ```
 
+## Testing using React Test Utilities
+
+[lib/react_test_utils.dart](lib/react_test_utils.dart) is a Dart wrapper for the [React TestUtils](http://facebook.github.io/react/docs/test-utils.html) library allowing for tests to be made for React components in Dart.
+
+Here is an example of how to use React TestUtils within a Dart test.
+
+```dart
+import 'package:unittest/unittest.dart';
+import 'package:react/react.dart' as react;
+import 'package:react/react_client.dart' as reactClient;
+import 'package:react/react_test_utils.dart' as reactTestUtils;
+
+class MyTestComponent extends react.Component {
+  getInitialState() => {'text': 'testing...'};
+  render() {
+    return react.div({}, [
+        react.button({'onClick': (e) => setState({'text': 'success'})}),
+        react.span({'className': 'spanText'}, state['text'])
+    ]);
+  }
+}
+
+var myTestComponent = react.registerComponent(() => new MyTestComponent());
+
+void main() {
+  reactClient.setClientConfiguration();
+
+  test('should click button and set span text to "success"', () {
+    var component = reactTestUtils.renderIntoDocument(myTestComponent({}));
+
+    // Find button using tag name
+    var buttonElement = reactTestUtils.findRenderedDOMComponentWithTag(
+        component, 'button');
+
+    // Find span using class name
+    var spanElement = reactTestUtils.findRenderedDOMComponentWithClass(
+        component, 'spanText');
+
+    var buttonNode = reactTestUtils.getDomNode(buttonElement);
+    var spanNode = reactTestUtils.getDomNode(spanElement);
+
+    // Span text should equal the initial state
+    expect(spanNode.text, equals('testing...'));
+
+    // Click the button and trigger the onClick event
+    reactTestUtils.Simulate.click(buttonNode);
+
+    // Span text should change to 'success'
+    expect(spanNode.text, equals('success'));
+  });
+}
+```
+
+To test the Dart wrapper, take a look at [test/react_test_utils_test.dart](test).
