@@ -434,12 +434,26 @@ SyntheticEvent syntheticFormEventFactory(JsObject e) {
       e["target"], e["timeStamp"], e["type"]);
 }
 
+SyntheticDataTransfer syntheticDataTransferFactory(JsObject dt) {
+  if (dt == null) return null;
+  List<File> files = [];
+  for (int i = 0; i < dt["files"]["length"]; i++) {
+    files.add(dt["files"][i]);
+  }
+  List<String> types = [];
+  for (int i = 0; i < dt["types"]["length"]; i++) {
+    types.add(dt["types"][i]);
+  }
+  return new SyntheticDataTransfer(dt["dropEffect"], dt["effectAllowed"], files, types);
+}
+
 SyntheticEvent syntheticMouseEventFactory(JsObject e) {
+  SyntheticDataTransfer dt = syntheticDataTransferFactory(e["dataTransfer"]);
   return new SyntheticMouseEvent(e["bubbles"], e["cancelable"], e["currentTarget"],
       e["defaultPrevented"], () => e.callMethod("preventDefault", []),
       () => e.callMethod("stopPropagation", []), e["eventPhase"], e["isTrusted"], e["nativeEvent"],
       e["target"], e["timeStamp"], e["type"], e["altKey"], e["button"], e["buttons"], e["clientX"], e["clientY"],
-      e["ctrlKey"], e["metaKey"], e["pageX"], e["pageY"], e["relatedTarget"], e["screenX"],
+      e["ctrlKey"], dt, e["metaKey"], e["pageX"], e["pageY"], e["relatedTarget"], e["screenX"],
       e["screenY"], e["shiftKey"]);
 }
 

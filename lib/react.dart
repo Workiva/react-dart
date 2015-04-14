@@ -215,6 +215,15 @@ class SyntheticFormEvent extends SyntheticEvent {
 
 }
 
+class SyntheticDataTransfer {
+  final String dropEffect;
+  final String effectAllowed;
+  final List/*<File>*/ files;
+  final List<String> types;
+
+  SyntheticDataTransfer(this.dropEffect, this.effectAllowed, this.files, this.types);
+}
+
 class SyntheticMouseEvent extends SyntheticEvent {
 
   final bool altKey;
@@ -223,6 +232,7 @@ class SyntheticMouseEvent extends SyntheticEvent {
   final num clientX;
   final num clientY;
   final bool ctrlKey;
+  final SyntheticDataTransfer dataTransfer;
   final bool metaKey;
   final num pageX;
   final num pageY;
@@ -234,8 +244,8 @@ class SyntheticMouseEvent extends SyntheticEvent {
   SyntheticMouseEvent(bubbles, cancelable, currentTarget, _defaultPrevented,
       _preventDefault, stopPropagation, eventPhase, isTrusted, nativeEvent, target,
       timeStamp, type, this.altKey, this.button, this.buttons, this.clientX, this.clientY,
-      this.ctrlKey, this.metaKey, this.pageX, this.pageY, this.relatedTarget, this.screenX,
-      this.screenY, this.shiftKey) :
+      this.ctrlKey, this.dataTransfer, this.metaKey, this.pageX, this.pageY, this.relatedTarget,
+      this.screenX, this.screenY, this.shiftKey) :
         super( bubbles, cancelable, currentTarget, _defaultPrevented,
             _preventDefault, stopPropagation, eventPhase, isTrusted, nativeEvent, target,
             timeStamp, type){}
