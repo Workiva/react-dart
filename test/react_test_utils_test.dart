@@ -61,7 +61,9 @@ void main() {
     test('mouseDown', () => testEvent(Simulate.mouseDown, 'mouseDown'));
     test('mouseMove', () => testEvent(Simulate.mouseMove, 'mouseMove'));
     test('mouseOut', () => testEvent(Simulate.mouseOut, 'mouseOut'));
+    test('mouseOut native', () => testEvent(SimulateNative.mouseOut, 'mouseOut'));
     test('mouseOver', () => testEvent(Simulate.mouseOver, 'mouseOver'));
+    test('mouseOver native', () => testEvent(SimulateNative.mouseOver, 'mouseOver'));
     test('mouseUp', () => testEvent(Simulate.mouseUp, 'mouseUp'));
     test('paste', () => testEvent(Simulate.paste, 'paste'));
     test('scroll', () => testEvent(Simulate.scroll, 'scroll'));

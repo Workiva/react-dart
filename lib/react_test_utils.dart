@@ -16,6 +16,8 @@ JsObject _TestUtils = _getNestedJsObject(
 
 JsObject _Simulate = _TestUtils['Simulate'];
 
+JsObject _SimulateNative = _TestUtils['SimulateNative'];
+
 _getNestedJsObject(
     JsObject base, List<String> keys, [String errorIfNotFound='']) {
   JsObject object = base;
@@ -147,6 +149,20 @@ class Simulate {
 
   static void wheel(JsObject element, [Map eventData = const{}]) =>
       _Simulate.callMethod('wheel', [element, new JsObject.jsify(eventData)]);
+
+}
+
+/// Native event simulation interface.
+///
+/// Provides methods that allow for simulation of mouseEnter and mouseLeave
+
+class SimulateNative {
+
+  static void mouseOut(JsObject element, [Map eventData = const{}]) =>
+      _SimulateNative.callMethod('mouseOut', [element, new JsObject.jsify(eventData)]);
+
+  static void mouseOver(JsObject element, [Map eventData = const{}]) =>
+      _SimulateNative.callMethod('mouseOver', [element, new JsObject.jsify(eventData)]);
 
 }
 
