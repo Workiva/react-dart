@@ -73,6 +73,44 @@ void main() {
     test('wheel', () => testEvent(Simulate.wheel, 'wheel'));
   });
 
+  group('Simulate native event', () {
+    tearDown(() {
+      component = null;
+      domNode = null;
+    });
+
+    test('blur', () => testEvent(SimulateNative.blur, 'blur'));
+    test('click', () => testEvent(SimulateNative.click, 'click'));
+    test('copy', () => testEvent(SimulateNative.copy, 'copy'));
+    test('cut', () => testEvent(SimulateNative.cut, 'cut'));
+    test('doubleClick', () => testEvent(SimulateNative.doubleClick, 'doubleClick'));
+    test('drag', () => testEvent(SimulateNative.drag, 'drag'));
+    test('dragEnd', () => testEvent(SimulateNative.dragEnd, 'dragEnd'));
+    test('dragEnter', () => testEvent(SimulateNative.dragEnter, 'dragEnter'));
+    test('dragExit', () => testEvent(SimulateNative.dragExit, 'dragExit'));
+    test('dragLeave', () => testEvent(SimulateNative.dragLeave, 'dragLeave'));
+    test('dragOver', () => testEvent(SimulateNative.dragOver, 'dragOver'));
+    test('dragStart', () => testEvent(SimulateNative.dragStart, 'dragStart'));
+    test('drop', () => testEvent(SimulateNative.drop, 'drop'));
+    test('focus', () => testEvent(SimulateNative.focus, 'focus'));
+    test('input', () => testEvent(SimulateNative.input, 'input'));
+    test('keyDown', () => testEvent(SimulateNative.keyDown, 'keyDown'));
+    test('keyUp', () => testEvent(SimulateNative.keyUp, 'keyUp'));
+    test('mouseDown', () => testEvent(SimulateNative.mouseDown, 'mouseDown'));
+    test('mouseMove', () => testEvent(SimulateNative.mouseMove, 'mouseMove'));
+    test('mouseOut', () => testEvent(SimulateNative.mouseOut, 'mouseOut'));
+    test('mouseOver', () => testEvent(SimulateNative.mouseOver, 'mouseOver'));
+    test('mouseUp', () => testEvent(SimulateNative.mouseUp, 'mouseUp'));
+    test('paste', () => testEvent(SimulateNative.paste, 'paste'));
+    test('scroll', () => testEvent(SimulateNative.scroll, 'scroll'));
+    test('submit', () => testEvent(SimulateNative.submit, 'submit'));
+    test('touchCancel', () => testEvent(SimulateNative.touchCancel, 'touchCancel'));
+    test('touchEnd', () => testEvent(SimulateNative.touchEnd, 'touchEnd'));
+    test('touchMove', () => testEvent(SimulateNative.touchMove, 'touchMove'));
+    test('touchStart', () => testEvent(SimulateNative.touchStart, 'touchStart'));
+    test('wheel', () => testEvent(SimulateNative.wheel, 'wheel'));
+  });
+
   test('findRenderedDOMComponentWithClass', () {
     component = renderIntoDocument(sampleComponent({}));
     var spanComponent = findRenderedDOMComponentWithClass(component, 'span1');
