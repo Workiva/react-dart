@@ -118,7 +118,7 @@ abstract class Component {
 
 }
 
-/** Syntetic event */
+/** Synthetic event */
 
 class SyntheticEvent {
 

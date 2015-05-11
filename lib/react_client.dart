@@ -8,6 +8,7 @@ import "package:react/react.dart";
 import "dart:js";
 import "dart:html";
 import "dart:async";
+import 'dart:mirrors';
 
 var _React = context['React'];
 var _Object = context['Object'];
@@ -33,6 +34,28 @@ newJsMap(Map map) {
     }
   }
   return JsMap;
+}
+
+class ReactJSComponent extends Component {
+
+  JsObject _source;
+
+  ReactJSComponent(JsObject source) {
+    _source = source;
+
+    getDOMNode = () => _source.callMethod('getDOMNode');
+
+    ref = (name) {
+      var ref = _source['refs'][name] as JsObject;
+      if (ref[PROPS][INTERNAL] != null) return ref[PROPS][INTERNAL][COMPONENT];
+      else return new ReactJSComponent(ref);
+    };
+  }
+
+  noSuchMethod(Invocation invocation) {
+    /** fall back to underlying JS method if it exists */
+    return _source.callMethod(MirrorSystem.getName(invocation.memberName), invocation.positionalArguments);
+  }
 }
 
 /**
@@ -91,7 +114,7 @@ ReactComponentFactory _registerComponent(ComponentFactory componentFactory, [Ite
     var getRef = (name) {
       var ref = jsThis['refs'][name] as JsObject;
       if (ref[PROPS][INTERNAL] != null) return ref[PROPS][INTERNAL][COMPONENT];
-      else return ref;
+      else return new ReactJSComponent(ref);
     };
     
     var getDOMNode = () {
