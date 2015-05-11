@@ -91,7 +91,7 @@ ReactComponentFactory _registerComponent(ComponentFactory componentFactory, [Ite
     var getRef = (name) {
       var ref = jsThis['refs'][name] as JsObject;
       if (ref[PROPS][INTERNAL] != null) return ref[PROPS][INTERNAL][COMPONENT];
-      else return ref.callMethod('getDOMNode', []);
+      else return ref;
     };
     
     var getDOMNode = () {
