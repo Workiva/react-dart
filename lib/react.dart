@@ -107,7 +107,7 @@ abstract class Component {
   void componentWillUpdate(nextProps, nextState) {}
 
   void componentDidUpdate(prevProps, prevState, /*DOMElement */ rootNode) {}
-  
+
   void componentWillUnmount() {}
 
   Map getInitialState() => {};
@@ -118,7 +118,7 @@ abstract class Component {
 
 }
 
-/** Syntetic event */
+/** Synthetic event */
 
 class SyntheticEvent {
 
@@ -314,9 +314,9 @@ var renderToString;
 
 /**
  * bool unmountComponentAtNode(HTMLElement);
- * 
+ *
  * client side derendering - reverse operation to render
- * 
+ *
  */
 var unmountComponentAtNode;
 
@@ -324,6 +324,11 @@ var unmountComponentAtNode;
  * register component method to register component on both, client-side and server-side.
  */
 var registerComponent;
+
+/**
+ * if this component has been mounted into the DOM, this returns the corresponding native browser DOM element.
+ */
+var findDOMNode;
 
 /** Basic DOM elements
  * <var> is renamed to <variable> because var is reserved word in Dart.
@@ -484,11 +489,12 @@ _createDOMComponents(creator){
  *
  * It pass arguments to global variables and run DOM components creation by dom Creator.
  */
-setReactConfiguration(domCreator, customRegisterComponent, customRender, customRenderToString, customUnmountComponentAtNode){
+setReactConfiguration(domCreator, customRegisterComponent, customRender, customRenderToString, customUnmountComponentAtNode, customFindDOMNode){
   registerComponent = customRegisterComponent;
   render = customRender;
   renderToString = customRenderToString;
   unmountComponentAtNode = customUnmountComponentAtNode;
+  findDOMNode = customFindDOMNode;
   // HTML Elements
   _createDOMComponents(domCreator);
 }

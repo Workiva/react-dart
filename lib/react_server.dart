@@ -325,5 +325,5 @@ _adler32(String data) {
 }
 
 void setServerConfiguration() {
-  setReactConfiguration(_reactDom, _registerComponent, null, _renderComponentToString, null);
+  setReactConfiguration(_reactDom, _registerComponent, null, _renderComponentToString, null, null);
 }
