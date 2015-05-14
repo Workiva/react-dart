@@ -207,8 +207,10 @@ String _parseDomArgument(String key, dynamic value) {
     value = style.keys.map((key) => "$key:${style[key]};").join("");
   }
 
-  if(key == 'value' && value is List)
+  if(key == 'value' && value is List) {
     value = value[0];
+    if (value is! String) value = value.toString();
+  }
 
   value = _escapeTextForBrowser(value);
   return " ${key.toLowerCase()}=\"${value}\"";
