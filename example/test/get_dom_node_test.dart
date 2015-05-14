@@ -2,8 +2,15 @@ import "package:react/react.dart" as react;
 import "package:react/react_client.dart";
 import "dart:html";
 
-var secondElement = react.registerComponent(() => new SecondComponent());
-class SecondComponent extends react.Component {
+customAssert(text, condition) {
+  if (condition)
+    print("${text} passed");
+  else
+    throw(text);
+}
+
+var ChildComponent = react.registerComponent(() => new _ChildComponent());
+class _ChildComponent extends react.Component {
 
   var counter = 0;
 
@@ -22,26 +29,22 @@ class SimpleComponent extends react.Component {
   componentWillUnmount() => print("unmount");
 
   componentDidMount(root) {
-
-    print("getDomNode is same as mounted element ${root == getDOMNode()}");
-    print(ref("some random"));
-    print(ref("test"));
-    print(react.findDOMNode(ref("test")) == ref("test").getDOMNode());
-    print(ref("someRandomRef"));
-    print(react.findDOMNode(ref("someRandomRef")));
-
+    customAssert("ref to span return span ", (react.findDOMNode(ref("refToSpan")) as SpanElement).text == "Test");
+    customAssert("getDomNode is same as mounted element", root == getDOMNode());
+    customAssert("findDOMNode work on this", root == react.findDOMNode(this));
+    customAssert("random ref resolute to null", react.findDOMNode(ref("someRandomRef")) == null);
   }
 
   var counter = 0;
 
   render() =>
     react.div({}, [
-      react.span({"ref": "someRandomRef"}, "Test"),
+      react.span({"ref": "refToSpan"}, "Test"),
       react.span({}, counter),
       react.button({"onClick": (_) => (getDOMNode() as HtmlElement).children.first.text = (++counter).toString()},"Increase counter"),
       react.br({}),
-      secondElement({"ref": "test"}),
-      react.button({"onClick": (_) => window.alert((this.ref('test') as SecondComponent).counter.toString())}, "Show value"),
+      ChildComponent({"ref": "refToElement"}),
+      react.button({"onClick": (_) => window.alert((this.ref('test') as _ChildComponent).counter.toString())}, "Show value of child element"),
     ]);
 }
 

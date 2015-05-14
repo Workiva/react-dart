@@ -22,7 +22,7 @@ class _HelloGreeter extends react.Component {
   getInitialState() => {"name": "World"};
 
   onInputChange(e) {
-    var input = ref('myInput');
+    var input = react.findDOMNode(ref('myInput'));
     print(input.borderEdge);
   }
 
