@@ -130,11 +130,13 @@ void main() {
 ```
 ## Using refs and findDOMNode
 
-Using refs is little bit different that in react. You can specifi ref name in component props
-and then call ref method to get referenced element. Return value is different for dart components and for
-javascript components. For dart component you get instance of dart class for that component. 
-For js components(like dom elements) you get instance of jsObject representing that react component.
-If you want to work with dom nodes instead of component you can call top level method findDOMNode on anything that ref returns.
+Proper usage of refs here is a little bit different from usage in react. You can specify
+a ref name in component props and then call ref method to get the referenced element.
+Return value for dart components and for javascript components is different.
+For dart component, you get an instance of dart class of the component.
+For js components (like DOM elements), you get instance of jsObject representing the
+react component. If you want to work with DOM nodes instead of a component, you can
+call top level method findDOMNode on anything the ref returns.
 
 ```
 var DartComponent = registerComponent(() => new _DartComponent());
@@ -142,8 +144,8 @@ class _DartComponent extends Component {
   var someData = 11;
   render() => div({});
 }
-var ParrentComponent = registerComponent(() => new _ParrentComponent());
-class ParrentComponent extedns Component {
+var ParentComponent = registerComponent(() => new _ParentComponent());
+class _ParentComponent extedns Component {
   render() =>
     div({},[
       input({"ref": "input"}),

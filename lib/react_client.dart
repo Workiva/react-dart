@@ -513,8 +513,8 @@ bool _unmountComponentAtNode(HtmlElement element) {
 }
 
 dynamic _findDomNode(component) {
-  // if we have dart component class so geting mounted dom is returned from getDOMNode
-  // which has jsComponent closured inside and call on it findDOMNode
+  // if it's a dart component class, the mounted dom is returned from getDOMNode
+  // which has jsComponent closured inside and calls on it findDOMNode
   if (component is Component) return component.getDOMNode();
   //otherwise we have js component so pass it in findDOM node
   return _React.callMethod('findDOMNode', [component]);
