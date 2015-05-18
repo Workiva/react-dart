@@ -90,12 +90,13 @@ ReactComponentFactory _registerComponent(ComponentFactory componentFactory, [Ite
 
     var getRef = (name) {
       var ref = jsThis['refs'][name] as JsObject;
+      if (ref == null) return null;
       if (ref[PROPS][INTERNAL] != null) return ref[PROPS][INTERNAL][COMPONENT];
-      else return ref.callMethod('getDOMNode', []);
+      else return ref;
     };
-    
+
     var getDOMNode = () {
-      return jsThis.callMethod("getDOMNode");
+      return _React.callMethod('findDOMNode', [jsThis]);
     };
 
     Component component = componentFactory()
@@ -123,8 +124,8 @@ ReactComponentFactory _registerComponent(ComponentFactory componentFactory, [Ite
    * only wrap componentDidMount
    */
   var componentDidMount = new JsFunction.withThis((JsObject jsThis) => zone.run(() {
-    //you need to get dom node by calling getDOMNode
-    var rootNode = jsThis.callMethod("getDOMNode");
+    //you need to get dom node by calling findDOMNode
+    var rootNode = _React.callMethod('findDOMNode', [jsThis]);
     _getComponent(jsThis).componentDidMount(rootNode);
   }));
 
@@ -194,7 +195,7 @@ ReactComponentFactory _registerComponent(ComponentFactory componentFactory, [Ite
       new JsFunction.withThis((JsObject jsThis, prevProps, prevState, prevContext) => zone.run(() {
     var prevInternalProps = _getInternalProps(prevProps);
     //you don't get root node as parameter but need to get it directly
-    var rootNode = jsThis.callMethod("getDOMNode");
+    var rootNode = _React.callMethod('findDOMNode', [jsThis]);
     Component component = _getComponent(jsThis);
     component.componentDidUpdate(prevInternalProps, component.prevState, rootNode);
   }));
@@ -492,7 +493,7 @@ Set _syntheticFormEvents = new Set.from(["onChange", "onInput", "onSubmit",
 Set _syntheticMouseEvents = new Set.from(["onClick", "onContextMenu",
     "onDoubleClick", "onDrag", "onDragEnd", "onDragEnter", "onDragExit",
     "onDragLeave", "onDragOver", "onDragStart", "onDrop", "onMouseDown",
-    "onMouseEnter", "onMouseLeave", "onMouseMove", "onMouseOut", 
+    "onMouseEnter", "onMouseLeave", "onMouseMove", "onMouseOut",
     "onMouseOver", "onMouseUp",]);
 
 Set _syntheticTouchEvents = new Set.from(["onTouchCancel", "onTouchEnd",
@@ -511,7 +512,15 @@ bool _unmountComponentAtNode(HtmlElement element) {
   return _React.callMethod('unmountComponentAtNode', [element]);
 }
 
+dynamic _findDomNode(component) {
+  // if it's a dart component class, the mounted dom is returned from getDOMNode
+  // which has jsComponent closured inside and calls on it findDOMNode
+  if (component is Component) return component.getDOMNode();
+  //otherwise we have js component so pass it in findDOM node
+  return _React.callMethod('findDOMNode', [component]);
+}
+
 void setClientConfiguration() {
   _React.callMethod('initializeTouchEvents', [true]);
-  setReactConfiguration(_reactDom, _registerComponent, _render, null, _unmountComponentAtNode);
+  setReactConfiguration(_reactDom, _registerComponent, _render, null, _unmountComponentAtNode, _findDomNode);
 }
