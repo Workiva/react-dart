@@ -31,9 +31,13 @@ _getNestedJsObject(
   return object;
 }
 
-JsFunction getFactory(component) {
-  if (component is ReactComponentFactoryProxy) {
-    return (component as ReactComponentFactoryProxy).reactComponentFactory;
+/// Returns the 'type' of a component.
+///
+/// For a DOM components, this with return the String corresponding to its tagName ('div', 'a', etc.).
+/// For React.createClass()-based components, this with return the React class as a JsFunction.
+dynamic getComponentType(ReactComponentFactory componentFactory) {
+  if (componentFactory is ReactComponentFactoryProxy) {
+    return componentFactory.reactComponentFactory['type'];
   }
   return null;
 }
@@ -289,13 +293,15 @@ JsObject findRenderedDOMComponentWithTag(JsObject tree, String tag) {
 JsObject findRenderedComponentWithType(
     JsObject tree, ReactComponentFactory componentType) {
   return _TestUtils.callMethod(
-      'findRenderedComponentWithType', [tree, getFactory(componentType)]);
+      'findRenderedComponentWithType', [tree, getComponentType(componentType)]);
 }
 
 /// Returns true if element is a composite component.
 /// (created with React.createClass()).
 bool isCompositeComponent(JsObject instance) {
-  return _TestUtils.callMethod('isCompositeComponent', [instance]);
+  return _TestUtils.callMethod('isCompositeComponent', [instance])
+         // Workaround for DOM components being detected as composite: https://github.com/facebook/react/pull/3839
+         && instance['tagName'] == null;
 }
 
 /// Returns true if instance is a composite component.
@@ -303,7 +309,7 @@ bool isCompositeComponent(JsObject instance) {
 bool isCompositeComponentWithType(
     JsObject instance, ReactComponentFactory componentClass) {
   return _TestUtils.callMethod(
-      'isCompositeComponentWithType', [instance, getFactory(componentClass)]);
+      'isCompositeComponentWithType', [instance, getComponentType(componentClass)]);
 }
 
 /// Returns true if instance is a DOM component (such as a <div> or <span>).
@@ -311,23 +317,23 @@ bool isDOMComponent(JsObject instance) {
   return _TestUtils.callMethod('isDOMComponent', [instance]);
 }
 
-/// Returns true if element is any ReactElement.
-bool isElement(JsObject element) {
-  return _TestUtils.callMethod('isElement', [element]);
+/// Returns true if [object] is a valid React component.
+bool isElement(JsObject object) {
+  return _TestUtils.callMethod('isElement', [object]);
 }
 
 /// Returns true if element is a ReactElement whose type is of a
 /// React componentClass.
 bool isElementOfType(JsObject element, ReactComponentFactory componentClass) {
   return _TestUtils.callMethod(
-      'isElementOfType', [element, getFactory(componentClass)]);
+      'isElementOfType', [element, getComponentType(componentClass)]);
 }
 
 /// Finds all instances of components with type equal to componentClass.
 JsObject scryRenderedComponentsWithType(
     JsObject tree, ReactComponentFactory componentClass) {
   return _TestUtils.callMethod(
-      'scryRenderedComponentsWithType', [tree, getFactory(componentClass)]);
+      'scryRenderedComponentsWithType', [tree, getComponentType(componentClass)]);
 }
 
 /// Finds all instances of components in the rendered tree that are DOM
