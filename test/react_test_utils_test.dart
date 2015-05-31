@@ -132,13 +132,13 @@ void main() {
   });
 
   group('isCompositeComponent', () {
-    test('returns true when element is a React component', () {
+    test('returns true when element is a composite component (created with React.createClass())', () {
       component = renderIntoDocument(eventComponent({}));
 
       expect(isCompositeComponent(component), isTrue);
     });
 
-    test('returns false when element is not a React component', () {
+    test('returns false when element is not a composite component (created with React.createClass())', () {
       component = renderIntoDocument(div({}));
 
       expect(isCompositeComponent(component), isFalse);
@@ -148,12 +148,12 @@ void main() {
   group('isCompositeComponentWithType', () {
     var renderedInstance = renderIntoDocument(sampleComponent({}));
 
-    test('returns true when element is a React component with class', () {
+    test('returns true when element is a composite component (created with React.createClass()) of the specified type', () {
       expect(isCompositeComponentWithType(
           renderedInstance, sampleComponent), isTrue);
     });
 
-    test('returns false when element is not a React component with class', () {
+    test('returns false when element is not a composite component (created with React.createClass()) of the specified type', () {
       expect(isCompositeComponentWithType(
           renderedInstance, eventComponent), isFalse);
     });
@@ -178,7 +178,7 @@ void main() {
     });
 
     test('returns false argument is not an element', () {
-      expect(isElement(div), isFalse);
+      expect(isElement(new JsObject.jsify({})), isFalse);
     });
   });
 
