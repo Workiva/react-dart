@@ -127,9 +127,10 @@ class _GeocodesForm extends react.Component {
   // This is called when form is submited
   onFormSubmit(e) {
       e.preventDefault();
+      InputElement inputElement = react.findDOMNode(ref('addressInput'));
       // The input's value is accessed.
-      var addr = ref('addressInput').value;
-      ref('addressInput').value = "";
+      var addr = inputElement.value;
+      inputElement.value = "";
       // And the callback from the parent element is called.
       // (Yes, you haven't seen it yet.)
       props['submiter'](addr);

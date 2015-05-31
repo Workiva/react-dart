@@ -207,8 +207,10 @@ String _parseDomArgument(String key, dynamic value) {
     value = style.keys.map((key) => "$key:${style[key]};").join("");
   }
 
-  if(key == 'value' && value is List)
+  if(key == 'value' && value is List) {
     value = value[0];
+    if (value is! String) value = value.toString();
+  }
 
   value = _escapeTextForBrowser(value);
   return " ${key.toLowerCase()}=\"${value}\"";
@@ -325,5 +327,5 @@ _adler32(String data) {
 }
 
 void setServerConfiguration() {
-  setReactConfiguration(_reactDom, _registerComponent, null, _renderComponentToString, null);
+  setReactConfiguration(_reactDom, _registerComponent, null, _renderComponentToString, null, null);
 }
