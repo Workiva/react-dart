@@ -145,7 +145,7 @@ class _DartComponent extends Component {
   render() => div({});
 }
 var ParentComponent = registerComponent(() => new _ParentComponent());
-class _ParentComponent extedns Component {
+class _ParentComponent extends Component {
   render() =>
     div({},[
       input({"ref": "input"}),
