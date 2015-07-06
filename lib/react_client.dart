@@ -46,17 +46,9 @@ class ReactComponentFactoryProxy implements Function {
   ReactComponentFactoryProxy(this.reactComponentFactory);
 
   JsObject call(Map props, [dynamic children]) {
-
-    if (children == null) {
-      children = [];
-    } else if (children is! Iterable) {
-      children = [children];
-    }
-
-    return reactComponentFactory.apply([
-      _generateExtendedJSProps(props, children),
-      new JsArray.from(children)
-    ]);
+    List<dynamic> reactParams = [_generateExtendedJSProps(props, children)];
+    reactParams.add(children);
+    return reactComponentFactory.apply(reactParams);
   }
 
   dynamic noSuchMethod(Invocation invocation) {
@@ -70,12 +62,12 @@ class ReactComponentFactoryProxy implements Function {
     return super.noSuchMethod(invocation);
   }
 
-  _generateExtendedJSProps(Map props, List<dynamic> children) {
+  JsObject _generateExtendedJSProps(Map props, dynamic children) {
 
-    var extendedProps = new Map.from(props);
+    Map extendedProps = new Map.from(props);
     extendedProps['children'] = children;
 
-    var jsProps = newJsObjectEmpty();
+    JsObject jsProps = newJsObjectEmpty();
 
     /**
      * add key to args which will be passed to javascript react component
@@ -107,7 +99,7 @@ class ReactDomComponentFactoryProxy implements Function {
     if (children is Iterable) {
       children = new JsArray.from(children);
     }
-    return _React['createElement'].apply([name, newJsMap(props), children]);
+    return _React.callMethod('createElement', [name, newJsMap(props), children]);
   }
 
   dynamic noSuchMethod(Invocation invocation) {
@@ -117,12 +109,12 @@ class ReactDomComponentFactoryProxy implements Function {
       List<dynamic> reactParams = [name, newJsMap(props)];
       List<dynamic> children = invocation.positionalArguments.sublist(1);
       reactParams.addAll(children);
-      return _React['createElement'].apply(reactParams);
+      return _React.callMethod('createElement', reactParams);
     }
     return super.noSuchMethod(invocation);
   }
 
-  _convertProps(Map props) {
+  void _convertProps(Map props) {
     _convertBoundValues(props);
     _convertEventHandlers(props);
     if (props.containsKey('style')) {
