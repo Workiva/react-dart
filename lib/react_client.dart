@@ -47,6 +47,9 @@ class ReactComponentFactoryProxy implements Function {
 
   JsObject call(Map props, [dynamic children]) {
     List<dynamic> reactParams = [_generateExtendedJSProps(props, children)];
+    if (children is Iterable) {
+      children = new JsArray.from(children);
+    }
     reactParams.add(children);
     return reactComponentFactory.apply(reactParams);
   }
