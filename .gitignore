@@ -3,3 +3,4 @@ packages
 lib/docs/
 pubspec.lock
 .idea
+.pub/
