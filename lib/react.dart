@@ -467,9 +467,9 @@ _createDOMComponents(creator){
   // SVG Elements
   circle = creator('circle');
   clipPath = creator('clipPath');
-  g = creator('g');
   defs = creator('defs');
   ellipse = creator('ellipse');
+  g = creator('g');
   line = creator('line');
   linearGradient = creator('linearGradient');
   mask = creator('mask');
@@ -479,8 +479,8 @@ _createDOMComponents(creator){
   polyline = creator('polyline');
   radialGradient = creator('radialGradient');
   rect = creator('rect');
-  svg = creator('svg');
   stop = creator('stop');
+  svg = creator('svg');
   text = creator('text');
   tspan = creator('tspan');
 }
