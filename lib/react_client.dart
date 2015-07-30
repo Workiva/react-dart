@@ -524,6 +524,10 @@ String _renderToString(JsObject component) {
   return _React.callMethod('renderToString', [component]);
 }
 
+String _renderToStaticMarkup(JsObject component) {
+  return _React.callMethod('renderToStaticMarkup', [component]);
+}
+
 bool _unmountComponentAtNode(HtmlElement element) {
   return _React.callMethod('unmountComponentAtNode', [element]);
 }
@@ -538,5 +542,6 @@ dynamic _findDomNode(component) {
 
 void setClientConfiguration() {
   _React.callMethod('initializeTouchEvents', [true]);
-  setReactConfiguration(_reactDom, _registerComponent, _render, _renderToString, _unmountComponentAtNode, _findDomNode);
+  setReactConfiguration(_reactDom, _registerComponent, _render, _renderToString,
+      _renderToStaticMarkup, _unmountComponentAtNode, _findDomNode);
 }
