@@ -311,6 +311,14 @@ var render;
  */
 var renderToString;
 
+/**
+ * Similar to [renderToString], except this doesn't create extra DOM attributes such as
+ * `data-react-id`, that React uses internally. This is useful if you want to use React
+ * as a simple static page generator, as stripping away the extra attributes can save
+ * lots of bytes.
+ */
+var renderToStaticMarkup;
+
 
 /**
  * bool unmountComponentAtNode(HTMLElement);
@@ -489,10 +497,12 @@ _createDOMComponents(creator){
  *
  * It pass arguments to global variables and run DOM components creation by dom Creator.
  */
-setReactConfiguration(domCreator, customRegisterComponent, customRender, customRenderToString, customUnmountComponentAtNode, customFindDOMNode){
+setReactConfiguration(domCreator, customRegisterComponent, customRender, customRenderToString,
+    customRenderToStaticMarkup, customUnmountComponentAtNode, customFindDOMNode){
   registerComponent = customRegisterComponent;
   render = customRender;
   renderToString = customRenderToString;
+  renderToStaticMarkup = customRenderToStaticMarkup;
   unmountComponentAtNode = customUnmountComponentAtNode;
   findDOMNode = customFindDOMNode;
   // HTML Elements

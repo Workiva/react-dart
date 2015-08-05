@@ -288,6 +288,10 @@ String _renderComponentToString(OwnerFactory component) {
   return _addChecksumToMarkup(component());
 }
 
+String _renderToStaticMarkup(OwnerFactory component) {
+  return _removeReactIdFromMarkup(component());
+}
+
 /**
  * creates random id based on id creation in react.js
  */
@@ -306,6 +310,11 @@ String _addChecksumToMarkup(String markup) {
       ' $_CHECKSUM_ATTR_NAME="$checksum">'
     );
 
+}
+
+String _removeReactIdFromMarkup(String markup) {
+  var matcher = new RegExp(' $_ID_ATTR_NAME=".+?"');
+  return markup.replaceAll(matcher, "");
 }
 
 /**
@@ -327,5 +336,5 @@ _adler32(String data) {
 }
 
 void setServerConfiguration() {
-  setReactConfiguration(_reactDom, _registerComponent, null, _renderComponentToString, null, null);
+  setReactConfiguration(_reactDom, _registerComponent, null, _renderComponentToString, _renderToStaticMarkup, null, null);
 }
