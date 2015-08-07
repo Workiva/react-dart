@@ -36,19 +36,95 @@ newJsMap(Map map) {
 }
 
 /**
- * Type of [children] must be child or list of childs, when child is JsObject or String
+ * Type of [children] must be child or list of children, when child is JsObject or String
  */
 typedef JsObject ReactComponentFactory(Map props, [dynamic children]);
 typedef Component ComponentFactory();
 
 class ReactComponentFactoryProxy implements Function {
-  final ReactComponentFactory _call;
   final JsFunction reactComponentFactory;
-  ReactComponentFactoryProxy(this.reactComponentFactory, this._call);
+  ReactComponentFactoryProxy(this.reactComponentFactory);
 
   JsObject call(Map props, [dynamic children]) {
-    return this._call(props, children);
+    List<dynamic> reactParams = [_generateExtendedJSProps(props, children)];
+    if (children is Iterable) {
+      children = new JsArray.from(children);
+    }
+    reactParams.add(children);
+    return reactComponentFactory.apply(reactParams);
   }
+
+  dynamic noSuchMethod(Invocation invocation) {
+    if ((invocation.memberName == #call) && (invocation.isMethod)) {
+      Map props = invocation.positionalArguments[0];
+      List<dynamic> children = invocation.positionalArguments.sublist(1);
+      List<dynamic> reactParams = [_generateExtendedJSProps(props, children)];
+      reactParams.addAll(children);
+      return reactComponentFactory.apply(reactParams);
+    }
+    return super.noSuchMethod(invocation);
+  }
+
+  JsObject _generateExtendedJSProps(Map props, dynamic children) {
+
+    Map extendedProps = new Map.from(props);
+    extendedProps['children'] = children;
+
+    JsObject jsProps = newJsObjectEmpty();
+
+    /**
+     * add key to args which will be passed to javascript react component
+     */
+    if (extendedProps.containsKey('key')) {
+      jsProps['key'] = extendedProps['key'];
+    }
+
+    if (extendedProps.containsKey('ref')) {
+      jsProps['ref'] = extendedProps['ref'];
+    }
+
+    /**
+     * put props to internal part of args
+     */
+    jsProps[INTERNAL] = {PROPS: extendedProps};
+
+    return jsProps;
+  }
+
+}
+
+class ReactDomComponentFactoryProxy implements Function {
+  final String name;
+  ReactDomComponentFactoryProxy(this.name);
+
+  JsObject call(Map props, [dynamic children]) {
+    _convertProps(props);
+    if (children is Iterable) {
+      children = new JsArray.from(children);
+    }
+    return _React.callMethod('createElement', [name, newJsMap(props), children]);
+  }
+
+  dynamic noSuchMethod(Invocation invocation) {
+    if ((invocation.memberName == #call) && (invocation.isMethod)) {
+      Map props = invocation.positionalArguments[0];
+      _convertProps(props);
+      List<dynamic> reactParams = [name, newJsMap(props)];
+      List<dynamic> children = invocation.positionalArguments.sublist(1);
+      reactParams.addAll(children);
+      return _React.callMethod('createElement', reactParams);
+    }
+    return super.noSuchMethod(invocation);
+  }
+
+  void _convertProps(Map props) {
+    _convertBoundValues(props);
+    _convertEventHandlers(props);
+    if (props.containsKey('style')) {
+      props['style'] = new JsObject.jsify(props['style']);
+    }
+  }
+
 }
 
 /** TODO Think about using Expandos */
@@ -245,40 +321,10 @@ ReactComponentFactory _registerComponent(ComponentFactory componentFactory, [Ite
     )])
   ]);
 
-  var call = (Map props, [dynamic children]) {
-    if (children == null) {
-      children = [];
-    } else if (children is! Iterable) {
-      children = [children];
-    }
-    var extendedProps = new Map.from(props);
-    extendedProps['children'] = children;
-
-    var convertedArgs = newJsObjectEmpty();
-
-    /**
-     * add key to args which will be passed to javascript react component
-     */
-    if (extendedProps.containsKey('key')) {
-      convertedArgs['key'] = extendedProps['key'];
-    }
-
-    if (extendedProps.containsKey('ref')) {
-      convertedArgs['ref'] = extendedProps['ref'];
-    }
-
-    /**
-     * put props to internal part of args
-     */
-    convertedArgs[INTERNAL] = {PROPS: extendedProps};
-
-    return reactComponentFactory.apply([convertedArgs, new JsArray.from(children)]);
-  };
-
   /**
    * return ReactComponentFactory which produce react component with set props and children[s]
    */
-  return new ReactComponentFactoryProxy(reactComponentFactory, call);
+  return new ReactComponentFactoryProxy(reactComponentFactory);
 }
 
 
@@ -286,19 +332,7 @@ ReactComponentFactory _registerComponent(ComponentFactory componentFactory, [Ite
  * create dart-react registered component for html tag.
  */
 _reactDom(String name) {
-  var call = (Map props, [dynamic children]) {
-    _convertBoundValues(props);
-    _convertEventHandlers(props);
-    if (props.containsKey('style')) {
-      props['style'] = new JsObject.jsify(props['style']);
-    }
-    if (children is Iterable) {
-      children = new JsArray.from(children);
-    }
-    return _React['createElement'].apply([name, newJsMap(props), children]);
-  };
-
-  return new ReactComponentFactoryProxy(_React['DOM'][name], call);
+  return new ReactDomComponentFactoryProxy(name);
 }
 
 /**

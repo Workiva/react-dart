@@ -39,6 +39,9 @@ dynamic getComponentType(ReactComponentFactory componentFactory) {
   if (componentFactory is ReactComponentFactoryProxy) {
     return componentFactory.reactComponentFactory['type'];
   }
+  if (componentFactory is ReactDomComponentFactoryProxy) {
+    return componentFactory.name;
+  }
   return null;
 }
 
