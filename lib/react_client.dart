@@ -45,6 +45,11 @@ class ReactComponentFactoryProxy implements Function {
   final JsFunction reactComponentFactory;
   ReactComponentFactoryProxy(this.reactComponentFactory);
 
+  /**
+   * The ReactClass JS function used by [reactComponentFactory].
+   */
+  JsFunction get type => reactComponentFactory['type'];
+
   JsObject call(Map props, [dynamic children]) {
     List reactParams = [
       _generateExtendedJsProps(props, children),

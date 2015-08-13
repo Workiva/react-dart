@@ -37,7 +37,9 @@ _getNestedJsObject(
 /// For React.createClass()-based components, this with return the React class as a JsFunction.
 dynamic getComponentType(ReactComponentFactory componentFactory) {
   if (componentFactory is ReactComponentFactoryProxy) {
-    return componentFactory.reactComponentFactory['type'];
+    return (componentFactory as ReactComponentFactoryProxy).type;
+  } else if (componentFactory is ReactDomComponentFactoryProxy) {
+    return (componentFactory as ReactDomComponentFactoryProxy).name;
   }
   return null;
 }
