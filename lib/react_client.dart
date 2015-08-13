@@ -42,12 +42,51 @@ typedef JsObject ReactComponentFactory(Map props, [dynamic children]);
 typedef Component ComponentFactory();
 
 class ReactComponentFactoryProxy implements Function {
-  final ReactComponentFactory _call;
   final JsFunction reactComponentFactory;
-  ReactComponentFactoryProxy(this.reactComponentFactory, this._call);
+  ReactComponentFactoryProxy(this.reactComponentFactory);
 
   JsObject call(Map props, [dynamic children]) {
-    return this._call(props, children);
+    List reactParams = [
+      _generateExtendedJsProps(props, children),
+      children
+    ];
+
+    return reactComponentFactory.apply(reactParams);
+  }
+
+  /**
+   * Returns a JsObject version of the specified props, preprocessed for consumption by React JS
+   * and prepared for consumption by the react-dart wrapper internals.
+   */
+  static JsObject _generateExtendedJsProps(Map props, dynamic children) {
+    if (children == null) {
+      children = [];
+    } else if (children is! Iterable) {
+      children = [children];
+    }
+
+    Map extendedProps = new Map.from(props);
+    extendedProps['children'] = children;
+
+    JsObject jsProps = newJsObjectEmpty();
+
+    /**
+     * Transfer over key and ref if they're specified so React JS knows about them.
+     */
+    if (extendedProps.containsKey('key')) {
+      jsProps['key'] = extendedProps['key'];
+    }
+
+    if (extendedProps.containsKey('ref')) {
+      jsProps['ref'] = extendedProps['ref'];
+    }
+
+    /**
+     * Put Dart props inside the internal object.
+     */
+    jsProps[INTERNAL] = {PROPS: extendedProps};
+
+    return jsProps;
   }
 }
 
@@ -245,60 +284,49 @@ ReactComponentFactory _registerComponent(ComponentFactory componentFactory, [Ite
     )])
   ]);
 
-  var call = (Map props, [dynamic children]) {
-    if (children == null) {
-      children = [];
-    } else if (children is! Iterable) {
-      children = [children];
-    }
-    var extendedProps = new Map.from(props);
-    extendedProps['children'] = children;
-
-    var convertedArgs = newJsObjectEmpty();
-
-    /**
-     * add key to args which will be passed to javascript react component
-     */
-    if (extendedProps.containsKey('key')) {
-      convertedArgs['key'] = extendedProps['key'];
-    }
-
-    if (extendedProps.containsKey('ref')) {
-      convertedArgs['ref'] = extendedProps['ref'];
-    }
-
-    /**
-     * put props to internal part of args
-     */
-    convertedArgs[INTERNAL] = {PROPS: extendedProps};
-
-    return reactComponentFactory.apply([convertedArgs, new JsArray.from(children)]);
-  };
-
   /**
    * return ReactComponentFactory which produce react component with set props and children[s]
    */
-  return new ReactComponentFactoryProxy(reactComponentFactory, call);
+  return new ReactComponentFactoryProxy(reactComponentFactory);
 }
 
+class ReactDomComponentFactoryProxy implements Function {
+  /**
+   * The name of the proxied DOM component.
+   * E.g., 'div', 'a', 'h1'
+   */
+  final String name;
+  ReactDomComponentFactoryProxy(this.name);
 
-/**
- * create dart-react registered component for html tag.
- */
-_reactDom(String name) {
-  var call = (Map props, [dynamic children]) {
+  JsObject call(Map props, [dynamic children]) {
+    _convertProps(props);
+
+    List reactParams = [
+      name,
+      newJsMap(props),
+      children
+    ];
+
+    return _React.callMethod('createElement', reactParams);
+  }
+
+  /**
+   * Prepares the bound values, event handlers, and style props for consumption by React JS DOM components.
+   */
+  static void _convertProps(Map props) {
     _convertBoundValues(props);
     _convertEventHandlers(props);
     if (props.containsKey('style')) {
       props['style'] = new JsObject.jsify(props['style']);
     }
-    if (children is Iterable) {
-      children = new JsArray.from(children);
-    }
-    return _React['createElement'].apply([name, newJsMap(props), children]);
-  };
+  }
+}
 
-  return new ReactComponentFactoryProxy(_React['DOM'][name], call);
+/**
+ * create dart-react registered component for html tag.
+ */
+_reactDom(String name) {
+  return new ReactDomComponentFactoryProxy(name);
 }
 
 /**
