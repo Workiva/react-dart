@@ -59,6 +59,20 @@ class ReactComponentFactoryProxy implements Function {
     return reactComponentFactory.apply(reactParams);
   }
 
+  dynamic noSuchMethod(Invocation invocation) {
+    if (invocation.memberName == #call && invocation.isMethod) {
+      Map props = invocation.positionalArguments[0];
+      List children = invocation.positionalArguments.sublist(1);
+
+      List reactParams = [_generateExtendedJsProps(props, children)];
+      reactParams.addAll(children);
+
+      return reactComponentFactory.apply(reactParams);
+    }
+
+    return super.noSuchMethod(invocation);
+  }
+
   /**
    * Returns a JsObject version of the specified props, preprocessed for consumption by React JS
    * and prepared for consumption by the react-dart wrapper internals.
@@ -306,13 +320,25 @@ class ReactDomComponentFactoryProxy implements Function {
   JsObject call(Map props, [dynamic children]) {
     _convertProps(props);
 
-    List reactParams = [
-      name,
-      newJsMap(props),
-      children
-    ];
+    List reactParams = [name, newJsMap(props), children];
 
     return _React.callMethod('createElement', reactParams);
+  }
+
+  dynamic noSuchMethod(Invocation invocation) {
+    if (invocation.memberName == #call && invocation.isMethod) {
+      Map props = invocation.positionalArguments[0];
+      List children = invocation.positionalArguments.sublist(1);
+
+      _convertProps(props);
+
+      List reactParams = [name, newJsMap(props)];
+      reactParams.addAll(children);
+
+      return _React.callMethod('createElement', reactParams);
+    }
+
+    return super.noSuchMethod(invocation);
   }
 
   /**
