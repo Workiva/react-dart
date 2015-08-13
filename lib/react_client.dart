@@ -76,7 +76,7 @@ class ReactDartComponentFactoryProxy extends ReactComponentFactoryProxy {
 
   JsObject call(Map props, [dynamic children]) {
     List reactParams = [
-      _generateExtendedJsProps(props, children),
+      generateExtendedJsProps(props, children),
       children
     ];
 
@@ -88,7 +88,7 @@ class ReactDartComponentFactoryProxy extends ReactComponentFactoryProxy {
       Map props = invocation.positionalArguments[0];
       List children = invocation.positionalArguments.sublist(1);
 
-      List reactParams = [_generateExtendedJsProps(props, children)];
+      List reactParams = [generateExtendedJsProps(props, children)];
       reactParams.addAll(children);
 
       return reactComponentFactory.apply(reactParams);
@@ -101,7 +101,7 @@ class ReactDartComponentFactoryProxy extends ReactComponentFactoryProxy {
    * Returns a JsObject version of the specified props, preprocessed for consumption by React JS
    * and prepared for consumption by the react-dart wrapper internals.
    */
-  static JsObject _generateExtendedJsProps(Map props, dynamic children) {
+  static JsObject generateExtendedJsProps(Map props, dynamic children) {
     if (children == null) {
       children = [];
     } else if (children is! Iterable) {
@@ -347,7 +347,7 @@ class ReactDomComponentFactoryProxy extends ReactComponentFactoryProxy {
 
   @override
   JsObject call(Map props, [dynamic children]) {
-    _convertProps(props);
+    convertProps(props);
 
     List reactParams = [name, newJsMap(props), children];
 
@@ -360,7 +360,7 @@ class ReactDomComponentFactoryProxy extends ReactComponentFactoryProxy {
       Map props = invocation.positionalArguments[0];
       List children = invocation.positionalArguments.sublist(1);
 
-      _convertProps(props);
+      convertProps(props);
 
       List reactParams = [name, newJsMap(props)];
       reactParams.addAll(children);
@@ -374,7 +374,7 @@ class ReactDomComponentFactoryProxy extends ReactComponentFactoryProxy {
   /**
    * Prepares the bound values, event handlers, and style props for consumption by React JS DOM components.
    */
-  static void _convertProps(Map props) {
+  static void convertProps(Map props) {
     _convertBoundValues(props);
     _convertEventHandlers(props);
     if (props.containsKey('style')) {
