@@ -38,8 +38,6 @@ _getNestedJsObject(
 dynamic getComponentType(ReactComponentFactory componentFactory) {
   if (componentFactory is ReactComponentFactoryProxy) {
     return (componentFactory as ReactComponentFactoryProxy).type;
-  } else if (componentFactory is ReactDomComponentFactoryProxy) {
-    return (componentFactory as ReactDomComponentFactoryProxy).name;
   }
   return null;
 }

@@ -41,14 +41,38 @@ newJsMap(Map map) {
 typedef JsObject ReactComponentFactory(Map props, [dynamic children]);
 typedef Component ComponentFactory();
 
-class ReactComponentFactoryProxy implements Function {
-  final JsFunction reactComponentFactory;
-  ReactComponentFactoryProxy(this.reactComponentFactory);
+/**
+ * A Dart function that creates React JS component instances.
+ */
+abstract class ReactComponentFactoryProxy implements Function {
+  /**
+   * The type of component created by this factory.
+   */
+  get type;
 
   /**
-   * The ReactClass JS function used by [reactComponentFactory].
+   * Returns a new rendered component instance with the specified props and children.
    */
-  JsFunction get type => reactComponentFactory['type'];
+  JsObject call(Map props, [dynamic children]);
+
+  /**
+   * Used to implement a variadic version of [call], in which children may be specified as additional options.
+   */
+  dynamic noSuchMethod(Invocation invocation);
+}
+
+/**
+ * A Dart function that creates React JS component instances for Dart components.
+ */
+class ReactDartComponentFactoryProxy extends ReactComponentFactoryProxy {
+  final JsFunction reactClass;
+  final JsFunction reactComponentFactory;
+
+  ReactDartComponentFactoryProxy(JsFunction reactClass) :
+    this.reactClass = reactClass,
+    this.reactComponentFactory = _React.callMethod('createFactory', [reactClass]);
+
+  JsFunction get type => reactClass;
 
   JsObject call(Map props, [dynamic children]) {
     List reactParams = [
@@ -286,30 +310,31 @@ ReactComponentFactory _registerComponent(ComponentFactory componentFactory, [Ite
   /**
    * create reactComponent with wrapped functions
    */
-  JsFunction reactComponentFactory = _React.callMethod('createFactory', [
-    _React.callMethod('createClass', [newJsMap(
-      removeUnusedMethods({
-        'componentWillMount': componentWillMount,
-        'componentDidMount': componentDidMount,
-        'componentWillReceiveProps': componentWillReceiveProps,
-        'shouldComponentUpdate': shouldComponentUpdate,
-        'componentWillUpdate': componentWillUpdate,
-        'componentDidUpdate': componentDidUpdate,
-        'componentWillUnmount': componentWillUnmount,
-        'getDefaultProps': getDefaultProps,
-        'getInitialState': getInitialState,
-        'render': render
-      }, skipMethods)
-    )])
-  ]);
+  JsFunction reactComponentClass = _React.callMethod('createClass', [newJsMap(
+    removeUnusedMethods({
+      'componentWillMount': componentWillMount,
+      'componentDidMount': componentDidMount,
+      'componentWillReceiveProps': componentWillReceiveProps,
+      'shouldComponentUpdate': shouldComponentUpdate,
+      'componentWillUpdate': componentWillUpdate,
+      'componentDidUpdate': componentDidUpdate,
+      'componentWillUnmount': componentWillUnmount,
+      'getDefaultProps': getDefaultProps,
+      'getInitialState': getInitialState,
+      'render': render
+    }, skipMethods)
+  )]);
 
   /**
    * return ReactComponentFactory which produce react component with set props and children[s]
    */
-  return new ReactComponentFactoryProxy(reactComponentFactory);
+  return new ReactDartComponentFactoryProxy(reactComponentClass);
 }
 
-class ReactDomComponentFactoryProxy implements Function {
+/**
+ * A Dart function that creates React JS component instances for DOM components.
+ */
+class ReactDomComponentFactoryProxy extends ReactComponentFactoryProxy {
   /**
    * The name of the proxied DOM component.
    * E.g., 'div', 'a', 'h1'
@@ -317,6 +342,10 @@ class ReactDomComponentFactoryProxy implements Function {
   final String name;
   ReactDomComponentFactoryProxy(this.name);
 
+  @override
+  String get type => name;
+
+  @override
   JsObject call(Map props, [dynamic children]) {
     _convertProps(props);
 
@@ -325,6 +354,7 @@ class ReactDomComponentFactoryProxy implements Function {
     return _React.callMethod('createElement', reactParams);
   }
 
+  @override
   dynamic noSuchMethod(Invocation invocation) {
     if (invocation.memberName == #call && invocation.isMethod) {
       Map props = invocation.positionalArguments[0];
