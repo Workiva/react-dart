@@ -516,8 +516,8 @@ Set _syntheticUIEvents = new Set.from(["onScroll",]);
 Set _syntheticWheelEvents = new Set.from(["onWheel",]);
 
 
-void _render(JsObject component, HtmlElement element) {
-  _React.callMethod('render', [component, element]);
+JsObject _render(JsObject component, HtmlElement element) {
+  return _React.callMethod('render', [component, element]);
 }
 
 String _renderToString(JsObject component) {
