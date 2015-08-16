@@ -41,13 +41,95 @@ newJsMap(Map map) {
 typedef JsObject ReactComponentFactory(Map props, [dynamic children]);
 typedef Component ComponentFactory();
 
-class ReactComponentFactoryProxy implements Function {
-  final ReactComponentFactory _call;
+/**
+ * A Dart function that creates React JS component instances.
+ */
+abstract class ReactComponentFactoryProxy implements Function {
+  /**
+   * The type of component created by this factory.
+   */
+  get type;
+
+  /**
+   * Returns a new rendered component instance with the specified props and children.
+   */
+  JsObject call(Map props, [dynamic children]);
+
+  /**
+   * Used to implement a variadic version of [call], in which children may be specified as additional options.
+   */
+  dynamic noSuchMethod(Invocation invocation);
+}
+
+/**
+ * A Dart function that creates React JS component instances for Dart components.
+ */
+class ReactDartComponentFactoryProxy extends ReactComponentFactoryProxy {
+  final JsFunction reactClass;
   final JsFunction reactComponentFactory;
-  ReactComponentFactoryProxy(this.reactComponentFactory, this._call);
+
+  ReactDartComponentFactoryProxy(JsFunction reactClass) :
+    this.reactClass = reactClass,
+    this.reactComponentFactory = _React.callMethod('createFactory', [reactClass]);
+
+  JsFunction get type => reactClass;
 
   JsObject call(Map props, [dynamic children]) {
-    return this._call(props, children);
+    List reactParams = [
+      generateExtendedJsProps(props, children),
+      children
+    ];
+
+    return reactComponentFactory.apply(reactParams);
+  }
+
+  dynamic noSuchMethod(Invocation invocation) {
+    if (invocation.memberName == #call && invocation.isMethod) {
+      Map props = invocation.positionalArguments[0];
+      List children = invocation.positionalArguments.sublist(1);
+
+      List reactParams = [generateExtendedJsProps(props, children)];
+      reactParams.addAll(children);
+
+      return reactComponentFactory.apply(reactParams);
+    }
+
+    return super.noSuchMethod(invocation);
+  }
+
+  /**
+   * Returns a JsObject version of the specified props, preprocessed for consumption by React JS
+   * and prepared for consumption by the react-dart wrapper internals.
+   */
+  static JsObject generateExtendedJsProps(Map props, dynamic children) {
+    if (children == null) {
+      children = [];
+    } else if (children is! Iterable) {
+      children = [children];
+    }
+
+    Map extendedProps = new Map.from(props);
+    extendedProps['children'] = children;
+
+    JsObject jsProps = newJsObjectEmpty();
+
+    /**
+     * Transfer over key and ref if they're specified so React JS knows about them.
+     */
+    if (extendedProps.containsKey('key')) {
+      jsProps['key'] = extendedProps['key'];
+    }
+
+    if (extendedProps.containsKey('ref')) {
+      jsProps['ref'] = extendedProps['ref'];
+    }
+
+    /**
+     * Put Dart props inside the internal object.
+     */
+    jsProps[INTERNAL] = {PROPS: extendedProps};
+
+    return jsProps;
   }
 }
 
@@ -228,77 +310,84 @@ ReactComponentFactory _registerComponent(ComponentFactory componentFactory, [Ite
   /**
    * create reactComponent with wrapped functions
    */
-  JsFunction reactComponentFactory = _React.callMethod('createFactory', [
-    _React.callMethod('createClass', [newJsMap(
-      removeUnusedMethods({
-        'componentWillMount': componentWillMount,
-        'componentDidMount': componentDidMount,
-        'componentWillReceiveProps': componentWillReceiveProps,
-        'shouldComponentUpdate': shouldComponentUpdate,
-        'componentWillUpdate': componentWillUpdate,
-        'componentDidUpdate': componentDidUpdate,
-        'componentWillUnmount': componentWillUnmount,
-        'getDefaultProps': getDefaultProps,
-        'getInitialState': getInitialState,
-        'render': render
-      }, skipMethods)
-    )])
-  ]);
-
-  var call = (Map props, [dynamic children]) {
-    if (children == null) {
-      children = [];
-    } else if (children is! Iterable) {
-      children = [children];
-    }
-    var extendedProps = new Map.from(props);
-    extendedProps['children'] = children;
-
-    var convertedArgs = newJsObjectEmpty();
-
-    /**
-     * add key to args which will be passed to javascript react component
-     */
-    if (extendedProps.containsKey('key')) {
-      convertedArgs['key'] = extendedProps['key'];
-    }
-
-    if (extendedProps.containsKey('ref')) {
-      convertedArgs['ref'] = extendedProps['ref'];
-    }
-
-    /**
-     * put props to internal part of args
-     */
-    convertedArgs[INTERNAL] = {PROPS: extendedProps};
-
-    return reactComponentFactory.apply([convertedArgs, new JsArray.from(children)]);
-  };
+  JsFunction reactComponentClass = _React.callMethod('createClass', [newJsMap(
+    removeUnusedMethods({
+      'componentWillMount': componentWillMount,
+      'componentDidMount': componentDidMount,
+      'componentWillReceiveProps': componentWillReceiveProps,
+      'shouldComponentUpdate': shouldComponentUpdate,
+      'componentWillUpdate': componentWillUpdate,
+      'componentDidUpdate': componentDidUpdate,
+      'componentWillUnmount': componentWillUnmount,
+      'getDefaultProps': getDefaultProps,
+      'getInitialState': getInitialState,
+      'render': render
+    }, skipMethods)
+  )]);
 
   /**
    * return ReactComponentFactory which produce react component with set props and children[s]
    */
-  return new ReactComponentFactoryProxy(reactComponentFactory, call);
+  return new ReactDartComponentFactoryProxy(reactComponentClass);
 }
 
-
 /**
- * create dart-react registered component for html tag.
+ * A Dart function that creates React JS component instances for DOM components.
  */
-_reactDom(String name) {
-  var call = (Map props, [dynamic children]) {
+class ReactDomComponentFactoryProxy extends ReactComponentFactoryProxy {
+  /**
+   * The name of the proxied DOM component.
+   * E.g., 'div', 'a', 'h1'
+   */
+  final String name;
+  ReactDomComponentFactoryProxy(this.name);
+
+  @override
+  String get type => name;
+
+  @override
+  JsObject call(Map props, [dynamic children]) {
+    convertProps(props);
+
+    List reactParams = [name, newJsMap(props), children];
+
+    return _React.callMethod('createElement', reactParams);
+  }
+
+  @override
+  dynamic noSuchMethod(Invocation invocation) {
+    if (invocation.memberName == #call && invocation.isMethod) {
+      Map props = invocation.positionalArguments[0];
+      List children = invocation.positionalArguments.sublist(1);
+
+      convertProps(props);
+
+      List reactParams = [name, newJsMap(props)];
+      reactParams.addAll(children);
+
+      return _React.callMethod('createElement', reactParams);
+    }
+
+    return super.noSuchMethod(invocation);
+  }
+
+  /**
+   * Prepares the bound values, event handlers, and style props for consumption by React JS DOM components.
+   */
+  static void convertProps(Map props) {
     _convertBoundValues(props);
     _convertEventHandlers(props);
     if (props.containsKey('style')) {
       props['style'] = new JsObject.jsify(props['style']);
     }
-    if (children is Iterable) {
-      children = new JsArray.from(children);
-    }
-    return _React['createElement'].apply([name, newJsMap(props), children]);
-  };
+  }
+}
 
-  return new ReactComponentFactoryProxy(_React['DOM'][name], call);
+/**
+ * create dart-react registered component for html tag.
+ */
+_reactDom(String name) {
+  return new ReactDomComponentFactoryProxy(name);
 }
 
 /**
