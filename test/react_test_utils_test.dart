@@ -19,96 +19,108 @@ void main() {
   var _React = context['React'];
   var _Object = context['Object'];
 
-  void testEvent(Function event, String eventName) {
-    component = renderIntoDocument(eventComponent({}));
-    domNode = getDomNode(component);
-    expect(domNode.text, equals(''));
-
-    int fakeTimeStamp = eventName.hashCode;
-    Map eventData = {
-      'type': eventName,
-      'timeStamp': fakeTimeStamp
-    };
-    event(findRenderedDOMComponentWithTag(component, 'div'), eventData);
-    expect(domNode.text, equals('$eventName $fakeTimeStamp'));
-  }
-
-  group('Simulate event', () {
-    tearDown(() {
-      component = null;
-      domNode = null;
-    });
-
-    test('blur', () => testEvent(Simulate.blur, 'blur'));
-    test('change', () => testEvent(Simulate.change, 'change'));
-    test('click', () => testEvent(Simulate.click, 'click'));
-    test('copy', () => testEvent(Simulate.copy, 'copy'));
-    test('cut', () => testEvent(Simulate.cut, 'cut'));
-    test('doubleClick', () => testEvent(Simulate.doubleClick, 'doubleClick'));
-    test('drag', () => testEvent(Simulate.drag, 'drag'));
-    test('dragEnd', () => testEvent(Simulate.dragEnd, 'dragEnd'));
-    test('dragEnter', () => testEvent(Simulate.dragEnter, 'dragEnter'));
-    test('dragExit', () => testEvent(Simulate.dragExit, 'dragExit'));
-    test('dragLeave', () => testEvent(Simulate.dragLeave, 'dragLeave'));
-    test('dragOver', () => testEvent(Simulate.dragOver, 'dragOver'));
-    test('dragStart', () => testEvent(Simulate.dragStart, 'dragStart'));
-    test('drop', () => testEvent(Simulate.drop, 'drop'));
-    test('focus', () => testEvent(Simulate.focus, 'focus'));
-    test('input', () => testEvent(Simulate.input, 'input'));
-    test('keyDown', () => testEvent(Simulate.keyDown, 'keyDown'));
-    test('keyPress', () => testEvent(Simulate.keyPress, 'keyPress'));
-    test('keyUp', () => testEvent(Simulate.keyUp, 'keyUp'));
-    test('mouseDown', () => testEvent(Simulate.mouseDown, 'mouseDown'));
-    test('mouseMove', () => testEvent(Simulate.mouseMove, 'mouseMove'));
-    test('mouseOut', () => testEvent(Simulate.mouseOut, 'mouseOut'));
-    test('mouseOver', () => testEvent(Simulate.mouseOver, 'mouseOver'));
-    test('mouseUp', () => testEvent(Simulate.mouseUp, 'mouseUp'));
-    test('paste', () => testEvent(Simulate.paste, 'paste'));
-    test('scroll', () => testEvent(Simulate.scroll, 'scroll'));
-    test('submit', () => testEvent(Simulate.submit, 'submit'));
-    test('touchCancel', () => testEvent(Simulate.touchCancel, 'touchCancel'));
-    test('touchEnd', () => testEvent(Simulate.touchEnd, 'touchEnd'));
-    test('touchMove', () => testEvent(Simulate.touchMove, 'touchMove'));
-    test('touchStart', () => testEvent(Simulate.touchStart, 'touchStart'));
-    test('wheel', () => testEvent(Simulate.wheel, 'wheel'));
+  tearDown(() {
+    component = null;
+    domNode = null;
   });
 
-  group('Simulate native event', () {
-    tearDown(() {
-      component = null;
-      domNode = null;
+  group('Simulate', () {
+    setUp(() {
+      component = renderIntoDocument(eventComponent({}));
+      domNode = getDomNode(component);
+      expect(domNode.text, equals(''));
     });
 
-    test('blur', () => testEvent(SimulateNative.blur, 'blur'));
-    test('click', () => testEvent(SimulateNative.click, 'click'));
-    test('copy', () => testEvent(SimulateNative.copy, 'copy'));
-    test('cut', () => testEvent(SimulateNative.cut, 'cut'));
-    test('doubleClick', () => testEvent(SimulateNative.doubleClick, 'doubleClick'));
-    test('drag', () => testEvent(SimulateNative.drag, 'drag'));
-    test('dragEnd', () => testEvent(SimulateNative.dragEnd, 'dragEnd'));
-    test('dragEnter', () => testEvent(SimulateNative.dragEnter, 'dragEnter'));
-    test('dragExit', () => testEvent(SimulateNative.dragExit, 'dragExit'));
-    test('dragLeave', () => testEvent(SimulateNative.dragLeave, 'dragLeave'));
-    test('dragOver', () => testEvent(SimulateNative.dragOver, 'dragOver'));
-    test('dragStart', () => testEvent(SimulateNative.dragStart, 'dragStart'));
-    test('drop', () => testEvent(SimulateNative.drop, 'drop'));
-    test('focus', () => testEvent(SimulateNative.focus, 'focus'));
-    test('input', () => testEvent(SimulateNative.input, 'input'));
-    test('keyDown', () => testEvent(SimulateNative.keyDown, 'keyDown'));
-    test('keyUp', () => testEvent(SimulateNative.keyUp, 'keyUp'));
-    test('mouseDown', () => testEvent(SimulateNative.mouseDown, 'mouseDown'));
-    test('mouseMove', () => testEvent(SimulateNative.mouseMove, 'mouseMove'));
-    test('mouseOut', () => testEvent(SimulateNative.mouseOut, 'mouseOut'));
-    test('mouseOver', () => testEvent(SimulateNative.mouseOver, 'mouseOver'));
-    test('mouseUp', () => testEvent(SimulateNative.mouseUp, 'mouseUp'));
-    test('paste', () => testEvent(SimulateNative.paste, 'paste'));
-    test('scroll', () => testEvent(SimulateNative.scroll, 'scroll'));
-    test('submit', () => testEvent(SimulateNative.submit, 'submit'));
-    test('touchCancel', () => testEvent(SimulateNative.touchCancel, 'touchCancel'));
-    test('touchEnd', () => testEvent(SimulateNative.touchEnd, 'touchEnd'));
-    test('touchMove', () => testEvent(SimulateNative.touchMove, 'touchMove'));
-    test('touchStart', () => testEvent(SimulateNative.touchStart, 'touchStart'));
-    test('wheel', () => testEvent(SimulateNative.wheel, 'wheel'));
+    void testEvent(void event(dynamic instanceOrNode, Map eventData), String eventName) {
+      int fakeTimeStamp;
+      Map eventData;
+
+      setUp(() {
+        fakeTimeStamp = eventName.hashCode;
+        eventData = {
+          'type': eventName,
+          'timeStamp': fakeTimeStamp
+        };
+      });
+
+      test('with React instance as arg', () {
+        event(findRenderedDOMComponentWithTag(component, 'div'), eventData);
+        expect(domNode.text, equals('$eventName $fakeTimeStamp'));
+      });
+
+      test('with DOM Element as arg', () {
+        event(domNode, eventData);
+        expect(domNode.text, equals('$eventName $fakeTimeStamp'));
+      });
+    };
+
+    group('event', () {
+      group('blur', () => testEvent(Simulate.blur, 'blur'));
+      group('change', () => testEvent(Simulate.change, 'change'));
+      group('click', () => testEvent(Simulate.click, 'click'));
+      group('copy', () => testEvent(Simulate.copy, 'copy'));
+      group('cut', () => testEvent(Simulate.cut, 'cut'));
+      group('doubleClick', () => testEvent(Simulate.doubleClick, 'doubleClick'));
+      group('drag', () => testEvent(Simulate.drag, 'drag'));
+      group('dragEnd', () => testEvent(Simulate.dragEnd, 'dragEnd'));
+      group('dragEnter', () => testEvent(Simulate.dragEnter, 'dragEnter'));
+      group('dragExit', () => testEvent(Simulate.dragExit, 'dragExit'));
+      group('dragLeave', () => testEvent(Simulate.dragLeave, 'dragLeave'));
+      group('dragOver', () => testEvent(Simulate.dragOver, 'dragOver'));
+      group('dragStart', () => testEvent(Simulate.dragStart, 'dragStart'));
+      group('drop', () => testEvent(Simulate.drop, 'drop'));
+      group('focus', () => testEvent(Simulate.focus, 'focus'));
+      group('input', () => testEvent(Simulate.input, 'input'));
+      group('keyDown', () => testEvent(Simulate.keyDown, 'keyDown'));
+      group('keyPress', () => testEvent(Simulate.keyPress, 'keyPress'));
+      group('keyUp', () => testEvent(Simulate.keyUp, 'keyUp'));
+      group('mouseDown', () => testEvent(Simulate.mouseDown, 'mouseDown'));
+      group('mouseMove', () => testEvent(Simulate.mouseMove, 'mouseMove'));
+      group('mouseOut', () => testEvent(Simulate.mouseOut, 'mouseOut'));
+      group('mouseOver', () => testEvent(Simulate.mouseOver, 'mouseOver'));
+      group('mouseUp', () => testEvent(Simulate.mouseUp, 'mouseUp'));
+      group('paste', () => testEvent(Simulate.paste, 'paste'));
+      group('scroll', () => testEvent(Simulate.scroll, 'scroll'));
+      group('submit', () => testEvent(Simulate.submit, 'submit'));
+      group('touchCancel', () => testEvent(Simulate.touchCancel, 'touchCancel'));
+      group('touchEnd', () => testEvent(Simulate.touchEnd, 'touchEnd'));
+      group('touchMove', () => testEvent(Simulate.touchMove, 'touchMove'));
+      group('touchStart', () => testEvent(Simulate.touchStart, 'touchStart'));
+      group('wheel', () => testEvent(Simulate.wheel, 'wheel'));
+    });
+
+    group('native event', () {
+      group('blur', () => testEvent(SimulateNative.blur, 'blur'));
+      group('click', () => testEvent(SimulateNative.click, 'click'));
+      group('copy', () => testEvent(SimulateNative.copy, 'copy'));
+      group('cut', () => testEvent(SimulateNative.cut, 'cut'));
+      group('doubleClick', () => testEvent(SimulateNative.doubleClick, 'doubleClick'));
+      group('drag', () => testEvent(SimulateNative.drag, 'drag'));
+      group('dragEnd', () => testEvent(SimulateNative.dragEnd, 'dragEnd'));
+      group('dragEnter', () => testEvent(SimulateNative.dragEnter, 'dragEnter'));
+      group('dragExit', () => testEvent(SimulateNative.dragExit, 'dragExit'));
+      group('dragLeave', () => testEvent(SimulateNative.dragLeave, 'dragLeave'));
+      group('dragOver', () => testEvent(SimulateNative.dragOver, 'dragOver'));
+      group('dragStart', () => testEvent(SimulateNative.dragStart, 'dragStart'));
+      group('drop', () => testEvent(SimulateNative.drop, 'drop'));
+      group('focus', () => testEvent(SimulateNative.focus, 'focus'));
+      group('input', () => testEvent(SimulateNative.input, 'input'));
+      group('keyDown', () => testEvent(SimulateNative.keyDown, 'keyDown'));
+      group('keyUp', () => testEvent(SimulateNative.keyUp, 'keyUp'));
+      group('mouseDown', () => testEvent(SimulateNative.mouseDown, 'mouseDown'));
+      group('mouseMove', () => testEvent(SimulateNative.mouseMove, 'mouseMove'));
+      group('mouseOut', () => testEvent(SimulateNative.mouseOut, 'mouseOut'));
+      group('mouseOver', () => testEvent(SimulateNative.mouseOver, 'mouseOver'));
+      group('mouseUp', () => testEvent(SimulateNative.mouseUp, 'mouseUp'));
+      group('paste', () => testEvent(SimulateNative.paste, 'paste'));
+      group('scroll', () => testEvent(SimulateNative.scroll, 'scroll'));
+      group('submit', () => testEvent(SimulateNative.submit, 'submit'));
+      group('touchCancel', () => testEvent(SimulateNative.touchCancel, 'touchCancel'));
+      group('touchEnd', () => testEvent(SimulateNative.touchEnd, 'touchEnd'));
+      group('touchMove', () => testEvent(SimulateNative.touchMove, 'touchMove'));
+      group('touchStart', () => testEvent(SimulateNative.touchStart, 'touchStart'));
+      group('wheel', () => testEvent(SimulateNative.wheel, 'wheel'));
+    });
   });
 
   test('findRenderedDOMComponentWithClass', () {
