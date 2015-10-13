@@ -36,6 +36,17 @@ newJsMap(Map map) {
 }
 
 /**
+ * Returns [children] converted to be passed to React JS.
+ */
+convertChildren(children) {
+  if (children is Iterable || children is Map) {
+    return new JsObject.jsify(children);
+  }
+
+  return children;
+}
+
+/**
  * Type of [children] must be child or list of childs, when child is JsObject or String
  */
 typedef JsObject ReactComponentFactory(Map props, [dynamic children]);
@@ -77,7 +88,7 @@ class ReactDartComponentFactoryProxy extends ReactComponentFactoryProxy {
   JsObject call(Map props, [dynamic children]) {
     List reactParams = [
       generateExtendedJsProps(props, children),
-      children
+      convertChildren(children)
     ];
 
     return reactComponentFactory.apply(reactParams);
@@ -349,7 +360,7 @@ class ReactDomComponentFactoryProxy extends ReactComponentFactoryProxy {
   JsObject call(Map props, [dynamic children]) {
     convertProps(props);
 
-    List reactParams = [name, newJsMap(props), children];
+    List reactParams = [name, newJsMap(props), convertChildren(children)];
 
     return _React.callMethod('createElement', reactParams);
   }
