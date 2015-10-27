@@ -75,10 +75,11 @@ class ReactDartComponentFactoryProxy extends ReactComponentFactoryProxy {
   JsFunction get type => reactClass;
 
   JsObject call(Map props, [dynamic children]) {
-    // Convert Iterable children to a List so that they get auto-converted
-    // properly when passed to the JS.
-    if (children is Iterable && children is! List) {
-      children = children.toList(growable: false);
+    // Convert Iterable children to JsArrays so that the JS can read them.
+    // Use JsArrays instead of Lists, because automatic List conversion results in
+    // react-id values being cluttered with ".$o:0:0:$_jsObject:" in dart2js-transpiled Dart.
+    if (children is Iterable) {
+      children = new JsArray.from(children);
     }
 
     List reactParams = [
@@ -354,11 +355,12 @@ class ReactDomComponentFactoryProxy extends ReactComponentFactoryProxy {
   @override
   JsObject call(Map props, [dynamic children]) {
     convertProps(props);
-
-    // Convert Iterable children to a List so that they get auto-converted
-    // properly when passed to the JS.
-    if (children is Iterable && children is! List) {
-      children = children.toList(growable: false);
+    
+    // Convert Iterable children to JsArrays so that the JS can read them.
+    // Use JsArrays instead of Lists, because automatic List conversion results in
+    // react-id values being cluttered with ".$o:0:0:$_jsObject:" in dart2js-transpiled Dart.
+    if (children is Iterable) {
+      children = new JsArray.from(children);
     }
 
     List reactParams = [name, newJsMap(props), children];
