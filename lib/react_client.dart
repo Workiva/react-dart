@@ -475,6 +475,10 @@ _convertBoundValues(Map args) {
 _convertEventHandlers(Map args) {
   var zone = Zone.current;
   args.forEach((key, value) {
+    if (value == null) {
+      // If the handler is null, don't attempt to wrap/call it.
+      return;
+    }
     var eventFactory;
     if (_syntheticClipboardEvents.contains(key)) {
       eventFactory = syntheticClipboardEventFactory;
