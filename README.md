@@ -1,5 +1,7 @@
 #Dart wrapper library for [facebook/react](http://facebook.github.io/)
 
+[![Pub](https://img.shields.io/pub/v/react.svg)](https://pub.dartlang.org/packages/react)
+
 ##Getting started
 
 If you are not familiar with React library read [react tutorial](http://facebook.github.io/react/docs/getting-started.html) first.
@@ -44,7 +46,7 @@ Inverse method to rendering component is unmountComponentAtNode
 
 ##Using browser native elements
 
-If you are familiar with React (without JSX extension) React-dart shouldn't surprise you much. All elements are defined as 
+If you are familiar with React (without JSX extension) React-dart shouldn't surprise you much. All elements are defined as
 functions that take `props` as first argument and `children` as optional second argument. `props` should implement `Map` and `children` is either one React element or `List` with multiple elements.
 
 ```dart
@@ -71,7 +73,7 @@ class MyComponent extends Component {
   render() => div({}, "MyComponent");
 }
 ```
-    
+
 Register this class so React can recognize it.
 
 ```dart
@@ -154,15 +156,15 @@ class _ParentComponent extends Component {
   componentDidMount(root) {
     var inputRef = ref("input"); //return react jsObject
     InputElement input = findDOMNode(inputRef); // return InputElement in dom
-    
+
     _DartComponent dartRef = ref("dart"); //return instance of _DartComponent
     dartRef.someData; // you can call methods or get values from it
     findDOMNode(dartRef); //return div element rendered from _DartComponent
-    
+
     findDOMNode(this); //return root dom element rendered from this component
   }
 }
-``` 
+```
 
 ## Geocodes Example
 

@@ -366,3 +366,41 @@ JsObject mockComponent(JsObject componentClass, String mockTagName) {
   return _TestUtils.callMethod(
       'mockComponent', [componentClass, mockTagName]);
 }
+
+/// Returns a ReactShallowRenderer instance
+///
+/// More info on using shallow rendering: https://facebook.github.io/react/docs/test-utils.html#shallow-rendering
+ReactShallowRenderer createRenderer() {
+  return new ReactShallowRenderer.jsObject(_TestUtils.callMethod('createRenderer', []));
+}
+
+/// ReactShallowRenderer wrapper
+///
+/// Usage:
+/// ```
+/// ReactShallowRenderer shallowRenderer = createRenderer();
+/// shallowRenderer.render(div({'className': 'active'}));
+///
+/// JsObject renderedOutput = shallowRenderer.getRenderOutput();
+/// expect(renderedOutput['props']['className'], 'active');
+/// ```
+///
+/// See react_with_addons.js#ReactShallowRenderer
+class ReactShallowRenderer {
+  final JsObject jsRenderer;
+
+  ReactShallowRenderer.jsObject(JsObject this.jsRenderer);
+
+  /// Get the rendered output. [render] must be called first
+  JsObject getRenderOutput() => jsRenderer.callMethod('getRenderOutput', []);
+
+  render(JsObject element, [Map context]) {
+    JsObject c = context == null ? null : new JsObject.jsify(context);
+
+    jsRenderer.callMethod('render', [element, c]);
+  }
+
+  unmount() {
+    jsRenderer.callMethod('unmount', []);
+  }
+}

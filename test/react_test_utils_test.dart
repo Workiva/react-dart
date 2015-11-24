@@ -24,6 +24,32 @@ void main() {
     domNode = null;
   });
 
+  group('Shallow Rendering', () {
+    JsObject content;
+    ReactShallowRenderer shallowRenderer;
+
+    setUp(() {
+      content = div({'className': 'test', 'id': 'createRendererTest'});
+
+      shallowRenderer = createRenderer();
+    });
+
+    tearDown(() {
+      JsObject renderedOutput = shallowRenderer.getRenderOutput();
+
+      expect(renderedOutput['props']['className'], 'test');
+      expect(renderedOutput['props']['id'], 'createRendererTest');
+    });
+
+    test('without context', () {
+      shallowRenderer.render(content);
+    });
+
+    test('with context', () {
+      shallowRenderer.render(content, {});
+    });
+  });
+
   group('Simulate', () {
     setUp(() {
       component = renderIntoDocument(eventComponent({}));
