@@ -15,6 +15,11 @@ abstract class Component {
   dynamic _jsRedraw;
 
   /**
+   * Getter to allow the [displayName] React property to be set.
+   */
+  String get displayName => runtimeType.toString();
+
+  /**
    * Bind the value of input to [state[key]].
    */
   bind(key) => [state[key], (value) => setState({key: value})];

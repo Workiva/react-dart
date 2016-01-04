@@ -319,6 +319,7 @@ ReactComponentFactory _registerComponent(ComponentFactory componentFactory, [Ite
    */
   JsFunction reactComponentClass = _React.callMethod('createClass', [newJsMap(
     removeUnusedMethods({
+      'displayName': componentFactory().displayName,
       'componentWillMount': componentWillMount,
       'componentDidMount': componentDidMount,
       'componentWillReceiveProps': componentWillReceiveProps,
