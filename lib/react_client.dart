@@ -42,6 +42,13 @@ typedef JsObject ReactComponentFactory(Map props, [dynamic children]);
 typedef Component ComponentFactory();
 
 /**
+ * The type of a ref specified as a callback.
+ *
+ * See <https://facebook.github.io/react/docs/more-about-refs.html#the-ref-callback-attribute>.
+ */
+typedef _CallbackRef(componentOrDomNode);
+
+/**
  * A Dart function that creates React JS component instances.
  */
 abstract class ReactComponentFactoryProxy implements Function {
@@ -128,7 +135,15 @@ class ReactDartComponentFactoryProxy extends ReactComponentFactoryProxy {
     }
 
     if (extendedProps.containsKey('ref')) {
-      jsProps['ref'] = extendedProps['ref'];
+      var ref = extendedProps['ref'];
+
+      // If the ref is a callback, pass React a function that will call it
+      // with the Dart component instance, not the JsObject instance.
+      if (ref is _CallbackRef) {
+        jsProps['ref'] = (JsObject instance) => ref(_getComponent(instance));
+      } else {
+        jsProps['ref'] = ref;
+      }
     }
 
     /**
@@ -356,7 +371,7 @@ class ReactDomComponentFactoryProxy extends ReactComponentFactoryProxy {
   @override
   JsObject call(Map props, [dynamic children]) {
     convertProps(props);
-    
+
     // Convert Iterable children to JsArrays so that the JS can read them.
     // Use JsArrays instead of Lists, because automatic List conversion results in
     // react-id values being cluttered with ".$o:0:0:$_jsObject:" in dart2js-transpiled Dart.
