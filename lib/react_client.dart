@@ -623,6 +623,7 @@ Set _syntheticKeyboardEvents = new Set.from(["onKeyDown", "onKeyPress",
 Set _syntheticFocusEvents = new Set.from(["onFocus", "onBlur",]);
 
 Set _syntheticFormEvents = new Set.from(["onChange", "onInput", "onSubmit",
+    "onReset",
 ]);
 
 Set _syntheticMouseEvents = new Set.from(["onClick", "onContextMenu",
