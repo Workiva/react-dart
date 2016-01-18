@@ -140,7 +140,7 @@ class ReactDartComponentFactoryProxy extends ReactComponentFactoryProxy {
       // If the ref is a callback, pass React a function that will call it
       // with the Dart component instance, not the JsObject instance.
       if (ref is _CallbackRef) {
-        jsProps['ref'] = (JsObject instance) => ref(_getComponent(instance));
+        jsProps['ref'] = (JsObject instance) => ref(instance == null ? null : _getComponent(instance));
       } else {
         jsProps['ref'] = ref;
       }
