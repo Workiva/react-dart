@@ -13,6 +13,12 @@ abstract class Component {
   dynamic ref;
   dynamic getDOMNode;
   dynamic _jsRedraw;
+  dynamic _jsThis;
+
+  /**
+   * The JavaScript `ReactComponent` instance associated with this component.
+   */
+  dynamic get jsThis => _jsThis;
 
   /**
    * Getter to allow the [displayName] React property to be set.
@@ -24,10 +30,11 @@ abstract class Component {
    */
   bind(key) => [state[key], (value) => setState({key: value})];
 
-  initComponentInternal(props, _jsRedraw, [ref = null, getDOMNode = null]) {
+  initComponentInternal(props, _jsRedraw, [ref, getDOMNode, _jsThis]) {
     this._jsRedraw = _jsRedraw;
     this.ref = ref;
     this.getDOMNode = getDOMNode;
+    this._jsThis = _jsThis;
     _initProps(props);
   }
 
