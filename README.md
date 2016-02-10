@@ -107,7 +107,7 @@ myComponent({"text":"Somehting"})
 ```dart
 typedef MyComponentType({String headline, String text});
 
-var _myComponent = registerComponent(() => new MyComponent())
+var _myComponent = registerComponent(() => new MyComponent());
 
 MyComponentType myComponent = ({headline, text}) =>
     _myComponent({'headline':headline, 'text':text});
@@ -121,6 +121,7 @@ class MyComponent extends Component {
       span({}, text),
     ]);
 }
+
 void main() {
   reactClient.setClientConfiguration();
   render(
