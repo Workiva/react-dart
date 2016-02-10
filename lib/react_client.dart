@@ -204,7 +204,7 @@ ReactComponentFactory _registerComponent(ComponentFactory componentFactory, [Ite
     };
 
     Component component = componentFactory()
-        ..initComponentInternal(internal[PROPS], redraw, getRef, getDOMNode);
+        ..initComponentInternal(internal[PROPS], redraw, getRef, getDOMNode, jsThis);
 
     internal[COMPONENT] = component;
     internal[IS_MOUNTED] = false;
