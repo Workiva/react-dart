@@ -10,6 +10,7 @@ import "dart:html";
 import "dart:async";
 
 var _React = context['React'];
+var _ReactDom = context['ReactDOM'];
 var _Object = context['Object'];
 
 const PROPS = 'props';
@@ -200,7 +201,7 @@ ReactComponentFactory _registerComponent(ComponentFactory componentFactory, [Ite
     };
 
     var getDOMNode = () {
-      return _React.callMethod('findDOMNode', [jsThis]);
+      return _ReactDom.callMethod('findDOMNode', [jsThis]);
     };
 
     Component component = componentFactory()
@@ -229,7 +230,7 @@ ReactComponentFactory _registerComponent(ComponentFactory componentFactory, [Ite
    */
   var componentDidMount = new JsFunction.withThis((JsObject jsThis) => zone.run(() {
     //you need to get dom node by calling findDOMNode
-    var rootNode = _React.callMethod('findDOMNode', [jsThis]);
+    var rootNode = _ReactDom.callMethod('findDOMNode', [jsThis]);
     _getComponent(jsThis).componentDidMount(rootNode);
   }));
 
@@ -299,7 +300,7 @@ ReactComponentFactory _registerComponent(ComponentFactory componentFactory, [Ite
       new JsFunction.withThis((JsObject jsThis, prevProps, prevState, prevContext) => zone.run(() {
     var prevInternalProps = _getInternalProps(prevProps);
     //you don't get root node as parameter but need to get it directly
-    var rootNode = _React.callMethod('findDOMNode', [jsThis]);
+    var rootNode = _ReactDom.callMethod('findDOMNode', [jsThis]);
     Component component = _getComponent(jsThis);
     component.componentDidUpdate(prevInternalProps, component.prevState, rootNode);
   }));
@@ -661,7 +662,7 @@ dynamic _findDomNode(component) {
   // which has jsComponent closured inside and calls on it findDOMNode
   if (component is Component) return component.getDOMNode();
   //otherwise we have js component so pass it in findDOM node
-  return _React.callMethod('findDOMNode', [component]);
+  return _ReactDom.callMethod('findDOMNode', [component]);
 }
 
 void setClientConfiguration() {
