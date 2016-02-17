@@ -44,7 +44,7 @@ class SimpleComponent extends react.Component {
       react.button({"onClick": (_) => (getDOMNode() as HtmlElement).children.first.text = (++counter).toString()},"Increase counter"),
       react.br({}),
       ChildComponent({"ref": "refToElement"}),
-      react.button({"onClick": (_) => window.alert((this.ref('test') as _ChildComponent).counter.toString())}, "Show value of child element"),
+      react.button({"onClick": (_) => window.alert((this.ref('refToElement') as _ChildComponent).counter.toString())}, "Show value of child element"),
     ]);
 }
 
