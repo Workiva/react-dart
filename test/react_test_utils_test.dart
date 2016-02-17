@@ -29,7 +29,7 @@ void main() {
     ReactShallowRenderer shallowRenderer;
 
     setUp(() {
-      content = div({'className': 'test', 'id': 'createRendererTest'});
+      content = sampleComponent({'className': 'test', 'id': 'createRendererTest'});
 
       shallowRenderer = createRenderer();
     });

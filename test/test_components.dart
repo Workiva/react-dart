@@ -49,7 +49,7 @@ ReactComponentFactory eventComponent = registerComponent(() =>
     new EventComponent());
 
 class SampleComponent extends Component {
-  render() => div({}, [
+  render() => div(props, [
       h1({}, 'A header'),
       div({'className': 'div1'}, 'First div'),
       div({}, 'Second div'),
