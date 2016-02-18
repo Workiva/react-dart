@@ -268,7 +268,16 @@ class SimulateNative {
 ///
 /// Included in Dart for completeness
 List findAllInRenderedTree(JsObject tree, JsFunction test) {
-  return _TestUtils.callMethod('findAllInRenderedTree', [tree, test]);
+  var components = _TestUtils.callMethod('findAllInRenderedTree', [tree, test]);
+
+  var jsObjectComponents = [];
+
+  components.forEach((component) {
+    if (component is JsObject) jsObjectComponents.add(component);
+    else jsObjectComponents.add(new JsObject.fromBrowserObject(component));
+  });
+
+  return jsObjectComponents;
 }
 
 /// Like scryRenderedDOMComponentsWithClass() but expects there to be one
