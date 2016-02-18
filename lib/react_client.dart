@@ -644,7 +644,10 @@ Set _syntheticWheelEvents = new Set.from(["onWheel",]);
 
 
 JsObject _render(JsObject component, HtmlElement element) {
-  return _React.callMethod('render', [component, element]);
+  var renderedComponent = _React.callMethod('render', [component, element]);
+
+  if (renderedComponent is JsObject) return renderedComponent;
+  else return new JsObject.fromBrowserObject(renderedComponent);
 }
 
 String _renderToString(JsObject component) {
