@@ -194,8 +194,10 @@ ReactComponentFactory _registerComponent(ComponentFactory componentFactory, [Ite
     };
 
     var getRef = (name) {
-      var ref = jsThis['refs'][name] as JsObject;
+      var ref = jsThis['refs'][name];
       if (ref == null) return null;
+      if (ref is Element) return ref;
+
       if (ref[PROPS][INTERNAL] != null) return ref[PROPS][INTERNAL][COMPONENT];
       else return ref;
     };
