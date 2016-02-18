@@ -516,7 +516,7 @@ _convertEventHandlers(Map args) {
     } else if (_syntheticWheelEvents.contains(key)) {
       eventFactory = syntheticWheelEventFactory;
     } else return;
-    args[key] = (JsObject e, [String domId]) => zone.run(() {
+    args[key] = (JsObject e, [String domId, Event event]) => zone.run(() {
       value(eventFactory(e));
     });
   });
