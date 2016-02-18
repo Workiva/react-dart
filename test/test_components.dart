@@ -60,3 +60,9 @@ class SampleComponent extends Component {
 ReactComponentFactory sampleComponent = registerComponent(() =>
     new SampleComponent());
 
+class WrapperComponent extends Component {
+  render() => div(props, props['children']);
+}
+
+ReactComponentFactory wrapperComponent = registerComponent(() =>
+    new WrapperComponent());
