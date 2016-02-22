@@ -1,6 +1,8 @@
-import "package:react/react.dart" as react;
-import "package:react/react_client.dart";
 import 'dart:html';
+
+import "package:react/react.dart" as react;
+import "package:react/react_dom.dart" as reactDom;
+import "package:react/react_client.dart";
 
 class _Item extends react.Component {
   componentWillReceiveProps(newProps) {
@@ -39,5 +41,5 @@ var list = react.registerComponent(() => new _List());
 
 void main() {
   setClientConfiguration();
-  react.render(list({}), querySelector('#content'));
+  reactDom.render(list({}), querySelector('#content'));
 }

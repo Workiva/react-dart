@@ -1,4 +1,5 @@
 import "package:react/react.dart" as react;
+import "package:react/react_dom.dart" as reactDom;
 import "package:react/react_client.dart";
 import "dart:html";
 
@@ -53,5 +54,5 @@ var mountedNode = querySelector('#content');
 void main() {
   setClientConfiguration();
   var component = simpleComponent({});
-  react.render(component, mountedNode);
+  reactDom.render(component, mountedNode);
 }
