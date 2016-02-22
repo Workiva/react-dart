@@ -1,4 +1,5 @@
 import "package:react/react.dart" as react;
+import "package:react/react_dom.dart" as reactDom;
 import "package:react/react_client.dart";
 import "dart:html";
 import "dart:convert";
@@ -127,7 +128,7 @@ class _GeocodesForm extends react.Component {
   // This is called when form is submited
   onFormSubmit(e) {
       e.preventDefault();
-      InputElement inputElement = react.findDOMNode(ref('addressInput'));
+      InputElement inputElement = reactDom.findDOMNode(ref('addressInput'));
       // The input's value is accessed.
       var addr = inputElement.value;
       inputElement.value = "";
@@ -318,5 +319,5 @@ var geocodesApp = react.registerComponent(() => new _GeocodesApp());
  */
 void main() {
   setClientConfiguration();
-  react.render(geocodesApp({}), querySelector('#content'));
+  reactDom.render(geocodesApp({}), querySelector('#content'));
 }
