@@ -675,6 +675,10 @@ dynamic _findDomNode(component) {
 }
 
 void setClientConfiguration() {
+  if (_React == null || _ReactDom == null) {
+    throw new Exception('react.js and react_dom.js must be loaded.');
+  }
+
   setReactConfiguration(_reactDom, _registerComponent, _render, _renderToString,
       _renderToStaticMarkup, _unmountComponentAtNode, _findDomNode);
   setReactDOMConfiguration(_render, _unmountComponentAtNode, _findDomNode);

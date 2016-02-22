@@ -317,7 +317,9 @@ class SyntheticWheelEvent extends SyntheticEvent {
  * client side rendering
  */
 @deprecated
-var render;
+var render = (component, element) {
+  throw new Exception('setClientConfiguration must be called before render.');
+};
 
 /**
  * server side rendering
@@ -347,7 +349,9 @@ var unmountComponentAtNode;
 /**
  * register component method to register component on both, client-side and server-side.
  */
-var registerComponent;
+var registerComponent = (componentFactory, [skipMethods]) {
+  throw new Exception('setClientConfiguration must be called before registerComponent.');
+};
 
 /**
  * if this component has been mounted into the DOM, this returns the corresponding native browser DOM element.

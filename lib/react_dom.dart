@@ -5,7 +5,9 @@ library react_dom;
 ///
 /// If the ReactElement was previously rendered into the container, this will perform an update on it and only
 /// mutate the DOM as necessary to reflect the latest React component.
-var render;
+var render = (component, element) {
+  throw new Exception('setClientConfiguration must be called before render.');
+};
 
 /// Removes a mounted React component from the DOM and cleans up its event handlers and state. If no component
 /// was mounted in the container, calling this function does nothing. Returns true if a component was unmounted
