@@ -316,11 +316,13 @@ class SyntheticWheelEvent extends SyntheticEvent {
 /**
  * client side rendering
  */
+@deprecated
 var render;
 
 /**
  * server side rendering
  */
+@deprecated
 var renderToString;
 
 /**
@@ -329,6 +331,7 @@ var renderToString;
  * as a simple static page generator, as stripping away the extra attributes can save
  * lots of bytes.
  */
+@deprecated
 var renderToStaticMarkup;
 
 
@@ -338,6 +341,7 @@ var renderToStaticMarkup;
  * client side derendering - reverse operation to render
  *
  */
+@deprecated
 var unmountComponentAtNode;
 
 /**
@@ -348,6 +352,7 @@ var registerComponent;
 /**
  * if this component has been mounted into the DOM, this returns the corresponding native browser DOM element.
  */
+@deprecated
 var findDOMNode;
 
 /** Basic DOM elements
