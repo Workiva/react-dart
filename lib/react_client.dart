@@ -4,10 +4,13 @@
 
 library react_client;
 
-import "package:react/react.dart";
 import "dart:js";
 import "dart:html";
 import "dart:async";
+
+import "package:react/react.dart";
+import "package:react/react_dom.dart";
+import "package:react/react_dom_server.dart";
 
 var _React = context['React'];
 var _ReactDom = context['ReactDOM'];
@@ -673,4 +676,6 @@ dynamic _findDomNode(component) {
 void setClientConfiguration() {
   setReactConfiguration(_reactDom, _registerComponent, _render, _renderToString,
       _renderToStaticMarkup, _unmountComponentAtNode, _findDomNode);
+  setReactDOMConfiguration(_render, _unmountComponentAtNode, _findDomNode);
+  setReactDOMServerConfiguration(_renderToString, _renderToStaticMarkup);
 }
