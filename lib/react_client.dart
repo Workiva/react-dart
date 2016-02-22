@@ -14,6 +14,7 @@ import "package:react/react_dom_server.dart";
 
 var _React = context['React'];
 var _ReactDom = context['ReactDOM'];
+var _ReactDomServer = context['ReactDOMServer'];
 var _Object = context['Object'];
 
 const PROPS = 'props';
@@ -647,22 +648,22 @@ Set _syntheticWheelEvents = new Set.from(["onWheel",]);
 
 
 JsObject _render(JsObject component, HtmlElement element) {
-  var renderedComponent = _React.callMethod('render', [component, element]);
+  var renderedComponent = _ReactDom.callMethod('render', [component, element]);
 
   if (renderedComponent is JsObject) return renderedComponent;
   else return new JsObject.fromBrowserObject(renderedComponent);
 }
 
 String _renderToString(JsObject component) {
-  return _React.callMethod('renderToString', [component]);
+  return _ReactDomServer.callMethod('renderToString', [component]);
 }
 
 String _renderToStaticMarkup(JsObject component) {
-  return _React.callMethod('renderToStaticMarkup', [component]);
+  return _ReactDomServer.callMethod('renderToStaticMarkup', [component]);
 }
 
 bool _unmountComponentAtNode(HtmlElement element) {
-  return _React.callMethod('unmountComponentAtNode', [element]);
+  return _ReactDom.callMethod('unmountComponentAtNode', [element]);
 }
 
 dynamic _findDomNode(component) {
