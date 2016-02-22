@@ -8,12 +8,13 @@ If you are not familiar with React library read [react tutorial](http://facebook
 
 To integrate in Dart project add dependency [react](https://pub.dartlang.org/packages/react) to pubspec.yaml.
 
-Include native react library (provided with this library for compatibility reasons) to index.html and create element where you'll mount the react component you'll create.
+Include the native javascript `react` and `react_dom` libraries (provided with this library for compatibility reasons) in `index.html` and create element where you'll mount the react component you'll create.
 
 ```html
 <html>
   <head>
     <script async src="packages/react/react.js"></script>
+    <script async src="packages/react/react_dom.js"></script>
     <script async type="application/dart" src="your_app_name.dart"></script>
     <script async src="packages/browser/dart.js"></script>
   </head>
@@ -29,19 +30,20 @@ Initialize React in our Dart application. Mount simple component into '#content'
 import 'dart:html';
 import 'package:react/react_client.dart' as reactClient;
 import 'package:react/react.dart';
+import 'package:react/react_dom.dart' as reactDom;
 
 main() {
-  //this should be called once at the begging of application
+  // This should be called once at the beginning of the application
   reactClient.setClientConfiguration();
   var component = div({}, "Hello world!");
-  render(component, querySelector('#content'));
+  reactDom.render(component, querySelector('#content'));
 }
 ```
 
-Inverse method to rendering component is unmountComponentAtNode
+Inverse method to rendering component is `unmountComponentAtNode`
 
 ```dart
-  unmountComponentAtNode(querySelector('#content'));
+  reactDom.unmountComponentAtNode(querySelector('#content'));
 ```
 
 ##Using browser native elements
@@ -83,7 +85,7 @@ var myComponent = registerComponent(() => new MyComponent());
 Use this registered component similarly as native elements.
 
 ```dart
-render(myComponent({}), querySelector('#content'));
+reactDom.render(myComponent({}), querySelector('#content'));
 // or
 div({}, [
   myComponent({})
@@ -124,7 +126,7 @@ class MyComponent extends Component {
 
 void main() {
   reactClient.setClientConfiguration();
-  render(
+  reactDom.render(
     myComponent(headline: "My custom headline",
                 text: "My custom text"),
     querySelector('#content')
@@ -135,11 +137,9 @@ void main() {
 
 Proper usage of refs here is a little bit different from usage in react. You can specify
 a ref name in component props and then call ref method to get the referenced element.
-Return value for dart components and for javascript components is different.
-For dart component, you get an instance of dart class of the component.
-For js components (like DOM elements), you get instance of jsObject representing the
-react component. If you want to work with DOM nodes instead of a component, you can
-call top level method findDOMNode on anything the ref returns.
+Return value for Dart components and for javascript components is different.
+For a Dart component, you get an instance of the Dart class of the component.
+For primitive components (like DOM elements), you get the DOM node. If you want to work with DOM nodes of dart components instead, you can call top level method `findDOMNode` on anything the ref returns.
 
 ```
 var DartComponent = registerComponent(() => new _DartComponent());
@@ -155,14 +155,13 @@ class _ParentComponent extends Component {
       DartComponent({"ref": "dart"})
     ]);
   componentDidMount(root) {
-    var inputRef = ref("input"); //return react jsObject
-    InputElement input = findDOMNode(inputRef); // return InputElement in dom
+    InputElement input = ref("input"); // Returns the DOM node.
 
-    _DartComponent dartRef = ref("dart"); //return instance of _DartComponent
+    _DartComponent dartRef = ref("dart"); // Returns instance of _DartComponent
     dartRef.someData; // you can call methods or get values from it
-    findDOMNode(dartRef); //return div element rendered from _DartComponent
+    reactDom.findDOMNode(dartRef); // return div element rendered from _DartComponent
 
-    findDOMNode(this); //return root dom element rendered from this component
+    reactDom.findDOMNode(this); // return root dom element rendered from this component
   }
 }
 ```
