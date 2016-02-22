@@ -363,8 +363,8 @@ span, strong, style, sub, summary, sup, table, tbody, td, textarea, tfoot, th, t
 title, tr, track, u, ul, variable, video, wbr;
 
 /** SVG elements */
-var circle, clipPath, defs, ellipse, g, line, linearGradient, mask, path, pattern, polygon, polyline,
-radialGradient, rect, stop, svg, text, tspan;
+var circle, clipPath, defs, ellipse, g, image, line, linearGradient, mask, path, pattern, polygon,
+polyline, radialGradient, rect, stop, svg, text, tspan;
 
 
 /**
@@ -490,6 +490,7 @@ _createDOMComponents(creator){
   defs = creator('defs');
   ellipse = creator('ellipse');
   g = creator('g');
+  image = creator('image');
   line = creator('line');
   linearGradient = creator('linearGradient');
   mask = creator('mask');
