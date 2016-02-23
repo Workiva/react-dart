@@ -1,10 +1,11 @@
-#Dart wrapper library for [facebook/react](http://facebook.github.io/)
+# Dart wrapper library for [facebook/react](http://facebook.github.io/)
 
 [![Pub](https://img.shields.io/pub/v/react.svg)](https://pub.dartlang.org/packages/react)
+[![documentation](https://img.shields.io/badge/Documentation-react-blue.svg)](https://www.dartdocs.org/documentation/react/latest/)
 
-##Getting started
+## Getting started
 
-If you are not familiar with React library read [react tutorial](http://facebook.github.io/react/docs/getting-started.html) first.
+If you are not familiar with the ReactJS library, read this [react tutorial](http://facebook.github.io/react/docs/getting-started.html) first.
 
 To integrate in Dart project add dependency [react](https://pub.dartlang.org/packages/react) to pubspec.yaml.
 
@@ -46,7 +47,7 @@ Inverse method to rendering component is `unmountComponentAtNode`
   reactDom.unmountComponentAtNode(querySelector('#content'));
 ```
 
-##Using browser native elements
+## Using browser native elements
 
 If you are familiar with React (without JSX extension) React-dart shouldn't surprise you much. All elements are defined as
 functions that take `props` as first argument and `children` as optional second argument. `props` should implement `Map` and `children` is either one React element or `List` with multiple elements.
@@ -65,7 +66,7 @@ For event handlers you must provide function that take `SyntheticEvent` (defined
 div({"onClick": (SyntheticMouseEvent e) => print(e)})
 ```
 
-##Defining custom elements
+## Defining custom elements
 
 Define custom class that extends Component and implements at least render.
 
@@ -104,7 +105,7 @@ class MyComponent extends Component {
 myComponent({"text":"Somehting"})
 ```
 
-####Creating components with richer interface than just props and children and with type control
+#### Creating components with richer interface than just props and children and with type control
 
 ```dart
 typedef MyComponentType({String headline, String text});
