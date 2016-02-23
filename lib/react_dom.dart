@@ -1,11 +1,11 @@
 library react_dom;
 
-/// Renders a ReactElement into the DOM in the supplied container and return a reference to the component
+/// Renders a ReactElement into the DOM in the supplied [container] and return a reference to the [component]
 /// (or returns null for stateless components).
 ///
-/// If the ReactElement was previously rendered into the container, this will perform an update on it and only
+/// If the ReactElement was previously rendered into the [container], this will perform an update on it and only
 /// mutate the DOM as necessary to reflect the latest React component.
-var render = (component, element) {
+var render = (component, container) {
   throw new Exception('setClientConfiguration must be called before render.');
 };
 
@@ -14,7 +14,7 @@ var render = (component, element) {
 /// and false if there was no component to unmount.
 var unmountComponentAtNode;
 
-/// If this component has been mounted into the DOM, this returns the corresponding native browser DOM element.
+/// If this component has been mounted into the DOM, this returns the corresponding native browser DOM [Element].
 var findDOMNode;
 
 /// Sets configuration based on passed functions.
