@@ -11,7 +11,12 @@ abstract class Component {
   Map props;
 
   dynamic ref;
+
+  /// As of ReactJS v0.14, [Component.getDOMNode] is deprecated in favor of
+  /// `ReactDOM.findDOMNode`.
+  @deprecated
   dynamic getDOMNode;
+  
   dynamic _jsRedraw;
   dynamic _jsThis;
 
