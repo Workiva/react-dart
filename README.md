@@ -137,9 +137,12 @@ void main() {
 
 Proper usage of refs here is a little bit different from usage in react. You can specify
 a ref name in component props and then call ref method to get the referenced element.
-Return value for Dart components and for javascript components is different.
+Return values for Dart components, DOM components and JavaScript components are different.
 For a Dart component, you get an instance of the Dart class of the component.
-For primitive components (like DOM elements), you get the DOM node. If you want to work with DOM nodes of dart components instead, you can call top level method `findDOMNode` on anything the ref returns.
+For primitive components (like DOM elements), you get the DOM node. For JavaScript composite components,
+you get a `JsObject` representing the react component.
+
+If you want to work with DOM nodes of dart or JS components instead, you can call top level method `findDOMNode` on anything the ref returns.
 
 ```
 var DartComponent = registerComponent(() => new _DartComponent());
