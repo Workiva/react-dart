@@ -32,8 +32,14 @@ _getNestedJsObject(
 }
 
 /// Returns [component] if it is already a [JsObject], and converts [component] if
-/// it is an [Element]. If [component] is neither a [JsObject] or [Element], throws an
+/// it is an [Element]. If [component] is neither a [JsObject] or an [Element], throws an
 /// [ArgumentError].
+///
+/// React does not use the same type of object for primitive components as composite components,
+/// and Dart converts the React objects used for primitive components to [Element]s automatically.
+/// This is problematic in some cases - primarily the test utility methods that return [JsObject]s,
+/// and render, which also needs to return a [JsObject]. This method can be used for handling this
+/// by converting the [Element] back to a [JsObject].
 JsObject normalizeReactComponent(dynamic component) {
   if (component is JsObject) return component;
   if (component is Element) return new JsObject.fromBrowserObject(component);
