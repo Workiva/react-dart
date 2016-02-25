@@ -24,6 +24,13 @@ Include the native javascript `react` and `react_dom` libraries (provided with t
 </html>
 ```
 
+If it fits the needs of your application better, you may alternatively load the concatenated minified `react` and `react_dom`
+libraries in a single file:
+
+```html
+<script async src="packages/react/react_with_react_dom_prod.js"></script>
+```
+
 Initialize React in our Dart application. Mount simple component into '#content' div.
 
 ```dart
