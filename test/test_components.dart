@@ -49,7 +49,7 @@ ReactComponentFactory eventComponent = registerComponent(() =>
     new EventComponent());
 
 class SampleComponent extends Component {
-  render() => div({}, [
+  render() => div(props, [
       h1({}, 'A header'),
       div({'className': 'div1'}, 'First div'),
       div({}, 'Second div'),
@@ -60,3 +60,9 @@ class SampleComponent extends Component {
 ReactComponentFactory sampleComponent = registerComponent(() =>
     new SampleComponent());
 
+class WrapperComponent extends Component {
+  render() => div(props, props['children']);
+}
+
+ReactComponentFactory wrapperComponent = registerComponent(() =>
+    new WrapperComponent());

@@ -4,12 +4,17 @@
 
 library react_client;
 
-import "package:react/react.dart";
 import "dart:js";
 import "dart:html";
 import "dart:async";
 
+import "package:react/react.dart";
+import "package:react/react_dom.dart";
+import "package:react/react_dom_server.dart";
+
 var _React = context['React'];
+var _ReactDom = context['ReactDOM'];
+var _ReactDomServer = context['ReactDOMServer'];
 var _Object = context['Object'];
 
 const PROPS = 'props';
@@ -193,14 +198,16 @@ ReactComponentFactory _registerComponent(ComponentFactory componentFactory, [Ite
     };
 
     var getRef = (name) {
-      var ref = jsThis['refs'][name] as JsObject;
+      var ref = jsThis['refs'][name];
       if (ref == null) return null;
+      if (ref is Element) return ref;
+
       if (ref[PROPS][INTERNAL] != null) return ref[PROPS][INTERNAL][COMPONENT];
       else return ref;
     };
 
     var getDOMNode = () {
-      return _React.callMethod('findDOMNode', [jsThis]);
+      return _ReactDom.callMethod('findDOMNode', [jsThis]);
     };
 
     Component component = componentFactory()
@@ -229,7 +236,7 @@ ReactComponentFactory _registerComponent(ComponentFactory componentFactory, [Ite
    */
   var componentDidMount = new JsFunction.withThis((JsObject jsThis) => zone.run(() {
     //you need to get dom node by calling findDOMNode
-    var rootNode = _React.callMethod('findDOMNode', [jsThis]);
+    var rootNode = _ReactDom.callMethod('findDOMNode', [jsThis]);
     _getComponent(jsThis).componentDidMount(rootNode);
   }));
 
@@ -299,7 +306,7 @@ ReactComponentFactory _registerComponent(ComponentFactory componentFactory, [Ite
       new JsFunction.withThis((JsObject jsThis, prevProps, prevState, prevContext) => zone.run(() {
     var prevInternalProps = _getInternalProps(prevProps);
     //you don't get root node as parameter but need to get it directly
-    var rootNode = _React.callMethod('findDOMNode', [jsThis]);
+    var rootNode = _ReactDom.callMethod('findDOMNode', [jsThis]);
     Component component = _getComponent(jsThis);
     component.componentDidUpdate(prevInternalProps, component.prevState, rootNode);
   }));
@@ -515,7 +522,7 @@ _convertEventHandlers(Map args) {
     } else if (_syntheticWheelEvents.contains(key)) {
       eventFactory = syntheticWheelEventFactory;
     } else return;
-    args[key] = (JsObject e, [String domId]) => zone.run(() {
+    args[key] = (JsObject e, [String domId, Event event]) => zone.run(() {
       value(eventFactory(e));
     });
   });
@@ -641,19 +648,22 @@ Set _syntheticWheelEvents = new Set.from(["onWheel",]);
 
 
 JsObject _render(JsObject component, HtmlElement element) {
-  return _React.callMethod('render', [component, element]);
+  var renderedComponent = _ReactDom.callMethod('render', [component, element]);
+
+  if (renderedComponent is JsObject) return renderedComponent;
+  else return new JsObject.fromBrowserObject(renderedComponent);
 }
 
 String _renderToString(JsObject component) {
-  return _React.callMethod('renderToString', [component]);
+  return _ReactDomServer.callMethod('renderToString', [component]);
 }
 
 String _renderToStaticMarkup(JsObject component) {
-  return _React.callMethod('renderToStaticMarkup', [component]);
+  return _ReactDomServer.callMethod('renderToStaticMarkup', [component]);
 }
 
 bool _unmountComponentAtNode(HtmlElement element) {
-  return _React.callMethod('unmountComponentAtNode', [element]);
+  return _ReactDom.callMethod('unmountComponentAtNode', [element]);
 }
 
 dynamic _findDomNode(component) {
@@ -661,11 +671,16 @@ dynamic _findDomNode(component) {
   // which has jsComponent closured inside and calls on it findDOMNode
   if (component is Component) return component.getDOMNode();
   //otherwise we have js component so pass it in findDOM node
-  return _React.callMethod('findDOMNode', [component]);
+  return _ReactDom.callMethod('findDOMNode', [component]);
 }
 
 void setClientConfiguration() {
-  _React.callMethod('initializeTouchEvents', [true]);
+  if (_React == null || _ReactDom == null) {
+    throw new Exception('react.js and react_dom.js must be loaded.');
+  }
+
   setReactConfiguration(_reactDom, _registerComponent, _render, _renderToString,
       _renderToStaticMarkup, _unmountComponentAtNode, _findDomNode);
+  setReactDOMConfiguration(_render, _unmountComponentAtNode, _findDomNode);
+  setReactDOMServerConfiguration(_renderToString, _renderToStaticMarkup);
 }

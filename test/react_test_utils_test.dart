@@ -29,7 +29,7 @@ void main() {
     ReactShallowRenderer shallowRenderer;
 
     setUp(() {
-      content = div({'className': 'test', 'id': 'createRendererTest'});
+      content = sampleComponent({'className': 'test', 'id': 'createRendererTest'});
 
       shallowRenderer = createRenderer();
     });
@@ -164,7 +164,7 @@ void main() {
   });
 
   test('findRenderedComponentWithType', () {
-    component = renderIntoDocument(div({}, [sampleComponent({})]));
+    component = renderIntoDocument(wrapperComponent({}, [sampleComponent({})]));
     var result = findRenderedComponentWithType(component, sampleComponent);
     expect(isCompositeComponentWithType(result, sampleComponent), isTrue);
   });
@@ -231,7 +231,7 @@ void main() {
   });
 
   test('scryRenderedComponentsWithType', () {
-    component = renderIntoDocument(div({}, [
+    component = renderIntoDocument(wrapperComponent({}, [
         sampleComponent({}), sampleComponent({}), eventComponent({})]));
 
     var results = scryRenderedComponentsWithType(component, sampleComponent);
@@ -242,7 +242,7 @@ void main() {
   });
 
   test('scryRenderedDOMComponentsWithClass', () {
-    component = renderIntoDocument(div({}, [
+    component = renderIntoDocument(wrapperComponent({}, [
         div({'className': 'divClass'}),
         div({'className': 'divClass'}),
         span({})
@@ -256,7 +256,7 @@ void main() {
   });
 
   test('scryRenderedDOMComponentsWithTag', () {
-    component = renderIntoDocument(div({}, [div({}), div({}), span({})]));
+    component = renderIntoDocument(wrapperComponent({}, [div({}), div({}), span({})]));
 
     var results = scryRenderedDOMComponentsWithTag(component, 'div');
 

@@ -31,6 +31,23 @@ _getNestedJsObject(
   return object;
 }
 
+/// Returns [component] if it is already a [JsObject], and converts [component] if
+/// it is an [Element]. If [component] is neither a [JsObject] or an [Element], throws an
+/// [ArgumentError].
+///
+/// React does not use the same type of object for primitive components as composite components,
+/// and Dart converts the React objects used for primitive components to [Element]s automatically.
+/// This is problematic in some cases - primarily the test utility methods that return [JsObject]s,
+/// and render, which also needs to return a [JsObject]. This method can be used for handling this
+/// by converting the [Element] back to a [JsObject].
+JsObject normalizeReactComponent(dynamic component) {
+  if (component is JsObject) return component;
+  if (component is Element) return new JsObject.fromBrowserObject(component);
+  if (component == null) return null;
+
+  throw new ArgumentError('$component component is not a valid ReactComponent');
+}
+
 /// Returns the 'type' of a component.
 ///
 /// For a DOM components, this with return the String corresponding to its tagName ('div', 'a', etc.).
@@ -268,23 +285,31 @@ class SimulateNative {
 ///
 /// Included in Dart for completeness
 List findAllInRenderedTree(JsObject tree, JsFunction test) {
-  return _TestUtils.callMethod('findAllInRenderedTree', [tree, test]);
+  var components = _TestUtils.callMethod('findAllInRenderedTree', [tree, test]);
+
+  components.map(normalizeReactComponent).toList();
+
+  return components;
 }
 
 /// Like scryRenderedDOMComponentsWithClass() but expects there to be one
 /// result, and returns that one result, or throws exception if there is
 /// any other number of matches besides one.
 JsObject findRenderedDOMComponentWithClass(JsObject tree, String className) {
-  return _TestUtils.callMethod(
+  var component = _TestUtils.callMethod(
       'findRenderedDOMComponentWithClass', [tree, className]);
+
+  return normalizeReactComponent(component);
 }
 
 /// Like scryRenderedDOMComponentsWithTag() but expects there to be one result,
 /// and returns that one result, or throws exception if there is any other
 /// number of matches besides one.
 JsObject findRenderedDOMComponentWithTag(JsObject tree, String tag) {
-  return _TestUtils.callMethod(
+  var component = _TestUtils.callMethod(
       'findRenderedDOMComponentWithTag', [tree, tag]);
+
+  return normalizeReactComponent(component);
 }
 
 /// Same as scryRenderedComponentsWithType() but expects there to be one result
@@ -339,21 +364,30 @@ JsObject scryRenderedComponentsWithType(
 /// Finds all instances of components in the rendered tree that are DOM
 /// components with the class name matching className.
 List scryRenderedDOMComponentsWithClass(JsObject tree, String className) {
-  return _TestUtils.callMethod(
+  var components = _TestUtils.callMethod(
       'scryRenderedDOMComponentsWithClass', [tree, className]);
+
+  components = components.map(normalizeReactComponent).toList();
+
+  return components;
 }
 
 /// Finds all instances of components in the rendered tree that are DOM
 /// components with the tag name matching tagName.
-JsObject scryRenderedDOMComponentsWithTag(JsObject tree, String tagName) {
-  return _TestUtils.callMethod(
+List scryRenderedDOMComponentsWithTag(JsObject tree, String tagName) {
+  var components = _TestUtils.callMethod(
       'scryRenderedDOMComponentsWithTag', [tree, tagName]);
+
+  components = components.map(normalizeReactComponent).toList();
+
+  return components;
 }
 
 /// Render a Component into a detached DOM node in the document.
 JsObject renderIntoDocument(JsObject instance) {
-  var div = new DivElement();
-  return _TestUtils.callMethod('renderIntoDocument', [instance]);
+  var component = _TestUtils.callMethod('renderIntoDocument', [instance]);
+
+  return normalizeReactComponent(component);
 }
 
 Element getDomNode(JsObject object) => object.callMethod('getDOMNode', []);

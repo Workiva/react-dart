@@ -5,6 +5,7 @@
 library react_server;
 
 import "package:react/react.dart";
+import "package:react/react_dom_server.dart";
 import "dart:math";
 import "package:quiver/iterables.dart";
 import 'dart:typed_data';
@@ -337,4 +338,5 @@ _adler32(String data) {
 
 void setServerConfiguration() {
   setReactConfiguration(_reactDom, _registerComponent, null, _renderComponentToString, _renderToStaticMarkup, null, null);
+  setReactDOMServerConfiguration(_renderComponentToString, _renderToStaticMarkup);
 }

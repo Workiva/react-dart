@@ -16,25 +16,25 @@ void main() {
   }
 
   group('Key/children validation', () {
-    bool consoleWarnCalled;
-    var consoleWarnMessage;
-    JsFunction originalConsoleWarn;
+    bool consoleErrorCalled;
+    var consoleErrorMessage;
+    JsFunction originalConsoleError;
 
     setUp(() {
-      consoleWarnCalled = false;
-      consoleWarnMessage = null;
+      consoleErrorCalled = false;
+      consoleErrorMessage = null;
 
-      originalConsoleWarn = context['console']['warn'];
-      context['console']['warn'] = new JsFunction.withThis((self, message) {
-        consoleWarnCalled = true;
-        consoleWarnMessage = message;
+      originalConsoleError = context['console']['error'];
+      context['console']['error'] = new JsFunction.withThis((self, message) {
+        consoleErrorCalled = true;
+        consoleErrorMessage = message;
 
-        originalConsoleWarn.apply([message], thisArg: self);
+        originalConsoleError.apply([message], thisArg: self);
       });
     });
 
     tearDown(() {
-      context['console']['warn'] = originalConsoleWarn;
+      context['console']['error'] = originalConsoleError;
     });
 
     group('warns when multiple children are passed as a list', () {
@@ -47,8 +47,8 @@ void main() {
             ])
         );
 
-        expect(consoleWarnCalled, isTrue, reason: 'should have outputted a warning');
-        expect(consoleWarnMessage, contains('Each child in an array or iterator should have a unique "key" prop.'));
+        expect(consoleErrorCalled, isTrue, reason: 'should have outputted a warning');
+        expect(consoleErrorMessage, contains('Each child in an array or iterator should have a unique "key" prop.'));
       });
 
       test('when rendering custom Dart components', () {
@@ -60,8 +60,8 @@ void main() {
             ])
         );
 
-        expect(consoleWarnCalled, isTrue, reason: 'should have outputted a warning');
-        expect(consoleWarnMessage, contains('Each child in an array or iterator should have a unique "key" prop.'));
+        expect(consoleErrorCalled, isTrue, reason: 'should have outputted a warning');
+        expect(consoleErrorMessage, contains('Each child in an array or iterator should have a unique "key" prop.'));
       });
     });
 
@@ -75,7 +75,7 @@ void main() {
             )
         );
 
-        expect(consoleWarnCalled, isFalse, reason: 'should not have outputted a warning');
+        expect(consoleErrorCalled, isFalse, reason: 'should not have outputted a warning');
       });
 
       test('when rendering custom Dart components', () {
@@ -87,7 +87,7 @@ void main() {
             )
         );
 
-        expect(consoleWarnCalled, isFalse, reason: 'should not have outputted a warning');
+        expect(consoleErrorCalled, isFalse, reason: 'should not have outputted a warning');
       });
     });
 
@@ -99,7 +99,7 @@ void main() {
             )
         );
 
-        expect(consoleWarnCalled, isFalse, reason: 'should not have outputted a warning');
+        expect(consoleErrorCalled, isFalse, reason: 'should not have outputted a warning');
       });
 
       test('when rendering custom Dart components', () {
@@ -109,7 +109,7 @@ void main() {
             )
         );
 
-        expect(consoleWarnCalled, isFalse, reason: 'should not have outputted a warning');
+        expect(consoleErrorCalled, isFalse, reason: 'should not have outputted a warning');
       });
     });
   });

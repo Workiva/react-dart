@@ -11,7 +11,12 @@ abstract class Component {
   Map props;
 
   dynamic ref;
+
+  /// As of ReactJS v0.14, [Component.getDOMNode] is deprecated in favor of
+  /// `ReactDOM.findDOMNode`.
+  @deprecated
   dynamic getDOMNode;
+  
   dynamic _jsRedraw;
   dynamic _jsThis;
 
@@ -316,11 +321,15 @@ class SyntheticWheelEvent extends SyntheticEvent {
 /**
  * client side rendering
  */
-var render;
+@deprecated
+var render = (component, element) {
+  throw new Exception('setClientConfiguration must be called before render.');
+};
 
 /**
  * server side rendering
  */
+@deprecated
 var renderToString;
 
 /**
@@ -329,6 +338,7 @@ var renderToString;
  * as a simple static page generator, as stripping away the extra attributes can save
  * lots of bytes.
  */
+@deprecated
 var renderToStaticMarkup;
 
 
@@ -338,16 +348,20 @@ var renderToStaticMarkup;
  * client side derendering - reverse operation to render
  *
  */
+@deprecated
 var unmountComponentAtNode;
 
 /**
  * register component method to register component on both, client-side and server-side.
  */
-var registerComponent;
+var registerComponent = (componentFactory, [skipMethods]) {
+  throw new Exception('setClientConfiguration must be called before registerComponent.');
+};
 
 /**
  * if this component has been mounted into the DOM, this returns the corresponding native browser DOM element.
  */
+@deprecated
 var findDOMNode;
 
 /** Basic DOM elements
@@ -363,8 +377,8 @@ span, strong, style, sub, summary, sup, table, tbody, td, textarea, tfoot, th, t
 title, tr, track, u, ul, variable, video, wbr;
 
 /** SVG elements */
-var circle, clipPath, defs, ellipse, g, line, linearGradient, mask, path, pattern, polygon, polyline,
-radialGradient, rect, stop, svg, text, tspan;
+var circle, clipPath, defs, ellipse, g, image, line, linearGradient, mask, path, pattern, polygon,
+polyline, radialGradient, rect, stop, svg, text, tspan;
 
 
 /**
@@ -490,6 +504,7 @@ _createDOMComponents(creator){
   defs = creator('defs');
   ellipse = creator('ellipse');
   g = creator('g');
+  image = creator('image');
   line = creator('line');
   linearGradient = creator('linearGradient');
   mask = creator('mask');

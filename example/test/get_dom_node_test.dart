@@ -1,4 +1,5 @@
 import "package:react/react.dart" as react;
+import "package:react/react_dom.dart" as reactDom;
 import "package:react/react_client.dart";
 import "dart:html";
 
@@ -44,7 +45,7 @@ class SimpleComponent extends react.Component {
       react.button({"onClick": (_) => (getDOMNode() as HtmlElement).children.first.text = (++counter).toString()},"Increase counter"),
       react.br({}),
       ChildComponent({"ref": "refToElement"}),
-      react.button({"onClick": (_) => window.alert((this.ref('test') as _ChildComponent).counter.toString())}, "Show value of child element"),
+      react.button({"onClick": (_) => window.alert((this.ref('refToElement') as _ChildComponent).counter.toString())}, "Show value of child element"),
     ]);
 }
 
@@ -53,5 +54,5 @@ var mountedNode = querySelector('#content');
 void main() {
   setClientConfiguration();
   var component = simpleComponent({});
-  react.render(component, mountedNode);
+  reactDom.render(component, mountedNode);
 }

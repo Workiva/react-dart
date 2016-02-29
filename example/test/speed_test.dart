@@ -1,4 +1,5 @@
 import "package:react/react.dart" as react;
+import "package:react/react_dom.dart" as reactDom;
 import "package:react/react_client.dart";
 import "dart:html";
 import "dart:async";
@@ -86,5 +87,5 @@ void main() {
   for(num i=0; i<1000; i++){
     data.add(["name_$i", "value_$i"]);
   }
-  react.render(Hello({"data": data}, []), querySelector('#content'));
+  reactDom.render(Hello({"data": data}, []), querySelector('#content'));
 }

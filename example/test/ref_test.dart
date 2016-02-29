@@ -1,7 +1,7 @@
 import "dart:html";
-import 'dart:js';
 
 import "package:react/react.dart" as react;
+import "package:react/react_dom.dart" as reactDom;
 import "package:react/react_client.dart";
 
 var ChildComponent = react.registerComponent(() => new _ChildComponent());
@@ -30,7 +30,7 @@ class _ParrentComponent extends react.Component {
   }
 
   // Callback refs
-  JsObject _inputCallbackRef;
+  InputElement _inputCallbackRef;
   _ChildComponent _childCallbackRef;
   showInputCallbackRefValue(_) {
     var input = react.findDOMNode(_inputCallbackRef);
@@ -69,5 +69,5 @@ var mountedNode = querySelector('#content');
 void main() {
   setClientConfiguration();
   var component = ParrentComponent({});
-  react.render(component, mountedNode);
+  reactDom.render(component, mountedNode);
 }
