@@ -4,7 +4,7 @@
 
 library react_server;
 
-import "dart:math";
+import 'dart:math';
 import 'dart:typed_data';
 
 import "package:react/react.dart";
