@@ -1,38 +1,34 @@
 <!DOCTYPE html>
-
-<!--
- * Hello,
- *
- * this is a part of the tutorial to the react-dart package. We'll go through
- * a simple app that is quering Google Maps API and showing the result to the
- * user. It also stores the search history and allows to reload past queries.
- *
- * In this file you'll find the mountpoint of the app. There is also
- * a `geocodes.dart` file, that contains the structure and the logic.
- *
- * Be sure that you understand the basic concepts of
- * [React](http://facebook.github.io/react/) before reading this tutorial.
- *
- * Enjoy!
--->
-
 <html>
   <head>
+    <!--
+     * Hello,
+     *
+     * This is the HTML portion of the tutorial for the Dart react package.
+     *
+     * We'll go through a simple app that queries the Google Maps API and shows the result to the user.
+     * It also stores the search history and allows the user to reload past queries.
+     *
+     * In this file you'll find the mount point of the app. There is also a `geocodes.dart` file which contains the
+     * structure and the application logic.
+     *
+     * Be sure that you understand the basic concepts of [React](http://facebook.github.io/react/) before reading this
+     * tutorial.
+     *
+     * Enjoy!
+    -->
+
     <title>Geocode resolver</title>
-    <link
-     rel="stylesheet"
-     href="http://getbootstrap.com/dist/css/bootstrap.min.css"
-    >
+    <link rel="stylesheet" href="http://getbootstrap.com/dist/css/bootstrap.min.css">
   </head>
 
   <body>
     <!--
-      This is the mountpoint. Every app is inside this div.
-      The div is referenced in the Dart code by id.
+      This is the mount point. The app will render within this element.
     -->
     <div class="container" id="content"></div>
 
-    <!-- Load React, Your code and Dart -->
+    <!-- Load React, your application code and Dart -->
     <script src="packages/react/react.js"></script>
     <script src="packages/react/react_dom.js"></script>
     <script type="application/dart" src="geocodes.dart"></script>
