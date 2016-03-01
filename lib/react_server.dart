@@ -7,14 +7,14 @@ library react_server;
 import 'dart:math';
 import 'dart:typed_data';
 
-import "package:react/react.dart";
-import "package:react/react_dom_server.dart";
-import "package:quiver/iterables.dart";
+import 'package:react/react.dart';
+import 'package:react/react_dom_server.dart';
+import 'package:quiver/iterables.dart';
 
 // ReactJS constants needed to create correct checksum
-String _SEPARATOR = ".";
-String _ID_ATTR_NAME = "data-reactid";
-String _CHECKSUM_ATTR_NAME = "data-react-checksum";
+String _SEPARATOR = '.';
+String _ID_ATTR_NAME = 'data-reactid';
+String _CHECKSUM_ATTR_NAME = 'data-react-checksum';
 num    _GLOBAL_MOUNT_POINT_MAX = 9999999;
 num    _MOD = 65521;
 
@@ -60,8 +60,8 @@ ReactComponentFactory _reactDom(String name) {
 
       // Count react id
       // If args contains key, then replace argument key by that key.
-      if (args.containsKey("key")) {
-        key = args["key"].toString();
+      if (args.containsKey('key')) {
+        key = args['key'].toString();
       }
 
       // If ownerId is not set, then this is a rootNode - create rootId for it.
@@ -70,28 +70,28 @@ ReactComponentFactory _reactDom(String name) {
         thisId = _createRootId();
       } else {
         // If ownerId is set, append adequate string to parent id based on position and key.
-        thisId = ownerId + (key != null ? ".\$$key" : (position != null ? ".${position.toRadixString(36)}" : ".0"));
+        thisId = ownerId + (key != null ? '.\$$key' : (position != null ? '.${position.toRadixString(36)}' : '.0'));
       }
 
       // Create StringBuffer to build result, end open tag to it
-      StringBuffer result = new StringBuffer("<$name");
+      StringBuffer result = new StringBuffer('<$name');
 
       // Add attributes to it and prepare args to be the same as in ReactJS
       args.forEach((key,value) {
         String toWrite = _parseDomArgument(key, value);
-        if(toWrite != null) result.write(toWrite);
+        if (toWrite != null) result.write(toWrite);
       });
 
       // Add id after attributes
       result.write(' $_ID_ATTR_NAME="$thisId"');
 
       // Close the opening tag
-      result.write(">");
+      result.write('>');
 
       // If its not a self-closing tag... add children
       if (!_selfClosingElementTags.contains(name)) {
         if (children is Iterable) {
-          enumerate(children.where((child) => child!=null)).forEach((value) {
+          enumerate(children.where((child) => child != null)).forEach((value) {
             num i = value.index;
             var component = value.value;
             if (component is String) {
@@ -111,7 +111,7 @@ ReactComponentFactory _reactDom(String name) {
         }
 
         // Add a closing tag after the children
-        result.write("</$name>");
+        result.write('</$name>');
       }
 
       // Return result as a string
@@ -129,18 +129,18 @@ String _parseDomArgument(String key, dynamic value) {
   if(key == 'ref') return null;
 
   // Change "className" to class
-  if (key == "className") {
+  if (key == 'className') {
     key = 'class';
   }
 
   // Change "htmlFor" to "for"
-  if (key == "htmlFor") {
+  if (key == 'htmlFor') {
     key = 'for';
   }
 
-  if (key == "style" && value is Map) {
+  if (key == 'style' && value is Map) {
     Map style = value;
-    value = style.keys.map((key) => "$key:${style[key]};").join("");
+    value = style.keys.map((key) => '$key:${style[key]};').join('');
   }
 
   if(key == 'value' && value is List) {
@@ -149,16 +149,16 @@ String _parseDomArgument(String key, dynamic value) {
   }
 
   value = _escapeTextForBrowser(value);
-  return " ${key.toLowerCase()}=\"${value}\"";
+  return ' ${key.toLowerCase()}="$value"';
 }
 
 var _ESCAPE_LOOKUP = {
-  "&": "&amp;",
-  ">": "&gt;",
-  "<": "&lt;",
-  "\"": "&quot;",
-  "'": "&#x27;",
-  "/": "&#x2f;"
+  '&': '&amp;',
+  '>': '&gt;',
+  '<': '&lt;',
+  '"': '&quot;',
+  '\'': '&#x27;',
+  '/': '&#x2f;'
 };
 
 var _ESCAPE_REGEX = new RegExp('[&><\\\'/]');
@@ -174,28 +174,28 @@ String _escapeTextForBrowser(text) {
 
 /// Set of all in client converted synthetic events
 Set _syntheticEvents = new Set.from([
-  "onCopy", "onCut", "onPaste", "onKeyDown", "onKeyPress", "onKeyUp", "onFocus", "onBlur", "onChange", "onInput",
-  "onSubmit", "onClick", "onDoubleClick", "onDrag", "onDragEnd", "onDragEnter", "onDragExit", "onDragLeave",
-  "onDragOver", "onDragStart", "onDrop", "onMouseDown", "onMouseEnter", "onMouseLeave", "onMouseMove", "onMouseOut",
-  "onMouseOver", "onMouseUp", "onTouchCancel", "onTouchEnd", "onTouchMove", "onTouchStart", "onScroll", "onWheel",
+  'onCopy', 'onCut', 'onPaste', 'onKeyDown', 'onKeyPress', 'onKeyUp', 'onFocus', 'onBlur', 'onChange', 'onInput',
+  'onSubmit', 'onClick', 'onDoubleClick', 'onDrag', 'onDragEnd', 'onDragEnter', 'onDragExit', 'onDragLeave',
+  'onDragOver', 'onDragStart', 'onDrop', 'onMouseDown', 'onMouseEnter', 'onMouseLeave', 'onMouseMove', 'onMouseOut',
+  'onMouseOver', 'onMouseUp', 'onTouchCancel', 'onTouchEnd', 'onTouchMove', 'onTouchStart', 'onScroll', 'onWheel',
 ]);
 
 /// Set of HTML [Element] names that can contain children
 Set _elementTags = new Set.from([
-  "a", "abbr", "address", "article", "aside", "audio", "b", "bdi", "bdo", "big", "blockquote", "body", "button",
-  "canvas", "caption", "cite", "code", "colgroup", "data", "datalist", "dd", "del", "details", "dfn", "dialog", "div",
-  "dl", "dt", "em", "fieldset", "figcaption", "figure", "footer", "form", "h1", "h2", "h3", "h4", "h5", "h6", "head",
-  "header", "html", "i", "iframe", "ins", "kbd", "label", "legend", "li", "main", "map", "mark", "menu", "menuitem",
-  "meter", "nav", "noscript", "object", "ol", "optgroup", "option", "output", "p", "picture", "pre", "progress", "q",
-  "rp", "rt", "ruby", "s", "samp", "script", "section", "select", "small", "span", "strong", "style", "sub", "summary",
-  "sup", "table", "tbody", "td", "textarea", "tfoot", "th", "thead", "time", "title", "tr", "u", "ul", "variable",
-  "video", "defs", "g", "linearGradient", "mask", "pattern", "radialGradient", "svg", "text", "tspan",
+  'a', 'abbr', 'address', 'article', 'aside', 'audio', 'b', 'bdi', 'bdo', 'big', 'blockquote', 'body', 'button',
+  'canvas', 'caption', 'cite', 'code', 'colgroup', 'data', 'datalist', 'dd', 'del', 'details', 'dfn', 'dialog', 'div',
+  'dl', 'dt', 'em', 'fieldset', 'figcaption', 'figure', 'footer', 'form', 'h1', 'h2', 'h3', 'h4', 'h5', 'h6', 'head',
+  'header', 'html', 'i', 'iframe', 'ins', 'kbd', 'label', 'legend', 'li', 'main', 'map', 'mark', 'menu', 'menuitem',
+  'meter', 'nav', 'noscript', 'object', 'ol', 'optgroup', 'option', 'output', 'p', 'picture', 'pre', 'progress', 'q',
+  'rp', 'rt', 'ruby', 's', 'samp', 'script', 'section', 'select', 'small', 'span', 'strong', 'style', 'sub', 'summary',
+  'sup', 'table', 'tbody', 'td', 'textarea', 'tfoot', 'th', 'thead', 'time', 'title', 'tr', 'u', 'ul', 'variable',
+  'video', 'defs', 'g', 'linearGradient', 'mask', 'pattern', 'radialGradient', 'svg', 'text', 'tspan',
 ]);
 
 /// Set of HTML [Element] names that are "self-closing"
 Set _selfClosingElementTags = new Set.from([
-  "area", "base", "br", "col", "hr", "img", "input", "link", "meta", "param", "command", "embed", "keygen", "source",
-  "track", "wbr", "circle", "ellipse", "line", "path", "polygon", "polyline", "rect", "stop",
+  'area', 'base', 'br', 'col', 'hr', 'img', 'input', 'link', 'meta', 'param', 'command', 'embed', 'keygen', 'source',
+  'track', 'wbr', 'circle', 'ellipse', 'line', 'path', 'polygon', 'polyline', 'rect', 'stop',
 ]);
 
 
@@ -210,7 +210,7 @@ String _renderToStaticMarkup(OwnerFactory component) {
 /// Creates random id based on id creation in react.js
 String _createRootId() {
   var rng = new Random();
-  return "${_SEPARATOR}r[${rng.nextInt(_GLOBAL_MOUNT_POINT_MAX).toRadixString(36)}]";
+  return '${_SEPARATOR}r[${rng.nextInt(_GLOBAL_MOUNT_POINT_MAX).toRadixString(36)}]';
 }
 
 /// Count checksum and add it to markup as last attribute of root element
@@ -224,7 +224,7 @@ String _addChecksumToMarkup(String markup) {
 
 String _removeReactIdFromMarkup(String markup) {
   var matcher = new RegExp(' $_ID_ATTR_NAME=".+?"');
-  return markup.replaceAll(matcher, "");
+  return markup.replaceAll(matcher, '');
 }
 
 /// Checksum algorithm copied from react.js

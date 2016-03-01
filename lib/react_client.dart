@@ -4,13 +4,13 @@
 
 library react_client;
 
-import "dart:js";
-import "dart:html";
-import "dart:async";
+import 'dart:js';
+import 'dart:html';
+import 'dart:async';
 
-import "package:react/react.dart";
-import "package:react/react_dom.dart";
-import "package:react/react_dom_server.dart";
+import 'package:react/react.dart';
+import 'package:react/react_dom.dart';
+import 'package:react/react_dom_server.dart';
 
 var _React = context['React'];
 var _ReactDom = context['ReactDOM'];
@@ -417,7 +417,7 @@ _convertBoundValues(Map args) {
   if (boundValue is List) {
     _setValueToProps(args, boundValue[0]);
     args['value'] = boundValue[0];
-    var onChange = args["onChange"];
+    var onChange = args['onChange'];
 
     // Put new function into onChange event handler.
     // If there was something listening for that event, trigger it and return it's return value.
@@ -470,126 +470,126 @@ _convertEventHandlers(Map args) {
 
 /// Wrapper for [SyntheticEvent].
 SyntheticEvent syntheticEventFactory(JsObject e) {
-  return new SyntheticEvent(e["bubbles"], e["cancelable"], e["currentTarget"],
-      e["defaultPrevented"], () => e.callMethod("preventDefault", []),
-      () => e.callMethod("stopPropagation", []), e["eventPhase"], e["isTrusted"], e["nativeEvent"],
-      e["target"], e["timeStamp"], e["type"]);
+  return new SyntheticEvent(e['bubbles'], e['cancelable'], e['currentTarget'],
+      e['defaultPrevented'], () => e.callMethod('preventDefault', []),
+      () => e.callMethod('stopPropagation', []), e['eventPhase'], e['isTrusted'], e['nativeEvent'],
+      e['target'], e['timeStamp'], e['type']);
 }
 
 /// Wrapper for [SyntheticClipboardEvent].
 SyntheticClipboardEvent syntheticClipboardEventFactory(JsObject e) {
-  return new SyntheticClipboardEvent(e["bubbles"], e["cancelable"], e["currentTarget"],
-      e["defaultPrevented"], () => e.callMethod("preventDefault", []),
-      () => e.callMethod("stopPropagation", []), e["eventPhase"], e["isTrusted"], e["nativeEvent"],
-      e["target"], e["timeStamp"], e["type"], e["clipboardData"]);
+  return new SyntheticClipboardEvent(e['bubbles'], e['cancelable'], e['currentTarget'],
+      e['defaultPrevented'], () => e.callMethod('preventDefault', []),
+      () => e.callMethod('stopPropagation', []), e['eventPhase'], e['isTrusted'], e['nativeEvent'],
+      e['target'], e['timeStamp'], e['type'], e['clipboardData']);
 }
 
 /// Wrapper for [SyntheticKeyboardEvent].
 SyntheticKeyboardEvent syntheticKeyboardEventFactory(JsObject e) {
-  return new SyntheticKeyboardEvent(e["bubbles"], e["cancelable"], e["currentTarget"],
-      e["defaultPrevented"], () => e.callMethod("preventDefault", []),
-      () => e.callMethod("stopPropagation", []), e["eventPhase"], e["isTrusted"],
-      e["nativeEvent"], e["target"], e["timeStamp"], e["type"], e["altKey"],
-      e["char"], e["charCode"], e["ctrlKey"], e["locale"], e["location"],
-      e["key"], e["keyCode"], e["metaKey"], e["repeat"], e["shiftKey"]);
+  return new SyntheticKeyboardEvent(e['bubbles'], e['cancelable'], e['currentTarget'],
+      e['defaultPrevented'], () => e.callMethod('preventDefault', []),
+      () => e.callMethod('stopPropagation', []), e['eventPhase'], e['isTrusted'],
+      e['nativeEvent'], e['target'], e['timeStamp'], e['type'], e['altKey'],
+      e['char'], e['charCode'], e['ctrlKey'], e['locale'], e['location'],
+      e['key'], e['keyCode'], e['metaKey'], e['repeat'], e['shiftKey']);
 }
 
 /// Wrapper for [SyntheticFocusEvent].
 SyntheticFocusEvent syntheticFocusEventFactory(JsObject e) {
-  return new SyntheticFocusEvent(e["bubbles"], e["cancelable"], e["currentTarget"],
-      e["defaultPrevented"], () => e.callMethod("preventDefault", []),
-      () => e.callMethod("stopPropagation", []), e["eventPhase"], e["isTrusted"], e["nativeEvent"],
-      e["target"], e["timeStamp"], e["type"], e["relatedTarget"]);
+  return new SyntheticFocusEvent(e['bubbles'], e['cancelable'], e['currentTarget'],
+      e['defaultPrevented'], () => e.callMethod('preventDefault', []),
+      () => e.callMethod('stopPropagation', []), e['eventPhase'], e['isTrusted'], e['nativeEvent'],
+      e['target'], e['timeStamp'], e['type'], e['relatedTarget']);
 }
 
 /// Wrapper for [SyntheticFormEvent].
 SyntheticFormEvent syntheticFormEventFactory(JsObject e) {
-  return new SyntheticFormEvent(e["bubbles"], e["cancelable"], e["currentTarget"],
-      e["defaultPrevented"], () => e.callMethod("preventDefault", []),
-      () => e.callMethod("stopPropagation", []), e["eventPhase"], e["isTrusted"], e["nativeEvent"],
-      e["target"], e["timeStamp"], e["type"]);
+  return new SyntheticFormEvent(e['bubbles'], e['cancelable'], e['currentTarget'],
+      e['defaultPrevented'], () => e.callMethod('preventDefault', []),
+      () => e.callMethod('stopPropagation', []), e['eventPhase'], e['isTrusted'], e['nativeEvent'],
+      e['target'], e['timeStamp'], e['type']);
 }
 
 /// Wrapper for [SyntheticDataTransfer].
 SyntheticDataTransfer syntheticDataTransferFactory(JsObject dt) {
   if (dt == null) return null;
   List<File> files = [];
-  if (dt["files"] != null) {
-    for (int i = 0; i < dt["files"]["length"]; i++) {
-      files.add(dt["files"][i]);
+  if (dt['files'] != null) {
+    for (int i = 0; i < dt['files']['length']; i++) {
+      files.add(dt['files'][i]);
     }
   }
   List<String> types = [];
-  if (dt["types"] != null) {
-    for (int i = 0; i < dt["types"]["length"]; i++) {
-      types.add(dt["types"][i]);
+  if (dt['types'] != null) {
+    for (int i = 0; i < dt['types']['length']; i++) {
+      types.add(dt['types'][i]);
     }
   }
   var effectAllowed;
   try {
     // Works around a bug in IE where dragging from outside the browser fails.
     // Trying to access this property throws the error "Unexpected call to method or property access.".
-    effectAllowed = dt["effectAllowed"];
+    effectAllowed = dt['effectAllowed'];
   } catch (exception) {
-    effectAllowed = "uninitialized";
+    effectAllowed = 'uninitialized';
   }
-  return new SyntheticDataTransfer(dt["dropEffect"], effectAllowed, files, types);
+  return new SyntheticDataTransfer(dt['dropEffect'], effectAllowed, files, types);
 }
 
 /// Wrapper for [SyntheticMouseEvent].
 SyntheticMouseEvent syntheticMouseEventFactory(JsObject e) {
-  SyntheticDataTransfer dt = syntheticDataTransferFactory(e["dataTransfer"]);
-  return new SyntheticMouseEvent(e["bubbles"], e["cancelable"], e["currentTarget"],
-      e["defaultPrevented"], () => e.callMethod("preventDefault", []),
-      () => e.callMethod("stopPropagation", []), e["eventPhase"], e["isTrusted"], e["nativeEvent"],
-      e["target"], e["timeStamp"], e["type"], e["altKey"], e["button"], e["buttons"], e["clientX"], e["clientY"],
-      e["ctrlKey"], dt, e["metaKey"], e["pageX"], e["pageY"], e["relatedTarget"], e["screenX"],
-      e["screenY"], e["shiftKey"]);
+  SyntheticDataTransfer dt = syntheticDataTransferFactory(e['dataTransfer']);
+  return new SyntheticMouseEvent(e['bubbles'], e['cancelable'], e['currentTarget'],
+      e['defaultPrevented'], () => e.callMethod('preventDefault', []),
+      () => e.callMethod('stopPropagation', []), e['eventPhase'], e['isTrusted'], e['nativeEvent'],
+      e['target'], e['timeStamp'], e['type'], e['altKey'], e['button'], e['buttons'], e['clientX'], e['clientY'],
+      e['ctrlKey'], dt, e['metaKey'], e['pageX'], e['pageY'], e['relatedTarget'], e['screenX'],
+      e['screenY'], e['shiftKey']);
 }
 
 /// Wrapper for [SyntheticTouchEvent].
 SyntheticTouchEvent syntheticTouchEventFactory(JsObject e) {
-  return new SyntheticTouchEvent(e["bubbles"], e["cancelable"], e["currentTarget"],
-      e["defaultPrevented"], () => e.callMethod("preventDefault", []),
-      () => e.callMethod("stopPropagation", []), e["eventPhase"], e["isTrusted"], e["nativeEvent"],
-      e["target"], e["timeStamp"], e["type"], e["altKey"], e["changedTouches"], e["ctrlKey"], e["metaKey"],
-      e["shiftKey"], e["targetTouches"], e["touches"]);
+  return new SyntheticTouchEvent(e['bubbles'], e['cancelable'], e['currentTarget'],
+      e['defaultPrevented'], () => e.callMethod('preventDefault', []),
+      () => e.callMethod('stopPropagation', []), e['eventPhase'], e['isTrusted'], e['nativeEvent'],
+      e['target'], e['timeStamp'], e['type'], e['altKey'], e['changedTouches'], e['ctrlKey'], e['metaKey'],
+      e['shiftKey'], e['targetTouches'], e['touches']);
 }
 
 /// Wrapper for [SyntheticUIEvent].
 SyntheticUIEvent syntheticUIEventFactory(JsObject e) {
-  return new SyntheticUIEvent(e["bubbles"], e["cancelable"], e["currentTarget"],
-      e["defaultPrevented"], () => e.callMethod("preventDefault", []),
-      () => e.callMethod("stopPropagation", []), e["eventPhase"], e["isTrusted"], e["nativeEvent"],
-      e["target"], e["timeStamp"], e["type"], e["detail"], e["view"]);
+  return new SyntheticUIEvent(e['bubbles'], e['cancelable'], e['currentTarget'],
+      e['defaultPrevented'], () => e.callMethod('preventDefault', []),
+      () => e.callMethod('stopPropagation', []), e['eventPhase'], e['isTrusted'], e['nativeEvent'],
+      e['target'], e['timeStamp'], e['type'], e['detail'], e['view']);
 }
 
 /// Wrapper for [SyntheticWheelEvent].
 SyntheticWheelEvent syntheticWheelEventFactory(JsObject e) {
-  return new SyntheticWheelEvent(e["bubbles"], e["cancelable"], e["currentTarget"],
-      e["defaultPrevented"], () => e.callMethod("preventDefault", []),
-      () => e.callMethod("stopPropagation", []), e["eventPhase"], e["isTrusted"], e["nativeEvent"],
-      e["target"], e["timeStamp"], e["type"], e["deltaX"], e["deltaMode"], e["deltaY"], e["deltaZ"]);
+  return new SyntheticWheelEvent(e['bubbles'], e['cancelable'], e['currentTarget'],
+      e['defaultPrevented'], () => e.callMethod('preventDefault', []),
+      () => e.callMethod('stopPropagation', []), e['eventPhase'], e['isTrusted'], e['nativeEvent'],
+      e['target'], e['timeStamp'], e['type'], e['deltaX'], e['deltaMode'], e['deltaY'], e['deltaZ']);
 }
 
-Set _syntheticClipboardEvents = new Set.from(["onCopy", "onCut", "onPaste",]);
+Set _syntheticClipboardEvents = new Set.from(['onCopy', 'onCut', 'onPaste',]);
 
-Set _syntheticKeyboardEvents = new Set.from(["onKeyDown", "onKeyPress", "onKeyUp",]);
+Set _syntheticKeyboardEvents = new Set.from(['onKeyDown', 'onKeyPress', 'onKeyUp',]);
 
-Set _syntheticFocusEvents = new Set.from(["onFocus", "onBlur",]);
+Set _syntheticFocusEvents = new Set.from(['onFocus', 'onBlur',]);
 
-Set _syntheticFormEvents = new Set.from(["onChange", "onInput", "onSubmit", "onReset",]);
+Set _syntheticFormEvents = new Set.from(['onChange', 'onInput', 'onSubmit', 'onReset',]);
 
-Set _syntheticMouseEvents = new Set.from(["onClick", "onContextMenu", "onDoubleClick", "onDrag", "onDragEnd",
-    "onDragEnter", "onDragExit", "onDragLeave", "onDragOver", "onDragStart", "onDrop", "onMouseDown", "onMouseEnter",
-    "onMouseLeave", "onMouseMove", "onMouseOut", "onMouseOver", "onMouseUp",
+Set _syntheticMouseEvents = new Set.from(['onClick', 'onContextMenu', 'onDoubleClick', 'onDrag', 'onDragEnd',
+    'onDragEnter', 'onDragExit', 'onDragLeave', 'onDragOver', 'onDragStart', 'onDrop', 'onMouseDown', 'onMouseEnter',
+    'onMouseLeave', 'onMouseMove', 'onMouseOut', 'onMouseOver', 'onMouseUp',
 ]);
 
-Set _syntheticTouchEvents = new Set.from(["onTouchCancel", "onTouchEnd", "onTouchMove", "onTouchStart",]);
+Set _syntheticTouchEvents = new Set.from(['onTouchCancel', 'onTouchEnd', 'onTouchMove', 'onTouchStart',]);
 
-Set _syntheticUIEvents = new Set.from(["onScroll",]);
+Set _syntheticUIEvents = new Set.from(['onScroll',]);
 
-Set _syntheticWheelEvents = new Set.from(["onWheel",]);
+Set _syntheticWheelEvents = new Set.from(['onWheel',]);
 
 
 JsObject _render(JsObject component, Element element) {

@@ -7,31 +7,37 @@ library react.test_utils;
 import 'dart:js';
 import 'dart:html';
 import 'package:react/react.dart';
-import "package:react/react_client.dart";
+import 'package:react/react_client.dart';
 
 
-const missingAddonsMessage = 'React.addons.TestUtils not found. Ensure you\'ve '
-    'included the React addons in your HTML file.'
-    '\n  This:\n<script src="packages/react/react-with-addons.js"></script>'
-    '\n  Not this:\n<script src="packages/react/react.js"></script>';
+const missingAddonsMessage =
+    '''
+    React.addons.TestUtils not found. Ensure you've
+    included the React addons in your HTML file.
 
-JsObject _TestUtils = _getNestedJsObject(
-    context, ['React', 'addons', 'TestUtils'], missingAddonsMessage);
+    This:
+    <script src="packages/react/react-with-addons.js"></script>
+
+    Not this:
+    <script src="packages/react/react.js"></script>
+    ''';
+
+JsObject _TestUtils = _getNestedJsObject(context, ['React', 'addons', 'TestUtils'], missingAddonsMessage);
 
 JsObject _Simulate = _TestUtils['Simulate'];
 
 JsObject _SimulateNative = _TestUtils['SimulateNative'];
 
-_getNestedJsObject(
-    JsObject base, List<String> keys, [String errorIfNotFound='']) {
+_getNestedJsObject(JsObject base, List<String> keys, [String errorIfNotFound='']) {
   JsObject object = base;
+
   for (String key in keys) {
     if (!object.hasProperty(key)) {
-      throw 'Unable to resolve '
-          '$key in $base.${keys.join('.')}}.\n$errorIfNotFound';
+      throw 'Unable to resolve $key in {$base.${keys.join('.')}}.\n$errorIfNotFound';
     }
     object = object[key];
   }
+
   return object;
 }
 

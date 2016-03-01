@@ -4,7 +4,7 @@
 
 library react_test;
 
-import "package:react/react.dart";
+import 'package:react/react.dart';
 
 class MarkupDescription {
   final String tag;
@@ -37,5 +37,5 @@ initializeComponent(Component component, [Map props = const {}, List children, r
 }
 
 void setTestConfiguration() {
-  setReactConfiguration(_reactDom, null, null, null, null, null);
+  setReactConfiguration(_reactDom, null, null, null, null, null, null);
 }

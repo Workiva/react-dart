@@ -178,8 +178,8 @@ class _GeocodesHistoryList extends react.Component {
         new List.from(props['data'].keys.map(
           (key) => geocodesHistoryItem({
             'key': key,
-            'query': props['data'][key]["query"],
-            'status': props['data'][key]["status"],
+            'query': props['data'][key]['query'],
+            'status': props['data'][key]['status'],
             'reloader': props['reloader']
           })
         )).reversed
