@@ -14,6 +14,9 @@ abstract class Component {
   /// Provides access to the underlying DOM representation of the [render]ed [Component].
   dynamic ref;
 
+  /// As of ReactJS v0.14, [Component.getDOMNode] is deprecated in favor of
+  /// `ReactDOM.findDOMNode`.
+  @deprecated
   dynamic getDOMNode;
 
   dynamic _jsRedraw;
