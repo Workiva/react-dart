@@ -24,8 +24,8 @@ typedef String OwnerFactory([String ownerId, num position, String key]);
 typedef OwnerFactory ReactComponentFactory(Map props, [dynamic children]);
 typedef Component ComponentFactory();
 
-/// Creates a method that which creates a new [Component], runs lifecycle methods and returns the result of
-/// [Component.render].
+/// Creates a method that creates a new [Component], runs lifecycle methods and returns the result of the
+/// [componentFactory] instance `render` method.
 ReactComponentFactory _registerComponent(ComponentFactory componentFactory, [Iterable<String> skipMethods = const []]) {
   return (Map props, [dynamic children]) {
     Component component = componentFactory();
@@ -51,7 +51,7 @@ ReactComponentFactory _registerComponent(ComponentFactory componentFactory, [Ite
 /// Create DOM component factory
 ReactComponentFactory _reactDom(String name) {
   return (Map args, [children]) {
-    // Pack component string creating into function to easy pass owner id, position and key
+    // Pack component string creation into function to easily pass owner id, position and key
     // (from its custom component owner)
     return ([String ownerId, int position, String key]) {
       if (_selfClosingElementTags.contains(name) && (children != null && children.length > 0)) {
@@ -73,7 +73,7 @@ ReactComponentFactory _reactDom(String name) {
         thisId = ownerId + (key != null ? '.\$$key' : (position != null ? '.${position.toRadixString(36)}' : '.0'));
       }
 
-      // Create StringBuffer to build result, end open tag to it
+      // Create StringBuffer to build result, append open tag to it
       StringBuffer result = new StringBuffer('<$name');
 
       // Add attributes to it and prepare args to be the same as in ReactJS
@@ -88,7 +88,7 @@ ReactComponentFactory _reactDom(String name) {
       // Close the opening tag
       result.write('>');
 
-      // If its not a self-closing tag... add children
+      // If it's not a self-closing tag, add children
       if (!_selfClosingElementTags.contains(name)) {
         if (children is Iterable) {
           enumerate(children.where((child) => child != null)).forEach((value) {
@@ -229,7 +229,7 @@ String _removeReactIdFromMarkup(String markup) {
 
 /// Checksum algorithm copied from react.js
 ///
-/// Must be the same to enable react.js recognize it.
+/// Must be the same to enable react.js to recognize it.
 ///
 /// JS uses 4-byte signed integers for binary operations while dart adjusts it, so Int32x4 is used for it
 _adler32(String data) {

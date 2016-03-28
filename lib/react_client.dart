@@ -49,12 +49,12 @@ typedef Component ComponentFactory();
 /// See: <https://facebook.github.io/react/docs/more-about-refs.html#the-ref-callback-attribute>
 typedef _CallbackRef(componentOrDomNode);
 
-/// Creates ReactJS [Component] instances.
+/// Creates ReactJS [ReactElement] instances.
 abstract class ReactComponentFactoryProxy implements Function {
-  /// The type of [Component] created by this factory.
+  /// The type of component created by this factory.
   get type;
 
-  /// Returns a new rendered [Component] instance with the specified [props] and [children].
+  /// Returns a new rendered component instance with the specified [props] and [children].
   JsObject call(Map props, [dynamic children]);
 
   /// Used to implement a variadic version of [call], in which children may be specified as additional arguments.
@@ -277,7 +277,6 @@ ReactComponentFactory _registerComponent(ComponentFactory componentFactory, [Ite
   /// Wrapper for [Component.render].
   var render = new JsFunction.withThis((jsThis) => zone.run(() {
     Component component = _getComponent(jsThis);
-
     return component.render();
   }));
 
@@ -315,7 +314,7 @@ ReactComponentFactory _registerComponent(ComponentFactory componentFactory, [Ite
   return new ReactDartComponentFactoryProxy(reactComponentClass);
 }
 
-/// Creates ReactJS [Component] instances for DOM components.
+/// Creates ReactJS [ReactElement] instances for DOM components.
 class ReactDomComponentFactoryProxy extends ReactComponentFactoryProxy {
   /// The name of the proxied DOM component.
   ///
@@ -382,7 +381,7 @@ _isCheckbox(props) {
 
 /// Get value from the provided [domElem].
 ///
-/// If the [domElem] is an [CheckboxInputElement], return [bool], else return [String] value.
+/// If the [domElem] is a [CheckboxInputElement], return [bool], else return [String] value.
 _getValueFromDom(domElem) {
   var props = domElem.attributes;
 
@@ -395,7 +394,7 @@ _getValueFromDom(domElem) {
 
 /// Set value to props based on type of input.
 ///
-/// Specifically, it recognized checkbox.
+/// _Note: Processing checkbox `checked` value is handled as a special case._
 _setValueToProps(Map props, val) {
   if (_isCheckbox(props)) {
     if(val) {
@@ -420,7 +419,7 @@ _convertBoundValues(Map args) {
     var onChange = args['onChange'];
 
     // Put new function into onChange event handler.
-    // If there was something listening for that event, trigger it and return it's return value.
+    // If there was something listening for that event, trigger it and return its return value.
     args['onChange'] = (event) {
       boundValue[1](_getValueFromDom(event.target));
 
@@ -431,8 +430,8 @@ _convertBoundValues(Map args) {
   }
 }
 
-/// Convert packed event handler into wrapper and pass it only the Dart [Event] object converted from the [JsObject]
-/// event.
+/// Convert packed event handler into wrapper and pass it only the Dart [SyntheticEvent] object converted from the
+/// [JsObject] event.
 _convertEventHandlers(Map args) {
   var zone = Zone.current;
   args.forEach((key, value) {

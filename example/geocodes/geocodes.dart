@@ -96,7 +96,7 @@ var geocodesResultList = react.registerComponent(() => new _GeocodesResultList()
 ///
 /// > The functions can be [Component] parameters _(handy for callbacks)_
 ///
-/// > The DOM [Element]s can accessed using [ref]s.
+/// > The DOM [Element]s can be accessed using [ref]s.
 class _GeocodesForm extends react.Component {
   var searchInputInstance;
 
@@ -248,13 +248,11 @@ class _GeocodesApp extends react.Component {
             // In theory, state should be considered as immutable and `setState` or `replaceState` should be the only
             // way to change it.
             //
-            // It is possible to do this, when the whole state value is parsed from the server response
-            // (the case of `shown_addresses`).
+            // It is possible to do this when the whole state value is parsed from the server response
+            // (the case of `shown_addresses`); however, it would be inefficient to copy the whole `history` just to
+            // change one item. Therefore we mutate it and then replace it by itself.
             //
-            // However, it would be inefficient to copy the whole `history` just to change one item.
-            // Therefore we mutate it and then replace it by itself.
-            //
-            // Have a look at `vacuum_persistent` package to achieve the immutability of state.
+            // Have a look at `vacuum_persistent` package to achieve immutability of state.
             setState({
               'shown_addresses': data['results'],
               'history': state['history']
@@ -316,7 +314,7 @@ class _GeocodesApp extends react.Component {
 
 var geocodesApp = react.registerComponent(() => new _GeocodesApp());
 
-/// And, finally, few magic commands to wire it all up!
+/// And finally, a few magic commands to wire it all up!
 ///
 /// Select the root of the app and the place in the DOM where it should be mounted.
 void main() {

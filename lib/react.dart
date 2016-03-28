@@ -8,10 +8,10 @@ library react;
 /// Top-level ReactJS [Component class](https://facebook.github.io/react/docs/top-level-api.html#react.component)
 /// which provides the [ReactJS Component API](https://facebook.github.io/react/docs/component-api.html)
 abstract class Component {
-  /// ReactJS [Component] props.
+  /// ReactJS `Component` props.
   Map props;
 
-  /// Provides access to the underlying DOM representation of the [render]ed [Component].
+  /// Provides access to the underlying DOM representation of the [render]ed `Component`.
   dynamic ref;
 
   /// As of [version `0.9.0`](https://github.com/cleandart/react-dart/pull/86), _(which upgrades this library's ReactJS
@@ -24,7 +24,7 @@ abstract class Component {
   dynamic _jsThis;
 
   /// The JavaScript [`ReactComponent`](https://facebook.github.io/react/docs/top-level-api.html#reactdom.render)
-  /// instance of this [Component] returned by [render].
+  /// instance of this `Component` returned by [render].
   dynamic get jsThis => _jsThis;
 
   /// Allows the [ReactJS `displayName` property](https://facebook.github.io/react/docs/component-specs.html#displayname)
@@ -50,11 +50,11 @@ abstract class Component {
 
   initStateInternal() {
     this.state = new Map.from(getInitialState());
-    // Call transferComponent to get state also to _prevState
+    // Call `transferComponentState` to get state also to `_prevState`
     transferComponentState();
   }
 
-  /// ReactJS [Component] state.
+  /// ReactJS `Component` state.
   Map state = {};
 
   /// Private reference to the value of [state] from the previous render cycle.
@@ -75,7 +75,7 @@ abstract class Component {
   /// If `null`, then [_nextState] is equal to [state] - which is the value that will be returned.
   Map get nextState => _nextState == null ? state : _nextState;
 
-  /// Transfers [Component] [_nextState] to [state], and [state] to [_prevState].
+  /// Transfers `Component` [_nextState] to [state], and [state] to [_prevState].
   ///
   /// This is the only way to set the value of [_prevState].
   void transferComponentState() {
@@ -86,7 +86,7 @@ abstract class Component {
     _nextState = new Map.from(state);
   }
 
-  /// Force a call to [render] by calling [setState], which effectively "redraws" the [Component].
+  /// Force a call to [render] by calling [setState], which effectively "redraws" the `Component`.
   ///
   /// [A.k.a "forceUpdate"](https://facebook.github.io/react/docs/component-api.html#forceupdate)
   void redraw() {
@@ -128,12 +128,12 @@ abstract class Component {
   ///
   /// At this point in the lifecycle, you can access any [ref]s to the children of [rootNode].
   ///
-  /// The [componentDidMount] method of child [Component]s is invoked _before_ that of parent [Component].
+  /// The [componentDidMount] method of child `Component`s is invoked _before_ that of parent `Component`.
   ///
   /// See: <https://facebook.github.io/react/docs/component-specs.html#mounting-componentdidmount>
   void componentDidMount(/*DOMElement */ rootNode) {}
 
-  /// ReactJS lifecycle method that is invoked when a [Component] is receiving [newProps].
+  /// ReactJS lifecycle method that is invoked when a `Component` is receiving [newProps].
   ///
   /// This method is not called for the initial [render].
   ///
@@ -146,8 +146,6 @@ abstract class Component {
   void componentWillReceiveProps(newProps) {}
 
   /// ReactJS lifecycle method that is invoked before rendering when [nextProps] or [nextState] are being received.
-  ///
-  /// This method is not called for the initial [render] or when [redraw] _a.k.a "forceUpdate"_ is used.
   ///
   /// Use this as an opportunity to return false when you're certain that the transition to the new props and state
   /// will not require a component update.
@@ -165,17 +163,17 @@ abstract class Component {
   /// See: <https://facebook.github.io/react/docs/component-specs.html#updating-componentwillupdate>
   void componentWillUpdate(nextProps, nextState) {}
 
-  /// ReactJS lifecycle method that is invoked immediately after the [Component]'s updates are flushed to the DOM.
+  /// ReactJS lifecycle method that is invoked immediately after the `Component`'s updates are flushed to the DOM.
   ///
   /// This method is not called for the initial [render].
   ///
-  /// Use this as an opportunity to operate on the [rootNode] (DOM) when the [Component] has been updated as a result
+  /// Use this as an opportunity to operate on the [rootNode] (DOM) when the `Component` has been updated as a result
   /// of the values of [prevProps] / [prevState].
   ///
   /// See: <https://facebook.github.io/react/docs/component-specs.html#updating-componentdidupdate>
   void componentDidUpdate(prevProps, prevState, /*DOMElement */ rootNode) {}
 
-  /// ReactJS lifecycle method that is invoked immediately before a [Component] is unmounted from the DOM.
+  /// ReactJS lifecycle method that is invoked immediately before a `Component` is unmounted from the DOM.
   ///
   /// Perform any necessary cleanup in this method, such as invalidating timers or cleaning up any DOM [Element]s that
   /// were created in [componentDidMount].
@@ -183,7 +181,7 @@ abstract class Component {
   /// See: <https://facebook.github.io/react/docs/component-specs.html#unmounting-componentwillunmount>
   void componentWillUnmount() {}
 
-  /// Invoked once before the [Component] is mounted. The return value will be used as the initial value of [state].
+  /// Invoked once before the `Component` is mounted. The return value will be used as the initial value of [state].
   ///
   /// See: <https://facebook.github.io/react/docs/component-specs.html#getinitialstate>
   Map getInitialState() => {};
@@ -201,7 +199,7 @@ abstract class Component {
   ///
   /// When called, it should examine [props] and [state] and return a single child [Element]. This child [Element] can
   /// be either a virtual representation of a native DOM component (such as [DivElement]) or another composite
-  /// [Component] that you've defined yourself.
+  /// `Component` that you've defined yourself.
   ///
   /// See: <https://facebook.github.io/react/docs/component-specs.html#render>
   dynamic render();
@@ -896,7 +894,7 @@ var text;
 var tspan;
 
 
-/// Create React DOM [Component]s by calling the specified [creator]
+/// Create React DOM `Component`s by calling the specified [creator].
 _createDOMComponents(creator){
   a = creator('a');
   abbr = creator('abbr');
@@ -1035,7 +1033,7 @@ _createDOMComponents(creator){
 
 /// Set configuration based on functions provided as arguments.
 ///
-/// The arguments are assigned to global variables, and React DOM [Component]s are created by calling
+/// The arguments are assigned to global variables, and React DOM `Component`s are created by calling
 /// [_createDOMComponents] with [domCreator].
 setReactConfiguration(domCreator, customRegisterComponent, customRender, customRenderToString,
     customRenderToStaticMarkup, customUnmountComponentAtNode, customFindDOMNode){
