@@ -465,24 +465,28 @@ class SyntheticWheelEvent extends SyntheticEvent {
 
 }
 
-/// Client side rendering.
+/// As of [version `0.9.0`](https://github.com/cleandart/react-dart/pull/86), _(which upgrades this library's ReactJS
+/// dependency to version `0.14.7`)_, this is deprecated in favor of `render` within the `react_dom` library.
 @deprecated
 var render = (component, element) {
   throw new Exception('setClientConfiguration must be called before render.');
 };
 
-/// Server side rendering.
+/// As of [version `0.9.0`](https://github.com/cleandart/react-dart/pull/86), _(which upgrades this library's ReactJS
+/// dependency to version `0.14.7`)_, this is deprecated in favor of `renderToString` within the
+/// `react_dom_server` library.
 @deprecated
 var renderToString;
 
-/// Similar to [renderToString], except this doesn't create extra DOM attributes such as
-/// `data-react-id`, that ReactJS uses internally. This is useful if you want to use React
-/// as a simple static page generator, as stripping away the extra attributes can save
-/// lots of bytes.
+/// As of [version `0.9.0`](https://github.com/cleandart/react-dart/pull/86), _(which upgrades this library's ReactJS
+/// dependency to version `0.14.7`)_, this is deprecated in favor of `renderToStaticMarkup` within the
+/// `react_dom_server` library.
 @deprecated
 var renderToStaticMarkup;
 
-/// Inverse of [render].
+/// As of [version `0.9.0`](https://github.com/cleandart/react-dart/pull/86), _(which upgrades this library's ReactJS
+/// dependency to version `0.14.7`)_, this is deprecated in favor of `unmountComponentAtNode` within the `react_dom`
+/// library.
 @deprecated
 var unmountComponentAtNode;
 
@@ -491,7 +495,8 @@ var registerComponent = (componentFactory, [skipMethods]) {
   throw new Exception('setClientConfiguration must be called before registerComponent.');
 };
 
-/// Returns the corresponding native browser DOM [Element] if the [Component] has been mounted into the DOM.
+/// As of [version `0.9.0`](https://github.com/cleandart/react-dart/pull/86), _(which upgrades this library's ReactJS
+/// dependency to version `0.14.7`)_, this is deprecated in favor of `findDOMNode` within the `react_dom` library.
 @deprecated
 var findDOMNode;
 
