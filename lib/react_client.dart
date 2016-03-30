@@ -447,38 +447,72 @@ _convertBoundValues(Map args) {
 /// [JsObject] event.
 _convertEventHandlers(Map args) {
   var zone = Zone.current;
-  args.forEach((key, value) {
-    if (value == null) {
-      // If the handler is null, don't attempt to wrap/call it.
-      return;
+  args.forEach((propKey, value) {
+    var eventFactory = _eventPropKeyToEventFactory[propKey];
+    if (eventFactory != null && value != null) {
+      args[propKey] = (JsObject e, [String domId, Event event]) => zone.run(() {
+        value(eventFactory(e));
+      });
     }
-    var eventFactory;
-
-    if (_syntheticClipboardEvents.contains(key)) {
-      eventFactory = syntheticClipboardEventFactory;
-    } else if (_syntheticKeyboardEvents.contains(key)) {
-      eventFactory = syntheticKeyboardEventFactory;
-    } else if (_syntheticFocusEvents.contains(key)) {
-      eventFactory = syntheticFocusEventFactory;
-    } else if (_syntheticFormEvents.contains(key)) {
-      eventFactory = syntheticFormEventFactory;
-    } else if (_syntheticMouseEvents.contains(key)) {
-      eventFactory = syntheticMouseEventFactory;
-    } else if (_syntheticTouchEvents.contains(key)) {
-      eventFactory = syntheticTouchEventFactory;
-    } else if (_syntheticUIEvents.contains(key)) {
-      eventFactory = syntheticUIEventFactory;
-    } else if (_syntheticWheelEvents.contains(key)) {
-      eventFactory = syntheticWheelEventFactory;
-    } else {
-      return;
-    }
-
-    args[key] = (JsObject e, [String domId, Event event]) => zone.run(() {
-      value(eventFactory(e));
-    });
   });
 }
+
+/// A mapping from event prop keys to their respective event factories.
+///
+/// Used in [_convertEventHandlers] for efficient event handler conversion.
+const Map<String, Function> _eventPropKeyToEventFactory = const <String, Function>{
+  // SyntheticClipboardEvent
+  'onCopy': syntheticClipboardEventFactory,
+  'onCut': syntheticClipboardEventFactory,
+  'onPaste': syntheticClipboardEventFactory,
+
+  // SyntheticKeyboardEvent
+  'onKeyDown': syntheticKeyboardEventFactory,
+  'onKeyPress': syntheticKeyboardEventFactory,
+  'onKeyUp': syntheticKeyboardEventFactory,
+
+  // SyntheticFocusEvent
+  'onFocus': syntheticFocusEventFactory,
+  'onBlur': syntheticFocusEventFactory,
+
+  // SyntheticFormEvent
+  'onChange': syntheticFormEventFactory,
+  'onInput': syntheticFormEventFactory,
+  'onSubmit': syntheticFormEventFactory,
+  'onReset': syntheticFormEventFactory,
+
+  // SyntheticMouseEvent
+  'onClick': syntheticMouseEventFactory,
+  'onContextMenu': syntheticMouseEventFactory,
+  'onDoubleClick': syntheticMouseEventFactory,
+  'onDrag': syntheticMouseEventFactory,
+  'onDragEnd': syntheticMouseEventFactory,
+  'onDragEnter': syntheticMouseEventFactory,
+  'onDragExit': syntheticMouseEventFactory,
+  'onDragLeave': syntheticMouseEventFactory,
+  'onDragOver': syntheticMouseEventFactory,
+  'onDragStart': syntheticMouseEventFactory,
+  'onDrop': syntheticMouseEventFactory,
+  'onMouseDown': syntheticMouseEventFactory,
+  'onMouseEnter': syntheticMouseEventFactory,
+  'onMouseLeave': syntheticMouseEventFactory,
+  'onMouseMove': syntheticMouseEventFactory,
+  'onMouseOut': syntheticMouseEventFactory,
+  'onMouseOver': syntheticMouseEventFactory,
+  'onMouseUp': syntheticMouseEventFactory,
+
+  // SyntheticTouchEvent
+  'onTouchCancel': syntheticTouchEventFactory,
+  'onTouchEnd': syntheticTouchEventFactory,
+  'onTouchMove': syntheticTouchEventFactory,
+  'onTouchStart': syntheticTouchEventFactory,
+
+  // SyntheticUIEvent
+  'onScroll': syntheticUIEventFactory,
+
+  // SyntheticWheelEvent
+  'onWheel': syntheticWheelEventFactory,
+};
 
 /// Wrapper for [SyntheticEvent].
 SyntheticEvent syntheticEventFactory(JsObject e) {
@@ -583,26 +617,6 @@ SyntheticWheelEvent syntheticWheelEventFactory(JsObject e) {
       () => e.callMethod('stopPropagation', []), e['eventPhase'], e['isTrusted'], e['nativeEvent'],
       e['target'], e['timeStamp'], e['type'], e['deltaX'], e['deltaMode'], e['deltaY'], e['deltaZ']);
 }
-
-Set _syntheticClipboardEvents = new Set.from(['onCopy', 'onCut', 'onPaste',]);
-
-Set _syntheticKeyboardEvents = new Set.from(['onKeyDown', 'onKeyPress', 'onKeyUp',]);
-
-Set _syntheticFocusEvents = new Set.from(['onFocus', 'onBlur',]);
-
-Set _syntheticFormEvents = new Set.from(['onChange', 'onInput', 'onSubmit', 'onReset',]);
-
-Set _syntheticMouseEvents = new Set.from(['onClick', 'onContextMenu', 'onDoubleClick', 'onDrag', 'onDragEnd',
-    'onDragEnter', 'onDragExit', 'onDragLeave', 'onDragOver', 'onDragStart', 'onDrop', 'onMouseDown', 'onMouseEnter',
-    'onMouseLeave', 'onMouseMove', 'onMouseOut', 'onMouseOver', 'onMouseUp',
-]);
-
-Set _syntheticTouchEvents = new Set.from(['onTouchCancel', 'onTouchEnd', 'onTouchMove', 'onTouchStart',]);
-
-Set _syntheticUIEvents = new Set.from(['onScroll',]);
-
-Set _syntheticWheelEvents = new Set.from(['onWheel',]);
-
 
 JsObject _render(JsObject component, Element element) {
   var renderedComponent = _ReactDom.callMethod('render', [component, element]);
