@@ -1,7 +1,7 @@
 /// JS interop classes for React synthetic events.
 ///
 /// For use in `react_client.dart` and by advanced react-dart users.
-library react_client.synthetic_event;
+library react_client.synthetic_event_wrappers;
 
 import 'dart:html';
 import 'package:js/js.dart';

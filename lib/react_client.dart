@@ -11,9 +11,9 @@ import "package:js/js.dart";
 import "package:react/react.dart";
 import "package:react/react_client/js_interop_helpers.dart";
 import 'package:react/react_client/react_interop.dart';
-import "package:react/react_client/synthetic_event_interop.dart" as events;
 import "package:react/react_dom.dart";
 import "package:react/react_dom_server.dart";
+import "package:react/src/react_client/synthetic_event_wrappers.dart" as events;
 
 export 'package:react/react_client/react_interop.dart' show ReactElement;
 
