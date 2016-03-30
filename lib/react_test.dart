@@ -1,10 +1,10 @@
-// Copyright (c) 2013, the Clean project authors.  Please see the AUTHORS file
+// Copyright (c) 2013-2016, the Clean project authors.  Please see the AUTHORS file
 // for details. All rights reserved. Use of this source code is governed by a
 // BSD-style license that can be found in the LICENSE file.
 
 library react_test;
 
-import "package:react/react.dart";
+import 'package:react/react.dart';
 
 class MarkupDescription {
   final String tag;
@@ -37,5 +37,5 @@ initializeComponent(Component component, [Map props = const {}, List children, r
 }
 
 void setTestConfiguration() {
-  setReactConfiguration(_reactDom, null, null, null, null, null);
+  setReactConfiguration(_reactDom, null, null, null, null, null, null);
 }

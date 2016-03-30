@@ -1,38 +1,37 @@
-// Copyright (c) 2013, the Clean project authors.  Please see the AUTHORS file
+// Copyright (c) 2013-2016, the Clean project authors.  Please see the AUTHORS file
 // for details. All rights reserved. Use of this source code is governed by a
 // BSD-style license that can be found in the LICENSE file.
 
-/**
- * A Dart library for building user interfaces.
- */
+/// A Dart library for building UI using ReactJS.
 library react;
 
+/// Top-level ReactJS [Component class](https://facebook.github.io/react/docs/top-level-api.html#react.component)
+/// which provides the [ReactJS Component API](https://facebook.github.io/react/docs/component-api.html)
 abstract class Component {
+  /// ReactJS `Component` props.
   Map props;
 
+  /// Provides access to the underlying DOM representation of the [render]ed `Component`.
   dynamic ref;
 
-  /// As of ReactJS v0.14, [Component.getDOMNode] is deprecated in favor of
-  /// `ReactDOM.findDOMNode`.
+  /// As of [version `0.9.0`](https://github.com/cleandart/react-dart/pull/86), _(which upgrades this library's ReactJS
+  /// dependency to version `0.14.7`)_, [Component.getDOMNode] is deprecated in favor of `ReactDOM.findDOMNode`.
   @deprecated
   dynamic getDOMNode;
-  
+
   dynamic _jsRedraw;
+
   dynamic _jsThis;
 
-  /**
-   * The JavaScript `ReactComponent` instance associated with this component.
-   */
+  /// The JavaScript [`ReactComponent`](https://facebook.github.io/react/docs/top-level-api.html#reactdom.render)
+  /// instance of this `Component` returned by [render].
   dynamic get jsThis => _jsThis;
 
-  /**
-   * Getter to allow the [displayName] React property to be set.
-   */
+  /// Allows the [ReactJS `displayName` property](https://facebook.github.io/react/docs/component-specs.html#displayname)
+  /// to be set for debugging purposes.
   String get displayName => runtimeType.toString();
 
-  /**
-   * Bind the value of input to [state[key]].
-   */
+  /// Bind the value of input to [state[key]].
   bind(key) => [state[key], (value) => setState({key: value})];
 
   initComponentInternal(props, _jsRedraw, [ref, getDOMNode, _jsThis]) {
@@ -51,34 +50,34 @@ abstract class Component {
 
   initStateInternal() {
     this.state = new Map.from(getInitialState());
-    /** Call transferComponent to get state also to _prevState */
+    // Call `transferComponentState` to get state also to `_prevState`
     transferComponentState();
   }
 
+  /// ReactJS `Component` state.
   Map state = {};
 
-  /**
-   * private _nextState and _prevState are usefull for methods shouldComponentUpdate,
-   * componentWillUpdate and componentDidUpdate.
-   *
-   * Use of theese private variables is implemented in react_client or react_server
-   */
+  /// Private reference to the value of [state] from the previous render cycle.
+  ///
+  /// Useful for ReactJS lifecycle methods [shouldComponentUpdate], [componentWillUpdate] and [componentDidUpdate].
   Map _prevState = null;
+
+  /// Private reference to the value of [state] for the upcoming render cycle.
+  ///
+  /// Useful for ReactJS lifecycle methods [shouldComponentUpdate], [componentWillUpdate] and [componentDidUpdate].
   Map _nextState = null;
-  /**
-   * nextState and prevState are just getters for previous private variables _prevState
-   * and _nextState
-   *
-   * if _nextState is null, then next state will be same as actual state,
-   * so return state as nextState
-   */
+
+  /// Public getter for [_prevState].
   Map get prevState => _prevState;
+
+  /// Public getter for [_nextState].
+  ///
+  /// If `null`, then [_nextState] is equal to [state] - which is the value that will be returned.
   Map get nextState => _nextState == null ? state : _nextState;
 
-  /**
-   * Transfers component _nextState to state and state to _prevState.
-   * This is only way how to set _prevState.
-   */
+  /// Transfers `Component` [_nextState] to [state], and [state] to [_prevState].
+  ///
+  /// This is the only way to set the value of [_prevState].
   void transferComponentState() {
     _prevState = state;
     if (_nextState != null) {
@@ -87,14 +86,16 @@ abstract class Component {
     _nextState = new Map.from(state);
   }
 
+  /// Force a call to [render] by calling [setState], which effectively "redraws" the `Component`.
+  ///
+  /// [A.k.a "forceUpdate"](https://facebook.github.io/react/docs/component-api.html#forceupdate)
   void redraw() {
     setState({});
   }
 
-  /**
-   * set _nextState to state updated by newState
-   * and call React original setState method with no parameter
-   */
+  /// Set [_nextState] to provided [newState] value and force a re-render.
+  ///
+  /// See: <https://facebook.github.io/react/docs/component-api.html#setstate>
   void setState(Map newState) {
     if (newState != null) {
       _nextState.addAll(newState);
@@ -103,58 +104,202 @@ abstract class Component {
     _jsRedraw();
   }
 
-  /**
-   * set _nextState to newState
-   * and call React original setState method with no parameter
-   */
+  /// Set [_nextState] to provided [newState] value and force a re-render.
+  ///
+  /// See: <https://facebook.github.io/react/docs/component-api.html#replacestate>
   void replaceState(Map newState) {
     Map nextState = newState == null ? {} : new Map.from(newState);
     _nextState = nextState;
+
     _jsRedraw();
   }
 
+  /// ReactJS lifecycle method that is invoked once, both on the client and server, immediately before the initial
+  /// rendering occurs.
+  ///
+  /// If you call [setState] within this method, [render] will see the updated state and will be executed only once
+  /// despite the [state] value change.
+  ///
+  /// See: <https://facebook.github.io/react/docs/component-specs.html#mounting-componentwillmount>
   void componentWillMount() {}
 
+  /// ReactJS lifecycle method that is invoked once, only on the client _(not on the server)_, immediately after the
+  /// initial rendering occurs.
+  ///
+  /// At this point in the lifecycle, you can access any [ref]s to the children of [rootNode].
+  ///
+  /// The [componentDidMount] method of child `Component`s is invoked _before_ that of parent `Component`.
+  ///
+  /// See: <https://facebook.github.io/react/docs/component-specs.html#mounting-componentdidmount>
   void componentDidMount(/*DOMElement */ rootNode) {}
 
+  /// ReactJS lifecycle method that is invoked when a `Component` is receiving [newProps].
+  ///
+  /// This method is not called for the initial [render].
+  ///
+  /// Use this as an opportunity to react to a prop transition before [render] is called by updating the [state] using
+  /// [setState]. The old props can be accessed via [props].
+  ///
+  /// Calling [setState] within this function will not trigger an additional [render].
+  ///
+  /// See: <https://facebook.github.io/react/docs/component-specs.html#updating-componentwillreceiveprops>
   void componentWillReceiveProps(newProps) {}
 
+  /// ReactJS lifecycle method that is invoked before rendering when [nextProps] or [nextState] are being received.
+  ///
+  /// Use this as an opportunity to return false when you're certain that the transition to the new props and state
+  /// will not require a component update.
+  ///
+  /// See: <https://facebook.github.io/react/docs/component-specs.html#updating-shouldcomponentupdate>
   bool shouldComponentUpdate(nextProps, nextState) => true;
 
+  /// ReactJS lifecycle method that is invoked immediately before rendering when [nextProps] or [nextState] are being
+  /// received.
+  ///
+  /// This method is not called for the initial [render].
+  ///
+  /// Use this as an opportunity to perform preparation before an update occurs.
+  ///
+  /// See: <https://facebook.github.io/react/docs/component-specs.html#updating-componentwillupdate>
   void componentWillUpdate(nextProps, nextState) {}
 
+  /// ReactJS lifecycle method that is invoked immediately after the `Component`'s updates are flushed to the DOM.
+  ///
+  /// This method is not called for the initial [render].
+  ///
+  /// Use this as an opportunity to operate on the [rootNode] (DOM) when the `Component` has been updated as a result
+  /// of the values of [prevProps] / [prevState].
+  ///
+  /// See: <https://facebook.github.io/react/docs/component-specs.html#updating-componentdidupdate>
   void componentDidUpdate(prevProps, prevState, /*DOMElement */ rootNode) {}
 
+  /// ReactJS lifecycle method that is invoked immediately before a `Component` is unmounted from the DOM.
+  ///
+  /// Perform any necessary cleanup in this method, such as invalidating timers or cleaning up any DOM [Element]s that
+  /// were created in [componentDidMount].
+  ///
+  /// See: <https://facebook.github.io/react/docs/component-specs.html#unmounting-componentwillunmount>
   void componentWillUnmount() {}
 
+  /// Invoked once before the `Component` is mounted. The return value will be used as the initial value of [state].
+  ///
+  /// See: <https://facebook.github.io/react/docs/component-specs.html#getinitialstate>
   Map getInitialState() => {};
 
+  /// Invoked once and cached when [reactComponentClass] is called. Values in the mapping will be set on [props]
+  /// if that prop is not specified by the parent component.
+  ///
+  /// This method is invoked before any instances are created and thus cannot rely on [props]. In addition, be aware
+  /// that any complex objects returned by `getDefaultProps` will be shared across instances, not copied.
+  ///
+  /// See: <https://facebook.github.io/react/docs/component-specs.html#getdefaultprops>
   Map getDefaultProps() => {};
 
+  /// __Required.__
+  ///
+  /// When called, it should examine [props] and [state] and return a single child [Element]. This child [Element] can
+  /// be either a virtual representation of a native DOM component (such as [DivElement]) or another composite
+  /// `Component` that you've defined yourself.
+  ///
+  /// See: <https://facebook.github.io/react/docs/component-specs.html#render>
   dynamic render();
-
 }
 
-/** Synthetic event */
 
+/// A cross-browser wrapper around the browser's [nativeEvent].
+///
+/// It has the same interface as the browser's native event, including [stopPropagation] and [preventDefault], except
+/// the events work identically across all browsers.
+///
+/// See: <https://facebook.github.io/react/docs/events.html#syntheticevent>
 class SyntheticEvent {
-
+  /// Indicates whether the [Event] bubbles up through the DOM or not.
+  ///
+  /// See: <https://developer.mozilla.org/en-US/docs/Web/API/Event/bubbles>
   final bool bubbles;
+
+  /// Indicates whether the [Event] is cancelable or not.
+  ///
+  /// See: <https://developer.mozilla.org/en-US/docs/Web/API/Event/cancelable>
   final bool cancelable;
+
+  /// Identifies the current target for the event, as the [Event] traverses the DOM.
+  ///
+  /// It always refers to the [Element] the [Event] handler has been attached to as opposed to [target] which identifies
+  /// the [Element] on which the [Event] occurred.
+  ///
+  /// See: <https://developer.mozilla.org/en-US/docs/Web/API/Event/currentTarget>
   final /*DOMEventTarget*/ currentTarget;
+
   bool _defaultPrevented;
+
   dynamic _preventDefault;
-  final dynamic stopPropagation;
+
+  /// Indicates whether or not [preventDefault] was called on the event.
+  ///
+  /// See: <https://developer.mozilla.org/en-US/docs/Web/API/Event/defaultPrevented>
   bool get defaultPrevented => _defaultPrevented;
-  final num eventPhase;
-  final bool isTrusted;
-  final /*DOMEvent*/ nativeEvent;
+
+  /// Cancels the [Event] if it is [cancelable], without stopping further propagation of the event.
+  ///
+  /// See: <https://developer.mozilla.org/en-US/docs/Web/API/Event/preventDefault>
   void preventDefault() {
     _defaultPrevented = true;
     _preventDefault();
   }
+
+  /// Prevents further propagation of the current event.
+  ///
+  /// See: <https://developer.mozilla.org/en-US/docs/Web/API/Event/stopPropagation>
+  final dynamic stopPropagation;
+
+  /// Indicates which phase of the [Event] flow is currently being evaluated.
+  ///
+  /// Possible values:
+  ///
+  /// > [Event.CAPTURING_PHASE] (1) - The [Event] is being propagated through the [target]'s ancestor objects. This
+  /// process starts with the Window, then [HtmlDocument], then the [HtmlHtmlElement], and so on through the [Element]s
+  /// until the [target]'s parent is reached. Event listeners registered for capture mode when
+  /// [EventTarget.addEventListener] was called are triggered during this phase.
+  ///
+  /// > [Event.AT_TARGET] (2) - The [Event] has arrived at the [target]. Event listeners registered for this phase are
+  /// called at this time. If [bubbles] is `false`, processing the [Event] is finished after this phase is complete.
+  ///
+  /// > [Event.BUBBLING_PHASE] (3) - The [Event] is propagating back up through the [target]'s ancestors in reverse
+  /// order, starting with the parent, and eventually reaching the containing Window. This is known as bubbling, and
+  /// occurs only if [bubbles] is `true`. [Event] listeners registered for this phase are triggered during this process.
+  ///
+  /// See: <https://developer.mozilla.org/en-US/docs/Web/API/Event/eventPhase>
+  final num eventPhase;
+
+  /// Is `true` when the [Event] was generated by a user action, and `false` when the [Event] was created or modified
+  /// by a script or dispatched via [Event.dispatchEvent].
+  ///
+  /// __Read Only__
+  ///
+  /// See: <https://developer.mozilla.org/en-US/docs/Web/API/Event/isTrusted>
+  final bool isTrusted;
+
+  /// Native browser event that [SyntheticEvent] wraps around.
+  final /*DOMEvent*/ nativeEvent;
+
+  /// A reference to the object that dispatched the event. It is different from [currentTarget] when the [Event]
+  /// handler is called when [eventPhase] is [Event.BUBBLING_PHASE] or [Event.CAPTURING_PHASE].
+  ///
+  /// See: <https://developer.mozilla.org/en-US/docs/Web/API/Event/target>
   final /*DOMEventTarget*/ target;
+
+  /// Returns the [Time] (in milliseconds) at which the [Event] was created.
+  ///
+  /// _Starting with Chrome 49, returns a high-resolution monotonic time instead of epoch time._
+  ///
+  /// See: <https://developer.mozilla.org/en-US/docs/Web/API/Event/timeStamp>
   final num timeStamp;
+
+  /// Returns a string containing the type of event. It is set when the [Event] is constructed and is the name commonly
+  /// used to refer to the specific event.
+  ///
+  /// See: <https://developer.mozilla.org/en-US/docs/Web/API/Event/type>
   final String type;
 
   SyntheticEvent(
@@ -318,72 +463,438 @@ class SyntheticWheelEvent extends SyntheticEvent {
 
 }
 
-/**
- * client side rendering
- */
+/// As of [version `0.9.0`](https://github.com/cleandart/react-dart/pull/86), _(which upgrades this library's ReactJS
+/// dependency to version `0.14.7`)_, this is deprecated in favor of `render` within the `react_dom` library.
 @deprecated
 var render = (component, element) {
   throw new Exception('setClientConfiguration must be called before render.');
 };
 
-/**
- * server side rendering
- */
+/// As of [version `0.9.0`](https://github.com/cleandart/react-dart/pull/86), _(which upgrades this library's ReactJS
+/// dependency to version `0.14.7`)_, this is deprecated in favor of `renderToString` within the
+/// `react_dom_server` library.
 @deprecated
 var renderToString;
 
-/**
- * Similar to [renderToString], except this doesn't create extra DOM attributes such as
- * `data-react-id`, that React uses internally. This is useful if you want to use React
- * as a simple static page generator, as stripping away the extra attributes can save
- * lots of bytes.
- */
+/// As of [version `0.9.0`](https://github.com/cleandart/react-dart/pull/86), _(which upgrades this library's ReactJS
+/// dependency to version `0.14.7`)_, this is deprecated in favor of `renderToStaticMarkup` within the
+/// `react_dom_server` library.
 @deprecated
 var renderToStaticMarkup;
 
-
-/**
- * bool unmountComponentAtNode(HTMLElement);
- *
- * client side derendering - reverse operation to render
- *
- */
+/// As of [version `0.9.0`](https://github.com/cleandart/react-dart/pull/86), _(which upgrades this library's ReactJS
+/// dependency to version `0.14.7`)_, this is deprecated in favor of `unmountComponentAtNode` within the `react_dom`
+/// library.
 @deprecated
 var unmountComponentAtNode;
 
-/**
- * register component method to register component on both, client-side and server-side.
- */
+/// Registers [componentFactory] on both client and server.
 var registerComponent = (componentFactory, [skipMethods]) {
   throw new Exception('setClientConfiguration must be called before registerComponent.');
 };
 
-/**
- * if this component has been mounted into the DOM, this returns the corresponding native browser DOM element.
- */
+/// As of [version `0.9.0`](https://github.com/cleandart/react-dart/pull/86), _(which upgrades this library's ReactJS
+/// dependency to version `0.14.7`)_, this is deprecated in favor of `findDOMNode` within the `react_dom` library.
 @deprecated
 var findDOMNode;
 
-/** Basic DOM elements
- * <var> is renamed to <variable> because var is reserved word in Dart.
- */
-var a, abbr, address, area, article, aside, audio, b, base, bdi, bdo, big, blockquote, body, br,
-button, canvas, caption, cite, code, col, colgroup, data, datalist, dd, del, details, dfn, dialog,
-div, dl, dt, em, embed, fieldset, figcaption, figure, footer, form, h1, h2, h3, h4, h5, h6,
-head, header, hr, html, i, iframe, img, input, ins, kbd, keygen, label, legend, li, link, main,
-map, mark, menu, menuitem, meta, meter, nav, noscript, object, ol, optgroup, option, output,
-p, param, picture, pre, progress, q, rp, rt, ruby, s, samp, script, section, select, small, source,
-span, strong, style, sub, summary, sup, table, tbody, td, textarea, tfoot, th, thead, time,
-title, tr, track, u, ul, variable, video, wbr;
+/// The HTML `<a>` [AnchorElement].
+var a;
 
-/** SVG elements */
-var circle, clipPath, defs, ellipse, g, image, line, linearGradient, mask, path, pattern, polygon,
-polyline, radialGradient, rect, stop, svg, text, tspan;
+/// The HTML `<abbr>` [Element].
+var abbr;
+
+/// The HTML `<address>` [Element].
+var address;
+
+/// The HTML `<area>` [AreaElement].
+var area;
+
+/// The HTML `<article>` [Element].
+var article;
+
+/// The HTML `<aside>` [Element].
+var aside;
+
+/// The HTML `<audio>` [AudioElement].
+var audio;
+
+/// The HTML `<b>` [Element].
+var b;
+
+/// The HTML `<base>` [BaseElement].
+var base;
+
+/// The HTML `<bdi>` [Element].
+var bdi;
+
+/// The HTML `<bdo>` [Element].
+var bdo;
+
+/// The HTML `<big>` [Element].
+var big;
+
+/// The HTML `<blockquote>` [Element].
+var blockquote;
+
+/// The HTML `<body>` [BodyElement].
+var body;
+
+/// The HTML `<br>` [BRElement].
+var br;
+
+/// The HTML `<button>` [ButtonElement].
+var button;
+
+/// The HTML `<canvas>` [CanvasElement].
+var canvas;
+
+/// The HTML `<caption>` [Element].
+var caption;
+
+/// The HTML `<cite>` [Element].
+var cite;
+
+/// The HTML `<code>` [Element].
+var code;
+
+/// The HTML `<col>` [Element].
+var col;
+
+/// The HTML `<colgroup>` [Element].
+var colgroup;
+
+/// The HTML `<data>` [Element].
+var data;
+
+/// The HTML `<datalist>` [DataListElement].
+var datalist;
+
+/// The HTML `<dd>` [Element].
+var dd;
+
+/// The HTML `<del>` [Element].
+var del;
+
+/// The HTML `<details>` [DetailsElement].
+var details;
+
+/// The HTML `<dfn>` [Element].
+var dfn;
+
+/// The HTML `<dialog>` [DialogElement].
+var dialog;
+
+/// The HTML `<div>` [DivElement].
+var div;
+
+/// The HTML `<dl>` [DListElement].
+var dl;
+
+/// The HTML `<dt>` [Element].
+var dt;
+
+/// The HTML `<em>` [Element].
+var em;
+
+/// The HTML `<embed>` [EmbedElement].
+var embed;
+
+/// The HTML `<fieldset>` [FieldSetElement].
+var fieldset;
+
+/// The HTML `<figcaption>` [Element].
+var figcaption;
+
+/// The HTML `<figure>` [Element].
+var figure;
+
+/// The HTML `<footer>` [Element].
+var footer;
+
+/// The HTML `<form>` [FormElement].
+var form;
+
+/// The HTML `<h1>` [HeadingElement].
+var h1;
+
+/// The HTML `<h2>` [HeadingElement].
+var h2;
+
+/// The HTML `<h3>` [HeadingElement].
+var h3;
+
+/// The HTML `<h4>` [HeadingElement].
+var h4;
+
+/// The HTML `<h5>` [HeadingElement].
+var h5;
+
+/// The HTML `<h6>` [HeadingElement].
+var h6;
+
+/// The HTML `<head>` [HeadElement].
+var head;
+
+/// The HTML `<header>` [Element].
+var header;
+
+/// The HTML `<hr>` [HRElement].
+var hr;
+
+/// The HTML `<html>` [HtmlHtmlElement].
+var html;
+
+/// The HTML `<i>` [Element].
+var i;
+
+/// The HTML `<iframe>` [IFrameElement].
+var iframe;
+
+/// The HTML `<img>` [ImageElement].
+var img;
+
+/// The HTML `<input>` [InputElement].
+var input;
+
+/// The HTML `<ins>` [Element].
+var ins;
+
+/// The HTML `<kbd>` [Element].
+var kbd;
+
+/// The HTML `<keygen>` [KeygenElement].
+var keygen;
+
+/// The HTML `<label>` [LabelElement].
+var label;
+
+/// The HTML `<legend>` [LegendElement].
+var legend;
+
+/// The HTML `<li>` [LIElement].
+var li;
+
+/// The HTML `<link>` [LinkElement].
+var link;
+
+/// The HTML `<main>` [Element].
+var main;
+
+/// The HTML `<map>` [MapElement].
+var map;
+
+/// The HTML `<mark>` [Element].
+var mark;
+
+/// The HTML `<menu>` [MenuElement].
+var menu;
+
+/// The HTML `<menuitem>` [MenuItemElement].
+var menuitem;
+
+/// The HTML `<meta>` [MetaElement].
+var meta;
+
+/// The HTML `<meter>` [MeterElement].
+var meter;
+
+/// The HTML `<nav>` [Element].
+var nav;
+
+/// The HTML `<noscript>` [Element].
+var noscript;
+
+/// The HTML `<object>` [ObjectElement].
+var object;
+
+/// The HTML `<ol>` [OListElement].
+var ol;
+
+/// The HTML `<optgroup>` [OptGroupElement].
+var optgroup;
+
+/// The HTML `<option>` [OptionElement].
+var option;
+
+/// The HTML `<output>` [OutputElement].
+var output;
+
+/// The HTML `<p>` [ParagraphElement].
+var p;
+
+/// The HTML `<param>` [ParamElement].
+var param;
+
+/// The HTML `<picture>` [PictureElement].
+var picture;
+
+/// The HTML `<pre>` [PreElement].
+var pre;
+
+/// The HTML `<progress>` [ProgressElement].
+var progress;
+
+/// The HTML `<q>` [QuoteElement].
+var q;
+
+/// The HTML `<rp>` [Element].
+var rp;
+
+/// The HTML `<rt>` [Element].
+var rt;
+
+/// The HTML `<ruby>` [Element].
+var ruby;
+
+/// The HTML `<s>` [Element].
+var s;
+
+/// The HTML `<samp>` [Element].
+var samp;
+
+/// The HTML `<script>` [ScriptElement].
+var script;
+
+/// The HTML `<section>` [Element].
+var section;
+
+/// The HTML `<select>` [SelectElement].
+var select;
+
+/// The HTML `<small>` [Element].
+var small;
+
+/// The HTML `<source>` [SourceElement].
+var source;
+
+/// The HTML `<span>` [SpanElement].
+var span;
+
+/// The HTML `<strong>` [Element].
+var strong;
+
+/// The HTML `<style>` [StyleElement].
+var style;
+
+/// The HTML `<sub>` [Element].
+var sub;
+
+/// The HTML `<summary>` [Element].
+var summary;
+
+/// The HTML `<sup>` [Element].
+var sup;
+
+/// The HTML `<table>` [TableElement].
+var table;
+
+/// The HTML `<tbody>` [TableSectionElement].
+var tbody;
+
+/// The HTML `<td>` [TableCellElement].
+var td;
+
+/// The HTML `<textarea>` [TextAreaElement].
+var textarea;
+
+/// The HTML `<tfoot>` [TableSectionElement].
+var tfoot;
+
+/// The HTML `<th>` [TableCellElement].
+var th;
+
+/// The HTML `<thead>` [TableSectionElement].
+var thead;
+
+/// The HTML `<time>` [TimeInputElement].
+var time;
+
+/// The HTML `<title>` [TitleElement].
+var title;
+
+/// The HTML `<tr>` [TableRowElement].
+var tr;
+
+/// The HTML `<track>` [TrackElement].
+var track;
+
+/// The HTML `<u>` [Element].
+var u;
+
+/// The HTML `<ul>` [UListElement].
+var ul;
+
+/// The HTML `<var>` [Element].
+///
+/// _Named variable because `var` is a reserved word in Dart._
+var variable;
+
+/// The HTML `<video>` [VideoElement].
+var video;
+
+/// The HTML `<wbr>` [Element].
+var wbr;
+
+/// The SVG `<circle>` [CircleElement].
+var circle;
+
+/// The SVG `<clipPath>` [ClipPathElement].
+var clipPath;
+
+/// The SVG `<defs>` [DefsElement].
+var defs;
+
+/// The SVG `<ellipse>` [EllipseElement].
+var ellipse;
+
+/// The SVG `<g>` [GElement].
+var g;
+
+/// The SVG `<image>` [ImageElement].
+var image;
+
+/// The SVG `<line>` [LineElement].
+var line;
+
+/// The SVG `<linearGradient>` [LinearGradientElement].
+var linearGradient;
+
+/// The SVG `<mask>` [MaskElement].
+var mask;
+
+/// The SVG `<path>` [PathElement].
+var path;
+
+/// The SVG `<pattern>` [PatternElement].
+var pattern;
+
+/// The SVG `<polygon>` [PolygonElement].
+var polygon;
+
+/// The SVG `<polyline>` [PolylineElement].
+var polyline;
+
+/// The SVG `<radialGradient>` [RadialGradientElement].
+var radialGradient;
+
+/// The SVG `<rect>` [RectElement].
+var rect;
+
+/// The SVG `<stop>` [StopElement].
+var stop;
+
+/// The SVG `<svg>` [SvgSvgElement].
+var svg;
+
+/// The SVG `<text>` [TextElement].
+var text;
+
+/// The SVG `<tspan>` [TSpanElement].
+var tspan;
 
 
-/**
- * Create DOM components by creator passed
- */
+/// Create React DOM `Component`s by calling the specified [creator].
 _createDOMComponents(creator){
   a = creator('a');
   abbr = creator('abbr');
@@ -520,11 +1031,10 @@ _createDOMComponents(creator){
   tspan = creator('tspan');
 }
 
-/**
- * set configuration based on passed functions.
- *
- * It pass arguments to global variables and run DOM components creation by dom Creator.
- */
+/// Set configuration based on functions provided as arguments.
+///
+/// The arguments are assigned to global variables, and React DOM `Component`s are created by calling
+/// [_createDOMComponents] with [domCreator].
 setReactConfiguration(domCreator, customRegisterComponent, customRender, customRenderToString,
     customRenderToStaticMarkup, customUnmountComponentAtNode, customFindDOMNode){
   registerComponent = customRegisterComponent;
@@ -536,4 +1046,3 @@ setReactConfiguration(domCreator, customRegisterComponent, customRender, customR
   // HTML Elements
   _createDOMComponents(domCreator);
 }
-

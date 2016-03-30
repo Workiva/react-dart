@@ -1,3 +1,7 @@
+// Copyright (c) 2016, the Clean project authors.  Please see the AUTHORS file
+// for details. All rights reserved. Use of this source code is governed by a
+// BSD-style license that can be found in the LICENSE file.
+
 library react_dom;
 
 /// Renders a ReactElement into the DOM in the supplied [container] and return a reference to the [component]
@@ -9,12 +13,12 @@ var render = (component, container) {
   throw new Exception('setClientConfiguration must be called before render.');
 };
 
-/// Removes a mounted React component from the DOM and cleans up its event handlers and state. If no component
+/// Removes a mounted React [Component] from the DOM and cleans up its event handlers and state. If no component
 /// was mounted in the container, calling this function does nothing. Returns true if a component was unmounted
 /// and false if there was no component to unmount.
 var unmountComponentAtNode;
 
-/// If this component has been mounted into the DOM, this returns the corresponding native browser DOM [Element].
+/// If the [Component] has been mounted into the DOM, this returns the corresponding native browser DOM [Element].
 var findDOMNode;
 
 /// Sets configuration based on passed functions.
