@@ -39,13 +39,25 @@ abstract class ReactDomServer {
 //   Types and data structures
 // ----------------------------------------------------------------------------
 
+/// A React class specification returned by [React.createClass].
+///
+/// To be used as the value of [ReactElement.type], which is set upon initialization
+/// by a component factory or by [React.createElement].
+///
+/// See: <http://facebook.github.io/react/docs/top-level-api.html#react.createclass>
 @JS()
 @anonymous
 class ReactClass {
+  /// The `displayName` string is used in debugging messages.
+  ///
+  /// See: <http://facebook.github.io/react/docs/component-specs.html#displayname>
   external String get displayName;
   external set displayName(String value);
 }
 
+/// A JS interop class used as an argument to [React.createClass].
+///
+/// See: <http://facebook.github.io/react/docs/top-level-api.html#react.createclass>.
 @JS()
 @anonymous
 class ReactClassConfig {
@@ -74,18 +86,43 @@ class ReactElementStore {
   external set validated(bool value);
 }
 
-
+/// A virtual instance of a React component that is returned by component
+/// factories and `Component.render` methods, and passed into [react.render].
+///
+/// See <http://facebook.github.io/react/docs/glossary.html#react-elements>
+/// and <http://facebook.github.io/react/docs/glossary.html#react-components>.
 @JS()
 @anonymous
 class ReactElement<TComponent extends Component> {
   external ReactElementStore get _store;
 
+  /// The type of this element.
+  ///
+  /// For DOM components, this will a [String] tagName (e.g., `'div'`, `'a'`).
+  ///
+  /// For composite components (react-dart or pur JS), this will be a [ReactClass].
   external dynamic get type;
+
+  /// The props this element was created with.
   external InteropProps get props;
+
+  /// This element's `key`, which is used to uniquely identify it among its siblings.
+  ///
+  /// Not needed when children are passed variadically.
+  ///
+  /// See: <http://facebook.github.io/react/docs/reconciliation.html#keys>.
   external String get key;
+
+  /// This element's `ref`, which can be used to access the associated
+  /// [Component]/[ReactComponent]/[Element] after it has been rendered.
+  ///
+  /// See: <http://facebook.github.io/react/docs/more-about-refs.html>.
   external dynamic get ref;
 }
 
+/// The JavaScript component instance, which backs each react-dart [Component].
+///
+/// See: <http://facebook.github.io/react/docs/glossary.html#react-components>
 @JS()
 @anonymous
 class ReactComponent {
@@ -103,6 +140,13 @@ class ReactComponent {
 //   Interop internals
 // ----------------------------------------------------------------------------
 
+/// A JavaScript interop class representing a React JS `props` object.
+///
+/// Used for storing/accessing [ReactDartComponentInternal] objects for in
+/// react-dart [ReactElement]s and [ReactComponent]s, as well as for preparing
+/// reserved props (`key` and `ref`)for consumption by ReactJS.
+///
+/// __For internal/advanced use only.__
 @JS()
 @anonymous
 class InteropProps {
@@ -116,9 +160,23 @@ class InteropProps {
   external factory InteropProps({ReactDartComponentInternal internal, String key, dynamic ref});
 }
 
+/// Internal react-dart information used to proxy React JS lifecycle to Dart
+/// [Component] instances.
+///
+/// __For internal/advanced use only.__
 class ReactDartComponentInternal {
+  /// The Dart component instance associated with this JS [ReactComponent].
+  ///
+  /// Null until the [ReactComponent]'s instantiation.
   Component component;
+
+  /// Whether the component is mounted.
   bool isMounted;
+
+  /// For a `ReactElement`, this is the initial props with defaults merged.
+  ///
+  /// For a `ReactComponent`, this is props the component was last rendered with,
+  /// and is used to within props-related lifecycle internals.
   Map props;
 }
 
