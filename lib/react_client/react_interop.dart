@@ -98,9 +98,9 @@ class ReactElement<TComponent extends Component> {
 
   /// The type of this element.
   ///
-  /// For DOM components, this will a [String] tagName (e.g., `'div'`, `'a'`).
+  /// For DOM components, this will be a [String] tagName (e.g., `'div'`, `'a'`).
   ///
-  /// For composite components (react-dart or pur JS), this will be a [ReactClass].
+  /// For composite components (react-dart or pure JS), this will be a [ReactClass].
   external dynamic get type;
 
   /// The props this element was created with.
@@ -142,9 +142,9 @@ class ReactComponent {
 
 /// A JavaScript interop class representing a React JS `props` object.
 ///
-/// Used for storing/accessing [ReactDartComponentInternal] objects for in
+/// Used for storing/accessing [ReactDartComponentInternal] objects in
 /// react-dart [ReactElement]s and [ReactComponent]s, as well as for preparing
-/// reserved props (`key` and `ref`)for consumption by ReactJS.
+/// reserved props (`key` and `ref`) for consumption by ReactJS.
 ///
 /// __For internal/advanced use only.__
 @JS()
@@ -175,12 +175,12 @@ class ReactDartComponentInternal {
 
   /// For a `ReactElement`, this is the initial props with defaults merged.
   ///
-  /// For a `ReactComponent`, this is props the component was last rendered with,
-  /// and is used to within props-related lifecycle internals.
+  /// For a `ReactComponent`, this is the props the component was last rendered with,
+  /// and is used within props-related lifecycle internals.
   Map props;
 }
 
-/// Mark each child in children as validated so that React doesn't emit key warnings.
+/// Mark each child in [children] as validated so that React doesn't emit key warnings.
 ///
 /// ___Only for use with variadic children.___
 ///

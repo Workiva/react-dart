@@ -220,7 +220,7 @@ external List<dynamic> scryRenderedDOMComponentsWithTag(/* [1] */ tree, String t
 @JS('React.addons.TestUtils.renderIntoDocument')
 external /* [1] */ renderIntoDocument(ReactElement instance);
 
-// Use [findDOMNode] instead.
+/// Use [findDOMNode] instead.
 @deprecated
 Element getDomNode(dynamic object) => findDOMNode(object);
 
