@@ -107,10 +107,10 @@ class ReactComponent {
 @anonymous
 class InteropProps {
   external ReactDartComponentInternal get internal;
-  external String get key;
+  external dynamic get key;
   external dynamic get ref;
 
-  external set key(String value);
+  external set key(dynamic value);
   external set ref(dynamic value);
 
   external factory InteropProps({ReactDartComponentInternal internal, String key, dynamic ref});
