@@ -65,8 +65,9 @@ abstract class ReactComponentFactoryProxy implements Function {
 class ReactDartComponentFactoryProxy extends ReactComponentFactoryProxy {
   final JsFunction reactClass;
   final JsFunction reactComponentFactory;
+  final Map defaultProps;
 
-  ReactDartComponentFactoryProxy(JsFunction reactClass) :
+  ReactDartComponentFactoryProxy(JsFunction reactClass, {this.defaultProps: const {}}) :
       this.reactClass = reactClass,
       this.reactComponentFactory = _React.callMethod('createFactory', [reactClass]);
 
@@ -81,7 +82,7 @@ class ReactDartComponentFactoryProxy extends ReactComponentFactoryProxy {
     }
 
     List reactParams = [
-      generateExtendedJsProps(props, children),
+      generateExtendedJsProps(props, children, defaultProps: defaultProps),
       children
     ];
 
@@ -93,7 +94,7 @@ class ReactDartComponentFactoryProxy extends ReactComponentFactoryProxy {
       Map props = invocation.positionalArguments[0];
       List children = invocation.positionalArguments.sublist(1);
 
-      List reactParams = [generateExtendedJsProps(props, children)];
+      List reactParams = [generateExtendedJsProps(props, children, defaultProps: defaultProps)];
       reactParams.addAll(children);
 
       return reactComponentFactory.apply(reactParams);
@@ -104,15 +105,22 @@ class ReactDartComponentFactoryProxy extends ReactComponentFactoryProxy {
 
   /// Returns a [JsObject] version of the specified [props], preprocessed for consumption by ReactJS and prepared for
   /// consumption by the [react] library internals.
-  static JsObject generateExtendedJsProps(Map props, dynamic children) {
+  static JsObject generateExtendedJsProps(Map props, dynamic children, {Map defaultProps}) {
     if (children == null) {
       children = [];
     } else if (children is! Iterable) {
       children = [children];
     }
 
-    Map extendedProps = new Map.from(props);
-    extendedProps['children'] = children;
+    // 1. Merge in defaults (if they were specified)
+    // 2. Add specified props and children.
+
+    // [1]
+    Map extendedProps = defaultProps != null ? new Map.from(defaultProps) : {};
+    extendedProps
+      // [2]
+      ..addAll(props)
+      ..['children'] = children;
 
     JsObject jsProps = newJsObjectEmpty();
 
@@ -159,6 +167,9 @@ ReactComponentFactory _registerComponent(ComponentFactory componentFactory, [Ite
     return newJsObjectEmpty();
   }));
 
+  /// Cached default props.
+  final Map defaultProps = new Map.from(componentFactory().getDefaultProps());
+
   /// Wrapper for [Component.getInitialState].
   var getInitialState = new JsFunction.withThis((jsThis) => zone.run(() {
     var internal = _getInternal(jsThis);
@@ -182,7 +193,7 @@ ReactComponentFactory _registerComponent(ComponentFactory componentFactory, [Ite
     };
 
     Component component = componentFactory()
-        ..initComponentInternal(internal[PROPS], redraw, getRef, getDOMNode, jsThis);
+        ..initComponentInternal(internal[PROPS], defaultProps, redraw, getRef, getDOMNode, jsThis);
 
     internal[COMPONENT] = component;
     internal[IS_MOUNTED] = false;
@@ -208,10 +219,12 @@ ReactComponentFactory _registerComponent(ComponentFactory componentFactory, [Ite
   }));
 
   _getNextProps(Component component, newArgs) {
+    var nextProps = new Map.from(defaultProps);
+
     var newProps = _getInternalProps(newArgs);
-    return {}
-      ..addAll(component.getDefaultProps())
-      ..addAll(newProps != null ? newProps : {});
+    if (newProps != null) nextProps.addAll(newProps);
+
+    return nextProps;
   }
 
   /// 1. Add [component] to [newArgs] to keep it in [INTERNAL]
@@ -311,7 +324,7 @@ ReactComponentFactory _registerComponent(ComponentFactory componentFactory, [Ite
     }, skipMethods)
   )]);
 
-  return new ReactDartComponentFactoryProxy(reactComponentClass);
+  return new ReactDartComponentFactoryProxy(reactComponentClass, defaultProps: defaultProps);
 }
 
 /// Creates ReactJS [ReactElement] instances for DOM components.
