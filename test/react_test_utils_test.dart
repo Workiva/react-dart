@@ -1,10 +1,12 @@
-import 'dart:js';
+import 'dart:html';
 
-import 'package:unittest/unittest.dart';
-import 'package:unittest/html_config.dart';
+import 'package:js/js.dart';
 import 'package:react/react.dart';
-import 'package:react/react_client.dart' as reactClient;
+import 'package:react/react_client.dart';
+import 'package:react/react_client/js_interop_helpers.dart';
 import 'package:react/react_test_utils.dart';
+import 'package:unittest/html_config.dart';
+import 'package:unittest/unittest.dart';
 
 import 'test_components.dart';
 
@@ -12,12 +14,10 @@ import 'test_components.dart';
 void main() {
 
   useHtmlConfiguration();
-  reactClient.setClientConfiguration();
+  setClientConfiguration();
 
   var component;
-  var domNode;
-  var _React = context['React'];
-  var _Object = context['Object'];
+  Element domNode;
 
   tearDown(() {
     component = null;
@@ -25,8 +25,15 @@ void main() {
   });
 
   group('Shallow Rendering', () {
-    JsObject content;
+    ReactElement content;
     ReactShallowRenderer shallowRenderer;
+
+    Map getProps(ReactElement element) {
+      var props = element.props;
+
+      return new Map.fromIterable(_objectKeys(props),
+          value: (key) => getProperty(props, key));
+    }
 
     setUp(() {
       content = sampleComponent({'className': 'test', 'id': 'createRendererTest'});
@@ -35,10 +42,13 @@ void main() {
     });
 
     tearDown(() {
-      JsObject renderedOutput = shallowRenderer.getRenderOutput();
+      ReactElement renderedOutput = shallowRenderer.getRenderOutput();
+      var props = getProps(renderedOutput);
 
-      expect(renderedOutput['props']['className'], 'test');
-      expect(renderedOutput['props']['id'], 'createRendererTest');
+      expect(props['className'], 'test');
+      expect(props['id'], 'createRendererTest');
+
+      print(props['id']);
     });
 
     test('without context', () {
@@ -53,19 +63,19 @@ void main() {
   group('Simulate', () {
     setUp(() {
       component = renderIntoDocument(eventComponent({}));
-      domNode = getDomNode(component);
+      domNode = findDOMNode(component);
       expect(domNode.text, equals(''));
     });
 
     void testEvent(void event(dynamic instanceOrNode, Map eventData), String eventName) {
-      int fakeTimeStamp;
       Map eventData;
+      int fakeTimeStamp;
 
       setUp(() {
         fakeTimeStamp = eventName.hashCode;
         eventData = {
           'type': eventName,
-          'timeStamp': fakeTimeStamp
+          'timeStamp': fakeTimeStamp,
         };
       });
 
@@ -153,14 +163,14 @@ void main() {
     component = renderIntoDocument(sampleComponent({}));
     var spanComponent = findRenderedDOMComponentWithClass(component, 'span1');
 
-    expect(spanComponent['tagName'], equals('SPAN'));
+    expect(getProperty(spanComponent, 'tagName'), equals('SPAN'));
   });
 
   test('findRenderedDOMComponentWithTag', () {
     component = renderIntoDocument(sampleComponent({}));
     var h1Component = findRenderedDOMComponentWithTag(component, 'h1');
 
-    expect(h1Component['tagName'], equals('H1'));
+    expect(getProperty(h1Component, 'tagName'), equals('H1'));
   });
 
   test('findRenderedComponentWithType', () {
@@ -216,7 +226,7 @@ void main() {
     });
 
     test('returns false argument is not an element', () {
-      expect(isElement(new JsObject.jsify({})), isFalse);
+      expect(isElement(new EmptyObject()), isFalse);
     });
   });
 
@@ -251,8 +261,8 @@ void main() {
     var results = scryRenderedDOMComponentsWithClass(component, 'divClass');
 
     expect(results.length, 2);
-    expect(results[0]['tagName'], equals('DIV'));
-    expect(results[1]['tagName'], equals('DIV'));
+    expect(getProperty(results[0], 'tagName'), equals('DIV'));
+    expect(getProperty(results[1], 'tagName'), equals('DIV'));
   });
 
   test('scryRenderedDOMComponentsWithTag', () {
@@ -261,9 +271,9 @@ void main() {
     var results = scryRenderedDOMComponentsWithTag(component, 'div');
 
     expect(results.length, 3);
-    expect(results[0]['tagName'], equals('DIV'));
-    expect(results[1]['tagName'], equals('DIV'));
-    expect(results[2]['tagName'], equals('DIV'));
+    expect(getProperty(results[0], 'tagName'), equals('DIV'));
+    expect(getProperty(results[1], 'tagName'), equals('DIV'));
+    expect(getProperty(results[2], 'tagName'), equals('DIV'));
   });
 
   test('renderIntoDocument', () {
@@ -274,14 +284,14 @@ void main() {
 
     expect(divElements.length, equals(3));
     // First div should be the parent div created by renderIntoDocument()
-    expect(getDomNode(
+    expect(findDOMNode(
         divElements[0]).text, equals('A headerFirst divSecond div'));
-    expect(getDomNode(divElements[1]).text, equals('First div'));
-    expect(getDomNode(divElements[2]).text, equals('Second div'));
+    expect(findDOMNode(divElements[1]).text, equals('First div'));
+    expect(findDOMNode(divElements[2]).text, equals('Second div'));
     expect(h1Elements.length, equals(1));
-    expect(getDomNode(h1Elements[0]).text, equals('A header'));
+    expect(findDOMNode(h1Elements[0]).text, equals('A header'));
     expect(spanElements.length, equals(1));
-    expect(getDomNode(spanElements[0]).text, equals(''));
+    expect(findDOMNode(spanElements[0]).text, equals(''));
   });
 
   test('getDOMNode', () {
@@ -293,3 +303,6 @@ void main() {
     expect(h1DomNode.text, 'A header');
   });
 }
+
+@JS('Object.keys')
+external List _objectKeys(obj);
