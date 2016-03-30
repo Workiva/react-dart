@@ -177,7 +177,7 @@ ReactComponentFactory _registerComponent(ComponentFactory componentFactory, [Ite
     };
 
     Component component = componentFactory()
-        ..initComponentInternal(internal.props, defaultProps, redraw, getRef, getDOMNode, jsThis);
+        ..initComponentInternal(internal.props, redraw, getRef, getDOMNode, jsThis);
 
     internal.component = component;
     internal.isMounted = false;
@@ -202,12 +202,8 @@ ReactComponentFactory _registerComponent(ComponentFactory componentFactory, [Ite
   }));
 
   _getNextProps(Component component, InteropProps newArgs) {
-    var nextProps = new Map.from(defaultProps);
-
     var newProps = newArgs.internal.props;
-    if (newProps != null) nextProps.addAll(newProps);
-
-    return nextProps;
+    return newProps != null ? new Map.from(newProps) : {};
   }
 
   /// 1. Add [component] to [newArgs] to keep it in [InteropProps.internal]

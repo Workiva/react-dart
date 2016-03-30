@@ -34,17 +34,16 @@ abstract class Component {
   /// Bind the value of input to [state[key]].
   bind(key) => [state[key], (value) => setState({key: value})];
 
-  initComponentInternal(props, defaultProps, _jsRedraw, [ref, getDOMNode, _jsThis]) {
+  initComponentInternal(props, _jsRedraw, [ref, getDOMNode, _jsThis]) {
     this._jsRedraw = _jsRedraw;
     this.ref = ref;
     this.getDOMNode = getDOMNode;
     this._jsThis = _jsThis;
-    _initProps(props, defaultProps);
+    _initProps(props);
   }
 
-  _initProps(props, defaultProps) {
-    this.props = new Map.from(defaultProps)
-      ..addAll(props);
+  _initProps(props) {
+    this.props = new Map.from(props);
     this.nextProps = this.props;
   }
 

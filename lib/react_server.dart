@@ -34,8 +34,10 @@ ReactComponentFactory _registerComponent(ComponentFactory componentFactory, [Ite
     Component component = componentFactory();
 
     // Get default props, add children to props and apply props from arguments
-    props['children'] = children;
-    component.initComponentInternal(props, defaultProps, () {});
+    var extendedProps = new Map.from(defaultProps)
+      ..addAll(props)
+      ..['children'] = children;
+    component.initComponentInternal(extendedProps, () {});
 
     // Get initial state
     component.initStateInternal();
