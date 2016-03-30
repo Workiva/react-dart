@@ -32,7 +32,7 @@ import 'package:react/src/react_test_utils/simulate_wrappers.dart' as simulate_w
 /// Returns the 'type' of a component.
 ///
 /// For a DOM components, this with return the String corresponding to its tagName ('div', 'a', etc.).
-/// For React.createClass()-based components, this with return the React class as a JsFunction.
+/// For React.createClass()-based components, this with return the [ReactClass].
 dynamic getComponentType(ReactComponentFactory componentFactory) {
   if (componentFactory is ReactComponentFactoryProxy) {
     return componentFactory.type;

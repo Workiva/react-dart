@@ -19,7 +19,7 @@ export 'package:react/react_client/react_interop.dart' show ReactElement;
 
 final EmptyObject emptyJsMap = new EmptyObject();
 
-/// Type of [children] must be child or list of children, when child is [JsObject] or [String]
+/// Type of [children] must be child or list of children, when child is [ReactElement] or [String]
 typedef ReactElement ReactComponentFactory(Map props, [dynamic children]);
 typedef Component ComponentFactory();
 
@@ -90,7 +90,7 @@ class ReactDartComponentFactoryProxy<TComponent extends Component> extends React
     return super.noSuchMethod(invocation);
   }
 
-  /// Returns a [JsObject] version of the specified [props], preprocessed for consumption by ReactJS and prepared for
+  /// Returns a JavaScript version of the specified [props], preprocessed for consumption by ReactJS and prepared for
   /// consumption by the [react] library internals.
   static InteropProps generateExtendedJsProps(Map props, dynamic children, {Map defaultProps}) {
     if (children == null) {
@@ -128,7 +128,7 @@ class ReactDartComponentFactoryProxy<TComponent extends Component> extends React
       var ref = props['ref'];
 
       // If the ref is a callback, pass ReactJS a function that will call it
-      // with the Dart Component instance, not the JsObject instance.
+      // with the Dart Component instance, not the ReactComponent instance.
       if (ref is _CallbackRef) {
         interopProps.ref = allowInterop((ReactComponent instance) =>
             ref(instance == null ? null : instance.props.internal.component));
@@ -402,7 +402,7 @@ _convertBoundValues(Map args) {
 }
 
 /// Convert packed event handler into wrapper and pass it only the Dart [SyntheticEvent] object converted from the
-/// [JsObject] event.
+/// [events.SyntheticEvent] event.
 _convertEventHandlers(Map args) {
   var zone = Zone.current;
   args.forEach((propKey, value) {
