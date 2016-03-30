@@ -231,13 +231,15 @@ ReactComponentFactory _registerComponent(ComponentFactory componentFactory, [Ite
 
   /// 1. Add [component] to [newArgs] to keep it in [INTERNAL]
   /// 2. Update [Component.props] using [newArgs] as second argument to [_getNextProps]
+  /// 2. Update [Component.props] using the value stored to [Component.nextProps]
+  ///    in `componentWillReceiveProps`.
   /// 3. Update [Component.state] by calling [Component.transferComponentState]
   _afterPropsChange(Component component, newArgs) {
     // [1]
     newArgs[INTERNAL][COMPONENT] = component;
 
     // [2]
-    component.props = _getNextProps(component, newArgs);
+    component.props = component.nextProps;
 
     // [3]
     component.transferComponentState();
