@@ -217,9 +217,7 @@ ReactComponentFactory _registerComponent(ComponentFactory componentFactory, [Ite
 
   /// Wrapper for [Component.componentDidMount].
   var componentDidMount = new JsFunction.withThis((JsObject jsThis) => zone.run(() {
-    //you need to get dom node by calling findDOMNode
-    var rootNode = _ReactDom.callMethod('findDOMNode', [jsThis]);
-    _getComponent(jsThis).componentDidMount(rootNode);
+    _getComponent(jsThis).componentDidMount();
   }));
 
   _getNextProps(Component component, newArgs) {
@@ -278,10 +276,8 @@ ReactComponentFactory _registerComponent(ComponentFactory componentFactory, [Ite
   /// Uses [prevState] which was transferred from [Component.nextState] in [componentWillUpdate].
   var componentDidUpdate = new JsFunction.withThis((JsObject jsThis, prevProps, prevState, prevContext) => zone.run(() {
     var prevInternalProps = _getInternalProps(prevProps);
-    // You don't get rootNode as a parameter, so we need to get it directly
-    var rootNode = _ReactDom.callMethod('findDOMNode', [jsThis]);
     Component component = _getComponent(jsThis);
-    component.componentDidUpdate(prevInternalProps, component.prevState, rootNode);
+    component.componentDidUpdate(prevInternalProps, component.prevState);
   }));
 
   /// Wrapper for [Component.componentWillUnmount].

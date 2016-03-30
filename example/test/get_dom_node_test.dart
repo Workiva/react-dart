@@ -29,10 +29,9 @@ class SimpleComponent extends react.Component {
 
   componentWillUnmount() => print("unmount");
 
-  componentDidMount(root) {
+  componentDidMount() {
     customAssert("ref to span return span ", (react.findDOMNode(ref("refToSpan")) as SpanElement).text == "Test");
-    customAssert("getDomNode is same as mounted element", root == getDOMNode());
-    customAssert("findDOMNode works on this", root == react.findDOMNode(this));
+    customAssert("findDOMNode works on this", react.findDOMNode(this) != null);
     customAssert("random ref resolves to null", react.findDOMNode(ref("someRandomRef")) == null);
   }
 

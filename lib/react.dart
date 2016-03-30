@@ -130,7 +130,7 @@ abstract class Component {
   /// The [componentDidMount] method of child `Component`s is invoked _before_ that of parent `Component`.
   ///
   /// See: <https://facebook.github.io/react/docs/component-specs.html#mounting-componentdidmount>
-  void componentDidMount(/*DOMElement */ rootNode) {}
+  void componentDidMount() {}
 
   /// ReactJS lifecycle method that is invoked when a `Component` is receiving [newProps].
   ///
@@ -170,7 +170,7 @@ abstract class Component {
   /// of the values of [prevProps] / [prevState].
   ///
   /// See: <https://facebook.github.io/react/docs/component-specs.html#updating-componentdidupdate>
-  void componentDidUpdate(prevProps, prevState, /*DOMElement */ rootNode) {}
+  void componentDidUpdate(prevProps, prevState) {}
 
   /// ReactJS lifecycle method that is invoked immediately before a `Component` is unmounted from the DOM.
   ///

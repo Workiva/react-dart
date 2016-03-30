@@ -165,7 +165,7 @@ class _ParentComponent extends Component {
       input({"ref": "input"}),
       DartComponent({"ref": "dart"})
     ]);
-  componentDidMount(root) {
+  componentDidMount() {
     InputElement input = ref("input"); // Returns the DOM node.
 
     _DartComponent dartRef = ref("dart"); // Returns instance of _DartComponent
@@ -189,11 +189,11 @@ explanation/spec. Their signatures in Dart are as:
 ```dart
 class MyComponent extends Component {
   void componentWillMount() {}
-  void componentDidMount(/*DOMElement*/rootNode) {}
+  void componentDidMount() {}
   void componentWillReceiveProps(newProps) {}
   bool shouldComponentUpdate(nextProps, nextState) => true;
   void componentWillUpdate(nextProps, nextState) {}
-  void componentDidUpdate(prevProps, prevState, /*DOMElement */ rootNode) {}
+  void componentDidUpdate(prevProps, prevState) {}
   void componentWillUnmount() {}
   Map getInitialState() => {};
   Map getDefaultProps() => {};
