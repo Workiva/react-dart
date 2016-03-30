@@ -246,14 +246,16 @@ ReactComponentFactory _registerComponent(ComponentFactory componentFactory, [Ite
   /// Wrapper for [Component.componentWillReceiveProps].
   var componentWillReceiveProps = new JsFunction.withThis((jsThis, newArgs, [reactInternal]) => zone.run(() {
     Component component = _getComponent(jsThis);
-    component.componentWillReceiveProps(_getNextProps(component, newArgs));
+    var nextProps = _getNextProps(component, newArgs);
+    component.nextProps = nextProps;
+    component.componentWillReceiveProps(nextProps);
   }));
 
   /// Wrapper for [Component.shouldComponentUpdate].
   var shouldComponentUpdate = new JsFunction.withThis((jsThis, newArgs, nextState, nextContext) => zone.run(() {
     Component component  = _getComponent(jsThis);
 
-    if (component.shouldComponentUpdate(_getNextProps(component, newArgs), component.nextState)) {
+    if (component.shouldComponentUpdate(component.nextProps, component.nextState)) {
       return true;
     } else {
       // If component should not update, update props / transfer state because componentWillUpdate will not be called.
@@ -265,9 +267,7 @@ ReactComponentFactory _registerComponent(ComponentFactory componentFactory, [Ite
   /// Wrapper for [Component.componentWillUpdate].
   var componentWillUpdate = new JsFunction.withThis((jsThis, newArgs, nextState, [reactInternal]) => zone.run(() {
     Component component  = _getComponent(jsThis);
-
-    component.componentWillUpdate(_getNextProps(component, newArgs), component.nextState);
-
+    component.componentWillUpdate(component.nextProps, component.nextState);
     _afterPropsChange(component, newArgs);
   }));
 

@@ -45,6 +45,7 @@ abstract class Component {
   _initProps(props, defaultProps) {
     this.props = new Map.from(defaultProps)
       ..addAll(props);
+    this.nextProps = this.props;
   }
 
   initStateInternal() {
@@ -73,6 +74,11 @@ abstract class Component {
   ///
   /// If `null`, then [_nextState] is equal to [state] - which is the value that will be returned.
   Map get nextState => _nextState == null ? state : _nextState;
+
+  /// Reference to the value of [props] for the upcoming render cycle.
+  ///
+  /// Useful for ReactJS lifecycle methods [shouldComponentUpdate], [componentWillReceiveProps], and [componentWillUpdate].
+  Map nextProps;
 
   /// Transfers `Component` [_nextState] to [state], and [state] to [_prevState].
   ///
