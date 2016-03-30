@@ -40,8 +40,13 @@ abstract class ReactComponentFactoryProxy implements Function {
   dynamic noSuchMethod(Invocation invocation);
 }
 
+/// Prepares [children] to be passed to ReactJS.
+///
+/// Currently only involves converting a top-level non-[List] [Iterable] to
+/// a non-growable [List]s, but this may be updated in the future to support
+/// advanced nesting and other kinds of children.
 dynamic jsifyChildren(dynamic children) {
-  if (children is Iterable) {
+  if (children is Iterable && children is! List) {
     return children.toList(growable: false);
   } else {
     return children;
