@@ -114,24 +114,28 @@ class ReactDartComponentFactoryProxy extends ReactComponentFactoryProxy {
 
     // 1. Merge in defaults (if they were specified)
     // 2. Add specified props and children.
+    // 3. Remove "reserved" props that should not be visible to the rendered component.
 
     // [1]
     Map extendedProps = defaultProps != null ? new Map.from(defaultProps) : {};
     extendedProps
       // [2]
       ..addAll(props)
-      ..['children'] = children;
+      ..['children'] = children
+      // [3]
+      ..remove('key')
+      ..remove('ref');
 
     JsObject jsProps = newJsObjectEmpty();
 
     // Transfer over `key` if specified so ReactJS knows about it.
-    if (extendedProps.containsKey('key')) {
-      jsProps['key'] = extendedProps['key'];
+    if (props.containsKey('key')) {
+      jsProps['key'] = props['key'];
     }
 
     // Transfer over `ref` if specified so ReactJS knows about it.
-    if (extendedProps.containsKey('ref')) {
-      var ref = extendedProps['ref'];
+    if (props.containsKey('ref')) {
+      var ref = props['ref'];
 
       // If the ref is a callback, pass ReactJS a function that will call it
       // with the Dart Component instance, not the JsObject instance.
