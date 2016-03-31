@@ -59,9 +59,13 @@ class ReactDartComponentFactoryProxy<TComponent extends Component> extends React
   final Function reactComponentFactory;
   final Map defaultProps;
 
-  ReactDartComponentFactoryProxy(ReactClass reactClass, {this.defaultProps: const {}}) :
+  ReactDartComponentFactoryProxy(ReactClass reactClass) :
       this.reactClass = reactClass,
-    this.reactComponentFactory = React.createFactory(reactClass);
+      this.reactComponentFactory = React.createFactory(reactClass),
+      this.defaultProps = reactClass.dartDefaultProps
+  {
+    assert(defaultProps != null);
+  }
 
   ReactClass get type => reactClass;
 
@@ -156,9 +160,6 @@ ReactComponentFactory _registerComponent(ComponentFactory componentFactory, [Ite
   var getDefaultProps = allowInterop(() => zone.run(() {
     return new EmptyObject();
   }));
-
-
-  final Map defaultProps = new Map.from(componentFactory().getDefaultProps());
 
   /// Wrapper for [Component.getInitialState].
   var getInitialState = allowInteropCaptureThis((ReactComponent jsThis) => zone.run(() {
@@ -295,7 +296,12 @@ ReactComponentFactory _registerComponent(ComponentFactory componentFactory, [Ite
       render: render
   ));
 
-  return new ReactDartComponentFactoryProxy(reactComponentClass, defaultProps: defaultProps);
+  // Cache default props and store them on the ReactClass so they can be used
+  // by ReactDartComponentFactoryProxy and externally.
+  final Map defaultProps = new Map.unmodifiable(componentFactory().getDefaultProps());
+  reactComponentClass.dartDefaultProps = defaultProps;
+
+  return new ReactDartComponentFactoryProxy(reactComponentClass);
 }
 
 /// Creates ReactJS [ReactElement] instances for DOM components.

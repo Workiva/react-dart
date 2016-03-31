@@ -6,7 +6,7 @@ library react_client.react_interop;
 import 'dart:html';
 
 import 'package:js/js.dart';
-import 'package:react/react.dart' show Component;
+import 'package:react/react.dart';
 
 // ----------------------------------------------------------------------------
 //   Top-level API
@@ -53,6 +53,14 @@ class ReactClass {
   /// See: <http://facebook.github.io/react/docs/component-specs.html#displayname>
   external String get displayName;
   external set displayName(String value);
+
+  /// The cached, unmodifiable copy of [Component.getDefaultProps] computed in
+  /// [registerComponent].
+  ///
+  /// For use in [ReactDartComponentFactoryProxy] when creating new [ReactElement]s,
+  /// or for external use involving inspection of Dart prop defaults.
+  external Map get dartDefaultProps;
+  external set dartDefaultProps(Map value);
 }
 
 /// A JS interop class used as an argument to [React.createClass].
