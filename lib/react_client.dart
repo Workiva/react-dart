@@ -113,8 +113,7 @@ class ReactDartComponentFactoryProxy<TComponent extends Component> extends React
     // 3. Remove "reserved" props that should not be visible to the rendered component.
 
     // [1]
-    Map extendedProps = defaultProps != null ? new Map.from(defaultProps) : {};
-    extendedProps
+    Map extendedProps = (defaultProps != null ? new Map.from(defaultProps) : {})
       // [2]
       ..addAll(props)
       ..['children'] = children
