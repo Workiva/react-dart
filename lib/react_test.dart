@@ -31,7 +31,9 @@ _reactDom(String name) {
 
 initializeComponent(Component component, [Map props = const {}, List children, redraw, ref, getDOMNode]) {
   if (redraw == null) redraw = () {};
-  component.initComponentInternal(props, redraw, ref, getDOMNode);
+  var extendedProps = new Map.from(component.getDefaultProps())
+    ..addAll(props);
+  component.initComponentInternal(extendedProps, redraw, ref, getDOMNode);
   component.initStateInternal();
   component.componentWillMount();
 }

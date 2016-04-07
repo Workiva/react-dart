@@ -11,7 +11,7 @@ void main() {
   useHtmlConfiguration();
   setClientConfiguration();
 
-  void render(JsObject reactElement) {
+  void render(ReactElement reactElement) {
     react_test_utils.renderIntoDocument(reactElement);
   }
 

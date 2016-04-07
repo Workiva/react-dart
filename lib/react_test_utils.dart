@@ -4,183 +4,87 @@
 
 library react.test_utils;
 
-import 'dart:js';
 import 'dart:html';
+
+import 'package:js/js.dart';
 import 'package:react/react.dart';
 import 'package:react/react_client.dart';
+import 'package:react/react_client/js_interop_helpers.dart';
+import 'package:react/react_client/react_interop.dart';
+import 'package:react/src/react_test_utils/simulate_wrappers.dart' as simulate_wrappers;
 
+// Notes
+// ---------------------------------------------------------------------------
+//
+// 1.  This is of type `dynamic` out of necessity, since the actual type,
+//     `ReactComponent | Element`, cannot be expressed in Dart's type system.
+//
+//     React 0.14 augments DOM nodes with its own properties and uses them as
+//     DOM component instances. To Dart's JS interop, those instances look
+//     like DOM nodes, so they get converted to the corresponding DOM node
+//     interceptors, and thus cannot be used with a custom `@JS()` class.
+//
+//     So, React composite component instances will be of type
+//     `ReactComponent`, whereas DOM component instance will be of type
+//     `Element`.
 
-const missingAddonsMessage =
-    '''
-    React.addons.TestUtils not found. Ensure you've
-    included the React addons in your HTML file.
-
-    This:
-    <script src="packages/react/react-with-addons.js"></script>
-
-    Not this:
-    <script src="packages/react/react.js"></script>
-    ''';
-
-JsObject _TestUtils = _getNestedJsObject(context, ['React', 'addons', 'TestUtils'], missingAddonsMessage);
-
-JsObject _Simulate = _TestUtils['Simulate'];
-
-JsObject _SimulateNative = _TestUtils['SimulateNative'];
-
-_getNestedJsObject(JsObject base, List<String> keys, [String errorIfNotFound='']) {
-  JsObject object = base;
-
-  for (String key in keys) {
-    if (!object.hasProperty(key)) {
-      throw 'Unable to resolve $key in {$base.${keys.join('.')}}.\n$errorIfNotFound';
-    }
-    object = object[key];
-  }
-
-  return object;
-}
-
-/// Returns [component] if it is already a [JsObject], and converts [component] if
-/// it is an [Element]. If [component] is neither a [JsObject] or an [Element], throws an
-/// [ArgumentError].
-///
-/// React does not use the same type of object for primitive components as composite components,
-/// and Dart converts the React objects used for primitive components to [Element]s automatically.
-/// This is problematic in some cases - primarily the test utility methods that return [JsObject]s,
-/// and render, which also needs to return a [JsObject]. This method can be used for handling this
-/// by converting the [Element] back to a [JsObject].
-JsObject normalizeReactComponent(dynamic component) {
-  if (component is JsObject) return component;
-  if (component is Element) return new JsObject.fromBrowserObject(component);
-  if (component == null) return null;
-
-  throw new ArgumentError('$component component is not a valid ReactComponent');
-}
 
 /// Returns the 'type' of a component.
 ///
 /// For a DOM components, this with return the String corresponding to its tagName ('div', 'a', etc.).
-/// For React.createClass()-based components, this with return the React class as a JsFunction.
+/// For React.createClass()-based components, this with return the [ReactClass].
 dynamic getComponentType(ReactComponentFactory componentFactory) {
   if (componentFactory is ReactComponentFactoryProxy) {
-    return (componentFactory as ReactComponentFactoryProxy).type;
+    return componentFactory.type;
   }
   return null;
 }
 
-typedef bool ComponentTestFunction(JsObject componentInstance);
+typedef bool ComponentTestFunction(/* [1] */ component);
 
 /// Event simulation interface.
 ///
 /// Provides methods for each type of event that can be handled by a React
 /// component.  All methods are used in the same way:
 ///
-///   Simulate.{eventName}(dynamic instanceOrNode, [Map] eventData)
+///   Simulate.{eventName}(ReactComponent|Element componentOrNode, [Map] eventData)
 ///
 /// This should include all events documented at:
 /// http://facebook.github.io/react/docs/events.html
 class Simulate {
-
-  static void blur(dynamic instanceOrNode, [Map eventData = const{}]) =>
-      _Simulate.callMethod('blur', [instanceOrNode, new JsObject.jsify(eventData)]);
-
-  static void change(dynamic instanceOrNode, [Map eventData = const{}]) =>
-      _Simulate.callMethod('change', [instanceOrNode, new JsObject.jsify(eventData)]);
-
-  static void click(dynamic instanceOrNode, [Map eventData = const{}]) =>
-      _Simulate.callMethod('click', [instanceOrNode, new JsObject.jsify(eventData)]);
-
-  static void contextMenu(dynamic instanceOrNode, [Map eventData = const{}]) =>
-      _Simulate.callMethod('contextMenu', [instanceOrNode, new JsObject.jsify(eventData)]);
-
-  static void copy(dynamic instanceOrNode, [Map eventData = const{}]) =>
-      _Simulate.callMethod('copy', [instanceOrNode, new JsObject.jsify(eventData)]);
-
-  static void cut(dynamic instanceOrNode, [Map eventData = const{}]) =>
-      _Simulate.callMethod('cut', [instanceOrNode, new JsObject.jsify(eventData)]);
-
-  static void doubleClick(dynamic instanceOrNode, [Map eventData = const{}]) =>
-      _Simulate.callMethod('doubleClick', [instanceOrNode, new JsObject.jsify(eventData)]);
-
-  static void drag(dynamic instanceOrNode, [Map eventData = const{}]) =>
-      _Simulate.callMethod('drag', [instanceOrNode, new JsObject.jsify(eventData)]);
-
-  static void dragEnd(dynamic instanceOrNode, [Map eventData = const{}]) =>
-      _Simulate.callMethod('dragEnd', [instanceOrNode, new JsObject.jsify(eventData)]);
-
-  static void dragEnter(dynamic instanceOrNode, [Map eventData = const{}]) =>
-      _Simulate.callMethod('dragEnter', [instanceOrNode, new JsObject.jsify(eventData)]);
-
-  static void dragExit(dynamic instanceOrNode, [Map eventData = const{}]) =>
-      _Simulate.callMethod('dragExit', [instanceOrNode, new JsObject.jsify(eventData)]);
-
-  static void dragLeave(dynamic instanceOrNode, [Map eventData = const{}]) =>
-      _Simulate.callMethod('dragLeave', [instanceOrNode, new JsObject.jsify(eventData)]);
-
-  static void dragOver(dynamic instanceOrNode, [Map eventData = const{}]) =>
-      _Simulate.callMethod('dragOver', [instanceOrNode, new JsObject.jsify(eventData)]);
-
-  static void dragStart(dynamic instanceOrNode, [Map eventData = const{}]) =>
-      _Simulate.callMethod('dragStart', [instanceOrNode, new JsObject.jsify(eventData)]);
-
-  static void drop(dynamic instanceOrNode, [Map eventData = const{}]) =>
-      _Simulate.callMethod('drop', [instanceOrNode, new JsObject.jsify(eventData)]);
-
-  static void focus(dynamic instanceOrNode, [Map eventData = const{}]) =>
-      _Simulate.callMethod('focus', [instanceOrNode, new JsObject.jsify(eventData)]);
-
-  static void input(dynamic instanceOrNode, [Map eventData = const{}]) =>
-      _Simulate.callMethod('input', [instanceOrNode, new JsObject.jsify(eventData)]);
-
-  static void keyDown(dynamic instanceOrNode, [Map eventData = const{}]) =>
-      _Simulate.callMethod('keyDown', [instanceOrNode, new JsObject.jsify(eventData)]);
-
-  static void keyPress(dynamic instanceOrNode, [Map eventData = const{}]) =>
-      _Simulate.callMethod('keyPress', [instanceOrNode, new JsObject.jsify(eventData)]);
-
-  static void keyUp(dynamic instanceOrNode, [Map eventData = const{}]) =>
-      _Simulate.callMethod('keyUp', [instanceOrNode, new JsObject.jsify(eventData)]);
-
-  static void mouseDown(dynamic instanceOrNode, [Map eventData = const{}]) =>
-      _Simulate.callMethod('mouseDown', [instanceOrNode, new JsObject.jsify(eventData)]);
-
-  static void mouseMove(dynamic instanceOrNode, [Map eventData = const{}]) =>
-      _Simulate.callMethod('mouseMove', [instanceOrNode, new JsObject.jsify(eventData)]);
-
-  static void mouseOut(dynamic instanceOrNode, [Map eventData = const{}]) =>
-      _Simulate.callMethod('mouseOut', [instanceOrNode, new JsObject.jsify(eventData)]);
-
-  static void mouseOver(dynamic instanceOrNode, [Map eventData = const{}]) =>
-      _Simulate.callMethod('mouseOver', [instanceOrNode, new JsObject.jsify(eventData)]);
-
-  static void mouseUp(dynamic instanceOrNode, [Map eventData = const{}]) =>
-      _Simulate.callMethod('mouseUp', [instanceOrNode, new JsObject.jsify(eventData)]);
-
-  static void paste(dynamic instanceOrNode, [Map eventData = const{}]) =>
-      _Simulate.callMethod('paste', [instanceOrNode, new JsObject.jsify(eventData)]);
-
-  static void scroll(dynamic instanceOrNode, [Map eventData = const{}]) =>
-      _Simulate.callMethod('scroll', [instanceOrNode, new JsObject.jsify(eventData)]);
-
-  static void submit(dynamic instanceOrNode, [Map eventData = const{}]) =>
-      _Simulate.callMethod('submit', [instanceOrNode, new JsObject.jsify(eventData)]);
-
-  static void touchCancel(dynamic instanceOrNode, [Map eventData = const{}]) =>
-      _Simulate.callMethod('touchCancel', [instanceOrNode, new JsObject.jsify(eventData)]);
-
-  static void touchEnd(dynamic instanceOrNode, [Map eventData = const{}]) =>
-      _Simulate.callMethod('touchEnd', [instanceOrNode, new JsObject.jsify(eventData)]);
-
-  static void touchMove(dynamic instanceOrNode, [Map eventData = const{}]) =>
-      _Simulate.callMethod('touchMove', [instanceOrNode, new JsObject.jsify(eventData)]);
-
-  static void touchStart(dynamic instanceOrNode, [Map eventData = const{}]) =>
-      _Simulate.callMethod('touchStart', [instanceOrNode, new JsObject.jsify(eventData)]);
-
-  static void wheel(dynamic instanceOrNode, [Map eventData = const{}]) =>
-      _Simulate.callMethod('wheel', [instanceOrNode, new JsObject.jsify(eventData)]);
-
+  static void blur(/* [1] */ componentOrNode, [Map eventData = const {}]) => simulate_wrappers.Simulate.blur(componentOrNode, jsify(eventData));
+  static void change(/* [1] */ componentOrNode, [Map eventData = const {}]) => simulate_wrappers.Simulate.change(componentOrNode, jsify(eventData));
+  static void click(/* [1] */ componentOrNode, [Map eventData = const {}]) => simulate_wrappers.Simulate.click(componentOrNode, jsify(eventData));
+  static void contextMenu(/* [1] */ componentOrNode, [Map eventData = const {}]) => simulate_wrappers.Simulate.contextMenu(componentOrNode, jsify(eventData));
+  static void copy(/* [1] */ componentOrNode, [Map eventData = const {}]) => simulate_wrappers.Simulate.copy(componentOrNode, jsify(eventData));
+  static void cut(/* [1] */ componentOrNode, [Map eventData = const {}]) => simulate_wrappers.Simulate.cut(componentOrNode, jsify(eventData));
+  static void doubleClick(/* [1] */ componentOrNode, [Map eventData = const {}]) => simulate_wrappers.Simulate.doubleClick(componentOrNode, jsify(eventData));
+  static void drag(/* [1] */ componentOrNode, [Map eventData = const {}]) => simulate_wrappers.Simulate.drag(componentOrNode, jsify(eventData));
+  static void dragEnd(/* [1] */ componentOrNode, [Map eventData = const {}]) => simulate_wrappers.Simulate.dragEnd(componentOrNode, jsify(eventData));
+  static void dragEnter(/* [1] */ componentOrNode, [Map eventData = const {}]) => simulate_wrappers.Simulate.dragEnter(componentOrNode, jsify(eventData));
+  static void dragExit(/* [1] */ componentOrNode, [Map eventData = const {}]) => simulate_wrappers.Simulate.dragExit(componentOrNode, jsify(eventData));
+  static void dragLeave(/* [1] */ componentOrNode, [Map eventData = const {}]) => simulate_wrappers.Simulate.dragLeave(componentOrNode, jsify(eventData));
+  static void dragOver(/* [1] */ componentOrNode, [Map eventData = const {}]) => simulate_wrappers.Simulate.dragOver(componentOrNode, jsify(eventData));
+  static void dragStart(/* [1] */ componentOrNode, [Map eventData = const {}]) => simulate_wrappers.Simulate.dragStart(componentOrNode, jsify(eventData));
+  static void drop(/* [1] */ componentOrNode, [Map eventData = const {}]) => simulate_wrappers.Simulate.drop(componentOrNode, jsify(eventData));
+  static void focus(/* [1] */ componentOrNode, [Map eventData = const {}]) => simulate_wrappers.Simulate.focus(componentOrNode, jsify(eventData));
+  static void input(/* [1] */ componentOrNode, [Map eventData = const {}]) => simulate_wrappers.Simulate.input(componentOrNode, jsify(eventData));
+  static void keyDown(/* [1] */ componentOrNode, [Map eventData = const {}]) => simulate_wrappers.Simulate.keyDown(componentOrNode, jsify(eventData));
+  static void keyPress(/* [1] */ componentOrNode, [Map eventData = const {}]) => simulate_wrappers.Simulate.keyPress(componentOrNode, jsify(eventData));
+  static void keyUp(/* [1] */ componentOrNode, [Map eventData = const {}]) => simulate_wrappers.Simulate.keyUp(componentOrNode, jsify(eventData));
+  static void mouseDown(/* [1] */ componentOrNode, [Map eventData = const {}]) => simulate_wrappers.Simulate.mouseDown(componentOrNode, jsify(eventData));
+  static void mouseMove(/* [1] */ componentOrNode, [Map eventData = const {}]) => simulate_wrappers.Simulate.mouseMove(componentOrNode, jsify(eventData));
+  static void mouseOut(/* [1] */ componentOrNode, [Map eventData = const {}]) => simulate_wrappers.Simulate.mouseOut(componentOrNode, jsify(eventData));
+  static void mouseOver(/* [1] */ componentOrNode, [Map eventData = const {}]) => simulate_wrappers.Simulate.mouseOver(componentOrNode, jsify(eventData));
+  static void mouseUp(/* [1] */ componentOrNode, [Map eventData = const {}]) => simulate_wrappers.Simulate.mouseUp(componentOrNode, jsify(eventData));
+  static void paste(/* [1] */ componentOrNode, [Map eventData = const {}]) => simulate_wrappers.Simulate.paste(componentOrNode, jsify(eventData));
+  static void scroll(/* [1] */ componentOrNode, [Map eventData = const {}]) => simulate_wrappers.Simulate.scroll(componentOrNode, jsify(eventData));
+  static void submit(/* [1] */ componentOrNode, [Map eventData = const {}]) => simulate_wrappers.Simulate.submit(componentOrNode, jsify(eventData));
+  static void touchCancel(/* [1] */ componentOrNode, [Map eventData = const {}]) => simulate_wrappers.Simulate.touchCancel(componentOrNode, jsify(eventData));
+  static void touchEnd(/* [1] */ componentOrNode, [Map eventData = const {}]) => simulate_wrappers.Simulate.touchEnd(componentOrNode, jsify(eventData));
+  static void touchMove(/* [1] */ componentOrNode, [Map eventData = const {}]) => simulate_wrappers.Simulate.touchMove(componentOrNode, jsify(eventData));
+  static void touchStart(/* [1] */ componentOrNode, [Map eventData = const {}]) => simulate_wrappers.Simulate.touchStart(componentOrNode, jsify(eventData));
+  static void wheel(/* [1] */ componentOrNode, [Map eventData = const {}]) => simulate_wrappers.Simulate.wheel(componentOrNode, jsify(eventData));
 }
 
 /// Native event simulation interface.
@@ -190,103 +94,39 @@ class Simulate {
 /// Provides methods for each type of event that can be handled by a React
 /// component.  All methods are used in the same way:
 ///
-///   SimulateNative.{eventName}(dynamic instanceOrNode, [Map] eventData)
-
+///   SimulateNative.{eventName}(/* [1] */ componentOrNode, [Map] eventData)
 class SimulateNative {
-
-  static void blur(dynamic instanceOrNode, [Map eventData = const{}]) =>
-      _SimulateNative.callMethod('blur', [instanceOrNode, new JsObject.jsify(eventData)]);
-
-  static void click(dynamic instanceOrNode, [Map eventData = const{}]) =>
-      _SimulateNative.callMethod('click', [instanceOrNode, new JsObject.jsify(eventData)]);
-
-  static void contextMenu(dynamic instanceOrNode, [Map eventData = const{}]) =>
-      _SimulateNative.callMethod('contextMenu', [instanceOrNode, new JsObject.jsify(eventData)]);
-
-  static void copy(dynamic instanceOrNode, [Map eventData = const{}]) =>
-      _SimulateNative.callMethod('copy', [instanceOrNode, new JsObject.jsify(eventData)]);
-
-  static void cut(dynamic instanceOrNode, [Map eventData = const{}]) =>
-      _SimulateNative.callMethod('cut', [instanceOrNode, new JsObject.jsify(eventData)]);
-
-  static void doubleClick(dynamic instanceOrNode, [Map eventData = const{}]) =>
-      _SimulateNative.callMethod('doubleClick', [instanceOrNode, new JsObject.jsify(eventData)]);
-
-  static void drag(dynamic instanceOrNode, [Map eventData = const{}]) =>
-      _SimulateNative.callMethod('drag', [instanceOrNode, new JsObject.jsify(eventData)]);
-
-  static void dragEnd(dynamic instanceOrNode, [Map eventData = const{}]) =>
-      _SimulateNative.callMethod('dragEnd', [instanceOrNode, new JsObject.jsify(eventData)]);
-
-  static void dragEnter(dynamic instanceOrNode, [Map eventData = const{}]) =>
-      _SimulateNative.callMethod('dragEnter', [instanceOrNode, new JsObject.jsify(eventData)]);
-
-  static void dragExit(dynamic instanceOrNode, [Map eventData = const{}]) =>
-      _SimulateNative.callMethod('dragExit', [instanceOrNode, new JsObject.jsify(eventData)]);
-
-  static void dragLeave(dynamic instanceOrNode, [Map eventData = const{}]) =>
-      _SimulateNative.callMethod('dragLeave', [instanceOrNode, new JsObject.jsify(eventData)]);
-
-  static void dragOver(dynamic instanceOrNode, [Map eventData = const{}]) =>
-      _SimulateNative.callMethod('dragOver', [instanceOrNode, new JsObject.jsify(eventData)]);
-
-  static void dragStart(dynamic instanceOrNode, [Map eventData = const{}]) =>
-      _SimulateNative.callMethod('dragStart', [instanceOrNode, new JsObject.jsify(eventData)]);
-
-  static void drop(dynamic instanceOrNode, [Map eventData = const{}]) =>
-      _SimulateNative.callMethod('drop', [instanceOrNode, new JsObject.jsify(eventData)]);
-
-  static void focus(dynamic instanceOrNode, [Map eventData = const{}]) =>
-      _SimulateNative.callMethod('focus', [instanceOrNode, new JsObject.jsify(eventData)]);
-
-  static void input(dynamic instanceOrNode, [Map eventData = const{}]) =>
-      _SimulateNative.callMethod('input', [instanceOrNode, new JsObject.jsify(eventData)]);
-
-  static void keyDown(dynamic instanceOrNode, [Map eventData = const{}]) =>
-      _SimulateNative.callMethod('keyDown', [instanceOrNode, new JsObject.jsify(eventData)]);
-
-  static void keyUp(dynamic instanceOrNode, [Map eventData = const{}]) =>
-      _SimulateNative.callMethod('keyUp', [instanceOrNode, new JsObject.jsify(eventData)]);
-
-  static void mouseDown(dynamic instanceOrNode, [Map eventData = const{}]) =>
-      _SimulateNative.callMethod('mouseDown', [instanceOrNode, new JsObject.jsify(eventData)]);
-
-  static void mouseMove(dynamic instanceOrNode, [Map eventData = const{}]) =>
-      _SimulateNative.callMethod('mouseMove', [instanceOrNode, new JsObject.jsify(eventData)]);
-
-  static void mouseOut(dynamic instanceOrNode, [Map eventData = const{}]) =>
-      _SimulateNative.callMethod('mouseOut', [instanceOrNode, new JsObject.jsify(eventData)]);
-
-  static void mouseOver(dynamic instanceOrNode, [Map eventData = const{}]) =>
-      _SimulateNative.callMethod('mouseOver', [instanceOrNode, new JsObject.jsify(eventData)]);
-
-  static void mouseUp(dynamic instanceOrNode, [Map eventData = const{}]) =>
-      _SimulateNative.callMethod('mouseUp', [instanceOrNode, new JsObject.jsify(eventData)]);
-
-  static void paste(dynamic instanceOrNode, [Map eventData = const{}]) =>
-      _SimulateNative.callMethod('paste', [instanceOrNode, new JsObject.jsify(eventData)]);
-
-  static void scroll(dynamic instanceOrNode, [Map eventData = const{}]) =>
-      _SimulateNative.callMethod('scroll', [instanceOrNode, new JsObject.jsify(eventData)]);
-
-  static void submit(dynamic instanceOrNode, [Map eventData = const{}]) =>
-      _SimulateNative.callMethod('submit', [instanceOrNode, new JsObject.jsify(eventData)]);
-
-  static void touchCancel(dynamic instanceOrNode, [Map eventData = const{}]) =>
-      _SimulateNative.callMethod('touchCancel', [instanceOrNode, new JsObject.jsify(eventData)]);
-
-  static void touchEnd(dynamic instanceOrNode, [Map eventData = const{}]) =>
-      _SimulateNative.callMethod('touchEnd', [instanceOrNode, new JsObject.jsify(eventData)]);
-
-  static void touchMove(dynamic instanceOrNode, [Map eventData = const{}]) =>
-      _SimulateNative.callMethod('touchMove', [instanceOrNode, new JsObject.jsify(eventData)]);
-
-  static void touchStart(dynamic instanceOrNode, [Map eventData = const{}]) =>
-      _SimulateNative.callMethod('touchStart', [instanceOrNode, new JsObject.jsify(eventData)]);
-
-  static void wheel(dynamic instanceOrNode, [Map eventData = const{}]) =>
-      _SimulateNative.callMethod('wheel', [instanceOrNode, new JsObject.jsify(eventData)]);
-
+  static void blur(/* [1] */ componentOrNode, [Map eventData = const {}]) => simulate_wrappers.SimulateNative.blur(componentOrNode, jsify(eventData));
+  static void click(/* [1] */ componentOrNode, [Map eventData = const {}]) => simulate_wrappers.SimulateNative.click(componentOrNode, jsify(eventData));
+  static void contextMenu(/* [1] */ componentOrNode, [Map eventData = const {}]) => simulate_wrappers.SimulateNative.contextMenu(componentOrNode, jsify(eventData));
+  static void copy(/* [1] */ componentOrNode, [Map eventData = const {}]) => simulate_wrappers.SimulateNative.copy(componentOrNode, jsify(eventData));
+  static void cut(/* [1] */ componentOrNode, [Map eventData = const {}]) => simulate_wrappers.SimulateNative.cut(componentOrNode, jsify(eventData));
+  static void doubleClick(/* [1] */ componentOrNode, [Map eventData = const {}]) => simulate_wrappers.SimulateNative.doubleClick(componentOrNode, jsify(eventData));
+  static void drag(/* [1] */ componentOrNode, [Map eventData = const {}]) => simulate_wrappers.SimulateNative.drag(componentOrNode, jsify(eventData));
+  static void dragEnd(/* [1] */ componentOrNode, [Map eventData = const {}]) => simulate_wrappers.SimulateNative.dragEnd(componentOrNode, jsify(eventData));
+  static void dragEnter(/* [1] */ componentOrNode, [Map eventData = const {}]) => simulate_wrappers.SimulateNative.dragEnter(componentOrNode, jsify(eventData));
+  static void dragExit(/* [1] */ componentOrNode, [Map eventData = const {}]) => simulate_wrappers.SimulateNative.dragExit(componentOrNode, jsify(eventData));
+  static void dragLeave(/* [1] */ componentOrNode, [Map eventData = const {}]) => simulate_wrappers.SimulateNative.dragLeave(componentOrNode, jsify(eventData));
+  static void dragOver(/* [1] */ componentOrNode, [Map eventData = const {}]) => simulate_wrappers.SimulateNative.dragOver(componentOrNode, jsify(eventData));
+  static void dragStart(/* [1] */ componentOrNode, [Map eventData = const {}]) => simulate_wrappers.SimulateNative.dragStart(componentOrNode, jsify(eventData));
+  static void drop(/* [1] */ componentOrNode, [Map eventData = const {}]) => simulate_wrappers.SimulateNative.drop(componentOrNode, jsify(eventData));
+  static void focus(/* [1] */ componentOrNode, [Map eventData = const {}]) => simulate_wrappers.SimulateNative.focus(componentOrNode, jsify(eventData));
+  static void input(/* [1] */ componentOrNode, [Map eventData = const {}]) => simulate_wrappers.SimulateNative.input(componentOrNode, jsify(eventData));
+  static void keyDown(/* [1] */ componentOrNode, [Map eventData = const {}]) => simulate_wrappers.SimulateNative.keyDown(componentOrNode, jsify(eventData));
+  static void keyUp(/* [1] */ componentOrNode, [Map eventData = const {}]) => simulate_wrappers.SimulateNative.keyUp(componentOrNode, jsify(eventData));
+  static void mouseDown(/* [1] */ componentOrNode, [Map eventData = const {}]) => simulate_wrappers.SimulateNative.mouseDown(componentOrNode, jsify(eventData));
+  static void mouseMove(/* [1] */ componentOrNode, [Map eventData = const {}]) => simulate_wrappers.SimulateNative.mouseMove(componentOrNode, jsify(eventData));
+  static void mouseOut(/* [1] */ componentOrNode, [Map eventData = const {}]) => simulate_wrappers.SimulateNative.mouseOut(componentOrNode, jsify(eventData));
+  static void mouseOver(/* [1] */ componentOrNode, [Map eventData = const {}]) => simulate_wrappers.SimulateNative.mouseOver(componentOrNode, jsify(eventData));
+  static void mouseUp(/* [1] */ componentOrNode, [Map eventData = const {}]) => simulate_wrappers.SimulateNative.mouseUp(componentOrNode, jsify(eventData));
+  static void paste(/* [1] */ componentOrNode, [Map eventData = const {}]) => simulate_wrappers.SimulateNative.paste(componentOrNode, jsify(eventData));
+  static void scroll(/* [1] */ componentOrNode, [Map eventData = const {}]) => simulate_wrappers.SimulateNative.scroll(componentOrNode, jsify(eventData));
+  static void submit(/* [1] */ componentOrNode, [Map eventData = const {}]) => simulate_wrappers.SimulateNative.submit(componentOrNode, jsify(eventData));
+  static void touchCancel(/* [1] */ componentOrNode, [Map eventData = const {}]) => simulate_wrappers.SimulateNative.touchCancel(componentOrNode, jsify(eventData));
+  static void touchEnd(/* [1] */ componentOrNode, [Map eventData = const {}]) => simulate_wrappers.SimulateNative.touchEnd(componentOrNode, jsify(eventData));
+  static void touchMove(/* [1] */ componentOrNode, [Map eventData = const {}]) => simulate_wrappers.SimulateNative.touchMove(componentOrNode, jsify(eventData));
+  static void touchStart(/* [1] */ componentOrNode, [Map eventData = const {}]) => simulate_wrappers.SimulateNative.touchStart(componentOrNode, jsify(eventData));
+  static void wheel(/* [1] */ componentOrNode, [Map eventData = const {}]) => simulate_wrappers.SimulateNative.wheel(componentOrNode, jsify(eventData));
 }
 
 /// Traverse all components in tree and accumulate all components where
@@ -294,129 +134,108 @@ class SimulateNative {
 /// used as a primitive for other test utils
 ///
 /// Included in Dart for completeness
-List findAllInRenderedTree(JsObject tree, JsFunction test) {
-  var components = _TestUtils.callMethod('findAllInRenderedTree', [tree, test]);
-
-  components.map(normalizeReactComponent).toList();
-
-  return components;
-}
+@JS('React.addons.TestUtils.findAllInRenderedTree')
+external List<dynamic> findAllInRenderedTree(/* [1] */ tree, ComponentTestFunction test);
 
 /// Like scryRenderedDOMComponentsWithClass() but expects there to be one
 /// result, and returns that one result, or throws exception if there is
 /// any other number of matches besides one.
-JsObject findRenderedDOMComponentWithClass(JsObject tree, String className) {
-  var component = _TestUtils.callMethod(
-      'findRenderedDOMComponentWithClass', [tree, className]);
-
-  return normalizeReactComponent(component);
-}
+@JS('React.addons.TestUtils.findRenderedDOMComponentWithClass')
+external dynamic /* [1] */ findRenderedDOMComponentWithClass(/* [1] */ tree, String className);
 
 /// Like scryRenderedDOMComponentsWithTag() but expects there to be one result,
 /// and returns that one result, or throws exception if there is any other
 /// number of matches besides one.
-JsObject findRenderedDOMComponentWithTag(JsObject tree, String tag) {
-  var component = _TestUtils.callMethod(
-      'findRenderedDOMComponentWithTag', [tree, tag]);
+@JS('React.addons.TestUtils.findRenderedDOMComponentWithTag')
+external dynamic /* [1] */ findRenderedDOMComponentWithTag(/* [1] */ tree, String tag);
 
-  return normalizeReactComponent(component);
-}
+
+@JS('React.addons.TestUtils.findRenderedComponentWithType')
+external dynamic /* [1] */ _findRenderedComponentWithType(/* [1] */ tree, dynamic type);
 
 /// Same as scryRenderedComponentsWithType() but expects there to be one result
 /// and returns that one result, or throws exception if there is any other
 /// number of matches besides one.
-JsObject findRenderedComponentWithType(
-    JsObject tree, ReactComponentFactory componentType) {
-  return _TestUtils.callMethod(
-      'findRenderedComponentWithType', [tree, getComponentType(componentType)]);
+/* [1] */ findRenderedComponentWithType(
+    /* [1] */ tree, ReactComponentFactory componentType) {
+  return _findRenderedComponentWithType(tree, getComponentType(componentType));
 }
+
+@JS('React.addons.TestUtils.isCompositeComponent')
+external bool _isCompositeComponent(/* [1] */ instance);
 
 /// Returns true if element is a composite component.
 /// (created with React.createClass()).
-bool isCompositeComponent(JsObject instance) {
-  return _TestUtils.callMethod('isCompositeComponent', [instance])
+bool isCompositeComponent(/* [1] */ instance) {
+  return _isCompositeComponent(instance)
          // Workaround for DOM components being detected as composite: https://github.com/facebook/react/pull/3839
-         && instance['tagName'] == null;
+         && getProperty(instance, 'tagName') == null;
 }
+
+@JS('React.addons.TestUtils.isCompositeComponentWithType')
+external bool _isCompositeComponentWithType(/* [1] */ instance, dynamic type);
 
 /// Returns true if instance is a composite component.
 /// (created with React.createClass()) whose type is of a React componentClass.
-bool isCompositeComponentWithType(
-    JsObject instance, ReactComponentFactory componentClass) {
-  return _TestUtils.callMethod(
-      'isCompositeComponentWithType', [instance, getComponentType(componentClass)]);
+bool isCompositeComponentWithType(/* [1] */ instance, ReactComponentFactory componentClass) {
+  return _isCompositeComponentWithType(instance, getComponentType(componentClass));
 }
 
 /// Returns true if instance is a DOM component (such as a <div> or <span>).
-bool isDOMComponent(JsObject instance) {
-  return _TestUtils.callMethod('isDOMComponent', [instance]);
-}
+@JS('React.addons.TestUtils.isDOMComponent')
+external bool isDOMComponent(/* [1] */ instance);
 
 /// Returns true if [object] is a valid React component.
-bool isElement(JsObject object) {
-  return _TestUtils.callMethod('isElement', [object]);
+@JS('React.addons.TestUtils.isElement')
+external bool isElement(dynamic object);
+
+@JS('React.addons.TestUtils.isElementOfType')
+external bool _isElementOfType(dynamic element, ReactComponentFactory componentClass);
+
+/// Returns true if [element] is a ReactElement whose type is of a
+/// React componentClass.
+bool isElementOfType(dynamic element, ReactComponentFactory componentClass) {
+  return _isElementOfType(element, getComponentType(componentClass));
 }
 
-/// Returns true if element is a ReactElement whose type is of a
-/// React componentClass.
-bool isElementOfType(JsObject element, ReactComponentFactory componentClass) {
-  return _TestUtils.callMethod(
-      'isElementOfType', [element, getComponentType(componentClass)]);
-}
+@JS('React.addons.TestUtils.scryRenderedComponentsWithType')
+external List<dynamic> /* [1] */ _scryRenderedComponentsWithType(/* [1] */ tree, dynamic type);
 
 /// Finds all instances of components with type equal to componentClass.
-JsObject scryRenderedComponentsWithType(
-    JsObject tree, ReactComponentFactory componentClass) {
-  return _TestUtils.callMethod(
-      'scryRenderedComponentsWithType', [tree, getComponentType(componentClass)]);
+List<dynamic> /* [1] */ scryRenderedComponentsWithType(/* [1] */ tree, ReactComponentFactory componentClass) {
+  return _scryRenderedComponentsWithType(tree, getComponentType(componentClass));
 }
 
+@JS('React.addons.TestUtils.scryRenderedDOMComponentsWithClass')
 /// Finds all instances of components in the rendered tree that are DOM
 /// components with the class name matching className.
-List scryRenderedDOMComponentsWithClass(JsObject tree, String className) {
-  var components = _TestUtils.callMethod(
-      'scryRenderedDOMComponentsWithClass', [tree, className]);
+external List<dynamic> scryRenderedDOMComponentsWithClass(/* [1] */ tree, String className);
 
-  components = components.map(normalizeReactComponent).toList();
-
-  return components;
-}
-
+@JS('React.addons.TestUtils.scryRenderedDOMComponentsWithTag')
 /// Finds all instances of components in the rendered tree that are DOM
 /// components with the tag name matching tagName.
-List scryRenderedDOMComponentsWithTag(JsObject tree, String tagName) {
-  var components = _TestUtils.callMethod(
-      'scryRenderedDOMComponentsWithTag', [tree, tagName]);
-
-  components = components.map(normalizeReactComponent).toList();
-
-  return components;
-}
+external List<dynamic> scryRenderedDOMComponentsWithTag(/* [1] */ tree, String tagName);
 
 /// Render a Component into a detached DOM node in the document.
-JsObject renderIntoDocument(JsObject instance) {
-  var component = _TestUtils.callMethod('renderIntoDocument', [instance]);
+@JS('React.addons.TestUtils.renderIntoDocument')
+external /* [1] */ renderIntoDocument(ReactElement instance);
 
-  return normalizeReactComponent(component);
-}
-
-Element getDomNode(JsObject object) => object.callMethod('getDOMNode', []);
+/// Use [findDOMNode] instead.
+@deprecated
+Element getDomNode(dynamic object) => findDOMNode(object);
 
 /// Pass a mocked component module to this method to augment it with useful
 /// methods that allow it to be used as a dummy React component. Instead of
 /// rendering as usual, the component will become a simple <div> (or other tag
 /// if mockTagName is provided) containing any provided children.
-JsObject mockComponent(JsObject componentClass, String mockTagName) {
-  return _TestUtils.callMethod(
-      'mockComponent', [componentClass, mockTagName]);
-}
+@JS('React.addons.TestUtils.mockComponent')
+external ReactClass mockComponent(ReactClass componentClass, String mockTagName);
 
 /// Returns a ReactShallowRenderer instance
 ///
 /// More info on using shallow rendering: https://facebook.github.io/react/docs/test-utils.html#shallow-rendering
-ReactShallowRenderer createRenderer() {
-  return new ReactShallowRenderer.jsObject(_TestUtils.callMethod('createRenderer', []));
-}
+@JS('React.addons.TestUtils.createRenderer')
+external ReactShallowRenderer createRenderer();
 
 /// ReactShallowRenderer wrapper
 ///
@@ -425,26 +244,16 @@ ReactShallowRenderer createRenderer() {
 /// ReactShallowRenderer shallowRenderer = createRenderer();
 /// shallowRenderer.render(div({'className': 'active'}));
 ///
-/// JsObject renderedOutput = shallowRenderer.getRenderOutput();
-/// expect(renderedOutput['props']['className'], 'active');
+/// ReactElement renderedOutput = shallowRenderer.getRenderOutput();
+/// Map props = getProps(renderedOutput);
+/// expect(props['className'], 'active');
 /// ```
 ///
 /// See react_with_addons.js#ReactShallowRenderer
+@JS()
 class ReactShallowRenderer {
-  final JsObject jsRenderer;
-
-  ReactShallowRenderer.jsObject(JsObject this.jsRenderer);
-
   /// Get the rendered output. [render] must be called first
-  JsObject getRenderOutput() => jsRenderer.callMethod('getRenderOutput', []);
-
-  render(JsObject element, [Map context]) {
-    JsObject c = context == null ? null : new JsObject.jsify(context);
-
-    jsRenderer.callMethod('render', [element, c]);
-  }
-
-  unmount() {
-    jsRenderer.callMethod('unmount', []);
-  }
+  external ReactElement getRenderOutput();
+  external void render(ReactElement element, [context]);
+  external void unmount();
 }

@@ -73,8 +73,9 @@ class _ClockComponent extends react.Component {
     timer.cancel();
   }
 
-  void componentDidMount(rootNode) {
-      rootNode.style.backgroundColor = "#FFAAAA";
+  void componentDidMount() {
+    var rootNode = react.findDOMNode(this);
+    rootNode.style.backgroundColor = "#FFAAAA";
   }
 
   bool shouldComponentUpdate(nextProps, nextState) {
@@ -113,7 +114,7 @@ class _ListComponent extends react.Component {
       print("Adding " + nextState["items"].last.toString());
   }
 
-  void componentDidUpdate(prevProps, prevState, rootNode) {
+  void componentDidUpdate(prevProps, prevState) {
     if(prevState["items"].length > state["items"].length)
       print("Removed " + prevState["items"].first.toString());
   }

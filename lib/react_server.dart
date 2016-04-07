@@ -27,12 +27,17 @@ typedef Component ComponentFactory();
 /// Creates a method that creates a new [Component], runs lifecycle methods and returns the result of the
 /// [componentFactory] instance `render` method.
 ReactComponentFactory _registerComponent(ComponentFactory componentFactory, [Iterable<String> skipMethods = const []]) {
+  /// Cached default props.
+  final Map defaultProps = componentFactory().getDefaultProps();
+
   return (Map props, [dynamic children]) {
     Component component = componentFactory();
 
     // Get default props, add children to props and apply props from arguments
-    props['children'] = children;
-    component.initComponentInternal(props, () {});
+    var extendedProps = new Map.from(defaultProps)
+      ..addAll(props)
+      ..['children'] = children;
+    component.initComponentInternal(extendedProps, () {});
 
     // Get initial state
     component.initStateInternal();

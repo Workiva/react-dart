@@ -4,9 +4,10 @@ author: Clean Team <clean@vacuumlabs.com>
 description: Bindings of the ReactJS library for building interactive interfaces.
 homepage: http://cleandart.github.io/react-dart/
 environment:
-  sdk: '>=0.8.10+6 <2.0.0'
+  sdk: '>=1.13.0 <2.0.0'
 dependencies:
   browser: '>=0.9.0 <0.11.0'
+  js: '^0.6.0'
   quiver: '>=0.18.2 <0.22.0'
 dev_dependencies:
   unittest: '>=0.11.0 <0.12.0'
