@@ -40,12 +40,13 @@ abstract class ReactComponentFactoryProxy implements Function {
   dynamic noSuchMethod(Invocation invocation);
 }
 
-/// Prepares [children] to be passed to ReactJS.
+/// Prepares [children] to be passed to the ReactJS [React.createElement] and
+/// the Dart [react.Component].
 ///
 /// Currently only involves converting a top-level non-[List] [Iterable] to
 /// a non-growable [List], but this may be updated in the future to support
 /// advanced nesting and other kinds of children.
-dynamic jsifyChildren(dynamic children) {
+dynamic listifyChildren(dynamic children) {
   if (children is Iterable && children is! List) {
     return children.toList(growable: false);
   } else {
@@ -74,29 +75,22 @@ class ReactDartComponentFactoryProxy<TComponent extends Component> extends React
   ReactClass get type => reactClass;
 
   ReactElement<TComponent> call(Map props, [dynamic children]) {
-    // Convert Iterable children to Lists so that the JS can read them,
-    // and so they don't get iterated twice when passed to the Dart component
-    // and to the JS component.
-    if (children is Iterable && children is! List) {
-      children = children.toList(growable: false);
-    }
+    children = listifyChildren(children);
 
     return reactComponentFactory(
       generateExtendedJsProps(props, children, defaultProps: defaultProps),
-      jsifyChildren(children)
+      children
     );
   }
 
   dynamic noSuchMethod(Invocation invocation) {
     if (invocation.memberName == #call && invocation.isMethod) {
       Map props = invocation.positionalArguments[0];
-      List children = invocation.positionalArguments.sublist(1);
-
-      markChildrenValidated(children);
+      List children = listifyChildren(invocation.positionalArguments.sublist(1));
 
       return reactComponentFactory(
         generateExtendedJsProps(props, children, defaultProps: defaultProps),
-        jsifyChildren(children)
+        children
       );
     }
 
@@ -327,19 +321,19 @@ class ReactDomComponentFactoryProxy extends ReactComponentFactoryProxy {
   @override
   ReactElement call(Map props, [dynamic children]) {
     convertProps(props);
-    return factory(jsify(props), jsifyChildren(children));
+    return factory(jsify(props), listifyChildren(children));
   }
 
   @override
   dynamic noSuchMethod(Invocation invocation) {
     if (invocation.memberName == #call && invocation.isMethod) {
       Map props = invocation.positionalArguments[0];
-      List children = invocation.positionalArguments.sublist(1);
+      List children = listifyChildren(invocation.positionalArguments.sublist(1));
 
       convertProps(props);
       markChildrenValidated(children);
 
-      return factory(jsify(props), jsifyChildren(children));
+      return factory(jsify(props), children);
     }
 
     return super.noSuchMethod(invocation);
