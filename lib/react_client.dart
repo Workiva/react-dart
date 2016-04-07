@@ -55,8 +55,15 @@ dynamic jsifyChildren(dynamic children) {
 
 /// Creates ReactJS [Component] instances for Dart components.
 class ReactDartComponentFactoryProxy<TComponent extends Component> extends ReactComponentFactoryProxy {
+  /// The ReactJS class used as the type for all [ReactElement]s built by
+  /// this factory.
   final ReactClass reactClass;
+
+  /// The JS component factory used by this factory to build [ReactElement]s.
   final Function reactComponentFactory;
+
+  /// The cached Dart default props retrieved from [reactClass] that are passed
+  /// into [generateExtendedJsProps] upon [ReactElement] creation.
   final Map defaultProps;
 
   ReactDartComponentFactoryProxy(ReactClass reactClass) :
@@ -306,14 +313,16 @@ class ReactDomComponentFactoryProxy extends ReactComponentFactoryProxy {
   ///
   /// E.g. `'div'`, `'a'`, `'h1'`
   final String name;
+
+  /// The JS component factory used by this factory to build [ReactElement]s.
+  final Function factory;
+
   ReactDomComponentFactoryProxy(name) :
     this.name = name,
     this.factory = React.createFactory(name);
 
   @override
   String get type => name;
-
-  final Function factory;
 
   @override
   ReactElement call(Map props, [dynamic children]) {
