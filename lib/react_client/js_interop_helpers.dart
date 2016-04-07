@@ -47,7 +47,7 @@ final _SetPropertyFn setProperty = (() {
 })();
 
 
-/// A interop class for an anonymous JavaScript object, with no properties.
+/// An interop class for an anonymous JavaScript object, with no properties.
 ///
 /// For use when dealing with dynamic properties via [getProperty]/[setProperty].
 @JS()
