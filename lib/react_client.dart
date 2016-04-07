@@ -62,10 +62,7 @@ class ReactDartComponentFactoryProxy<TComponent extends Component> extends React
   ReactDartComponentFactoryProxy(ReactClass reactClass) :
       this.reactClass = reactClass,
       this.reactComponentFactory = React.createFactory(reactClass),
-      this.defaultProps = reactClass.dartDefaultProps
-  {
-    assert(defaultProps != null);
-  }
+      this.defaultProps = reactClass.dartDefaultProps;
 
   ReactClass get type => reactClass;
 
