@@ -58,7 +58,7 @@ ReactComponentFactory _reactDom(String name) {
   return (Map args, [children]) {
     // Pack component string creation into function to easily pass owner id, position and key
     // (from its custom component owner)
-    return ([String ownerId, int position, String key]) {
+    return ([String ownerId, num position, String key]) {
       if (_selfClosingElementTags.contains(name) && (children != null && children.length > 0)) {
         throw new Exception('$name element does not accept children.');
       }
@@ -75,7 +75,7 @@ ReactComponentFactory _reactDom(String name) {
         thisId = _createRootId();
       } else {
         // If ownerId is set, append adequate string to parent id based on position and key.
-        thisId = ownerId + (key != null ? '.\$$key' : (position != null ? '.${position.toRadixString(36)}' : '.0'));
+        thisId = ownerId + (key != null ? '.\$$key' : (position != null ? '.${position.toInt().toRadixString(36)}' : '.0'));
       }
 
       // Create StringBuffer to build result, append open tag to it

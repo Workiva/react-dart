@@ -390,7 +390,7 @@ class _DefaultPropsCachingTest extends react.Component {
   render() => false;
 }
 
-ReactDartComponentFactoryProxy<_DefaultPropsTest> DefaultPropsTest = react.registerComponent(() => new _DefaultPropsTest());
+ReactDartComponentFactoryProxy<_DefaultPropsTest> DefaultPropsTest = react.registerComponent(() => new _DefaultPropsTest()) as ReactDartComponentFactoryProxy<_DefaultPropsTest>;
 class _DefaultPropsTest extends react.Component {
   static int getDefaultPropsCallCount = 0;
 
@@ -401,7 +401,7 @@ class _DefaultPropsTest extends react.Component {
   render() => false;
 }
 
-ReactDartComponentFactoryProxy<_LifecycleTest> LifecycleTest = react.registerComponent(() => new _LifecycleTest());
+ReactDartComponentFactoryProxy<_LifecycleTest> LifecycleTest = react.registerComponent(() => new _LifecycleTest()) as ReactDartComponentFactoryProxy<_LifecycleTest>;
 class _LifecycleTest extends react.Component {
   List lifecycleCalls = [];
 
@@ -415,7 +415,9 @@ class _LifecycleTest extends react.Component {
 
     var lifecycleCallback = props == null ? null : props[memberName];
     if (lifecycleCallback != null) {
-      return Function.apply(lifecycleCallback, [this]..addAll(arguments));
+      return Function.apply(lifecycleCallback, []
+          ..add(this)
+          ..addAll(arguments));
     }
 
     if (defaultReturnValue != null) {

@@ -232,11 +232,11 @@ void main() {
 
   group('isElementOfType', () {
     test('returns true argument is an element of type', () {
-      expect(isElementOfType(div({}), div), isTrue);
+      expect(isElementOfType(div({}), div as ReactComponentFactory), isTrue);
     });
 
     test('returns false argument is not an element of type', () {
-      expect(isElementOfType(div({}), span), isFalse);
+      expect(isElementOfType(div({}), span as ReactComponentFactory), isFalse);
     });
   });
 

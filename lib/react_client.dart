@@ -80,7 +80,7 @@ class ReactDartComponentFactoryProxy<TComponent extends Component> extends React
     return reactComponentFactory(
       generateExtendedJsProps(props, children, defaultProps: defaultProps),
       children
-    );
+    ) as ReactElement<TComponent>;
   }
 
   dynamic noSuchMethod(Invocation invocation) {

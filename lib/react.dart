@@ -384,7 +384,7 @@ class SyntheticFormEvent extends SyntheticEvent {
 class SyntheticDataTransfer {
   final String dropEffect;
   final String effectAllowed;
-  final List/*<File>*/ files;
+  final List files;
   final List<String> types;
 
   SyntheticDataTransfer(this.dropEffect, this.effectAllowed, this.files, this.types);
