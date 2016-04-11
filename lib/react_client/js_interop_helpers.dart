@@ -58,7 +58,7 @@ final _GetPropertyFn getProperty = (() {
 final _SetPropertyFn setProperty = (() {
   try {
     // If this throws, then the JS function isn't available.
-    _getProperty(new EmptyObject(), null);
+    _setProperty(new EmptyObject(), null, null);
   } catch(_) {
     throw new _MissingJsMemberError('_setProperty',
         'Be sure to include React JS files included in this package '
