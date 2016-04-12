@@ -195,7 +195,7 @@ external bool _isElementOfType(dynamic element, ReactComponentFactory componentC
 /// Returns true if [element] is a ReactElement whose type is of a
 /// React componentClass.
 bool isElementOfType(dynamic element, ReactComponentFactory componentClass) {
-  return _isElementOfType(element, getComponentType(componentClass));
+  return _isElementOfType(element, getComponentType(componentClass) as ReactComponentFactory);
 }
 
 @JS('React.addons.TestUtils.scryRenderedComponentsWithType')
