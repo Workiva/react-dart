@@ -4,9 +4,6 @@ library react_client.js_interop_helpers;
 
 import "package:js/js.dart";
 
-@JS('eval')
-external dynamic _eval(String source);
-
 @JS()
 external dynamic _getProperty(jsObj, String key);
 
@@ -16,17 +13,37 @@ external dynamic _setProperty(jsObj, String key, value);
 typedef dynamic _GetPropertyFn(jsObj, String key);
 typedef dynamic _SetPropertyFn(jsObj, String key, value);
 
+class _MissingJsMemberError extends Error {
+  final String name;
+  final String message;
+
+  _MissingJsMemberError(this.name, [this.message]);
+
+  @override
+  String toString() =>
+      '_MissingJsMemberError: The JS member `$name` is missing and thus '
+      'cannot be used as expected. $message';
+}
+
 /// Returns the property at the given [_GetPropertyFn.key] on the
 /// specified JavaScript object [_GetPropertyFn.jsObj]
 ///
 /// Necessary because `external operator[]` isn't allowed on JS interop classes
 /// (see: https://github.com/dart-lang/sdk/issues/25053).
+///
+/// __Defined in this package's React JS files.__
 final _GetPropertyFn getProperty = (() {
-  _eval(r'''
-    function _getProperty(obj, key) {
-      return obj[key];
-    }
-  ''');
+  try {
+    // If this throws, then the JS function isn't available.
+    _getProperty(new EmptyObject(), null);
+  } catch(_) {
+    throw new _MissingJsMemberError('_getProperty',
+        'Be sure to include React JS files included in this package '
+        '(which has this and other JS interop helper functions included) '
+        'or, alternatively, define the function yourself:\n'
+        '    function _getProperty(obj, key) { return obj[key]; }'
+    );
+  }
 
   return _getProperty;
 })();
@@ -36,12 +53,20 @@ final _GetPropertyFn getProperty = (() {
 ///
 /// Necessary because `external operator[]=` isn't allowed on JS interop classes
 /// (see: https://github.com/dart-lang/sdk/issues/25053).
+///
+/// __Defined in this package's React JS files.__
 final _SetPropertyFn setProperty = (() {
-  _eval(r'''
-    function _setProperty(obj, key, value) {
-      return obj[key] = value;
-    }
-  ''');
+  try {
+    // If this throws, then the JS function isn't available.
+    _setProperty(new EmptyObject(), null, null);
+  } catch(_) {
+    throw new _MissingJsMemberError('_setProperty',
+        'Be sure to include React JS files included in this package '
+        '(which has this and other JS interop helper functions included) '
+        'or, alternatively, define the function yourself:\n'
+        '    function _setProperty(obj, key, value) { return obj[key] = value; }'
+    );
+  }
 
   return _setProperty;
 })();
