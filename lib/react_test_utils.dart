@@ -190,12 +190,12 @@ external bool isDOMComponent(/* [1] */ instance);
 external bool isElement(dynamic object);
 
 @JS('React.addons.TestUtils.isElementOfType')
-external bool _isElementOfType(dynamic element, ReactComponentFactory componentClass);
+external bool _isElementOfType(dynamic element, dynamic componentClass);
 
 /// Returns true if [element] is a ReactElement whose type is of a
 /// React componentClass.
 bool isElementOfType(dynamic element, ReactComponentFactory componentClass) {
-  return _isElementOfType(element, getComponentType(componentClass) as ReactComponentFactory);
+  return _isElementOfType(element, getComponentType(componentClass));
 }
 
 @JS('React.addons.TestUtils.scryRenderedComponentsWithType')
