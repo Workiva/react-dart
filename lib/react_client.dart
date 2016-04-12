@@ -88,6 +88,8 @@ class ReactDartComponentFactoryProxy<TComponent extends Component> extends React
       Map props = invocation.positionalArguments[0];
       List children = listifyChildren(invocation.positionalArguments.sublist(1));
 
+      markChildrenValidated(children);
+
       return reactComponentFactory(
         generateExtendedJsProps(props, children, defaultProps: defaultProps),
         children
