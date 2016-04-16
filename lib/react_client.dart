@@ -156,12 +156,12 @@ ReactComponentFactory _registerComponent(ComponentFactory componentFactory, [Ite
   var zone = Zone.current;
 
   /// Wrapper for [Component.getDefaultProps].
-  var getDefaultProps = allowInterop(() => zone.run(() {
+  EmptyObject getDefaultProps() => zone.run(() {
     return new EmptyObject();
-  }));
+  });
 
   /// Wrapper for [Component.getInitialState].
-  var getInitialState = allowInteropCaptureThis((ReactComponent jsThis) => zone.run(() {
+  EmptyObject getInitialState(ReactComponent jsThis) => zone.run(() {
     var internal = jsThis.props.internal;
     var redraw = () {
       if (internal.isMounted) {
@@ -190,26 +190,26 @@ ReactComponentFactory _registerComponent(ComponentFactory componentFactory, [Ite
 
     component.initStateInternal();
     return new EmptyObject();
-  }));
+  });
 
   /// Wrapper for [Component.componentWillMount].
-  var componentWillMount = allowInteropCaptureThis((ReactComponent jsThis) => zone.run(() {
+  void componentWillMount(ReactComponent jsThis) => zone.run(() {
     var internal = jsThis.props.internal;
     internal.isMounted = true;
     internal.component
         ..componentWillMount()
         ..transferComponentState();
-  }));
+  });
 
   /// Wrapper for [Component.componentDidMount].
-  var componentDidMount = allowInteropCaptureThis((ReactComponent jsThis) => zone.run(() {
+  void componentDidMount(ReactComponent jsThis) => zone.run(() {
     jsThis.props.internal.component.componentDidMount();
-  }));
+  });
 
-  _getNextProps(Component component, InteropProps newArgs) {
+  _getNextProps(Component component, InteropProps newArgs) => zone.run(() {
     var newProps = newArgs.internal.props;
     return newProps != null ? new Map.from(newProps) : {};
-  }
+  });
 
   /// 1. Add [component] to [newArgs] to keep it in [InteropProps.internal]
   /// 2. Update [Component.props] using the value stored to [Component.nextProps]
@@ -227,17 +227,15 @@ ReactComponentFactory _registerComponent(ComponentFactory componentFactory, [Ite
   }
 
   /// Wrapper for [Component.componentWillReceiveProps].
-  var componentWillReceiveProps =
-      allowInteropCaptureThis((ReactComponent jsThis, InteropProps newArgs, [reactInternal]) => zone.run(() {
+  void componentWillReceiveProps(ReactComponent jsThis, InteropProps newArgs, [reactInternal]) => zone.run(() {
     var component = jsThis.props.internal.component;
     var nextProps = _getNextProps(component, newArgs);
     component.nextProps = nextProps;
     component.componentWillReceiveProps(nextProps);
-  }));
+  });
 
   /// Wrapper for [Component.shouldComponentUpdate].
-  var shouldComponentUpdate =
-      allowInteropCaptureThis((ReactComponent jsThis, InteropProps newArgs, nextState, nextContext) => zone.run(() {
+  bool shouldComponentUpdate(ReactComponent jsThis, InteropProps newArgs, nextState, nextContext) => zone.run(() {
     Component component = jsThis.props.internal.component;
 
     if (component.shouldComponentUpdate(component.nextProps, component.nextState)) {
@@ -247,52 +245,50 @@ ReactComponentFactory _registerComponent(ComponentFactory componentFactory, [Ite
       _afterPropsChange(component, newArgs);
       return false;
     }
-  }));
+  });
 
   /// Wrapper for [Component.componentWillUpdate].
-  var componentWillUpdate =
-      allowInteropCaptureThis((ReactComponent jsThis, newArgs, nextState, [nextContext]) => zone.run(() {
+  void componentWillUpdate(ReactComponent jsThis, newArgs, nextState, [nextContext]) => zone.run(() {
     Component component = jsThis.props.internal.component;
     component.componentWillUpdate(component.nextProps, component.nextState);
     _afterPropsChange(component, newArgs);
-  }));
+  });
 
   /// Wrapper for [Component.componentDidUpdate].
   ///
   /// Uses [prevState] which was transferred from [Component.nextState] in [componentWillUpdate].
-  var componentDidUpdate =
-      allowInteropCaptureThis((ReactComponent jsThis, InteropProps prevProps, prevState, prevContext) => zone.run(() {
+  void componentDidUpdate(ReactComponent jsThis, InteropProps prevProps, prevState, prevContext) => zone.run(() {
     var prevInternalProps = prevProps.internal.props;
     Component component = jsThis.props.internal.component;
     component.componentDidUpdate(prevInternalProps, component.prevState);
-  }));
+  });
 
   /// Wrapper for [Component.componentWillUnmount].
-  var componentWillUnmount = allowInteropCaptureThis((ReactComponent jsThis, [reactInternal]) => zone.run(() {
+  void componentWillUnmount(ReactComponent jsThis, [reactInternal]) => zone.run(() {
     var internal = jsThis.props.internal;
     internal.isMounted = false;
     internal.component.componentWillUnmount();
-  }));
+  });
 
   /// Wrapper for [Component.render].
-  var render = allowInteropCaptureThis((ReactComponent jsThis) => zone.run(() {
+  dynamic render(ReactComponent jsThis) => zone.run(() {
     return jsThis.props.internal.component.render();
-  }));
+  });
 
   /// Create the JS [`ReactClass` component class](https://facebook.github.io/react/docs/top-level-api.html#react.createclass)
   /// with wrapped functions.
   ReactClass reactComponentClass = React.createClass(new ReactClassConfig(
       displayName: componentFactory().displayName,
-      componentWillMount: componentWillMount,
-      componentDidMount: skipMethods.contains('componentDidMount') ? null : componentDidMount,
-      componentWillReceiveProps: componentWillReceiveProps,
-      shouldComponentUpdate: shouldComponentUpdate,
-      componentWillUpdate: componentWillUpdate,
-      componentDidUpdate: skipMethods.contains('componentDidUpdate') ? null : componentDidUpdate,
-      componentWillUnmount: componentWillUnmount,
-      getDefaultProps: getDefaultProps,
-      getInitialState: getInitialState,
-      render: render
+      componentWillMount: allowInteropCaptureThis(componentWillMount),
+      componentDidMount: skipMethods.contains('componentDidMount') ? null : allowInteropCaptureThis(componentDidMount),
+      componentWillReceiveProps: allowInteropCaptureThis(componentWillReceiveProps),
+      shouldComponentUpdate: allowInteropCaptureThis(shouldComponentUpdate),
+      componentWillUpdate: allowInteropCaptureThis(componentWillUpdate),
+      componentDidUpdate: skipMethods.contains('componentDidUpdate') ? null : allowInteropCaptureThis(componentDidUpdate),
+      componentWillUnmount: allowInteropCaptureThis(componentWillUnmount),
+      getDefaultProps: allowInterop(getDefaultProps),
+      getInitialState: allowInteropCaptureThis(getInitialState),
+      render: allowInteropCaptureThis(render)
   ));
 
   // Cache default props and store them on the ReactClass so they can be used
