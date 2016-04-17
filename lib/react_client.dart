@@ -47,7 +47,11 @@ abstract class ReactComponentFactoryProxy implements Function {
 /// a non-growable [List], but this may be updated in the future to support
 /// advanced nesting and other kinds of children.
 dynamic listifyChildren(dynamic children) {
-  if (children is Iterable && children is! List) {
+  if (React.isValidElement(children)) {
+    // Short-circuit if we're dealing with a ReactElement to the interceptor
+    // lookup involved in Dart type-checking.
+    return children;
+  } else if (children is Iterable && children is! List) {
     return children.toList(growable: false);
   } else {
     return children;
