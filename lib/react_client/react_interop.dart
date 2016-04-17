@@ -72,6 +72,7 @@ class ReactClass {
 class ReactClassConfig {
   external factory ReactClassConfig({
     String displayName,
+    List mixins,
     Function componentWillMount,
     Function componentDidMount,
     Function componentWillReceiveProps,
