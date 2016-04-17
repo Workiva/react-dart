@@ -190,6 +190,13 @@ class ReactDartComponentInternal {
   Map props;
 }
 
+/// Marks [child] as validated, as if it were passed into [React.createElement]
+/// as a variadic child.
+///
+/// Offloaded to the JS to avoid interceptor lookup.
+@JS()
+external void _markChildValidated(ReactElement child);
+
 /// Mark each child in [children] as validated so that React doesn't emit key warnings.
 ///
 /// ___Only for use with variadic children.___
@@ -200,7 +207,7 @@ void markChildrenValidated(List<dynamic> children) {
   children.forEach((dynamic child) {
     // Use `isValidElement` since `is ReactElement` doesn't behave as expected.
     if (React.isValidElement(child)) {
-      (child as ReactElement)._store?.validated = true;
+      _markChildValidated(child);
     }
   });
 }
