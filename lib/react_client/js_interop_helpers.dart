@@ -1,5 +1,6 @@
 /// Utilities for reading/modifying dynamic keys on JavaScript objects
 /// and converting Dart [Map]s to JavaScript objects.
+@JS()
 library react_client.js_interop_helpers;
 
 import "package:js/js.dart";

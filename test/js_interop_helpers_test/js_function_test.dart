@@ -1,3 +1,6 @@
+@JS()
+library js_function_test;
+
 import 'package:js/js.dart';
 import 'package:react/react_client/js_interop_helpers.dart';
 import 'package:unittest/html_config.dart';
