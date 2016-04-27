@@ -1,3 +1,6 @@
+@JS()
+library react_test_utils_test;
+
 import 'dart:html';
 
 import 'package:js/js.dart';

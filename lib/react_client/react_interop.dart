@@ -1,6 +1,7 @@
 /// JS interop classes for main React JS APIs and react-dart internals.
 ///
 /// For use in `react_client.dart` and by advanced react-dart users.
+@JS()
 library react_client.react_interop;
 
 import 'dart:html';
