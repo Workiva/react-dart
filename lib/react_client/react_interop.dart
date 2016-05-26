@@ -201,8 +201,8 @@ class ReactDartComponentInternal {
 /// as a variadic child.
 ///
 /// Offloaded to the JS to avoid dart2js interceptor lookup.
-@JS()
-external void _markChildValidated(child);
+@JS('_markChildValidated')
+external void markChildValidated(child);
 
 /// Mark each child in [children] as validated so that React doesn't emit key warnings.
 ///
@@ -211,10 +211,16 @@ void markChildrenValidated(List<dynamic> children) {
   children.forEach((dynamic child) {
     // Use `isValidElement` since `is ReactElement` doesn't behave as expected.
     if (React.isValidElement(child)) {
-      _markChildValidated(child);
+      markChildValidated(child);
     }
   });
 }
+
+/// Returns a new JS [ReactClassConfig] for a component that uses
+/// [dartInteropStatics] and [componentStatics] internally to proxy between
+/// the JS and Dart component instances.
+@JS('_createReactDartComponentClassConfig')
+external ReactClassConfig createReactDartComponentClassConfig(ReactDartInteropStatics dartInteropStatics, ComponentStatics componentStatics);
 
 /// An object that stores static methods used by all Dart components.
 @JS()
@@ -238,7 +244,7 @@ class ReactDartInteropStatics {
 /// This object is made accessible to a component's JS ReactClass config, which
 /// passes it to certain methods in [ReactDartInteropStatics].
 ///
-/// See [ReactDartInteropStatics], [_createReactDartComponentClassConfig].
+/// See [ReactDartInteropStatics], [createReactDartComponentClassConfig].
 class ComponentStatics {
   final ComponentFactory componentFactory;
 

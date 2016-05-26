@@ -282,12 +282,6 @@ final ReactDartInteropStatics _dartInteropStatics = (() {
   );
 })();
 
-/// Returns a new JS [ReactClassConfig] for a component that uses
-/// [dartInteropStatics] and [componentStatics] internally to proxy between
-/// the JS and Dart component instances.
-@JS()
-external ReactClassConfig _createReactDartComponentClassConfig(ReactDartInteropStatics dartInteropStatics, ComponentStatics componentStatics);
-
 /// Returns a new [ReactComponentFactory] which produces a new JS
 /// [`ReactClass` component class](https://facebook.github.io/react/docs/top-level-api.html#react.createclass).
 ReactComponentFactory _registerComponent(ComponentFactory componentFactory, [Iterable<String> skipMethods = const []]) {
@@ -296,7 +290,7 @@ ReactComponentFactory _registerComponent(ComponentFactory componentFactory, [Ite
   /// Create the JS [`ReactClass` component class](https://facebook.github.io/react/docs/top-level-api.html#react.createclass)
   /// with custom JS lifecycle methods.
   var reactComponentClass = React.createClass(
-      _createReactDartComponentClassConfig(_dartInteropStatics, componentStatics)
+      createReactDartComponentClassConfig(_dartInteropStatics, componentStatics)
         ..displayName = componentFactory().displayName
   );
 
@@ -599,7 +593,7 @@ void setClientConfiguration() {
     // corresponding JS functions are not available.
     React.isValidElement(null);
     ReactDom.findDOMNode(null);
-    _createReactDartComponentClassConfig(null, null);
+    createReactDartComponentClassConfig(null, null);
   } on NoSuchMethodError catch (_) {
     throw new Exception('react.js and react_dom.js must be loaded.');
   } catch(_) {

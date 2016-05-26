@@ -3,6 +3,7 @@ library js_function_test;
 
 import 'package:js/js.dart';
 import 'package:react/react_client/js_interop_helpers.dart';
+import 'package:react/react_client/react_interop.dart';
 import 'package:unittest/html_config.dart';
 import 'package:unittest/unittest.dart';
 
@@ -36,6 +37,18 @@ void main() {
             reason: 'should return the result of the assignment expression');
 
         expect(jsObj.foo, equals('bar'));
+      });
+    });
+
+    group('markChildValidated', () {
+      test('is function that does not throw when called', () {
+        expect(() => markChildValidated(new EmptyObject()), returnsNormally);
+      });
+    });
+
+    group('createReactDartComponentClassConfig', () {
+      test('is function that does not throw when called', () {
+        expect(() => createReactDartComponentClassConfig(null, null), returnsNormally);
       });
     });
   });
