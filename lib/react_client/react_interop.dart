@@ -8,6 +8,7 @@ import 'dart:html';
 
 import 'package:js/js.dart';
 import 'package:react/react.dart';
+import 'package:react/react_client.dart' show ComponentFactory;
 
 // ----------------------------------------------------------------------------
 //   Top-level API
@@ -84,6 +85,12 @@ class ReactClassConfig {
     Function getInitialState,
     Function render
   });
+
+  /// The `displayName` string is used in debugging messages.
+  ///
+  /// See: <http://facebook.github.io/react/docs/component-specs.html#displayname>
+  external String get displayName;
+  external set displayName(String value);
 }
 
 /// Interop class for the data structure at `ReactElement._store`.
@@ -193,16 +200,13 @@ class ReactDartComponentInternal {
 /// Marks [child] as validated, as if it were passed into [React.createElement]
 /// as a variadic child.
 ///
-/// Offloaded to the JS to avoid interceptor lookup.
+/// Offloaded to the JS to avoid dart2js interceptor lookup.
 @JS()
-external void _markChildValidated(ReactElement child);
+external void _markChildValidated(child);
 
 /// Mark each child in [children] as validated so that React doesn't emit key warnings.
 ///
 /// ___Only for use with variadic children.___
-///
-/// Needs to be in the same library as [ReactElement] since `ReactElement._store`
-/// is private due to package:js restrictions.
 void markChildrenValidated(List<dynamic> children) {
   children.forEach((dynamic child) {
     // Use `isValidElement` since `is ReactElement` doesn't behave as expected.
@@ -210,4 +214,33 @@ void markChildrenValidated(List<dynamic> children) {
       _markChildValidated(child);
     }
   });
+}
+
+/// An object that stores static methods used by all Dart components.
+@JS()
+@anonymous
+class ReactDartInteropStatics {
+  external factory ReactDartInteropStatics({
+      initComponent,
+      handleComponentWillMount,
+      handleComponentDidMount,
+      handleComponentWillReceiveProps,
+      handleShouldComponentUpdate,
+      handleComponentWillUpdate,
+      handleComponentDidUpdate,
+      handleComponentWillUnmount,
+      handleRender
+  });
+}
+
+/// An object that stores static methods and information for a specific component class.
+///
+/// This object is made accessible to a component's JS ReactClass config, which
+/// passes it to certain methods in [ReactDartInteropStatics].
+///
+/// See [ReactDartInteropStatics], [_createReactDartComponentClassConfig].
+class ComponentStatics {
+  final ComponentFactory componentFactory;
+
+  ComponentStatics(this.componentFactory);
 }

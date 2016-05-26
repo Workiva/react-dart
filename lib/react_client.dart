@@ -2,6 +2,7 @@
 // for details. All rights reserved. Use of this source code is governed by a
 // BSD-style license that can be found in the LICENSE file.
 
+@JS()
 library react_client;
 
 import "dart:async";
@@ -48,8 +49,8 @@ abstract class ReactComponentFactoryProxy implements Function {
 /// advanced nesting and other kinds of children.
 dynamic listifyChildren(dynamic children) {
   if (React.isValidElement(children)) {
-    // Short-circuit if we're dealing with a ReactElement to the interceptor
-    // lookup involved in Dart type-checking.
+    // Short-circuit if we're dealing with a ReactElement to avoid the dart2js
+    // interceptor lookup involved in Dart type-checking.
     return children;
   } else if (children is Iterable && children is! List) {
     return children.toList(growable: false);
@@ -153,11 +154,12 @@ class ReactDartComponentFactoryProxy<TComponent extends Component> extends React
   }
 }
 
-final EmptyObject dartInteropStatics = (() {
+/// The static methods that proxy JS component lifecycle methods to Dart components.
+final ReactDartInteropStatics _dartInteropStatics = (() {
   var zone = Zone.current;
 
   /// Wrapper for [Component.getInitialState].
-  void initComponent(ReactComponent jsThis, ReactDartComponentInternal internal, ComponentFactory componentFactory) => zone.run(() {
+  void initComponent(ReactComponent jsThis, ReactDartComponentInternal internal, ComponentStatics componentStatics) => zone.run(() {
     var redraw = () {
       if (internal.isMounted) {
         jsThis.setState(emptyJsMap);
@@ -176,7 +178,7 @@ final EmptyObject dartInteropStatics = (() {
       return ReactDom.findDOMNode(jsThis);
     };
 
-    Component component = componentFactory()
+    Component component = componentStatics.componentFactory()
         ..initComponentInternal(internal.props, redraw, getRef, getDOMNode, jsThis);
 
     internal.component = component;
@@ -267,34 +269,36 @@ final EmptyObject dartInteropStatics = (() {
     return internal.component.render();
   });
 
-  var dartInteropStatics = jsify({
-    'initComponent': initComponent,
-    'handleComponentWillMount': handleComponentWillMount,
-    'handleComponentDidMount': handleComponentDidMount,
-    'handleComponentWillReceiveProps': handleComponentWillReceiveProps,
-    'handleShouldComponentUpdate': handleShouldComponentUpdate,
-    'handleComponentWillUpdate': handleComponentWillUpdate,
-    'handleComponentDidUpdate': handleComponentDidUpdate,
-    'handleComponentWillUnmount': handleComponentWillUnmount,
-    'handleRender': handleRender,
-  });
-
-  return dartInteropStatics;
+  return new ReactDartInteropStatics(
+      initComponent: allowInterop(initComponent),
+      handleComponentWillMount: allowInterop(handleComponentWillMount),
+      handleComponentDidMount: allowInterop(handleComponentDidMount),
+      handleComponentWillReceiveProps: allowInterop(handleComponentWillReceiveProps),
+      handleShouldComponentUpdate: allowInterop(handleShouldComponentUpdate),
+      handleComponentWillUpdate: allowInterop(handleComponentWillUpdate),
+      handleComponentDidUpdate: allowInterop(handleComponentDidUpdate),
+      handleComponentWillUnmount: allowInterop(handleComponentWillUnmount),
+      handleRender: allowInterop(handleRender)
+  );
 })();
 
+/// Returns a new JS [ReactClassConfig] for a component that uses
+/// [dartInteropStatics] and [componentStatics] internally to proxy between
+/// the JS and Dart component instances.
 @JS()
-external _initReactDartInteropMixin(dartInteropStatics, ComponentFactory componentFactory);
-
+external ReactClassConfig _createReactDartComponentClassConfig(ReactDartInteropStatics dartInteropStatics, ComponentStatics componentStatics);
 
 /// Returns a new [ReactComponentFactory] which produces a new JS
 /// [`ReactClass` component class](https://facebook.github.io/react/docs/top-level-api.html#react.createclass).
 ReactComponentFactory _registerComponent(ComponentFactory componentFactory, [Iterable<String> skipMethods = const []]) {
+  var componentStatics = new ComponentStatics(componentFactory);
+
   /// Create the JS [`ReactClass` component class](https://facebook.github.io/react/docs/top-level-api.html#react.createclass)
-  /// with wrapped functions.
-  ReactClass reactComponentClass = React.createClass(new ReactClassConfig(
-      displayName: componentFactory().displayName,
-      mixins: [_initReactDartInteropMixin(dartInteropStatics, componentFactory)]
-  ));
+  /// with custom JS lifecycle methods.
+  var reactComponentClass = React.createClass(
+      _createReactDartComponentClassConfig(_dartInteropStatics, componentStatics)
+        ..displayName = componentFactory().displayName
+  );
 
   // Cache default props and store them on the ReactClass so they can be used
   // by ReactDartComponentFactoryProxy and externally.
