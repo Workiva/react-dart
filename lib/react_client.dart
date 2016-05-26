@@ -599,8 +599,11 @@ void setClientConfiguration() {
     // corresponding JS functions are not available.
     React.isValidElement(null);
     ReactDom.findDOMNode(null);
+    _createReactDartComponentClassConfig(null, null);
   } on NoSuchMethodError catch (_) {
     throw new Exception('react.js and react_dom.js must be loaded.');
+  } catch(_) {
+    throw new Exception('Loaded react.js must include react-dart JS interop helpers.');
   }
 
   setReactConfiguration(_reactDom, _registerComponent, ReactDom.render,
