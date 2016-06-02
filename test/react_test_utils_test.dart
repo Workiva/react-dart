@@ -5,6 +5,7 @@ import 'dart:html';
 
 import 'package:js/js.dart';
 import 'package:react/react.dart';
+import 'package:react/react_dom.dart' as react_dom;
 import 'package:react/react_client.dart';
 import 'package:react/react_client/js_interop_helpers.dart';
 import 'package:react/react_test_utils.dart';
@@ -66,7 +67,7 @@ void main() {
   group('Simulate', () {
     setUp(() {
       component = renderIntoDocument(eventComponent({}));
-      domNode = findDOMNode(component);
+      domNode = react_dom.findDOMNode(component);
       expect(domNode.text, equals(''));
     });
 
@@ -287,20 +288,20 @@ void main() {
 
     expect(divElements.length, equals(3));
     // First div should be the parent div created by renderIntoDocument()
-    expect(findDOMNode(
+    expect(react_dom.findDOMNode(
         divElements[0]).text, equals('A headerFirst divSecond div'));
-    expect(findDOMNode(divElements[1]).text, equals('First div'));
-    expect(findDOMNode(divElements[2]).text, equals('Second div'));
+    expect(react_dom.findDOMNode(divElements[1]).text, equals('First div'));
+    expect(react_dom.findDOMNode(divElements[2]).text, equals('Second div'));
     expect(h1Elements.length, equals(1));
-    expect(findDOMNode(h1Elements[0]).text, equals('A header'));
+    expect(react_dom.findDOMNode(h1Elements[0]).text, equals('A header'));
     expect(spanElements.length, equals(1));
-    expect(findDOMNode(spanElements[0]).text, equals(''));
+    expect(react_dom.findDOMNode(spanElements[0]).text, equals(''));
   });
 
-  test('getDOMNode', () {
+  test('findDomNode', () {
     component = renderIntoDocument(sampleComponent({}));
     var h1Element = findRenderedDOMComponentWithTag(component, 'h1');
-    var h1DomNode = getDomNode(h1Element);
+    var h1DomNode = react_dom.findDOMNode(h1Element);
 
     expect(h1DomNode.nodeName, 'H1');
     expect(h1DomNode.text, 'A header');

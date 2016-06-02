@@ -3,7 +3,7 @@ import 'dart:convert';
 import 'dart:html';
 
 import 'package:react/react.dart' as react;
-import 'package:react/react_dom.dart' as reactDom;
+import 'package:react/react_dom.dart' as react_dom;
 import 'package:react/react_client.dart';
 
 
@@ -133,7 +133,7 @@ class _GeocodesForm extends react.Component {
   /// Handle form submission via `props.onSubmit`
   onFormSubmit(react.SyntheticEvent event) {
       event.preventDefault();
-      InputElement inputElement = reactDom.findDOMNode(searchInputInstance);
+      InputElement inputElement = react_dom.findDOMNode(searchInputInstance);
       // The input's value is accessed.
       var address = inputElement.value;
       inputElement.value = '';
@@ -319,5 +319,5 @@ var geocodesApp = react.registerComponent(() => new _GeocodesApp());
 /// Select the root of the app and the place in the DOM where it should be mounted.
 void main() {
   setClientConfiguration();
-  reactDom.render(geocodesApp({}), querySelector('#content'));
+  react_dom.render(geocodesApp({}), querySelector('#content'));
 }

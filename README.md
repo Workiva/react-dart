@@ -36,22 +36,22 @@ Initialize React in our Dart application. Mount simple component into '#content'
 
 ```dart
 import 'dart:html';
-import 'package:react/react_client.dart' as reactClient;
+import 'package:react/react_client.dart' as react_client;
 import 'package:react/react.dart';
-import 'package:react/react_dom.dart' as reactDom;
+import 'package:react/react_dom.dart' as react_dom;
 
 main() {
   // This should be called once at the beginning of the application
-  reactClient.setClientConfiguration();
+  react_client.setClientConfiguration();
   var component = div({}, "Hello world!");
-  reactDom.render(component, querySelector('#content'));
+  react_dom.render(component, querySelector('#content'));
 }
 ```
 
 Inverse method to rendering component is `unmountComponentAtNode`
 
 ```dart
-  reactDom.unmountComponentAtNode(querySelector('#content'));
+  react_dom.unmountComponentAtNode(querySelector('#content'));
 ```
 
 ## Using browser native elements
@@ -93,7 +93,7 @@ var myComponent = registerComponent(() => new MyComponent());
 Use this registered component similarly as native elements.
 
 ```dart
-reactDom.render(myComponent({}), querySelector('#content'));
+react_dom.render(myComponent({}), querySelector('#content'));
 // or
 div({}, [
   myComponent({})
@@ -133,8 +133,8 @@ class MyComponent extends Component {
 }
 
 void main() {
-  reactClient.setClientConfiguration();
-  reactDom.render(
+  react_client.setClientConfiguration();
+  react_dom.render(
     myComponent(headline: "My custom headline",
                 text: "My custom text"),
     querySelector('#content')
@@ -170,9 +170,9 @@ class _ParentComponent extends Component {
 
     _DartComponent dartRef = ref("dart"); // Returns instance of _DartComponent
     dartRef.someData; // you can call methods or get values from it
-    reactDom.findDOMNode(dartRef); // return div element rendered from _DartComponent
+    react_dom.findDOMNode(dartRef); // return div element rendered from _DartComponent
 
-    reactDom.findDOMNode(this); // return root dom element rendered from this component
+    react_dom.findDOMNode(this); // return root dom element rendered from this component
   }
 }
 ```
@@ -210,7 +210,7 @@ Here is an example of how to use React TestUtils within a Dart test.
 ```dart
 import 'package:unittest/unittest.dart';
 import 'package:react/react.dart' as react;
-import 'package:react/react_client.dart' as reactClient;
+import 'package:react/react_client.dart' as react_client;
 import 'package:react/react_test_utils.dart' as reactTestUtils;
 
 class MyTestComponent extends react.Component {
@@ -226,7 +226,7 @@ class MyTestComponent extends react.Component {
 var myTestComponent = react.registerComponent(() => new MyTestComponent());
 
 void main() {
-  reactClient.setClientConfiguration();
+  react_client.setClientConfiguration();
 
   test('should click button and set span text to "success"', () {
     var component = reactTestUtils.renderIntoDocument(myTestComponent({}));

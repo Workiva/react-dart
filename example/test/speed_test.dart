@@ -1,8 +1,9 @@
-import "package:react/react.dart" as react;
-import "package:react/react_dom.dart" as reactDom;
-import "package:react/react_client.dart";
 import "dart:html";
 import "dart:async";
+
+import "package:react/react.dart" as react;
+import "package:react/react_dom.dart" as react_dom;
+import "package:react/react_client.dart";
 
 Stopwatch stopwatch = new Stopwatch()..start();
 timeprint(message){
@@ -87,5 +88,5 @@ void main() {
   for(num i=0; i<1000; i++){
     data.add(["name_$i", "value_$i"]);
   }
-  reactDom.render(Hello({"data": data}, []), querySelector('#content'));
+  react_dom.render(Hello({"data": data}, []), querySelector('#content'));
 }

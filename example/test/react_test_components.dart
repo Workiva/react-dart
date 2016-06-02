@@ -1,5 +1,7 @@
-import "package:react/react.dart" as react;
 import "dart:async";
+
+import "package:react/react.dart" as react;
+import "package:react/react_dom.dart" as react_dom;
 
 
 class _HelloComponent extends react.Component {
@@ -22,7 +24,7 @@ class _HelloGreeter extends react.Component {
   getInitialState() => {"name": "World"};
 
   onInputChange(e) {
-    var input = react.findDOMNode(ref('myInput'));
+    var input = react_dom.findDOMNode(ref('myInput'));
     print(input.borderEdge);
   }
 
@@ -74,7 +76,7 @@ class _ClockComponent extends react.Component {
   }
 
   void componentDidMount() {
-    var rootNode = react.findDOMNode(this);
+    var rootNode = react_dom.findDOMNode(this);
     rootNode.style.backgroundColor = "#FFAAAA";
   }
 

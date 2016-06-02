@@ -1,7 +1,7 @@
 import 'dart:html';
 
 import "package:react/react.dart" as react;
-import "package:react/react_dom.dart" as reactDom;
+import "package:react/react_dom.dart" as react_dom;
 import "package:react/react_client.dart";
 
 class _Item extends react.Component {
@@ -41,5 +41,5 @@ var list = react.registerComponent(() => new _List());
 
 void main() {
   setClientConfiguration();
-  reactDom.render(list({}), querySelector('#content'));
+  react_dom.render(list({}), querySelector('#content'));
 }

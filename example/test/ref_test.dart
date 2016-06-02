@@ -1,7 +1,7 @@
 import "dart:html";
 
 import "package:react/react.dart" as react;
-import "package:react/react_dom.dart" as reactDom;
+import "package:react/react_dom.dart" as react_dom;
 import "package:react/react_client.dart";
 
 var ChildComponent = react.registerComponent(() => new _ChildComponent());
@@ -19,7 +19,7 @@ var ParrentComponent = react.registerComponent(() => new _ParrentComponent());
 class _ParrentComponent extends react.Component {
   // String refs
   showInputValue(_) {
-    var input = react.findDOMNode(ref('inputRef')) as InputElement;
+    var input = react_dom.findDOMNode(ref('inputRef')) as InputElement;
     print(input.value);
   }
   showChildValue(_) {
@@ -33,7 +33,7 @@ class _ParrentComponent extends react.Component {
   InputElement _inputCallbackRef;
   _ChildComponent _childCallbackRef;
   showInputCallbackRefValue(_) {
-    var input = react.findDOMNode(_inputCallbackRef);
+    var input = react_dom.findDOMNode(_inputCallbackRef);
     print(input.value);
   }
   showChildCallbackRefValue(_) {
@@ -69,5 +69,5 @@ var mountedNode = querySelector('#content');
 void main() {
   setClientConfiguration();
   var component = ParrentComponent({});
-  reactDom.render(component, mountedNode);
+  react_dom.render(component, mountedNode);
 }
