@@ -297,15 +297,6 @@ void main() {
     expect(spanElements.length, equals(1));
     expect(react_dom.findDOMNode(spanElements[0]).text, equals(''));
   });
-
-  test('findDomNode', () {
-    component = renderIntoDocument(sampleComponent({}));
-    var h1Element = findRenderedDOMComponentWithTag(component, 'h1');
-    var h1DomNode = react_dom.findDOMNode(h1Element);
-
-    expect(h1DomNode.nodeName, 'H1');
-    expect(h1DomNode.text, 'A header');
-  });
 }
 
 @JS('Object.keys')
