@@ -174,12 +174,8 @@ final ReactDartInteropStatics _dartInteropStatics = (() {
       return (ref as ReactComponent).props?.internal?.component ?? ref;
     };
 
-    var getDOMNode = () {
-      return ReactDom.findDOMNode(jsThis);
-    };
-
     Component component = componentStatics.componentFactory()
-        ..initComponentInternal(internal.props, redraw, getRef, getDOMNode, jsThis);
+        ..initComponentInternal(internal.props, redraw, getRef, jsThis);
 
     internal.component = component;
     internal.isMounted = false;
@@ -600,9 +596,7 @@ void setClientConfiguration() {
     throw new Exception('Loaded react.js must include react-dart JS interop helpers.');
   }
 
-  setReactConfiguration(_reactDom, _registerComponent, ReactDom.render,
-      ReactDomServer.renderToString, ReactDomServer.renderToStaticMarkup,
-      ReactDom.unmountComponentAtNode, _findDomNode);
+  setReactConfiguration(_reactDom, _registerComponent);
   setReactDOMConfiguration(ReactDom.render, ReactDom.unmountComponentAtNode, _findDomNode);
   setReactDOMServerConfiguration(ReactDomServer.renderToString, ReactDomServer.renderToStaticMarkup);
 }

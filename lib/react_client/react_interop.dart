@@ -147,8 +147,6 @@ class ReactComponent {
   external get refs;
   external void setState(state, [callback]);
   external void forceUpdate([callback]);
-  @deprecated
-  external setProps(props, [callback]);
 
   external bool isMounted();
 }

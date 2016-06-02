@@ -14,11 +14,6 @@ abstract class Component {
   /// Provides access to the underlying DOM representation of the [render]ed `Component`.
   dynamic ref;
 
-  /// As of [version `0.9.0`](https://github.com/cleandart/react-dart/pull/86), _(which upgrades this library's ReactJS
-  /// dependency to version `0.14.7`)_, [Component.getDOMNode] is deprecated in favor of `ReactDOM.findDOMNode`.
-  @deprecated
-  dynamic getDOMNode;
-
   dynamic _jsRedraw;
 
   dynamic _jsThis;
@@ -34,10 +29,9 @@ abstract class Component {
   /// Bind the value of input to [state[key]].
   bind(key) => [state[key], (value) => setState({key: value})];
 
-  initComponentInternal(props, _jsRedraw, [ref, getDOMNode, _jsThis]) {
+  initComponentInternal(props, _jsRedraw, [ref, _jsThis]) {
     this._jsRedraw = _jsRedraw;
     this.ref = ref;
-    this.getDOMNode = getDOMNode;
     this._jsThis = _jsThis;
     _initProps(props);
   }
@@ -467,40 +461,10 @@ class SyntheticWheelEvent extends SyntheticEvent {
 
 }
 
-/// As of [version `0.9.0`](https://github.com/cleandart/react-dart/pull/86), _(which upgrades this library's ReactJS
-/// dependency to version `0.14.7`)_, this is deprecated in favor of `render` within the `react_dom` library.
-@deprecated
-var render = (component, element) {
-  throw new Exception('setClientConfiguration must be called before render.');
-};
-
-/// As of [version `0.9.0`](https://github.com/cleandart/react-dart/pull/86), _(which upgrades this library's ReactJS
-/// dependency to version `0.14.7`)_, this is deprecated in favor of `renderToString` within the
-/// `react_dom_server` library.
-@deprecated
-var renderToString;
-
-/// As of [version `0.9.0`](https://github.com/cleandart/react-dart/pull/86), _(which upgrades this library's ReactJS
-/// dependency to version `0.14.7`)_, this is deprecated in favor of `renderToStaticMarkup` within the
-/// `react_dom_server` library.
-@deprecated
-var renderToStaticMarkup;
-
-/// As of [version `0.9.0`](https://github.com/cleandart/react-dart/pull/86), _(which upgrades this library's ReactJS
-/// dependency to version `0.14.7`)_, this is deprecated in favor of `unmountComponentAtNode` within the `react_dom`
-/// library.
-@deprecated
-var unmountComponentAtNode;
-
 /// Registers [componentFactory] on both client and server.
 var registerComponent = (componentFactory, [skipMethods]) {
   throw new Exception('setClientConfiguration must be called before registerComponent.');
 };
-
-/// As of [version `0.9.0`](https://github.com/cleandart/react-dart/pull/86), _(which upgrades this library's ReactJS
-/// dependency to version `0.14.7`)_, this is deprecated in favor of `findDOMNode` within the `react_dom` library.
-@deprecated
-var findDOMNode;
 
 /// The HTML `<a>` [AnchorElement].
 var a;
@@ -1039,14 +1003,8 @@ _createDOMComponents(creator){
 ///
 /// The arguments are assigned to global variables, and React DOM `Component`s are created by calling
 /// [_createDOMComponents] with [domCreator].
-setReactConfiguration(domCreator, customRegisterComponent, customRender, customRenderToString,
-    customRenderToStaticMarkup, customUnmountComponentAtNode, customFindDOMNode){
+setReactConfiguration(domCreator, customRegisterComponent){
   registerComponent = customRegisterComponent;
-  render = customRender;
-  renderToString = customRenderToString;
-  renderToStaticMarkup = customRenderToStaticMarkup;
-  unmountComponentAtNode = customUnmountComponentAtNode;
-  findDOMNode = customFindDOMNode;
   // HTML Elements
   _createDOMComponents(domCreator);
 }
