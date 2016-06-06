@@ -211,7 +211,8 @@ Here is an example of how to use React TestUtils within a Dart test.
 import 'package:unittest/unittest.dart';
 import 'package:react/react.dart' as react;
 import 'package:react/react_client.dart' as react_client;
-import 'package:react/react_test_utils.dart' as reactTestUtils;
+import 'package:react/react_dom.dart' as react_dom;
+import 'package:react/react_test_utils.dart' as react_test_utils;
 
 class MyTestComponent extends react.Component {
   getInitialState() => {'text': 'testing...'};
@@ -229,24 +230,24 @@ void main() {
   react_client.setClientConfiguration();
 
   test('should click button and set span text to "success"', () {
-    var component = reactTestUtils.renderIntoDocument(myTestComponent({}));
+    var component = react_test_utils.renderIntoDocument(myTestComponent({}));
 
     // Find button using tag name
-    var buttonElement = reactTestUtils.findRenderedDOMComponentWithTag(
+    var buttonElement = react_test_utils.findRenderedDOMComponentWithTag(
         component, 'button');
 
     // Find span using class name
-    var spanElement = reactTestUtils.findRenderedDOMComponentWithClass(
+    var spanElement = react_test_utils.findRenderedDOMComponentWithClass(
         component, 'spanText');
 
-    var buttonNode = reactTestUtils.getDomNode(buttonElement);
-    var spanNode = reactTestUtils.getDomNode(spanElement);
+    var buttonNode = react_dom.findDOMNode(buttonElement);
+    var spanNode = react_dom.findDOMNode(spanElement);
 
     // Span text should equal the initial state
     expect(spanNode.text, equals('testing...'));
 
     // Click the button and trigger the onClick event
-    reactTestUtils.Simulate.click(buttonNode);
+    react_test_utils.Simulate.click(buttonNode);
 
     // Span text should change to 'success'
     expect(spanNode.text, equals('success'));
