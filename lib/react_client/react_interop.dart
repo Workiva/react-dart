@@ -10,6 +10,8 @@ import 'package:js/js.dart';
 import 'package:react/react.dart';
 import 'package:react/react_client.dart' show ComponentFactory;
 
+typedef ReactElement ReactJsComponentFactory(props, children);
+
 // ----------------------------------------------------------------------------
 //   Top-level API
 // ----------------------------------------------------------------------------
@@ -17,7 +19,7 @@ import 'package:react/react_client.dart' show ComponentFactory;
 @JS()
 abstract class React {
   external static ReactClass createClass(ReactClassConfig reactClassConfig);
-  external static Function createFactory(type);
+  external static ReactJsComponentFactory createFactory(type);
 
   external static ReactElement createElement(dynamic type, props, [dynamic children]);
 
@@ -110,7 +112,7 @@ class ReactElementStore {
 /// and <http://facebook.github.io/react/docs/glossary.html#react-components>.
 @JS()
 @anonymous
-class ReactElement<TComponent extends Component> {
+class ReactElement {
   external ReactElementStore get _store;
 
   /// The type of this element.
@@ -147,8 +149,6 @@ class ReactComponent {
   external get refs;
   external void setState(state, [callback]);
   external void forceUpdate([callback]);
-  @deprecated
-  external setProps(props, [callback]);
 
   external bool isMounted();
 }

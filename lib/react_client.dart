@@ -16,7 +16,7 @@ import "package:react/react_dom.dart";
 import "package:react/react_dom_server.dart";
 import "package:react/src/react_client/synthetic_event_wrappers.dart" as events;
 
-export 'package:react/react_client/react_interop.dart' show ReactElement;
+export 'package:react/react_client/react_interop.dart' show ReactElement, ReactJsComponentFactory;
 
 final EmptyObject emptyJsMap = new EmptyObject();
 
@@ -66,7 +66,7 @@ class ReactDartComponentFactoryProxy<TComponent extends Component> extends React
   final ReactClass reactClass;
 
   /// The JS component factory used by this factory to build [ReactElement]s.
-  final Function reactComponentFactory;
+  final ReactJsComponentFactory reactComponentFactory;
 
   /// The cached Dart default props retrieved from [reactClass] that are passed
   /// into [generateExtendedJsProps] upon [ReactElement] creation.
@@ -79,13 +79,13 @@ class ReactDartComponentFactoryProxy<TComponent extends Component> extends React
 
   ReactClass get type => reactClass;
 
-  ReactElement<TComponent> call(Map props, [dynamic children]) {
+  ReactElement call(Map props, [dynamic children]) {
     children = listifyChildren(children);
 
     return reactComponentFactory(
       generateExtendedJsProps(props, children, defaultProps: defaultProps),
       children
-    ) as ReactElement<TComponent>;
+    );
   }
 
   dynamic noSuchMethod(Invocation invocation) {
@@ -174,12 +174,8 @@ final ReactDartInteropStatics _dartInteropStatics = (() {
       return (ref as ReactComponent).props?.internal?.component ?? ref;
     };
 
-    var getDOMNode = () {
-      return ReactDom.findDOMNode(jsThis);
-    };
-
     Component component = componentStatics.componentFactory()
-        ..initComponentInternal(internal.props, redraw, getRef, getDOMNode, jsThis);
+        ..initComponentInternal(internal.props, redraw, getRef, jsThis);
 
     internal.component = component;
     internal.isMounted = false;
@@ -600,9 +596,7 @@ void setClientConfiguration() {
     throw new Exception('Loaded react.js must include react-dart JS interop helpers.');
   }
 
-  setReactConfiguration(_reactDom, _registerComponent, ReactDom.render,
-      ReactDomServer.renderToString, ReactDomServer.renderToStaticMarkup,
-      ReactDom.unmountComponentAtNode, _findDomNode);
+  setReactConfiguration(_reactDom, _registerComponent);
   setReactDOMConfiguration(ReactDom.render, ReactDom.unmountComponentAtNode, _findDomNode);
   setReactDOMServerConfiguration(ReactDomServer.renderToString, ReactDomServer.renderToStaticMarkup);
 }

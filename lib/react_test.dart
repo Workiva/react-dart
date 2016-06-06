@@ -29,15 +29,15 @@ _reactDom(String name) {
   };
 }
 
-initializeComponent(Component component, [Map props = const {}, List children, redraw, ref, getDOMNode]) {
+initializeComponent(Component component, [Map props = const {}, List children, redraw, ref]) {
   if (redraw == null) redraw = () {};
   var extendedProps = new Map.from(component.getDefaultProps())
     ..addAll(props);
-  component.initComponentInternal(extendedProps, redraw, ref, getDOMNode);
+  component.initComponentInternal(extendedProps, redraw, ref);
   component.initStateInternal();
   component.componentWillMount();
 }
 
 void setTestConfiguration() {
-  setReactConfiguration(_reactDom, null, null, null, null, null, null);
+  setReactConfiguration(_reactDom, null);
 }

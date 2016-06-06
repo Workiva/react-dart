@@ -5,10 +5,7 @@
 @JS()
 library react.test_utils;
 
-import 'dart:html';
-
 import 'package:js/js.dart';
-import 'package:react/react.dart';
 import 'package:react/react_client.dart';
 import 'package:react/react_client/js_interop_helpers.dart';
 import 'package:react/react_client/react_interop.dart';
@@ -220,10 +217,6 @@ external List<dynamic> scryRenderedDOMComponentsWithTag(/* [1] */ tree, String t
 /// Render a Component into a detached DOM node in the document.
 @JS('React.addons.TestUtils.renderIntoDocument')
 external /* [1] */ renderIntoDocument(ReactElement instance);
-
-/// Use [findDOMNode] instead.
-@deprecated
-Element getDomNode(dynamic object) => findDOMNode(object);
 
 /// Pass a mocked component module to this method to augment it with useful
 /// methods that allow it to be used as a dummy React component. Instead of
