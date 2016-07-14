@@ -1,5 +1,9 @@
+@JS()
+library lifecycle_test;
+
 import 'dart:html';
 
+import "package:js/js.dart";
 import 'package:react/react.dart' as react;
 import 'package:react/react_client.dart';
 import 'package:react/react_client/react_interop.dart';
@@ -374,7 +378,116 @@ void main() {
         ]));
       });
     });
+
+    group('calls the setState callback, and transactional setState callback in the correct order', () {
+      test('when shouldComponentUpdate returns false', () {
+        var mountNode = new DivElement();
+        var renderedInstance = react_dom.render(SetStateTest({'shouldUpdate': false}), mountNode);
+        Element renderedNode = react_dom.findDOMNode(renderedInstance);
+        _SetStateTest component = getDartComponent(renderedInstance);
+
+        react_test_utils.Simulate.click(renderedNode.children.first);
+
+        // Check against the JS component to ensure no regressions.
+        expect(component.lifecycleCalls, orderedEquals(getNonUpdatingSetStateLifeCycleCalls()));
+        expect(renderedNode.children.first.text, '1');
+      });
+
+      test('when shouldComponentUpdate returns true', () {
+        var mountNode = new DivElement();
+        var renderedInstance = react_dom.render(SetStateTest({}), mountNode);
+        Element renderedNode = react_dom.findDOMNode(renderedInstance);
+        _SetStateTest component = getDartComponent(renderedInstance);
+
+        react_test_utils.Simulate.click(renderedNode.children.first);
+
+        // Check against the JS component to ensure no regressions.
+        expect(component.lifecycleCalls, orderedEquals(getUpdatingSetStateLifeCycleCalls()));
+        expect(renderedNode.children.first.text, '3');
+      });
+    });
+
+    test('throws when setState is called with something other than a Map or Function that accepts two parameters', () {
+      var mountNode = new DivElement();
+      var renderedInstance = react_dom.render(SetStateTest({}), mountNode);
+      _SetStateTest component = getDartComponent(renderedInstance);
+
+      expect(() => component.setState(new Map()), returnsNormally);
+      expect(() => component.setState((_, __) { return {}; }), returnsNormally);
+      expect(() => component.setState(null), returnsNormally);
+
+      expect(() => component.setState('Not A Valid Parameter'), throwsArgumentError);
+      expect(() => component.setState(5), throwsArgumentError);
+    });
   });
+}
+
+@JS()
+external List getUpdatingSetStateLifeCycleCalls();
+
+@JS()
+external List getNonUpdatingSetStateLifeCycleCalls();
+
+ReactDartComponentFactoryProxy<_SetStateTest> SetStateTest = react.registerComponent(() => new _SetStateTest()) as ReactDartComponentFactoryProxy<_SetStateTest>;
+class _SetStateTest extends react.Component {
+  @override
+  Map getDefaultProps() => {'shouldUpdate': true};
+
+  @override
+  getInitialState() => {"counter": 1};
+
+  @override
+  componentWillReceiveProps(_) {
+    recordLifecyleCall('componentWillReceiveProps');
+  }
+
+  @override
+  componentWillUpdate(_, __) {
+    recordLifecyleCall('componentWillUpdate');
+  }
+
+  @override
+  componentDidUpdate(_, __) {
+    recordLifecyleCall('componentDidUpdate');
+  }
+
+  @override
+  shouldComponentUpdate(_, __) {
+    recordLifecyleCall('shouldComponentUpdate');
+    return props['shouldUpdate'] as bool;
+  }
+
+  Map outerTransactionalSetStateCallback(previousState, __) {
+    recordLifecyleCall('outerTransactionalSetStateCallback');
+    return {'counter': ++previousState['counter']};
+  }
+
+  Map innerTransactionalSetStateCallback(previousState, __) {
+    recordLifecyleCall('innerTransactionalSetStateCallback');
+    return {'counter': ++previousState['counter']};
+  }
+
+  void recordLifecyleCall(String name) {
+    lifecycleCalls.add(name);
+  }
+
+  render() {
+    return react.div({
+      'onClick': (_) {
+        setState(outerTransactionalSetStateCallback, () { recordLifecyleCall('outerSetStateCallback'); });
+      }
+    },
+      react.div({
+        'onClick': (_) {
+          setState(innerTransactionalSetStateCallback, () { recordLifecyleCall('innerSetStateCallback'); });
+        }
+      },
+        state['counter']
+      )
+    );
+  }
+
+  List lifecycleCalls = [];
 }
 
 class _DefaultPropsCachingTest extends react.Component {
