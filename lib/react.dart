@@ -18,6 +18,16 @@ abstract class Component {
 
   dynamic _jsThis;
 
+  List _setStateCallbacks = [];
+
+  List _transactionalSetStateCallbacks = [];
+
+  /// The List of callbacks to be called after the component has been updated from a call to [setState].
+  List get setStateCallbacks => _setStateCallbacks;
+
+  /// The List of transactional `setState` callbacks to be called before the component updates.
+  List get transactionalSetStateCallbacks => _transactionalSetStateCallbacks;
+
   /// The JavaScript [`ReactComponent`](https://facebook.github.io/react/docs/top-level-api.html#reactdom.render)
   /// instance of this `Component` returned by [render].
   dynamic get jsThis => _jsThis;
@@ -86,30 +96,57 @@ abstract class Component {
 
   /// Force a call to [render] by calling [setState], which effectively "redraws" the `Component`.
   ///
+  /// Optionally accepts a callback that gets called after the component updates.
+  ///
   /// [A.k.a "forceUpdate"](https://facebook.github.io/react/docs/component-api.html#forceupdate)
-  void redraw() {
-    setState({});
+  void redraw([callback()]) {
+    setState({}, callback);
   }
 
   /// Set [_nextState] to provided [newState] value and force a re-render.
+  ///
+  /// Optionally accepts a callback that gets called after the component updates.
+  ///
+  /// Also allows [newState] to be used as a transactional `setState` callback.
   ///
   /// See: <https://facebook.github.io/react/docs/component-api.html#setstate>
-  void setState(Map newState) {
-    if (newState != null) {
+  void setState(dynamic newState, [callback()]) {
+    if (newState is Map) {
       _nextState.addAll(newState);
+    } else if (newState is _TransactionalSetStateCallback) {
+      _addTransactionalSetStateCallback(newState);
+    } else if (newState != null) {
+      throw new ArgumentError('setState expects its first parameter to either be a Map or a Function that accepts two parameters.');
     }
+
+    if (callback != null) _addSetStateCallback(callback);
 
     _jsRedraw();
   }
 
   /// Set [_nextState] to provided [newState] value and force a re-render.
   ///
+  /// Optionally accepts a callback that gets called after the component updates.
+  ///
   /// See: <https://facebook.github.io/react/docs/component-api.html#replacestate>
-  void replaceState(Map newState) {
+  void replaceState(Map newState, [callback()]) {
     Map nextState = newState == null ? {} : new Map.from(newState);
     _nextState = nextState;
+    if (callback != null) _addSetStateCallback(callback);
 
     _jsRedraw();
+  }
+
+  void _addTransactionalSetStateCallback(Map callback(Map prevState, Map currentProps)) {
+    if (_transactionalSetStateCallbacks == null) _transactionalSetStateCallbacks = [];
+
+    _transactionalSetStateCallbacks.add(callback);
+  }
+
+  void _addSetStateCallback(callback()) {
+    if (_setStateCallbacks == null) _setStateCallbacks = [];
+
+    _setStateCallbacks.add(callback);
   }
 
   /// ReactJS lifecycle method that is invoked once, both on the client and server, immediately before the initial
@@ -202,6 +239,11 @@ abstract class Component {
   /// See: <https://facebook.github.io/react/docs/component-specs.html#render>
   dynamic render();
 }
+
+/// Typedef of a transactional [Component.setState] callback.
+///
+/// See: <https://facebook.github.io/react/docs/component-api.html#setstate>
+typedef Map _TransactionalSetStateCallback(Map prevState, Map props);
 
 
 /// A cross-browser wrapper around the browser's [nativeEvent].
