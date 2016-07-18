@@ -218,12 +218,12 @@ final ReactDartInteropStatics _dartInteropStatics = (() {
     component.transferComponentState();
   }
 
-  _callSetStateCallbacks(Component component) {
+  void _callSetStateCallbacks(Component component) {
     component.setStateCallbacks.forEach((callback()) { callback(); });
     component.setStateCallbacks.clear();
   }
 
-  _callSetStateTransactionalCallbacks(Component component) {
+  void _callSetStateTransactionalCallbacks(Component component) {
     var nextState = component.nextState;
     var props = new UnmodifiableMapView(component.props);
 
@@ -251,7 +251,7 @@ final ReactDartInteropStatics _dartInteropStatics = (() {
       _afterPropsChange(component, nextInternal);
       _callSetStateCallbacks(component);
       return false;
-    }
+  }
   });
 
   /// Wrapper for [Component.componentWillUpdate].

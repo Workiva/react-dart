@@ -114,12 +114,12 @@ abstract class Component {
     if (newState is Map) {
       _nextState.addAll(newState);
     } else if (newState is _TransactionalSetStateCallback) {
-      _addTransactionalSetStateCallback(newState);
+      _transactionalSetStateCallbacks.add(newState);
     } else if (newState != null) {
       throw new ArgumentError('setState expects its first parameter to either be a Map or a Function that accepts two parameters.');
     }
 
-    if (callback != null) _addSetStateCallback(callback);
+    if (callback != null) _setStateCallbacks.add(callback);
 
     _jsRedraw();
   }
@@ -132,21 +132,9 @@ abstract class Component {
   void replaceState(Map newState, [callback()]) {
     Map nextState = newState == null ? {} : new Map.from(newState);
     _nextState = nextState;
-    if (callback != null) _addSetStateCallback(callback);
+    if (callback != null) _setStateCallbacks.add(callback);
 
     _jsRedraw();
-  }
-
-  void _addTransactionalSetStateCallback(Map callback(Map prevState, Map currentProps)) {
-    if (_transactionalSetStateCallbacks == null) _transactionalSetStateCallbacks = [];
-
-    _transactionalSetStateCallbacks.add(callback);
-  }
-
-  void _addSetStateCallback(callback()) {
-    if (_setStateCallbacks == null) _setStateCallbacks = [];
-
-    _setStateCallbacks.add(callback);
   }
 
   /// ReactJS lifecycle method that is invoked once, both on the client and server, immediately before the initial

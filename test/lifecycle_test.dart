@@ -459,12 +459,12 @@ class _SetStateTest extends react.Component {
 
   Map outerTransactionalSetStateCallback(previousState, __) {
     recordLifecyleCall('outerTransactionalSetStateCallback');
-    return {'counter': ++previousState['counter']};
+    return {'counter': previousState['counter'] + 1};
   }
 
   Map innerTransactionalSetStateCallback(previousState, __) {
     recordLifecyleCall('innerTransactionalSetStateCallback');
-    return {'counter': ++previousState['counter']};
+    return {'counter': ++previousState['counter'] + 1};
   }
 
   void recordLifecyleCall(String name) {
