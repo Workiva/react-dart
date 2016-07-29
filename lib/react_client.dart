@@ -6,7 +6,6 @@
 library react_client;
 
 import "dart:async";
-import "dart:collection";
 import "dart:html";
 
 import "package:js/js.dart";
@@ -218,19 +217,6 @@ final ReactDartInteropStatics _dartInteropStatics = (() {
     component.transferComponentState();
   }
 
-  void _callSetStateCallbacks(Component component) {
-    component.setStateCallbacks.forEach((callback()) { callback(); });
-    component.setStateCallbacks.clear();
-  }
-
-  void _callSetStateTransactionalCallbacks(Component component) {
-    var nextState = component.nextState;
-    var props = new UnmodifiableMapView(component.props);
-
-    component.transactionalSetStateCallbacks.forEach((callback) { nextState.addAll(callback(nextState, props)); });
-    component.transactionalSetStateCallbacks.clear();
-  }
-
   /// Wrapper for [Component.componentWillReceiveProps].
   void handleComponentWillReceiveProps(ReactDartComponentInternal internal, ReactDartComponentInternal nextInternal) => zone.run(() {
     var nextProps = _getNextProps(internal.component, nextInternal);
@@ -242,16 +228,14 @@ final ReactDartInteropStatics _dartInteropStatics = (() {
   /// Wrapper for [Component.shouldComponentUpdate].
   bool handleShouldComponentUpdate(ReactDartComponentInternal internal, ReactDartComponentInternal nextInternal) => zone.run(() {
     Component component = internal.component;
-    _callSetStateTransactionalCallbacks(component);
 
     if (component.shouldComponentUpdate(component.nextProps, component.nextState)) {
       return true;
     } else {
       // If component should not update, update props / transfer state because componentWillUpdate will not be called.
       _afterPropsChange(component, nextInternal);
-      _callSetStateCallbacks(component);
       return false;
-  }
+    }
   });
 
   /// Wrapper for [Component.componentWillUpdate].
@@ -268,7 +252,6 @@ final ReactDartInteropStatics _dartInteropStatics = (() {
     var prevInternalProps = prevInternal.props;
     Component component = internal.component;
     component.componentDidUpdate(prevInternalProps, component.prevState);
-    _callSetStateCallbacks(component);
   });
 
   /// Wrapper for [Component.componentWillUnmount].
