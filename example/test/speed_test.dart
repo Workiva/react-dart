@@ -49,10 +49,6 @@ class _Hello extends react.Component {
     });
   }
 
-  void redraw(){
-    setState({});
-  }
-
   render() {
     timeprint("rendering start");
     List<List<String>> data = (props['data'] as List<List<String>>);
