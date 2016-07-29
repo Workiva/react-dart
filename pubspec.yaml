@@ -1,5 +1,5 @@
 name: react
-version: 2.2.1
+version: 3.0.0
 author: Clean Team <clean@vacuumlabs.com>
 description: Bindings of the ReactJS library for building interactive interfaces.
 homepage: http://cleandart.github.io/react-dart/
