@@ -13,7 +13,8 @@ int _nextFactoryId = 0;
 ///
 /// This prevents React JS from not printing key warnings it deems as "duplicates".
 void renderWithUniqueOwnerName(ReactElement render()) {
-  ReactDartComponentFactoryProxy factory = react.registerComponent(() => new _OwnerHelperComponent());
+  ReactDartComponentFactoryProxy factory =
+      (react.registerComponent(() => new _OwnerHelperComponent())) as ReactDartComponentFactoryProxy;
   factory.reactClass.displayName = 'OwnerHelperComponent_$_nextFactoryId';
   _nextFactoryId++;
 
@@ -128,9 +129,11 @@ void main() {
 
 Function CustomComponent = react.registerComponent(() => new _CustomComponent());
 class _CustomComponent extends react.Component {
+  @override
   render() => react.div({}, []);
 }
 
 class _OwnerHelperComponent extends react.Component {
+  @override
   render() => props['render']();
 }
