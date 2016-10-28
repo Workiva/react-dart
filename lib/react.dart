@@ -5,8 +5,6 @@
 /// A Dart library for building UI using ReactJS.
 library react;
 
-import 'dart:html' show Element;
-
 /// Top-level ReactJS [Component class](https://facebook.github.io/react/docs/top-level-api.html#react.component)
 /// which provides the [ReactJS Component API](https://facebook.github.io/react/docs/component-api.html)
 abstract class Component {
@@ -24,7 +22,7 @@ abstract class Component {
 
   /// Returns the component of the specified [ref].
   ///
-  /// Returns a [Component] if it is a Dart component, otherwise returns an "Dom component" ([Element]).
+  /// Returns a [Component] if it is a Dart component, otherwise returns an "Dom component" (Dart `Element`).
   dynamic get ref => _ref;
   set ref(dynamic value) => _ref = value;
 
