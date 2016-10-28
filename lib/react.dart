@@ -177,7 +177,7 @@ abstract class Component {
   /// Calling [setState] within this function will not trigger an additional [render].
   ///
   /// See: <https://facebook.github.io/react/docs/component-specs.html#updating-componentwillreceiveprops>
-  void componentWillReceiveProps(newProps) {}
+  void componentWillReceiveProps(Map newProps) {}
 
   /// ReactJS lifecycle method that is invoked before rendering when [nextProps] or [nextState] are being received.
   ///
@@ -185,7 +185,7 @@ abstract class Component {
   /// will not require a component update.
   ///
   /// See: <https://facebook.github.io/react/docs/component-specs.html#updating-shouldcomponentupdate>
-  bool shouldComponentUpdate(nextProps, nextState) => true;
+  bool shouldComponentUpdate(Map nextProps, Map nextState) => true;
 
   /// ReactJS lifecycle method that is invoked immediately before rendering when [nextProps] or [nextState] are being
   /// received.
@@ -195,7 +195,7 @@ abstract class Component {
   /// Use this as an opportunity to perform preparation before an update occurs.
   ///
   /// See: <https://facebook.github.io/react/docs/component-specs.html#updating-componentwillupdate>
-  void componentWillUpdate(nextProps, nextState) {}
+  void componentWillUpdate(Map nextProps, Map nextState) {}
 
   /// ReactJS lifecycle method that is invoked immediately after the `Component`'s updates are flushed to the DOM.
   ///
@@ -205,7 +205,7 @@ abstract class Component {
   /// of the values of [prevProps] / [prevState].
   ///
   /// See: <https://facebook.github.io/react/docs/component-specs.html#updating-componentdidupdate>
-  void componentDidUpdate(prevProps, prevState) {}
+  void componentDidUpdate(Map prevProps, Map prevState) {}
 
   /// ReactJS lifecycle method that is invoked immediately before a `Component` is unmounted from the DOM.
   ///
