@@ -5,7 +5,7 @@
 /// A Dart library for building UI using ReactJS.
 library react;
 
-import 'dart:html';
+import 'dart:html' show Element;
 
 /// Top-level ReactJS [Component class](https://facebook.github.io/react/docs/top-level-api.html#react.component)
 /// which provides the [ReactJS Component API](https://facebook.github.io/react/docs/component-api.html)
