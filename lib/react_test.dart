@@ -5,6 +5,7 @@
 library react_test;
 
 import 'package:react/react.dart';
+import 'package:react/src/typedefs.dart';
 
 class MarkupDescription {
   final String tag;
@@ -29,7 +30,7 @@ _reactDom(String name) {
   };
 }
 
-initializeComponent(Component component, [Map props = const {}, List children, redraw, ref]) {
+initializeComponent(Component component, [Map props = const {}, List children, redraw, Ref ref]) {
   if (redraw == null) redraw = () {};
   var extendedProps = new Map.from(component.getDefaultProps())
     ..addAll(props);

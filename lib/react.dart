@@ -5,12 +5,21 @@
 /// A Dart library for building UI using ReactJS.
 library react;
 
+import 'package:react/src/typedefs.dart';
+
 /// Top-level ReactJS [Component class](https://facebook.github.io/react/docs/top-level-api.html#react.component)
 /// which provides the [ReactJS Component API](https://facebook.github.io/react/docs/component-api.html)
 abstract class Component {
   Map _props;
   Map _state = {};
-  dynamic _ref;
+
+  /// Returns a component reference.
+  ///
+  /// * [Component] if it is a Dart component.
+  /// * `Element` _(DOM node)_ if it is a React DOM component.
+  ///
+  /// See: [ref]
+  Ref _ref;
 
   /// ReactJS `Component` props.
   Map get props => _props;
@@ -20,11 +29,8 @@ abstract class Component {
   Map get state => _state;
   set state(Map value) => _state = value;
 
-  /// Returns the component of the specified [ref].
-  ///
-  /// Returns a [Component] if it is a Dart component, otherwise returns an "Dom component" (Dart `Element`).
-  dynamic get ref => _ref;
-  set ref(dynamic value) => _ref = value;
+  Ref get ref => _ref;
+  set ref(Ref value) => _ref = value;
 
   dynamic _jsRedraw;
 
@@ -51,7 +57,7 @@ abstract class Component {
   /// Bind the value of input to [state[key]].
   bind(key) => [state[key], (value) => setState({key: value})];
 
-  initComponentInternal(props, _jsRedraw, [ref, _jsThis]) {
+  initComponentInternal(props, _jsRedraw, [Ref ref, _jsThis]) {
     this._jsRedraw = _jsRedraw;
     this.ref = ref;
     this._jsThis = _jsThis;
