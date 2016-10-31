@@ -10,7 +10,28 @@ import 'package:react/src/typedefs.dart';
 /// Top-level ReactJS [Component class](https://facebook.github.io/react/docs/top-level-api.html#react.component)
 /// which provides the [ReactJS Component API](https://facebook.github.io/react/docs/component-api.html)
 abstract class Component {
+  /// ReactJS [Component] props.
+  ///
+  /// Currently private since the `@virtual` annotation within the meta package
+  /// [doesn't work for overriding fields](https://github.com/dart-lang/sdk/issues/27452).
+  ///
+  /// TODO: Make public once SDK issue / meta package allows field overriding in strong mode.
+  ///
+  /// See: [props]
+  ///
+  /// Related: [_state]
   Map _props;
+
+  /// ReactJS [Component] state.
+  ///
+  /// Currently private since the `@virtual` annotation within the meta package
+  /// [doesn't work for overriding fields](https://github.com/dart-lang/sdk/issues/27452).
+  ///
+  /// TODO: Make public once SDK issue / meta package allows field overriding in strong mode.
+  ///
+  /// See: [state]
+  ///
+  /// Related: [_props]
   Map _state = {};
 
   /// Returns a component reference.
@@ -18,14 +39,17 @@ abstract class Component {
   /// * [Component] if it is a Dart component.
   /// * `Element` _(DOM node)_ if it is a React DOM component.
   ///
+  /// Currently private since the `@virtual` annotation within the meta package
+  /// [doesn't work for overriding fields](https://github.com/dart-lang/sdk/issues/27452).
+  ///
+  /// TODO: Make public once SDK issue / meta package allows field overriding in strong mode.
+  ///
   /// See: [ref]
   Ref _ref;
 
-  /// ReactJS `Component` props.
   Map get props => _props;
   set props(Map value) => _props = value;
 
-  /// ReactJS `Component` state.
   Map get state => _state;
   set state(Map value) => _state = value;
 
