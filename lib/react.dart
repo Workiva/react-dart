@@ -10,22 +10,31 @@ import 'package:react/src/typedefs.dart';
 /// Top-level ReactJS [Component class](https://facebook.github.io/react/docs/react-component.html)
 /// which provides the [ReactJS Component API](https://facebook.github.io/react/docs/react-component.html#reference)
 abstract class Component {
-  /// Currently private since the `@virtual` annotation within the meta package
+  /// A private field that backs [props], which is exposed via getter/setter so
+  /// it can be overridden in strong mode.
+  ///
+  /// Necessary since the `@virtual` annotation within the meta package
   /// [doesn't work for overriding fields](https://github.com/dart-lang/sdk/issues/27452).
   ///
-  /// TODO: Make public once SDK issue / meta package allows field overriding in strong mode.
+  /// TODO: Switch back to a plain field once this issue is fixed.
   Map _props;
 
-  /// Currently private since the `@virtual` annotation within the meta package
+  /// A private field that backs [state], which is exposed via getter/setter so
+  /// it can be overridden in strong mode.
+  ///
+  /// Necessary since the `@virtual` annotation within the meta package
   /// [doesn't work for overriding fields](https://github.com/dart-lang/sdk/issues/27452).
   ///
-  /// TODO: Make public once SDK issue / meta package allows field overriding in strong mode.
+  /// TODO: Switch back to a plain field once this issue is fixed.
   Map _state = {};
 
-  /// Currently private since the `@virtual` annotation within the meta package
+  /// A private field that backs [ref], which is exposed via getter/setter so
+  /// it can be overridden in strong mode.
+  ///
+  /// Necessary since the `@virtual` annotation within the meta package
   /// [doesn't work for overriding fields](https://github.com/dart-lang/sdk/issues/27452).
   ///
-  /// TODO: Make public once SDK issue / meta package allows field overriding in strong mode.
+  /// TODO: Switch back to a plain field once this issue is fixed.
   Ref _ref;
 
   /// ReactJS [Component] props.
@@ -40,7 +49,7 @@ abstract class Component {
   Map get state => _state;
   set state(Map value) => _state = value;
 
-  /// Returns a component reference.
+  /// A function that returns a component reference:
   ///
   /// * [Component] if it is a Dart component.
   /// * `Element` _(DOM node)_ if it is a React DOM component.
