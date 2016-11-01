@@ -10,49 +10,40 @@ import 'package:react/src/typedefs.dart';
 /// Top-level ReactJS [Component class](https://facebook.github.io/react/docs/react-component.html)
 /// which provides the [ReactJS Component API](https://facebook.github.io/react/docs/react-component.html#reference)
 abstract class Component {
-  /// ReactJS [Component] props.
-  ///
   /// Currently private since the `@virtual` annotation within the meta package
   /// [doesn't work for overriding fields](https://github.com/dart-lang/sdk/issues/27452).
   ///
   /// TODO: Make public once SDK issue / meta package allows field overriding in strong mode.
-  ///
-  /// See: [props]
-  ///
-  /// Related: [_state]
   Map _props;
+
+  /// Currently private since the `@virtual` annotation within the meta package
+  /// [doesn't work for overriding fields](https://github.com/dart-lang/sdk/issues/27452).
+  ///
+  /// TODO: Make public once SDK issue / meta package allows field overriding in strong mode.
+  Map _state = {};
+
+  /// Currently private since the `@virtual` annotation within the meta package
+  /// [doesn't work for overriding fields](https://github.com/dart-lang/sdk/issues/27452).
+  ///
+  /// TODO: Make public once SDK issue / meta package allows field overriding in strong mode.
+  Ref _ref;
+
+  /// ReactJS [Component] props.
+  ///
+  /// Related: [state]
+  Map get props => _props;
+  set props(Map value) => _props = value;
 
   /// ReactJS [Component] state.
   ///
-  /// Currently private since the `@virtual` annotation within the meta package
-  /// [doesn't work for overriding fields](https://github.com/dart-lang/sdk/issues/27452).
-  ///
-  /// TODO: Make public once SDK issue / meta package allows field overriding in strong mode.
-  ///
-  /// See: [state]
-  ///
-  /// Related: [_props]
-  Map _state = {};
+  /// Related: [props]
+  Map get state => _state;
+  set state(Map value) => _state = value;
 
   /// Returns a component reference.
   ///
   /// * [Component] if it is a Dart component.
   /// * `Element` _(DOM node)_ if it is a React DOM component.
-  ///
-  /// Currently private since the `@virtual` annotation within the meta package
-  /// [doesn't work for overriding fields](https://github.com/dart-lang/sdk/issues/27452).
-  ///
-  /// TODO: Make public once SDK issue / meta package allows field overriding in strong mode.
-  ///
-  /// See: [ref]
-  Ref _ref;
-
-  Map get props => _props;
-  set props(Map value) => _props = value;
-
-  Map get state => _state;
-  set state(Map value) => _state = value;
-
   Ref get ref => _ref;
   set ref(Ref value) => _ref = value;
 
