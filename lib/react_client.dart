@@ -566,7 +566,7 @@ SyntheticDataTransfer syntheticDataTransferFactory(events.SyntheticDataTransfer 
     // Trying to access this property throws the error "Unexpected call to method or property access.".
     dropEffect = dt.dropEffect;
   } catch (exception) {
-    dropEffect = 'uninitialized';
+    dropEffect = 'none';
   }
 
   return new SyntheticDataTransfer(dropEffect, effectAllowed, files, types);
