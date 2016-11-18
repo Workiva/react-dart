@@ -428,7 +428,7 @@ _convertEventHandlers(Map args) {
   args.forEach((propKey, value) {
     var eventFactory = _eventPropKeyToEventFactory[propKey];
     if (eventFactory != null && value != null) {
-      args[propKey] = (events.SyntheticEvent e, [String domId, Event event]) => zone.run(() {
+      args[propKey] = (events.SyntheticEvent e, [_, __]) => zone.run(() {
         value(eventFactory(e));
       });
     }
