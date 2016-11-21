@@ -16,6 +16,7 @@ import 'package:react/react_client/react_interop.dart';
 import "package:react/react_dom.dart";
 import "package:react/react_dom_server.dart";
 import "package:react/src/react_client/synthetic_event_wrappers.dart" as events;
+import 'package:react/src/typedefs.dart';
 
 export 'package:react/react_client/react_interop.dart' show ReactElement, ReactJsComponentFactory;
 
@@ -167,7 +168,7 @@ final ReactDartInteropStatics _dartInteropStatics = (() {
       }
     };
 
-    var getRef = (name) {
+    Ref getRef = (name) {
       var ref = getProperty(jsThis.refs, name);
       if (ref == null) return null;
       if (ref is Element) return ref;

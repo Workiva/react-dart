@@ -5,14 +5,56 @@
 /// A Dart library for building UI using ReactJS.
 library react;
 
-/// Top-level ReactJS [Component class](https://facebook.github.io/react/docs/top-level-api.html#react.component)
-/// which provides the [ReactJS Component API](https://facebook.github.io/react/docs/component-api.html)
-abstract class Component {
-  /// ReactJS `Component` props.
-  Map props;
+import 'package:react/src/typedefs.dart';
 
-  /// Provides access to the underlying DOM representation of the [render]ed `Component`.
-  dynamic ref;
+/// Top-level ReactJS [Component class](https://facebook.github.io/react/docs/react-component.html)
+/// which provides the [ReactJS Component API](https://facebook.github.io/react/docs/react-component.html#reference)
+abstract class Component {
+  /// A private field that backs [props], which is exposed via getter/setter so
+  /// it can be overridden in strong mode.
+  ///
+  /// Necessary since the `@virtual` annotation within the meta package
+  /// [doesn't work for overriding fields](https://github.com/dart-lang/sdk/issues/27452).
+  ///
+  /// TODO: Switch back to a plain field once this issue is fixed.
+  Map _props;
+
+  /// A private field that backs [state], which is exposed via getter/setter so
+  /// it can be overridden in strong mode.
+  ///
+  /// Necessary since the `@virtual` annotation within the meta package
+  /// [doesn't work for overriding fields](https://github.com/dart-lang/sdk/issues/27452).
+  ///
+  /// TODO: Switch back to a plain field once this issue is fixed.
+  Map _state = {};
+
+  /// A private field that backs [ref], which is exposed via getter/setter so
+  /// it can be overridden in strong mode.
+  ///
+  /// Necessary since the `@virtual` annotation within the meta package
+  /// [doesn't work for overriding fields](https://github.com/dart-lang/sdk/issues/27452).
+  ///
+  /// TODO: Switch back to a plain field once this issue is fixed.
+  Ref _ref;
+
+  /// ReactJS [Component] props.
+  ///
+  /// Related: [state]
+  Map get props => _props;
+  set props(Map value) => _props = value;
+
+  /// ReactJS [Component] state.
+  ///
+  /// Related: [props]
+  Map get state => _state;
+  set state(Map value) => _state = value;
+
+  /// A function that returns a component reference:
+  ///
+  /// * [Component] if it is a Dart component.
+  /// * `Element` _(DOM node)_ if it is a React DOM component.
+  Ref get ref => _ref;
+  set ref(Ref value) => _ref = value;
 
   dynamic _jsRedraw;
 
@@ -32,14 +74,14 @@ abstract class Component {
   /// instance of this `Component` returned by [render].
   dynamic get jsThis => _jsThis;
 
-  /// Allows the [ReactJS `displayName` property](https://facebook.github.io/react/docs/component-specs.html#displayname)
+  /// Allows the [ReactJS `displayName` property](https://facebook.github.io/react/docs/react-component.html#displayname)
   /// to be set for debugging purposes.
   String get displayName => runtimeType.toString();
 
   /// Bind the value of input to [state[key]].
   bind(key) => [state[key], (value) => setState({key: value})];
 
-  initComponentInternal(props, _jsRedraw, [ref, _jsThis]) {
+  initComponentInternal(props, _jsRedraw, [Ref ref, _jsThis]) {
     this._jsRedraw = _jsRedraw;
     this.ref = ref;
     this._jsThis = _jsThis;
@@ -56,9 +98,6 @@ abstract class Component {
     // Call `transferComponentState` to get state also to `_prevState`
     transferComponentState();
   }
-
-  /// ReactJS `Component` state.
-  Map state = {};
 
   /// Private reference to the value of [state] from the previous render cycle.
   ///
@@ -98,7 +137,7 @@ abstract class Component {
   ///
   /// Optionally accepts a callback that gets called after the component updates.
   ///
-  /// [A.k.a "forceUpdate"](https://facebook.github.io/react/docs/component-api.html#forceupdate)
+  /// [A.k.a "forceUpdate"](https://facebook.github.io/react/docs/react-component.html#forceupdate)
   void redraw([callback()]) {
     setState({}, callback);
   }
@@ -109,7 +148,7 @@ abstract class Component {
   ///
   /// Also allows [newState] to be used as a transactional `setState` callback.
   ///
-  /// See: <https://facebook.github.io/react/docs/component-api.html#setstate>
+  /// See: <https://facebook.github.io/react/docs/react-component.html#setstate>
   void setState(dynamic newState, [callback()]) {
     if (newState is Map) {
       _nextState.addAll(newState);
@@ -128,7 +167,7 @@ abstract class Component {
   ///
   /// Optionally accepts a callback that gets called after the component updates.
   ///
-  /// See: <https://facebook.github.io/react/docs/component-api.html#replacestate>
+  /// See: <https://facebook.github.io/react/docs/react-component.html#setstate>
   void replaceState(Map newState, [callback()]) {
     Map nextState = newState == null ? {} : new Map.from(newState);
     _nextState = nextState;
@@ -143,7 +182,7 @@ abstract class Component {
   /// If you call [setState] within this method, [render] will see the updated state and will be executed only once
   /// despite the [state] value change.
   ///
-  /// See: <https://facebook.github.io/react/docs/component-specs.html#mounting-componentwillmount>
+  /// See: <https://facebook.github.io/react/docs/react-component.html#mounting-componentwillmount>
   void componentWillMount() {}
 
   /// ReactJS lifecycle method that is invoked once, only on the client _(not on the server)_, immediately after the
@@ -153,7 +192,7 @@ abstract class Component {
   ///
   /// The [componentDidMount] method of child `Component`s is invoked _before_ that of parent `Component`.
   ///
-  /// See: <https://facebook.github.io/react/docs/component-specs.html#mounting-componentdidmount>
+  /// See: <https://facebook.github.io/react/docs/react-component.html#mounting-componentdidmount>
   void componentDidMount() {}
 
   /// ReactJS lifecycle method that is invoked when a `Component` is receiving [newProps].
@@ -165,16 +204,16 @@ abstract class Component {
   ///
   /// Calling [setState] within this function will not trigger an additional [render].
   ///
-  /// See: <https://facebook.github.io/react/docs/component-specs.html#updating-componentwillreceiveprops>
-  void componentWillReceiveProps(newProps) {}
+  /// See: <https://facebook.github.io/react/docs/react-component.html#updating-componentwillreceiveprops>
+  void componentWillReceiveProps(Map newProps) {}
 
   /// ReactJS lifecycle method that is invoked before rendering when [nextProps] or [nextState] are being received.
   ///
   /// Use this as an opportunity to return false when you're certain that the transition to the new props and state
   /// will not require a component update.
   ///
-  /// See: <https://facebook.github.io/react/docs/component-specs.html#updating-shouldcomponentupdate>
-  bool shouldComponentUpdate(nextProps, nextState) => true;
+  /// See: <https://facebook.github.io/react/docs/react-component.html#updating-shouldcomponentupdate>
+  bool shouldComponentUpdate(Map nextProps, Map nextState) => true;
 
   /// ReactJS lifecycle method that is invoked immediately before rendering when [nextProps] or [nextState] are being
   /// received.
@@ -183,8 +222,8 @@ abstract class Component {
   ///
   /// Use this as an opportunity to perform preparation before an update occurs.
   ///
-  /// See: <https://facebook.github.io/react/docs/component-specs.html#updating-componentwillupdate>
-  void componentWillUpdate(nextProps, nextState) {}
+  /// See: <https://facebook.github.io/react/docs/react-component.html#updating-componentwillupdate>
+  void componentWillUpdate(Map nextProps, Map nextState) {}
 
   /// ReactJS lifecycle method that is invoked immediately after the `Component`'s updates are flushed to the DOM.
   ///
@@ -193,20 +232,20 @@ abstract class Component {
   /// Use this as an opportunity to operate on the [rootNode] (DOM) when the `Component` has been updated as a result
   /// of the values of [prevProps] / [prevState].
   ///
-  /// See: <https://facebook.github.io/react/docs/component-specs.html#updating-componentdidupdate>
-  void componentDidUpdate(prevProps, prevState) {}
+  /// See: <https://facebook.github.io/react/docs/react-component.html#updating-componentdidupdate>
+  void componentDidUpdate(Map prevProps, Map prevState) {}
 
   /// ReactJS lifecycle method that is invoked immediately before a `Component` is unmounted from the DOM.
   ///
   /// Perform any necessary cleanup in this method, such as invalidating timers or cleaning up any DOM [Element]s that
   /// were created in [componentDidMount].
   ///
-  /// See: <https://facebook.github.io/react/docs/component-specs.html#unmounting-componentwillunmount>
+  /// See: <https://facebook.github.io/react/docs/react-component.html#unmounting-componentwillunmount>
   void componentWillUnmount() {}
 
   /// Invoked once before the `Component` is mounted. The return value will be used as the initial value of [state].
   ///
-  /// See: <https://facebook.github.io/react/docs/component-specs.html#getinitialstate>
+  /// See: <https://facebook.github.io/react/docs/react-component.html#getinitialstate>
   Map getInitialState() => {};
 
   /// Invoked once and cached when [reactComponentClass] is called. Values in the mapping will be set on [props]
@@ -215,7 +254,7 @@ abstract class Component {
   /// This method is invoked before any instances are created and thus cannot rely on [props]. In addition, be aware
   /// that any complex objects returned by `getDefaultProps` will be shared across instances, not copied.
   ///
-  /// See: <https://facebook.github.io/react/docs/component-specs.html#getdefaultprops>
+  /// See: <https://facebook.github.io/react/docs/react-component.html#getdefaultprops>
   Map getDefaultProps() => {};
 
   /// __Required.__
@@ -224,13 +263,13 @@ abstract class Component {
   /// be either a virtual representation of a native DOM component (such as [DivElement]) or another composite
   /// `Component` that you've defined yourself.
   ///
-  /// See: <https://facebook.github.io/react/docs/component-specs.html#render>
+  /// See: <https://facebook.github.io/react/docs/react-component.html#render>
   dynamic render();
 }
 
 /// Typedef of a transactional [Component.setState] callback.
 ///
-/// See: <https://facebook.github.io/react/docs/component-api.html#setstate>
+/// See: <https://facebook.github.io/react/docs/react-component.html#setstate>
 typedef Map _TransactionalSetStateCallback(Map prevState, Map props);
 
 
