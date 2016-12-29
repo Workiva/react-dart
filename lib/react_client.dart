@@ -10,8 +10,9 @@ import "dart:collection";
 import "dart:html";
 
 import "package:js/js.dart";
+import 'package:js/js_util.dart' hide jsify;
 import "package:react/react.dart";
-import "package:react/react_client/js_interop_helpers.dart";
+import "package:react/react_client/js_interop_helpers.dart" show jsify;
 import 'package:react/react_client/react_interop.dart';
 import "package:react/react_dom.dart";
 import "package:react/react_dom_server.dart";
@@ -20,7 +21,7 @@ import 'package:react/src/typedefs.dart';
 
 export 'package:react/react_client/react_interop.dart' show ReactElement, ReactJsComponentFactory;
 
-final EmptyObject emptyJsMap = new EmptyObject();
+final dynamic emptyJsMap = newObject();
 
 /// Type of [children] must be child or list of children, when child is [ReactElement] or [String]
 typedef ReactElement ReactComponentFactory(Map props, [dynamic children]);

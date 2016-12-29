@@ -1,8 +1,5 @@
-/// __Deprecated: use `package:js/js_util.dart` instead.__
-///
 /// Utilities for reading/modifying dynamic keys on JavaScript objects
 /// and converting Dart [Map]s to JavaScript objects.
-@Deprecated('4.0.0')
 @JS()
 library react_client.js_interop_helpers;
 
@@ -94,15 +91,14 @@ class EmptyObject {
   external factory EmptyObject();
 }
 
-/// __Deprecated: use [js_util.jsify] instead.
-///
 /// Returns [map] converted to a JavaScript object, similar to
 /// `new JsObject.jsify` in `dart:js`.
 ///
 /// Recursively converts nested [Map]s, and wraps [Function]s with [allowInterop].
-@Deprecated('4.0.0')
-EmptyObject jsify(Map map) {
-  var jsMap = new EmptyObject();
+///
+/// TODO: deprecate and switch over to using [js_util.jsify]
+dynamic jsify(Map map) {
+  var jsMap = js_util.newObject();
 
   map.forEach((key, value) {
     if (value is Map) {
@@ -111,7 +107,7 @@ EmptyObject jsify(Map map) {
       value = allowInterop(value);
     }
 
-    setProperty(jsMap, key, value);
+    js_util.setProperty(jsMap, key, value);
   });
 
   return jsMap;
