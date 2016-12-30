@@ -1,7 +1,6 @@
 import 'dart:js';
 
-import 'package:unittest/unittest.dart';
-import 'package:unittest/html_config.dart';
+import 'package:test/test.dart';
 
 import 'package:react/react.dart' as react;
 import 'package:react/react_client.dart';
@@ -24,7 +23,6 @@ void renderWithUniqueOwnerName(ReactElement render()) {
 }
 
 void main() {
-  useHtmlConfiguration();
   setClientConfiguration();
 
   group('Key/children validation', () {

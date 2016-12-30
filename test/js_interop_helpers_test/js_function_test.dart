@@ -4,12 +4,9 @@ library js_function_test;
 import 'package:js/js.dart';
 import 'package:react/react_client/js_interop_helpers.dart';
 import 'package:react/react_client/react_interop.dart';
-import 'package:unittest/html_config.dart';
-import 'package:unittest/unittest.dart';
+import 'package:test/test.dart';
 
 void main() {
-  useHtmlConfiguration();
-
   group('group', () {
     group('getProperty', () {
       test('is function that does not throw upon initialization', () {
