@@ -4,6 +4,7 @@
 library react_client.js_interop_helpers;
 
 import "package:js/js.dart";
+import "package:js/js_util.dart" as js_util;
 
 @JS()
 external dynamic _getProperty(jsObj, String key);
@@ -25,7 +26,8 @@ class _MissingJsMemberError extends Error {
       '_MissingJsMemberError: The JS member `$name` is missing and thus '
       'cannot be used as expected. $message';
 }
-
+/// __Deprecated: use [js_util.getProperty] instead.
+///
 /// Returns the property at the given [_GetPropertyFn.key] on the
 /// specified JavaScript object [_GetPropertyFn.jsObj]
 ///
@@ -33,10 +35,11 @@ class _MissingJsMemberError extends Error {
 /// (see: https://github.com/dart-lang/sdk/issues/25053).
 ///
 /// __Defined in this package's React JS files.__
+@Deprecated('4.0.0')
 final _GetPropertyFn getProperty = (() {
   try {
     // If this throws, then the JS function isn't available.
-    _getProperty(new EmptyObject(), null);
+    _getProperty(js_util.newObject(), null);
   } catch(_) {
     throw new _MissingJsMemberError('_getProperty',
         'Be sure to include React JS files included in this package '
@@ -49,6 +52,8 @@ final _GetPropertyFn getProperty = (() {
   return _getProperty;
 })();
 
+/// __Deprecated: use [js_util.setProperty] instead.
+///
 /// Sets the property at the given [_SetPropertyFn.key] to [_SetPropertyFn.value]
 /// on the specified JavaScript object [_SetPropertyFn.jsObj]
 ///
@@ -56,10 +61,11 @@ final _GetPropertyFn getProperty = (() {
 /// (see: https://github.com/dart-lang/sdk/issues/25053).
 ///
 /// __Defined in this package's React JS files.__
+@Deprecated('4.0.0')
 final _SetPropertyFn setProperty = (() {
   try {
     // If this throws, then the JS function isn't available.
-    _setProperty(new EmptyObject(), null, null);
+    _setProperty(js_util.newObject(), null, null);
   } catch(_) {
     throw new _MissingJsMemberError('_setProperty',
         'Be sure to include React JS files included in this package '
@@ -73,11 +79,14 @@ final _SetPropertyFn setProperty = (() {
 })();
 
 
+/// __Deprecated: use [js_util.newObject] instead.
+///
 /// An interop class for an anonymous JavaScript object, with no properties.
 ///
 /// For use when dealing with dynamic properties via [getProperty]/[setProperty].
 @JS()
 @anonymous
+@Deprecated('4.0.0')
 class EmptyObject {
   external factory EmptyObject();
 }
@@ -86,8 +95,10 @@ class EmptyObject {
 /// `new JsObject.jsify` in `dart:js`.
 ///
 /// Recursively converts nested [Map]s, and wraps [Function]s with [allowInterop].
-EmptyObject jsify(Map map) {
-  var jsMap = new EmptyObject();
+///
+/// TODO: deprecate and switch over to using [js_util.jsify]
+dynamic jsify(Map map) {
+  var jsMap = js_util.newObject();
 
   map.forEach((key, value) {
     if (value is Map) {
@@ -96,7 +107,7 @@ EmptyObject jsify(Map map) {
       value = allowInterop(value);
     }
 
-    setProperty(jsMap, key, value);
+    js_util.setProperty(jsMap, key, value);
   });
 
   return jsMap;

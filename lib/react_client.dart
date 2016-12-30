@@ -10,8 +10,9 @@ import "dart:collection";
 import "dart:html";
 
 import "package:js/js.dart";
+import 'package:js/js_util.dart' hide jsify;
 import "package:react/react.dart";
-import "package:react/react_client/js_interop_helpers.dart";
+import "package:react/react_client/js_interop_helpers.dart" show jsify, EmptyObject;
 import 'package:react/react_client/react_interop.dart';
 import "package:react/react_dom.dart";
 import "package:react/react_dom_server.dart";
@@ -20,6 +21,7 @@ import 'package:react/src/typedefs.dart';
 
 export 'package:react/react_client/react_interop.dart' show ReactElement, ReactJsComponentFactory;
 
+@Deprecated('4.0.0')
 final EmptyObject emptyJsMap = new EmptyObject();
 
 /// Type of [children] must be child or list of children, when child is [ReactElement] or [String]
@@ -156,6 +158,8 @@ class ReactDartComponentFactoryProxy<TComponent extends Component> extends React
   }
 }
 
+final _emptyJsMap = newObject();
+
 /// The static methods that proxy JS component lifecycle methods to Dart components.
 final ReactDartInteropStatics _dartInteropStatics = (() {
   var zone = Zone.current;
@@ -164,7 +168,7 @@ final ReactDartInteropStatics _dartInteropStatics = (() {
   void initComponent(ReactComponent jsThis, ReactDartComponentInternal internal, ComponentStatics componentStatics) => zone.run(() {
     var redraw = () {
       if (internal.isMounted) {
-        jsThis.setState(emptyJsMap);
+        jsThis.setState(_emptyJsMap);
       }
     };
 
