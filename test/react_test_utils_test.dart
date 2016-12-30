@@ -50,8 +50,6 @@ void main() {
 
       expect(props['className'], 'test');
       expect(props['id'], 'createRendererTest');
-
-      print(props['id']);
     });
 
     test('without context', () {
