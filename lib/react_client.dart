@@ -320,6 +320,39 @@ ReactComponentFactory _registerComponent(ComponentFactory componentFactory, [Ite
   return new ReactDartComponentFactoryProxy(reactComponentClass);
 }
 
+/// Creates ReactJS [ReactElement] instances for components defined in the JS.
+class ReactJsComponentFactoryProxy extends ReactComponentFactoryProxy {
+  /// The JS class used by this factory.
+  @override
+  final ReactClass type;
+
+  /// The JS component factory used by this factory to build [ReactElement]s.
+  final Function factory;
+
+  ReactJsComponentFactoryProxy(ReactClass type) :
+      this.type = type,
+      this.factory = React.createFactory(type);
+
+  @override
+  ReactElement call(Map props, [dynamic children]) {
+    return factory(jsify(props), listifyChildren(children));
+  }
+
+  @override
+  dynamic noSuchMethod(Invocation invocation) {
+    if (invocation.memberName == #call && invocation.isMethod) {
+      Map props = invocation.positionalArguments[0];
+      List children = listifyChildren(invocation.positionalArguments.sublist(1));
+
+      markChildrenValidated(children);
+
+      return factory(jsify(props), children);
+    }
+
+    return super.noSuchMethod(invocation);
+  }
+}
+
 /// Creates ReactJS [ReactElement] instances for DOM components.
 class ReactDomComponentFactoryProxy extends ReactComponentFactoryProxy {
   /// The name of the proxied DOM component.
