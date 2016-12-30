@@ -10,9 +10,9 @@ import "dart:collection";
 import "dart:html";
 
 import "package:js/js.dart";
-import 'package:js/js_util.dart' hide jsify;
+import 'package:js/js_util.dart';
 import "package:react/react.dart";
-import "package:react/react_client/js_interop_helpers.dart" show jsify, EmptyObject;
+import "package:react/react_client/js_interop_helpers.dart" hide getProperty, setProperty, jsify;
 import 'package:react/react_client/react_interop.dart';
 import "package:react/react_dom.dart";
 import "package:react/react_dom_server.dart";
@@ -335,7 +335,7 @@ class ReactJsComponentFactoryProxy extends ReactComponentFactoryProxy {
 
   @override
   ReactElement call(Map props, [dynamic children]) {
-    return factory(jsify(props), listifyChildren(children));
+    return factory(jsifyAndAllowInterop(props), listifyChildren(children));
   }
 
   @override
@@ -346,7 +346,7 @@ class ReactJsComponentFactoryProxy extends ReactComponentFactoryProxy {
 
       markChildrenValidated(children);
 
-      return factory(jsify(props), children);
+      return factory(jsifyAndAllowInterop(props), children);
     }
 
     return super.noSuchMethod(invocation);
@@ -373,7 +373,7 @@ class ReactDomComponentFactoryProxy extends ReactComponentFactoryProxy {
   @override
   ReactElement call(Map props, [dynamic children]) {
     convertProps(props);
-    return factory(jsify(props), listifyChildren(children));
+    return factory(jsifyAndAllowInterop(props), listifyChildren(children));
   }
 
   @override
@@ -385,7 +385,7 @@ class ReactDomComponentFactoryProxy extends ReactComponentFactoryProxy {
       convertProps(props);
       markChildrenValidated(children);
 
-      return factory(jsify(props), children);
+      return factory(jsifyAndAllowInterop(props), children);
     }
 
     return super.noSuchMethod(invocation);
