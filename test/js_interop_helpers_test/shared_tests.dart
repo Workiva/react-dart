@@ -1,13 +1,23 @@
 @JS()
 library js_function_test;
 
+import 'dart:html';
+
 import 'package:js/js.dart';
 import 'package:react/react_client/js_interop_helpers.dart';
 import 'package:react/react_client/react_interop.dart';
 import 'package:test/test.dart';
 
-void main() {
-  group('group', () {
+void verifyJsFileLoaded(String filename) {
+  var isLoaded = document.getElementsByTagName('script').any((script) {
+    return Uri.parse((script as ScriptElement).src).pathSegments.last == filename;
+  });
+
+  if (!isLoaded) throw new Exception('$filename is not loaded');
+}
+
+void sharedJsFunctionTests() {
+  group('JS functions:', () {
     group('getProperty', () {
       test('is function that does not throw upon initialization', () {
         expect(() => getProperty, const isInstanceOf<Function>());

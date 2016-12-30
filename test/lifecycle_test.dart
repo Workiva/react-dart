@@ -1,3 +1,4 @@
+@TestOn('browser')
 @JS()
 library lifecycle_test;
 

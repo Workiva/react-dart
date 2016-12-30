@@ -1,3 +1,4 @@
+@TestOn('browser')
 import 'dart:js';
 
 import 'package:test/test.dart';

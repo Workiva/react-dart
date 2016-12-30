@@ -1,3 +1,4 @@
+@TestOn('browser')
 @JS()
 library react_test_utils_test;
 
