@@ -484,17 +484,68 @@ _convertEventHandlers(Map args) {
   args.forEach((propKey, value) {
     var eventFactory = _eventPropKeyToEventFactory[propKey];
     if (eventFactory != null && value != null) {
-      args[propKey] = (events.SyntheticEvent e, [_, __]) => zone.run(() {
-        value(eventFactory(e));
+      args[propKey] = (events.SyntheticEvent jsEvent, [_, __]) => zone.run(() {
+        value(eventFactory(jsEvent));
       });
     }
   });
 }
 
+typedef SyntheticEvent _SyntheticEventFactory(jsEvent);
+typedef _JsEventHandler(events.SyntheticEvent jsEvent, [_, __]);
+
+/// Wraps an event [handler] function in the same manner that DOM event handlers are normally wrapped,
+/// adding automatic conversion of JS synthetic events to their Dart [SyntheticEvent] counterparts.
+///
+/// Useful when specifying custom event handlers on JS components that are passed synthetic events.
+///
+/// [type] must be either be:
+///
+/// - a [Function] that converts the JS synthetic event into a [SyntheticEvent] (e.g., [syntheticMouseEventFactory])
+/// - the name of a DOM event prop to match the wrapping of, for convenience (e.g., 'onClick')
+///
+/// Examples:
+///
+///     _handleClick(react.SyntheticMouseEvent event) {
+///       // ...
+///     }
+///
+///     render() {
+///       return MyJsComponent({
+///         'onMyButtonClick': wrapEventHandler(_handleClick, 'onClick')
+///       });
+///
+///       return MyJsComponent({
+///         'onMyButtonClick': wrapEventHandler(_handleClick, syntheticMouseEventFactory)
+///       })
+///     }
+///
+_JsEventHandler wrapEventHandler(handler(event), dynamic type) {
+  _SyntheticEventFactory eventFactory;
+
+  if (type is String) {
+    eventFactory = _eventPropKeyToEventFactory[type];
+  } else if (type is _SyntheticEventFactory) {
+    eventFactory = type;
+  }
+
+  if (eventFactory == null) {
+    throw new ArgumentError.value(type, 'type',
+        'must be a function that converts the JS synthetic event, or the name of a DOM event prop');
+  }
+
+  final zone = Zone.current;
+  void wrappedHandler(events.SyntheticEvent jsEvent, [_, __]) => zone.run(() {
+    handler(eventFactory(jsEvent));
+  });
+
+  return wrappedHandler;
+}
+
 /// A mapping from event prop keys to their respective event factories.
 ///
 /// Used in [_convertEventHandlers] for efficient event handler conversion.
-const Map<String, Function> _eventPropKeyToEventFactory = const <String, Function>{
+const Map<String, _SyntheticEventFactory> _eventPropKeyToEventFactory = const <String, _SyntheticEventFactory>{
   // SyntheticClipboardEvent
   'onCopy': syntheticClipboardEventFactory,
   'onCut': syntheticClipboardEventFactory,
