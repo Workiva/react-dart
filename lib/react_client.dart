@@ -337,9 +337,15 @@ class ReactJsComponentFactoryProxy extends ReactComponentFactoryProxy {
   /// Disable for more custom handling of these props.
   final bool convertDomProps;
 
-  ReactJsComponentFactoryProxy(ReactClass type, {bool this.convertDomProps: true}) :
-      this.type = type,
-      this.factory = React.createFactory(type);
+  ReactJsComponentFactoryProxy(ReactClass jsClass, {bool this.convertDomProps: true}) :
+      this.type = jsClass,
+      this.factory = React.createFactory(jsClass) {
+    if (jsClass == null) {
+      throw new ArgumentError('`jsClass` must not be null. '
+          'Ensure that the JS component class you\'re referencing is available and being accessed correctly.'
+      );
+    }
+  }
 
   @override
   ReactElement call(Map props, [dynamic children]) {
