@@ -1,8 +1,10 @@
+@JS()
 @TestOn('browser')
+library js_factory_test;
+
 import 'package:js/js.dart';
 import 'package:test/test.dart';
 
-import 'package:react/react.dart' as react;
 import 'package:react/react_client.dart';
 import 'package:react/react_client/react_interop.dart';
 
@@ -12,17 +14,20 @@ main() {
   setClientConfiguration();
 
   group('ReactJsComponentFactoryProxy', () {
-    test('has a type corresponding to the backing JS class', () {
-      expect(jsFactoryProxy.type, equals(jsClass));
+    group('- common factory behavior -', () {
+      commonFactoryTests(JsFoo);
     });
 
-    group('- common factory behavior -', () {
-      commonFactoryTests(jsFactoryProxy);
+    group('- dom event handler wrapping -', () {
+      domEventHandlerWrappingTests(JsFoo);
+    });
+
+    test('has a type corresponding to the backing JS class', () {
+      expect(JsFoo.type, equals(_JsFoo));
     });
   });
 }
 
-final jsClass = React.createClass(new ReactClassConfig(
-    render: allowInterop(() => react.div({}))
-));
-final jsFactoryProxy = new ReactJsComponentFactoryProxy(jsClass);
+@JS()
+external ReactClass get _JsFoo;
+final JsFoo = new ReactJsComponentFactoryProxy(_JsFoo);
