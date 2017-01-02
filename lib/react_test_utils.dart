@@ -6,8 +6,9 @@
 library react.test_utils;
 
 import 'package:js/js.dart';
+import 'package:js/js_util.dart' hide jsify;
 import 'package:react/react_client.dart';
-import 'package:react/react_client/js_interop_helpers.dart';
+import 'package:react/react_client/js_interop_helpers.dart' show jsify;
 import 'package:react/react_client/react_interop.dart';
 import 'package:react/src/react_test_utils/simulate_wrappers.dart' as simulate_wrappers;
 
