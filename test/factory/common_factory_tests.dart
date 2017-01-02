@@ -4,11 +4,12 @@ import 'package:js/js_util.dart';
 import 'package:test/test.dart';
 
 import 'package:react/react.dart' as react;
+import 'package:react/react_dom.dart' as react_dom;
 import 'package:react/react_client.dart';
-import 'package:react/react_test_utils.dart' as react_test_utils;
+import 'package:react/react_test_utils.dart' as rtu;
 
 void commonFactoryTests(Function factory) {
-  childKeyWarningTests(factory);
+  _childKeyWarningTests(factory);
 
   test('renders an instance with the corresponding `type`', () {
     var instance = factory({});
@@ -41,7 +42,48 @@ void commonFactoryTests(Function factory) {
   });
 }
 
-void childKeyWarningTests(Function factory) {
+void domEventHandlerWrappingTests(Function factory) {
+  setUpAll(() {
+    var called = false;
+
+    var renderedInstance = rtu.renderIntoDocument(factory({
+      'onClick': (_) {
+        called = true;
+      }
+    }));
+
+    rtu.Simulate.click(react_dom.findDOMNode(renderedInstance));
+
+    expect(called, isTrue,
+        reason: 'this set of tests assumes that the factory '
+            'passes the click handler to the rendered DOM node'
+    );
+  });
+
+  test('wraps the handler with a function that converts the synthetic event', () {
+    var actualEvent;
+
+    var renderedInstance = rtu.renderIntoDocument(factory({
+      'onClick': (event) {
+        actualEvent = event;
+      }
+    }));
+
+    rtu.Simulate.click(react_dom.findDOMNode(renderedInstance));
+
+    expect(actualEvent, const isInstanceOf<react.SyntheticEvent>());
+  });
+
+  test('doesn\'t wrap the handler if it is null', () {
+    var renderedInstance = rtu.renderIntoDocument(factory({
+      'onClick': null
+    }));
+
+    expect(() => rtu.Simulate.click(react_dom.findDOMNode(renderedInstance)), returnsNormally);
+  });
+}
+
+void _childKeyWarningTests(Function factory) {
   group('key/children validation', () {
     bool consoleErrorCalled;
     var consoleErrorMessage;
@@ -112,7 +154,7 @@ void _renderWithUniqueOwnerName(ReactElement render()) {
   factory.reactClass.displayName = 'OwnerHelperComponent_$_nextFactoryId';
   _nextFactoryId++;
 
-  react_test_utils.renderIntoDocument(
+  rtu.renderIntoDocument(
       factory({'render': render})
   );
 }
