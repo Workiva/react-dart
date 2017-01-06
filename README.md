@@ -208,7 +208,7 @@ class MyComponent extends Component {
 Here is an example of how to use React TestUtils within a Dart test.
 
 ```dart
-import 'package:unittest/unittest.dart';
+import 'package:test/test.dart';
 import 'package:react/react.dart' as react;
 import 'package:react/react_client.dart' as react_client;
 import 'package:react/react_dom.dart' as react_dom;
