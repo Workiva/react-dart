@@ -9,7 +9,6 @@ import 'dart:typed_data';
 
 import 'package:react/react.dart';
 import 'package:react/react_dom_server.dart';
-import 'package:quiver/iterables.dart';
 
 // ReactJS constants needed to create correct checksum
 String _SEPARATOR = '.';
@@ -96,15 +95,18 @@ ReactComponentFactory _reactDom(String name) {
       // If it's not a self-closing tag, add children
       if (!_selfClosingElementTags.contains(name)) {
         if (children is Iterable) {
-          enumerate(children.where((child) => child != null)).forEach((value) {
-            num i = value.index;
-            var component = value.value;
+          var i = 0;
+          for (var component in children) {
+            if (component == null) continue;
+
             if (component is String) {
               result.write(span({}, component)(thisId, i));
             } else {
               result.write(component(thisId, i));
             }
-          });
+
+            i++;
+          }
         } else if (children != null) {
           if (children is String) {
             result.write(_escapeTextForBrowser(children));
