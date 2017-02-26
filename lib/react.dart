@@ -142,9 +142,9 @@ abstract class Component {
     setState({}, callback);
   }
 
-  /// Set [_nextState] to provided [newState] value and force a re-render.
+  /// Triggers a rerender with new state obtained by shallow-merging [newState] into the current [state].
   ///
-  /// Optionally accepts a callback that gets called after the component updates.
+  /// Optionally accepts a [callback] that gets called after the component updates.
   ///
   /// Also allows [newState] to be used as a transactional `setState` callback.
   ///
