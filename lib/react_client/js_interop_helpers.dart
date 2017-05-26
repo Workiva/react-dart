@@ -90,13 +90,16 @@ EmptyObject jsify(Map map) {
   var jsMap = new EmptyObject();
 
   map.forEach((key, value) {
+    var jsValue;
     if (value is Map) {
-      value = jsify(value);
+      jsValue = jsify(value);
     } else if (value is Function) {
-      value = allowInterop(value);
+      jsValue = allowInterop(value);
+    } else {
+      jsValue = value;
     }
 
-    setProperty(jsMap, key, value);
+    setProperty(jsMap, key, jsValue);
   });
 
   return jsMap;
