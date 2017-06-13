@@ -197,7 +197,7 @@ final ReactDartInteropStatics _dartInteropStatics = (() {
     internal.component.componentDidMount();
   });
 
-  _getNextProps(Component component, ReactDartComponentInternal nextInternal) {
+  Map _getNextProps(Component component, ReactDartComponentInternal nextInternal) {
     var newProps = nextInternal.props;
     return newProps != null ? new Map.from(newProps) : {};
   }
@@ -206,7 +206,7 @@ final ReactDartInteropStatics _dartInteropStatics = (() {
   /// 2. Update [Component.props] using the value stored to [Component.nextProps]
   ///    in `componentWillReceiveProps`.
   /// 3. Update [Component.state] by calling [Component.transferComponentState]
-  _afterPropsChange(Component component, ReactDartComponentInternal nextInternal) {
+  void _afterPropsChange(Component component, ReactDartComponentInternal nextInternal) {
     // [1]
     nextInternal.component = component;
 
@@ -215,6 +215,10 @@ final ReactDartInteropStatics _dartInteropStatics = (() {
 
     // [3]
     component.transferComponentState();
+  }
+
+  void _clearPrevState(Component component) {
+    component.prevState = null;
   }
 
   void _callSetStateCallbacks(Component component) {
@@ -249,6 +253,8 @@ final ReactDartInteropStatics _dartInteropStatics = (() {
       // If component should not update, update props / transfer state because componentWillUpdate will not be called.
       _afterPropsChange(component, nextInternal);
       _callSetStateCallbacks(component);
+      // Clear out prevState after it's done being used so it's not retained
+      _clearPrevState(component);
       return false;
   }
   });
@@ -268,6 +274,8 @@ final ReactDartInteropStatics _dartInteropStatics = (() {
     Component component = internal.component;
     component.componentDidUpdate(prevInternalProps, component.prevState);
     _callSetStateCallbacks(component);
+    // Clear out prevState after it's done being used so it's not retained
+    _clearPrevState(component);
   });
 
   /// Wrapper for [Component.componentWillUnmount].

@@ -99,18 +99,18 @@ abstract class Component {
     transferComponentState();
   }
 
-  /// Private reference to the value of [state] from the previous render cycle.
-  ///
-  /// Useful for ReactJS lifecycle methods [shouldComponentUpdate], [componentWillUpdate] and [componentDidUpdate].
-  Map _prevState = null;
-
   /// Private reference to the value of [state] for the upcoming render cycle.
   ///
   /// Useful for ReactJS lifecycle methods [shouldComponentUpdate], [componentWillUpdate] and [componentDidUpdate].
   Map _nextState = null;
 
-  /// Public getter for [_prevState].
-  Map get prevState => _prevState;
+  /// Reference to the value of [state] from the previous render cycle, used internally for proxying
+  /// the ReactJS lifecycle method and [componentDidUpdate].
+  ///
+  /// Not available after [componentDidUpdate] is called.
+  ///
+  /// __DO NOT set__ from anywhere outside react-dart lifecycle internals.
+  Map prevState;
 
   /// Public getter for [_nextState].
   ///
@@ -119,14 +119,14 @@ abstract class Component {
 
   /// Reference to the value of [props] for the upcoming render cycle.
   ///
-  /// Useful for ReactJS lifecycle methods [shouldComponentUpdate], [componentWillReceiveProps], and [componentWillUpdate].
+  /// Used internally for proxying ReactJS lifecycle methods [shouldComponentUpdate], [componentWillReceiveProps], and [componentWillUpdate].
+  ///
+  /// __DO NOT set__ from anywhere outside react-dart lifecycle internals.
   Map nextProps;
 
-  /// Transfers `Component` [_nextState] to [state], and [state] to [_prevState].
-  ///
-  /// This is the only way to set the value of [_prevState].
+  /// Transfers `Component` [_nextState] to [state], and [state] to [prevState].
   void transferComponentState() {
-    _prevState = state;
+    prevState = state;
     if (_nextState != null) {
       state = _nextState;
     }
