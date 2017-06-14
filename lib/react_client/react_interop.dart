@@ -113,7 +113,7 @@ class ReactElementStore {
 @JS()
 @anonymous
 class ReactElement {
-  external ReactElementStore get _store;
+  external ReactElementStore get _store; // ignore: unused_element
 
   /// The type of this element.
   ///
