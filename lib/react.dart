@@ -531,7 +531,7 @@ class SyntheticWheelEvent extends SyntheticEvent {
 }
 
 /// Registers [componentFactory] on both client and server.
-var registerComponent = (componentFactory, [skipMethods]) {
+Function registerComponent = (componentFactory, [skipMethods]) {
   throw new Exception('setClientConfiguration must be called before registerComponent.');
 };
 
