@@ -15,8 +15,8 @@ class _ChildComponent extends react.Component {
     react.span({}, "Child element with value ${somevalue}");
 }
 
-var ParrentComponent = react.registerComponent(() => new _ParrentComponent());
-class _ParrentComponent extends react.Component {
+var ParentComponent = react.registerComponent(() => new _ParentComponent());
+class _ParentComponent extends react.Component {
   // String refs
   showInputValue(_) {
     var input = react_dom.findDOMNode(ref('inputRef')) as InputElement;
@@ -68,6 +68,6 @@ class _ParrentComponent extends react.Component {
 var mountedNode = querySelector('#content');
 void main() {
   setClientConfiguration();
-  var component = ParrentComponent({});
+  var component = ParentComponent({});
   react_dom.render(component, mountedNode);
 }
