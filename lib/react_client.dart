@@ -38,10 +38,22 @@ abstract class ReactComponentFactoryProxy implements Function {
   get type;
 
   /// Returns a new rendered component instance with the specified [props] and [children].
-  ReactElement call(Map props, [dynamic children]);
+  ///
+  /// Necessary to work around DDC `dart.dcall` issues in <https://github.com/dart-lang/sdk/issues/29904>,
+  /// since invoking the function directly doesn't work.
+  ReactElement build(Map props, [List childrenArgs]);
 
-  /// Used to implement a variadic version of [call], in which children may be specified as additional arguments.
-  dynamic noSuchMethod(Invocation invocation);
+  @override
+  dynamic noSuchMethod(Invocation invocation) {
+    if (invocation.memberName == #call && invocation.isMethod) {
+      Map props = invocation.positionalArguments[0];
+      List children = invocation.positionalArguments.sublist(1);
+
+      return build(props, children);
+    }
+
+    return super.noSuchMethod(invocation);
+  }
 }
 
 /// Prepares [children] to be passed to the ReactJS [React.createElement] and
@@ -82,29 +94,20 @@ class ReactDartComponentFactoryProxy<TComponent extends Component> extends React
 
   ReactClass get type => reactClass;
 
-  ReactElement call(Map props, [dynamic children]) {
-    children = listifyChildren(children);
+  /// Returns a new rendered component instance with the specified [props] and [children].
+  ///
+  /// We need a concrete implementation of this, as opposed to it just being handled by [noSuchMethod],
+  /// in order to work around DDC issue <https://github.com/dart-lang/sdk/issues/29917>.
+  ReactElement call(Map props, [dynamic children]) => build(props, [children]);
+
+  ReactElement build(Map props, [List childrenArgs = const []]) {
+    var children = _convertArgsToChildren(childrenArgs);
+    listifyChildren(children);
 
     return reactComponentFactory(
       generateExtendedJsProps(props, children, defaultProps: defaultProps),
       children
     );
-  }
-
-  dynamic noSuchMethod(Invocation invocation) {
-    if (invocation.memberName == #call && invocation.isMethod) {
-      Map props = invocation.positionalArguments[0];
-      List children = listifyChildren(invocation.positionalArguments.sublist(1));
-
-      markChildrenValidated(children);
-
-      return reactComponentFactory(
-        generateExtendedJsProps(props, children, defaultProps: defaultProps),
-        children
-      );
-    }
-
-    return super.noSuchMethod(invocation);
   }
 
   /// Returns a JavaScript version of the specified [props], preprocessed for consumption by ReactJS and prepared for
@@ -154,6 +157,24 @@ class ReactDartComponentFactoryProxy<TComponent extends Component> extends React
     }
 
     return interopProps;
+  }
+}
+
+/// Converts a list of variadic children arguments to children that should be passed to ReactJS.
+///
+/// Returns:
+///
+/// - `null` if there are no args
+/// - the single child if only one was specified
+/// - otherwise, the same list of args, will all top-level children validated
+dynamic _convertArgsToChildren(List childrenArgs) {
+  if (childrenArgs.isEmpty) {
+    return null;
+  } else if (childrenArgs.length == 1) {
+    return childrenArgs.single;
+  } else {
+    markChildrenValidated(childrenArgs);
+    return childrenArgs;
   }
 }
 
@@ -305,7 +326,7 @@ final ReactDartInteropStatics _dartInteropStatics = (() {
 
 /// Returns a new [ReactComponentFactory] which produces a new JS
 /// [`ReactClass` component class](https://facebook.github.io/react/docs/top-level-api.html#react.createclass).
-ReactComponentFactory _registerComponent(ComponentFactory componentFactory, [Iterable<String> skipMethods = const []]) {
+ReactDartComponentFactoryProxy _registerComponent(ComponentFactory componentFactory, [Iterable<String> skipMethods = const []]) {
   var componentStatics = new ComponentStatics(componentFactory);
 
   /// Create the JS [`ReactClass` component class](https://facebook.github.io/react/docs/top-level-api.html#react.createclass)
@@ -340,25 +361,21 @@ class ReactDomComponentFactoryProxy extends ReactComponentFactoryProxy {
   @override
   String get type => name;
 
+
+  /// Returns a new rendered component instance with the specified [props] and [children].
+  ///
+  /// We need a concrete implementation of this, as opposed to it just being handled by [noSuchMethod],
+  /// in order to work around DDC issue <https://github.com/dart-lang/sdk/issues/29917>.
+  ReactElement call(Map props, [dynamic children]) => build(props, [children]);
+
   @override
-  ReactElement call(Map props, [dynamic children]) {
+  ReactElement build(Map props, [List childrenArgs = const []]) {
+    var children = _convertArgsToChildren(childrenArgs);
+    listifyChildren(children);
+
     convertProps(props);
-    return factory(jsify(props), listifyChildren(children));
-  }
 
-  @override
-  dynamic noSuchMethod(Invocation invocation) {
-    if (invocation.memberName == #call && invocation.isMethod) {
-      Map props = invocation.positionalArguments[0];
-      List children = listifyChildren(invocation.positionalArguments.sublist(1));
-
-      convertProps(props);
-      markChildrenValidated(children);
-
-      return factory(jsify(props), children);
-    }
-
-    return super.noSuchMethod(invocation);
+    return factory(jsify(props), children);
   }
 
   /// Prepares the bound values, event handlers, and style props for consumption by ReactJS DOM components.
