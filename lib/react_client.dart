@@ -43,6 +43,12 @@ abstract class ReactComponentFactoryProxy implements Function {
   /// since invoking the function directly doesn't work.
   ReactElement build(Map props, [List childrenArgs]);
 
+  /// Returns a new rendered component instance with the specified [props] and [children].
+  ///
+  /// We need a concrete implementation of this, as opposed to it just being handled by [noSuchMethod],
+  /// in order to work around DDC issue <https://github.com/dart-lang/sdk/issues/29917>.
+  ReactElement call(Map props, [dynamic children]) => build(props, [children]);
+
   @override
   dynamic noSuchMethod(Invocation invocation) {
     if (invocation.memberName == #call && invocation.isMethod) {
@@ -93,12 +99,6 @@ class ReactDartComponentFactoryProxy<TComponent extends Component> extends React
       this.defaultProps = reactClass.dartDefaultProps;
 
   ReactClass get type => reactClass;
-
-  /// Returns a new rendered component instance with the specified [props] and [children].
-  ///
-  /// We need a concrete implementation of this, as opposed to it just being handled by [noSuchMethod],
-  /// in order to work around DDC issue <https://github.com/dart-lang/sdk/issues/29917>.
-  ReactElement call(Map props, [dynamic children]) => build(props, [children]);
 
   ReactElement build(Map props, [List childrenArgs = const []]) {
     var children = _convertArgsToChildren(childrenArgs);
@@ -360,13 +360,6 @@ class ReactDomComponentFactoryProxy extends ReactComponentFactoryProxy {
 
   @override
   String get type => name;
-
-
-  /// Returns a new rendered component instance with the specified [props] and [children].
-  ///
-  /// We need a concrete implementation of this, as opposed to it just being handled by [noSuchMethod],
-  /// in order to work around DDC issue <https://github.com/dart-lang/sdk/issues/29917>.
-  ReactElement call(Map props, [dynamic children]) => build(props, [children]);
 
   @override
   ReactElement build(Map props, [List childrenArgs = const []]) {
