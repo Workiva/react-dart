@@ -8,6 +8,7 @@ library react_client;
 import "dart:async";
 import "dart:collection";
 import "dart:html";
+import 'dart:js';
 
 import "package:js/js.dart";
 import "package:react/react.dart";
@@ -642,5 +643,8 @@ void setClientConfiguration() {
 
   setReactConfiguration(_reactDom, _registerComponent);
   setReactDOMConfiguration(ReactDom.render, ReactDom.unmountComponentAtNode, _findDomNode);
-  setReactDOMServerConfiguration(ReactDomServer.renderToString, ReactDomServer.renderToStaticMarkup);
+  // Accessing ReactDomServer.renderToString when it's not available breaks in DDC.
+  if (context['ReactDOMServer'] != null) {
+    setReactDOMServerConfiguration(ReactDomServer.renderToString, ReactDomServer.renderToStaticMarkup);
+  }
 }
