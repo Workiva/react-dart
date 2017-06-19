@@ -102,7 +102,7 @@ class ReactDartComponentFactoryProxy<TComponent extends Component> extends React
 
   ReactElement build(Map props, [List childrenArgs = const []]) {
     var children = _convertArgsToChildren(childrenArgs);
-    listifyChildren(children);
+    children = listifyChildren(children);
 
     return reactComponentFactory(
       generateExtendedJsProps(props, children, defaultProps: defaultProps),
@@ -364,7 +364,7 @@ class ReactDomComponentFactoryProxy extends ReactComponentFactoryProxy {
   @override
   ReactElement build(Map props, [List childrenArgs = const []]) {
     var children = _convertArgsToChildren(childrenArgs);
-    listifyChildren(children);
+    children = listifyChildren(children);
 
     convertProps(props);
 
