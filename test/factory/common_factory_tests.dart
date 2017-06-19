@@ -1,12 +1,12 @@
 import 'dart:js';
 
-import 'package:js/js_util.dart';
 import 'package:test/test.dart';
 
-import 'package:react/react.dart' as react;
-import 'package:react/react_dom.dart' as react_dom;
 import 'package:react/react_client.dart';
+import 'package:react/react_dom.dart' as react_dom;
 import 'package:react/react_test_utils.dart' as rtu;
+import 'package:react/react.dart' as react;
+import "package:react/react_client/js_interop_helpers.dart";
 
 void commonFactoryTests(Function factory) {
   _childKeyWarningTests(factory);
@@ -38,6 +38,11 @@ void commonFactoryTests(Function factory) {
     test('a List', () {
       var instance = factory({}, ['one', 'two',]);
       expect(getJsChildren(instance), equals(['one', 'two']));
+    });
+
+    test('an empty List', () {
+      var instance = factory({}, []);
+      expect(getJsChildren(instance), equals([]));
     });
   });
 }
@@ -104,6 +109,17 @@ void _childKeyWarningTests(Function factory) {
 
     tearDown(() {
       context['console']['error'] = originalConsoleError;
+    });
+
+    test('warns when a single child is passed as a list', () {
+      _renderWithUniqueOwnerName(() =>
+          factory({}, [
+            react.span({})
+          ])
+      );
+
+      expect(consoleErrorCalled, isTrue, reason: 'should have outputted a warning');
+      expect(consoleErrorMessage, contains('Each child in an array or iterator should have a unique "key" prop.'));
     });
 
     test('warns when multiple children are passed as a list', () {
