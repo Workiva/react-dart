@@ -130,7 +130,7 @@ class _ListComponent extends react.Component {
   }
 
   dynamic render() {
-    var items = ["\\", "&",">","<","\"", "'", "/"];
+    List<dynamic> items = ["\\", "&",">","<","\"", "'", "/"];
     for (var item in state['items']) {
       items.add(react.li({"key": item}, "$item"));
     }
