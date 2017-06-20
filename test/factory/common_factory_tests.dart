@@ -44,6 +44,16 @@ void commonFactoryTests(Function factory) {
       var instance = factory({}, []);
       expect(getJsChildren(instance), equals([]));
     });
+
+    test('an Iterable', () {
+      var instance = factory({}, new Iterable.generate(3, (int i) => '$i'));
+      expect(getJsChildren(instance), equals(['0', '1', '2']));
+    });
+
+    test('an empty Iterable', () {
+      var instance = factory({}, new Iterable.empty());
+      expect(getJsChildren(instance), equals([]));
+    });
   });
 }
 
