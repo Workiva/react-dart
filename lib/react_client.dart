@@ -18,6 +18,7 @@ import "package:react/react_dom.dart";
 import "package:react/react_dom_server.dart";
 import "package:react/src/react_client/synthetic_event_wrappers.dart" as events;
 import 'package:react/src/typedefs.dart';
+import 'package:react/src/ddc_emulated_function_name_bug.dart' as ddc_emulated_function_name_bug;
 
 export 'package:react/react_client/react_interop.dart' show ReactElement, ReactJsComponentFactory;
 
@@ -356,7 +357,11 @@ class ReactDomComponentFactoryProxy extends ReactComponentFactoryProxy {
 
   ReactDomComponentFactoryProxy(name) :
     this.name = name,
-    this.factory = React.createFactory(name);
+    this.factory = React.createFactory(name) {
+    if (ddc_emulated_function_name_bug.isBugPresent) {
+      ddc_emulated_function_name_bug.patchName(this);
+    }
+  }
 
   @override
   String get type => name;
