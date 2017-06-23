@@ -1,5 +1,3 @@
-@Tags(const ["ddcFailure"])
-
 import 'dart:js';
 
 import 'package:test/test.dart';
@@ -35,7 +33,7 @@ void commonFactoryTests(Function factory) {
     test('multiple arguments', () {
       var instance = factory({}, 'one', 'two');
       expect(getJsChildren(instance), equals(['one', 'two']));
-    }, tags: 'ddcFailure');
+    }, tags: 'ddcFailure'); // This test cannot be run using ddc until https://github.com/dart-lang/sdk/issues/29904 is resolved
 
     test('a List', () {
       var instance = factory({}, ['one', 'two',]);
@@ -157,7 +155,7 @@ void _childKeyWarningTests(Function factory) {
       );
 
       expect(consoleErrorCalled, isFalse, reason: 'should not have outputted a warning');
-    }, tags: 'ddcFailure');
+    }, tags: 'ddcFailure'); // This test cannot be run using ddc until https://github.com/dart-lang/sdk/issues/29904 is resolved
 
     test('when rendering custom Dart components', () {
       _renderWithUniqueOwnerName(() =>
