@@ -427,7 +427,7 @@ external List getUpdatingSetStateLifeCycleCalls();
 @JS()
 external List getNonUpdatingSetStateLifeCycleCalls();
 
-ReactDartComponentFactoryProxy<_SetStateTest> SetStateTest = react.registerComponent(() => new _SetStateTest()) as ReactDartComponentFactoryProxy<_SetStateTest>;
+ReactDartComponentFactoryProxy SetStateTest = react.registerComponent(() => new _SetStateTest());
 class _SetStateTest extends react.Component {
   @override
   Map getDefaultProps() => {'shouldUpdate': true};
@@ -502,7 +502,7 @@ class _DefaultPropsCachingTest extends react.Component {
   render() => false;
 }
 
-ReactDartComponentFactoryProxy<_DefaultPropsTest> DefaultPropsTest = react.registerComponent(() => new _DefaultPropsTest()) as ReactDartComponentFactoryProxy<_DefaultPropsTest>;
+ReactDartComponentFactoryProxy DefaultPropsTest = react.registerComponent(() => new _DefaultPropsTest());
 class _DefaultPropsTest extends react.Component {
   static int getDefaultPropsCallCount = 0;
 
@@ -513,7 +513,7 @@ class _DefaultPropsTest extends react.Component {
   render() => false;
 }
 
-ReactDartComponentFactoryProxy<_LifecycleTest> LifecycleTest = react.registerComponent(() => new _LifecycleTest()) as ReactDartComponentFactoryProxy<_LifecycleTest>;
+ReactDartComponentFactoryProxy LifecycleTest = react.registerComponent(() => new _LifecycleTest());
 class _LifecycleTest extends react.Component {
   List lifecycleCalls = [];
 
