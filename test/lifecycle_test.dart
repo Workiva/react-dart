@@ -418,6 +418,47 @@ void main() {
       expect(() => component.setState('Not A Valid Parameter'), throwsArgumentError);
       expect(() => component.setState(5), throwsArgumentError);
     });
+
+    group('clears out the reference to the Dart component in all `internal` instances', () {
+      ReactElement element;
+      Element mountNode;
+      ReactComponent renderedInstance;
+
+      setUp(() {
+        element = SetStateTest({});
+        mountNode = new DivElement();
+        renderedInstance = react_dom.render(element, mountNode);
+
+        expect(renderedInstance.props.internal.component, isNotNull, reason: 'test setup sanity check');
+        expect(element.props.internal.component, isNotNull, reason: 'test setup sanity check');
+      });
+
+      test('when the component is unmounted', () {
+        react_dom.unmountComponentAtNode(mountNode);
+        expect(renderedInstance.props.internal.component, isNull);
+        expect(element.props.internal.component, isNull);
+      });
+
+      group('except for rerenders due to', () {
+        test('props changes', () {
+          renderedInstance = react_dom.render(element, mountNode);
+          expect(renderedInstance.props.internal.component, isNotNull);
+          // We don't care about the `element` in this case, with the current `internal` implementation.
+        });
+
+        test('state changes', () {
+          renderedInstance.props.internal.component.setState({});
+          expect(renderedInstance.props.internal.component, isNotNull);
+          // We don't care about the `element` in this case, with the current `internal` implementation.
+        });
+
+        test('redraws', () {
+          renderedInstance.props.internal.component.redraw();
+          expect(renderedInstance.props.internal.component, isNotNull);
+          // We don't care about the `element` in this case, with the current `internal` implementation.
+        });
+      });
+    });
   });
 }
 
