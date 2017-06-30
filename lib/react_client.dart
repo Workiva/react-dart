@@ -312,7 +312,7 @@ final ReactDartInteropStatics _dartInteropStatics = (() {
   /// Wrapper for [Component.componentWillUnmount].
   void handleComponentWillUnmount(ReactDartComponentInternal internal) => zone.run(() {
     internal.isMounted = false;
-    internal.component.componentWillUnmount();
+    internal.component?.componentWillUnmount();
     // Clear the reference to the component. It won't be used by it anymore,
     // and we don't want it leaking.
     internal.component = null;
