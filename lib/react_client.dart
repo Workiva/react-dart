@@ -299,23 +299,12 @@ final ReactDartInteropStatics _dartInteropStatics = (() {
     _callSetStateCallbacks(component);
     // Clear out prevState after it's done being used so it's not retained
     _clearPrevState(component);
-    // Clear the old internal's reference to the component. It won't be used by it anymore,
-    // and we don't want it leaking.
-    // We leave props around so they can be used by `getProps` calls on the old [ReactElement]s.
-    if (prevInternal != internal) {
-      // Only clear if this is a props-triggered update, which is only the case when
-      // the internal objects are different.
-      prevInternal.component = null;
-    }
   });
 
   /// Wrapper for [Component.componentWillUnmount].
   void handleComponentWillUnmount(ReactDartComponentInternal internal) => zone.run(() {
     internal.isMounted = false;
     internal.component.componentWillUnmount();
-    // Clear the reference to the component. It won't be used by it anymore,
-    // and we don't want it leaking.
-    internal.component = null;
   });
 
   /// Wrapper for [Component.render].
