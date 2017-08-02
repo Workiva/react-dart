@@ -305,6 +305,10 @@ final ReactDartInteropStatics _dartInteropStatics = (() {
   void handleComponentWillUnmount(ReactDartComponentInternal internal) => zone.run(() {
     internal.isMounted = false;
     internal.component.componentWillUnmount();
+    // Clear these callbacks in case they retain anything;
+    // they definitely won't be called after this point.
+    internal.component.setStateCallbacks.clear();
+    internal.component.transactionalSetStateCallbacks.clear();
   });
 
   /// Wrapper for [Component.render].
