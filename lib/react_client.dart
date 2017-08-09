@@ -150,8 +150,7 @@ class ReactDartComponentFactoryProxy<TComponent extends Component> extends React
       // If the ref is a callback, pass ReactJS a function that will call it
       // with the Dart Component instance, not the ReactComponent instance.
       if (ref is _CallbackRef) {
-        interopProps.ref = allowInterop((ReactComponent instance) =>
-            ref(instance == null ? null : instance.props.internal.component));
+        interopProps.ref = allowInterop((ReactComponent instance) => ref(instance?.dartComponent));
       } else {
         interopProps.ref = ref;
       }
@@ -184,7 +183,7 @@ final ReactDartInteropStatics _dartInteropStatics = (() {
   var zone = Zone.current;
 
   /// Wrapper for [Component.getInitialState].
-  void initComponent(ReactComponent jsThis, ReactDartComponentInternal internal, ComponentStatics componentStatics) => zone.run(() {
+  Component initComponent(ReactComponent jsThis, ReactDartComponentInternal internal, ComponentStatics componentStatics) => zone.run(() {
     void jsRedraw() {
       jsThis.setState(emptyJsMap);
     }
@@ -194,30 +193,28 @@ final ReactDartInteropStatics _dartInteropStatics = (() {
       if (ref == null) return null;
       if (ref is Element) return ref;
 
-      return (ref as ReactComponent).props?.internal?.component ?? ref;
+      return (ref as ReactComponent).dartComponent ?? ref;
     };
 
     Component component = componentStatics.componentFactory()
-        ..initComponentInternal(internal.props, jsRedraw, getRef, jsThis);
+      ..initComponentInternal(internal.props, jsRedraw, getRef, jsThis)
+      ..initStateInternal();
 
-    internal.component = component;
-    internal.isMounted = false;
-    internal.props = component.props;
-
-    component.initStateInternal();
+    // Return the component so that the JS proxying component can store it,
+    // avoiding an interceptor lookup.
+    return component;
   });
 
   /// Wrapper for [Component.componentWillMount].
-  void handleComponentWillMount(ReactDartComponentInternal internal) => zone.run(() {
-    internal.isMounted = true;
-    internal.component
-        ..componentWillMount()
-        ..transferComponentState();
+  void handleComponentWillMount(Component component) => zone.run(() {
+    component
+      ..componentWillMount()
+      ..transferComponentState();
   });
 
   /// Wrapper for [Component.componentDidMount].
-  void handleComponentDidMount(ReactDartComponentInternal internal) => zone.run(() {
-    internal.component.componentDidMount();
+  void handleComponentDidMount(Component component) => zone.run(() {
+    component.componentDidMount();
   });
 
   Map _getNextProps(Component component, ReactDartComponentInternal nextInternal) {
@@ -225,19 +222,12 @@ final ReactDartInteropStatics _dartInteropStatics = (() {
     return newProps != null ? new Map.from(newProps) : {};
   }
 
-  /// 1. Add [component] to [newArgs] to keep it in [InteropProps.internal]
-  /// 2. Update [Component.props] using the value stored to [Component.nextProps]
+  /// 1. Update [Component.props] using the value stored to [Component.nextProps]
   ///    in `componentWillReceiveProps`.
-  /// 3. Update [Component.state] by calling [Component.transferComponentState]
-  void _afterPropsChange(Component component, ReactDartComponentInternal nextInternal) {
-    // [1]
-    nextInternal.component = component;
-
-    // [2]
-    component.props = component.nextProps;
-
-    // [3]
-    component.transferComponentState();
+  /// 2. Update [Component.state] by calling [Component.transferComponentState]
+  void _afterPropsChange(Component component) {
+    component.props = component.nextProps; // [1]
+    component.transferComponentState();    // [2]
   }
 
   void _clearPrevState(Component component) {
@@ -258,23 +248,22 @@ final ReactDartInteropStatics _dartInteropStatics = (() {
   }
 
   /// Wrapper for [Component.componentWillReceiveProps].
-  void handleComponentWillReceiveProps(ReactDartComponentInternal internal, ReactDartComponentInternal nextInternal) => zone.run(() {
-    var nextProps = _getNextProps(internal.component, nextInternal);
-    internal.component
+  void handleComponentWillReceiveProps(Component component, ReactDartComponentInternal nextInternal) => zone.run(() {
+    var nextProps = _getNextProps(component, nextInternal);
+    component
       ..nextProps = nextProps
       ..componentWillReceiveProps(nextProps);
   });
 
   /// Wrapper for [Component.shouldComponentUpdate].
-  bool handleShouldComponentUpdate(ReactDartComponentInternal internal, ReactDartComponentInternal nextInternal) => zone.run(() {
-    Component component = internal.component;
+  bool handleShouldComponentUpdate(Component component) => zone.run(() {
     _callSetStateTransactionalCallbacks(component);
 
     if (component.shouldComponentUpdate(component.nextProps, component.nextState)) {
       return true;
     } else {
       // If component should not update, update props / transfer state because componentWillUpdate will not be called.
-      _afterPropsChange(component, nextInternal);
+      _afterPropsChange(component);
       _callSetStateCallbacks(component);
       // Clear out prevState after it's done being used so it's not retained
       _clearPrevState(component);
@@ -283,18 +272,16 @@ final ReactDartInteropStatics _dartInteropStatics = (() {
   });
 
   /// Wrapper for [Component.componentWillUpdate].
-  void handleComponentWillUpdate(ReactDartComponentInternal internal, ReactDartComponentInternal nextInternal) => zone.run(() {
-    Component component = internal.component;
+  void handleComponentWillUpdate(Component component) => zone.run(() {
     component.componentWillUpdate(component.nextProps, component.nextState);
-    _afterPropsChange(component, nextInternal);
+    _afterPropsChange(component);
   });
 
   /// Wrapper for [Component.componentDidUpdate].
   ///
   /// Uses [prevState] which was transferred from [Component.nextState] in [componentWillUpdate].
-  void handleComponentDidUpdate(ReactDartComponentInternal internal, ReactDartComponentInternal prevInternal) => zone.run(() {
+  void handleComponentDidUpdate(Component component, ReactDartComponentInternal prevInternal) => zone.run(() {
     var prevInternalProps = prevInternal.props;
-    Component component = internal.component;
     component.componentDidUpdate(prevInternalProps, component.prevState);
     _callSetStateCallbacks(component);
     // Clear out prevState after it's done being used so it's not retained
@@ -302,18 +289,17 @@ final ReactDartInteropStatics _dartInteropStatics = (() {
   });
 
   /// Wrapper for [Component.componentWillUnmount].
-  void handleComponentWillUnmount(ReactDartComponentInternal internal) => zone.run(() {
-    internal.isMounted = false;
-    internal.component.componentWillUnmount();
+  void handleComponentWillUnmount(Component component) => zone.run(() {
+    component.componentWillUnmount();
     // Clear these callbacks in case they retain anything;
     // they definitely won't be called after this point.
-    internal.component.setStateCallbacks.clear();
-    internal.component.transactionalSetStateCallbacks.clear();
+    component.setStateCallbacks.clear();
+    component.transactionalSetStateCallbacks.clear();
   });
 
   /// Wrapper for [Component.render].
-  dynamic handleRender(ReactDartComponentInternal internal) => zone.run(() {
-    return internal.component.render();
+  dynamic handleRender(Component component) => zone.run(() {
+    return component.render();
   });
 
   return new ReactDartInteropStatics(

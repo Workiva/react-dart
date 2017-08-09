@@ -20,7 +20,7 @@ void main() {
   }
 
   react.Component getDartComponent(ReactComponent dartComponent) {
-    return dartComponent.props.internal.component;
+    return dartComponent.dartComponent;
   }
 
   Map getDartComponentProps(ReactComponent dartComponent) {
