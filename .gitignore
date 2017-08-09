@@ -5,3 +5,4 @@ pubspec.lock
 .idea
 .pub/
 .packages
+node_modules/

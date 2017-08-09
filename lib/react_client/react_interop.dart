@@ -219,8 +219,8 @@ void markChildrenValidated(List<dynamic> children) {
 /// Returns a new JS [ReactClassConfig] for a component that uses
 /// [dartInteropStatics] and [componentStatics] internally to proxy between
 /// the JS and Dart component instances.
-@JS('_createReactDartComponentClassConfig')
-external ReactClassConfig createReactDartComponentClassConfig(ReactDartInteropStatics dartInteropStatics, ComponentStatics componentStatics);
+@JS('_createReactDartComponentClass')
+external ReactClass createReactDartComponentClass(ReactDartInteropStatics dartInteropStatics, ComponentStatics componentStatics);
 
 /// An object that stores static methods used by all Dart components.
 @JS()
@@ -244,7 +244,7 @@ class ReactDartInteropStatics {
 /// This object is made accessible to a component's JS ReactClass config, which
 /// passes it to certain methods in [ReactDartInteropStatics].
 ///
-/// See [ReactDartInteropStatics], [createReactDartComponentClassConfig].
+/// See [ReactDartInteropStatics], [createReactDartComponentClass].
 class ComponentStatics {
   final ComponentFactory componentFactory;
 
