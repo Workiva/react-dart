@@ -182,12 +182,18 @@ class InteropProps {
 ///
 /// __For internal/advanced use only.__
 class ReactDartComponentInternal {
+  /// *__Deprecated.__ The component will soon be stored on the JS instance, not this object.*
+  ///
   /// The Dart component instance associated with this JS [ReactComponent].
   ///
   /// Null until the [ReactComponent]'s instantiation.
+  @Deprecated('4.0.0')
   Component component;
 
+  /// *__Deprecated.__ Instead of referencing this, you can track mounted state in an instance variable via component lifecycle methods.*
+  ///
   /// Whether the component is mounted.
+  @Deprecated('4.0.0')
   bool isMounted;
 
   /// For a `ReactElement`, this is the initial props with defaults merged.
