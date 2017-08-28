@@ -145,6 +145,7 @@ class ReactElement {
 @JS()
 @anonymous
 class ReactComponent {
+  external Component get dartComponent;
   external InteropProps get props;
   external get refs;
   external void setState(state, [callback]);
@@ -182,20 +183,6 @@ class InteropProps {
 ///
 /// __For internal/advanced use only.__
 class ReactDartComponentInternal {
-  /// *__Deprecated.__ The component will soon be stored on the JS instance, not this object.*
-  ///
-  /// The Dart component instance associated with this JS [ReactComponent].
-  ///
-  /// Null until the [ReactComponent]'s instantiation.
-  @Deprecated('4.0.0')
-  Component component;
-
-  /// *__Deprecated.__ Instead of referencing this, you can track mounted state in an instance variable via component lifecycle methods.*
-  ///
-  /// Whether the component is mounted.
-  @Deprecated('4.0.0')
-  bool isMounted;
-
   /// For a `ReactElement`, this is the initial props with defaults merged.
   ///
   /// For a `ReactComponent`, this is the props the component was last rendered with,
@@ -228,20 +215,30 @@ void markChildrenValidated(List<dynamic> children) {
 @JS('_createReactDartComponentClassConfig')
 external ReactClassConfig createReactDartComponentClassConfig(ReactDartInteropStatics dartInteropStatics, ComponentStatics componentStatics);
 
+typedef Component _InitComponent(ReactComponent jsThis, ReactDartComponentInternal internal, ComponentStatics componentStatics);
+typedef void _HandleComponentWillMount(Component component);
+typedef void _HandleComponentDidMount(Component component);
+typedef void _HandleComponentWillReceiveProps(Component component, ReactDartComponentInternal nextInternal);
+typedef bool _HandleShouldComponentUpdate(Component component);
+typedef void _HandleComponentWillUpdate(Component component);
+typedef void _HandleComponentDidUpdate(Component component, ReactDartComponentInternal prevInternal);
+typedef void _HandleComponentWillUnmount(Component component);
+typedef dynamic _HandleRender(Component component);
+
 /// An object that stores static methods used by all Dart components.
 @JS()
 @anonymous
 class ReactDartInteropStatics {
   external factory ReactDartInteropStatics({
-      initComponent,
-      handleComponentWillMount,
-      handleComponentDidMount,
-      handleComponentWillReceiveProps,
-      handleShouldComponentUpdate,
-      handleComponentWillUpdate,
-      handleComponentDidUpdate,
-      handleComponentWillUnmount,
-      handleRender
+    _InitComponent initComponent,
+    _HandleComponentWillMount handleComponentWillMount,
+    _HandleComponentDidMount handleComponentDidMount,
+    _HandleComponentWillReceiveProps handleComponentWillReceiveProps,
+    _HandleShouldComponentUpdate handleShouldComponentUpdate,
+    _HandleComponentWillUpdate handleComponentWillUpdate,
+    _HandleComponentDidUpdate handleComponentDidUpdate,
+    _HandleComponentWillUnmount handleComponentWillUnmount,
+    _HandleRender handleRender,
   });
 }
 
