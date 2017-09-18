@@ -1,10 +1,8 @@
 @TestOn('browser')
-@JS()
 library react_test_utils_test;
 
 import 'dart:html';
 
-import 'package:js/js.dart';
 import 'package:react/react.dart';
 import 'package:react/react_dom.dart' as react_dom;
 import 'package:react/react_client.dart';
@@ -13,10 +11,9 @@ import 'package:react/react_test_utils.dart';
 import 'package:test/test.dart';
 
 import 'test_components.dart';
-
+import 'util.dart';
 
 void main() {
-
   setClientConfiguration();
 
   var component;
@@ -30,13 +27,6 @@ void main() {
   group('Shallow Rendering', () {
     ReactElement content;
     ReactShallowRenderer shallowRenderer;
-
-    Map getProps(ReactElement element) {
-      var props = element.props;
-
-      return new Map.fromIterable(_objectKeys(props),
-          value: (key) => getProperty(props, key));
-    }
 
     setUp(() {
       content = sampleComponent({'className': 'test', 'id': 'createRendererTest'});
@@ -295,6 +285,3 @@ void main() {
     expect(react_dom.findDOMNode(spanElements[0]).text, equals(''));
   });
 }
-
-@JS('Object.keys')
-external List _objectKeys(obj);
