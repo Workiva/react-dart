@@ -8,6 +8,8 @@ import 'package:react/react_test_utils.dart' as rtu;
 import 'package:react/react.dart' as react;
 import "package:react/react_client/js_interop_helpers.dart";
 
+import '../util.dart';
+
 void commonFactoryTests(Function factory) {
   _childKeyWarningTests(factory);
 
@@ -95,6 +97,17 @@ void domEventHandlerWrappingTests(Function factory) {
     }));
 
     expect(() => rtu.Simulate.click(react_dom.findDOMNode(renderedInstance)), returnsNormally);
+  });
+  
+  test('stores the original function in a way that it can be retrieved from unconvertJsEventHandler', () {
+    final originalHandler = (event) {};
+
+    var instance = factory({'onClick': originalHandler});
+    var instanceProps = getProps(instance);
+
+    expect(instanceProps['onClick'], isNot(same(originalHandler)),
+        reason: 'test setup sanity check; should be different, converted function');
+    expect(unconvertJsEventHandler(instanceProps['onClick']), same(originalHandler));
   });
 }
 

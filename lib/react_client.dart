@@ -434,6 +434,24 @@ _convertBoundValues(Map args) {
   }
 }
 
+/// A mapping from converted/wrapped JS handler functions (the result of [_convertEventHandlers])
+/// to the original Dart functions (the input of [_convertEventHandlers]).
+final Expando<Function> _originalEventHandlers = new Expando();
+
+/// Returns the original Dart handler function that, within [_convertEventHandlers],
+/// was converted/wrapped into the function [jsConvertedEventHandler] to be passed to the JS.
+///
+/// Returns `null` if [jsConvertedEventHandler] is `null`.
+///
+/// Returns `null` if [jsConvertedEventHandler] does not represent such a function
+///
+/// Useful for chaining event handlers on DOM or JS composite [ReactElement]s.
+Function unconvertJsEventHandler(Function jsConvertedEventHandler) {
+  if (jsConvertedEventHandler == null) return null;
+
+  return _originalEventHandlers[jsConvertedEventHandler];
+}
+
 /// Convert packed event handler into wrapper and pass it only the Dart [SyntheticEvent] object converted from the
 /// [events.SyntheticEvent] event.
 _convertEventHandlers(Map args) {
@@ -441,9 +459,14 @@ _convertEventHandlers(Map args) {
   args.forEach((propKey, value) {
     var eventFactory = _eventPropKeyToEventFactory[propKey];
     if (eventFactory != null && value != null) {
-      args[propKey] = (events.SyntheticEvent e, [_, __]) => zone.run(() {
+      // Apply allowInterop here so that the function we store in [_originalEventHandlers]
+      // is the same one we'll retrieve from the JS props.
+      var reactDartConvertedEventHandler = allowInterop((events.SyntheticEvent e, [_, __]) => zone.run(() {
         value(eventFactory(e));
-      });
+      }));
+
+      args[propKey] = reactDartConvertedEventHandler;
+      _originalEventHandlers[reactDartConvertedEventHandler] = value;
     }
   });
 }
