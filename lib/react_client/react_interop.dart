@@ -83,6 +83,8 @@ class ReactClassConfig {
     Function componentWillUpdate,
     Function componentDidUpdate,
     Function componentWillUnmount,
+    Function getChildContext,
+    Map<String, dynamic> childContextTypes,
     Function getDefaultProps,
     Function getInitialState,
     Function render
@@ -122,6 +124,8 @@ class ReactElement {
   /// For composite components (react-dart or pure JS), this will be a [ReactClass].
   external dynamic get type;
 
+  external InteropContext get context;
+
   /// The props this element was created with.
   external InteropProps get props;
 
@@ -146,6 +150,7 @@ class ReactElement {
 @anonymous
 class ReactComponent {
   external Component get dartComponent;
+  external InteropContext get context;
   external InteropProps get props;
   external get refs;
   external void setState(state, [callback]);
@@ -157,6 +162,10 @@ class ReactComponent {
 // ----------------------------------------------------------------------------
 //   Interop internals
 // ----------------------------------------------------------------------------
+
+@JS()
+@anonymous
+class InteropContext {}
 
 /// A JavaScript interop class representing a React JS `props` object.
 ///
@@ -183,6 +192,8 @@ class InteropProps {
 ///
 /// __For internal/advanced use only.__
 class ReactDartComponentInternal {
+  Map context;
+
   /// For a `ReactElement`, this is the initial props with defaults merged.
   ///
   /// For a `ReactComponent`, this is the props the component was last rendered with,
@@ -213,15 +224,20 @@ void markChildrenValidated(List<dynamic> children) {
 /// [dartInteropStatics] and [componentStatics] internally to proxy between
 /// the JS and Dart component instances.
 @JS('_createReactDartComponentClassConfig')
-external ReactClassConfig createReactDartComponentClassConfig(ReactDartInteropStatics dartInteropStatics, ComponentStatics componentStatics);
+external ReactClassConfig createReactDartComponentClassConfig(
+    ReactDartInteropStatics dartInteropStatics,
+    ComponentStatics componentStatics,
+    [JsComponentConfig jsConfig]
+);
 
 typedef Component _InitComponent(ReactComponent jsThis, ReactDartComponentInternal internal, ComponentStatics componentStatics);
+typedef InteropContext _GetChildContext(Component component);
 typedef void _HandleComponentWillMount(Component component);
 typedef void _HandleComponentDidMount(Component component);
-typedef void _HandleComponentWillReceiveProps(Component component, ReactDartComponentInternal nextInternal);
-typedef bool _HandleShouldComponentUpdate(Component component);
-typedef void _HandleComponentWillUpdate(Component component);
-typedef void _HandleComponentDidUpdate(Component component, ReactDartComponentInternal prevInternal);
+typedef void _HandleComponentWillReceiveProps(Component component, ReactDartComponentInternal nextInternal, InteropContext nextContext);
+typedef bool _HandleShouldComponentUpdate(Component component, InteropContext nextContext);
+typedef void _HandleComponentWillUpdate(Component component, InteropContext nextContext);
+typedef void _HandleComponentDidUpdate(Component component, ReactDartComponentInternal prevInternal, InteropContext prevContext);
 typedef void _HandleComponentWillUnmount(Component component);
 typedef dynamic _HandleRender(Component component);
 
@@ -231,6 +247,7 @@ typedef dynamic _HandleRender(Component component);
 class ReactDartInteropStatics {
   external factory ReactDartInteropStatics({
     _InitComponent initComponent,
+    _GetChildContext getChildContext,
     _HandleComponentWillMount handleComponentWillMount,
     _HandleComponentDidMount handleComponentDidMount,
     _HandleComponentWillReceiveProps handleComponentWillReceiveProps,
@@ -252,4 +269,15 @@ class ComponentStatics {
   final ComponentFactory componentFactory;
 
   ComponentStatics(this.componentFactory);
+}
+
+/// Additional configuration passed to [createReactDartComponentClassConfig]
+/// that needs to be directly accessible by that JS code.
+@JS()
+@anonymous
+class JsComponentConfig {
+  external factory JsComponentConfig({
+    Iterable<String> childContextKeys,
+    Iterable<String> contextKeys,
+  });
 }

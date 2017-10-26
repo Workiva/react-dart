@@ -10,6 +10,8 @@ import 'package:react/src/typedefs.dart';
 /// Top-level ReactJS [Component class](https://facebook.github.io/react/docs/react-component.html)
 /// which provides the [ReactJS Component API](https://facebook.github.io/react/docs/react-component.html#reference)
 abstract class Component {
+  Map _context;
+
   /// A private field that backs [props], which is exposed via getter/setter so
   /// it can be overridden in strong mode.
   ///
@@ -36,6 +38,9 @@ abstract class Component {
   ///
   /// TODO: Switch back to a plain field once this issue is fixed.
   Ref _ref;
+
+  Map get context => _context;
+  set context(Map value) => _context = value;
 
   /// ReactJS [Component] props.
   ///
@@ -81,11 +86,16 @@ abstract class Component {
   /// Bind the value of input to [state[key]].
   bind(key) => [state[key], (value) => setState({key: value})];
 
-  initComponentInternal(props, _jsRedraw, [Ref ref, _jsThis]) {
+  initComponentInternal(context, props, _jsRedraw, [Ref ref, _jsThis]) {
     this._jsRedraw = _jsRedraw;
     this.ref = ref;
     this._jsThis = _jsThis;
+    _initContext(context);
     _initProps(props);
+  }
+
+  _initContext(context) {
+    _context = new Map.from(context ?? {});
   }
 
   _initProps(props) {
@@ -242,6 +252,12 @@ abstract class Component {
   ///
   /// See: <https://facebook.github.io/react/docs/react-component.html#unmounting-componentwillunmount>
   void componentWillUnmount() {}
+
+  Map getChildContext() => {};
+
+  Iterable<String> get childContextKeys => const [];
+
+  Iterable<String> get contextKeys => const [];
 
   /// Invoked once before the `Component` is mounted. The return value will be used as the initial value of [state].
   ///
