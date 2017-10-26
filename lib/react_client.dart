@@ -216,7 +216,7 @@ final ReactDartInteropStatics _dartInteropStatics = (() {
     };
 
     Component component = componentStatics.componentFactory()
-      ..initComponentInternal(_unjsifyContext(jsThis.context), internal.props, jsRedraw, getRef, jsThis)
+      ..initComponentInternal(internal.props, jsRedraw, getRef, jsThis, _unjsifyContext(jsThis.context))
       ..initStateInternal();
 
     // Return the component so that the JS proxying component can store it,
