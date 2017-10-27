@@ -307,7 +307,7 @@ final ReactDartInteropStatics _dartInteropStatics = (() {
   /// Wrapper for [Component.componentDidUpdate].
   ///
   /// Uses [prevState] which was transferred from [Component.nextState] in [componentWillUpdate].
-  void handleComponentDidUpdate(Component component, ReactDartComponentInternal prevInternal, InteropContextValue prevContext) => zone.run(() {
+  void handleComponentDidUpdate(Component component, ReactDartComponentInternal prevInternal) => zone.run(() {
     var prevInternalProps = prevInternal.props;
     component.componentDidUpdate(prevInternalProps, component.prevState);
     _callSetStateCallbacks(component);

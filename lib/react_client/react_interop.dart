@@ -249,7 +249,8 @@ typedef void _HandleComponentDidMount(Component component);
 typedef void _HandleComponentWillReceiveProps(Component component, ReactDartComponentInternal nextInternal, InteropContextValue nextContext);
 typedef bool _HandleShouldComponentUpdate(Component component, InteropContextValue nextContext);
 typedef void _HandleComponentWillUpdate(Component component, InteropContextValue nextContext);
-typedef void _HandleComponentDidUpdate(Component component, ReactDartComponentInternal prevInternal, InteropContextValue prevContext);
+// Ignore prevContext in componentDidUpdate, since it's not supported in React 16
+typedef void _HandleComponentDidUpdate(Component component, ReactDartComponentInternal prevInternal);
 typedef void _HandleComponentWillUnmount(Component component);
 typedef dynamic _HandleRender(Component component);
 
