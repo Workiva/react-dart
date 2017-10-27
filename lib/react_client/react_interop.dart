@@ -243,7 +243,7 @@ external ReactClassConfig createReactDartComponentClassConfig(
 );
 
 typedef Component _InitComponent(ReactComponent jsThis, ReactDartComponentInternal internal, InteropContextValue context, ComponentStatics componentStatics);
-typedef InteropContextValue _GetChildContext(Component component);
+typedef InteropContextValue _HandleGetChildContext(Component component);
 typedef void _HandleComponentWillMount(Component component);
 typedef void _HandleComponentDidMount(Component component);
 typedef void _HandleComponentWillReceiveProps(Component component, ReactDartComponentInternal nextInternal, InteropContextValue nextContext);
@@ -260,7 +260,7 @@ typedef dynamic _HandleRender(Component component);
 class ReactDartInteropStatics {
   external factory ReactDartInteropStatics({
     _InitComponent initComponent,
-    _GetChildContext getChildContext,
+    _HandleGetChildContext handleGetChildContext,
     _HandleComponentWillMount handleComponentWillMount,
     _HandleComponentDidMount handleComponentDidMount,
     _HandleComponentWillReceiveProps handleComponentWillReceiveProps,

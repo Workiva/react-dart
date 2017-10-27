@@ -225,7 +225,7 @@ final ReactDartInteropStatics _dartInteropStatics = (() {
     return component;
   });
 
-  InteropContextValue getChildContext(Component component) => zone.run(() {
+  InteropContextValue handleGetChildContext(Component component) => zone.run(() {
     return _jsifyContext(component.getChildContext());
   });
 
@@ -331,7 +331,7 @@ final ReactDartInteropStatics _dartInteropStatics = (() {
 
   return new ReactDartInteropStatics(
       initComponent: allowInterop(initComponent),
-      getChildContext: allowInterop(getChildContext),
+      handleGetChildContext: allowInterop(handleGetChildContext),
       handleComponentWillMount: allowInterop(handleComponentWillMount),
       handleComponentDidMount: allowInterop(handleComponentDidMount),
       handleComponentWillReceiveProps: allowInterop(handleComponentWillReceiveProps),
