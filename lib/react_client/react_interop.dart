@@ -148,7 +148,6 @@ class ReactElement {
 @anonymous
 class ReactComponent {
   external Component get dartComponent;
-  external InteropContext get context;
   external InteropProps get props;
   external get refs;
   external void setState(state, [callback]);
@@ -161,10 +160,16 @@ class ReactComponent {
 //   Interop internals
 // ----------------------------------------------------------------------------
 
+/// A JavaScript interop class representing a value in a React JS `context` object.
+///
+/// Used for storing/accessing Dart [ReactDartContextInternal] objects in `context`
+/// in a way that's opaque to the JS, and avoids the need to use dart2js interceptors.
+///
+/// __For internal/advanced use only.__
 @JS()
 @anonymous
-class InteropContext {
-  external factory InteropContext();
+class InteropContextValue {
+  external factory InteropContextValue();
 }
 
 /// A JavaScript interop class representing a React JS `props` object.
@@ -187,8 +192,7 @@ class InteropProps {
   external factory InteropProps({ReactDartComponentInternal internal, String key, dynamic ref});
 }
 
-/// Internal react-dart information used to proxy React JS lifecycle to Dart
-/// [Component] instances.
+/// A Dart object that stores .
 ///
 /// __For internal/advanced use only.__
 class ReactDartComponentInternal {
@@ -199,6 +203,10 @@ class ReactDartComponentInternal {
   Map props;
 }
 
+/// Internal react-dart information used to proxy React JS lifecycle to Dart
+/// [Component] instances.
+///
+/// __For internal/advanced use only.__
 class ReactDartContextInternal {
   final dynamic value;
 
@@ -234,14 +242,14 @@ external ReactClassConfig createReactDartComponentClassConfig(
     [JsComponentConfig jsConfig]
 );
 
-typedef Component _InitComponent(ReactComponent jsThis, ReactDartComponentInternal internal, InteropContext context, ComponentStatics componentStatics);
-typedef InteropContext _GetChildContext(Component component);
+typedef Component _InitComponent(ReactComponent jsThis, ReactDartComponentInternal internal, InteropContextValue context, ComponentStatics componentStatics);
+typedef InteropContextValue _GetChildContext(Component component);
 typedef void _HandleComponentWillMount(Component component);
 typedef void _HandleComponentDidMount(Component component);
-typedef void _HandleComponentWillReceiveProps(Component component, ReactDartComponentInternal nextInternal, InteropContext nextContext);
-typedef bool _HandleShouldComponentUpdate(Component component, InteropContext nextContext);
-typedef void _HandleComponentWillUpdate(Component component, InteropContext nextContext);
-typedef void _HandleComponentDidUpdate(Component component, ReactDartComponentInternal prevInternal, InteropContext prevContext);
+typedef void _HandleComponentWillReceiveProps(Component component, ReactDartComponentInternal nextInternal, InteropContextValue nextContext);
+typedef bool _HandleShouldComponentUpdate(Component component, InteropContextValue nextContext);
+typedef void _HandleComponentWillUpdate(Component component, InteropContextValue nextContext);
+typedef void _HandleComponentDidUpdate(Component component, ReactDartComponentInternal prevInternal, InteropContextValue prevContext);
 typedef void _HandleComponentWillUnmount(Component component);
 typedef dynamic _HandleRender(Component component);
 

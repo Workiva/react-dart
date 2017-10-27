@@ -181,8 +181,8 @@ dynamic _convertArgsToChildren(List childrenArgs) {
 @JS('Object.keys')
 external List<String> _objectKeys(Object object);
 
-InteropContext _jsifyContext(Map<String, dynamic> context) {
-  var interopContext = new InteropContext();
+InteropContextValue _jsifyContext(Map<String, dynamic> context) {
+  var interopContext = new InteropContextValue();
   context.forEach((key, value) {
     setProperty(interopContext, key, new ReactDartContextInternal(value));
   });
@@ -190,7 +190,7 @@ InteropContext _jsifyContext(Map<String, dynamic> context) {
   return interopContext;
 }
 
-Map<String, dynamic> _unjsifyContext(InteropContext interopContext) {
+Map<String, dynamic> _unjsifyContext(InteropContextValue interopContext) {
   // TODO consider using `contextKeys` for this if perf of objectKeys is bad.
   return new Map.fromIterable(_objectKeys(interopContext), value: (key) {
     ReactDartContextInternal internal = getProperty(interopContext, key);
@@ -203,7 +203,7 @@ final ReactDartInteropStatics _dartInteropStatics = (() {
   var zone = Zone.current;
 
   /// Wrapper for [Component.getInitialState].
-  Component initComponent(ReactComponent jsThis, ReactDartComponentInternal internal, InteropContext context, ComponentStatics componentStatics) => zone.run(() {
+  Component initComponent(ReactComponent jsThis, ReactDartComponentInternal internal, InteropContextValue context, ComponentStatics componentStatics) => zone.run(() {
     void jsRedraw() {
       jsThis.setState(emptyJsMap);
     }
@@ -225,7 +225,7 @@ final ReactDartInteropStatics _dartInteropStatics = (() {
     return component;
   });
 
-  InteropContext getChildContext(Component component) => zone.run(() {
+  InteropContextValue getChildContext(Component component) => zone.run(() {
     return _jsifyContext(component.getChildContext());
   });
 
@@ -250,7 +250,7 @@ final ReactDartInteropStatics _dartInteropStatics = (() {
   ///    in `componentWillReceiveProps`.
   /// 2. Update [Component.state] by calling [Component.transferComponentState]
   /// 3. Update [Component.context] with the latest
-  void _afterPropsChange(Component component, InteropContext nextContext) {
+  void _afterPropsChange(Component component, InteropContextValue nextContext) {
     component.props = component.nextProps; // [1]
     component.transferComponentState();    // [2]
     // [3]
@@ -275,7 +275,7 @@ final ReactDartInteropStatics _dartInteropStatics = (() {
   }
 
   /// Wrapper for [Component.componentWillReceiveProps].
-  void handleComponentWillReceiveProps(Component component, ReactDartComponentInternal nextInternal, InteropContext nextContext) => zone.run(() {
+  void handleComponentWillReceiveProps(Component component, ReactDartComponentInternal nextInternal, InteropContextValue nextContext) => zone.run(() {
     var nextProps = _getNextProps(component, nextInternal);
     component
       ..nextProps = nextProps
@@ -283,7 +283,7 @@ final ReactDartInteropStatics _dartInteropStatics = (() {
   });
 
   /// Wrapper for [Component.shouldComponentUpdate].
-  bool handleShouldComponentUpdate(Component component, InteropContext nextContext) => zone.run(() {
+  bool handleShouldComponentUpdate(Component component, InteropContextValue nextContext) => zone.run(() {
     _callSetStateTransactionalCallbacks(component);
 
     if (component.shouldComponentUpdate(component.nextProps, component.nextState)) {
@@ -299,7 +299,7 @@ final ReactDartInteropStatics _dartInteropStatics = (() {
   });
 
   /// Wrapper for [Component.componentWillUpdate].
-  void handleComponentWillUpdate(Component component, InteropContext nextContext) => zone.run(() {
+  void handleComponentWillUpdate(Component component, InteropContextValue nextContext) => zone.run(() {
     component.componentWillUpdate(component.nextProps, component.nextState);
     _afterPropsChange(component, nextContext);
   });
@@ -307,7 +307,7 @@ final ReactDartInteropStatics _dartInteropStatics = (() {
   /// Wrapper for [Component.componentDidUpdate].
   ///
   /// Uses [prevState] which was transferred from [Component.nextState] in [componentWillUpdate].
-  void handleComponentDidUpdate(Component component, ReactDartComponentInternal prevInternal, InteropContext prevContext) => zone.run(() {
+  void handleComponentDidUpdate(Component component, ReactDartComponentInternal prevInternal, InteropContextValue prevContext) => zone.run(() {
     var prevInternalProps = prevInternal.props;
     component.componentDidUpdate(prevInternalProps, component.prevState);
     _callSetStateCallbacks(component);

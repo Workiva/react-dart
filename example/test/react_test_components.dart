@@ -157,7 +157,7 @@ class _ContextComponent extends react.Component {
   int _renderCount = 0;
 
   @override
-  Map getChildContext() => {
+  Map<String, dynamic> getChildContext() => {
     'foo': 'bar',
     'renderCount': _renderCount
   };

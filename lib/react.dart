@@ -39,6 +39,9 @@ abstract class Component {
   /// TODO: Switch back to a plain field once this issue is fixed.
   Ref _ref;
 
+  /// The React context map of this component, passed down from its ancestors' [getChildContext] value.
+  ///
+  /// Only keys declared in this component's [contextKeys] will be present.
   Map get context => _context;
   set context(Map value) => _context = value;
 
@@ -253,10 +256,19 @@ abstract class Component {
   /// See: <https://facebook.github.io/react/docs/react-component.html#unmounting-componentwillunmount>
   void componentWillUnmount() {}
 
-  Map getChildContext() => {};
+  /// Returns a Map of context to be passed to descendant components.
+  ///
+  /// Only keys present in [childContextKeys] will be used; all others will be ignored.
+  Map<String, dynamic> getChildContext() => const {};
 
+  /// The keys this component uses in its child context map (returned by [getChildContext]).
+  ///
+  /// __This method is called only once, upon component registration.__
   Iterable<String> get childContextKeys => const [];
 
+  /// The keys of context used by this component.
+  ///
+  /// __This method is called only once, upon component registration.__
   Iterable<String> get contextKeys => const [];
 
   /// Invoked once before the `Component` is mounted. The return value will be used as the initial value of [state].
