@@ -546,14 +546,27 @@ class _LifecycleTest extends react.Component {
   void componentWillReceiveProps(newProps) =>
     lifecycleCall('componentWillReceiveProps', arguments: [new Map.from(newProps)]);
 
+  void componentWillReceivePropsWithContext(newProps, newContext) =>
+    lifecycleCall('componentWillReceivePropsWithContext', arguments: [new Map.from(newProps), new Map.from(newContext)]);
+
   void componentWillUpdate(nextProps, nextState) =>
     lifecycleCall('componentWillUpdate', arguments: [new Map.from(nextProps), new Map.from(nextState)]);
+
+  void componentWillUpdateWithContext(nextProps, nextState, nextContext) =>
+    lifecycleCall('componentWillUpdateWithContext', arguments: [new Map.from(nextProps), new Map.from(nextState), new Map.from(nextContext)]);
 
   void componentDidUpdate(prevProps, prevState) =>
     lifecycleCall('componentDidUpdate', arguments: [new Map.from(prevProps), new Map.from(prevState)]);
 
+  void componentDidUpdateWithContext(prevProps, prevState, prevContext) =>
+    lifecycleCall('componentDidUpdateWithContext', arguments: [new Map.from(prevProps), new Map.from(prevState), new Map.from(prevContext)]);
+
   bool shouldComponentUpdate(nextProps, nextState) =>
     lifecycleCall('shouldComponentUpdate', arguments: [new Map.from(nextProps), new Map.from(nextState)],
+        defaultReturnValue: () => true);
+
+  bool shouldComponentUpdateWithContext(nextProps, nextState, nextContext) =>
+    lifecycleCall('shouldComponentUpdateWithContext', arguments: [new Map.from(nextProps), new Map.from(nextState), new Map.from(nextContext)],
         defaultReturnValue: () => true);
 
   dynamic render() =>
