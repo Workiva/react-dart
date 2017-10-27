@@ -124,8 +124,6 @@ class ReactElement {
   /// For composite components (react-dart or pure JS), this will be a [ReactClass].
   external dynamic get type;
 
-  external InteropContext get context;
-
   /// The props this element was created with.
   external InteropProps get props;
 
@@ -165,7 +163,9 @@ class ReactComponent {
 
 @JS()
 @anonymous
-class InteropContext {}
+class InteropContext {
+  external factory InteropContext();
+}
 
 /// A JavaScript interop class representing a React JS `props` object.
 ///
@@ -192,13 +192,17 @@ class InteropProps {
 ///
 /// __For internal/advanced use only.__
 class ReactDartComponentInternal {
-  Map context;
-
   /// For a `ReactElement`, this is the initial props with defaults merged.
   ///
   /// For a `ReactComponent`, this is the props the component was last rendered with,
   /// and is used within props-related lifecycle internals.
   Map props;
+}
+
+class ReactDartContextInternal {
+  final dynamic value;
+
+  ReactDartContextInternal(this.value);
 }
 
 /// Marks [child] as validated, as if it were passed into [React.createElement]
@@ -230,7 +234,7 @@ external ReactClassConfig createReactDartComponentClassConfig(
     [JsComponentConfig jsConfig]
 );
 
-typedef Component _InitComponent(ReactComponent jsThis, ReactDartComponentInternal internal, ComponentStatics componentStatics);
+typedef Component _InitComponent(ReactComponent jsThis, ReactDartComponentInternal internal, InteropContext context, ComponentStatics componentStatics);
 typedef InteropContext _GetChildContext(Component component);
 typedef void _HandleComponentWillMount(Component component);
 typedef void _HandleComponentDidMount(Component component);

@@ -33,7 +33,7 @@ function _createReactDartComponentClassConfig(dartInteropStatics, componentStati
     childContextTypes: childContextTypes,
     contextTypes: contextTypes,
     getInitialState: function() {
-      this.dartComponent = dartInteropStatics.initComponent(this, this.props.internal, componentStatics);
+      this.dartComponent = dartInteropStatics.initComponent(this, this.props.internal, this.context, componentStatics);
       return {};
     },
     componentWillMount: function() {

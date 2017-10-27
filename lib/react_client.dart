@@ -11,7 +11,6 @@ import "dart:html";
 import 'dart:js';
 
 import "package:js/js.dart";
-import "package:js/js_util.dart" show newObject;
 import "package:react/react.dart";
 import "package:react/react_client/js_interop_helpers.dart";
 import 'package:react/react_client/react_interop.dart';
@@ -182,18 +181,20 @@ dynamic _convertArgsToChildren(List childrenArgs) {
 @JS('Object.keys')
 external List<String> _objectKeys(Object object);
 
-_jsifyContext(Map context) {
-  var interopContext = newObject();
+InteropContext _jsifyContext(Map<String, dynamic> context) {
+  var interopContext = new InteropContext();
   context.forEach((key, value) {
-    setProperty(interopContext, key, value);
+    setProperty(interopContext, key, new ReactDartContextInternal(value));
   });
 
   return interopContext;
 }
 
-Map _unjsifyContext(interopContext) {
+Map<String, dynamic> _unjsifyContext(InteropContext interopContext) {
+  // TODO consider using `contextKeys` for this if perf of objectKeys is bad.
   return new Map.fromIterable(_objectKeys(interopContext), value: (key) {
-    return getProperty(interopContext, key);
+    ReactDartContextInternal internal = getProperty(interopContext, key);
+    return internal.value;
   });
 }
 
@@ -202,7 +203,7 @@ final ReactDartInteropStatics _dartInteropStatics = (() {
   var zone = Zone.current;
 
   /// Wrapper for [Component.getInitialState].
-  Component initComponent(ReactComponent jsThis, ReactDartComponentInternal internal, ComponentStatics componentStatics) => zone.run(() {
+  Component initComponent(ReactComponent jsThis, ReactDartComponentInternal internal, InteropContext context, ComponentStatics componentStatics) => zone.run(() {
     void jsRedraw() {
       jsThis.setState(emptyJsMap);
     }
@@ -216,7 +217,7 @@ final ReactDartInteropStatics _dartInteropStatics = (() {
     };
 
     Component component = componentStatics.componentFactory()
-      ..initComponentInternal(internal.props, jsRedraw, getRef, jsThis, _unjsifyContext(jsThis.context))
+      ..initComponentInternal(internal.props, jsRedraw, getRef, jsThis, _unjsifyContext(context))
       ..initStateInternal();
 
     // Return the component so that the JS proxying component can store it,
@@ -225,18 +226,7 @@ final ReactDartInteropStatics _dartInteropStatics = (() {
   });
 
   InteropContext getChildContext(Component component) => zone.run(() {
-    var childContext = component.getChildContext();
-
-    assert(() {
-      var undeclaredKeys = childContext.keys.toSet().difference(component.childContextKeys.toSet());
-      if (undeclaredKeys.isNotEmpty) {
-        throw new Exception('Context keys used in `getChildContext()` but not declared in `childContextKeys`: $undeclaredKeys');
-      }
-
-      return true;
-    });
-
-    return _jsifyContext(childContext);
+    return _jsifyContext(component.getChildContext());
   });
 
   /// Wrapper for [Component.componentWillMount].
@@ -264,14 +254,11 @@ final ReactDartInteropStatics _dartInteropStatics = (() {
     component.props = component.nextProps; // [1]
     component.transferComponentState();    // [2]
     // [3]
-    component.context = _unjsifyContext(component.jsThis);
+    component.context = _unjsifyContext(nextContext);
   }
 
   void _clearPrevState(Component component) {
     component.prevState = null;
-
-    // [4]
-    component.context = _unjsifyContext(context);
   }
 
   void _callSetStateCallbacks(Component component) {
@@ -288,7 +275,7 @@ final ReactDartInteropStatics _dartInteropStatics = (() {
   }
 
   /// Wrapper for [Component.componentWillReceiveProps].
-  void handleComponentWillReceiveProps(Component component, ReactDartComponentInternal nextInternal, nextContext) => zone.run(() {
+  void handleComponentWillReceiveProps(Component component, ReactDartComponentInternal nextInternal, InteropContext nextContext) => zone.run(() {
     var nextProps = _getNextProps(component, nextInternal);
     component
       ..nextProps = nextProps
@@ -296,7 +283,7 @@ final ReactDartInteropStatics _dartInteropStatics = (() {
   });
 
   /// Wrapper for [Component.shouldComponentUpdate].
-  bool handleShouldComponentUpdate(Component component, nextContext) => zone.run(() {
+  bool handleShouldComponentUpdate(Component component, InteropContext nextContext) => zone.run(() {
     _callSetStateTransactionalCallbacks(component);
 
     if (component.shouldComponentUpdate(component.nextProps, component.nextState)) {
@@ -312,7 +299,7 @@ final ReactDartInteropStatics _dartInteropStatics = (() {
   });
 
   /// Wrapper for [Component.componentWillUpdate].
-  void handleComponentWillUpdate(Component component, nextContext) => zone.run(() {
+  void handleComponentWillUpdate(Component component, InteropContext nextContext) => zone.run(() {
     component.componentWillUpdate(component.nextProps, component.nextState);
     _afterPropsChange(component, nextContext);
   });
@@ -320,7 +307,7 @@ final ReactDartInteropStatics _dartInteropStatics = (() {
   /// Wrapper for [Component.componentDidUpdate].
   ///
   /// Uses [prevState] which was transferred from [Component.nextState] in [componentWillUpdate].
-  void handleComponentDidUpdate(Component component, ReactDartComponentInternal prevInternal, prevContext) => zone.run(() {
+  void handleComponentDidUpdate(Component component, ReactDartComponentInternal prevInternal, InteropContext prevContext) => zone.run(() {
     var prevInternalProps = prevInternal.props;
     component.componentDidUpdate(prevInternalProps, component.prevState);
     _callSetStateCallbacks(component);
