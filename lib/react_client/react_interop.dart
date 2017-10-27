@@ -83,6 +83,8 @@ class ReactClassConfig {
     Function componentWillUpdate,
     Function componentDidUpdate,
     Function componentWillUnmount,
+    Function getChildContext,
+    Map<String, dynamic> childContextTypes,
     Function getDefaultProps,
     Function getInitialState,
     Function render
@@ -158,6 +160,18 @@ class ReactComponent {
 //   Interop internals
 // ----------------------------------------------------------------------------
 
+/// A JavaScript interop class representing a value in a React JS `context` object.
+///
+/// Used for storing/accessing Dart [ReactDartContextInternal] objects in `context`
+/// in a way that's opaque to the JS, and avoids the need to use dart2js interceptors.
+///
+/// __For internal/advanced use only.__
+@JS()
+@anonymous
+class InteropContextValue {
+  external factory InteropContextValue();
+}
+
 /// A JavaScript interop class representing a React JS `props` object.
 ///
 /// Used for storing/accessing [ReactDartComponentInternal] objects in
@@ -178,8 +192,7 @@ class InteropProps {
   external factory InteropProps({ReactDartComponentInternal internal, String key, dynamic ref});
 }
 
-/// Internal react-dart information used to proxy React JS lifecycle to Dart
-/// [Component] instances.
+/// A Dart object that stores .
 ///
 /// __For internal/advanced use only.__
 class ReactDartComponentInternal {
@@ -188,6 +201,16 @@ class ReactDartComponentInternal {
   /// For a `ReactComponent`, this is the props the component was last rendered with,
   /// and is used within props-related lifecycle internals.
   Map props;
+}
+
+/// Internal react-dart information used to proxy React JS lifecycle to Dart
+/// [Component] instances.
+///
+/// __For internal/advanced use only.__
+class ReactDartContextInternal {
+  final dynamic value;
+
+  ReactDartContextInternal(this.value);
 }
 
 /// Marks [child] as validated, as if it were passed into [React.createElement]
@@ -213,14 +236,20 @@ void markChildrenValidated(List<dynamic> children) {
 /// [dartInteropStatics] and [componentStatics] internally to proxy between
 /// the JS and Dart component instances.
 @JS('_createReactDartComponentClassConfig')
-external ReactClassConfig createReactDartComponentClassConfig(ReactDartInteropStatics dartInteropStatics, ComponentStatics componentStatics);
+external ReactClassConfig createReactDartComponentClassConfig(
+    ReactDartInteropStatics dartInteropStatics,
+    ComponentStatics componentStatics,
+    [JsComponentConfig jsConfig]
+);
 
-typedef Component _InitComponent(ReactComponent jsThis, ReactDartComponentInternal internal, ComponentStatics componentStatics);
+typedef Component _InitComponent(ReactComponent jsThis, ReactDartComponentInternal internal, InteropContextValue context, ComponentStatics componentStatics);
+typedef InteropContextValue _HandleGetChildContext(Component component);
 typedef void _HandleComponentWillMount(Component component);
 typedef void _HandleComponentDidMount(Component component);
-typedef void _HandleComponentWillReceiveProps(Component component, ReactDartComponentInternal nextInternal);
-typedef bool _HandleShouldComponentUpdate(Component component);
-typedef void _HandleComponentWillUpdate(Component component);
+typedef void _HandleComponentWillReceiveProps(Component component, ReactDartComponentInternal nextInternal, InteropContextValue nextContext);
+typedef bool _HandleShouldComponentUpdate(Component component, InteropContextValue nextContext);
+typedef void _HandleComponentWillUpdate(Component component, InteropContextValue nextContext);
+// Ignore prevContext in componentDidUpdate, since it's not supported in React 16
 typedef void _HandleComponentDidUpdate(Component component, ReactDartComponentInternal prevInternal);
 typedef void _HandleComponentWillUnmount(Component component);
 typedef dynamic _HandleRender(Component component);
@@ -231,6 +260,7 @@ typedef dynamic _HandleRender(Component component);
 class ReactDartInteropStatics {
   external factory ReactDartInteropStatics({
     _InitComponent initComponent,
+    _HandleGetChildContext handleGetChildContext,
     _HandleComponentWillMount handleComponentWillMount,
     _HandleComponentDidMount handleComponentDidMount,
     _HandleComponentWillReceiveProps handleComponentWillReceiveProps,
@@ -252,4 +282,15 @@ class ComponentStatics {
   final ComponentFactory componentFactory;
 
   ComponentStatics(this.componentFactory);
+}
+
+/// Additional configuration passed to [createReactDartComponentClassConfig]
+/// that needs to be directly accessible by that JS code.
+@JS()
+@anonymous
+class JsComponentConfig {
+  external factory JsComponentConfig({
+    Iterable<String> childContextKeys,
+    Iterable<String> contextKeys,
+  });
 }

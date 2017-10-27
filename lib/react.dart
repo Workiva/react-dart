@@ -10,6 +10,8 @@ import 'package:react/src/typedefs.dart';
 /// Top-level ReactJS [Component class](https://facebook.github.io/react/docs/react-component.html)
 /// which provides the [ReactJS Component API](https://facebook.github.io/react/docs/react-component.html#reference)
 abstract class Component {
+  Map _context;
+
   /// A private field that backs [props], which is exposed via getter/setter so
   /// it can be overridden in strong mode.
   ///
@@ -36,6 +38,12 @@ abstract class Component {
   ///
   /// TODO: Switch back to a plain field once this issue is fixed.
   Ref _ref;
+
+  /// The React context map of this component, passed down from its ancestors' [getChildContext] value.
+  ///
+  /// Only keys declared in this component's [contextKeys] will be present.
+  Map get context => _context;
+  set context(Map value) => _context = value;
 
   /// ReactJS [Component] props.
   ///
@@ -81,11 +89,16 @@ abstract class Component {
   /// Bind the value of input to [state[key]].
   bind(key) => [state[key], (value) => setState({key: value})];
 
-  initComponentInternal(props, _jsRedraw, [Ref ref, _jsThis]) {
+  initComponentInternal(props, _jsRedraw, [Ref ref, _jsThis, context]) {
     this._jsRedraw = _jsRedraw;
     this.ref = ref;
     this._jsThis = _jsThis;
+    _initContext(context);
     _initProps(props);
+  }
+
+  _initContext(context) {
+    _context = new Map.from(context ?? {});
   }
 
   _initProps(props) {
@@ -242,6 +255,21 @@ abstract class Component {
   ///
   /// See: <https://facebook.github.io/react/docs/react-component.html#unmounting-componentwillunmount>
   void componentWillUnmount() {}
+
+  /// Returns a Map of context to be passed to descendant components.
+  ///
+  /// Only keys present in [childContextKeys] will be used; all others will be ignored.
+  Map<String, dynamic> getChildContext() => const {};
+
+  /// The keys this component uses in its child context map (returned by [getChildContext]).
+  ///
+  /// __This method is called only once, upon component registration.__
+  Iterable<String> get childContextKeys => const [];
+
+  /// The keys of context used by this component.
+  ///
+  /// __This method is called only once, upon component registration.__
+  Iterable<String> get contextKeys => const [];
 
   /// Invoked once before the `Component` is mounted. The return value will be used as the initial value of [state].
   ///

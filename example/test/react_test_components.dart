@@ -152,3 +152,41 @@ class _MainComponent extends react.Component {
 }
 
 var mainComponent = react.registerComponent(() => new _MainComponent());
+
+class _ContextComponent extends react.Component {
+  int _renderCount = 0;
+
+  @override
+  Map<String, dynamic> getChildContext() => {
+    'foo': 'bar',
+    'renderCount': _renderCount
+  };
+
+  @override
+  Iterable<String> get childContextKeys => const ['foo', 'renderCount'];
+
+  render() {
+    _renderCount++;
+
+    return react.ul({},
+      'ContextComponent.getChildContext(): ',
+      getChildContext().toString(),
+      props['children']
+    );
+  }
+}
+var contextComponent = react.registerComponent(() => new _ContextComponent());
+
+
+class _ContextConsumerComponent extends react.Component {
+  @override
+  Iterable<String> get contextKeys => const ['foo', 'renderCount'];
+
+  render() {
+    return react.ul({},
+      'ContextConsumerComponent.context: ',
+      context.toString(),
+    );
+  }
+}
+var contextConsumerComponent = react.registerComponent(() => new _ContextConsumerComponent());

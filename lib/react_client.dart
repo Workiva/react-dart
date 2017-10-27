@@ -178,12 +178,32 @@ dynamic _convertArgsToChildren(List childrenArgs) {
   }
 }
 
+@JS('Object.keys')
+external List<String> _objectKeys(Object object);
+
+InteropContextValue _jsifyContext(Map<String, dynamic> context) {
+  var interopContext = new InteropContextValue();
+  context.forEach((key, value) {
+    setProperty(interopContext, key, new ReactDartContextInternal(value));
+  });
+
+  return interopContext;
+}
+
+Map<String, dynamic> _unjsifyContext(InteropContextValue interopContext) {
+  // TODO consider using `contextKeys` for this if perf of objectKeys is bad.
+  return new Map.fromIterable(_objectKeys(interopContext), value: (key) {
+    ReactDartContextInternal internal = getProperty(interopContext, key);
+    return internal.value;
+  });
+}
+
 /// The static methods that proxy JS component lifecycle methods to Dart components.
 final ReactDartInteropStatics _dartInteropStatics = (() {
   var zone = Zone.current;
 
   /// Wrapper for [Component.getInitialState].
-  Component initComponent(ReactComponent jsThis, ReactDartComponentInternal internal, ComponentStatics componentStatics) => zone.run(() {
+  Component initComponent(ReactComponent jsThis, ReactDartComponentInternal internal, InteropContextValue context, ComponentStatics componentStatics) => zone.run(() {
     void jsRedraw() {
       jsThis.setState(emptyJsMap);
     }
@@ -197,12 +217,16 @@ final ReactDartInteropStatics _dartInteropStatics = (() {
     };
 
     Component component = componentStatics.componentFactory()
-      ..initComponentInternal(internal.props, jsRedraw, getRef, jsThis)
+      ..initComponentInternal(internal.props, jsRedraw, getRef, jsThis, _unjsifyContext(context))
       ..initStateInternal();
 
     // Return the component so that the JS proxying component can store it,
     // avoiding an interceptor lookup.
     return component;
+  });
+
+  InteropContextValue handleGetChildContext(Component component) => zone.run(() {
+    return _jsifyContext(component.getChildContext());
   });
 
   /// Wrapper for [Component.componentWillMount].
@@ -225,9 +249,12 @@ final ReactDartInteropStatics _dartInteropStatics = (() {
   /// 1. Update [Component.props] using the value stored to [Component.nextProps]
   ///    in `componentWillReceiveProps`.
   /// 2. Update [Component.state] by calling [Component.transferComponentState]
-  void _afterPropsChange(Component component) {
+  /// 3. Update [Component.context] with the latest
+  void _afterPropsChange(Component component, InteropContextValue nextContext) {
     component.props = component.nextProps; // [1]
     component.transferComponentState();    // [2]
+    // [3]
+    component.context = _unjsifyContext(nextContext);
   }
 
   void _clearPrevState(Component component) {
@@ -248,7 +275,7 @@ final ReactDartInteropStatics _dartInteropStatics = (() {
   }
 
   /// Wrapper for [Component.componentWillReceiveProps].
-  void handleComponentWillReceiveProps(Component component, ReactDartComponentInternal nextInternal) => zone.run(() {
+  void handleComponentWillReceiveProps(Component component, ReactDartComponentInternal nextInternal, InteropContextValue nextContext) => zone.run(() {
     var nextProps = _getNextProps(component, nextInternal);
     component
       ..nextProps = nextProps
@@ -256,14 +283,14 @@ final ReactDartInteropStatics _dartInteropStatics = (() {
   });
 
   /// Wrapper for [Component.shouldComponentUpdate].
-  bool handleShouldComponentUpdate(Component component) => zone.run(() {
+  bool handleShouldComponentUpdate(Component component, InteropContextValue nextContext) => zone.run(() {
     _callSetStateTransactionalCallbacks(component);
 
     if (component.shouldComponentUpdate(component.nextProps, component.nextState)) {
       return true;
     } else {
       // If component should not update, update props / transfer state because componentWillUpdate will not be called.
-      _afterPropsChange(component);
+      _afterPropsChange(component, nextContext);
       _callSetStateCallbacks(component);
       // Clear out prevState after it's done being used so it's not retained
       _clearPrevState(component);
@@ -272,9 +299,9 @@ final ReactDartInteropStatics _dartInteropStatics = (() {
   });
 
   /// Wrapper for [Component.componentWillUpdate].
-  void handleComponentWillUpdate(Component component) => zone.run(() {
+  void handleComponentWillUpdate(Component component, InteropContextValue nextContext) => zone.run(() {
     component.componentWillUpdate(component.nextProps, component.nextState);
-    _afterPropsChange(component);
+    _afterPropsChange(component, nextContext);
   });
 
   /// Wrapper for [Component.componentDidUpdate].
@@ -304,6 +331,7 @@ final ReactDartInteropStatics _dartInteropStatics = (() {
 
   return new ReactDartInteropStatics(
       initComponent: allowInterop(initComponent),
+      handleGetChildContext: allowInterop(handleGetChildContext),
       handleComponentWillMount: allowInterop(handleComponentWillMount),
       handleComponentDidMount: allowInterop(handleComponentDidMount),
       handleComponentWillReceiveProps: allowInterop(handleComponentWillReceiveProps),
@@ -318,18 +346,24 @@ final ReactDartInteropStatics _dartInteropStatics = (() {
 /// Returns a new [ReactComponentFactory] which produces a new JS
 /// [`ReactClass` component class](https://facebook.github.io/react/docs/top-level-api.html#react.createclass).
 ReactDartComponentFactoryProxy _registerComponent(ComponentFactory componentFactory, [Iterable<String> skipMethods = const []]) {
+  var componentInstance = componentFactory();
   var componentStatics = new ComponentStatics(componentFactory);
+
+  var jsConfig = new JsComponentConfig(
+    childContextKeys: componentInstance.childContextKeys,
+    contextKeys: componentInstance.contextKeys,
+  );
 
   /// Create the JS [`ReactClass` component class](https://facebook.github.io/react/docs/top-level-api.html#react.createclass)
   /// with custom JS lifecycle methods.
   var reactComponentClass = React.createClass(
-      createReactDartComponentClassConfig(_dartInteropStatics, componentStatics)
-        ..displayName = componentFactory().displayName
+      createReactDartComponentClassConfig(_dartInteropStatics, componentStatics, jsConfig)
+        ..displayName = componentInstance.displayName
   );
 
   // Cache default props and store them on the ReactClass so they can be used
   // by ReactDartComponentFactoryProxy and externally.
-  final Map defaultProps = new Map.unmodifiable(componentFactory().getDefaultProps());
+  final Map defaultProps = new Map.unmodifiable(componentInstance.getDefaultProps());
   reactComponentClass.dartDefaultProps = defaultProps;
 
   return new ReactDartComponentFactoryProxy(reactComponentClass);
