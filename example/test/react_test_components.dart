@@ -30,8 +30,8 @@ class _HelloGreeter extends react.Component {
 
   render() {
     return react.div({}, [
-        react.input({'ref': 'myInput', 'value': bind('name'), 'onChange': onInputChange}),
-        helloComponent({'name': state['name']})
+        react.input({'key': 'input', 'ref': 'myInput', 'value': bind('name'), 'onChange': onInputChange}),
+        helloComponent({'key': 'hello', 'name': state['name']})
     ]);
   }
 }
@@ -47,8 +47,8 @@ class _CheckBoxComponent extends react.Component {
 
   render() {
     return react.div({}, [
-        react.label({'className': this.state["checked"] ? 'striked' : 'not-striked'}, 'do the dishes'),
-        react.input({'type': 'checkbox', 'value': bind('checked')}, [])
+        react.label({'key': 'label', 'className': this.state["checked"] ? 'striked' : 'not-striked'}, 'do the dishes'),
+        react.input({'key': 'input', 'type': 'checkbox', 'value': bind('checked')})
     ]);
   }
 }
@@ -136,8 +136,8 @@ class _ListComponent extends react.Component {
     }
 
     return react.div({}, [
-        react.button({"onClick": addItem}, "addItem"),
-        react.ul({}, items),
+        react.button({"onClick": addItem, 'key': 'button'}, "addItem"),
+        react.ul({'key': 'list'}, items),
     ]);
   }
 }
