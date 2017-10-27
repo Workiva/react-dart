@@ -45,6 +45,9 @@ ReactComponentFactory _registerComponent(ComponentFactory componentFactory, [Ite
     // If componentWillMount called setState or replaceState, then transfer this state to actual state.
     component.transferComponentState();
 
+    // If componentWillMount updated context, then transfer this context to actual context.
+    component.transferComponentContext();
+
     // Return result of component.render()
     return ([String ownerId, num position, String key]) {
       return component.render()(ownerId, position, key);

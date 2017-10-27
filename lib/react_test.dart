@@ -34,7 +34,7 @@ initializeComponent(Component component, [Map props = const {}, List children, r
   if (redraw == null) redraw = () {};
   var extendedProps = new Map.from(component.getDefaultProps())
     ..addAll(props);
-  component.initComponentInternal(extendedProps, redraw, ref);
+  component.initComponentInternal(extendedProps, redraw, ref, null, component.context);
   component.initStateInternal();
   component.componentWillMount();
 }

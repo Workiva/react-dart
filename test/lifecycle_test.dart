@@ -159,6 +159,7 @@ void main() {
       );
 
       const Map expectedState = const {};
+      const Map expectedContext = const {};
 
       var mountNode = new DivElement();
       var instance = react_dom.render(LifecycleTest(initialProps), mountNode);
@@ -169,11 +170,14 @@ void main() {
       react_dom.render(LifecycleTest(newProps), mountNode);
 
       expect(component.lifecycleCalls, equals([
-        matchCall('componentWillReceiveProps', args: [newPropsWithDefaults],                    props: initialPropsWithDefaults),
-        matchCall('shouldComponentUpdate',     args: [newPropsWithDefaults, expectedState],     props: initialPropsWithDefaults),
-        matchCall('componentWillUpdate',       args: [newPropsWithDefaults, expectedState],     props: initialPropsWithDefaults),
-        matchCall('render',                                                                     props: newPropsWithDefaults),
-        matchCall('componentDidUpdate',        args: [initialPropsWithDefaults, expectedState], props: newPropsWithDefaults),
+        matchCall('componentWillReceiveProps',            args: [newPropsWithDefaults],                    props: initialPropsWithDefaults),
+        matchCall('componentWillReceivePropsWithContext', args: [newPropsWithDefaults, expectedContext],                    props: initialPropsWithDefaults),
+        matchCall('shouldComponentUpdateWithContext',     args: [newPropsWithDefaults, expectedState, expectedContext],     props: initialPropsWithDefaults),
+        matchCall('componentWillUpdate',                  args: [newPropsWithDefaults, expectedState],     props: initialPropsWithDefaults),
+        matchCall('componentWillUpdateWithContext',       args: [newPropsWithDefaults, expectedState, expectedContext],     props: initialPropsWithDefaults),
+        matchCall('render',                                                                                props: newPropsWithDefaults),
+        matchCall('componentDidUpdate',                   args: [initialPropsWithDefaults, expectedState], props: newPropsWithDefaults),
+        matchCall('componentDidUpdateWithContext',        args: [initialPropsWithDefaults, expectedState, expectedContext], props: newPropsWithDefaults),
       ]));
     });
 
@@ -193,6 +197,8 @@ void main() {
         'getInitialState': (_) => initialState
       });
 
+      final Map newContext = const {};
+
       final Map expectedProps = unmodifiableMap(
           defaultProps,
           initialProps,
@@ -206,10 +212,12 @@ void main() {
       component.setState(stateDelta);
 
       expect(component.lifecycleCalls, equals([
-        matchCall('shouldComponentUpdate', args: [expectedProps, newState],     state: initialState),
-        matchCall('componentWillUpdate',   args: [expectedProps, newState],     state: initialState),
-        matchCall('render',                                                     state: newState),
-        matchCall('componentDidUpdate',    args: [expectedProps, initialState], state: newState),
+        matchCall('shouldComponentUpdateWithContext', args: [expectedProps, newState, newContext],      state: initialState),
+        matchCall('componentWillUpdate',              args: [expectedProps, newState],                  state: initialState),
+        matchCall('componentWillUpdateWithContext',   args: [expectedProps, newState, newContext],      state: initialState),
+        matchCall('render',                                                                             state: newState),
+        matchCall('componentDidUpdate',               args: [expectedProps, initialState],              state: newState),
+        matchCall('componentDidUpdateWithContext',    args: [expectedProps, initialState, newContext],  state: newState),
       ]));
     });
 
@@ -224,6 +232,7 @@ void main() {
       const Map stateDelta = const {
         'newState': 'new',
       };
+      const Map expectedContext = const {};
 
       final Map lifecycleTestProps = unmodifiableMap({
         'getInitialState': (_) => initialState,
@@ -255,17 +264,22 @@ void main() {
 
       expect(component.lifecycleCalls, equals([
         matchCall('componentWillReceiveProps', args: [newPropsWithDefaults],           props: initialPropsWithDefaults, state: initialState),
-        matchCall('shouldComponentUpdate',     args: [newPropsWithDefaults, newState], props: initialPropsWithDefaults, state: initialState),
+        matchCall('componentWillReceivePropsWithContext', args: [newPropsWithDefaults, expectedContext],           props: initialPropsWithDefaults, state: initialState),
+        matchCall('shouldComponentUpdateWithContext',     args: [newPropsWithDefaults, newState, expectedContext], props: initialPropsWithDefaults, state: initialState),
         matchCall('componentWillUpdate',       args: [newPropsWithDefaults, newState], props: initialPropsWithDefaults, state: initialState),
+        matchCall('componentWillUpdateWithContext',       args: [newPropsWithDefaults, newState, expectedContext], props: initialPropsWithDefaults, state: initialState),
         matchCall('render',                                                                    props: newPropsWithDefaults, state: newState),
         matchCall('componentDidUpdate',        args: [initialPropsWithDefaults, initialState], props: newPropsWithDefaults, state: newState),
+        matchCall('componentDidUpdateWithContext',        args: [initialPropsWithDefaults, initialState, expectedContext], props: newPropsWithDefaults, state: newState),
       ]));
     });
 
-    group('when shouldComponentUpdate returns false:', () {
+    void testShouldUpdates({bool shouldComponentUpdateWithContext, bool shouldComponentUpdate}) {
       test('recieves updated props with correct lifecycle calls and does not rerender', () {
+        final Map expectedContext = const {};
         final Map initialProps = unmodifiableMap({
-          'shouldComponentUpdate': (_, __, ___) => false,
+          'shouldComponentUpdate': (_, __, ___) => shouldComponentUpdate,
+          'shouldComponentUpdateWithContext': (_, __, ___, ____) => shouldComponentUpdateWithContext,
           'initialProp': 'initial',
           'children': const []
         });
@@ -291,14 +305,24 @@ void main() {
 
         react_dom.render(LifecycleTest(newProps), mountNode);
 
-        expect(component.lifecycleCalls, equals([
+        List calls = [
           matchCall('componentWillReceiveProps', args: [newPropsWithDefaults],                props: initialPropsWithDefaults),
-          matchCall('shouldComponentUpdate',     args: [newPropsWithDefaults, expectedState], props: initialPropsWithDefaults),
-        ]));
+          matchCall('componentWillReceivePropsWithContext', args: [newPropsWithDefaults, expectedContext],                props: initialPropsWithDefaults),
+          matchCall('shouldComponentUpdateWithContext',     args: [newPropsWithDefaults, expectedState, expectedContext], props: initialPropsWithDefaults),
+        ];
+
+        if (shouldComponentUpdateWithContext == null) {
+          calls.add(
+            matchCall('shouldComponentUpdate', args: [newPropsWithDefaults, expectedState], props: initialPropsWithDefaults),
+          );
+        }
+
+        expect(component.lifecycleCalls, equals(calls));
         expect(component.props, equals(newPropsWithDefaults));
       });
 
       test('updates state with correct lifecycle calls and does not rerender', () {
+        const Map expectedContext = const {};
         const Map initialState = const {
           'initialState': 'initial',
         };
@@ -312,7 +336,8 @@ void main() {
 
         final Map initialProps = unmodifiableMap({
           'getInitialState': (_) => initialState,
-          'shouldComponentUpdate': (_, __, ___) => false,
+          'shouldComponentUpdate': (_, __, ___) => shouldComponentUpdate,
+          'shouldComponentUpdateWithContext': (_, __, ___, ____) => shouldComponentUpdateWithContext,
         });
 
         final Map expectedProps = unmodifiableMap(
@@ -324,9 +349,17 @@ void main() {
 
         component.setState(stateDelta);
 
-        expect(component.lifecycleCalls, equals([
-          matchCall('shouldComponentUpdate', args: [expectedProps, newState], state: initialState),
-        ]));
+        List calls = [
+          matchCall('shouldComponentUpdateWithContext', args: [expectedProps, newState, expectedContext], state: initialState),
+        ];
+
+        if (shouldComponentUpdateWithContext == null) {
+          calls.add(
+            matchCall('shouldComponentUpdate', args: [expectedProps, newState], state: initialState),
+          );
+        }
+
+        expect(component.lifecycleCalls, equals(calls));
         expect(component.state, equals(newState));
       });
 
@@ -343,7 +376,8 @@ void main() {
         };
 
         final Map lifecycleTestProps = unmodifiableMap({
-          'shouldComponentUpdate': (_, __, ___) => false,
+          'shouldComponentUpdate': (_, __, ___) => shouldComponentUpdate,
+          'shouldComponentUpdateWithContext': (_, __, ___, ____) => shouldComponentUpdateWithContext,
           'getInitialState': (_) => initialState,
           'componentWillReceiveProps': (_LifecycleTest component, Map props) {
             component.setState(stateDelta);
@@ -363,6 +397,8 @@ void main() {
           defaultProps, newProps, emptyChildrenProps
         );
 
+        final Map expectedContext = const {};
+
         var mountNode = new DivElement();
         var instance = react_dom.render(LifecycleTest(initialProps), mountNode);
         _LifecycleTest component = getDartComponent(instance);
@@ -371,11 +407,28 @@ void main() {
 
         react_dom.render(LifecycleTest(newProps), mountNode);
 
-        expect(component.lifecycleCalls, equals([
-          matchCall('componentWillReceiveProps', args: [newPropsWithDefaults],           props: initialPropsWithDefaults, state: initialState),
-          matchCall('shouldComponentUpdate',     args: [newPropsWithDefaults, newState], props: initialPropsWithDefaults, state: initialState),
-        ]));
+        List calls = [
+          matchCall('componentWillReceiveProps',            args: [newPropsWithDefaults],                            props: initialPropsWithDefaults, state: initialState),
+          matchCall('componentWillReceivePropsWithContext', args: [newPropsWithDefaults, expectedContext],           props: initialPropsWithDefaults, state: initialState),
+          matchCall('shouldComponentUpdateWithContext',     args: [newPropsWithDefaults, newState, expectedContext], props: initialPropsWithDefaults, state: initialState),
+        ];
+
+        if (shouldComponentUpdateWithContext == null) {
+          calls.add(
+            matchCall('shouldComponentUpdate', args: [newPropsWithDefaults, newState], props: initialPropsWithDefaults, state: initialState),
+          );
+        }
+
+        expect(component.lifecycleCalls, equals(calls));
       });
+    }
+
+    group('when shouldComponentUpdate returns false:', () {
+      testShouldUpdates(shouldComponentUpdateWithContext: null, shouldComponentUpdate: false);
+    });
+
+    group('when shouldComponentUpdateWithContext returns false:', () {
+      testShouldUpdates(shouldComponentUpdateWithContext: false, shouldComponentUpdate: false);
     });
 
     group('calls the setState callback, and transactional setState callback in the correct order', () {
@@ -438,6 +491,11 @@ class _SetStateTest extends react.Component {
   @override
   componentWillReceiveProps(_) {
     recordLifecyleCall('componentWillReceiveProps');
+  }
+
+  @override
+  componentWillReceivePropsWithContext(_, __) {
+    recordLifecyleCall('componentWillReceivePropsWithContext');
   }
 
   @override

@@ -158,12 +158,13 @@ class _ContextComponent extends react.Component {
 
   @override
   Map<String, dynamic> getChildContext() => {
-    'foo': 'bar',
+    'foo': {'object': 'with value'},
+    'bar': true,
     'renderCount': _renderCount
   };
 
   @override
-  Iterable<String> get childContextKeys => const ['foo', 'renderCount'];
+  Iterable<String> get childContextKeys => const ['foo', 'bar', 'renderCount'];
 
   render() {
     _renderCount++;
@@ -177,7 +178,6 @@ class _ContextComponent extends react.Component {
 }
 var contextComponent = react.registerComponent(() => new _ContextComponent());
 
-
 class _ContextConsumerComponent extends react.Component {
   @override
   Iterable<String> get contextKeys => const ['foo', 'renderCount'];
@@ -186,7 +186,21 @@ class _ContextConsumerComponent extends react.Component {
     return react.ul({},
       'ContextConsumerComponent.context: ',
       context.toString(),
+      props['children']
     );
   }
 }
 var contextConsumerComponent = react.registerComponent(() => new _ContextConsumerComponent());
+
+class _FooOnlyContextConsumerComponent extends react.Component {
+  @override
+  Iterable<String> get contextKeys => const ['foo'];
+
+  render() {
+    return react.ul({},
+      'FooOnlyContextConsumerComponent.context: ',
+      context.toString(),
+    );
+  }
+}
+var fooOnlyContextConsumerComponent = react.registerComponent(() => new _FooOnlyContextConsumerComponent());

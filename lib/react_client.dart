@@ -283,7 +283,8 @@ final ReactDartInteropStatics _dartInteropStatics = (() {
     var nextProps = _getNextProps(component, nextInternal);
     component
       ..nextProps = nextProps
-      ..componentWillReceiveProps(nextProps);
+      ..componentWillReceiveProps(nextProps)
+      ..componentWillReceivePropsWithContext(nextProps, component.nextContext);
   });
 
   /// Wrapper for [Component.shouldComponentUpdate].
@@ -316,8 +317,9 @@ final ReactDartInteropStatics _dartInteropStatics = (() {
   /// Wrapper for [Component.componentWillUpdate].
   void handleComponentWillUpdate(Component component, InteropContextValue nextContext) => zone.run(() {
     /// Call `componentWillUpdate` and the context variant
-    component.componentWillUpdate(component.nextProps, component.nextState);
-    component.componentWillUpdateWithContext(component.nextProps, component.nextState, component.nextContext);
+    component
+      ..componentWillUpdate(component.nextProps, component.nextState)
+      ..componentWillUpdateWithContext(component.nextProps, component.nextState, component.nextContext);
 
     _afterPropsChange(component, nextContext);
   });
@@ -329,8 +331,9 @@ final ReactDartInteropStatics _dartInteropStatics = (() {
     var prevInternalProps = prevInternal.props;
 
     /// Call `componentDidUpdate` and the context variant
-    component.componentDidUpdate(prevInternalProps, component.prevState);
-    component.componentDidUpdateWithContext(prevInternalProps, component.prevState, component.prevContext);
+    component
+      ..componentDidUpdate(prevInternalProps, component.prevState)
+      ..componentDidUpdateWithContext(prevInternalProps, component.prevState, component.prevContext);
 
     _callSetStateCallbacks(component);
     // Clear out prevState after it's done being used so it's not retained
