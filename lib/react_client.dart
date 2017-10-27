@@ -233,7 +233,8 @@ final ReactDartInteropStatics _dartInteropStatics = (() {
   void handleComponentWillMount(Component component) => zone.run(() {
     component
       ..componentWillMount()
-      ..transferComponentState();
+      ..transferComponentState()
+      ..transferComponentContext();
   });
 
   /// Wrapper for [Component.componentDidMount].
@@ -249,12 +250,15 @@ final ReactDartInteropStatics _dartInteropStatics = (() {
   /// 1. Update [Component.props] using the value stored to [Component.nextProps]
   ///    in `componentWillReceiveProps`.
   /// 2. Update [Component.state] by calling [Component.transferComponentState]
-  /// 3. Update [Component.context] with the latest
+  /// 3. Update [Component.context] by calling [Component.transferComponentContext]
   void _afterPropsChange(Component component, InteropContextValue nextContext) {
     component.props = component.nextProps; // [1]
     component.transferComponentState();    // [2]
-    // [3]
-    component.context = _unjsifyContext(nextContext);
+    component.transferComponentContext();  // [3]
+  }
+
+  void _clearPrevContext(Component component) {
+    component.prevContext = null;
   }
 
   void _clearPrevState(Component component) {
@@ -286,7 +290,16 @@ final ReactDartInteropStatics _dartInteropStatics = (() {
   bool handleShouldComponentUpdate(Component component, InteropContextValue nextContext) => zone.run(() {
     _callSetStateTransactionalCallbacks(component);
 
-    if (component.shouldComponentUpdate(component.nextProps, component.nextState)) {
+    // If shouldComponentUpdateWithContext returns a valid bool (default implementation returns null),
+    // then don't bother calling `shouldComponentUpdate` and have it trump.
+    bool shouldUpdate =
+      component.shouldComponentUpdateWithContext(component.nextProps, component.nextState, component.nextContext);
+
+    if (shouldUpdate == null) {
+      shouldUpdate = component.shouldComponentUpdate(component.nextProps, component.nextState);
+    }
+
+    if (shouldUpdate) {
       return true;
     } else {
       // If component should not update, update props / transfer state because componentWillUpdate will not be called.
@@ -294,13 +307,18 @@ final ReactDartInteropStatics _dartInteropStatics = (() {
       _callSetStateCallbacks(component);
       // Clear out prevState after it's done being used so it's not retained
       _clearPrevState(component);
+      // Clear out prevContext after it's done being used so it's not retained
+      _clearPrevContext(component);
       return false;
-  }
+    }
   });
 
   /// Wrapper for [Component.componentWillUpdate].
   void handleComponentWillUpdate(Component component, InteropContextValue nextContext) => zone.run(() {
+    /// Call `componentWillUpdate` and the context variant
     component.componentWillUpdate(component.nextProps, component.nextState);
+    component.componentWillUpdateWithContext(component.nextProps, component.nextState, component.nextContext);
+
     _afterPropsChange(component, nextContext);
   });
 
@@ -309,10 +327,16 @@ final ReactDartInteropStatics _dartInteropStatics = (() {
   /// Uses [prevState] which was transferred from [Component.nextState] in [componentWillUpdate].
   void handleComponentDidUpdate(Component component, ReactDartComponentInternal prevInternal) => zone.run(() {
     var prevInternalProps = prevInternal.props;
+
+    /// Call `componentDidUpdate` and the context variant
     component.componentDidUpdate(prevInternalProps, component.prevState);
+    component.componentDidUpdateWithContext(prevInternalProps, component.prevState, component.prevContext);
+
     _callSetStateCallbacks(component);
     // Clear out prevState after it's done being used so it's not retained
     _clearPrevState(component);
+    // Clear out prevContext after it's done being used so it's not retained
+    _clearPrevContext(component);
   });
 
   /// Wrapper for [Component.componentWillUnmount].
