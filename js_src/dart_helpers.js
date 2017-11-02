@@ -49,7 +49,7 @@ function _createReactDartComponentClassConfig(dartInteropStatics, componentStati
       config.childContextTypes[childContextKeys[i]] = React.PropTypes.object;
     }
 
-    // Only declare this when `hasChildContext` is true to avoid unnecessarily
+    // Only declare this when `childContextKeys` is non-empty to avoid unnecessarily
     // creating interop context objects for components that won't use it.
     config.getChildContext = function() {
       return dartInteropStatics.handleGetChildContext(this.dartComponent);
