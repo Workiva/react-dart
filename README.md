@@ -60,7 +60,7 @@ If you are familiar with React (without JSX extension) React-dart shouldn't surp
 functions that take `props` as first argument and `children` as optional second argument. `props` should implement `Map` and `children` is either one React element or `List` with multiple elements.
 
 ```dart
-div({"className": "somehing"}, [
+div({"className": "something"}, [
   h1({"style": {"height": "20px"}}, "Headline"),
   a({"href":"something.com"}, "Something"),
   "Some text"
