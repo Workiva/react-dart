@@ -331,9 +331,7 @@ final ReactDartInteropStatics _dartInteropStatics = (() {
     var prevInternalProps = prevInternal.props;
 
     /// Call `componentDidUpdate` and the context variant
-    component
-      ..componentDidUpdate(prevInternalProps, component.prevState)
-      ..componentDidUpdateWithContext(prevInternalProps, component.prevState, component.prevContext);
+    component.componentDidUpdate(prevInternalProps, component.prevState);
 
     _callSetStateCallbacks(component);
     // Clear out prevState after it's done being used so it's not retained

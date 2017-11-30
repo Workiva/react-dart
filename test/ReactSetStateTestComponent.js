@@ -53,10 +53,6 @@ var ReactSetStateTestComponent = React.createClass({
     this.recordLifecyleCall("componentDidUpdate");
   },
 
-  componentDidUpdateWithContext: function(_, __, ___) {
-    this.recordLifecyleCall("componentDidUpdateWithContext");
-  },
-
   outerSetStateCallback: function() {
     this.recordLifecyleCall('outerSetStateCallback');
   },

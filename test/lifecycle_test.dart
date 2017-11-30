@@ -177,7 +177,6 @@ void main() {
         matchCall('componentWillUpdateWithContext',       args: [newPropsWithDefaults, expectedState, expectedContext],     props: initialPropsWithDefaults),
         matchCall('render',                                                                                props: newPropsWithDefaults),
         matchCall('componentDidUpdate',                   args: [initialPropsWithDefaults, expectedState], props: newPropsWithDefaults),
-        matchCall('componentDidUpdateWithContext',        args: [initialPropsWithDefaults, expectedState, expectedContext], props: newPropsWithDefaults),
       ]));
     });
 
@@ -217,7 +216,6 @@ void main() {
         matchCall('componentWillUpdateWithContext',   args: [expectedProps, newState, newContext],      state: initialState),
         matchCall('render',                                                                             state: newState),
         matchCall('componentDidUpdate',               args: [expectedProps, initialState],              state: newState),
-        matchCall('componentDidUpdateWithContext',    args: [expectedProps, initialState, newContext],  state: newState),
       ]));
     });
 
@@ -270,7 +268,6 @@ void main() {
         matchCall('componentWillUpdateWithContext',       args: [newPropsWithDefaults, newState, expectedContext], props: initialPropsWithDefaults, state: initialState),
         matchCall('render',                                                                    props: newPropsWithDefaults, state: newState),
         matchCall('componentDidUpdate',        args: [initialPropsWithDefaults, initialState], props: newPropsWithDefaults, state: newState),
-        matchCall('componentDidUpdateWithContext',        args: [initialPropsWithDefaults, initialState, expectedContext], props: newPropsWithDefaults, state: newState),
       ]));
     });
 
@@ -615,9 +612,6 @@ class _LifecycleTest extends react.Component {
 
   void componentDidUpdate(prevProps, prevState) =>
     lifecycleCall('componentDidUpdate', arguments: [new Map.from(prevProps), new Map.from(prevState)]);
-
-  void componentDidUpdateWithContext(prevProps, prevState, prevContext) =>
-    lifecycleCall('componentDidUpdateWithContext', arguments: [new Map.from(prevProps), new Map.from(prevState), new Map.from(prevContext)]);
 
   bool shouldComponentUpdate(nextProps, nextState) =>
     lifecycleCall('shouldComponentUpdate', arguments: [new Map.from(nextProps), new Map.from(nextState)],

@@ -99,9 +99,9 @@ abstract class Component {
 
   /// Initializes context
   _initContext(context) {
-    this.context = new Map.from(context ?? {});
+    this.context = new Map.from(context ?? const {});
 
-    /// Call `transferComponentContext` to get state also to `_prevContext`
+    // Call `transferComponentContext` to get state also to `_prevContext`
     transferComponentContext();
   }
 
@@ -113,14 +113,13 @@ abstract class Component {
   initStateInternal() {
     this.state = new Map.from(getInitialState());
 
-    /// Call `transferComponentState` to get state also to `_prevState`
+    // Call `transferComponentState` to get state also to `_prevState`
     transferComponentState();
   }
 
   /// Private reference to the value of [context] for the upcoming render cycle.
   ///
-  /// Useful for ReactJS lifecycle methods [shouldComponentUpdateWithContext], [componentWillUpdateWithContext] and
-  /// [componentDidUpdateWithContext].
+  /// Useful for ReactJS lifecycle methods [shouldComponentUpdateWithContext] and [componentWillUpdateWithContext].
   Map _nextContext = null;
 
   /// Private reference to the value of [state] for the upcoming render cycle.
@@ -129,9 +128,7 @@ abstract class Component {
   Map _nextState = null;
 
   /// Reference to the value of [context] from the previous render cycle, used internally for proxying
-  /// the ReactJS lifecycle method and [componentDidUpdateWithContext].
-  ///
-  /// Not available after [componentDidUpdateWithContext] is called.
+  /// the ReactJS lifecycle method.
   ///
   /// __DO NOT set__ from anywhere outside react-dart lifecycle internals.
   Map prevContext;
@@ -144,7 +141,7 @@ abstract class Component {
   /// __DO NOT set__ from anywhere outside react-dart lifecycle internals.
   Map prevState;
 
-  /// Public getter for [_nextState].
+  /// Public getter for [_nextContext].
   ///
   /// If `null`, then [_nextContext] is equal to [context] - which is the value that will be returned.
   Map get nextContext => _nextContext == null ? context : _nextContext;
@@ -328,24 +325,8 @@ abstract class Component {
   /// Use this as an opportunity to operate on the [rootNode] (DOM) when the `Component` has been updated as a result
   /// of the values of [prevProps] / [prevState].
   ///
-  /// __Note__: Choose either this method or [componentDidUpdateWithContext]. They are both called at the same time so
-  /// using both provides no added benefit.
-  ///
   /// See: <https://facebook.github.io/react/docs/react-component.html#updating-componentdidupdate>
   void componentDidUpdate(Map prevProps, Map prevState) {}
-
-  /// ReactJS lifecycle method that is invoked immediately after the `Component`'s updates are flushed to the DOM.
-  ///
-  /// This method is not called for the initial [render].
-  ///
-  /// Use this as an opportunity to operate on the [rootNode] (DOM) when the `Component` has been updated as a result
-  /// of the values of [prevProps] / [prevState] /[prevContext].
-  ///
-  /// __Note__: Choose either this method or [componentDidUpdate]. They are both called at the same time so using both
-  /// provides no added benefit.
-  ///
-  /// See: <https://facebook.github.io/react/docs/react-component.html#updating-componentdidupdate>
-  void componentDidUpdateWithContext(Map prevProps, Map prevState, Map prevContext) {}
 
   /// ReactJS lifecycle method that is invoked immediately before a `Component` is unmounted from the DOM.
   ///
