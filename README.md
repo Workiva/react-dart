@@ -256,3 +256,10 @@ void main() {
 ```
 
 To test the Dart wrapper, take a look at [test/react_test_utils_test.dart](test).
+
+## Contributing
+
+### Running Tests
+
+Dart VM: `pub run test -p content-shell`
+dart2js: `pub run test -p chrome`
