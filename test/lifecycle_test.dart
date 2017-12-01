@@ -112,7 +112,7 @@ void main() {
       };
     }
 
-    test('recieves correct lifecycle calls on component mount', () {
+    test('receives correct lifecycle calls on component mount', () {
       _LifecycleTest component = getDartComponent(
           render(LifecycleTest({}))
       );
@@ -125,7 +125,7 @@ void main() {
       ]));
     });
 
-    test('recieves correct lifecycle calls on component unmount order', () {
+    test('receives correct lifecycle calls on component unmount order', () {
       var mountNode = new DivElement();
       var instance = react_dom.render(LifecycleTest({}), mountNode);
       _LifecycleTest component = getDartComponent(instance);
@@ -139,7 +139,7 @@ void main() {
       ]));
     });
 
-    test('recieves updated props with correct lifecycle calls and defaults properly merged in', () {
+    test('receives updated props with correct lifecycle calls and defaults properly merged in', () {
       const Map initialProps = const {
         'initialProp': 'initial',
         'children': const []
@@ -272,7 +272,7 @@ void main() {
     });
 
     void testShouldUpdates({bool shouldComponentUpdateWithContext, bool shouldComponentUpdate}) {
-      test('recieves updated props with correct lifecycle calls and does not rerender', () {
+      test('receives updated props with correct lifecycle calls and does not rerender', () {
         final Map expectedContext = const {};
         final Map initialProps = unmodifiableMap({
           'shouldComponentUpdate': (_, __, ___) => shouldComponentUpdate,
