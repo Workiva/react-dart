@@ -194,7 +194,7 @@ Map<String, dynamic> _unjsifyContext(InteropContextValue interopContext) {
   // TODO consider using `contextKeys` for this if perf of objectKeys is bad.
   return new Map.fromIterable(_objectKeys(interopContext), value: (key) {
     ReactDartContextInternal internal = getProperty(interopContext, key);
-    return internal.value;
+    return internal?.value;
   });
 }
 
@@ -233,8 +233,7 @@ final ReactDartInteropStatics _dartInteropStatics = (() {
   void handleComponentWillMount(Component component) => zone.run(() {
     component
       ..componentWillMount()
-      ..transferComponentState()
-      ..transferComponentContext();
+      ..transferComponentState();
   });
 
   /// Wrapper for [Component.componentDidMount].
@@ -249,16 +248,14 @@ final ReactDartInteropStatics _dartInteropStatics = (() {
 
   /// 1. Update [Component.props] using the value stored to [Component.nextProps]
   ///    in `componentWillReceiveProps`.
-  /// 2. Update [Component.state] by calling [Component.transferComponentState]
-  /// 3. Update [Component.context] by calling [Component.transferComponentContext]
+  /// 2. Update [Component.context] using the value stored to [Component.nextContext]
+  ///    in `componentWillReceivePropsWithContext`.
+  /// 3. Update [Component.state] by calling [Component.transferComponentState]
   void _afterPropsChange(Component component, InteropContextValue nextContext) {
-    component.props = component.nextProps; // [1]
-    component.transferComponentState();    // [2]
-    component.transferComponentContext();  // [3]
-  }
-
-  void _clearPrevContext(Component component) {
-    component.prevContext = null;
+    component
+      ..props = component.nextProps            // [1]
+      ..context = _unjsifyContext(nextContext) // [2]
+      ..transferComponentState();              // [3]
   }
 
   void _clearPrevState(Component component) {
@@ -308,8 +305,6 @@ final ReactDartInteropStatics _dartInteropStatics = (() {
       _callSetStateCallbacks(component);
       // Clear out prevState after it's done being used so it's not retained
       _clearPrevState(component);
-      // Clear out prevContext after it's done being used so it's not retained
-      _clearPrevContext(component);
       return false;
     }
   });
@@ -336,8 +331,6 @@ final ReactDartInteropStatics _dartInteropStatics = (() {
     _callSetStateCallbacks(component);
     // Clear out prevState after it's done being used so it's not retained
     _clearPrevState(component);
-    // Clear out prevContext after it's done being used so it's not retained
-    _clearPrevContext(component);
   });
 
   /// Wrapper for [Component.componentWillUnmount].

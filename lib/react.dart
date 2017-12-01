@@ -100,9 +100,7 @@ abstract class Component {
   /// Initializes context
   _initContext(context) {
     this.context = new Map.from(context ?? const {});
-
-    // Call `transferComponentContext` to get state also to `_prevContext`
-    transferComponentContext();
+    this.nextContext = this.context;
   }
 
   _initProps(props) {
@@ -120,7 +118,7 @@ abstract class Component {
   /// Private reference to the value of [context] for the upcoming render cycle.
   ///
   /// Useful for ReactJS lifecycle methods [shouldComponentUpdateWithContext] and [componentWillUpdateWithContext].
-  Map _nextContext = null;
+  Map nextContext;
 
   /// Private reference to the value of [state] for the upcoming render cycle.
   ///
@@ -144,7 +142,7 @@ abstract class Component {
   /// Public getter for [_nextContext].
   ///
   /// If `null`, then [_nextContext] is equal to [context] - which is the value that will be returned.
-  Map get nextContext => _nextContext == null ? context : _nextContext;
+  // Map get nextContext => _nextContext == null ? context : _nextContext;
 
   /// Public getter for [_nextState].
   ///
@@ -158,15 +156,6 @@ abstract class Component {
   ///
   /// __DO NOT set__ from anywhere outside react-dart lifecycle internals.
   Map nextProps;
-
-  /// Transfers `Component` [_nextContext] to [context], and [context] to [prevContext].
-  void transferComponentContext() {
-    prevContext = context;
-    if (_nextContext != null) {
-      context = _nextContext;
-    }
-    _nextContext = new Map.from(context);
-  }
 
   /// Transfers `Component` [_nextState] to [state], and [state] to [prevState].
   void transferComponentState() {
@@ -183,6 +172,8 @@ abstract class Component {
   ///
   /// [A.k.a "forceUpdate"](https://facebook.github.io/react/docs/react-component.html#forceupdate)
   void redraw([callback()]) {
+    context = getChildContext();
+
     setState({}, callback);
   }
 
