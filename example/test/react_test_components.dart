@@ -154,26 +154,28 @@ class _MainComponent extends react.Component {
 var mainComponent = react.registerComponent(() => new _MainComponent());
 
 class _ContextComponent extends react.Component {
-  int _renderCount = 0;
+  @override
+  Iterable<String> get childContextKeys => const ['foo', 'bar', 'renderCount'];
 
   @override
   Map<String, dynamic> getChildContext() => {
     'foo': {'object': 'with value'},
     'bar': true,
-    'renderCount': _renderCount
+    'renderCount': this.state['renderCount']
   };
 
-  @override
-  Iterable<String> get childContextKeys => const ['foo', 'bar', 'renderCount'];
-
   render() {
-    _renderCount++;
-
     return react.ul({},
+      react.button({'onClick': _onButtonClick}, 'Redraw'),
+      react.br({}),
       'ContextComponent.getChildContext(): ',
       getChildContext().toString(),
       props['children']
     );
+  }
+
+  _onButtonClick(event) {
+    this.setState({'renderCount': (this.state['renderCount'] ?? 0) + 1});
   }
 }
 var contextComponent = react.registerComponent(() => new _ContextComponent());
@@ -181,6 +183,9 @@ var contextComponent = react.registerComponent(() => new _ContextComponent());
 class _ContextConsumerComponent extends react.Component {
   @override
   Iterable<String> get contextKeys => const ['foo', 'renderCount'];
+
+  @override
+  Iterable<String> get childContextKeys => const ['foo', 'renderCount'];
 
   render() {
     return react.ul({},
