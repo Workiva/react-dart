@@ -17,6 +17,6 @@ void main() {
   ), querySelector('#content'));
 
   react_dom.render(contextComponent({},
-    contextConsumerComponent({}, fooOnlyContextConsumerComponent({})),
+    contextConsumerComponent({}, grandchildContextConsumerComponent({})),
   ), querySelector('#content'));
 }

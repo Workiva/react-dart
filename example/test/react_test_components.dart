@@ -170,6 +170,8 @@ class _ContextComponent extends react.Component {
       react.br({}),
       'ContextComponent.getChildContext(): ',
       getChildContext().toString(),
+      react.br({}),
+      react.br({}),
       props['children']
     );
   }
@@ -182,30 +184,29 @@ var contextComponent = react.registerComponent(() => new _ContextComponent());
 
 class _ContextConsumerComponent extends react.Component {
   @override
-  Iterable<String> get contextKeys => const ['foo', 'renderCount'];
-
-  @override
-  Iterable<String> get childContextKeys => const ['foo', 'renderCount'];
+  Iterable<String> get contextKeys => const ['foo'];
 
   render() {
     return react.ul({},
       'ContextConsumerComponent.context: ',
       context.toString(),
+      react.br({}),
+      react.br({}),
       props['children']
     );
   }
 }
 var contextConsumerComponent = react.registerComponent(() => new _ContextConsumerComponent());
 
-class _FooOnlyContextConsumerComponent extends react.Component {
+class _GrandchildContextConsumerComponent extends react.Component {
   @override
-  Iterable<String> get contextKeys => const ['foo'];
+  Iterable<String> get contextKeys => const ['renderCount'];
 
   render() {
     return react.ul({},
-      'FooOnlyContextConsumerComponent.context: ',
+      'GrandchildContextConsumerComponent.context: ',
       context.toString(),
     );
   }
 }
-var fooOnlyContextConsumerComponent = react.registerComponent(() => new _FooOnlyContextConsumerComponent());
+var grandchildContextConsumerComponent = react.registerComponent(() => new _GrandchildContextConsumerComponent());
