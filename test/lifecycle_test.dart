@@ -103,12 +103,13 @@ void main() {
       'children': const []
     };
 
-    Map matchCall(String memberName, {args: anything, props: anything, state: anything}) {
+    Map matchCall(String memberName, {args: anything, props: anything, state: anything, context: anything}) {
       return {
         'memberName': memberName,
         'arguments': args,
         'props': props,
         'state': state,
+        'context': context,
       };
     }
 
@@ -136,6 +137,77 @@ void main() {
 
       expect(component.lifecycleCalls, equals([
         matchCall('componentWillUnmount'),
+      ]));
+    });
+
+    test('receives updated context with correct lifecycle calls', () {
+      _LifecycleTestWithContext component;
+
+      Map initialProps = {
+        'foo': false,
+        'initialProp': 'initial',
+        'children': const []
+      };
+      Map newProps = {
+        'children': const [],
+        'foo': true,
+        'newProp': 'new',
+      };
+
+      final Map initialPropsWithDefaults = unmodifiableMap({}
+        ..addAll(defaultProps)
+        ..addAll(initialProps)
+      );
+      final Map newPropsWithDefaults = unmodifiableMap({}
+        ..addAll(defaultProps)
+        ..addAll(newProps)
+      );
+
+      const Map expectedState = const {};
+
+      const Map initialContext = const {
+        'foo': false
+      };
+
+      const Map expectedContext = const {
+        'foo': true
+      };
+
+      Map refMap = {
+        'ref': ((ref) => component = ref),
+      };
+
+      // Add the 'ref' prop separately so it isn't an expected prop since React removes it internally
+      var initialPropsWithRef = new Map.from(initialProps)..addAll(refMap);
+      var newPropsWithRef = new Map.from(newPropsWithDefaults)..addAll(refMap);
+
+      // Render the initial instance
+      var mountNode = new DivElement();
+      react_dom.render(ContextWrapper({'foo': false}, LifecycleTestWithContext(initialPropsWithRef)), mountNode);
+
+      // Verify initial context/setup
+      expect(component.lifecycleCalls, equals([
+        matchCall('getInitialState',                      props: initialPropsWithDefaults, context: initialContext),
+        matchCall('componentWillMount',                   props: initialPropsWithDefaults, context: initialContext),
+        matchCall('render',                               props: initialPropsWithDefaults, context: initialContext),
+        matchCall('componentDidMount',                    props: initialPropsWithDefaults, context: initialContext),
+      ]));
+
+      // Clear the lifecycle calls for to not duplicate the initial calls below
+      component.lifecycleCalls.clear();
+
+      // Trigger a re-render with new content
+      react_dom.render(ContextWrapper({'foo': true}, LifecycleTestWithContext(newPropsWithRef)), mountNode);
+
+      // Verify updated context/setup
+      expect(component.lifecycleCalls, equals([
+        matchCall('componentWillReceiveProps',            args: [newPropsWithDefaults],                                 props: initialPropsWithDefaults, context: initialContext),
+        matchCall('componentWillReceivePropsWithContext', args: [newPropsWithDefaults, expectedContext],                props: initialPropsWithDefaults, context: initialContext),
+        matchCall('shouldComponentUpdateWithContext',     args: [newPropsWithDefaults, expectedState, expectedContext], props: initialPropsWithDefaults, context: initialContext),
+        matchCall('componentWillUpdate',                  args: [newPropsWithDefaults, expectedState],                  props: initialPropsWithDefaults, context: initialContext),
+        matchCall('componentWillUpdateWithContext',       args: [newPropsWithDefaults, expectedState, expectedContext], props: initialPropsWithDefaults, context: initialContext),
+        matchCall('render',                                                                                             props: newPropsWithDefaults, context: expectedContext),
+        matchCall('componentDidUpdate',                   args: [initialPropsWithDefaults, expectedState],              props: newPropsWithDefaults, context: expectedContext),
       ]));
     });
 
@@ -568,6 +640,25 @@ class _DefaultPropsTest extends react.Component {
   render() => false;
 }
 
+ReactDartComponentFactoryProxy ContextWrapper = react.registerComponent(() => new _ContextWrapper());
+class _ContextWrapper extends react.Component {
+  @override
+  Iterable<String> get childContextKeys => const ['foo'];
+
+  @override
+  Map<String, dynamic> getChildContext() => {
+    'foo': props['foo']
+  };
+
+  dynamic render() => react.div({}, props['children']);
+}
+
+ReactDartComponentFactoryProxy LifecycleTestWithContext = react.registerComponent(() => new _LifecycleTestWithContext());
+class _LifecycleTestWithContext extends _LifecycleTest {
+  @override
+  Iterable<String> get contextKeys => const ['foo'];
+}
+
 ReactDartComponentFactoryProxy LifecycleTest = react.registerComponent(() => new _LifecycleTest());
 class _LifecycleTest extends react.Component {
   List lifecycleCalls = [];
@@ -578,6 +669,7 @@ class _LifecycleTest extends react.Component {
       'arguments': arguments,
       'props': props == null ? null : new Map.from(props),
       'state': state == null ? null : new Map.from(state),
+      'context': new Map.from(context ?? const {}),
     });
 
     var lifecycleCallback = props == null ? null : props[memberName];

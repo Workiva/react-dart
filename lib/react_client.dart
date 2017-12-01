@@ -281,7 +281,7 @@ final ReactDartInteropStatics _dartInteropStatics = (() {
     component
       ..nextProps = nextProps
       ..componentWillReceiveProps(nextProps)
-      ..componentWillReceivePropsWithContext(nextProps, component.nextContext);
+      ..componentWillReceivePropsWithContext(nextProps, _unjsifyContext(nextContext));
   });
 
   /// Wrapper for [Component.shouldComponentUpdate].
@@ -291,7 +291,7 @@ final ReactDartInteropStatics _dartInteropStatics = (() {
     // If shouldComponentUpdateWithContext returns a valid bool (default implementation returns null),
     // then don't bother calling `shouldComponentUpdate` and have it trump.
     bool shouldUpdate =
-      component.shouldComponentUpdateWithContext(component.nextProps, component.nextState, component.nextContext);
+      component.shouldComponentUpdateWithContext(component.nextProps, component.nextState, _unjsifyContext(nextContext));
 
     if (shouldUpdate == null) {
       shouldUpdate = component.shouldComponentUpdate(component.nextProps, component.nextState);
@@ -314,7 +314,7 @@ final ReactDartInteropStatics _dartInteropStatics = (() {
     /// Call `componentWillUpdate` and the context variant
     component
       ..componentWillUpdate(component.nextProps, component.nextState)
-      ..componentWillUpdateWithContext(component.nextProps, component.nextState, component.nextContext);
+      ..componentWillUpdateWithContext(component.nextProps, component.nextState, _unjsifyContext(nextContext));
 
     _afterPropsChange(component, nextContext);
   });
