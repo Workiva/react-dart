@@ -172,8 +172,6 @@ abstract class Component {
   ///
   /// [A.k.a "forceUpdate"](https://facebook.github.io/react/docs/react-component.html#forceupdate)
   void redraw([callback()]) {
-    context = getChildContext();
-
     setState({}, callback);
   }
 
