@@ -27,26 +27,13 @@ var ReactSetStateTestComponent = React.createClass({
     this.recordLifecyleCall("componentWillReceiveProps");
   },
 
-  componentWillReceivePropsWithContext: function(_) {
-    this.recordLifecyleCall("componentWillReceivePropsWithContext");
-  },
-
   shouldComponentUpdate: function(_, __) {
     this.recordLifecyleCall("shouldComponentUpdate");
     return this.props.shouldUpdate;
   },
 
-  shouldComponentUpdateWithContext: function(_, __, ___) {
-    this.recordLifecyleCall("shouldComponentUpdateWithContext");
-    return this.props.shouldUpdate;
-  },
-
   componentWillUpdate: function(_, __) {
     this.recordLifecyleCall("componentWillUpdate");
-  },
-
-  componentWillUpdateWithContext: function(_, __, ___) {
-    this.recordLifecyleCall("componentWillUpdateWithContext");
   },
 
   componentDidUpdate: function(_, __) {
