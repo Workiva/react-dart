@@ -192,7 +192,8 @@ class InteropProps {
   external factory InteropProps({ReactDartComponentInternal internal, String key, dynamic ref});
 }
 
-/// A Dart object that stores .
+/// Internal react-dart information used to proxy React JS lifecycle to Dart
+/// [Component] instances.
 ///
 /// __For internal/advanced use only.__
 class ReactDartComponentInternal {

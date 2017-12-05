@@ -139,11 +139,6 @@ abstract class Component {
   /// __DO NOT set__ from anywhere outside react-dart lifecycle internals.
   Map prevState;
 
-  /// Public getter for [_nextContext].
-  ///
-  /// If `null`, then [_nextContext] is equal to [context] - which is the value that will be returned.
-  // Map get nextContext => _nextContext == null ? context : _nextContext;
-
   /// Public getter for [_nextState].
   ///
   /// If `null`, then [_nextState] is equal to [state] - which is the value that will be returned.
