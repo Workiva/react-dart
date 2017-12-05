@@ -140,6 +140,24 @@ void main() {
       ]));
     });
 
+    test('does not call getChildContext when childContextKeys is empty', () {
+      var mountNode = new DivElement();
+      var instance = react_dom.render(ContextWrapperWithoutKeys({'foo': false}, LifecycleTestWithContext({})), mountNode);
+      _ContextWrapperWithoutKeys component = getDartComponent(instance);
+
+      expect(component.lifecycleCalls, isEmpty);
+    });
+
+    test('calls getChildContext when childContextKeys exist', () {
+      var mountNode = new DivElement();
+      var instance = react_dom.render(ContextWrapper({'foo': false}, LifecycleTestWithContext({})), mountNode);
+      _ContextWrapper component = getDartComponent(instance);
+
+      expect(component.lifecycleCalls, equals([
+        matchCall('getChildContext'),
+      ]));
+    });
+
     test('receives updated context with correct lifecycle calls', () {
       _LifecycleTestWithContext component;
 
@@ -549,6 +567,38 @@ external List getUpdatingSetStateLifeCycleCalls();
 @JS()
 external List getNonUpdatingSetStateLifeCycleCalls();
 
+/// A test helper to record lifecycle calls
+abstract class LifecycleTestHelper {
+  Map context;
+  Map props;
+  Map state;
+
+  List lifecycleCalls = [];
+
+  dynamic lifecycleCall(String memberName, {List arguments: const [], defaultReturnValue()}) {
+    lifecycleCalls.add({
+      'memberName': memberName,
+      'arguments': arguments,
+      'props': props == null ? null : new Map.from(props),
+      'state': state == null ? null : new Map.from(state),
+      'context': new Map.from(context ?? const {}),
+    });
+
+    var lifecycleCallback = props == null ? null : props[memberName];
+    if (lifecycleCallback != null) {
+      return Function.apply(lifecycleCallback, []
+          ..add(this)
+          ..addAll(arguments));
+    }
+
+    if (defaultReturnValue != null) {
+      return defaultReturnValue();
+    }
+
+    return null;
+  }
+}
+
 ReactDartComponentFactoryProxy SetStateTest = react.registerComponent(() => new _SetStateTest());
 class _SetStateTest extends react.Component {
   @override
@@ -640,15 +690,36 @@ class _DefaultPropsTest extends react.Component {
   render() => false;
 }
 
-ReactDartComponentFactoryProxy ContextWrapper = react.registerComponent(() => new _ContextWrapper());
-class _ContextWrapper extends react.Component {
+ReactDartComponentFactoryProxy ContextWrapperWithoutKeys = react.registerComponent(() => new _ContextWrapperWithoutKeys());
+class _ContextWrapperWithoutKeys extends react.Component with LifecycleTestHelper {
   @override
-  Iterable<String> get childContextKeys => const ['foo'];
+  Iterable<String> get childContextKeys => const [];
 
   @override
-  Map<String, dynamic> getChildContext() => {
-    'foo': props['foo']
-  };
+  Map<String, dynamic> getChildContext() {
+    lifecycleCall('getChildContext');
+    return {
+      'foo': props['foo'],
+      'extraContext': props['extraContext'],
+    };
+  }
+
+  dynamic render() => react.div({}, props['children']);
+}
+
+ReactDartComponentFactoryProxy ContextWrapper = react.registerComponent(() => new _ContextWrapper());
+class _ContextWrapper extends react.Component with LifecycleTestHelper {
+  @override
+  Iterable<String> get childContextKeys => const ['foo', 'extraContext'];
+
+  @override
+  Map<String, dynamic> getChildContext() {
+    lifecycleCall('getChildContext');
+    return {
+      'foo': props['foo'],
+      'extraContext': props['extraContext'],
+    };
+  }
 
   dynamic render() => react.div({}, props['children']);
 }
@@ -656,36 +727,11 @@ class _ContextWrapper extends react.Component {
 ReactDartComponentFactoryProxy LifecycleTestWithContext = react.registerComponent(() => new _LifecycleTestWithContext());
 class _LifecycleTestWithContext extends _LifecycleTest {
   @override
-  Iterable<String> get contextKeys => const ['foo'];
+  Iterable<String> get contextKeys => const ['foo']; // only listening to one context key
 }
 
 ReactDartComponentFactoryProxy LifecycleTest = react.registerComponent(() => new _LifecycleTest());
-class _LifecycleTest extends react.Component {
-  List lifecycleCalls = [];
-
-  dynamic lifecycleCall(String memberName, {List arguments: const [], defaultReturnValue()}) {
-    lifecycleCalls.add({
-      'memberName': memberName,
-      'arguments': arguments,
-      'props': props == null ? null : new Map.from(props),
-      'state': state == null ? null : new Map.from(state),
-      'context': new Map.from(context ?? const {}),
-    });
-
-    var lifecycleCallback = props == null ? null : props[memberName];
-    if (lifecycleCallback != null) {
-      return Function.apply(lifecycleCallback, []
-          ..add(this)
-          ..addAll(arguments));
-    }
-
-    if (defaultReturnValue != null) {
-      return defaultReturnValue();
-    }
-
-    return null;
-  }
-
+class _LifecycleTest extends react.Component with LifecycleTestHelper {
   void componentWillMount() => lifecycleCall('componentWillMount');
   void componentDidMount() => lifecycleCall('componentDidMount');
   void componentWillUnmount() => lifecycleCall('componentWillUnmount');
