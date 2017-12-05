@@ -253,9 +253,9 @@ final ReactDartInteropStatics _dartInteropStatics = (() {
   /// 3. Update [Component.state] by calling [Component.transferComponentState]
   void _afterPropsChange(Component component, InteropContextValue nextContext) {
     component
-      ..props = component.nextProps            // [1]
-      ..context = _unjsifyContext(nextContext) // [2]
-      ..transferComponentState();              // [3]
+      ..props = component.nextProps     // [1]
+      ..context = component.nextContext // [2]
+      ..transferComponentState();       // [3]
   }
 
   void _clearPrevState(Component component) {
@@ -278,10 +278,13 @@ final ReactDartInteropStatics _dartInteropStatics = (() {
   /// Wrapper for [Component.componentWillReceiveProps].
   void handleComponentWillReceiveProps(Component component, ReactDartComponentInternal nextInternal, InteropContextValue nextContext) => zone.run(() {
     var nextProps = _getNextProps(component, nextInternal);
+    var newContext = _unjsifyContext(nextContext);
+
     component
       ..nextProps = nextProps
+      ..nextContext = newContext
       ..componentWillReceiveProps(nextProps)
-      ..componentWillReceivePropsWithContext(nextProps, _unjsifyContext(nextContext));
+      ..componentWillReceivePropsWithContext(nextProps, newContext);
   });
 
   /// Wrapper for [Component.shouldComponentUpdate].
@@ -291,7 +294,7 @@ final ReactDartInteropStatics _dartInteropStatics = (() {
     // If shouldComponentUpdateWithContext returns a valid bool (default implementation returns null),
     // then don't bother calling `shouldComponentUpdate` and have it trump.
     bool shouldUpdate =
-      component.shouldComponentUpdateWithContext(component.nextProps, component.nextState, _unjsifyContext(nextContext));
+      component.shouldComponentUpdateWithContext(component.nextProps, component.nextState, component.nextContext);
 
     if (shouldUpdate == null) {
       shouldUpdate = component.shouldComponentUpdate(component.nextProps, component.nextState);
@@ -314,7 +317,7 @@ final ReactDartInteropStatics _dartInteropStatics = (() {
     /// Call `componentWillUpdate` and the context variant
     component
       ..componentWillUpdate(component.nextProps, component.nextState)
-      ..componentWillUpdateWithContext(component.nextProps, component.nextState, _unjsifyContext(nextContext));
+      ..componentWillUpdateWithContext(component.nextProps, component.nextState, component.nextContext);
 
     _afterPropsChange(component, nextContext);
   });
