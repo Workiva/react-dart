@@ -45,23 +45,23 @@ class _ParentComponent extends react.Component {
 
   render() =>
     react.div({},[
-      react.h1({}, "String refs"),
-      react.h4({}, "<input>"),
-      react.input({"ref": "inputRef"}),
-      react.button({"onClick": showInputValue}, "Print input element value"),
-      react.h4({}, "ChildComponent"),
-      ChildComponent({"ref": "childRef"}),
-      react.button({"onClick": showChildValue}, "Print child value"),
-      react.button({"onClick": incrementChildValue}, "Increment child value"),
+      react.h1({'key': 'string-h1'}, "String refs"),
+      react.h4({'key': 'string-h4'}, "<input>"),
+      react.input({'key': 'string-input', "ref": "inputRef"}),
+      react.button({'key': 'string-show-input', "onClick": showInputValue}, "Print input element value"),
+      react.h4({'key': 'string-h4-child'}, "ChildComponent"),
+      ChildComponent({'key': 'string-child', "ref": "childRef"}),
+      react.button({'key': 'string-show-button', "onClick": showChildValue}, "Print child value"),
+      react.button({'key': 'string-increment-button', "onClick": incrementChildValue}, "Increment child value"),
 
-      react.h1({}, "Callback refs"),
-      react.h4({}, "<input>"),
-      react.input({"ref": (instance) => _inputCallbackRef = instance}),
-      react.button({"onClick": showInputCallbackRefValue}, "Print input element value"),
-      react.h4({}, "ChildComponent"),
-      ChildComponent({"ref": (instance) => _childCallbackRef = instance}),
-      react.button({"onClick": showChildCallbackRefValue}, "Print child value"),
-      react.button({"onClick": incrementChildCallbackRefValue}, "Increment child value"),
+      react.h1({'key': 'h1-callback'}, "Callback refs"),
+      react.h4({'key': 'h4-callback-input'}, "<input>"),
+      react.input({'key': 'callback-input', "ref": (instance) => _inputCallbackRef = instance}),
+      react.button({'key': 'callback-show-input', "onClick": showInputCallbackRefValue}, "Print input element value"),
+      react.h4({'key': 'callback-child-h4'}, "ChildComponent"),
+      ChildComponent({'key': 'callback-child', "ref": (instance) => _childCallbackRef = instance}),
+      react.button({'key': 'callback-show-button', "onClick": showChildCallbackRefValue}, "Print child value"),
+      react.button({'key': 'callback-increment-button', "onClick": incrementChildCallbackRefValue}, "Increment child value"),
     ]);
 }
 

@@ -10,6 +10,8 @@ import 'package:react/src/typedefs.dart';
 /// Top-level ReactJS [Component class](https://facebook.github.io/react/docs/react-component.html)
 /// which provides the [ReactJS Component API](https://facebook.github.io/react/docs/react-component.html#reference)
 abstract class Component {
+  Map _context;
+
   /// A private field that backs [props], which is exposed via getter/setter so
   /// it can be overridden in strong mode.
   ///
@@ -36,6 +38,12 @@ abstract class Component {
   ///
   /// TODO: Switch back to a plain field once this issue is fixed.
   Ref _ref;
+
+  /// The React context map of this component, passed down from its ancestors' [getChildContext] value.
+  ///
+  /// Only keys declared in this component's [contextKeys] will be present.
+  Map get context => _context;
+  set context(Map value) => _context = value;
 
   /// ReactJS [Component] props.
   ///
@@ -81,11 +89,18 @@ abstract class Component {
   /// Bind the value of input to [state[key]].
   bind(key) => [state[key], (value) => setState({key: value})];
 
-  initComponentInternal(props, _jsRedraw, [Ref ref, _jsThis]) {
+  initComponentInternal(props, _jsRedraw, [Ref ref, _jsThis, context]) {
     this._jsRedraw = _jsRedraw;
     this.ref = ref;
     this._jsThis = _jsThis;
+    _initContext(context);
     _initProps(props);
+  }
+
+  /// Initializes context
+  _initContext(context) {
+    this.context = new Map.from(context ?? const {});
+    this.nextContext = this.context;
   }
 
   _initProps(props) {
@@ -95,14 +110,26 @@ abstract class Component {
 
   initStateInternal() {
     this.state = new Map.from(getInitialState());
+
     // Call `transferComponentState` to get state also to `_prevState`
     transferComponentState();
   }
+
+  /// Private reference to the value of [context] for the upcoming render cycle.
+  ///
+  /// Useful for ReactJS lifecycle methods [shouldComponentUpdateWithContext] and [componentWillUpdateWithContext].
+  Map nextContext;
 
   /// Private reference to the value of [state] for the upcoming render cycle.
   ///
   /// Useful for ReactJS lifecycle methods [shouldComponentUpdate], [componentWillUpdate] and [componentDidUpdate].
   Map _nextState = null;
+
+  /// Reference to the value of [context] from the previous render cycle, used internally for proxying
+  /// the ReactJS lifecycle method.
+  ///
+  /// __DO NOT set__ from anywhere outside react-dart lifecycle internals.
+  Map prevContext;
 
   /// Reference to the value of [state] from the previous render cycle, used internally for proxying
   /// the ReactJS lifecycle method and [componentDidUpdate].
@@ -119,7 +146,8 @@ abstract class Component {
 
   /// Reference to the value of [props] for the upcoming render cycle.
   ///
-  /// Used internally for proxying ReactJS lifecycle methods [shouldComponentUpdate], [componentWillReceiveProps], and [componentWillUpdate].
+  /// Used internally for proxying ReactJS lifecycle methods [shouldComponentUpdate], [componentWillReceiveProps], and
+  /// [componentWillUpdate] as well as the context-specific variants.
   ///
   /// __DO NOT set__ from anywhere outside react-dart lifecycle internals.
   Map nextProps;
@@ -204,16 +232,49 @@ abstract class Component {
   ///
   /// Calling [setState] within this function will not trigger an additional [render].
   ///
+  /// __Note__: Choose either this method or [componentWillReceivePropsWithContext]. They are both called at the same
+  /// time so using both provides no added benefit.
+  ///
   /// See: <https://facebook.github.io/react/docs/react-component.html#updating-componentwillreceiveprops>
   void componentWillReceiveProps(Map newProps) {}
 
+  /// ReactJS lifecycle method that is invoked when a `Component` is receiving [newProps].
+  ///
+  /// This method is not called for the initial [render].
+  ///
+  /// Use this as an opportunity to react to a prop or context transition before [render] is called by updating the
+  /// [state] using [setState]. The old props and context can be accessed via [props] and [context], respectively.
+  ///
+  /// Calling [setState] within this function will not trigger an additional [render].
+  ///
+  /// __Note__: Choose either this method or [componentWillReceiveProps]. They are both called at the same time so using
+  /// both provides no added benefit.
+  ///
+  /// See: <https://facebook.github.io/react/docs/react-component.html#updating-componentwillreceiveprops>
+  void componentWillReceivePropsWithContext(Map newProps, nextContext) {}
+
   /// ReactJS lifecycle method that is invoked before rendering when [nextProps] or [nextState] are being received.
   ///
-  /// Use this as an opportunity to return false when you're certain that the transition to the new props and state
+  /// Use this as an opportunity to return `false` when you're certain that the transition to the new props and state
   /// will not require a component update.
+  ///
+  /// __Note__: This method is called after [shouldComponentUpdateWithContext]. When it returns `null`, the result of
+  /// this method is used, but this is not called if a valid `bool` is returned from [shouldComponentUpdateWithContext].
   ///
   /// See: <https://facebook.github.io/react/docs/react-component.html#updating-shouldcomponentupdate>
   bool shouldComponentUpdate(Map nextProps, Map nextState) => true;
+
+  /// ReactJS lifecycle method that is invoked before rendering when [nextProps], [nextState], or [nextContext] are
+  /// being received.
+  ///
+  /// Use this as an opportunity to return `false` when you're certain that the transition to the new props, state, and
+  /// context will not require a component update.
+  ///
+  /// __Note__: This method is called before [shouldComponentUpdate]. Returning `null` will defer the update to the
+  /// result of [shouldComponentUpdate], but [shouldComponentUpdate] is not called if a valid `bool` is returned.
+  ///
+  /// See: <https://facebook.github.io/react/docs/react-component.html#updating-shouldcomponentupdate>
+  bool shouldComponentUpdateWithContext(Map nextProps, Map nextState, Map nextContext) => null;
 
   /// ReactJS lifecycle method that is invoked immediately before rendering when [nextProps] or [nextState] are being
   /// received.
@@ -222,8 +283,24 @@ abstract class Component {
   ///
   /// Use this as an opportunity to perform preparation before an update occurs.
   ///
+  /// __Note__: Choose either this method or [componentWillUpdateWithContext]. They are both called at the same time so
+  /// using both provides no added benefit.
+  ///
   /// See: <https://facebook.github.io/react/docs/react-component.html#updating-componentwillupdate>
   void componentWillUpdate(Map nextProps, Map nextState) {}
+
+  /// ReactJS lifecycle method that is invoked immediately before rendering when [nextProps], [nextState], or
+  /// [nextContext] are being received.
+  ///
+  /// This method is not called for the initial [render].
+  ///
+  /// Use this as an opportunity to perform preparation before an update occurs.
+  ///
+  /// __Note__: Choose either this method or [componentWillUpdate]. They are both called at the same time so using both
+  /// provides no added benefit.
+  ///
+  /// See: <https://facebook.github.io/react/docs/react-component.html#updating-componentwillupdate>
+  void componentWillUpdateWithContext(Map nextProps, Map nextState, Map nextContext) {}
 
   /// ReactJS lifecycle method that is invoked immediately after the `Component`'s updates are flushed to the DOM.
   ///
@@ -242,6 +319,21 @@ abstract class Component {
   ///
   /// See: <https://facebook.github.io/react/docs/react-component.html#unmounting-componentwillunmount>
   void componentWillUnmount() {}
+
+  /// Returns a Map of context to be passed to descendant components.
+  ///
+  /// Only keys present in [childContextKeys] will be used; all others will be ignored.
+  Map<String, dynamic> getChildContext() => const {};
+
+  /// The keys this component uses in its child context map (returned by [getChildContext]).
+  ///
+  /// __This method is called only once, upon component registration.__
+  Iterable<String> get childContextKeys => const [];
+
+  /// The keys of context used by this component.
+  ///
+  /// __This method is called only once, upon component registration.__
+  Iterable<String> get contextKeys => const [];
 
   /// Invoked once before the `Component` is mounted. The return value will be used as the initial value of [state].
   ///

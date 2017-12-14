@@ -30,8 +30,8 @@ class _HelloGreeter extends react.Component {
 
   render() {
     return react.div({}, [
-        react.input({'ref': 'myInput', 'value': bind('name'), 'onChange': onInputChange}),
-        helloComponent({'name': state['name']})
+        react.input({'key': 'input', 'ref': 'myInput', 'value': bind('name'), 'onChange': onInputChange}),
+        helloComponent({'key': 'hello', 'name': state['name']})
     ]);
   }
 }
@@ -47,8 +47,8 @@ class _CheckBoxComponent extends react.Component {
 
   render() {
     return react.div({}, [
-        react.label({'className': this.state["checked"] ? 'striked' : 'not-striked'}, 'do the dishes'),
-        react.input({'type': 'checkbox', 'value': bind('checked')}, [])
+        react.label({'key': 'label', 'className': this.state["checked"] ? 'striked' : 'not-striked'}, 'do the dishes'),
+        react.input({'key': 'input', 'type': 'checkbox', 'value': bind('checked')})
     ]);
   }
 }
@@ -136,8 +136,8 @@ class _ListComponent extends react.Component {
     }
 
     return react.div({}, [
-        react.button({"onClick": addItem}, "addItem"),
-        react.ul({}, items),
+        react.button({"onClick": addItem, 'key': 'button'}, "addItem"),
+        react.ul({'key': 'list'}, items),
     ]);
   }
 }
@@ -152,3 +152,61 @@ class _MainComponent extends react.Component {
 }
 
 var mainComponent = react.registerComponent(() => new _MainComponent());
+
+class _ContextComponent extends react.Component {
+  @override
+  Iterable<String> get childContextKeys => const ['foo', 'bar', 'renderCount'];
+
+  @override
+  Map<String, dynamic> getChildContext() => {
+    'foo': {'object': 'with value'},
+    'bar': true,
+    'renderCount': this.state['renderCount']
+  };
+
+  render() {
+    return react.ul({},
+      react.button({'onClick': _onButtonClick}, 'Redraw'),
+      react.br({}),
+      'ContextComponent.getChildContext(): ',
+      getChildContext().toString(),
+      react.br({}),
+      react.br({}),
+      props['children']
+    );
+  }
+
+  _onButtonClick(event) {
+    this.setState({'renderCount': (this.state['renderCount'] ?? 0) + 1});
+  }
+}
+var contextComponent = react.registerComponent(() => new _ContextComponent());
+
+class _ContextConsumerComponent extends react.Component {
+  @override
+  Iterable<String> get contextKeys => const ['foo'];
+
+  render() {
+    return react.ul({},
+      'ContextConsumerComponent.context: ',
+      context.toString(),
+      react.br({}),
+      react.br({}),
+      props['children']
+    );
+  }
+}
+var contextConsumerComponent = react.registerComponent(() => new _ContextConsumerComponent());
+
+class _GrandchildContextConsumerComponent extends react.Component {
+  @override
+  Iterable<String> get contextKeys => const ['renderCount'];
+
+  render() {
+    return react.ul({},
+      'GrandchildContextConsumerComponent.context: ',
+      context.toString(),
+    );
+  }
+}
+var grandchildContextConsumerComponent = react.registerComponent(() => new _GrandchildContextConsumerComponent());

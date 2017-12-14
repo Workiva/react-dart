@@ -56,9 +56,9 @@ class _Hello extends react.Component {
     for(var elem in data){
       children.add(
           react.div({'key': elem[0]},[
-            react.span({}, elem[0]),
+            react.span({'key': 'span1'}, elem[0]),
             " ",
-            react.span({}, elem[1])
+            react.span({'key': 'span2'}, elem[1])
           ])
       );
     }

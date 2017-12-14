@@ -20,7 +20,7 @@ class _ChildComponent extends react.Component {
     react.div({}, [
       "Test element",
       counter.toString(),
-      react.button({"onClick": (_) { counter++;redraw();} }, "Increase counter")
+      react.button({'key': 'button', "onClick": (_) { counter++;redraw();} }, "Increase counter")
     ]);
 }
 
@@ -40,12 +40,12 @@ class SimpleComponent extends react.Component {
 
   render() =>
     react.div({}, [
-      react.span({"ref": "refToSpan"}, "Test"),
-      react.span({}, counter),
-      react.button({"onClick": (_) => (react_dom.findDOMNode(this) as HtmlElement).children.first.text = (++counter).toString()},"Increase counter"),
-      react.br({}),
-      ChildComponent({"ref": "refToElement"}),
-      react.button({"onClick": (_) => window.alert((this.ref('refToElement') as _ChildComponent).counter.toString())}, "Show value of child element"),
+      react.span({'key': 'span1', "ref": "refToSpan"}, "Test"),
+      react.span({'key': 'span2'}, counter),
+      react.button({'key': 'button1', "onClick": (_) => (react_dom.findDOMNode(this) as HtmlElement).children.first.text = (++counter).toString()},"Increase counter"),
+      react.br({'key': 'br'}),
+      ChildComponent({'key': 'child', "ref": "refToElement"}),
+      react.button({'key': 'button2', "onClick": (_) => window.alert((this.ref('refToElement') as _ChildComponent).counter.toString())}, "Show value of child element"),
     ]);
 }
 
