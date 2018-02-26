@@ -1,1 +1,1 @@
-__isDevelopment = true;
+React.__isDevelopment = true;
