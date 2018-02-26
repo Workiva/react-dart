@@ -255,6 +255,19 @@ typedef void _HandleComponentDidUpdate(Component component, ReactDartComponentIn
 typedef void _HandleComponentWillUnmount(Component component);
 typedef dynamic _HandleRender(Component component);
 
+/// Whether the "dev" build of react.js is being used.
+///
+/// Useful for creating conditional logic based on whether your application is being served in a production environment.
+///
+///     if (inReactDevMode) {
+///       print('Debug info that only developers should see.');
+///     }
+///
+/// > This value will be `true` if your HTML page includes `react.js` or `react_with_addons.js`,
+///   and `false` if your HTML page includes `react_prod.js` or `react_with_react_dom_prod.js`.
+@JS('__isDevelopment')
+external bool get inReactDevMode;
+
 /// An object that stores static methods used by all Dart components.
 @JS()
 @anonymous

@@ -1,4 +1,5 @@
 @TestOn('browser')
+import 'package:react/react_client.dart';
 import 'package:test/test.dart';
 
 import 'shared_tests.dart';
@@ -8,5 +9,9 @@ main() {
 
   group('React JS files (prod combined build):', () {
     sharedJsFunctionTests();
+  });
+
+  test('inReactDevMode (prod build):', () {
+    expect(inReactDevMode, isFalse);
   });
 }
