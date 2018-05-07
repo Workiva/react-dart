@@ -8,15 +8,17 @@ import 'react_test_components.dart';
 void main() {
   setClientConfiguration();
 
-  react_dom.render(contextComponent({},
-    contextConsumerComponent({}),
-  ), querySelector('#content'));
+  react_dom.render(contextComponent({}, [
+    contextConsumerComponent({'key': 'consumerComponent'}),
+  ]), querySelector('#content'));
 
-  react_dom.render(contextComponent({},
-    contextConsumerComponent({}),
-  ), querySelector('#content'));
+  react_dom.render(contextComponent({}, [
+    contextConsumerComponent({'key': 'consumerComponent'}),
+  ]), querySelector('#content'));
 
-  react_dom.render(contextComponent({},
-    contextConsumerComponent({}, grandchildContextConsumerComponent({})),
-  ), querySelector('#content'));
+  react_dom.render(contextComponent({}, [
+    contextConsumerComponent({'key': 'consumerComponent'}, [
+      grandchildContextConsumerComponent({'key': 'consumerGrandchildComponent'})
+    ]),
+  ]), querySelector('#content'));
 }

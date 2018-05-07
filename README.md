@@ -179,7 +179,7 @@ class _ParentComponent extends Component {
 
 ## Geocodes Example
 
-For more robust example take a look at [example/geocodes/geocodes.dart](https://github.com/cleandart/react-dart/tree/master/example/geocodes).
+For more robust example take a look at our [examples](https://github.com/cleandart/react-dart/tree/master/example).
 
 ## Life-cycle methods of a component
 

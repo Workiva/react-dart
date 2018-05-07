@@ -39,9 +39,9 @@ class _GeocodesResultItem extends react.Component {
   @override
   render() {
     return react.tr({}, [
-      react.td({}, props['lat']),
-      react.td({}, props['lng']),
-      react.td({}, props['formatted'])
+      react.td({'key': '1'}, props['lat']),
+      react.td({'key': '2'}, props['lng']),
+      react.td({'key': '3'}, props['formatted'])
     ]);
   }
 }
@@ -62,20 +62,28 @@ class _GeocodesResultList extends react.Component {
   render() {
     // Built-in HTML DOM components also have props - which correspond to HTML element attributes.
     return react.div({'id': 'results'}, [
-      react.h2({}, 'Results:'),
+      react.h2({
+        'key': '1',
+      }, 'Results:'),
       // However, `class` is a keyword in javascript, therefore `className` is used instead
-      react.table({'className': 'table'}, [
-        react.thead({}, [
-          react.th({}, 'Latitude'),
-          react.th({}, 'Longitude'),
-          react.th({}, 'Address')
+      react.table({
+        'key': '2',
+        'className': 'table'
+      }, [
+        react.thead({'key': 'thead'}, [
+          react.tr({'key': '1'}, [
+            react.th({'key': '1'}, 'Latitude'),
+            react.th({'key': '2'}, 'Longitude'),
+            react.th({'key': '3'}, 'Address')
+          ]),
         ]),
-        react.tbody({},
+        react.tbody({'key': 'tbody'},
           // The second argument contains the body of the component (as you have already seen).
           //
           // It can be a String, a Component or an Iterable.
           props['data'].map(
             (item) => geocodesResultItem({
+              'key': item['formatted_address'],
               'lat': item['geometry']['location']['lat'],
               'lng': item['geometry']['location']['lng'],
               'formatted': item['formatted_address']
@@ -101,33 +109,49 @@ class _GeocodesForm extends react.Component {
   var searchInputInstance;
 
   @override
+  getInitialState() => {
+    'value': '',
+  };
+
+  @override
   render() {
     return react.div({}, [
-      react.h2({}, 'Search'),
+      react.h2({'key': '1'}, 'Search'),
       // Component function is passed as callback
       react.form({
+        'key': 'form',
         'className': 'form-inline',
         'onSubmit': onFormSubmit
       }, [
         react.label({
+          'key': 'label',
           'htmlFor': 'addressInput',
           'className': 'sr-only',
         }, 'Enter address'),
         react.input({
+          'key': 'input',
           'id': 'addressInput',
           'className': 'form-control',
           'type': 'text',
           'placeholder': 'Enter address',
+          'value': state['value'],
+          'onChange': handleChange,
           // Input is referenced to access it's value
           'ref': (searchInputInstance) { this.searchInputInstance = searchInputInstance; }
         }),
-        react.span({}, '\u00a0'),
+        react.span({'key': 'spacer',}, '\u00a0'),
         react.button({
+          'key': 'button',
           'className': 'btn btn-primary',
-          'type': 'submit'
+          'type': 'submit',
+          'disabled': state['value'] == '',
         }, 'Submit'),
       ])
     ]);
+  }
+
+  handleChange(react.SyntheticFormEvent event) {
+    setState({'value': event.target.value});
   }
 
   /// Handle form submission via `props.onSubmit`
@@ -155,6 +179,7 @@ class _GeocodesHistoryItem extends react.Component {
   render() {
     return react.li({}, [
       react.button({
+        'key': 'button',
         'className': 'btn btn-sm btn-default',
         'onClick': reload
       }, 'Reload'),
@@ -173,8 +198,8 @@ class _GeocodesHistoryList extends react.Component {
   @override
   render() {
     return react.div({}, [
-      react.h3({}, 'History:'),
-      react.ul({},
+      react.h3({'key': '1'}, 'History:'),
+      react.ul({'key': 'list',},
         new List.from(props['data'].keys.map(
           (key) => geocodesHistoryItem({
             'key': key,
@@ -231,7 +256,7 @@ class _GeocodesApp extends react.Component {
 
     // Send the request
     HttpRequest.getString(path)
-        .then((value) =>
+        .then((String value) =>
             // Delay the answer 2 more seconds, for test purposes
             new Future.delayed(new Duration(seconds: 2), () => value)
         )
@@ -294,16 +319,19 @@ class _GeocodesApp extends react.Component {
   @override
   render() {
     return react.div({}, [
-      react.h1({}, 'Geocode resolver'),
+      react.h1({'key': '1'}, 'Geocode resolver'),
       geocodesResultList({
+        'key': '2',
         // The state values are passed to the children as the properties.
         'data': state['shown_addresses']
       }),
       geocodesForm({
+        'key': '3',
         // `newQuery` is the final callback of the button click.
         'submitter': newQuery
       }),
       geocodesHistoryList({
+        'key': '4',
         'data': state['history'],
         // `newQuery` is the final callback of the button click.
         'reloader': newQuery

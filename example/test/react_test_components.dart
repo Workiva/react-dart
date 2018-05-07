@@ -1,6 +1,7 @@
 import "dart:async";
 
 import "package:react/react.dart" as react;
+import 'package:react/react_client.dart';
 import "package:react/react_dom.dart" as react_dom;
 
 
@@ -30,7 +31,13 @@ class _HelloGreeter extends react.Component {
 
   render() {
     return react.div({}, [
-        react.input({'key': 'input', 'ref': 'myInput', 'value': bind('name'), 'onChange': onInputChange}),
+        react.input({
+          'key': 'input',
+          'className': 'form-control',
+          'ref': 'myInput',
+          'value': bind('name'),
+          'onChange': onInputChange,
+        }),
         helloComponent({'key': 'hello', 'name': state['name']})
     ]);
   }
@@ -46,9 +53,19 @@ class _CheckBoxComponent extends react.Component {
   }
 
   render() {
-    return react.div({}, [
-        react.label({'key': 'label', 'className': this.state["checked"] ? 'striked' : 'not-striked'}, 'do the dishes'),
-        react.input({'key': 'input', 'type': 'checkbox', 'value': bind('checked')})
+    return react.div({'className': 'form-check'}, [
+      react.input({
+        'id': 'doTheDishes',
+        'key': 'input',
+        'className': 'form-check-input',
+        'type': 'checkbox',
+        'value': bind('checked'),
+      }),
+      react.label({
+        'htmlFor': 'doTheDishes',
+        'key': 'label',
+        'className': 'form-check-label ' + (this.state['checked'] ? 'striked' : 'not-striked')
+      }, 'do the dishes'),
     ]);
   }
 }
@@ -136,7 +153,11 @@ class _ListComponent extends react.Component {
     }
 
     return react.div({}, [
-        react.button({"onClick": addItem, 'key': 'button'}, "addItem"),
+        react.button({
+          'key': 'button',
+          'className': 'btn btn-primary',
+          'onClick': addItem,
+        }, 'addItem'),
         react.ul({'key': 'list'}, items),
     ]);
   }
@@ -165,15 +186,19 @@ class _ContextComponent extends react.Component {
   };
 
   render() {
-    return react.ul({},
-      react.button({'onClick': _onButtonClick}, 'Redraw'),
-      react.br({}),
+    return react.ul({'key': 'ul'}, [
+      react.button({
+        'key': 'button',
+        'className': 'btn btn-primary',
+        'onClick': _onButtonClick
+      }, 'Redraw'),
+      react.br({'key': 'break1'}),
       'ContextComponent.getChildContext(): ',
       getChildContext().toString(),
-      react.br({}),
-      react.br({}),
-      props['children']
-    );
+      react.br({'key': 'break2'}),
+      react.br({'key': 'break3'}),
+      props['children'],
+    ]);
   }
 
   _onButtonClick(event) {
@@ -187,13 +212,13 @@ class _ContextConsumerComponent extends react.Component {
   Iterable<String> get contextKeys => const ['foo'];
 
   render() {
-    return react.ul({},
+    return react.ul({'key': 'ul'}, [
       'ContextConsumerComponent.context: ',
       context.toString(),
-      react.br({}),
-      react.br({}),
-      props['children']
-    );
+      react.br({'key': 'break1'}),
+      react.br({'key': 'break2'}),
+      props['children'],
+    ]);
   }
 }
 var contextConsumerComponent = react.registerComponent(() => new _ContextConsumerComponent());
@@ -203,10 +228,10 @@ class _GrandchildContextConsumerComponent extends react.Component {
   Iterable<String> get contextKeys => const ['renderCount'];
 
   render() {
-    return react.ul({},
+    return react.ul({'key': 'ul'}, [
       'GrandchildContextConsumerComponent.context: ',
       context.toString(),
-    );
+    ]);
   }
 }
 var grandchildContextConsumerComponent = react.registerComponent(() => new _GrandchildContextConsumerComponent());
