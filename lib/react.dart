@@ -68,15 +68,15 @@ abstract class Component {
 
   dynamic _jsThis;
 
-  List _setStateCallbacks = [];
+  List<Function> _setStateCallbacks = [];
 
-  List _transactionalSetStateCallbacks = [];
+  List<TransactionalSetStateCallback> _transactionalSetStateCallbacks = [];
 
   /// The List of callbacks to be called after the component has been updated from a call to [setState].
-  List get setStateCallbacks => _setStateCallbacks;
+  List<Function> get setStateCallbacks => _setStateCallbacks;
 
   /// The List of transactional `setState` callbacks to be called before the component updates.
-  List get transactionalSetStateCallbacks => _transactionalSetStateCallbacks;
+  List<TransactionalSetStateCallback> get transactionalSetStateCallbacks => _transactionalSetStateCallbacks;
 
   /// The JavaScript [`ReactComponent`](https://facebook.github.io/react/docs/top-level-api.html#reactdom.render)
   /// instance of this `Component` returned by [render].
@@ -166,8 +166,7 @@ abstract class Component {
   /// Optionally accepts a callback that gets called after the component updates.
   ///
   /// [A.k.a "forceUpdate"](https://facebook.github.io/react/docs/react-component.html#forceupdate)
-  void redraw([callback()]) {
-    setState({}, callback);
+  void redraw([Function callback]) {
   }
 
   /// Triggers a rerender with new state obtained by shallow-merging [newState] into the current [state].
@@ -177,13 +176,13 @@ abstract class Component {
   /// Also allows [newState] to be used as a transactional `setState` callback.
   ///
   /// See: <https://facebook.github.io/react/docs/react-component.html#setstate>
-  void setState(dynamic newState, [callback()]) {
+  void setState(dynamic newState, [Function callback]) {
     if (newState is Map) {
       _nextState.addAll(newState);
-    } else if (newState is _TransactionalSetStateCallback) {
+    } else if (newState is TransactionalSetStateCallback) {
       _transactionalSetStateCallbacks.add(newState);
     } else if (newState != null) {
-      throw new ArgumentError('setState expects its first parameter to either be a Map or a Function that accepts two parameters.');
+      throw new ArgumentError('setState expects its first parameter to either be a Map or a `TransactionalSetStateCallback`.');
     }
 
     if (callback != null) _setStateCallbacks.add(callback);
@@ -196,7 +195,7 @@ abstract class Component {
   /// Optionally accepts a callback that gets called after the component updates.
   ///
   /// See: <https://facebook.github.io/react/docs/react-component.html#setstate>
-  void replaceState(Map newState, [callback()]) {
+  void replaceState(Map newState, [Function callback]) {
     Map nextState = newState == null ? {} : new Map.from(newState);
     _nextState = nextState;
     if (callback != null) _setStateCallbacks.add(callback);
@@ -358,12 +357,6 @@ abstract class Component {
   /// See: <https://facebook.github.io/react/docs/react-component.html#render>
   dynamic render();
 }
-
-/// Typedef of a transactional [Component.setState] callback.
-///
-/// See: <https://facebook.github.io/react/docs/react-component.html#setstate>
-typedef Map _TransactionalSetStateCallback(Map prevState, Map props);
-
 
 /// A cross-browser wrapper around the browser's [nativeEvent].
 ///
