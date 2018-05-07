@@ -1,6 +1,5 @@
 import 'package:react/react.dart';
-import 'package:react/react_client.dart' show ReactComponentFactory;
-
+import 'package:react/react_client.dart' show ReactComponentFactory, ReactComponentFactoryProxy; // ignore: deprecated_member_use
 
 /// Base component for event handling classes used in test cases.
 class EventComponent extends Component {
@@ -45,8 +44,9 @@ class EventComponent extends Component {
       state['text']
   );
 }
-ReactComponentFactory eventComponent = registerComponent(() =>
-    new EventComponent()) as ReactComponentFactory;
+
+// ignore: deprecated_member_use
+ReactComponentFactory eventComponent = registerComponent(() => new EventComponent()) as ReactComponentFactory;
 
 class SampleComponent extends Component {
   render() => div(props, [
@@ -57,12 +57,21 @@ class SampleComponent extends Component {
   ]);
 }
 
-ReactComponentFactory sampleComponent = registerComponent(() =>
-    new SampleComponent()) as ReactComponentFactory;
+// ignore: deprecated_member_use
+ReactComponentFactory sampleComponent = registerComponent(() => new SampleComponent()) as ReactComponentFactory;
 
 class WrapperComponent extends Component {
   render() => div(props, props['children']);
 }
 
-ReactComponentFactory wrapperComponent = registerComponent(() =>
-    new WrapperComponent()) as ReactComponentFactory;
+// ignore: deprecated_member_use
+ReactComponentFactory wrapperComponent = registerComponent(() => new WrapperComponent()) as ReactComponentFactory;
+
+final eventComponentV2 = registerComponent(() =>
+    new EventComponent()) as ReactComponentFactoryProxy;
+
+final sampleComponentV2 = registerComponent(() =>
+    new SampleComponent()) as ReactComponentFactoryProxy;
+
+final wrapperComponentV2 = registerComponent(() =>
+    new WrapperComponent()) as ReactComponentFactoryProxy;

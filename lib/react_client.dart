@@ -24,7 +24,10 @@ export 'package:react/react_client/react_interop.dart' show ReactElement, ReactJ
 
 final EmptyObject emptyJsMap = new EmptyObject();
 
-/// Type of [children] must be child or list of children, when child is [ReactElement] or [String]
+/// __Deprecated.__ Use [ReactComponentFactoryProxy] instead.
+///
+/// > Type of [children] must be child or list of children, when child is [ReactElement] or [String]
+@Deprecated('4.4.0')
 typedef ReactElement ReactComponentFactory(Map props, [dynamic children]);
 typedef Component ComponentFactory();
 
@@ -364,8 +367,8 @@ final ReactDartInteropStatics _dartInteropStatics = (() {
   );
 })();
 
-/// Returns a new [ReactComponentFactory] which produces a new JS
-/// [`ReactClass` component class](https://facebook.github.io/react/docs/top-level-api.html#react.createclass).
+/// Creates and returns a new [ReactDartComponentFactoryProxy] from the provided [componentFactory]
+/// which produces a new JS [`ReactClass` component class](https://facebook.github.io/react/docs/top-level-api.html#react.createclass).
 ReactDartComponentFactoryProxy _registerComponent(ComponentFactory componentFactory, [Iterable<String> skipMethods = const []]) {
   var componentInstance = componentFactory();
   var componentStatics = new ComponentStatics(componentFactory);
