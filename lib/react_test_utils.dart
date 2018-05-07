@@ -27,7 +27,7 @@ import 'package:react/src/react_test_utils/simulate_wrappers.dart' as simulate_w
 //     `Element`.
 
 
-/// __Deprecated.__ Use [getComponentTypeV2] instead.
+/// __Deprecated. Will be removed in the `5.0.0` release.__ Use [getComponentTypeV2] instead.
 ///
 /// Returns the 'type' of a given [componentFactory].
 ///
@@ -160,7 +160,7 @@ external dynamic /* [1] */ findRenderedDOMComponentWithTag(/* [1] */ tree, Strin
 @JS('React.addons.TestUtils.findRenderedComponentWithType')
 external dynamic /* [1] */ _findRenderedComponentWithType(/* [1] */ tree, dynamic type);
 
-/// __Deprecated.__ Use [findRenderedComponentWithTypeV2] instead.
+/// __Deprecated. Will be removed in the `5.0.0` release.__ Use [findRenderedComponentWithTypeV2] instead.
 ///
 /// Same as [scryRenderedComponentsWithType] but expects there to be one result
 /// and returns that one result, or throws exception if there is any other
@@ -193,7 +193,7 @@ bool isCompositeComponent(/* [1] */ instance) {
 @JS('React.addons.TestUtils.isCompositeComponentWithType')
 external bool _isCompositeComponentWithType(/* [1] */ instance, dynamic type);
 
-/// __Deprecated.__ Use [isCompositeComponentWithTypeV2] instead.
+/// __Deprecated. Will be removed in the `5.0.0` release.__ Use [isCompositeComponentWithTypeV2] instead.
 ///
 /// Returns `true` if instance is a custom composite component created using `React.createClass()`
 /// that is of the `type` of the provided [componentFactory].
@@ -219,7 +219,7 @@ external bool isElement(dynamic object);
 @JS('React.addons.TestUtils.isElementOfType')
 external bool _isElementOfType(dynamic element, dynamic componentClass);
 
-/// __Deprecated.__ Use [isElementOfTypeV2] instead.
+/// __Deprecated. Will be removed in the `5.0.0` release.__ Use [isElementOfTypeV2] instead.
 ///
 /// Returns `true` if [element] is a [ReactElement]
 /// that is of the `type` of the provided [componentFactory].
@@ -237,7 +237,7 @@ bool isElementOfTypeV2(dynamic element, ReactComponentFactoryProxy componentFact
 @JS('React.addons.TestUtils.scryRenderedComponentsWithType')
 external List<dynamic> /* [1] */ _scryRenderedComponentsWithType(/* [1] */ tree, dynamic type);
 
-/// __Deprecated.__ Use [scryRenderedComponentsWithTypeV2] instead.
+/// __Deprecated. Will be removed in the `5.0.0` release.__ Use [scryRenderedComponentsWithTypeV2] instead.
 ///
 /// Finds all instances within the provided [tree]
 /// that are of the `type` of the provided [componentFactory].

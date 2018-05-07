@@ -24,7 +24,18 @@ export 'package:react/react_client/react_interop.dart' show ReactElement, ReactJ
 
 final EmptyObject emptyJsMap = new EmptyObject();
 
-/// __Deprecated.__ Use [ReactComponentFactoryProxy] instead.
+/// __Deprecated. Will be removed in the `5.0.0` release.__ Use [ReactComponentFactoryProxy] instead.
+///
+/// __You should discontinue use of this, and all typedefs for the return value of [registerComponent].__
+///
+///     // Don't do this
+///     ReactComponentFactory customComponent = registerComponent(() => new CustomComponent());
+///
+///     // Don't do this.
+///     ReactComponentFactoryProxy customComponent = registerComponent(() => new CustomComponent());
+///
+///     // Do this.
+///     var customComponent = registerComponent(() => new CustomComponent());
 ///
 /// > Type of [children] must be child or list of children, when child is [ReactElement] or [String]
 @Deprecated('4.4.0')
