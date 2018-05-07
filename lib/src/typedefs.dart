@@ -13,7 +13,7 @@ typedef dynamic Ref(String ref);
 /// Typedef of a transactional [Component.setState] callback.
 ///
 /// See: <https://facebook.github.io/react/docs/react-component.html#setstate>
-typedef dynamic TransactionalSetStateCallback(
-    Map<String, dynamic> prevState,
-    UnmodifiableMapView<String, dynamic> props,
+typedef Map TransactionalSetStateCallback(
+    Map prevState,
+    UnmodifiableMapView props,
 );
