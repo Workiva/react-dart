@@ -33,7 +33,7 @@ import 'package:react/src/react_test_utils/simulate_wrappers.dart' as simulate_w
 /// For React.createClass()-based components, this with return the [ReactClass].
 dynamic getComponentType(ReactComponentFactory componentFactory) {
   if (componentFactory is ReactComponentFactoryProxy) {
-    return componentFactory.type;
+    return (componentFactory as ReactComponentFactoryProxy).type;
   }
   return null;
 }

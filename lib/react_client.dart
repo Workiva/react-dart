@@ -263,7 +263,7 @@ final ReactDartInteropStatics _dartInteropStatics = (() {
   }
 
   void _callSetStateCallbacks(Component component) {
-    component.setStateCallbacks.forEach((callback()) { callback(); });
+    component.setStateCallbacks.forEach((callback) { callback(); });
     component.setStateCallbacks.clear();
   }
 
