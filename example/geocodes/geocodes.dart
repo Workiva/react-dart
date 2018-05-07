@@ -266,7 +266,7 @@ class _GeocodesApp extends react.Component {
             // If yes, query was `OK` and `shown_addresses` are replaced
             state['history'][id]['status']='OK';
 
-            var data = JSON.decode(raw);
+            var data = jsonDecode(raw);
 
             // Calling `setState` will update the state and then repaint the component.
             //
