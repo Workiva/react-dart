@@ -261,12 +261,33 @@ To test the Dart wrapper, take a look at [test/react_test_utils_test.dart](test)
 
 ### Running Tests
 
-Dart VM: `pub run test -p content-shell`
-dart2js: `pub run test -p chrome`
+#### Dart VM 
+
+```bash
+pub run test -p content-shell
+```
+
+#### dart2js
+
+```bash
+pub run test -p chrome
+```
+
+#### Dart Dev Compiler ("DDC")
+
+1. In one terminal, serve the test directory using the dev compiler:
+    ```bash
+    pub serve test --port=8090 --web-compiler=dartdevc
+    ```
+2. In another terminal, run the tests, referencing the port the dev compiler is using to serve the test directory:
+    ```bash
+    pub run test -p chrome --pub-serve=8090 --exclude-tags=ddcFailure
+    ``` 
 
 ### Build JS
 
 After modifying dart_helpers.js, run:
-```
-$ tool/build_js.sh
+
+```bash
+./tool/build_js.sh
 ```
