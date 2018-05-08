@@ -1,7 +1,5 @@
 library react.typedefs;
 
-import 'dart:collection';
-
 import 'package:react/react.dart';
 
 /// Typedef for `react.Component.ref`, which should return one of the following specified by the provided [ref]:
@@ -13,10 +11,7 @@ typedef dynamic Ref(String ref);
 /// Typedef of a transactional [Component.setState] callback.
 ///
 /// See: <https://facebook.github.io/react/docs/react-component.html#setstate>
-typedef Map TransactionalSetStateCallback(
-    Map prevState,
-    UnmodifiableMapView props,
-);
+typedef Map TransactionalSetStateCallback(Map prevState, Map props);
 
 /// Typedef of a non-transactional [Component.setState] callback.
 ///
