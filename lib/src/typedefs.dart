@@ -17,3 +17,8 @@ typedef Map TransactionalSetStateCallback(
     Map prevState,
     UnmodifiableMapView props,
 );
+
+/// Typedef of a non-transactional [Component.setState] callback.
+///
+/// See: <https://facebook.github.io/react/docs/react-component.html#setstate>
+typedef SetStateCallback();

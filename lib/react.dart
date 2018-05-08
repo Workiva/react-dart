@@ -68,12 +68,12 @@ abstract class Component {
 
   dynamic _jsThis;
 
-  List<Function> _setStateCallbacks = [];
+  List<SetStateCallback> _setStateCallbacks = [];
 
   List<TransactionalSetStateCallback> _transactionalSetStateCallbacks = [];
 
   /// The List of callbacks to be called after the component has been updated from a call to [setState].
-  List<Function> get setStateCallbacks => _setStateCallbacks;
+  List<SetStateCallback> get setStateCallbacks => _setStateCallbacks;
 
   /// The List of transactional `setState` callbacks to be called before the component updates.
   List<TransactionalSetStateCallback> get transactionalSetStateCallbacks => _transactionalSetStateCallbacks;
@@ -176,7 +176,7 @@ abstract class Component {
   /// Also allows [newState] to be used as a transactional `setState` callback.
   ///
   /// See: <https://facebook.github.io/react/docs/react-component.html#setstate>
-  void setState(dynamic newState, [Function callback]) {
+  void setState(dynamic newState, [SetStateCallback callback]) {
     if (newState is Map) {
       _nextState.addAll(newState);
     } else if (newState is TransactionalSetStateCallback) {
@@ -195,7 +195,7 @@ abstract class Component {
   /// Optionally accepts a callback that gets called after the component updates.
   ///
   /// See: <https://facebook.github.io/react/docs/react-component.html#setstate>
-  void replaceState(Map newState, [Function callback]) {
+  void replaceState(Map newState, [SetStateCallback callback]) {
     Map nextState = newState == null ? {} : new Map.from(newState);
     _nextState = nextState;
     if (callback != null) _setStateCallbacks.add(callback);
