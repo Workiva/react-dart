@@ -186,12 +186,7 @@ abstract class Component {
       throw new ArgumentError('setState expects its first parameter to either be a Map or a `TransactionalSetStateCallback`.');
     }
 
-    if (callback != null) {
-      // Store locally to prevent concurrent modification during iteration
-      var localSetStateCallbacks = new List<SetStateCallback>.from(_setStateCallbacks);
-      localSetStateCallbacks.add(callback);
-      _setStateCallbacks = localSetStateCallbacks;
-    }
+    if (callback != null) _setStateCallbacks.add(callback);
 
     _jsRedraw();
   }
