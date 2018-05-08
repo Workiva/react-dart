@@ -31,9 +31,6 @@ final EmptyObject emptyJsMap = new EmptyObject();
 ///     // Don't do this
 ///     ReactComponentFactory customComponent = registerComponent(() => new CustomComponent());
 ///
-///     // Don't do this.
-///     ReactComponentFactoryProxy customComponent = registerComponent(() => new CustomComponent());
-///
 ///     // Do this.
 ///     var customComponent = registerComponent(() => new CustomComponent());
 ///
