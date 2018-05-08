@@ -5,7 +5,6 @@
 /// A Dart library for building UI using ReactJS.
 library react;
 
-import 'package:react/react_client/react_interop.dart';
 import 'package:react/src/typedefs.dart';
 
 typedef Component ComponentFactory();
@@ -393,12 +392,6 @@ abstract class ReactComponentFactoryProxy implements Function {
   }
 }
 
-class _ReactComponentFactoryProxy extends ReactComponentFactoryProxy {
-  @override
-  ReactElement call(Map props, [dynamic children]) =>
-      throw new Exception('setClientConfiguration must be called before registerComponent.');
-}
-
 /// A cross-browser wrapper around the browser's [nativeEvent].
 ///
 /// It has the same interface as the browser's native event, including [stopPropagation] and [preventDefault], except
@@ -657,7 +650,9 @@ class SyntheticWheelEvent extends SyntheticEvent {
 }
 
 /// Registers [componentFactory] on both client and server.
-ComponentRegistrar registerComponent = (ComponentFactory componentFactory, [Iterable<String> skipMethods]) => new _ReactComponentFactoryProxy();
+ComponentRegistrar registerComponent = (ComponentFactory componentFactory, [Iterable<String> skipMethods]) {
+  throw new Exception('setClientConfiguration must be called before registerComponent.');
+};
 
 /// The HTML `<a>` [AnchorElement].
 var a;
