@@ -341,6 +341,18 @@ void main() {
       ]));
     });
 
+    test('properly handles a call to setState within another setState callback', () {
+      _LifecycleTest component = getDartComponent(render(LifecycleTest({})));
+
+      expect(() {
+        component.setState({'foo': 'bar'}, () {
+          component.lifecycleCalls.clear();
+
+          component.setState({'baz': 'foobar'}, () {});
+        });
+      }, returnsNormally);
+    });
+
     test('properly handles a call to setState within componentWillReceiveProps', () {
       const Map initialState = const {
         'initialState': 'initial',
