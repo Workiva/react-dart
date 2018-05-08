@@ -163,10 +163,11 @@ abstract class Component {
 
   /// Force a call to [render] by calling [setState], which effectively "redraws" the `Component`.
   ///
-  /// Optionally accepts a callback that gets called after the component updates.
+  /// Optionally accepts a [callback] that gets called after the component updates.
   ///
   /// [A.k.a "forceUpdate"](https://facebook.github.io/react/docs/react-component.html#forceupdate)
-  void redraw([Function callback]) {
+  void redraw([SetStateCallback callback]) {
+    setState({}, callback);
   }
 
   /// Triggers a rerender with new state obtained by shallow-merging [newState] into the current [state].

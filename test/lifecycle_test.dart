@@ -309,6 +309,38 @@ void main() {
       ]));
     });
 
+    test('updates state with correct lifecycle calls when `redraw` is called', () {
+      const Map initialState = const {
+        'initialState': 'initial',
+      };
+
+      final Map initialProps = unmodifiableMap({
+        'getInitialState': (_) => initialState
+      });
+
+      final Map newContext = const {};
+
+      final Map expectedProps = unmodifiableMap(
+          defaultProps,
+          initialProps,
+          emptyChildrenProps
+      );
+
+      _LifecycleTest component = getDartComponent(render(LifecycleTest(initialProps)));
+
+      component.lifecycleCalls.clear();
+
+      component.redraw();
+
+      expect(component.lifecycleCalls, equals([
+        matchCall('shouldComponentUpdateWithContext', args: [expectedProps, initialState, newContext],  state: initialState),
+        matchCall('componentWillUpdate',              args: [expectedProps, initialState],              state: initialState),
+        matchCall('componentWillUpdateWithContext',   args: [expectedProps, initialState, newContext],  state: initialState),
+        matchCall('render',                                                                             state: initialState),
+        matchCall('componentDidUpdate',               args: [expectedProps, initialState],              state: initialState),
+      ]));
+    });
+
     test('properly handles a call to setState within componentWillReceiveProps', () {
       const Map initialState = const {
         'initialState': 'initial',
