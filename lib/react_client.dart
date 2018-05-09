@@ -400,9 +400,10 @@ class ReactDomComponentFactoryProxy extends ReactComponentFactoryProxy {
     var children = _convertArgsToChildren(childrenArgs);
     children = listifyChildren(children);
 
-    convertProps(props);
+    var convertibleProps = {}..addAll(props);
+    convertProps(convertibleProps);
 
-    return factory(jsify(props), children);
+    return factory(jsify(convertibleProps), children);
   }
 
   /// Prepares the bound values, event handlers, and style props for consumption by ReactJS DOM components.
@@ -500,9 +501,11 @@ _convertEventHandlers(Map args) {
     if (eventFactory != null && value != null) {
       // Apply allowInterop here so that the function we store in [_originalEventHandlers]
       // is the same one we'll retrieve from the JS props.
-      var reactDartConvertedEventHandler = allowInterop((events.SyntheticEvent e, [_, __]) => zone.run(() {
-        value(eventFactory(e));
-      }));
+      var reactDartConvertedEventHandler = allowInterop((events.SyntheticEvent e, [_, __]) {
+        zone.run(() {
+          value(eventFactory(e));
+        });
+      });
 
       args[propKey] = reactDartConvertedEventHandler;
       _originalEventHandlers[reactDartConvertedEventHandler] = value;

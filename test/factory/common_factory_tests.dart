@@ -10,13 +10,13 @@ import "package:react/react_client/js_interop_helpers.dart";
 
 import '../util.dart';
 
-void commonFactoryTests(Function factory) {
+void commonFactoryTests(ReactComponentFactoryProxy factory) {
   _childKeyWarningTests(factory);
 
   test('renders an instance with the corresponding `type`', () {
     var instance = factory({});
 
-    expect(instance.type, equals((factory as ReactComponentFactoryProxy).type));
+    expect(instance.type, equals(factory.type));
   });
 
   group('passes children to the component when specified as', () {
@@ -59,7 +59,7 @@ void commonFactoryTests(Function factory) {
   });
 }
 
-void domEventHandlerWrappingTests(Function factory) {
+void domEventHandlerWrappingTests(ReactDomComponentFactoryProxy factory) {
   setUpAll(() {
     var called = false;
 
@@ -98,7 +98,7 @@ void domEventHandlerWrappingTests(Function factory) {
 
     expect(() => rtu.Simulate.click(react_dom.findDOMNode(renderedInstance)), returnsNormally);
   });
-  
+
   test('stores the original function in a way that it can be retrieved from unconvertJsEventHandler', () {
     final originalHandler = (event) {};
 
