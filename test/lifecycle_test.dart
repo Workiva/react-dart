@@ -309,6 +309,123 @@ void main() {
       ]));
     });
 
+    test('updates state with correct lifecycle calls when `redraw` is called', () {
+      const Map initialState = const {
+        'initialState': 'initial',
+      };
+
+      final Map initialProps = unmodifiableMap({
+        'getInitialState': (_) => initialState
+      });
+
+      final Map newContext = const {};
+
+      final Map expectedProps = unmodifiableMap(
+          defaultProps,
+          initialProps,
+          emptyChildrenProps
+      );
+
+      _LifecycleTest component = getDartComponent(render(LifecycleTest(initialProps)));
+
+      component.lifecycleCalls.clear();
+
+      component.redraw();
+
+      expect(component.lifecycleCalls, equals([
+        matchCall('shouldComponentUpdateWithContext', args: [expectedProps, initialState, newContext],  state: initialState),
+        matchCall('componentWillUpdate',              args: [expectedProps, initialState],              state: initialState),
+        matchCall('componentWillUpdateWithContext',   args: [expectedProps, initialState, newContext],  state: initialState),
+        matchCall('render',                                                                             state: initialState),
+        matchCall('componentDidUpdate',               args: [expectedProps, initialState],              state: initialState),
+      ]));
+    });
+
+    group('prevents concurrent modification of `_setStateCallbacks`', () {
+      _LifecycleTest component;
+      const Map initialState = const {
+        'initialState': 'initial',
+      };
+      int firstStateUpdateCalls;
+      int secondStateUpdateCalls;
+      Map initialProps;
+      Map newState1;
+      Map expectedState1;
+      Map newState2;
+      Map expectedState2;
+
+      setUp(() {
+        firstStateUpdateCalls = 0;
+        secondStateUpdateCalls = 0;
+        initialProps = unmodifiableMap({
+          'getInitialState': (_) => initialState
+        });
+        newState1 = {'foo': 'bar'};
+        newState2 = {'baz': 'foobar'};
+        expectedState1 = {}..addAll(initialState)..addAll(newState1);
+        expectedState2 = {}..addAll(expectedState1)..addAll(newState2);
+
+        component = getDartComponent(render(LifecycleTest(initialProps)));
+        component.lifecycleCalls.clear();
+      });
+
+      tearDown(() {
+        component?.lifecycleCalls?.clear();
+        component = null;
+        initialProps = null;
+        newState1 = null;
+        expectedState1 = null;
+        newState2 = null;
+        expectedState2 = null;
+      });
+
+      test('when `setState` is called from within another `setState` callback', () {
+        void handleSecondStateUpdate() {
+          secondStateUpdateCalls++;
+          expect(component.state, expectedState2);
+        }
+
+        void handleFirstStateUpdate() {
+          firstStateUpdateCalls++;
+          expect(component.state, expectedState1);
+          component.setState(newState2, handleSecondStateUpdate);
+        }
+
+        component.setState(newState1, handleFirstStateUpdate);
+
+        expect(firstStateUpdateCalls, 1);
+        expect(secondStateUpdateCalls, 1);
+
+        expect(component.lifecycleCalls, containsAllInOrder([
+          matchCall('componentWillUpdate', args: [anything, expectedState1]),
+          matchCall('componentWillUpdate', args: [anything, expectedState2]),
+        ]));
+      });
+
+      test('when `replaceState` is called from within another `replaceState` callback', () {
+        void handleSecondStateUpdate() {
+          secondStateUpdateCalls++;
+          expect(component.state, newState2);
+        }
+
+        void handleFirstStateUpdate() {
+          firstStateUpdateCalls++;
+          expect(component.state, newState1);
+          component.replaceState(newState2, handleSecondStateUpdate);
+        }
+
+        component.replaceState(newState1, handleFirstStateUpdate);
+
+        expect(firstStateUpdateCalls, 1);
+        expect(secondStateUpdateCalls, 1);
+
+        expect(component.lifecycleCalls, containsAllInOrder([
+          matchCall('componentWillUpdate', args: [anything, newState1]),
+          matchCall('componentWillUpdate', args: [anything, newState2]),
+        ]));
+      });
+    });
+
     test('properly handles a call to setState within componentWillReceiveProps', () {
       const Map initialState = const {
         'initialState': 'initial',

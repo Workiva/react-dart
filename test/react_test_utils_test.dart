@@ -164,10 +164,18 @@ void main() {
     expect(getProperty(h1Component, 'tagName'), equals('H1'));
   });
 
-  test('findRenderedComponentWithType', () {
+  test('findRenderedComponentWithType (deprecated)', () {
     component = renderIntoDocument(wrapperComponent({}, [sampleComponent({})]));
+    // ignore: deprecated_member_use
     var result = findRenderedComponentWithType(component, sampleComponent);
+    // ignore: deprecated_member_use
     expect(isCompositeComponentWithType(result, sampleComponent), isTrue);
+  });
+
+  test('findRenderedComponentWithTypeV2', () {
+    component = renderIntoDocument(wrapperComponent({}, [sampleComponentV2({})]));
+    var result = findRenderedComponentWithTypeV2(component, sampleComponentV2);
+    expect(isCompositeComponentWithTypeV2(result, sampleComponentV2), isTrue);
   });
 
   group('isCompositeComponent', () {
@@ -184,17 +192,33 @@ void main() {
     });
   });
 
-  group('isCompositeComponentWithType', () {
+  group('isCompositeComponentWithType (deprecated)', () {
     var renderedInstance = renderIntoDocument(sampleComponent({}));
 
     test('returns true when element is a composite component (created with React.createClass()) of the specified type', () {
+      // ignore: deprecated_member_use
       expect(isCompositeComponentWithType(
           renderedInstance, sampleComponent), isTrue);
     });
 
     test('returns false when element is not a composite component (created with React.createClass()) of the specified type', () {
+      // ignore: deprecated_member_use
       expect(isCompositeComponentWithType(
           renderedInstance, eventComponent), isFalse);
+    });
+  });
+
+  group('isCompositeComponentWithTypeV2', () {
+    var renderedInstance = renderIntoDocument(sampleComponentV2({}));
+
+    test('returns true when element is a composite component (created with React.createClass()) of the specified type', () {
+      expect(isCompositeComponentWithTypeV2(
+          renderedInstance, sampleComponentV2), isTrue);
+    });
+
+    test('returns false when element is not a composite component (created with React.createClass()) of the specified type', () {
+      expect(isCompositeComponentWithTypeV2(
+          renderedInstance, eventComponentV2), isFalse);
     });
   });
 
@@ -221,25 +245,51 @@ void main() {
     });
   });
 
-  group('isElementOfType', () {
+  group('isElementOfType (deprecated)', () {
     test('returns true argument is an element of type', () {
-      expect(isElementOfType(div({}), div as ReactComponentFactory), isTrue);
+      // ignore: deprecated_member_use
+      expect(isElementOfType(div({}), div as ReactComponentFactoryProxy), isTrue);
     });
 
     test('returns false argument is not an element of type', () {
-      expect(isElementOfType(div({}), span as ReactComponentFactory), isFalse);
+      // ignore: deprecated_member_use
+      expect(isElementOfType(div({}), span as ReactComponentFactoryProxy), isFalse);
     });
   });
 
-  test('scryRenderedComponentsWithType', () {
+  group('isElementOfTypeV2', () {
+    test('returns true argument is an element of type', () {
+      expect(isElementOfTypeV2(div({}), div), isTrue);
+    });
+
+    test('returns false argument is not an element of type', () {
+      expect(isElementOfTypeV2(div({}), span), isFalse);
+    });
+  });
+
+  test('scryRenderedComponentsWithType (deprecated)', () {
     component = renderIntoDocument(wrapperComponent({}, [
         sampleComponent({}), sampleComponent({}), eventComponent({})]));
 
+    // ignore: deprecated_member_use
     var results = scryRenderedComponentsWithType(component, sampleComponent);
 
     expect(results.length, 2);
+    // ignore: deprecated_member_use
     expect(isCompositeComponentWithType(results[0], sampleComponent), isTrue);
+    // ignore: deprecated_member_use
     expect(isCompositeComponentWithType(results[1], sampleComponent), isTrue);
+  });
+
+  test('scryRenderedComponentsWithTypeV2', () {
+    component = renderIntoDocument(wrapperComponentV2({}, [
+        sampleComponentV2({}), sampleComponentV2({}), eventComponentV2({})]));
+
+    var results = scryRenderedComponentsWithTypeV2(component, sampleComponentV2);
+
+    expect(results.length, 2);
+    expect(isCompositeComponentWithTypeV2(results[0], sampleComponentV2), isTrue);
+    expect(isCompositeComponentWithTypeV2(results[1], sampleComponentV2), isTrue);
   });
 
   test('scryRenderedDOMComponentsWithClass', () {

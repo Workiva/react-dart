@@ -24,7 +24,18 @@ export 'package:react/react_client/react_interop.dart' show ReactElement, ReactJ
 
 final EmptyObject emptyJsMap = new EmptyObject();
 
-/// Type of [children] must be child or list of children, when child is [ReactElement] or [String]
+/// __Deprecated. Will be removed in the `5.0.0` release.__ Use [ReactComponentFactoryProxy] instead.
+///
+/// __You should discontinue use of this, and all typedefs for the return value of [registerComponent].__
+///
+///     // Don't do this
+///     ReactComponentFactory customComponent = registerComponent(() => new CustomComponent());
+///
+///     // Do this.
+///     var customComponent = registerComponent(() => new CustomComponent());
+///
+/// > Type of [children] must be child or list of children, when child is [ReactElement] or [String]
+@Deprecated('5.0.0')
 typedef ReactElement ReactComponentFactory(Map props, [dynamic children]);
 typedef Component ComponentFactory();
 
@@ -263,8 +274,10 @@ final ReactDartInteropStatics _dartInteropStatics = (() {
   }
 
   void _callSetStateCallbacks(Component component) {
-    component.setStateCallbacks.forEach((callback()) { callback(); });
+    var callbacks = component.setStateCallbacks.toList();
+    // Prevent concurrent modification during iteration
     component.setStateCallbacks.clear();
+    callbacks.forEach((callback()) { callback(); });
   }
 
   void _callSetStateTransactionalCallbacks(Component component) {
@@ -364,8 +377,8 @@ final ReactDartInteropStatics _dartInteropStatics = (() {
   );
 })();
 
-/// Returns a new [ReactComponentFactory] which produces a new JS
-/// [`ReactClass` component class](https://facebook.github.io/react/docs/top-level-api.html#react.createclass).
+/// Creates and returns a new [ReactDartComponentFactoryProxy] from the provided [componentFactory]
+/// which produces a new JS [`ReactClass` component class](https://facebook.github.io/react/docs/top-level-api.html#react.createclass).
 ReactDartComponentFactoryProxy _registerComponent(ComponentFactory componentFactory, [Iterable<String> skipMethods = const []]) {
   var componentInstance = componentFactory();
   var componentStatics = new ComponentStatics(componentFactory);

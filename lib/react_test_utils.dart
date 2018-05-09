@@ -27,16 +27,25 @@ import 'package:react/src/react_test_utils/simulate_wrappers.dart' as simulate_w
 //     `Element`.
 
 
-/// Returns the 'type' of a component.
+/// __Deprecated. Will be removed in the `5.0.0` release.__ Use [getComponentTypeV2] instead.
 ///
-/// For a DOM components, this with return the String corresponding to its tagName ('div', 'a', etc.).
-/// For React.createClass()-based components, this with return the [ReactClass].
+/// Returns the 'type' of a given [componentFactory].
+///
+/// For a DOM components, this with return the String corresponding to its `tagName` ('div', 'a', etc.).
+/// For custom composite components, this will return the [ReactClass].
+@Deprecated('5.0.0')
 dynamic getComponentType(ReactComponentFactory componentFactory) {
   if (componentFactory is ReactComponentFactoryProxy) {
-    return componentFactory.type;
+    return (componentFactory as ReactComponentFactoryProxy).type;
   }
   return null;
 }
+
+/// Returns the [ReactComponentFactoryProxy.type] of a given [componentFactory].
+///
+/// * For DOM components, this with return the String corresponding to its tagName ('div', 'a', etc.).
+/// * For custom composite components React.createClass()-based components, this will return the [ReactClass].
+dynamic getComponentTypeV2(ReactComponentFactoryProxy componentFactory) => componentFactory.type;
 
 typedef bool ComponentTestFunction(/* [1] */ component);
 
@@ -151,12 +160,23 @@ external dynamic /* [1] */ findRenderedDOMComponentWithTag(/* [1] */ tree, Strin
 @JS('React.addons.TestUtils.findRenderedComponentWithType')
 external dynamic /* [1] */ _findRenderedComponentWithType(/* [1] */ tree, dynamic type);
 
-/// Same as scryRenderedComponentsWithType() but expects there to be one result
+/// __Deprecated. Will be removed in the `5.0.0` release.__ Use [findRenderedComponentWithTypeV2] instead.
+///
+/// Same as [scryRenderedComponentsWithType] but expects there to be one result
 /// and returns that one result, or throws exception if there is any other
 /// number of matches besides one.
+@Deprecated('5.0.0')
 /* [1] */ findRenderedComponentWithType(
-    /* [1] */ tree, ReactComponentFactory componentType) {
-  return _findRenderedComponentWithType(tree, getComponentType(componentType));
+    /* [1] */ tree, ReactComponentFactory componentFactory) {
+  return _findRenderedComponentWithType(tree, getComponentType(componentFactory));
+}
+
+/// Same as [scryRenderedComponentsWithTypeV2] but expects there to be one result
+/// and returns that one result, or throws exception if there is any other
+/// number of matches besides one.
+/* [1] */ findRenderedComponentWithTypeV2(
+    /* [1] */ tree, ReactComponentFactoryProxy componentFactory) {
+  return _findRenderedComponentWithType(tree, getComponentTypeV2(componentFactory));
 }
 
 @JS('React.addons.TestUtils.isCompositeComponent')
@@ -173,10 +193,19 @@ bool isCompositeComponent(/* [1] */ instance) {
 @JS('React.addons.TestUtils.isCompositeComponentWithType')
 external bool _isCompositeComponentWithType(/* [1] */ instance, dynamic type);
 
-/// Returns true if instance is a composite component.
-/// (created with React.createClass()) whose type is of a React componentClass.
-bool isCompositeComponentWithType(/* [1] */ instance, ReactComponentFactory componentClass) {
-  return _isCompositeComponentWithType(instance, getComponentType(componentClass));
+/// __Deprecated. Will be removed in the `5.0.0` release.__ Use [isCompositeComponentWithTypeV2] instead.
+///
+/// Returns `true` if instance is a custom composite component created using `React.createClass()`
+/// that is of the `type` of the provided [componentFactory].
+@Deprecated('5.0.0')
+bool isCompositeComponentWithType(/* [1] */ instance, ReactComponentFactory componentFactory) {
+  return _isCompositeComponentWithType(instance, getComponentType(componentFactory));
+}
+
+/// Returns `true` if instance is a custom composite component created using `React.createClass()`
+/// that is of the [ReactComponentFactoryProxy.type] of the provided [componentFactory].
+bool isCompositeComponentWithTypeV2(/* [1] */ instance, ReactComponentFactoryProxy componentFactory) {
+  return _isCompositeComponentWithType(instance, getComponentTypeV2(componentFactory));
 }
 
 /// Returns true if instance is a DOM component (such as a <div> or <span>).
@@ -190,18 +219,37 @@ external bool isElement(dynamic object);
 @JS('React.addons.TestUtils.isElementOfType')
 external bool _isElementOfType(dynamic element, dynamic componentClass);
 
-/// Returns true if [element] is a ReactElement whose type is of a
-/// React componentClass.
+/// __Deprecated. Will be removed in the `5.0.0` release.__ Use [isElementOfTypeV2] instead.
+///
+/// Returns `true` if [element] is a [ReactElement]
+/// that is of the `type` of the provided [componentFactory].
+@Deprecated('5.0.0')
 bool isElementOfType(dynamic element, ReactComponentFactory componentFactory) {
   return _isElementOfType(element, getComponentType(componentFactory));
+}
+
+/// Returns `true` if [element] is a [ReactElement]
+/// that is of the [ReactComponentFactoryProxy.type] of the provided [componentFactory].
+bool isElementOfTypeV2(dynamic element, ReactComponentFactoryProxy componentFactory) {
+  return _isElementOfType(element, getComponentTypeV2(componentFactory));
 }
 
 @JS('React.addons.TestUtils.scryRenderedComponentsWithType')
 external List<dynamic> /* [1] */ _scryRenderedComponentsWithType(/* [1] */ tree, dynamic type);
 
-/// Finds all instances of components with type equal to componentClass.
-List<dynamic> /* [1] */ scryRenderedComponentsWithType(/* [1] */ tree, ReactComponentFactory componentClass) {
-  return _scryRenderedComponentsWithType(tree, getComponentType(componentClass));
+/// __Deprecated. Will be removed in the `5.0.0` release.__ Use [scryRenderedComponentsWithTypeV2] instead.
+///
+/// Finds all instances within the provided [tree]
+/// that are of the `type` of the provided [componentFactory].
+@Deprecated('5.0.0')
+List<dynamic> /* [1] */ scryRenderedComponentsWithType(/* [1] */ tree, ReactComponentFactory componentFactory) {
+  return _scryRenderedComponentsWithType(tree, getComponentType(componentFactory));
+}
+
+/// Finds all instances within the provided [tree]
+/// that are of the [ReactComponentFactoryProxy.type] of the provided [componentFactory].
+List<dynamic> /* [1] */ scryRenderedComponentsWithTypeV2(/* [1] */ tree, ReactComponentFactoryProxy componentFactory) {
+  return _scryRenderedComponentsWithType(tree, getComponentTypeV2(componentFactory));
 }
 
 @JS('React.addons.TestUtils.scryRenderedDOMComponentsWithClass')

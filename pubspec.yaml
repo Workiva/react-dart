@@ -1,8 +1,12 @@
 name: react
 version: 4.3.0
-author: Clean Team <clean@vacuumlabs.com>
+authors:
+  - Samuel Hapák <samuel.hapak@gmail.com>
+  - Greg Littlefield <greg.littlefield@workiva.com>
+  - Claire Sarsam <claire.sarsam@workiva.com>
+  - Aaron Lademann <aaron.lademann@workiva.com>
 description: Bindings of the ReactJS library for building interactive interfaces.
-homepage: http://cleandart.github.io/react-dart/
+homepage: https://github.com/cleandart/react-dart
 environment:
   sdk: '>=1.13.0 <2.0.0'
 dependencies:

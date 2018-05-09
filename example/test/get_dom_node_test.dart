@@ -20,7 +20,11 @@ class _ChildComponent extends react.Component {
     react.div({}, [
       "Test element",
       counter.toString(),
-      react.button({'key': 'button', "onClick": (_) { counter++;redraw();} }, "Increase counter")
+      react.button({
+        'key': 'button',
+        'className': 'btn btn-primary',
+        'onClick': (_) { counter++;redraw();},
+      }, 'Increase counter')
     ]);
 }
 
@@ -42,10 +46,18 @@ class SimpleComponent extends react.Component {
     react.div({}, [
       react.span({'key': 'span1', "ref": "refToSpan"}, "Test"),
       react.span({'key': 'span2'}, counter),
-      react.button({'key': 'button1', "onClick": (_) => (react_dom.findDOMNode(this) as HtmlElement).children.first.text = (++counter).toString()},"Increase counter"),
+      react.button({
+        'key': 'button1',
+        'className': 'btn btn-primary',
+        'onClick': (_) => (react_dom.findDOMNode(this) as HtmlElement).children.first.text = (++counter).toString()
+      }, 'Increase counter'),
       react.br({'key': 'br'}),
       ChildComponent({'key': 'child', "ref": "refToElement"}),
-      react.button({'key': 'button2', "onClick": (_) => window.alert((this.ref('refToElement') as _ChildComponent).counter.toString())}, "Show value of child element"),
+      react.button({
+        'key': 'button2',
+        'className': 'btn btn-primary',
+        'onClick': (_) => window.alert((this.ref('refToElement') as _ChildComponent).counter.toString())
+      }, 'Show value of child element'),
     ]);
 }
 
