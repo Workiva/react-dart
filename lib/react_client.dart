@@ -35,7 +35,7 @@ final EmptyObject emptyJsMap = new EmptyObject();
 ///     var customComponent = registerComponent(() => new CustomComponent());
 ///
 /// > Type of [children] must be child or list of children, when child is [ReactElement] or [String]
-@Deprecated('4.4.0')
+@Deprecated('5.0.0')
 typedef ReactElement ReactComponentFactory(Map props, [dynamic children]);
 typedef Component ComponentFactory();
 
