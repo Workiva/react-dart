@@ -277,7 +277,7 @@ final ReactDartInteropStatics _dartInteropStatics = (() {
     var callbacks = component.setStateCallbacks.toList();
     // Prevent concurrent modification during iteration
     component.setStateCallbacks.clear();
-    callbacks.forEach((callback()) { callback(); });
+    callbacks.forEach((callback) { callback(); });
   }
 
   void _callSetStateTransactionalCallbacks(Component component) {
