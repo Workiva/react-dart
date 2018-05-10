@@ -73,10 +73,10 @@ abstract class Component {
   List<TransactionalSetStateCallback> _transactionalSetStateCallbacks = [];
 
   /// The List of callbacks to be called after the component has been updated from a call to [setState].
-  List<SetStateCallback> get setStateCallbacks => _setStateCallbacks;
+  List get setStateCallbacks => _setStateCallbacks;
 
   /// The List of transactional `setState` callbacks to be called before the component updates.
-  List<TransactionalSetStateCallback> get transactionalSetStateCallbacks => _transactionalSetStateCallbacks;
+  List get transactionalSetStateCallbacks => _transactionalSetStateCallbacks;
 
   /// The JavaScript [`ReactComponent`](https://facebook.github.io/react/docs/top-level-api.html#reactdom.render)
   /// instance of this `Component` returned by [render].
@@ -166,7 +166,7 @@ abstract class Component {
   /// Optionally accepts a [callback] that gets called after the component updates.
   ///
   /// [A.k.a "forceUpdate"](https://facebook.github.io/react/docs/react-component.html#forceupdate)
-  void redraw([SetStateCallback callback]) {
+  void redraw([callback()]) {
     setState({}, callback);
   }
 
@@ -177,7 +177,7 @@ abstract class Component {
   /// Also allows [newState] to be used as a transactional `setState` callback.
   ///
   /// See: <https://facebook.github.io/react/docs/react-component.html#setstate>
-  void setState(dynamic newState, [SetStateCallback callback]) {
+  void setState(dynamic newState, [callback()]) {
     if (newState is Map) {
       _nextState.addAll(newState);
     } else if (newState is TransactionalSetStateCallback) {
@@ -196,7 +196,7 @@ abstract class Component {
   /// Optionally accepts a callback that gets called after the component updates.
   ///
   /// See: <https://facebook.github.io/react/docs/react-component.html#setstate>
-  void replaceState(Map newState, [SetStateCallback callback]) {
+  void replaceState(Map newState, [callback()]) {
     Map nextState = newState == null ? {} : new Map.from(newState);
     _nextState = nextState;
     if (callback != null) _setStateCallbacks.add(callback);
