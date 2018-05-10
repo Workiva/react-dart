@@ -362,7 +362,7 @@ abstract class Component {
   dynamic render();
 }
 
-/// Creates ReactJS [ReactElement] instances.
+/// Creates a ReactJS virtual DOM instance (`ReactElement` on the client).
 abstract class ReactComponentFactoryProxy implements Function {
   /// The type of component created by this factory.
   get type;
