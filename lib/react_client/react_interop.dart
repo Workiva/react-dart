@@ -7,7 +7,7 @@ library react_client.react_interop;
 import 'dart:html';
 
 import 'package:js/js.dart';
-import 'package:react/react.dart';
+import 'package:react/react.dart' hide ComponentFactory;
 import 'package:react/react_client.dart' show ComponentFactory;
 
 typedef ReactElement ReactJsComponentFactory(props, children);

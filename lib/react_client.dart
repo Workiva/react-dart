@@ -21,6 +21,7 @@ import 'package:react/src/typedefs.dart';
 import 'package:react/src/ddc_emulated_function_name_bug.dart' as ddc_emulated_function_name_bug;
 
 export 'package:react/react_client/react_interop.dart' show ReactElement, ReactJsComponentFactory, inReactDevMode;
+export 'package:react/react.dart' show ReactComponentFactoryProxy, ComponentFactory;
 
 final EmptyObject emptyJsMap = new EmptyObject();
 
@@ -43,36 +44,6 @@ typedef Component ComponentFactory();
 ///
 /// See: <https://facebook.github.io/react/docs/more-about-refs.html#the-ref-callback-attribute>
 typedef _CallbackRef(componentOrDomNode);
-
-/// Creates ReactJS [ReactElement] instances.
-abstract class ReactComponentFactoryProxy implements Function {
-  /// The type of component created by this factory.
-  get type;
-
-  /// Returns a new rendered component instance with the specified [props] and [children].
-  ///
-  /// Necessary to work around DDC `dart.dcall` issues in <https://github.com/dart-lang/sdk/issues/29904>,
-  /// since invoking the function directly doesn't work.
-  ReactElement build(Map props, [List childrenArgs]);
-
-  /// Returns a new rendered component instance with the specified [props] and [children].
-  ///
-  /// We need a concrete implementation of this, as opposed to it just being handled by [noSuchMethod],
-  /// in order to work around DDC issue <https://github.com/dart-lang/sdk/issues/29917>.
-  ReactElement call(Map props, [dynamic children]) => build(props, [children]);
-
-  @override
-  dynamic noSuchMethod(Invocation invocation) {
-    if (invocation.memberName == #call && invocation.isMethod) {
-      Map props = invocation.positionalArguments[0];
-      List children = invocation.positionalArguments.sublist(1);
-
-      return build(props, children);
-    }
-
-    return super.noSuchMethod(invocation);
-  }
-}
 
 /// Prepares [children] to be passed to the ReactJS [React.createElement] and
 /// the Dart [react.Component].
@@ -429,9 +400,12 @@ class ReactDomComponentFactoryProxy extends ReactComponentFactoryProxy {
     var children = _convertArgsToChildren(childrenArgs);
     children = listifyChildren(children);
 
-    convertProps(props);
+    // We can't mutate the original since we can't be certain that the value of the
+    // the converted event handler will be compatible with the Map's type parameters.
+    var convertibleProps = {}..addAll(props);
+    convertProps(convertibleProps);
 
-    return factory(jsify(props), children);
+    return factory(jsify(convertibleProps), children);
   }
 
   /// Prepares the bound values, event handlers, and style props for consumption by ReactJS DOM components.
@@ -529,9 +503,11 @@ _convertEventHandlers(Map args) {
     if (eventFactory != null && value != null) {
       // Apply allowInterop here so that the function we store in [_originalEventHandlers]
       // is the same one we'll retrieve from the JS props.
-      var reactDartConvertedEventHandler = allowInterop((events.SyntheticEvent e, [_, __]) => zone.run(() {
-        value(eventFactory(e));
-      }));
+      var reactDartConvertedEventHandler = allowInterop((events.SyntheticEvent e, [_, __]) {
+        zone.run(() {
+          value(eventFactory(e));
+        });
+      });
 
       args[propKey] = reactDartConvertedEventHandler;
       _originalEventHandlers[reactDartConvertedEventHandler] = value;
