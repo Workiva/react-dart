@@ -6,6 +6,10 @@ import 'package:react/react_client.dart';
 
 class _Component extends react.Component {
   render() {
+    if (props['hardCodedNullReturn'] == true) {
+      return null;
+    }
+
     return props['returnValue'];
   }
 }
@@ -16,10 +20,13 @@ void main() {
   setClientConfiguration();
 
   var content = react.div({}, [
-    react.p({}, 'Testing a return value of "null"...'),
+    react.p({}, 'Testing a dynamic return value of "null"...'),
     component({'returnValue': null, 'key': 0}),
+    react.p({}, 'Testing a hard-coded return value of "null"...'),
+    component({'hardCodedNullReturn': true, 'key': 1}),
     react.p({}, 'Testing a return value of "false"...'),
-    component({'returnValue': false, 'key': 1}),
+    component({'returnValue': false, 'key': 2}),
   ]);
+
   react_dom.render(content, querySelector('#content'));
 }
