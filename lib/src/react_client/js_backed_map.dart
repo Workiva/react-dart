@@ -51,7 +51,7 @@ class JsBackedMap<K, V> extends MapBase<K, V> implements Map<K, V> {
 //    assert(_isValidKey(key));
 //    if (!_isValidKey(key)) return null;
     final value = this[key];
-    _Reflect.deleteProperty(jsObject, value);
+    _Reflect.deleteProperty(jsObject, key);
     return value;
   }
 
