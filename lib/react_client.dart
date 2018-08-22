@@ -529,12 +529,6 @@ final ReactDartInteropStatics2 _dartInteropStatics2 = (() {
   void handleComponentDidUpdate(Component2 component, ReactComponent jsThis, JsMap jsPrevProps, JsMap jsPrevState) => zone.run(() {
 //    final prevProps = component.props; // todo do this instead of creating new wrappers?
 //    final prevState = component.state; // todo do this instead of creating new wrappers?
-
-    component
-      // FIXME fix casts
-      ..props = new JsBackedMap.backedBy(jsThis.props as dynamic)
-      ..state = new JsBackedMap.backedBy(jsThis.state as dynamic);
-
     component.componentDidUpdate(
       new JsBackedMap.backedBy(jsPrevProps),
       new JsBackedMap.backedBy(jsPrevState),
@@ -546,6 +540,10 @@ final ReactDartInteropStatics2 _dartInteropStatics2 = (() {
   });
 
   dynamic handleRender(Component2 component) => zone.run(() {
+    component
+      // FIXME fix casts
+      ..props = new JsBackedMap.backedBy(component.jsThis.props as dynamic)
+      ..state = new JsBackedMap.backedBy(component.jsThis.state as dynamic);
     return component.render();
   });
 

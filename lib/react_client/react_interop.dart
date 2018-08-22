@@ -54,7 +54,8 @@ abstract class ReactDomServer {
 @JS()
 @anonymous
 class ReactClass {
-  JsMap defaultProps;
+  external JsMap get defaultProps;
+  external set defaultProps(JsMap value);
 
   /// The `displayName` string is used in debugging messages.
   ///
