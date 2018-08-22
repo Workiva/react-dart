@@ -520,7 +520,7 @@ final ReactDartInteropStatics2 _dartInteropStatics2 = (() {
   });
 
   void handleComponentWillUpdate(Component2 component, JsMap jsNextProps, JsMap jsNextState) => zone.run(() {
-    return component.componentWillUpdate(
+    component.componentWillUpdate(
       new JsBackedMap.backedBy(jsNextProps),
       new JsBackedMap.backedBy(jsNextState),
     );
