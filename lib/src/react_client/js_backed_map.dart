@@ -7,14 +7,19 @@ import 'dart:core';
 import 'package:js/js.dart';
 import 'package:js/js_util.dart' as js_util;
 
-class JsBackedMap<V> extends MapBase<String, V> implements Map<String, V> {
-  final _JsObject jsObject;
+class JsBackedMap<K, V> extends MapBase<K, V> implements Map<K, V> {
+  final JsMap jsObject;
 
-  JsBackedMap() : jsObject = js_util.newObject() as _JsObject; // todo do we need this cast?
+  JsBackedMap() : jsObject = js_util.newObject() as JsMap; // todo do we need this cast?
 
   JsBackedMap.backedBy(this.jsObject);
 
   factory JsBackedMap.from(Map other) => new JsBackedMap()..addAll(other);
+
+  factory JsBackedMap.fromJs(JsMap other) {
+    // todo optimize by eliminating JsBackedMap instance creation
+    return new JsBackedMap.from(new JsBackedMap.backedBy(other));
+  }
 
   // these checks moved to asserts for better inlining...
   // todo see if we can keep toString() behavior of keys without asserts without breaking map behavior? probably not
@@ -33,13 +38,13 @@ class JsBackedMap<V> extends MapBase<String, V> implements Map<String, V> {
   }
 
   @override
-  void operator []=(String key, V value) {
+  void operator []=(K key, V value) {
     js_util.setProperty(jsObject, key, value);
   }
 
   // todo this cast seems to work in Dart 1 without much overhead in dart2js, but may break in DDC/Dartium and may also break reified types
   @override
-  Iterable<String> get keys => _Object.keys(jsObject) as List<String>;
+  Iterable<K> get keys => _Object.keys(jsObject) as List<K>;
 
   @override
   V remove(Object key) {
@@ -63,7 +68,7 @@ class JsBackedMap<V> extends MapBase<String, V> implements Map<String, V> {
   // ----------------------------------
 
   @override
-  void addAll(Map<String, V> other) {
+  void addAll(Map<K, V> other) {
     // Don't check against JsBackedMap<V> since it's less optimized in dart2js,
     // and we can assume that any JsBackedMap that is also a Map<String, V>
     // is also a JsBackedMap<V>. TODO validate in Dart 2 and create dart-lang/sdk bug for this
@@ -95,24 +100,31 @@ class JsBackedMap<V> extends MapBase<String, V> implements Map<String, V> {
 // overridden for to avoid cast in case the implementation of keys changes
 //  @override
 //  int get length => _Object.keys(jsObject).length;
-
 }
 
 @JS()
 @anonymous
-class _JsObject {}
+class JsMap {}
 
 @JS('Object')
 abstract class _Object {
   // FIXME needs polyfill for IE
-  external static void assign(_JsObject to, _JsObject from);
-  external static List<dynamic> keys(_JsObject object);
-  external static List<dynamic> values(_JsObject object);
+  external static void assign(JsMap to, JsMap from);
+  external static List<dynamic> keys(JsMap object);
+  external static List<dynamic> values(JsMap object);
 }
 
 @JS('Reflect')
 abstract class _Reflect {
   // FIXME needs polyfill for IE
-  external static bool deleteProperty(_JsObject target, dynamic propertyKey);
+  external static bool deleteProperty(JsMap target, dynamic propertyKey);
 }
 
+JsMap jsBackingMapOrJsCopy(Map other) {
+  // todo is it faster to just always do .from?
+  if (other is JsBackedMap) {
+    return other.jsObject;
+  } else {
+    return new JsBackedMap.from(other).jsObject;
+  }
+}

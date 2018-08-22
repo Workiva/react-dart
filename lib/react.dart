@@ -5,6 +5,7 @@
 /// A Dart library for building UI using ReactJS.
 library react;
 
+import 'package:react/react_client/react_interop.dart';
 import 'package:react/src/typedefs.dart';
 
 /// Top-level ReactJS [Component class](https://facebook.github.io/react/docs/react-component.html)
@@ -357,6 +358,255 @@ abstract class Component {
   ///
   /// See: <https://facebook.github.io/react/docs/react-component.html#render>
   dynamic render();
+}
+
+abstract class Component2Adapter {
+  void setState(dynamic newState, SetStateCallback callback);
+  void forceUpdate(SetStateCallback callback);
+}
+
+/// Top-level ReactJS [Component class](https://facebook.github.io/react/docs/react-component.html)
+/// which provides the [ReactJS Component API](https://facebook.github.io/react/docs/react-component.html#reference)
+abstract class Component2<T extends Map> implements Component {
+  // TODO make private using expando?
+  Component2Adapter adapter;
+
+  @override
+  covariant T props;
+
+  @override
+  covariant T state;
+
+  @override
+  dynamic _jsThis;
+
+  /// The JavaScript [`ReactComponent`](https://facebook.github.io/react/docs/top-level-api.html#reactdom.render)
+  /// instance of this `Component` returned by [render].
+  dynamic jsThis;
+
+  /// Allows the [ReactJS `displayName` property](https://facebook.github.io/react/docs/react-component.html#displayname)
+  /// to be set for debugging purposes.
+  String get displayName => '';
+
+  /// Triggers a rerender with new state obtained by shallow-merging [newState] into the current [state].
+  ///
+  /// Optionally accepts a [callback] that gets called after the component updates.
+  ///
+  /// Also allows [newState] to be used as a transactional `setState` callback.
+  ///
+  /// See: <https://facebook.github.io/react/docs/react-component.html#setstate>
+  void setState(dynamic newState, [SetStateCallback callback]) {
+    adapter.setState(newState, callback);
+  }
+
+  void forceUpdate([SetStateCallback callback]) {
+    adapter.forceUpdate(callback);
+  }
+
+  /// ReactJS lifecycle method that is invoked once, both on the client and server, immediately before the initial
+  /// rendering occurs.
+  ///
+  /// If you call [setState] within this method, [render] will see the updated state and will be executed only once
+  /// despite the [state] value change.
+  ///
+  /// See: <https://facebook.github.io/react/docs/react-component.html#mounting-componentwillmount>
+  void componentWillMount() {}
+
+  /// ReactJS lifecycle method that is invoked once, only on the client _(not on the server)_, immediately after the
+  /// initial rendering occurs.
+  ///
+  /// At this point in the lifecycle, you can access any [ref]s to the children of [rootNode].
+  ///
+  /// The [componentDidMount] method of child `Component`s is invoked _before_ that of parent `Component`.
+  ///
+  /// See: <https://facebook.github.io/react/docs/react-component.html#mounting-componentdidmount>
+  void componentDidMount() {}
+
+  /// ReactJS lifecycle method that is invoked when a `Component` is receiving [newProps].
+  ///
+  /// This method is not called for the initial [render].
+  ///
+  /// Use this as an opportunity to react to a prop transition before [render] is called by updating the [state] using
+  /// [setState]. The old props can be accessed via [props].
+  ///
+  /// Calling [setState] within this function will not trigger an additional [render].
+  ///
+  /// __Note__: Choose either this method or [componentWillReceivePropsWithContext]. They are both called at the same
+  /// time so using both provides no added benefit.
+  ///
+  /// See: <https://facebook.github.io/react/docs/react-component.html#updating-componentwillreceiveprops>
+  void componentWillReceiveProps(Map newProps) {}
+
+  /// ReactJS lifecycle method that is invoked before rendering when [nextProps] or [nextState] are being received.
+  ///
+  /// Use this as an opportunity to return `false` when you're certain that the transition to the new props and state
+  /// will not require a component update.
+  ///
+  /// __Note__: This method is called after [shouldComponentUpdateWithContext]. When it returns `null`, the result of
+  /// this method is used, but this is not called if a valid `bool` is returned from [shouldComponentUpdateWithContext].
+  ///
+  /// See: <https://facebook.github.io/react/docs/react-component.html#updating-shouldcomponentupdate>
+  bool shouldComponentUpdate(Map nextProps, Map nextState) => true;
+
+  /// ReactJS lifecycle method that is invoked immediately before rendering when [nextProps] or [nextState] are being
+  /// received.
+  ///
+  /// This method is not called for the initial [render].
+  ///
+  /// Use this as an opportunity to perform preparation before an update occurs.
+  ///
+  /// __Note__: Choose either this method or [componentWillUpdateWithContext]. They are both called at the same time so
+  /// using both provides no added benefit.
+  ///
+  /// See: <https://facebook.github.io/react/docs/react-component.html#updating-componentwillupdate>
+  void componentWillUpdate(Map nextProps, Map nextState) {}
+
+
+  /// ReactJS lifecycle method that is invoked immediately after the `Component`'s updates are flushed to the DOM.
+  ///
+  /// This method is not called for the initial [render].
+  ///
+  /// Use this as an opportunity to operate on the [rootNode] (DOM) when the `Component` has been updated as a result
+  /// of the values of [prevProps] / [prevState].
+  ///
+  /// See: <https://facebook.github.io/react/docs/react-component.html#updating-componentdidupdate>
+  void componentDidUpdate(Map prevProps, Map prevState) {}
+
+  /// ReactJS lifecycle method that is invoked immediately before a `Component` is unmounted from the DOM.
+  ///
+  /// Perform any necessary cleanup in this method, such as invalidating timers or cleaning up any DOM [Element]s that
+  /// were created in [componentDidMount].
+  ///
+  /// See: <https://facebook.github.io/react/docs/react-component.html#unmounting-componentwillunmount>
+  void componentWillUnmount() {}
+
+  /// Invoked once before the `Component` is mounted. The return value will be used as the initial value of [state].
+  ///
+  /// See: <https://facebook.github.io/react/docs/react-component.html#getinitialstate>
+  Map getInitialState() => const {};
+
+  /// Invoked once and cached when [reactComponentClass] is called. Values in the mapping will be set on [props]
+  /// if that prop is not specified by the parent component.
+  ///
+  /// This method is invoked before any instances are created and thus cannot rely on [props]. In addition, be aware
+  /// that any complex objects returned by `getDefaultProps` will be shared across instances, not copied.
+  ///
+  /// See: <https://facebook.github.io/react/docs/react-component.html#getdefaultprops>
+  Map getDefaultProps() => const {};
+
+  /// __Required.__
+  ///
+  /// When called, it should examine [props] and [state] and return a single child [Element]. This child [Element] can
+  /// be either a virtual representation of a native DOM component (such as [DivElement]) or another composite
+  /// `Component` that you've defined yourself.
+  ///
+  /// See: <https://facebook.github.io/react/docs/react-component.html#render>
+  dynamic render();
+
+  // Unsupported things
+
+  // Unsupported things
+
+  @Deprecated('3.0.0')
+  void replaceState(Map newState, [SetStateCallback callback]) => throw new UnimplementedError();
+
+  @Deprecated('3.0.0')
+  Map<String, dynamic> getChildContext() => const {};
+
+  @Deprecated('3.0.0')
+  void componentWillUpdateWithContext(Map nextProps, Map nextState, Map nextContext) {}
+
+  @Deprecated('3.0.0')
+  void componentWillReceivePropsWithContext(Map newProps, nextContext) {}
+
+  @Deprecated('3.0.0')
+  bool shouldComponentUpdateWithContext(Map nextProps, Map nextState, Map nextContext) => null;
+
+  @Deprecated('3.0.0')
+  Iterable<String> get childContextKeys => const [];
+
+  @Deprecated('3.0.0')
+  Iterable<String> get contextKeys => const [];
+
+  @Deprecated('3.0.0')
+  bind(key) => [state[key], (value) => setState({key: value})];
+
+  @Deprecated('3.0.0')
+  initComponentInternal(props, _jsRedraw, [Ref ref, _jsThis, context]) {
+    throw new UnimplementedError();
+  }
+
+  @Deprecated('3.0.0')
+  initStateInternal() => throw new UnimplementedError();
+
+  @Deprecated('3.0.0')
+  Map nextContext; // todo make throwing getters/setters
+
+  @Deprecated('3.0.0')
+  Map prevContext; // todo make throwing getters/setters
+
+  @Deprecated('3.0.0')
+  Map prevState; // todo make throwing getters/setters
+
+  @Deprecated('3.0.0')
+  Map get nextState => throw new UnimplementedError();
+
+  @Deprecated('3.0.0')
+  Map nextProps; // todo make throwing getters/setters
+
+  @Deprecated('3.0.0')
+  void transferComponentState() => throw new UnimplementedError();
+
+  @Deprecated('3.0.0')
+  void redraw([SetStateCallback callback]) {
+    forceUpdate(callback);
+  }
+
+  @override
+  Map _context;
+
+  @override
+  var _jsRedraw;
+
+  @override
+  Map _nextState;
+
+  @override
+  Map _props;
+
+  @override
+  Ref _ref;
+
+  @override
+  List<SetStateCallback> _setStateCallbacks;
+
+  @override
+  Map _state;
+
+  @override
+  List<TransactionalSetStateCallback> _transactionalSetStateCallbacks;
+
+  @override
+  Map context;
+
+  @override
+  Ref ref;
+
+  @override
+  _initContext(context) {
+    throw new UnimplementedError();
+  }
+
+  @override
+  _initProps(props) {
+    throw new UnimplementedError();
+  }
+
+  @override
+  List<SetStateCallback> get setStateCallbacks => throw new UnimplementedError();
+
+  @override
+  List<TransactionalSetStateCallback> get transactionalSetStateCallbacks => throw new UnimplementedError();
 }
 
 /// A cross-browser wrapper around the browser's [nativeEvent].

@@ -4,6 +4,7 @@
 library react_client.js_interop_helpers;
 
 import "package:js/js.dart";
+import 'package:react/src/react_client/js_backed_map.dart';
 
 @JS()
 external dynamic _getProperty(jsObj, String key);
@@ -103,4 +104,14 @@ EmptyObject jsify(Map map) {
   });
 
   return jsMap;
+}
+
+void jsifyProperties(JsBackedMap map) {
+  map.forEach((key, value) {
+    if (value is Map) {
+      map[key] = jsify(value);
+    } else if (value is Function) {
+      map[key] = allowInterop(value);
+    }
+  });
 }
