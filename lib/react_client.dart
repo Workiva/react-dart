@@ -211,10 +211,8 @@ class ReactDartComponentFactoryProxy2<TComponent extends Component> extends Reac
 
     if (children == null) {
       // FIXME are we cool to modify this list?
-      children = childrenArgs;
-      for (var i = 0; i < children.length; i++) {
-        children[i] = listifyChildren(children[i]);
-      }
+      // FIXME why are there unmofiable lists here?
+      children = childrenArgs.map(listifyChildren).toList();
       markChildrenValidated(children);
     }
 
