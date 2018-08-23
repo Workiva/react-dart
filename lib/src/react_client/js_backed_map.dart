@@ -10,7 +10,7 @@ import 'package:js/js_util.dart' as js_util;
 class JsBackedMap<K, V> extends MapBase<K, V> implements Map<K, V> {
   final JsMap jsObject;
 
-  JsBackedMap() : jsObject = js_util.newObject() as JsMap; // todo do we need this cast?
+  JsBackedMap() : jsObject = new JsMap();
 
   JsBackedMap.backedBy(this.jsObject);
 
@@ -104,7 +104,9 @@ class JsBackedMap<K, V> extends MapBase<K, V> implements Map<K, V> {
 
 @JS()
 @anonymous
-class JsMap {}
+class JsMap {
+  external factory JsMap();
+}
 
 @JS('Object')
 abstract class _Object {
