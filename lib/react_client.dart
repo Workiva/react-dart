@@ -114,7 +114,10 @@ class ReactDartComponentFactoryProxy<TComponent extends Component> extends React
   ReactClass get type => reactClass;
 
   ReactElement build(Map props, [List childrenArgs = const []]) {
-    var children = _convertArgsToChildren(childrenArgs);
+    // TODO if we don't pass in a list into React, we don't get a list back in Dart...
+//    var children = _convertArgsToChildren(childrenArgs);
+//    children = listifyChildren(children);
+    markChildrenValidated(childrenArgs);
     children = listifyChildren(children);
 
     return reactComponentFactory(
@@ -196,14 +199,14 @@ class ReactDartComponentFactoryProxy2<TComponent extends Component> extends Reac
     children = listifyChildren(children);
 
     return reactComponentFactory(
-      generateExtendedJsProps(props, children),
+      generateExtendedJsProps(props),
       children
     );
   }
 
   /// Returns a JavaScript version of the specified [props], preprocessed for consumption by ReactJS and prepared for
   /// consumption by the [react] library internals.
-  static EmptyObject generateExtendedJsProps(Map props, dynamic children) {
+  static EmptyObject generateExtendedJsProps(Map props) {
     final JsBackedMap propsForJs = new JsBackedMap.from(props);
 
     // FIXME forwarded DOM props???
