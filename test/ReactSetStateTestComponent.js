@@ -67,6 +67,7 @@ var ReactSetStateTestComponent = React.createClass({
   },
 
   render: function() {
+    this.recordLifecyleCall("render");
     return React.createElement("div", {onClick: this.handleOuterClick},
       React.createElement("div", {onClick: this.handleInnerClick}, this.state.counter)
     );

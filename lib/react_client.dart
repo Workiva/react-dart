@@ -479,11 +479,11 @@ class JsComponent2Adapter extends Component2Adapter {
     if (newState is Map) {
       firstArg = jsBackingMapOrJsCopy(newState);
     } else if (newState is TransactionalSetStateCallback) {
-      firstArg = allowInterop((jsPrevState, jsProps) {
-        return newState(
+      firstArg = allowInterop((jsPrevState, jsProps, [_]) {
+        return jsBackingMapOrJsCopy(newState(
           new JsBackedMap.backedBy(jsPrevState),
           new JsBackedMap.backedBy(jsProps),
-        );
+        ));
       });
     } else if (newState != null) {
       throw new ArgumentError('setState expects its first parameter to either be a Map or a `TransactionalSetStateCallback`.');
@@ -492,7 +492,9 @@ class JsComponent2Adapter extends Component2Adapter {
     if (callback == null) {
       jsThis.setState(firstArg);
     } else {
-      jsThis.setState(firstArg, allowInterop(callback));
+      jsThis.setState(firstArg, allowInterop(([_]) {
+        callback();
+      }));
     }
   }
 }
@@ -535,11 +537,25 @@ final ReactDartInteropStatics2 _dartInteropStatics2 = (() {
     component.componentWillReceiveProps(new JsBackedMap.backedBy(jsNextProps));
   });
 
+
+  void _updatePropsAndStateWithJs(Component2 component, JsMap props, JsMap state) {
+    component
+      // FIXME fix casts
+      ..props = new JsBackedMap.backedBy(props)
+      ..state = new JsBackedMap.backedBy(state);
+  }
+
   bool handleShouldComponentUpdate(Component2 component, JsMap jsNextProps, JsMap jsNextState) => zone.run(() {
-    return component.shouldComponentUpdate(
+    final value = component.shouldComponentUpdate(
       new JsBackedMap.backedBy(jsNextProps),
       new JsBackedMap.backedBy(jsNextState),
     );
+
+    if (!value) {
+      _updatePropsAndStateWithJs(component, jsNextProps, jsNextState);
+    }
+
+    return value;
   });
 
   void handleComponentWillUpdate(Component2 component, JsMap jsNextProps, JsMap jsNextState) => zone.run(() {
@@ -547,6 +563,8 @@ final ReactDartInteropStatics2 _dartInteropStatics2 = (() {
       new JsBackedMap.backedBy(jsNextProps),
       new JsBackedMap.backedBy(jsNextState),
     );
+
+    _updatePropsAndStateWithJs(component, jsNextProps, jsNextState);
   });
 
   void handleComponentDidUpdate(Component2 component, ReactComponent jsThis, JsMap jsPrevProps, JsMap jsPrevState) => zone.run(() {
@@ -563,10 +581,6 @@ final ReactDartInteropStatics2 _dartInteropStatics2 = (() {
   });
 
   dynamic handleRender(Component2 component) => zone.run(() {
-    component
-      // FIXME fix casts
-      ..props = new JsBackedMap.backedBy(component.jsThis.props as dynamic)
-      ..state = new JsBackedMap.backedBy(component.jsThis.state as dynamic);
     return component.render();
   });
 

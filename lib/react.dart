@@ -559,7 +559,7 @@ abstract class Component2<T extends Map> implements Component {
 
   @Deprecated('3.0.0')
   void redraw([SetStateCallback callback]) {
-    forceUpdate(callback);
+    setState({}, callback);
   }
 
   @override
