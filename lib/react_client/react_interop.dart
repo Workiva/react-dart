@@ -71,6 +71,9 @@ class ReactClass {
   @Deprecated('2.0.0')
   external Map get dartDefaultProps;
   external set dartDefaultProps(Map value);
+
+  external bool get isDartClass;
+  external set isDartClass(bool value);
 }
 
 /// A JS interop class used as an argument to [React.createClass].

@@ -613,6 +613,7 @@ ReactDartComponentFactoryProxy2 _registerComponent2(ComponentFactory<Component2>
   final JsBackedMap defaultProps = new JsBackedMap.from(componentInstance.getDefaultProps());
   // TODO move this to JS
   reactComponentClass.defaultProps = defaultProps.jsObject;
+  reactComponentClass.isDartClass = true;
 
   return new ReactDartComponentFactoryProxy2(reactComponentClass);
 }
