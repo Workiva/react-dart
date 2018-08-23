@@ -60,7 +60,7 @@ abstract class ReactComponentFactoryProxy implements Function {
   ///
   /// We need a concrete implementation of this, as opposed to it just being handled by [noSuchMethod],
   /// in order to work around DDC issue <https://github.com/dart-lang/sdk/issues/29917>.
-  ReactElement call(Map props, [dynamic children]) => build(props, [children]);
+  ReactElement call(Map props, [dynamic children = _notSpecified]) => build(props, children == _notSpecified ? [] : [children]);
 
   @override
   dynamic noSuchMethod(Invocation invocation) {
@@ -74,6 +74,11 @@ abstract class ReactComponentFactoryProxy implements Function {
     return super.noSuchMethod(invocation);
   }
 }
+
+class _NotSpecified {
+  const _NotSpecified();
+}
+const _notSpecified = const _NotSpecified();
 
 /// Prepares [children] to be passed to the ReactJS [React.createElement] and
 /// the Dart [react.Component].
@@ -114,10 +119,7 @@ class ReactDartComponentFactoryProxy<TComponent extends Component> extends React
   ReactClass get type => reactClass;
 
   ReactElement build(Map props, [List childrenArgs = const []]) {
-    // TODO if we don't pass in a list into React, we don't get a list back in Dart...
-//    var children = _convertArgsToChildren(childrenArgs);
-//    children = listifyChildren(children);
-    markChildrenValidated(childrenArgs);
+    var children = _convertArgsToChildren(childrenArgs);
     children = listifyChildren(children);
 
     return reactComponentFactory(
@@ -195,12 +197,30 @@ class ReactDartComponentFactoryProxy2<TComponent extends Component> extends Reac
   ReactClass get type => reactClass;
 
   ReactElement build(Map props, [List childrenArgs = const []]) {
-    var children = _convertArgsToChildren(childrenArgs);
-    children = listifyChildren(children);
+    // TODO if we don't pass in a list into React, we don't get a list back in Dart...
+
+    List children;
+    if (childrenArgs.isEmpty) {
+      children = childrenArgs;
+    } else if (childrenArgs.length == 1) {
+      final singleChild = listifyChildren(childrenArgs[0]);
+      if (singleChild is List) {
+        children = singleChild;
+      }
+    }
+
+    if (children == null) {
+      // FIXME are we cool to modify this list?
+      children = childrenArgs;
+      for (var i = 0; i < children.length; i++) {
+        children[i] = listifyChildren(children[i]);
+      }
+      markChildrenValidated(children);
+    }
 
     return reactComponentFactory(
       generateExtendedJsProps(props),
-      children
+      children,
     );
   }
 

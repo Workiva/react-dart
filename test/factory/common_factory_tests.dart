@@ -1,5 +1,6 @@
 import 'dart:js';
 
+import 'package:react/react_client/react_interop.dart';
 import 'package:test/test.dart';
 
 import 'package:react/react_client.dart';
@@ -19,43 +20,91 @@ void commonFactoryTests(Function factory) {
     expect(instance.type, equals((factory as ReactComponentFactoryProxy).type));
   });
 
-  group('passes children to the component when specified as', () {
+  if (isDartComponent(factory({}))) {
+    group('passes children to the component when specified as', () {
+      dynamic getDartChildren(ReactElement instance) {
+        ReactComponent renderedInstance = rtu.renderIntoDocument(instance);
+        return renderedInstance.dartComponent.props['children'];
+      }
+
+      test('no arguments', () {
+        var instance = factory({});
+        expect(getDartChildren(instance), equals([]));
+      });
+
+      test('a single argument', () {
+        var instance = factory({}, 'single',);
+        expect(getDartChildren(instance), equals(['single']));
+      });
+
+      test('multiple arguments', () {
+        var instance = factory({}, 'one', 'two');
+        expect(getDartChildren(instance), equals(['one', 'two']));
+      }, tags: 'ddcFailure'); // This test cannot be run using ddc until https://github.com/dart-lang/sdk/issues/29904 is resolved
+
+      test('a List', () {
+        var instance = factory({}, ['one', 'two',]);
+        expect(getDartChildren(instance), equals(['one', 'two']));
+      });
+
+      test('an empty List', () {
+        var instance = factory({}, []);
+        expect(getDartChildren(instance), equals([]));
+      });
+
+      test('an Iterable', () {
+        var instance = factory({}, new Iterable.generate(3, (int i) => '$i'));
+        expect(getDartChildren(instance), equals(['0', '1', '2']));
+      });
+
+      test('an empty Iterable', () {
+        var instance = factory({}, new Iterable.empty());
+        expect(getDartChildren(instance), equals([]));
+      });
+    });
+
+  }
+  group('passes children to the ReactElement when specified as', () {
     dynamic getJsChildren(ReactElement instance) => getProperty(instance.props, 'children');
 
-    test('no arguments', () {
-      var instance = factory({});
-      expect(getJsChildren(instance), isNull);
-    });
+    if (isDartComponent2(factory({}))) {
+      // TODO do we need to add tests here for Component2, or do the Dart component tests cover it?
+    } else {
+      test('no arguments', () {
+        var instance = factory({});
+        expect(getJsChildren(instance), isNull);
+      });
 
-    test('a single argument', () {
-      var instance = factory({}, 'single',);
-      expect(getJsChildren(instance), equals('single'));
-    });
+      test('a single argument', () {
+        var instance = factory({}, 'single',);
+        expect(getJsChildren(instance), equals('single'));
+      });
 
-    test('multiple arguments', () {
-      var instance = factory({}, 'one', 'two');
-      expect(getJsChildren(instance), equals(['one', 'two']));
-    }, tags: 'ddcFailure'); // This test cannot be run using ddc until https://github.com/dart-lang/sdk/issues/29904 is resolved
+      test('multiple arguments', () {
+        var instance = factory({}, 'one', 'two');
+        expect(getJsChildren(instance), equals(['one', 'two']));
+      }, tags: 'ddcFailure'); // This test cannot be run using ddc until https://github.com/dart-lang/sdk/issues/29904 is resolved
 
-    test('a List', () {
-      var instance = factory({}, ['one', 'two',]);
-      expect(getJsChildren(instance), equals(['one', 'two']));
-    });
+      test('a List', () {
+        var instance = factory({}, ['one', 'two',]);
+        expect(getJsChildren(instance), equals(['one', 'two']));
+      });
 
-    test('an empty List', () {
-      var instance = factory({}, []);
-      expect(getJsChildren(instance), equals([]));
-    });
+      test('an empty List', () {
+        var instance = factory({}, []);
+        expect(getJsChildren(instance), equals([]));
+      });
 
-    test('an Iterable', () {
-      var instance = factory({}, new Iterable.generate(3, (int i) => '$i'));
-      expect(getJsChildren(instance), equals(['0', '1', '2']));
-    });
+      test('an Iterable', () {
+        var instance = factory({}, new Iterable.generate(3, (int i) => '$i'));
+        expect(getJsChildren(instance), equals(['0', '1', '2']));
+      });
 
-    test('an empty Iterable', () {
-      var instance = factory({}, new Iterable.empty());
-      expect(getJsChildren(instance), equals([]));
-    });
+      test('an empty Iterable', () {
+        var instance = factory({}, new Iterable.empty());
+        expect(getJsChildren(instance), equals([]));
+      });
+    }
   });
 }
 
