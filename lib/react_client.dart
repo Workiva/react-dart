@@ -64,7 +64,7 @@ dynamic listifyChildren(dynamic children) {
 }
 
 /// Creates ReactJS [Component] instances for Dart components.
-class ReactDartComponentFactoryProxy extends ReactComponentFactoryProxy {
+class ReactDartComponentFactoryProxy<TComponent extends Component> extends ReactComponentFactoryProxy {
   /// The ReactJS class used as the type for all [ReactElement]s built by
   /// this factory.
   final ReactClass reactClass;
