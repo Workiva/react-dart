@@ -38,7 +38,6 @@ final EmptyObject emptyJsMap = new EmptyObject();
 /// > Type of [children] must be child or list of children, when child is [ReactElement] or [String]
 @Deprecated('5.0.0')
 typedef ReactElement ReactComponentFactory(Map props, [dynamic children]);
-typedef Component ComponentFactory();
 
 /// The type of [Component.ref] specified as a callback.
 ///
