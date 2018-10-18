@@ -7,6 +7,9 @@ library react;
 
 import 'package:react/src/typedefs.dart';
 
+typedef Component ComponentFactory();
+typedef ReactComponentFactoryProxy ComponentRegistrar(ComponentFactory componentFactory, [Iterable<String> skipMethods]);
+
 /// Top-level ReactJS [Component class](https://facebook.github.io/react/docs/react-component.html)
 /// which provides the [ReactJS Component API](https://facebook.github.io/react/docs/react-component.html#reference)
 abstract class Component {
@@ -359,6 +362,36 @@ abstract class Component {
   dynamic render();
 }
 
+/// Creates ReactJS [ReactElement] instances.
+abstract class ReactComponentFactoryProxy implements Function {
+  /// The type of component created by this factory.
+  get type;
+
+  /// Returns a new rendered component instance with the specified [props] and [children].
+  ///
+  /// Necessary to work around DDC `dart.dcall` issues in <https://github.com/dart-lang/sdk/issues/29904>,
+  /// since invoking the function directly doesn't work.
+  dynamic/*ReactElement*/ build(Map props, [List childrenArgs]);
+
+  /// Returns a new rendered component instance with the specified [props] and [children].
+  ///
+  /// We need a concrete implementation of this, as opposed to it just being handled by [noSuchMethod],
+  /// in order to work around DDC issue <https://github.com/dart-lang/sdk/issues/29917>.
+  dynamic/*ReactElement*/ call(Map props, [dynamic children]) => build(props, [children]);
+
+  @override
+  dynamic noSuchMethod(Invocation invocation) {
+    if (invocation.memberName == #call && invocation.isMethod) {
+      Map props = invocation.positionalArguments[0];
+      List children = invocation.positionalArguments.sublist(1);
+
+      return build(props, children);
+    }
+
+    return super.noSuchMethod(invocation);
+  }
+}
+
 /// A cross-browser wrapper around the browser's [nativeEvent].
 ///
 /// It has the same interface as the browser's native event, including [stopPropagation] and [preventDefault], except
@@ -617,7 +650,7 @@ class SyntheticWheelEvent extends SyntheticEvent {
 }
 
 /// Registers [componentFactory] on both client and server.
-Function registerComponent = (componentFactory, [skipMethods]) {
+/*ComponentRegistrar*/Function registerComponent = (/*ComponentFactory*/componentFactory, [/*Iterable<String>*/ skipMethods]) {
   throw new Exception('setClientConfiguration must be called before registerComponent.');
 };
 
