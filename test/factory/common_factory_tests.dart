@@ -21,21 +21,40 @@ void commonFactoryTests(ReactComponentFactoryProxy factory) {
 
   group('passes children to the component when specified as', () {
     dynamic getJsChildren(ReactElement instance) => getProperty(instance.props, 'children');
+    
+    // There are different code paths for 0, 1, 2, 3, 4, 5, 6, and 6+ arguments.
+    // Test all of them.
+    group('a number of variadic children:', () {
+      test('0', () {
+        final instance = factory({});
+        expect(getJsChildren(instance), isNull);
+      });
 
-    test('no arguments', () {
-      var instance = factory({});
-      expect(getJsChildren(instance), isNull);
+      test('1', () {
+        final instance = factory({}, 1);
+        expect(getJsChildren(instance), equals(1));
+      });
+
+      const firstGeneralCaseVariadicChildCount = 2;
+      const maxSupportedVariadicChildCount = 40;
+      for (var i = firstGeneralCaseVariadicChildCount; i < maxSupportedVariadicChildCount; i++) {
+        final childrenCount = i;
+
+        test('$childrenCount', () {
+          final expectedChildren = new List.generate(childrenCount, (i) => i + 1);
+          final arguments = <dynamic>[{}]..add(expectedChildren);
+          final instance = Function.apply(factory, arguments);
+          expect(getJsChildren(instance), expectedChildren);
+        });
+      }
+
+      test('$maxSupportedVariadicChildCount (and passes static analysis)', () {
+        final instance = factory({}, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25, 26, 27, 28, 29, 30, 31, 32, 33, 34, 35, 36, 37, 38, 39, 40);
+        // Generate these instead of hard coding them to ensure the arguments passed into this test match maxSupportedVariadicChildCount
+        final expectedChildren = new List.generate(maxSupportedVariadicChildCount, (i) => i + 1);
+        expect(getJsChildren(instance), equals(expectedChildren));
+      });
     });
-
-    test('a single argument', () {
-      var instance = factory({}, 'single',);
-      expect(getJsChildren(instance), equals('single'));
-    });
-
-    test('multiple arguments', () {
-      var instance = factory({}, 'one', 'two');
-      expect(getJsChildren(instance), equals(['one', 'two']));
-    }, tags: 'ddcFailure'); // This test cannot be run using ddc until https://github.com/dart-lang/sdk/issues/29904 is resolved
 
     test('a List', () {
       var instance = factory({}, ['one', 'two',]);
