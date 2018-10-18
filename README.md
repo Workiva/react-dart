@@ -281,7 +281,7 @@ pub run test -p chrome
     ```
 2. In another terminal, run the tests, referencing the port the dev compiler is using to serve the test directory:
     ```bash
-    pub run test -p chrome --pub-serve=8090 --exclude-tags=ddcFailure
+    pub run test -p chrome --pub-serve=8090
     ``` 
 
 ### Build JS

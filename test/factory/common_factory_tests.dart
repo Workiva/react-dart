@@ -187,7 +187,7 @@ void _childKeyWarningTests(Function factory) {
       );
 
       expect(consoleErrorCalled, isFalse, reason: 'should not have outputted a warning');
-    }, tags: 'ddcFailure'); // This test cannot be run using ddc until https://github.com/dart-lang/sdk/issues/29904 is resolved
+    });
 
     test('when rendering custom Dart components', () {
       _renderWithUniqueOwnerName(() =>
