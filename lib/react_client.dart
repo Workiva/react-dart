@@ -400,9 +400,12 @@ class ReactDomComponentFactoryProxy extends ReactComponentFactoryProxy {
     var children = _convertArgsToChildren(childrenArgs);
     children = listifyChildren(children);
 
-    convertProps(props);
+    // We can't mutate the original since we can't be certain that the value of the
+    // the converted event handler will be compatible with the Map's type parameters.
+    var convertibleProps = {}..addAll(props);
+    convertProps(convertibleProps);
 
-    return factory(jsify(props), children);
+    return factory(jsify(convertibleProps), children);
   }
 
   /// Prepares the bound values, event handlers, and style props for consumption by ReactJS DOM components.
