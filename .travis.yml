@@ -1,9 +1,5 @@
 language: dart
 
-dart:
-  - stable
-  - 1.24.3
-
 # Workaround for issue with sandboxed Chrome in containerized Travis builds.
 sudo: required
 addons:
@@ -15,6 +11,15 @@ cache:
   - $HOME/.pub-cache
   - $HOME/.dart_tool
 
-script:
-- dartanalyzer .
-- pub run test -p chrome
+include:
+  - stage: Dart 2
+    dart: stable
+    script:
+      - dartanalyzer .
+      - pub run test -p chrome
+      - pub run build_runner test -- -p chrome
+  - stage: Dart 1
+    dart: 1.24.3
+    script:
+      - dartanalyzer .
+      - pub run test -p chrome
