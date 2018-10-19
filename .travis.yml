@@ -16,6 +16,7 @@ include:
     dart: stable
     script:
       - dartanalyzer .
+      - pub run dependency_validator -i build_runner,build_test,build_web_compilers
       - pub run test -p chrome
       - pub run build_runner test -- -p chrome
   - stage: Dart 1
