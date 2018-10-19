@@ -1,118 +1,195 @@
 # Dart wrapper library for [facebook/react](http://facebook.github.io/)
 
 [![Pub](https://img.shields.io/pub/v/react.svg)](https://pub.dartlang.org/packages/react)
-[![documentation](https://img.shields.io/badge/Documentation-react-blue.svg)](https://www.dartdocs.org/documentation/react/latest/)
+[![Build Status](https://travis-ci.com/cleandart/react-dart.svg?branch=master)](https://travis-ci.com/cleandart/react-dart)
+[![documentation](https://img.shields.io/badge/Documentation-react-blue.svg)](https://pub.dartlang.org/documentation/react/latest/)
 
-## Getting started
+## Getting Started
+
+### Installation
 
 If you are not familiar with the ReactJS library, read this [react tutorial](http://facebook.github.io/react/docs/getting-started.html) first.
 
-To integrate in Dart project add dependency [react](https://pub.dartlang.org/packages/react) to pubspec.yaml.
+1. Install the Dart SDK
 
-Include the native javascript `react` and `react_dom` libraries (provided with this library for compatibility reasons) in `index.html` and create element where you'll mount the react component you'll create.
+    ```bash
+    brew install dart
+    ```
+    
+2. Create a `pubspec.yaml` file in the root of your project, and add `react` as a dependency: 
+
+    ```yaml
+    name: your_package_name
+    version: 1.0.0
+    environment:
+      sdk: ^2.0.0 
+    dependencies:
+      react: ^4.5.0
+    ```
+
+3. Install the dependencies using pub:
+
+    ```bash
+    pub get
+    ```
+
+### Wire things up
+
+#### HTML
+
+In a `.html` file where Include the native javascript `react` and `react_dom` libraries 
+_(provided with this library for compatibility reasons)_ within your `.html` file, 
+and add an element with an `id` to mount your React component into.
+
+Lastly, add the `.js` file that Dart will generate. The file will be the name of the `.dart` file that
+contains your `main` entrypoint, with `.js` at the end.
 
 ```html
 <html>
   <head>
-    <script async src="packages/react/react.js"></script>
-    <script async src="packages/react/react_dom.js"></script>
-    <script async type="application/dart" src="your_app_name.dart"></script>
-    <script async src="packages/browser/dart.js"></script>
+    <!-- ... -->
   </head>
   <body>
-    <div id="content">Here will be react content</div>
+    <div id="react_mount_point">Here will be react content</div>
+    
+    <script src="packages/react/react.js"></script>
+    <script src="packages/react/react_dom.js"></script>
+    <script defer src="your_dart_file_name.dart.js"></script>
   </body>
 </html>
 ```
 
-If it fits the needs of your application better, you may alternatively load the concatenated minified `react` and `react_dom`
-libraries in a single file:
+> __Note:__ When serving your application in production, use `packages/react/react_with_react_dom_prod.js`
+  file instead of the un-minified `react.js` / `react_dom.js` files shown in the example above.  
 
-```html
-<script async src="packages/react/react_with_react_dom_prod.js"></script>
-```
+#### Dart App
 
-Initialize React in our Dart application. Mount simple component into '#content' div.
+Once you have an `.html` file containing the necessary `.js` files, you can initialize React 
+in the `main` entrypoint of your Dart application.
 
 ```dart
 import 'dart:html';
+
 import 'package:react/react_client.dart' as react_client;
 import 'package:react/react.dart';
 import 'package:react/react_dom.dart' as react_dom;
 
 main() {
-  // This should be called once at the beginning of the application
+  // This should be called once at the beginning of the application.
   react_client.setClientConfiguration();
+  
+  // Something to render... in this case a simple <div> with no props, and a string as its children.
   var component = div({}, "Hello world!");
-  react_dom.render(component, querySelector('#content'));
+  
+  // Render it into the mount node we created in our .html file. 
+  react_dom.render(component, querySelector('#react_mount_point'));
 }
 ```
 
-Inverse method to rendering component is `unmountComponentAtNode`
+## Build Stuff
 
-```dart
-  react_dom.unmountComponentAtNode(querySelector('#content'));
-```
-
-## Using browser native elements
+### Using browser native elements
 
 If you are familiar with React (without JSX extension) React-dart shouldn't surprise you much. All elements are defined as
 functions that take `props` as first argument and `children` as optional second argument. `props` should implement `Map` and `children` is either one React element or `List` with multiple elements.
 
 ```dart
-div({"className": "something"}, [
+var aDiv = div({"className": "something"}, [
   h1({"style": {"height": "20px"}}, "Headline"),
   a({"href":"something.com"}, "Something"),
   "Some text"
-])
+]);
 ```
 
-For event handlers you must provide function that take `SyntheticEvent` (defined in this library).
+For event handlers you must provide function that takes a `SyntheticEvent` _(defined in this library)_.
 
 ```dart
-div({"onClick": (SyntheticMouseEvent e) => print(e)})
+var aButton = button({"onClick": (SyntheticMouseEvent event) => print(event)});
 ```
 
-## Defining custom elements
+### Defining custom components
 
-Define custom class that extends Component and implements at least render.
+1. Define custom class that extends Component and implements - at a minimum - `render`.
+
+    ```dart
+    // your_component.dart
+ 
+    import 'package:react/react.dart';
+    
+    class CoolWidgetComponent extends Component {
+      render() => div({}, "CoolWidgetComponent");
+    }
+    ```
+
+2. Then register the class so React can recognize it.
+
+    ```dart
+    var CoolWidget = registerComponent(() => new CoolWidgetComponent());
+    ```
+
+    > __Warning:__ `registerComponent` should be called only once per component and lifetime of application.
+
+3. Then you can use the registered component similarly as native elements.
+
+    ```dart
+    // app.dart
+    
+    import 'dart:html';
+
+    import 'package:react/react_client.dart' as react_client;
+    import 'package:react/react.dart';
+    import 'package:react/react_dom.dart' as react_dom;
+ 
+    import 'your_component.dart';
+ 
+    main() {
+      // This should be called once at the beginning of the application.
+      react_client.setClientConfiguration();
+    
+    
+      react_dom.render(CoolWidget({}), querySelector('#react_mount_point'));
+    }
+    ```
+
+#### Custom component with props
 
 ```dart
+// your_component.dart
+
 import 'package:react/react.dart';
-class MyComponent extends Component {
-  render() => div({}, "MyComponent");
-}
-```
 
-Register this class so React can recognize it.
-
-```dart
-var myComponent = registerComponent(() => new MyComponent());
-```
-
-Use this registered component similarly as native elements.
-
-```dart
-react_dom.render(myComponent({}), querySelector('#content'));
-// or
-div({}, [
-  myComponent({})
-])
-```
-
-Warning: `registerComponent` should be called only once per component and lifetime of application.
-
-### Custom element with props
-
-```dart
-var myComponent = registerComponent(() => new MyComponent());
-class MyComponent extends Component {
+class CoolWidgetComponent extends Component {
   render() => div({}, props['text']);
 }
-myComponent({"text":"Somehting"})
+
+var CoolWidget = registerComponent(() => new CoolWidgetComponent());
 ```
 
-#### Creating components with richer interface than just props and children and with type control
+```dart
+// app.dart
+
+import 'dart:html';
+
+import 'package:react/react_client.dart' as react_client;
+import 'package:react/react.dart';
+import 'package:react/react_dom.dart' as react_dom;
+
+import 'your_component.dart';
+
+main() {
+  // This should be called once at the beginning of the application.
+  react_client.setClientConfiguration();
+      
+  react_dom.render(CoolWidget({"text": "Something"}), querySelector('#react_mount_point'));
+}
+```
+
+#### Custom component with a typed interface
+
+> __Note:__ The typed interface capabilities of this library are fairly limited, and can result in
+  extremely verbose implementations. We strongly recommend using the 
+  [OverReact](https://pub.dartlang.org/packages/over_react) package - which 
+  makes creating statically-typed React UI components using Dart easy.
 
 ```dart
 typedef MyComponentType({String headline, String text});
@@ -141,7 +218,28 @@ void main() {
   );
 }
 ```
-## Using refs and findDOMNode
+
+#### React Component Lifecycle methods
+
+These are quite similar to React life-cycle methods, so refer to React tutorial for further
+explanation/spec. Their signatures in Dart are as:
+
+```dart
+class MyComponent extends Component {
+  void componentWillMount() {}
+  void componentDidMount() {}
+  void componentWillReceiveProps(newProps) {}
+  bool shouldComponentUpdate(nextProps, nextState) => true;
+  void componentWillUpdate(nextProps, nextState) {}
+  void componentDidUpdate(prevProps, prevState) {}
+  void componentWillUnmount() {}
+  Map getInitialState() => {};
+  Map getDefaultProps() => {};
+  render() => div({}, props['text']);
+}
+```
+
+#### Using refs and findDOMNode
 
 Proper usage of refs here is a little bit different from usage in react. You can specify
 a ref name in component props and then call ref method to get the referenced element.
@@ -152,7 +250,7 @@ you get a `ReactElement` representing the react component.
 
 If you want to work with DOM nodes of dart or JS components instead, you can call top level method `findDOMNode` on anything the ref returns.
 
-```
+```dart
 var DartComponent = registerComponent(() => new _DartComponent());
 class _DartComponent extends Component {
   var someData = 11;
@@ -177,31 +275,13 @@ class _ParentComponent extends Component {
 }
 ```
 
-## Geocodes Example
+### Example Application
 
 For more robust example take a look at our [examples](https://github.com/cleandart/react-dart/tree/master/example).
 
-## Life-cycle methods of a component
 
-These are quite similar to React life-cycle methods, so refer to React tutorial for further
-explanation/spec. Their signatures in Dart are as:
 
-```dart
-class MyComponent extends Component {
-  void componentWillMount() {}
-  void componentDidMount() {}
-  void componentWillReceiveProps(newProps) {}
-  bool shouldComponentUpdate(nextProps, nextState) => true;
-  void componentWillUpdate(nextProps, nextState) {}
-  void componentDidUpdate(prevProps, prevState) {}
-  void componentWillUnmount() {}
-  Map getInitialState() => {};
-  Map getDefaultProps() => {};
-  render() => div({}, props['text']);
-}
-```
-
-## Testing using React Test Utilities
+## Unit Testing Utilities
 
 [lib/react_test_utils.dart](lib/react_test_utils.dart) is a Dart wrapper for the [React TestUtils](http://facebook.github.io/react/docs/test-utils.html) library allowing for tests to be made for React components in Dart.
 
@@ -255,7 +335,6 @@ void main() {
 }
 ```
 
-To test the Dart wrapper, take a look at [test/react_test_utils_test.dart](test).
 
 ## Contributing
 
