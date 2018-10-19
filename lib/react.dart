@@ -7,6 +7,9 @@ library react;
 
 import 'package:react/src/typedefs.dart';
 
+typedef Component ComponentFactory();
+typedef ReactComponentFactoryProxy ComponentRegistrar(ComponentFactory componentFactory, [Iterable<String> skipMethods]);
+
 /// Top-level ReactJS [Component class](https://facebook.github.io/react/docs/react-component.html)
 /// which provides the [ReactJS Component API](https://facebook.github.io/react/docs/react-component.html#reference)
 abstract class Component {
@@ -359,6 +362,53 @@ abstract class Component {
   dynamic render();
 }
 
+/// Creates a ReactJS virtual DOM instance (`ReactElement` on the client).
+abstract class ReactComponentFactoryProxy implements Function {
+  /// The type of component created by this factory.
+  get type;
+
+  /// Returns a new rendered component instance with the specified [props] and [children].
+  ///
+  /// Necessary to work around DDC `dart.dcall` issues in <https://github.com/dart-lang/sdk/issues/29904>,
+  /// since invoking the function directly doesn't work.
+  dynamic/*ReactElement*/ build(Map props, [List childrenArgs]);
+
+  /// Returns a new rendered component instance with the specified [props] and `children` ([c1], [c2], et. al.).
+  ///
+  /// > The additional children arguments (c2, c3, et. al.) are a workaround for <https://github.com/dart-lang/sdk/issues/16030>.
+  dynamic/*ReactElement*/ call(Map props, [c1 = _notSpecified, c2 = _notSpecified, c3 = _notSpecified, c4 = _notSpecified, c5 = _notSpecified, c6 = _notSpecified, c7 = _notSpecified, c8 = _notSpecified, c9 = _notSpecified, c10 = _notSpecified, c11 = _notSpecified, c12 = _notSpecified, c13 = _notSpecified, c14 = _notSpecified, c15 = _notSpecified, c16 = _notSpecified, c17 = _notSpecified, c18 = _notSpecified, c19 = _notSpecified, c20 = _notSpecified, c21 = _notSpecified, c22 = _notSpecified, c23 = _notSpecified, c24 = _notSpecified, c25 = _notSpecified, c26 = _notSpecified, c27 = _notSpecified, c28 = _notSpecified, c29 = _notSpecified, c30 = _notSpecified, c31 = _notSpecified, c32 = _notSpecified, c33 = _notSpecified, c34 = _notSpecified, c35 = _notSpecified, c36 = _notSpecified, c37 = _notSpecified, c38 = _notSpecified, c39 = _notSpecified, c40 = _notSpecified]) {
+    List childArguments;
+    // Use `identical` since it compiles down to `===` in dart2js instead of calling equality helper functions,
+    // and we don't want to allow any object overriding `operator==` to claim it's equal to `_notSpecified`.
+    if (identical(c1, _notSpecified)) {
+      childArguments = [];
+    } else if (identical(c2, _notSpecified)) {
+      childArguments = [c1];
+    } else if (identical(c3, _notSpecified)) {
+      childArguments = [c1, c2];
+    } else if (identical(c4, _notSpecified)) {
+      childArguments = [c1, c2, c3];
+    } else if (identical(c5, _notSpecified)) {
+      childArguments = [c1, c2, c3, c4];
+    } else if (identical(c6, _notSpecified)) {
+      childArguments = [c1, c2, c3, c4, c5];
+    } else if (identical(c7, _notSpecified)) {
+      childArguments = [c1, c2, c3, c4, c5, c6];
+    } else {
+      childArguments = [c1, c2, c3, c4, c5, c6, c7, c8, c9, c10, c11, c12, c13, c14, c15, c16, c17, c18, c19, c20, c21, c22, c23, c24, c25, c26, c27, c28, c29, c30, c31, c32, c33, c34, c35, c36, c37, c38, c39, c40]
+        .takeWhile((child) => !identical(child, _notSpecified))
+        .toList();
+    }
+
+    return build(props, childArguments);
+  }
+}
+
+const _notSpecified = const NotSpecified();
+class NotSpecified {
+  const NotSpecified();
+}
+
 /// A cross-browser wrapper around the browser's [nativeEvent].
 ///
 /// It has the same interface as the browser's native event, including [stopPropagation] and [preventDefault], except
@@ -617,7 +667,7 @@ class SyntheticWheelEvent extends SyntheticEvent {
 }
 
 /// Registers [componentFactory] on both client and server.
-Function registerComponent = (componentFactory, [skipMethods]) {
+/*ComponentRegistrar*/Function registerComponent = (/*ComponentFactory*/componentFactory, [/*Iterable<String>*/ skipMethods]) {
   throw new Exception('setClientConfiguration must be called before registerComponent.');
 };
 

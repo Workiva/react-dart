@@ -8,7 +8,7 @@ import 'dart:html';
 
 import 'package:js/js.dart';
 import 'package:react/react.dart';
-import 'package:react/react_client.dart' show ComponentFactory;
+import 'package:react/src/react_client/dart2_interop_workaround_bindings.dart';
 
 typedef ReactElement ReactJsComponentFactory(props, children);
 
@@ -26,11 +26,10 @@ abstract class React {
   external static bool isValidElement(dynamic object);
 }
 
-@JS('ReactDOM')
 abstract class ReactDom {
-  external static Element findDOMNode(object);
-  external static ReactComponent render(ReactElement component, Element element);
-  external static bool unmountComponentAtNode(Element element);
+  static Element findDOMNode(object) => ReactDOM.findDOMNode(object);
+  static ReactComponent render(ReactElement component, Element element) => ReactDOM.render(component, element);
+  static bool unmountComponentAtNode(Element element) => ReactDOM.unmountComponentAtNode(element);
 }
 
 @JS('ReactDOMServer')
