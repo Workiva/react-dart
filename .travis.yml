@@ -13,6 +13,7 @@ addons:
 cache:
   directories:
   - $HOME/.pub-cache
+  - $HOME/.dart_tool
 
 script:
 - dartanalyzer .
