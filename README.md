@@ -1,8 +1,9 @@
-# Dart wrapper library for [facebook/react](http://facebook.github.io/)
+# Dart wrapper for [React JS](https://reactjs.org/)
 
 [![Pub](https://img.shields.io/pub/v/react.svg)](https://pub.dartlang.org/packages/react)
+![ReactJS v15.6.0](https://img.shields.io/badge/React_JS-v15.6.0-green.svg)
 [![Build Status](https://travis-ci.com/cleandart/react-dart.svg?branch=master)](https://travis-ci.com/cleandart/react-dart)
-[![documentation](https://img.shields.io/badge/Documentation-react-blue.svg)](https://pub.dartlang.org/documentation/react/latest/)
+[![React Dart API Docs](https://img.shields.io/badge/api_docs-react-blue.svg)](https://pub.dartlang.org/documentation/react/latest/)
 
 ## Getting Started
 
@@ -112,7 +113,7 @@ var aButton = button({"onClick": (SyntheticMouseEvent event) => print(event)});
 1. Define custom class that extends Component and implements - at a minimum - `render`.
 
     ```dart
-    // your_component.dart
+    // cool_widget.dart
  
     import 'package:react/react.dart';
     
@@ -121,7 +122,7 @@ var aButton = button({"onClick": (SyntheticMouseEvent event) => print(event)});
     }
     ```
 
-2. Then register the class so React can recognize it.
+2. Then register the class so ReactJS can recognize it.
 
     ```dart
     var CoolWidget = registerComponent(() => new CoolWidgetComponent());
@@ -133,20 +134,19 @@ var aButton = button({"onClick": (SyntheticMouseEvent event) => print(event)});
 
     ```dart
     // app.dart
-    
+
     import 'dart:html';
 
     import 'package:react/react_client.dart' as react_client;
     import 'package:react/react.dart';
     import 'package:react/react_dom.dart' as react_dom;
- 
-    import 'your_component.dart';
+
+    import 'cool_widget.dart';
  
     main() {
       // This should be called once at the beginning of the application.
       react_client.setClientConfiguration();
-    
-    
+
       react_dom.render(CoolWidget({}), querySelector('#react_mount_point'));
     }
     ```
@@ -154,12 +154,15 @@ var aButton = button({"onClick": (SyntheticMouseEvent event) => print(event)});
 #### Custom component with props
 
 ```dart
-// your_component.dart
+// cool_widget.dart
 
 import 'package:react/react.dart';
 
 class CoolWidgetComponent extends Component {
-  render() => div({}, props['text']);
+  @override
+  render() {
+    return div({}, props['text']);
+  }
 }
 
 var CoolWidget = registerComponent(() => new CoolWidgetComponent());
@@ -174,7 +177,7 @@ import 'package:react/react_client.dart' as react_client;
 import 'package:react/react.dart';
 import 'package:react/react_dom.dart' as react_dom;
 
-import 'your_component.dart';
+import 'cool_widget.dart';
 
 main() {
   // This should be called once at the beginning of the application.
@@ -192,98 +195,156 @@ main() {
   makes creating statically-typed React UI components using Dart easy.
 
 ```dart
-typedef MyComponentType({String headline, String text});
+// cool_widget.dart
+typedef CoolWidgetType({String headline, String text, int counter});
 
-var _myComponent = registerComponent(() => new MyComponent());
+var _CoolWidget = registerComponent(() => new CoolWidgetComponent());
 
-MyComponentType myComponent = ({headline, text}) =>
-    _myComponent({'headline':headline, 'text':text});
-
-class MyComponent extends Component {
-  get headline => props['headline'];
-  get text => props['text'];
-  render() =>
-    div({},[
-      h1({}, headline),
-      span({}, text),
-    ]);
+CoolWidgetType CoolWidget({String headline, String text, int counter}) {
+  return _CoolWidget({'headline':headline, 'text':text});
 }
 
+class CoolWidgetComponent extends Component {
+  String get headline => props['headline'];
+  String get text => props['text'];
+  int get counter => props['counter'];
+  
+  @override
+  render() {
+    return div({}, 
+      h1({}, headline),
+      span({}, text),
+      span({}, counter),
+    );
+  }
+}
+```
+
+```dart
+// app.dart
+
+import 'dart:html';
+
+import 'package:react/react_client.dart' as react_client;
+import 'package:react/react.dart';
+import 'package:react/react_dom.dart' as react_dom;
+
+import 'cool_widget.dart';
+
 void main() {
+  // This should be called once at the beginning of the application.
   react_client.setClientConfiguration();
+
   react_dom.render(
-    myComponent(headline: "My custom headline",
-                text: "My custom text"),
-    querySelector('#content')
+    myComponent(
+        headline: "My custom headline",
+        text: "My custom text",
+        counter: 3,
+    ),
+    querySelector('#react_mount_point')
   );
 }
 ```
 
 #### React Component Lifecycle methods
 
-These are quite similar to React life-cycle methods, so refer to React tutorial for further
-explanation/spec. Their signatures in Dart are as:
+The `Component` class mirrors ReactJS' `React.Component` class, and contains all the same methods. 
+
+> See: [ReactJS Lifecycle Method Documentation](https://reactjs.org/docs/react-component.html) for more information.
 
 ```dart
 class MyComponent extends Component {
+  @override
   void componentWillMount() {}
+  
+  @override
   void componentDidMount() {}
-  void componentWillReceiveProps(newProps) {}
-  bool shouldComponentUpdate(nextProps, nextState) => true;
-  void componentWillUpdate(nextProps, nextState) {}
-  void componentDidUpdate(prevProps, prevState) {}
+  
+  @override
+  void componentWillReceiveProps(Map nextProps) {}
+  
+  @override
+  void componentWillUpdate(Map nextProps, Map nextState) {}
+  
+  @override
+  void componentDidUpdate(Map prevProps, Map prevState) {}
+  
+  @override
   void componentWillUnmount() {}
+  
+  @override
+  bool shouldComponentUpdate(Map nextProps, Map nextState) => true;
+  
+  @override
   Map getInitialState() => {};
+  
+  @override
   Map getDefaultProps() => {};
+  
+  @override
   render() => div({}, props['text']);
 }
 ```
 
 #### Using refs and findDOMNode
 
-Proper usage of refs here is a little bit different from usage in react. You can specify
-a ref name in component props and then call ref method to get the referenced element.
-Return values for Dart components, DOM components and JavaScript components are different.
-For a Dart component, you get an instance of the Dart class of the component.
-For primitive components (like DOM elements), you get the DOM node. For JavaScript composite components,
-you get a `ReactElement` representing the react component.
+The use of component `ref`s in react-dart is a bit different from React JS. 
 
-If you want to work with DOM nodes of dart or JS components instead, you can call top level method `findDOMNode` on anything the ref returns.
+* You can specify a ref name in component props and then call ref method to get the referenced element.
+* Return values for Dart components, DOM components and JavaScript components are different.
+    * For a Dart component, you get an instance of the Dart class of the component.
+    * For primitive components (like DOM elements), you get the DOM node. 
+    * For JavaScript composite components, you get a `ReactElement` representing the react component.
+
+If you want to work with DOM nodes of dart or JS components instead, 
+you can call top level `findDOMNode` on anything the ref returns.
 
 ```dart
 var DartComponent = registerComponent(() => new _DartComponent());
 class _DartComponent extends Component {
-  var someData = 11;
+  @override
   render() => div({});
+  
+  void someInstanceMethod(int count) {
+    window.alert('count: $count');
+  }
 }
+
 var ParentComponent = registerComponent(() => new _ParentComponent());
 class _ParentComponent extends Component {
-  render() =>
-    div({},[
-      input({"ref": "input"}),
-      DartComponent({"ref": "dart"})
-    ]);
-  componentDidMount() {
+  @override
+  void componentDidMount() {
     InputElement input = ref("input"); // Returns the DOM node.
+    print(input.value); // Prints "hello" to the console.
 
-    _DartComponent dartRef = ref("dart"); // Returns instance of _DartComponent
-    dartRef.someData; // you can call methods or get values from it
-    react_dom.findDOMNode(dartRef); // return div element rendered from _DartComponent
+    _DartComponent dartComponentRef = ref("dartComponent"); // Returns instance of _DartComponent
+    dartComponentRef.someInstanceMethod(5); // Calls the method defined in _DartComponent
+    react_dom.findDOMNode(dartRef); // Returns div element rendered from _DartComponent
 
-    react_dom.findDOMNode(this); // return root dom element rendered from this component
+    react_dom.findDOMNode(this); // Returns root dom element rendered from this component
+  }
+  
+  @override
+  render() {
+    return div({},
+      input({"ref": "input", "value": "hello"}),
+      DartComponent({"ref": "dartComponent"}),
+    );
   }
 }
 ```
 
 ### Example Application
 
-For more robust example take a look at our [examples](https://github.com/cleandart/react-dart/tree/master/example).
+For more robust examples take a look at our [examples](https://github.com/cleandart/react-dart/tree/master/example).
 
 
 
 ## Unit Testing Utilities
 
-[lib/react_test_utils.dart](lib/react_test_utils.dart) is a Dart wrapper for the [React TestUtils](http://facebook.github.io/react/docs/test-utils.html) library allowing for tests to be made for React components in Dart.
+[lib/react_test_utils.dart](https://github.com/cleandart/react-dart/blob/master/lib/react_test_utils.dart) is a 
+Dart wrapper for the [ReactJS TestUtils](https://reactjs.org/docs/test-utils.html) library allowing for unit tests 
+to be made for React components in Dart.
 
 Here is an example of how to use React TestUtils within a Dart test.
 
@@ -295,12 +356,15 @@ import 'package:react/react_dom.dart' as react_dom;
 import 'package:react/react_test_utils.dart' as react_test_utils;
 
 class MyTestComponent extends react.Component {
-  getInitialState() => {'text': 'testing...'};
+  @override
+  Map getInitialState() => {'text': 'testing...'};
+  
+  @override
   render() {
-    return react.div({}, [
-        react.button({'onClick': (e) => setState({'text': 'success'})}),
-        react.span({'className': 'spanText'}, state['text'])
-    ]);
+    return react.div({}, 
+        react.button({'onClick': (_) => setState({'text': 'success'})}),
+        react.span({'className': 'spanText'}, state['text']),
+    );
   }
 }
 
@@ -379,7 +443,7 @@ _Or any other browser platform, e.g. `-p firefox`._
     ``` 
     _DDC only works in chrome._
 
-### Build JS
+### Building React JS Source Files
 
 After modifying dart_helpers.js, run:
 
