@@ -6,10 +6,9 @@ import "react_test_components.dart";
 void main() {
   setServerConfiguration();
   print(react_dom_server.renderToString(mainComponent({}, [
-                                           helloGreeter({}, []),
-                                           listComponent({}, []),
-                                           //clockComponent({}, []),
-                                           checkBoxComponent({}, [])
-                                           ]
-  )));
+    helloGreeter({}, []),
+    listComponent({}, []),
+    //clockComponent({}, []),
+    checkBoxComponent({}, [])
+  ])));
 }

@@ -37,18 +37,17 @@ final bool isBugPresent = (() {
     //       return call.call.apply(call, args);
     //     }'
     testObject.name = testValue;
-  } catch(_) {
+  } catch (_) {
     return true;
   }
 
   try {
     // We don't expect accessing this to throw, but just in case...
     return testObject.name != testValue;
-  } catch(_) {
+  } catch (_) {
     return true;
   }
 })();
-
 
 @JS()
 @anonymous
@@ -58,10 +57,12 @@ class _PropertyDescriptor {}
 external dynamic _getPrototypeOf(dynamic object);
 
 @JS('Object.getOwnPropertyDescriptor')
-external _PropertyDescriptor _getOwnPropertyDescriptor(dynamic object, String propertyName);
+external _PropertyDescriptor _getOwnPropertyDescriptor(
+    dynamic object, String propertyName);
 
 @JS('Object.defineProperty')
-external void _defineProperty(dynamic object, String propertyName, _PropertyDescriptor descriptor);
+external void _defineProperty(
+    dynamic object, String propertyName, _PropertyDescriptor descriptor);
 
 /// Patches the `name` property on the given [object] to have the expected behavior
 /// by copying the property descriptor for `name` from the appropriate prototype.
