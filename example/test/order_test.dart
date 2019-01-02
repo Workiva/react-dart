@@ -8,13 +8,11 @@ class _Item extends react.Component {
   componentWillReceiveProps(newProps) {
     print("Old props: $props");
     print("New props: $newProps");
-
   }
 
   shouldComponentUpdate(nextProps, nextState) {
     return false;
   }
-
 
   render() {
     return react.li({}, [props['text']]);
@@ -32,8 +30,8 @@ class _List extends react.Component {
   }
 
   render() {
-    return react.ul({'onClick': (e) => remove()}, items.map((text) =>
-        item({'text': text, 'key': text})));
+    return react.ul({'onClick': (e) => remove()},
+        items.map((text) => item({'text': text, 'key': text})));
   }
 }
 

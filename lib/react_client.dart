@@ -18,10 +18,13 @@ import "package:react/react_dom.dart";
 import "package:react/react_dom_server.dart";
 import "package:react/src/react_client/synthetic_event_wrappers.dart" as events;
 import 'package:react/src/typedefs.dart';
-import 'package:react/src/ddc_emulated_function_name_bug.dart' as ddc_emulated_function_name_bug;
+import 'package:react/src/ddc_emulated_function_name_bug.dart'
+    as ddc_emulated_function_name_bug;
 
-export 'package:react/react_client/react_interop.dart' show ReactElement, ReactJsComponentFactory, inReactDevMode;
-export 'package:react/react.dart' show ReactComponentFactoryProxy, ComponentFactory;
+export 'package:react/react_client/react_interop.dart'
+    show ReactElement, ReactJsComponentFactory, inReactDevMode;
+export 'package:react/react.dart'
+    show ReactComponentFactoryProxy, ComponentFactory;
 
 final EmptyObject emptyJsMap = new EmptyObject();
 
@@ -63,7 +66,8 @@ dynamic listifyChildren(dynamic children) {
 }
 
 /// Creates ReactJS [Component] instances for Dart components.
-class ReactDartComponentFactoryProxy<TComponent extends Component> extends ReactComponentFactoryProxy {
+class ReactDartComponentFactoryProxy<TComponent extends Component>
+    extends ReactComponentFactoryProxy {
   /// The ReactJS class used as the type for all [ReactElement]s built by
   /// this factory.
   final ReactClass reactClass;
@@ -75,10 +79,10 @@ class ReactDartComponentFactoryProxy<TComponent extends Component> extends React
   /// into [generateExtendedJsProps] upon [ReactElement] creation.
   final Map defaultProps;
 
-  ReactDartComponentFactoryProxy(ReactClass reactClass) :
-      this.reactClass = reactClass,
-      this.reactComponentFactory = React.createFactory(reactClass),
-      this.defaultProps = reactClass.dartDefaultProps;
+  ReactDartComponentFactoryProxy(ReactClass reactClass)
+      : this.reactClass = reactClass,
+        this.reactComponentFactory = React.createFactory(reactClass),
+        this.defaultProps = reactClass.dartDefaultProps;
 
   ReactClass get type => reactClass;
 
@@ -87,14 +91,14 @@ class ReactDartComponentFactoryProxy<TComponent extends Component> extends React
     children = listifyChildren(children);
 
     return reactComponentFactory(
-      generateExtendedJsProps(props, children, defaultProps: defaultProps),
-      children
-    );
+        generateExtendedJsProps(props, children, defaultProps: defaultProps),
+        children);
   }
 
   /// Returns a JavaScript version of the specified [props], preprocessed for consumption by ReactJS and prepared for
   /// consumption by the [react] library internals.
-  static InteropProps generateExtendedJsProps(Map props, dynamic children, {Map defaultProps}) {
+  static InteropProps generateExtendedJsProps(Map props, dynamic children,
+      {Map defaultProps}) {
     if (children == null) {
       children = [];
     } else if (children is! Iterable) {
@@ -114,8 +118,7 @@ class ReactDartComponentFactoryProxy<TComponent extends Component> extends React
       ..remove('key')
       ..remove('ref');
 
-    var internal = new ReactDartComponentInternal()
-      ..props = extendedProps;
+    var internal = new ReactDartComponentInternal()..props = extendedProps;
 
     var interopProps = new InteropProps(internal: internal);
 
@@ -131,7 +134,8 @@ class ReactDartComponentFactoryProxy<TComponent extends Component> extends React
       // If the ref is a callback, pass ReactJS a function that will call it
       // with the Dart Component instance, not the ReactComponent instance.
       if (ref is _CallbackRef) {
-        interopProps.ref = allowInterop((ReactComponent instance) => ref(instance?.dartComponent));
+        interopProps.ref = allowInterop(
+            (ReactComponent instance) => ref(instance?.dartComponent));
       } else {
         interopProps.ref = ref;
       }
@@ -184,45 +188,53 @@ final ReactDartInteropStatics _dartInteropStatics = (() {
   var zone = Zone.current;
 
   /// Wrapper for [Component.getInitialState].
-  Component initComponent(ReactComponent jsThis, ReactDartComponentInternal internal, InteropContextValue context, ComponentStatics componentStatics) => zone.run(() {
-    void jsRedraw() {
-      jsThis.setState(emptyJsMap);
-    }
+  Component initComponent(
+          ReactComponent jsThis,
+          ReactDartComponentInternal internal,
+          InteropContextValue context,
+          ComponentStatics componentStatics) =>
+      zone.run(() {
+        void jsRedraw() {
+          jsThis.setState(emptyJsMap);
+        }
 
-    Ref getRef = (name) {
-      var ref = getProperty(jsThis.refs, name);
-      if (ref == null) return null;
-      if (ref is Element) return ref;
+        Ref getRef = (name) {
+          var ref = getProperty(jsThis.refs, name);
+          if (ref == null) return null;
+          if (ref is Element) return ref;
 
-      return (ref as ReactComponent).dartComponent ?? ref;
-    };
+          return (ref as ReactComponent).dartComponent ?? ref;
+        };
 
-    Component component = componentStatics.componentFactory()
-      ..initComponentInternal(internal.props, jsRedraw, getRef, jsThis, _unjsifyContext(context))
-      ..initStateInternal();
+        Component component = componentStatics.componentFactory()
+          ..initComponentInternal(internal.props, jsRedraw, getRef, jsThis,
+              _unjsifyContext(context))
+          ..initStateInternal();
 
-    // Return the component so that the JS proxying component can store it,
-    // avoiding an interceptor lookup.
-    return component;
-  });
+        // Return the component so that the JS proxying component can store it,
+        // avoiding an interceptor lookup.
+        return component;
+      });
 
-  InteropContextValue handleGetChildContext(Component component) => zone.run(() {
-    return _jsifyContext(component.getChildContext());
-  });
+  InteropContextValue handleGetChildContext(Component component) =>
+      zone.run(() {
+        return _jsifyContext(component.getChildContext());
+      });
 
   /// Wrapper for [Component.componentWillMount].
   void handleComponentWillMount(Component component) => zone.run(() {
-    component
-      ..componentWillMount()
-      ..transferComponentState();
-  });
+        component
+          ..componentWillMount()
+          ..transferComponentState();
+      });
 
   /// Wrapper for [Component.componentDidMount].
   void handleComponentDidMount(Component component) => zone.run(() {
-    component.componentDidMount();
-  });
+        component.componentDidMount();
+      });
 
-  Map _getNextProps(Component component, ReactDartComponentInternal nextInternal) {
+  Map _getNextProps(
+      Component component, ReactDartComponentInternal nextInternal) {
     var newProps = nextInternal.props;
     return newProps != null ? new Map.from(newProps) : {};
   }
@@ -234,9 +246,9 @@ final ReactDartInteropStatics _dartInteropStatics = (() {
   /// 3. Update [Component.state] by calling [Component.transferComponentState]
   void _afterPropsChange(Component component, InteropContextValue nextContext) {
     component
-      ..props = component.nextProps     // [1]
+      ..props = component.nextProps // [1]
       ..context = component.nextContext // [2]
-      ..transferComponentState();       // [3]
+      ..transferComponentState(); // [3]
   }
 
   void _clearPrevState(Component component) {
@@ -247,109 +259,127 @@ final ReactDartInteropStatics _dartInteropStatics = (() {
     var callbacks = component.setStateCallbacks.toList();
     // Prevent concurrent modification during iteration
     component.setStateCallbacks.clear();
-    callbacks.forEach((callback) { callback(); });
+    callbacks.forEach((callback) {
+      callback();
+    });
   }
 
   void _callSetStateTransactionalCallbacks(Component component) {
     var nextState = component.nextState;
     var props = new UnmodifiableMapView(component.props);
 
-    component.transactionalSetStateCallbacks.forEach((callback) { nextState.addAll(callback(nextState, props)); });
+    component.transactionalSetStateCallbacks.forEach((callback) {
+      nextState.addAll(callback(nextState, props));
+    });
     component.transactionalSetStateCallbacks.clear();
   }
 
   /// Wrapper for [Component.componentWillReceiveProps].
-  void handleComponentWillReceiveProps(Component component, ReactDartComponentInternal nextInternal, InteropContextValue nextContext) => zone.run(() {
-    var nextProps = _getNextProps(component, nextInternal);
-    var newContext = _unjsifyContext(nextContext);
+  void handleComponentWillReceiveProps(
+          Component component,
+          ReactDartComponentInternal nextInternal,
+          InteropContextValue nextContext) =>
+      zone.run(() {
+        var nextProps = _getNextProps(component, nextInternal);
+        var newContext = _unjsifyContext(nextContext);
 
-    component
-      ..nextProps = nextProps
-      ..nextContext = newContext
-      ..componentWillReceiveProps(nextProps)
-      ..componentWillReceivePropsWithContext(nextProps, newContext);
-  });
+        component
+          ..nextProps = nextProps
+          ..nextContext = newContext
+          ..componentWillReceiveProps(nextProps)
+          ..componentWillReceivePropsWithContext(nextProps, newContext);
+      });
 
   /// Wrapper for [Component.shouldComponentUpdate].
-  bool handleShouldComponentUpdate(Component component, InteropContextValue nextContext) => zone.run(() {
-    _callSetStateTransactionalCallbacks(component);
+  bool handleShouldComponentUpdate(
+          Component component, InteropContextValue nextContext) =>
+      zone.run(() {
+        _callSetStateTransactionalCallbacks(component);
 
-    // If shouldComponentUpdateWithContext returns a valid bool (default implementation returns null),
-    // then don't bother calling `shouldComponentUpdate` and have it trump.
-    bool shouldUpdate =
-      component.shouldComponentUpdateWithContext(component.nextProps, component.nextState, component.nextContext);
+        // If shouldComponentUpdateWithContext returns a valid bool (default implementation returns null),
+        // then don't bother calling `shouldComponentUpdate` and have it trump.
+        bool shouldUpdate = component.shouldComponentUpdateWithContext(
+            component.nextProps, component.nextState, component.nextContext);
 
-    if (shouldUpdate == null) {
-      shouldUpdate = component.shouldComponentUpdate(component.nextProps, component.nextState);
-    }
+        if (shouldUpdate == null) {
+          shouldUpdate = component.shouldComponentUpdate(
+              component.nextProps, component.nextState);
+        }
 
-    if (shouldUpdate) {
-      return true;
-    } else {
-      // If component should not update, update props / transfer state because componentWillUpdate will not be called.
-      _afterPropsChange(component, nextContext);
-      _callSetStateCallbacks(component);
-      // Clear out prevState after it's done being used so it's not retained
-      _clearPrevState(component);
-      return false;
-    }
-  });
+        if (shouldUpdate) {
+          return true;
+        } else {
+          // If component should not update, update props / transfer state because componentWillUpdate will not be called.
+          _afterPropsChange(component, nextContext);
+          _callSetStateCallbacks(component);
+          // Clear out prevState after it's done being used so it's not retained
+          _clearPrevState(component);
+          return false;
+        }
+      });
 
   /// Wrapper for [Component.componentWillUpdate].
-  void handleComponentWillUpdate(Component component, InteropContextValue nextContext) => zone.run(() {
-    /// Call `componentWillUpdate` and the context variant
-    component
-      ..componentWillUpdate(component.nextProps, component.nextState)
-      ..componentWillUpdateWithContext(component.nextProps, component.nextState, component.nextContext);
+  void handleComponentWillUpdate(
+          Component component, InteropContextValue nextContext) =>
+      zone.run(() {
+        /// Call `componentWillUpdate` and the context variant
+        component
+          ..componentWillUpdate(component.nextProps, component.nextState)
+          ..componentWillUpdateWithContext(
+              component.nextProps, component.nextState, component.nextContext);
 
-    _afterPropsChange(component, nextContext);
-  });
+        _afterPropsChange(component, nextContext);
+      });
 
   /// Wrapper for [Component.componentDidUpdate].
   ///
   /// Uses [prevState] which was transferred from [Component.nextState] in [componentWillUpdate].
-  void handleComponentDidUpdate(Component component, ReactDartComponentInternal prevInternal) => zone.run(() {
-    var prevInternalProps = prevInternal.props;
+  void handleComponentDidUpdate(
+          Component component, ReactDartComponentInternal prevInternal) =>
+      zone.run(() {
+        var prevInternalProps = prevInternal.props;
 
-    /// Call `componentDidUpdate` and the context variant
-    component.componentDidUpdate(prevInternalProps, component.prevState);
+        /// Call `componentDidUpdate` and the context variant
+        component.componentDidUpdate(prevInternalProps, component.prevState);
 
-    _callSetStateCallbacks(component);
-    // Clear out prevState after it's done being used so it's not retained
-    _clearPrevState(component);
-  });
+        _callSetStateCallbacks(component);
+        // Clear out prevState after it's done being used so it's not retained
+        _clearPrevState(component);
+      });
 
   /// Wrapper for [Component.componentWillUnmount].
   void handleComponentWillUnmount(Component component) => zone.run(() {
-    component.componentWillUnmount();
-    // Clear these callbacks in case they retain anything;
-    // they definitely won't be called after this point.
-    component.setStateCallbacks.clear();
-    component.transactionalSetStateCallbacks.clear();
-  });
+        component.componentWillUnmount();
+        // Clear these callbacks in case they retain anything;
+        // they definitely won't be called after this point.
+        component.setStateCallbacks.clear();
+        component.transactionalSetStateCallbacks.clear();
+      });
 
   /// Wrapper for [Component.render].
   dynamic handleRender(Component component) => zone.run(() {
-    return component.render();
-  });
+        return component.render();
+      });
 
   return new ReactDartInteropStatics(
       initComponent: allowInterop(initComponent),
       handleGetChildContext: allowInterop(handleGetChildContext),
       handleComponentWillMount: allowInterop(handleComponentWillMount),
       handleComponentDidMount: allowInterop(handleComponentDidMount),
-      handleComponentWillReceiveProps: allowInterop(handleComponentWillReceiveProps),
+      handleComponentWillReceiveProps:
+          allowInterop(handleComponentWillReceiveProps),
       handleShouldComponentUpdate: allowInterop(handleShouldComponentUpdate),
       handleComponentWillUpdate: allowInterop(handleComponentWillUpdate),
       handleComponentDidUpdate: allowInterop(handleComponentDidUpdate),
       handleComponentWillUnmount: allowInterop(handleComponentWillUnmount),
-      handleRender: allowInterop(handleRender)
-  );
+      handleRender: allowInterop(handleRender));
 })();
 
 /// Creates and returns a new [ReactDartComponentFactoryProxy] from the provided [componentFactory]
 /// which produces a new JS [`ReactClass` component class](https://facebook.github.io/react/docs/top-level-api.html#react.createclass).
-ReactDartComponentFactoryProxy _registerComponent(ComponentFactory componentFactory, [Iterable<String> skipMethods = const []]) {
+ReactDartComponentFactoryProxy _registerComponent(
+    ComponentFactory componentFactory,
+    [Iterable<String> skipMethods = const []]) {
   var componentInstance = componentFactory();
   var componentStatics = new ComponentStatics(componentFactory);
 
@@ -361,13 +391,14 @@ ReactDartComponentFactoryProxy _registerComponent(ComponentFactory componentFact
   /// Create the JS [`ReactClass` component class](https://facebook.github.io/react/docs/top-level-api.html#react.createclass)
   /// with custom JS lifecycle methods.
   var reactComponentClass = React.createClass(
-      createReactDartComponentClassConfig(_dartInteropStatics, componentStatics, jsConfig)
-        ..displayName = componentInstance.displayName
-  );
+      createReactDartComponentClassConfig(
+          _dartInteropStatics, componentStatics, jsConfig)
+        ..displayName = componentInstance.displayName);
 
   // Cache default props and store them on the ReactClass so they can be used
   // by ReactDartComponentFactoryProxy and externally.
-  final Map defaultProps = new Map.unmodifiable(componentInstance.getDefaultProps());
+  final Map defaultProps =
+      new Map.unmodifiable(componentInstance.getDefaultProps());
   reactComponentClass.dartDefaultProps = defaultProps;
 
   return new ReactDartComponentFactoryProxy(reactComponentClass);
@@ -383,9 +414,9 @@ class ReactDomComponentFactoryProxy extends ReactComponentFactoryProxy {
   /// The JS component factory used by this factory to build [ReactElement]s.
   final Function factory;
 
-  ReactDomComponentFactoryProxy(name) :
-    this.name = name,
-    this.factory = React.createFactory(name) {
+  ReactDomComponentFactoryProxy(name)
+      : this.name = name,
+        this.factory = React.createFactory(name) {
     if (ddc_emulated_function_name_bug.isBugPresent) {
       ddc_emulated_function_name_bug.patchName(this);
     }
@@ -442,11 +473,11 @@ _getValueFromDom(domElem) {
 /// _Note: Processing checkbox `checked` value is handled as a special case._
 _setValueToProps(Map props, val) {
   if (_isCheckbox(props)) {
-    if(val) {
+    if (val) {
       props['checked'] = true;
     } else {
-      if(props.containsKey('checked')) {
-         props.remove('checked');
+      if (props.containsKey('checked')) {
+        props.remove('checked');
       }
     }
   } else {
@@ -502,9 +533,10 @@ _convertEventHandlers(Map args) {
     if (eventFactory != null && value != null) {
       // Apply allowInterop here so that the function we store in [_originalEventHandlers]
       // is the same one we'll retrieve from the JS props.
-      var reactDartConvertedEventHandler = allowInterop((events.SyntheticEvent e, [_, __]) => zone.run(() {
-        value(eventFactory(e));
-      }));
+      var reactDartConvertedEventHandler =
+          allowInterop((events.SyntheticEvent e, [_, __]) => zone.run(() {
+                value(eventFactory(e));
+              }));
 
       args[propKey] = reactDartConvertedEventHandler;
       _originalEventHandlers[reactDartConvertedEventHandler] = value;
@@ -572,7 +604,8 @@ final Map<String, Function> _eventPropKeyToEventFactory = (() {
 
   // Add support for capturing variants; e.g., onClick/onClickCapture
   for (var key in eventPropKeyToEventFactory.keys.toList()) {
-    eventPropKeyToEventFactory[key + 'Capture'] = eventPropKeyToEventFactory[key];
+    eventPropKeyToEventFactory[key + 'Capture'] =
+        eventPropKeyToEventFactory[key];
   }
 
   return eventPropKeyToEventFactory;
@@ -580,44 +613,102 @@ final Map<String, Function> _eventPropKeyToEventFactory = (() {
 
 /// Wrapper for [SyntheticEvent].
 SyntheticEvent syntheticEventFactory(events.SyntheticEvent e) {
-  return new SyntheticEvent(e.bubbles, e.cancelable, e.currentTarget,
-      e.defaultPrevented, () => e.preventDefault(),
-      () => e.stopPropagation(), e.eventPhase, e.isTrusted, e.nativeEvent,
-      e.target, e.timeStamp, e.type);
+  return new SyntheticEvent(
+      e.bubbles,
+      e.cancelable,
+      e.currentTarget,
+      e.defaultPrevented,
+      () => e.preventDefault(),
+      () => e.stopPropagation(),
+      e.eventPhase,
+      e.isTrusted,
+      e.nativeEvent,
+      e.target,
+      e.timeStamp,
+      e.type);
 }
 
 /// Wrapper for [SyntheticClipboardEvent].
-SyntheticClipboardEvent syntheticClipboardEventFactory(events.SyntheticClipboardEvent e) {
-  return new SyntheticClipboardEvent(e.bubbles, e.cancelable, e.currentTarget,
-      e.defaultPrevented, () => e.preventDefault(),
-      () => e.stopPropagation(), e.eventPhase, e.isTrusted, e.nativeEvent,
-      e.target, e.timeStamp, e.type, e.clipboardData);
+SyntheticClipboardEvent syntheticClipboardEventFactory(
+    events.SyntheticClipboardEvent e) {
+  return new SyntheticClipboardEvent(
+      e.bubbles,
+      e.cancelable,
+      e.currentTarget,
+      e.defaultPrevented,
+      () => e.preventDefault(),
+      () => e.stopPropagation(),
+      e.eventPhase,
+      e.isTrusted,
+      e.nativeEvent,
+      e.target,
+      e.timeStamp,
+      e.type,
+      e.clipboardData);
 }
 
 /// Wrapper for [SyntheticKeyboardEvent].
-SyntheticKeyboardEvent syntheticKeyboardEventFactory(events.SyntheticKeyboardEvent e) {
-  return new SyntheticKeyboardEvent(e.bubbles, e.cancelable, e.currentTarget,
-      e.defaultPrevented, () => e.preventDefault(),
-      () => e.stopPropagation(), e.eventPhase, e.isTrusted,
-      e.nativeEvent, e.target, e.timeStamp, e.type, e.altKey,
-      e.char, e.charCode, e.ctrlKey, e.locale, e.location,
-      e.key, e.keyCode, e.metaKey, e.repeat, e.shiftKey);
+SyntheticKeyboardEvent syntheticKeyboardEventFactory(
+    events.SyntheticKeyboardEvent e) {
+  return new SyntheticKeyboardEvent(
+      e.bubbles,
+      e.cancelable,
+      e.currentTarget,
+      e.defaultPrevented,
+      () => e.preventDefault(),
+      () => e.stopPropagation(),
+      e.eventPhase,
+      e.isTrusted,
+      e.nativeEvent,
+      e.target,
+      e.timeStamp,
+      e.type,
+      e.altKey,
+      e.char,
+      e.charCode,
+      e.ctrlKey,
+      e.locale,
+      e.location,
+      e.key,
+      e.keyCode,
+      e.metaKey,
+      e.repeat,
+      e.shiftKey);
 }
 
 /// Wrapper for [SyntheticFocusEvent].
 SyntheticFocusEvent syntheticFocusEventFactory(events.SyntheticFocusEvent e) {
-  return new SyntheticFocusEvent(e.bubbles, e.cancelable, e.currentTarget,
-      e.defaultPrevented, () => e.preventDefault(),
-      () => e.stopPropagation(), e.eventPhase, e.isTrusted, e.nativeEvent,
-      e.target, e.timeStamp, e.type, e.relatedTarget);
+  return new SyntheticFocusEvent(
+      e.bubbles,
+      e.cancelable,
+      e.currentTarget,
+      e.defaultPrevented,
+      () => e.preventDefault(),
+      () => e.stopPropagation(),
+      e.eventPhase,
+      e.isTrusted,
+      e.nativeEvent,
+      e.target,
+      e.timeStamp,
+      e.type,
+      e.relatedTarget);
 }
 
 /// Wrapper for [SyntheticFormEvent].
 SyntheticFormEvent syntheticFormEventFactory(events.SyntheticFormEvent e) {
-  return new SyntheticFormEvent(e.bubbles, e.cancelable, e.currentTarget,
-      e.defaultPrevented, () => e.preventDefault(),
-      () => e.stopPropagation(), e.eventPhase, e.isTrusted, e.nativeEvent,
-      e.target, e.timeStamp, e.type);
+  return new SyntheticFormEvent(
+      e.bubbles,
+      e.cancelable,
+      e.currentTarget,
+      e.defaultPrevented,
+      () => e.preventDefault(),
+      () => e.stopPropagation(),
+      e.eventPhase,
+      e.isTrusted,
+      e.nativeEvent,
+      e.target,
+      e.timeStamp,
+      e.type);
 }
 
 /// Wrapper for [SyntheticDataTransfer].
@@ -660,41 +751,102 @@ SyntheticDataTransfer syntheticDataTransferFactory(DataTransfer dt) {
 /// Wrapper for [SyntheticMouseEvent].
 SyntheticMouseEvent syntheticMouseEventFactory(events.SyntheticMouseEvent e) {
   SyntheticDataTransfer dt = syntheticDataTransferFactory(e.dataTransfer);
-  return new SyntheticMouseEvent(e.bubbles, e.cancelable, e.currentTarget,
-      e.defaultPrevented, () => e.preventDefault(),
-      () => e.stopPropagation(), e.eventPhase, e.isTrusted, e.nativeEvent,
-      e.target, e.timeStamp, e.type, e.altKey, e.button, e.buttons, e.clientX, e.clientY,
-      e.ctrlKey, dt, e.metaKey, e.pageX, e.pageY, e.relatedTarget, e.screenX,
-      e.screenY, e.shiftKey);
+  return new SyntheticMouseEvent(
+      e.bubbles,
+      e.cancelable,
+      e.currentTarget,
+      e.defaultPrevented,
+      () => e.preventDefault(),
+      () => e.stopPropagation(),
+      e.eventPhase,
+      e.isTrusted,
+      e.nativeEvent,
+      e.target,
+      e.timeStamp,
+      e.type,
+      e.altKey,
+      e.button,
+      e.buttons,
+      e.clientX,
+      e.clientY,
+      e.ctrlKey,
+      dt,
+      e.metaKey,
+      e.pageX,
+      e.pageY,
+      e.relatedTarget,
+      e.screenX,
+      e.screenY,
+      e.shiftKey);
 }
 
 /// Wrapper for [SyntheticTouchEvent].
 SyntheticTouchEvent syntheticTouchEventFactory(events.SyntheticTouchEvent e) {
-  return new SyntheticTouchEvent(e.bubbles, e.cancelable, e.currentTarget,
-      e.defaultPrevented, () => e.preventDefault(),
-      () => e.stopPropagation(), e.eventPhase, e.isTrusted, e.nativeEvent,
-      e.target, e.timeStamp, e.type, e.altKey, e.changedTouches, e.ctrlKey, e.metaKey,
-      e.shiftKey, e.targetTouches, e.touches);
+  return new SyntheticTouchEvent(
+      e.bubbles,
+      e.cancelable,
+      e.currentTarget,
+      e.defaultPrevented,
+      () => e.preventDefault(),
+      () => e.stopPropagation(),
+      e.eventPhase,
+      e.isTrusted,
+      e.nativeEvent,
+      e.target,
+      e.timeStamp,
+      e.type,
+      e.altKey,
+      e.changedTouches,
+      e.ctrlKey,
+      e.metaKey,
+      e.shiftKey,
+      e.targetTouches,
+      e.touches);
 }
 
 /// Wrapper for [SyntheticUIEvent].
 SyntheticUIEvent syntheticUIEventFactory(events.SyntheticUIEvent e) {
-  return new SyntheticUIEvent(e.bubbles, e.cancelable, e.currentTarget,
-      e.defaultPrevented, () => e.preventDefault(),
-      () => e.stopPropagation(), e.eventPhase, e.isTrusted, e.nativeEvent,
-      e.target, e.timeStamp, e.type, e.detail, e.view);
+  return new SyntheticUIEvent(
+      e.bubbles,
+      e.cancelable,
+      e.currentTarget,
+      e.defaultPrevented,
+      () => e.preventDefault(),
+      () => e.stopPropagation(),
+      e.eventPhase,
+      e.isTrusted,
+      e.nativeEvent,
+      e.target,
+      e.timeStamp,
+      e.type,
+      e.detail,
+      e.view);
 }
 
 /// Wrapper for [SyntheticWheelEvent].
 SyntheticWheelEvent syntheticWheelEventFactory(events.SyntheticWheelEvent e) {
-  return new SyntheticWheelEvent(e.bubbles, e.cancelable, e.currentTarget,
-      e.defaultPrevented, () => e.preventDefault(),
-      () => e.stopPropagation(), e.eventPhase, e.isTrusted, e.nativeEvent,
-      e.target, e.timeStamp, e.type, e.deltaX, e.deltaMode, e.deltaY, e.deltaZ);
+  return new SyntheticWheelEvent(
+      e.bubbles,
+      e.cancelable,
+      e.currentTarget,
+      e.defaultPrevented,
+      () => e.preventDefault(),
+      () => e.stopPropagation(),
+      e.eventPhase,
+      e.isTrusted,
+      e.nativeEvent,
+      e.target,
+      e.timeStamp,
+      e.type,
+      e.deltaX,
+      e.deltaMode,
+      e.deltaY,
+      e.deltaZ);
 }
 
 dynamic _findDomNode(component) {
-  return ReactDom.findDOMNode(component is Component ? component.jsThis : component);
+  return ReactDom.findDOMNode(
+      component is Component ? component.jsThis : component);
 }
 
 void setClientConfiguration() {
@@ -706,14 +858,17 @@ void setClientConfiguration() {
     createReactDartComponentClassConfig(null, null);
   } on NoSuchMethodError catch (_) {
     throw new Exception('react.js and react_dom.js must be loaded.');
-  } catch(_) {
-    throw new Exception('Loaded react.js must include react-dart JS interop helpers.');
+  } catch (_) {
+    throw new Exception(
+        'Loaded react.js must include react-dart JS interop helpers.');
   }
 
   setReactConfiguration(_reactDom, _registerComponent);
-  setReactDOMConfiguration(ReactDom.render, ReactDom.unmountComponentAtNode, _findDomNode);
+  setReactDOMConfiguration(
+      ReactDom.render, ReactDom.unmountComponentAtNode, _findDomNode);
   // Accessing ReactDomServer.renderToString when it's not available breaks in DDC.
   if (context['ReactDOMServer'] != null) {
-    setReactDOMServerConfiguration(ReactDomServer.renderToString, ReactDomServer.renderToStaticMarkup);
+    setReactDOMServerConfiguration(
+        ReactDomServer.renderToString, ReactDomServer.renderToStaticMarkup);
   }
 }

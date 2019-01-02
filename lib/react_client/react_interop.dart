@@ -21,15 +21,18 @@ abstract class React {
   external static ReactClass createClass(ReactClassConfig reactClassConfig);
   external static ReactJsComponentFactory createFactory(type);
 
-  external static ReactElement createElement(dynamic type, props, [dynamic children]);
+  external static ReactElement createElement(dynamic type, props,
+      [dynamic children]);
 
   external static bool isValidElement(dynamic object);
 }
 
 abstract class ReactDom {
   static Element findDOMNode(object) => ReactDOM.findDOMNode(object);
-  static ReactComponent render(ReactElement component, Element element) => ReactDOM.render(component, element);
-  static bool unmountComponentAtNode(Element element) => ReactDOM.unmountComponentAtNode(element);
+  static ReactComponent render(ReactElement component, Element element) =>
+      ReactDOM.render(component, element);
+  static bool unmountComponentAtNode(Element element) =>
+      ReactDOM.unmountComponentAtNode(element);
 }
 
 @JS('ReactDOMServer')
@@ -72,22 +75,21 @@ class ReactClass {
 @JS()
 @anonymous
 class ReactClassConfig {
-  external factory ReactClassConfig({
-    String displayName,
-    List mixins,
-    Function componentWillMount,
-    Function componentDidMount,
-    Function componentWillReceiveProps,
-    Function shouldComponentUpdate,
-    Function componentWillUpdate,
-    Function componentDidUpdate,
-    Function componentWillUnmount,
-    Function getChildContext,
-    Map<String, dynamic> childContextTypes,
-    Function getDefaultProps,
-    Function getInitialState,
-    Function render
-  });
+  external factory ReactClassConfig(
+      {String displayName,
+      List mixins,
+      Function componentWillMount,
+      Function componentDidMount,
+      Function componentWillReceiveProps,
+      Function shouldComponentUpdate,
+      Function componentWillUpdate,
+      Function componentDidUpdate,
+      Function componentWillUnmount,
+      Function getChildContext,
+      Map<String, dynamic> childContextTypes,
+      Function getDefaultProps,
+      Function getInitialState,
+      Function render});
 
   /// The `displayName` string is used in debugging messages.
   ///
@@ -188,7 +190,8 @@ class InteropProps {
   external set key(dynamic value);
   external set ref(dynamic value);
 
-  external factory InteropProps({ReactDartComponentInternal internal, String key, dynamic ref});
+  external factory InteropProps(
+      {ReactDartComponentInternal internal, String key, dynamic ref});
 }
 
 /// Internal react-dart information used to proxy React JS lifecycle to Dart
@@ -239,18 +242,25 @@ void markChildrenValidated(List<dynamic> children) {
 external ReactClassConfig createReactDartComponentClassConfig(
     ReactDartInteropStatics dartInteropStatics,
     ComponentStatics componentStatics,
-    [JsComponentConfig jsConfig]
-);
+    [JsComponentConfig jsConfig]);
 
-typedef Component _InitComponent(ReactComponent jsThis, ReactDartComponentInternal internal, InteropContextValue context, ComponentStatics componentStatics);
+typedef Component _InitComponent(
+    ReactComponent jsThis,
+    ReactDartComponentInternal internal,
+    InteropContextValue context,
+    ComponentStatics componentStatics);
 typedef InteropContextValue _HandleGetChildContext(Component component);
 typedef void _HandleComponentWillMount(Component component);
 typedef void _HandleComponentDidMount(Component component);
-typedef void _HandleComponentWillReceiveProps(Component component, ReactDartComponentInternal nextInternal, InteropContextValue nextContext);
-typedef bool _HandleShouldComponentUpdate(Component component, InteropContextValue nextContext);
-typedef void _HandleComponentWillUpdate(Component component, InteropContextValue nextContext);
+typedef void _HandleComponentWillReceiveProps(Component component,
+    ReactDartComponentInternal nextInternal, InteropContextValue nextContext);
+typedef bool _HandleShouldComponentUpdate(
+    Component component, InteropContextValue nextContext);
+typedef void _HandleComponentWillUpdate(
+    Component component, InteropContextValue nextContext);
 // Ignore prevContext in componentDidUpdate, since it's not supported in React 16
-typedef void _HandleComponentDidUpdate(Component component, ReactDartComponentInternal prevInternal);
+typedef void _HandleComponentDidUpdate(
+    Component component, ReactDartComponentInternal prevInternal);
 typedef void _HandleComponentWillUnmount(Component component);
 typedef dynamic _HandleRender(Component component);
 

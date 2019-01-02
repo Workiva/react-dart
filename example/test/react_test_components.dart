@@ -3,11 +3,9 @@ import "dart:async";
 import "package:react/react.dart" as react;
 import "package:react/react_dom.dart" as react_dom;
 
-
 class _HelloComponent extends react.Component {
-
   void componentWillReceiveProps(nextProps) {
-    if(nextProps["name"].length > 20) {
+    if (nextProps["name"].length > 20) {
       print("Too long Hello!");
     }
   }
@@ -20,7 +18,6 @@ class _HelloComponent extends react.Component {
 var helloComponent = react.registerComponent(() => new _HelloComponent());
 
 class _HelloGreeter extends react.Component {
-
   getInitialState() => {"name": "World"};
 
   onInputChange(e) {
@@ -30,14 +27,14 @@ class _HelloGreeter extends react.Component {
 
   render() {
     return react.div({}, [
-        react.input({
-          'key': 'input',
-          'className': 'form-control',
-          'ref': 'myInput',
-          'value': bind('name'),
-          'onChange': onInputChange,
-        }),
-        helloComponent({'key': 'hello', 'name': state['name']})
+      react.input({
+        'key': 'input',
+        'className': 'form-control',
+        'ref': 'myInput',
+        'value': bind('name'),
+        'onChange': onInputChange,
+      }),
+      helloComponent({'key': 'hello', 'name': state['name']})
     ]);
   }
 }
@@ -52,7 +49,9 @@ class _CheckBoxComponent extends react.Component {
   }
 
   render() {
-    return react.div({'className': 'form-check'}, [
+    return react.div({
+      'className': 'form-check'
+    }, [
       react.input({
         'id': 'doTheDishes',
         'key': 'input',
@@ -63,7 +62,8 @@ class _CheckBoxComponent extends react.Component {
       react.label({
         'htmlFor': 'doTheDishes',
         'key': 'label',
-        'className': 'form-check-label ' + (this.state['checked'] ? 'striked' : 'not-striked')
+        'className': 'form-check-label ' +
+            (this.state['checked'] ? 'striked' : 'not-striked')
       }, 'do the dishes'),
     ]);
   }
@@ -72,19 +72,15 @@ class _CheckBoxComponent extends react.Component {
 var checkBoxComponent = react.registerComponent(() => new _CheckBoxComponent());
 
 class _ClockComponent extends react.Component {
-
   Timer timer;
 
   getInitialState() => {'secondsElapsed': 0};
 
   Map getDefaultProps() => {'refreshRate': 1000};
 
-
   void componentWillMount() {
     timer = new Timer.periodic(
-        new Duration(milliseconds: this.props["refreshRate"]),
-        this.tick
-      );
+        new Duration(milliseconds: this.props["refreshRate"]), this.tick);
   }
 
   void componentWillUnmount() {
@@ -111,29 +107,28 @@ class _ClockComponent extends react.Component {
   }
 
   render() {
-    return react.span(
-        { 'onClick': (event) => print("Hello World!") },
+    return react.span({'onClick': (event) => print("Hello World!")},
 //        { 'onClick': (event, [domid = null]) => print("Hello World!") },
-        [ "Seconds elapsed: ", "${state['secondsElapsed']}"]
-    );
+        ["Seconds elapsed: ", "${state['secondsElapsed']}"]);
   }
 }
 
 var clockComponent = react.registerComponent(() => new _ClockComponent());
 
 class _ListComponent extends react.Component {
-
   Map getInitialState() {
-    return {"items": new List.from([0, 1, 2, 3])};
+    return {
+      "items": new List.from([0, 1, 2, 3])
+    };
   }
 
   void componentWillUpdate(nextProps, nextState) {
-    if(nextState["items"].length > state["items"].length)
+    if (nextState["items"].length > state["items"].length)
       print("Adding " + nextState["items"].last.toString());
   }
 
   void componentDidUpdate(prevProps, prevState) {
-    if(prevState["items"].length > state["items"].length)
+    if (prevState["items"].length > state["items"].length)
       print("Removed " + prevState["items"].first.toString());
   }
 
@@ -146,18 +141,18 @@ class _ListComponent extends react.Component {
   }
 
   dynamic render() {
-    List<dynamic> items = ["\\", "&",">","<","\"", "'", "/"];
+    List<dynamic> items = ["\\", "&", ">", "<", "\"", "'", "/"];
     for (var item in state['items']) {
       items.add(react.li({"key": item}, "$item"));
     }
 
     return react.div({}, [
-        react.button({
-          'key': 'button',
-          'className': 'btn btn-primary',
-          'onClick': addItem,
-        }, 'addItem'),
-        react.ul({'key': 'list'}, items),
+      react.button({
+        'key': 'button',
+        'className': 'btn btn-primary',
+        'onClick': addItem,
+      }, 'addItem'),
+      react.ul({'key': 'list'}, items),
     ]);
   }
 }
@@ -165,7 +160,6 @@ class _ListComponent extends react.Component {
 var listComponent = react.registerComponent(() => new _ListComponent());
 
 class _MainComponent extends react.Component {
-
   render() {
     return react.div({'ref': 'myDiv'}, props['children']);
   }
@@ -179,13 +173,15 @@ class _ContextComponent extends react.Component {
 
   @override
   Map<String, dynamic> getChildContext() => {
-    'foo': {'object': 'with value'},
-    'bar': true,
-    'renderCount': this.state['renderCount']
-  };
+        'foo': {'object': 'with value'},
+        'bar': true,
+        'renderCount': this.state['renderCount']
+      };
 
   render() {
-    return react.ul({'key': 'ul'}, [
+    return react.ul({
+      'key': 'ul'
+    }, [
       react.button({
         'key': 'button',
         'className': 'btn btn-primary',
@@ -204,6 +200,7 @@ class _ContextComponent extends react.Component {
     this.setState({'renderCount': (this.state['renderCount'] ?? 0) + 1});
   }
 }
+
 var contextComponent = react.registerComponent(() => new _ContextComponent());
 
 class _ContextConsumerComponent extends react.Component {
@@ -211,7 +208,9 @@ class _ContextConsumerComponent extends react.Component {
   Iterable<String> get contextKeys => const ['foo'];
 
   render() {
-    return react.ul({'key': 'ul'}, [
+    return react.ul({
+      'key': 'ul'
+    }, [
       'ContextConsumerComponent.context: ',
       context.toString(),
       react.br({'key': 'break1'}),
@@ -220,17 +219,23 @@ class _ContextConsumerComponent extends react.Component {
     ]);
   }
 }
-var contextConsumerComponent = react.registerComponent(() => new _ContextConsumerComponent());
+
+var contextConsumerComponent =
+    react.registerComponent(() => new _ContextConsumerComponent());
 
 class _GrandchildContextConsumerComponent extends react.Component {
   @override
   Iterable<String> get contextKeys => const ['renderCount'];
 
   render() {
-    return react.ul({'key': 'ul'}, [
+    return react.ul({
+      'key': 'ul'
+    }, [
       'GrandchildContextConsumerComponent.context: ',
       context.toString(),
     ]);
   }
 }
-var grandchildContextConsumerComponent = react.registerComponent(() => new _GrandchildContextConsumerComponent());
+
+var grandchildContextConsumerComponent =
+    react.registerComponent(() => new _GrandchildContextConsumerComponent());
