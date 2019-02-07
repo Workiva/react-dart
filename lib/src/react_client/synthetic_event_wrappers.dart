@@ -61,6 +61,15 @@ class SyntheticFormEvent extends SyntheticEvent {}
 
 @JS()
 @anonymous
+class SyntheticDataTransfer {
+  external String get dropEffect;
+  external String get effectAllowed;
+  external List<File> get files;
+  external List<String> get types;
+}
+
+@JS()
+@anonymous
 class SyntheticMouseEvent extends SyntheticEvent {
   external bool get altKey;
   external num get button;
@@ -68,7 +77,7 @@ class SyntheticMouseEvent extends SyntheticEvent {
   external num get clientX;
   external num get clientY;
   external bool get ctrlKey;
-  external DataTransfer get dataTransfer;
+  external SyntheticDataTransfer get dataTransfer;
   external bool get metaKey;
   external num get pageX;
   external num get pageY;
