@@ -516,6 +516,10 @@ final Expando<Function> _originalEventHandlers = new Expando();
 ///
 /// If `style` is specified in props, then it too is shallow-converted and included
 /// in the returned Map.
+///
+/// Any JS event handlers included in the props for the given [instance] will be
+/// unconverted such that the original JS handlers are returned instead of their
+/// Dart synthetic counterparts.
 Map unconvertJsProps(/* ReactElement|ReactComponent */ instance) {
   var props = _dartifyJsMap(instance.props);
   eventPropKeyToEventFactory.keys.forEach((key) {
@@ -570,8 +574,7 @@ _convertEventHandlers(Map args) {
 /// Returns a Dart Map copy of the JS property key-value pairs in [jsMap].
 Map _dartifyJsMap(jsMap) {
   return new Map.fromIterable(_objectKeys(jsMap),
-      value: (key) => getProperty(jsMap, key)
-  );
+      value: (key) => getProperty(jsMap, key));
 }
 
 /// Wrapper for [SyntheticEvent].
@@ -675,7 +678,8 @@ SyntheticFormEvent syntheticFormEventFactory(events.SyntheticFormEvent e) {
 }
 
 /// Wrapper for [SyntheticDataTransfer].
-SyntheticDataTransfer syntheticDataTransferFactory(events.SyntheticDataTransfer dt) {
+SyntheticDataTransfer syntheticDataTransferFactory(
+    events.SyntheticDataTransfer dt) {
   if (dt == null) return null;
   List<File> files = [];
   if (dt.files != null) {
