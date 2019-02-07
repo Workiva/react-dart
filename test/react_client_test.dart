@@ -107,17 +107,46 @@ main() {
           }));
     });
 
-    test('should unconvert JS event handlers', () {
-      var genericEventHandler = (_) {};
-      var props =
-          new Map.fromIterable(eventPropKeyToEventFactory.keys, value: (key) {
-        return genericEventHandler;
+    group('should unconvert JS event handlers', () {
+      Function createHandler(eventKey) => (_) {
+            print(eventKey);
+          };
+      Map<String, Function> originalHandlers;
+      Map props;
+
+      setUp(() {
+        originalHandlers = {};
+        props = {};
+
+        for (final key in eventPropKeyToEventFactory.keys) {
+          props[key] = originalHandlers[key] = createHandler(key);
+        }
       });
-      var component = react.div(props);
-      var jsProps = unconvertJsProps(component);
-      for (final key in eventPropKeyToEventFactory.keys) {
-        expect(identical(jsProps[key], genericEventHandler), isTrue);
-      }
+
+      test('for a DOM element', () {
+        var component = react.div(props);
+        var jsProps = unconvertJsProps(component);
+        for (final key in eventPropKeyToEventFactory.keys) {
+          expect(jsProps[key], isNotNull,
+              reason: 'JS event handler prop should not be null');
+          expect(identical(jsProps[key], originalHandlers[key]), isTrue,
+              reason: 'JS event handler prop was not unconverted');
+        }
+      });
+
+      test(
+          ', except for a JS composite component (handlers should already be unconverted)',
+          () {
+        var component = testJsComponentFactory(props);
+        var jsProps = unconvertJsProps(component);
+        for (final key in eventPropKeyToEventFactory.keys) {
+          expect(jsProps[key], isNotNull,
+              reason: 'JS event handler prop should not be null');
+          expect(identical(jsProps[key], allowInterop(originalHandlers[key])),
+              isTrue,
+              reason: 'JS event handler prop was unexpectedly modified');
+        }
+      });
     });
   });
 

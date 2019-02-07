@@ -524,7 +524,7 @@ Map unconvertJsProps(/* ReactElement|ReactComponent */ instance) {
   var props = _dartifyJsMap(instance.props);
   eventPropKeyToEventFactory.keys.forEach((key) {
     if (props.containsKey(key)) {
-      props[key] = unconvertJsEventHandler(props[key]);
+      props[key] = unconvertJsEventHandler(props[key]) ?? props[key];
     }
   });
 
