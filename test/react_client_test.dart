@@ -129,7 +129,7 @@ main() {
         for (final key in eventPropKeyToEventFactory.keys) {
           expect(jsProps[key], isNotNull,
               reason: 'JS event handler prop should not be null');
-          expect(identical(jsProps[key], originalHandlers[key]), isTrue,
+          expect(jsProps[key], same(originalHandlers[key]),
               reason: 'JS event handler prop was not unconverted');
         }
       });
@@ -142,8 +142,7 @@ main() {
         for (final key in eventPropKeyToEventFactory.keys) {
           expect(jsProps[key], isNotNull,
               reason: 'JS event handler prop should not be null');
-          expect(identical(jsProps[key], allowInterop(originalHandlers[key])),
-              isTrue,
+          expect(jsProps[key], same(allowInterop(originalHandlers[key])),
               reason: 'JS event handler prop was unexpectedly modified');
         }
       });
