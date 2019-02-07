@@ -712,7 +712,7 @@ SyntheticFormEvent syntheticFormEventFactory(events.SyntheticFormEvent e) {
 }
 
 /// Wrapper for [SyntheticDataTransfer].
-SyntheticDataTransfer syntheticDataTransferFactory(DataTransfer dt) {
+SyntheticDataTransfer syntheticDataTransferFactory(events.SyntheticDataTransfer dt) {
   if (dt == null) return null;
   List<File> files = [];
   if (dt.files != null) {
