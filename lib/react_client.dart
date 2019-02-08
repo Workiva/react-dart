@@ -16,6 +16,7 @@ import "package:react/react_client/js_interop_helpers.dart";
 import 'package:react/react_client/react_interop.dart';
 import "package:react/react_dom.dart";
 import "package:react/react_dom_server.dart";
+import "package:react/src/react_client/event_prop_key_to_event_factory.dart";
 import "package:react/src/react_client/synthetic_event_wrappers.dart" as events;
 import 'package:react/src/typedefs.dart';
 import 'package:react/src/ddc_emulated_function_name_bug.dart'
@@ -510,6 +511,32 @@ _convertBoundValues(Map args) {
 /// to the original Dart functions (the input of [_convertEventHandlers]).
 final Expando<Function> _originalEventHandlers = new Expando();
 
+/// Returns the props for a [ReactElement] or composite [ReactComponent] [instance],
+/// shallow-converted to a Dart Map for convenience.
+///
+/// If `style` is specified in props, then it too is shallow-converted and included
+/// in the returned Map.
+///
+/// Any JS event handlers included in the props for the given [instance] will be
+/// unconverted such that the original JS handlers are returned instead of their
+/// Dart synthetic counterparts.
+Map unconvertJsProps(/* ReactElement|ReactComponent */ instance) {
+  var props = _dartifyJsMap(instance.props);
+  eventPropKeyToEventFactory.keys.forEach((key) {
+    if (props.containsKey(key)) {
+      props[key] = unconvertJsEventHandler(props[key]) ?? props[key];
+    }
+  });
+
+  // Convert the nested style map so it can be read by Dart code.
+  var style = props['style'];
+  if (style != null) {
+    props['style'] = _dartifyJsMap(style);
+  }
+
+  return props;
+}
+
 /// Returns the original Dart handler function that, within [_convertEventHandlers],
 /// was converted/wrapped into the function [jsConvertedEventHandler] to be passed to the JS.
 ///
@@ -529,7 +556,7 @@ Function unconvertJsEventHandler(Function jsConvertedEventHandler) {
 _convertEventHandlers(Map args) {
   var zone = Zone.current;
   args.forEach((propKey, value) {
-    var eventFactory = _eventPropKeyToEventFactory[propKey];
+    var eventFactory = eventPropKeyToEventFactory[propKey];
     if (eventFactory != null && value != null) {
       // Apply allowInterop here so that the function we store in [_originalEventHandlers]
       // is the same one we'll retrieve from the JS props.
@@ -544,72 +571,11 @@ _convertEventHandlers(Map args) {
   });
 }
 
-/// A mapping from event prop keys to their respective event factories.
-///
-/// Used in [_convertEventHandlers] for efficient event handler conversion.
-final Map<String, Function> _eventPropKeyToEventFactory = (() {
-  var eventPropKeyToEventFactory = <String, Function>{
-    // SyntheticClipboardEvent
-    'onCopy': syntheticClipboardEventFactory,
-    'onCut': syntheticClipboardEventFactory,
-    'onPaste': syntheticClipboardEventFactory,
-
-    // SyntheticKeyboardEvent
-    'onKeyDown': syntheticKeyboardEventFactory,
-    'onKeyPress': syntheticKeyboardEventFactory,
-    'onKeyUp': syntheticKeyboardEventFactory,
-
-    // SyntheticFocusEvent
-    'onFocus': syntheticFocusEventFactory,
-    'onBlur': syntheticFocusEventFactory,
-
-    // SyntheticFormEvent
-    'onChange': syntheticFormEventFactory,
-    'onInput': syntheticFormEventFactory,
-    'onSubmit': syntheticFormEventFactory,
-    'onReset': syntheticFormEventFactory,
-
-    // SyntheticMouseEvent
-    'onClick': syntheticMouseEventFactory,
-    'onContextMenu': syntheticMouseEventFactory,
-    'onDoubleClick': syntheticMouseEventFactory,
-    'onDrag': syntheticMouseEventFactory,
-    'onDragEnd': syntheticMouseEventFactory,
-    'onDragEnter': syntheticMouseEventFactory,
-    'onDragExit': syntheticMouseEventFactory,
-    'onDragLeave': syntheticMouseEventFactory,
-    'onDragOver': syntheticMouseEventFactory,
-    'onDragStart': syntheticMouseEventFactory,
-    'onDrop': syntheticMouseEventFactory,
-    'onMouseDown': syntheticMouseEventFactory,
-    'onMouseEnter': syntheticMouseEventFactory,
-    'onMouseLeave': syntheticMouseEventFactory,
-    'onMouseMove': syntheticMouseEventFactory,
-    'onMouseOut': syntheticMouseEventFactory,
-    'onMouseOver': syntheticMouseEventFactory,
-    'onMouseUp': syntheticMouseEventFactory,
-
-    // SyntheticTouchEvent
-    'onTouchCancel': syntheticTouchEventFactory,
-    'onTouchEnd': syntheticTouchEventFactory,
-    'onTouchMove': syntheticTouchEventFactory,
-    'onTouchStart': syntheticTouchEventFactory,
-
-    // SyntheticUIEvent
-    'onScroll': syntheticUIEventFactory,
-
-    // SyntheticWheelEvent
-    'onWheel': syntheticWheelEventFactory,
-  };
-
-  // Add support for capturing variants; e.g., onClick/onClickCapture
-  for (var key in eventPropKeyToEventFactory.keys.toList()) {
-    eventPropKeyToEventFactory[key + 'Capture'] =
-        eventPropKeyToEventFactory[key];
-  }
-
-  return eventPropKeyToEventFactory;
-})();
+/// Returns a Dart Map copy of the JS property key-value pairs in [jsMap].
+Map _dartifyJsMap(jsMap) {
+  return new Map.fromIterable(_objectKeys(jsMap),
+      value: (key) => getProperty(jsMap, key));
+}
 
 /// Wrapper for [SyntheticEvent].
 SyntheticEvent syntheticEventFactory(events.SyntheticEvent e) {
@@ -712,7 +678,8 @@ SyntheticFormEvent syntheticFormEventFactory(events.SyntheticFormEvent e) {
 }
 
 /// Wrapper for [SyntheticDataTransfer].
-SyntheticDataTransfer syntheticDataTransferFactory(events.SyntheticDataTransfer dt) {
+SyntheticDataTransfer syntheticDataTransferFactory(
+    events.SyntheticDataTransfer dt) {
   if (dt == null) return null;
   List<File> files = [];
   if (dt.files != null) {
