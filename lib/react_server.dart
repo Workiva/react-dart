@@ -223,6 +223,7 @@ Set _syntheticEvents = new Set.from([
 ]);
 
 /// Set of HTML [Element] names that can contain children
+// ignore: unused_element
 Set _elementTags = new Set.from([
   'a',
   'abbr',
