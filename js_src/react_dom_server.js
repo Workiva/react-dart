@@ -1,3 +1,3 @@
-const ReactDOMServer = require('react-dom/lib/ReactDOMServerUMDEntry');
+import ReactDOMServer from 'react-dom/server';
 
 module.exports = ReactDOMServer;

@@ -1,3 +1,3 @@
-const ReactDOM = require('react-dom/lib/ReactDOMUMDEntry');
+import ReactDOM from 'react-dom';
 
 window.ReactDOM = ReactDOM;
