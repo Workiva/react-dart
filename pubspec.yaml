@@ -1,12 +1,20 @@
 name: react
-version: 3.4.4
-author: Clean Team <clean@vacuumlabs.com>
+version: 4.6.0
+authors:
+  - Samuel Hapák <samuel.hapak@gmail.com>
+  - Greg Littlefield <greg.littlefield@workiva.com>
+  - Claire Sarsam <claire.sarsam@workiva.com>
+  - Aaron Lademann <aaron.lademann@workiva.com>
 description: Bindings of the ReactJS library for building interactive interfaces.
-homepage: http://cleandart.github.io/react-dart/
+homepage: https://github.com/cleandart/react-dart
 environment:
-  sdk: '>=1.13.0 <2.0.0'
+  sdk: '>=1.24.3 <3.0.0'
 dependencies:
-  browser: '>=0.9.0 <0.11.0'
-  js: '^0.6.0'
+  js: ^0.6.0
 dev_dependencies:
-  test: '^0.12.18+1'
+  build_runner: ">=0.6.0 <1.0.0"
+  build_test: ">=0.9.0 <1.0.0"
+  build_web_compilers: ">=0.2.0 <1.0.0"
+  dart2_constant: ^1.0.0
+  dependency_validator: ^1.2.0
+  test: ">=0.12.30 <2.0.0"

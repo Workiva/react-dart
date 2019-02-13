@@ -1,10 +1,8 @@
 @TestOn('browser')
-@JS()
 library react_test_utils_test;
 
 import 'dart:html';
 
-import 'package:js/js.dart';
 import 'package:react/react.dart';
 import 'package:react/react_dom.dart' as react_dom;
 import 'package:react/react_client.dart';
@@ -13,10 +11,9 @@ import 'package:react/react_test_utils.dart';
 import 'package:test/test.dart';
 
 import 'test_components.dart';
-
+import 'util.dart';
 
 void main() {
-
   setClientConfiguration();
 
   var component;
@@ -31,15 +28,9 @@ void main() {
     ReactElement content;
     ReactShallowRenderer shallowRenderer;
 
-    Map getProps(ReactElement element) {
-      var props = element.props;
-
-      return new Map.fromIterable(_objectKeys(props),
-          value: (key) => getProperty(props, key));
-    }
-
     setUp(() {
-      content = sampleComponent({'className': 'test', 'id': 'createRendererTest'});
+      content =
+          sampleComponent({'className': 'test', 'id': 'createRendererTest'});
 
       shallowRenderer = createRenderer();
     });
@@ -68,27 +59,28 @@ void main() {
       expect(domNode.text, equals(''));
     });
 
-    void testEvent(void event(dynamic instanceOrNode, Map eventData), String eventName) {
-      Map eventData;
-      int fakeTimeStamp;
+    void testEvent(
+      void event(dynamic instanceOrNode, Map eventData), String eventName) {
+        Map eventData;
+        int fakeTimeStamp;
 
-      setUp(() {
-        fakeTimeStamp = eventName.hashCode;
-        eventData = {
-          'type': eventName,
-          'timeStamp': fakeTimeStamp,
-        };
-      });
+        setUp(() {
+          fakeTimeStamp = eventName.hashCode;
+          eventData = {
+            'type': eventName,
+            'timeStamp': fakeTimeStamp,
+          };
+        });
 
-      test('with React instance as arg', () {
-        event(findRenderedDOMComponentWithTag(component, 'div'), eventData);
-        expect(domNode.text, equals('$eventName $fakeTimeStamp'));
-      });
+        test('with React instance as arg', () {
+          event(findRenderedDOMComponentWithTag(component, 'div'), eventData);
+          expect(domNode.text, equals('$eventName $fakeTimeStamp'));
+        });
 
-      test('with DOM Element as arg', () {
-        event(domNode, eventData);
-        expect(domNode.text, equals('$eventName $fakeTimeStamp'));
-      });
+        test('with DOM Element as arg', () {
+          event(domNode, eventData);
+          expect(domNode.text, equals('$eventName $fakeTimeStamp'));
+        });
     };
 
     group('event', () {
@@ -141,37 +133,45 @@ void main() {
     expect(getProperty(h1Component, 'tagName'), equals('H1'));
   });
 
-  test('findRenderedComponentWithType', () {
+  test('findRenderedComponentWithTypeV2', () {
     component = renderIntoDocument(wrapperComponent({}, [sampleComponent({})]));
-    var result = findRenderedComponentWithType(component, sampleComponent);
-    expect(isCompositeComponentWithType(result, sampleComponent), isTrue);
+    var result = findRenderedComponentWithTypeV2(component, sampleComponent);
+    expect(isCompositeComponentWithTypeV2(result, sampleComponent), isTrue);
   });
 
   group('isCompositeComponent', () {
-    test('returns true when element is a composite component (created with React.createClass())', () {
+    test(
+        'returns true when element is a composite component (created with React.createClass())',
+        () {
       component = renderIntoDocument(eventComponent({}));
 
       expect(isCompositeComponent(component), isTrue);
     });
 
-    test('returns false when element is not a composite component (created with React.createClass())', () {
+    test(
+        'returns false when element is not a composite component (created with React.createClass())',
+        () {
       component = renderIntoDocument(div({}));
 
       expect(isCompositeComponent(component), isFalse);
     });
   });
 
-  group('isCompositeComponentWithType', () {
+  group('isCompositeComponentWithTypeV2', () {
     var renderedInstance = renderIntoDocument(sampleComponent({}));
 
-    test('returns true when element is a composite component (created with React.createClass()) of the specified type', () {
-      expect(isCompositeComponentWithType(
-          renderedInstance, sampleComponent), isTrue);
+    test(
+        'returns true when element is a composite component (created with React.createClass()) of the specified type',
+        () {
+      expect(isCompositeComponentWithTypeV2(renderedInstance, sampleComponent),
+          isTrue);
     });
 
-    test('returns false when element is not a composite component (created with React.createClass()) of the specified type', () {
-      expect(isCompositeComponentWithType(
-          renderedInstance, eventComponent), isFalse);
+    test(
+        'returns false when element is not a composite component (created with React.createClass()) of the specified type',
+        () {
+      expect(isCompositeComponentWithTypeV2(renderedInstance, eventComponent),
+          isFalse);
     });
   });
 
@@ -198,32 +198,32 @@ void main() {
     });
   });
 
-  group('isElementOfType', () {
+  group('isElementOfTypeV2', () {
     test('returns true argument is an element of type', () {
-      expect(isElementOfType(div({}), div as ReactComponentFactory), isTrue);
+      expect(isElementOfTypeV2(div({}), div), isTrue);
     });
 
     test('returns false argument is not an element of type', () {
-      expect(isElementOfType(div({}), span as ReactComponentFactory), isFalse);
+      expect(isElementOfTypeV2(div({}), span), isFalse);
     });
   });
 
-  test('scryRenderedComponentsWithType', () {
-    component = renderIntoDocument(wrapperComponent({}, [
-        sampleComponent({}), sampleComponent({}), eventComponent({})]));
+  test('scryRenderedComponentsWithTypeV2', () {
+    component = renderIntoDocument(wrapperComponent(
+        {}, [sampleComponent({}), sampleComponent({}), eventComponent({})]));
 
-    var results = scryRenderedComponentsWithType(component, sampleComponent);
+    var results = scryRenderedComponentsWithTypeV2(component, sampleComponent);
 
     expect(results.length, 2);
-    expect(isCompositeComponentWithType(results[0], sampleComponent), isTrue);
-    expect(isCompositeComponentWithType(results[1], sampleComponent), isTrue);
+    expect(isCompositeComponentWithTypeV2(results[0], sampleComponent), isTrue);
+    expect(isCompositeComponentWithTypeV2(results[1], sampleComponent), isTrue);
   });
 
   test('scryRenderedDOMComponentsWithClass', () {
     component = renderIntoDocument(wrapperComponent({}, [
-        div({'className': 'divClass'}),
-        div({'className': 'divClass'}),
-        span({})
+      div({'className': 'divClass'}),
+      div({'className': 'divClass'}),
+      span({})
     ]));
 
     var results = scryRenderedDOMComponentsWithClass(component, 'divClass');
@@ -234,7 +234,8 @@ void main() {
   });
 
   test('scryRenderedDOMComponentsWithTag', () {
-    component = renderIntoDocument(wrapperComponent({}, [div({}), div({}), span({})]));
+    component =
+        renderIntoDocument(wrapperComponent({}, [div({}), div({}), span({})]));
 
     var results = scryRenderedDOMComponentsWithTag(component, 'div');
 
@@ -252,8 +253,8 @@ void main() {
 
     expect(divElements.length, equals(3));
     // First div should be the parent div created by renderIntoDocument()
-    expect(react_dom.findDOMNode(
-        divElements[0]).text, equals('A headerFirst divSecond div'));
+    expect(react_dom.findDOMNode(divElements[0]).text,
+        equals('A headerFirst divSecond div'));
     expect(react_dom.findDOMNode(divElements[1]).text, equals('First div'));
     expect(react_dom.findDOMNode(divElements[2]).text, equals('Second div'));
     expect(h1Elements.length, equals(1));
@@ -262,6 +263,3 @@ void main() {
     expect(react_dom.findDOMNode(spanElements[0]).text, equals(''));
   });
 }
-
-@JS('Object.keys')
-external List _objectKeys(obj);

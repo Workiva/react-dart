@@ -10,11 +10,16 @@
     "babel-loader": "^8.0.4",
     "babel-minify": "^0.5.0",
     "create-react-class": "^15.6.3",
+    "prop-types": "^15.7.1",
     "react": "^16.8.1",
     "react-dom": "^16.8.1",
     "react-dom-factories": "^1.0.2",
     "react-test-renderer": "^16.8.1",
+    "uglifyjs-webpack-plugin": "^2.1.1",
     "webpack": "^4.23.1",
     "webpack-cli": "^3.2.3"
+  },
+  "dependencies": {
+    "prop-types": "^15.7.1"
   }
 }

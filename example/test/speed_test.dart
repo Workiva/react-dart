@@ -6,32 +6,29 @@ import "package:react/react_dom.dart" as react_dom;
 import "package:react/react_client.dart";
 
 Stopwatch stopwatch = new Stopwatch()..start();
-timeprint(message){
+timeprint(message) {
   print("$message ${stopwatch.elapsedMilliseconds}");
   stopwatch.reset();
 }
 
-
-class _Div extends react.Component{
-
-  shouldComponentUpdate(nProps, nState){
+class _Div extends react.Component {
+  shouldComponentUpdate(nProps, nState) {
     return nProps['key'] != props['key'];
   }
 
-  render(){
+  render() {
     return react.div(props, props['children']);
   }
 }
 
 var Div = react.registerComponent(() => new _Div());
 
-class _Span extends react.Component{
-
-  shouldComponentUpdate(nProps, nState){
+class _Span extends react.Component {
+  shouldComponentUpdate(nProps, nState) {
     return nProps['children'][0] != props['children'][0];
   }
 
-  render(){
+  render() {
     return react.span(props, props['children']);
   }
 }
@@ -39,9 +36,8 @@ class _Span extends react.Component{
 var Span = react.registerComponent(() => new _Span());
 
 class _Hello extends react.Component {
-
-  componentWillMount(){
-    new Future.delayed(new Duration(seconds: 5), (){
+  componentWillMount() {
+    new Future.delayed(new Duration(seconds: 5), () {
       stopwatch.reset();
       timeprint('before redraw call');
       redraw();
@@ -53,14 +49,14 @@ class _Hello extends react.Component {
     timeprint("rendering start");
     List<List<String>> data = (props['data'] as List<List<String>>);
     var children = [];
-    for(var elem in data){
-      children.add(
-          react.div({'key': elem[0]},[
-            react.span({}, elem[0]),
-            " ",
-            react.span({}, elem[1])
-          ])
-      );
+    for (var elem in data) {
+      children.add(react.div({
+        'key': elem[0]
+      }, [
+        react.span({'key': 'span1'}, elem[0]),
+        " ",
+        react.span({'key': 'span2'}, elem[1])
+      ]));
     }
 //    data.forEach((elem) => children.add(
 //        react.div({'key': elem[0]},[
@@ -80,8 +76,8 @@ var Hello = react.registerComponent(() => new _Hello());
 
 void main() {
   setClientConfiguration();
-  var data=[];
-  for(num i=0; i<1000; i++){
+  var data = [];
+  for (num i = 0; i < 1000; i++) {
     data.add(["name_$i", "value_$i"]);
   }
   react_dom.render(Hello({"data": data}, []), querySelector('#content'));

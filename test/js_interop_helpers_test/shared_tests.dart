@@ -10,7 +10,8 @@ import 'package:test/test.dart';
 
 void verifyJsFileLoaded(String filename) {
   var isLoaded = document.getElementsByTagName('script').any((script) {
-    return Uri.parse((script as ScriptElement).src).pathSegments.last == filename;
+    return Uri.parse((script as ScriptElement).src).pathSegments.last ==
+        filename;
   });
 
   if (!isLoaded) throw new Exception('$filename is not loaded');

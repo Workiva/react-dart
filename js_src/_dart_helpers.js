@@ -4,17 +4,17 @@
 function _getProperty(obj, key) { return obj[key]; }
 function _setProperty(obj, key, value) { return obj[key] = value; }
 
-function _createReactDartComponentClass(dartInteropStatics, componentStatics) {
-  return class extends React.Component {
-    constructor(props) {
-      super(props);
-      dartInteropStatics.initComponent(this, this.props.internal, componentStatics);
+function _createReactDartComponentClass(dartInteropStatics, componentStatics, jsConfig) {
+  class ReactDartComponent extends React.Component {
+    constructor(props, context) {
+      super(props, context);
+      this.dartComponent = dartInteropStatics.initComponent(this, this.props.internal, this.context, componentStatics);
     }
     UNSAFE_componentWillMount() {
-      dartInteropStatics.handleComponentWillMount(this.props.internal);
+      dartInteropStatics.handleComponentWillMount(this.dartComponent);
     }
     componentDidMount() {
-      dartInteropStatics.handleComponentDidMount(this.props.internal);
+      dartInteropStatics.handleComponentDidMount(this.dartComponent);
     }
     /*
     /// This cannot be used with UNSAFE_ lifecycle methods.
@@ -22,11 +22,11 @@ function _createReactDartComponentClass(dartInteropStatics, componentStatics) {
       return dartInteropStatics.handleGetDerivedStateFromProps(this.props.internal, nextProps.internal);
     }
     */
-    UNSAFE_componentWillReceiveProps(nextProps) {
-      dartInteropStatics.handleComponentWillReceiveProps(this.props.internal, nextProps.internal);
+    UNSAFE_componentWillReceiveProps(nextProps, nextContext) {
+      dartInteropStatics.handleComponentWillReceiveProps(this.dartComponent, nextProps.internal, nextContext);
     }
-    shouldComponentUpdate(nextProps, nextState) {
-      return dartInteropStatics.handleShouldComponentUpdate(this.props.internal, nextProps.internal);
+    shouldComponentUpdate(nextProps, nextState, nextContext) {
+      return dartInteropStatics.handleShouldComponentUpdate(this.dartComponent, nextContext);
     }
     /*
     /// This cannot be used with UNSAFE_ lifecycle methods.
@@ -34,22 +34,47 @@ function _createReactDartComponentClass(dartInteropStatics, componentStatics) {
       return dartInteropStatics.handleGetSnapshotBeforeUpdate(this.props.internal, prevProps.internal);
     }
     */
-    UNSAFE_componentWillUpdate(nextProps, nextState) {
-      dartInteropStatics.handleComponentWillUpdate(this.props.internal, nextProps.internal);
+    UNSAFE_componentWillUpdate(nextProps, nextState, nextContext) {
+      dartInteropStatics.handleComponentWillUpdate(this.dartComponent, nextContext);
     }
     componentDidUpdate(prevProps, prevState) {
-      dartInteropStatics.handleComponentDidUpdate(this.props.internal, prevProps.internal);
+      dartInteropStatics.handleComponentDidUpdate(this.dartComponent, prevProps.internal);
     }
     componentWillUnmount() {
-      dartInteropStatics.handleComponentWillUnmount(this.props.internal);
+      dartInteropStatics.handleComponentWillUnmount(this.dartComponent);
     }
     render() {
-      return dartInteropStatics.handleRender(this.props.internal)
-    }
-    componentDidCatch(error, info) {
-      dartInteropStatics.handleComponentDidCatch(error, info);
+      var result = dartInteropStatics.handleRender(this.dartComponent);
+      if (typeof result === 'undefined') result = null;
+      return result;
     }
   }
+
+      // React limits the accessible context entries
+      // to the keys specified in childContextTypes/contextTypes.
+      var childContextKeys = jsConfig && jsConfig.childContextKeys;
+      var contextKeys = jsConfig && jsConfig.contextKeys;
+
+      if (childContextKeys && childContextKeys.length !== 0) {
+        ReactDartComponent.childContextTypes = {};
+        for (var i = 0; i < childContextKeys.length; i++) {
+          ReactDartComponent.childContextTypes[childContextKeys[i]] = ReactPropTypes.object;
+        }
+        // Only declare this when `childContextKeys` is non-empty to avoid unnecessarily
+        // creating interop context objects for components that won't use it.
+        ReactDartComponent.prototype['getChildContext'] = function() {
+          return dartInteropStatics.handleGetChildContext(this.dartComponent);
+        };
+      }
+
+      if (contextKeys && contextKeys.length !== 0) {
+        ReactDartComponent.contextTypes = {};
+        for (var i = 0; i < contextKeys.length; i++) {
+          ReactDartComponent.contextTypes[contextKeys[i]] = ReactPropTypes.object;
+        }
+      }
+
+  return ReactDartComponent;
 }
 
 function _markChildValidated(child) {

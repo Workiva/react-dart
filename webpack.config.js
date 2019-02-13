@@ -1,5 +1,6 @@
 var webpack = require('webpack');
 const path = require('path');
+const UglifyJsPlugin = require('uglifyjs-webpack-plugin');
 
 var babelPlugin = new webpack.DefinePlugin({
   test: /\.jsx?$/,
@@ -16,18 +17,14 @@ var inputPath = path.resolve(__dirname,'js_src/');
 
 var devPlugins = [
   new webpack.DefinePlugin({
-    'process.env': {
-      NODE_ENV: JSON.stringify('development')
-    },
+    'process.env.NODE_ENV': JSON.stringify('development')
   }),
   babelPlugin,
 ];
 
 var prodPlugins = [
   new webpack.DefinePlugin({
-    'process.env': {
-      NODE_ENV: JSON.stringify('production')
-    },
+    'process.env.NODE_ENV': JSON.stringify('production')
   }),
   babelPlugin,
   new webpack.DefinePlugin({
@@ -48,7 +45,13 @@ var prodPlugins = [
         ]
       }
     },
- })
+    optimization: {
+      minimizer: [
+        new UglifyJsPlugin()
+      ]
+    }
+ }),
+
 ];
 
 module.exports = [

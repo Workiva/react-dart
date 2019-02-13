@@ -7,9 +7,16 @@ library react;
 
 import 'package:react/src/typedefs.dart';
 
+typedef Component ComponentFactory();
+typedef ReactComponentFactoryProxy ComponentRegistrar(
+    ComponentFactory componentFactory,
+    [Iterable<String> skipMethods]);
+
 /// Top-level ReactJS [Component class](https://facebook.github.io/react/docs/react-component.html)
 /// which provides the [ReactJS Component API](https://facebook.github.io/react/docs/react-component.html#reference)
 abstract class Component {
+  Map _context;
+
   /// A private field that backs [props], which is exposed via getter/setter so
   /// it can be overridden in strong mode.
   ///
@@ -37,6 +44,12 @@ abstract class Component {
   /// TODO: Switch back to a plain field once this issue is fixed.
   Ref _ref;
 
+  /// The React context map of this component, passed down from its ancestors' [getChildContext] value.
+  ///
+  /// Only keys declared in this component's [contextKeys] will be present.
+  Map get context => _context;
+  set context(Map value) => _context = value;
+
   /// ReactJS [Component] props.
   ///
   /// Related: [state]
@@ -60,9 +73,9 @@ abstract class Component {
 
   dynamic _jsThis;
 
-  List _setStateCallbacks = [];
+  List<SetStateCallback> _setStateCallbacks = [];
 
-  List _transactionalSetStateCallbacks = [];
+  List<TransactionalSetStateCallback> _transactionalSetStateCallbacks = [];
 
   /// The List of callbacks to be called after the component has been updated from a call to [setState].
   List get setStateCallbacks => _setStateCallbacks;
@@ -79,13 +92,23 @@ abstract class Component {
   String get displayName => runtimeType.toString();
 
   /// Bind the value of input to [state[key]].
-  bind(key) => [state[key], (value) => setState({key: value})];
+  bind(key) => [
+        state[key],
+        (value) => setState({key: value})
+      ];
 
-  initComponentInternal(props, _jsRedraw, [Ref ref, _jsThis]) {
+  initComponentInternal(props, _jsRedraw, [Ref ref, _jsThis, context]) {
     this._jsRedraw = _jsRedraw;
     this.ref = ref;
     this._jsThis = _jsThis;
+    _initContext(context);
     _initProps(props);
+  }
+
+  /// Initializes context
+  _initContext(context) {
+    this.context = new Map.from(context ?? const {});
+    this.nextContext = this.context;
   }
 
   _initProps(props) {
@@ -95,14 +118,26 @@ abstract class Component {
 
   initStateInternal() {
     this.state = new Map.from(getInitialState());
+
     // Call `transferComponentState` to get state also to `_prevState`
     transferComponentState();
   }
+
+  /// Private reference to the value of [context] for the upcoming render cycle.
+  ///
+  /// Useful for ReactJS lifecycle methods [shouldComponentUpdateWithContext] and [componentWillUpdateWithContext].
+  Map nextContext;
 
   /// Private reference to the value of [state] for the upcoming render cycle.
   ///
   /// Useful for ReactJS lifecycle methods [shouldComponentUpdate], [componentWillUpdate] and [componentDidUpdate].
   Map _nextState = null;
+
+  /// Reference to the value of [context] from the previous render cycle, used internally for proxying
+  /// the ReactJS lifecycle method.
+  ///
+  /// __DO NOT set__ from anywhere outside react-dart lifecycle internals.
+  Map prevContext;
 
   /// Reference to the value of [state] from the previous render cycle, used internally for proxying
   /// the ReactJS lifecycle method and [componentDidUpdate].
@@ -119,7 +154,8 @@ abstract class Component {
 
   /// Reference to the value of [props] for the upcoming render cycle.
   ///
-  /// Used internally for proxying ReactJS lifecycle methods [shouldComponentUpdate], [componentWillReceiveProps], and [componentWillUpdate].
+  /// Used internally for proxying ReactJS lifecycle methods [shouldComponentUpdate], [componentWillReceiveProps], and
+  /// [componentWillUpdate] as well as the context-specific variants.
   ///
   /// __DO NOT set__ from anywhere outside react-dart lifecycle internals.
   Map nextProps;
@@ -135,7 +171,7 @@ abstract class Component {
 
   /// Force a call to [render] by calling [setState], which effectively "redraws" the `Component`.
   ///
-  /// Optionally accepts a callback that gets called after the component updates.
+  /// Optionally accepts a [callback] that gets called after the component updates.
   ///
   /// [A.k.a "forceUpdate"](https://facebook.github.io/react/docs/react-component.html#forceupdate)
   void redraw([callback()]) {
@@ -152,10 +188,11 @@ abstract class Component {
   void setState(dynamic newState, [callback()]) {
     if (newState is Map) {
       _nextState.addAll(newState);
-    } else if (newState is _TransactionalSetStateCallback) {
+    } else if (newState is TransactionalSetStateCallback) {
       _transactionalSetStateCallbacks.add(newState);
     } else if (newState != null) {
-      throw new ArgumentError('setState expects its first parameter to either be a Map or a Function that accepts two parameters.');
+      throw new ArgumentError(
+          'setState expects its first parameter to either be a Map or a `TransactionalSetStateCallback`.');
     }
 
     if (callback != null) _setStateCallbacks.add(callback);
@@ -204,16 +241,51 @@ abstract class Component {
   ///
   /// Calling [setState] within this function will not trigger an additional [render].
   ///
+  /// __Note__: Choose either this method or [componentWillReceivePropsWithContext]. They are both called at the same
+  /// time so using both provides no added benefit.
+  ///
   /// See: <https://facebook.github.io/react/docs/react-component.html#updating-componentwillreceiveprops>
   void componentWillReceiveProps(Map newProps) {}
 
+  /// ReactJS lifecycle method that is invoked when a `Component` is receiving [newProps].
+  ///
+  /// This method is not called for the initial [render].
+  ///
+  /// Use this as an opportunity to react to a prop or context transition before [render] is called by updating the
+  /// [state] using [setState]. The old props and context can be accessed via [props] and [context], respectively.
+  ///
+  /// Calling [setState] within this function will not trigger an additional [render].
+  ///
+  /// __Note__: Choose either this method or [componentWillReceiveProps]. They are both called at the same time so using
+  /// both provides no added benefit.
+  ///
+  /// See: <https://facebook.github.io/react/docs/react-component.html#updating-componentwillreceiveprops>
+  void componentWillReceivePropsWithContext(Map newProps, nextContext) {}
+
   /// ReactJS lifecycle method that is invoked before rendering when [nextProps] or [nextState] are being received.
   ///
-  /// Use this as an opportunity to return false when you're certain that the transition to the new props and state
+  /// Use this as an opportunity to return `false` when you're certain that the transition to the new props and state
   /// will not require a component update.
+  ///
+  /// __Note__: This method is called after [shouldComponentUpdateWithContext]. When it returns `null`, the result of
+  /// this method is used, but this is not called if a valid `bool` is returned from [shouldComponentUpdateWithContext].
   ///
   /// See: <https://facebook.github.io/react/docs/react-component.html#updating-shouldcomponentupdate>
   bool shouldComponentUpdate(Map nextProps, Map nextState) => true;
+
+  /// ReactJS lifecycle method that is invoked before rendering when [nextProps], [nextState], or [nextContext] are
+  /// being received.
+  ///
+  /// Use this as an opportunity to return `false` when you're certain that the transition to the new props, state, and
+  /// context will not require a component update.
+  ///
+  /// __Note__: This method is called before [shouldComponentUpdate]. Returning `null` will defer the update to the
+  /// result of [shouldComponentUpdate], but [shouldComponentUpdate] is not called if a valid `bool` is returned.
+  ///
+  /// See: <https://facebook.github.io/react/docs/react-component.html#updating-shouldcomponentupdate>
+  bool shouldComponentUpdateWithContext(
+          Map nextProps, Map nextState, Map nextContext) =>
+      null;
 
   /// ReactJS lifecycle method that is invoked immediately before rendering when [nextProps] or [nextState] are being
   /// received.
@@ -222,8 +294,25 @@ abstract class Component {
   ///
   /// Use this as an opportunity to perform preparation before an update occurs.
   ///
+  /// __Note__: Choose either this method or [componentWillUpdateWithContext]. They are both called at the same time so
+  /// using both provides no added benefit.
+  ///
   /// See: <https://facebook.github.io/react/docs/react-component.html#updating-componentwillupdate>
   void componentWillUpdate(Map nextProps, Map nextState) {}
+
+  /// ReactJS lifecycle method that is invoked immediately before rendering when [nextProps], [nextState], or
+  /// [nextContext] are being received.
+  ///
+  /// This method is not called for the initial [render].
+  ///
+  /// Use this as an opportunity to perform preparation before an update occurs.
+  ///
+  /// __Note__: Choose either this method or [componentWillUpdate]. They are both called at the same time so using both
+  /// provides no added benefit.
+  ///
+  /// See: <https://facebook.github.io/react/docs/react-component.html#updating-componentwillupdate>
+  void componentWillUpdateWithContext(
+      Map nextProps, Map nextState, Map nextContext) {}
 
   /// ReactJS lifecycle method that is invoked immediately after the `Component`'s updates are flushed to the DOM.
   ///
@@ -242,6 +331,21 @@ abstract class Component {
   ///
   /// See: <https://facebook.github.io/react/docs/react-component.html#unmounting-componentwillunmount>
   void componentWillUnmount() {}
+
+  /// Returns a Map of context to be passed to descendant components.
+  ///
+  /// Only keys present in [childContextKeys] will be used; all others will be ignored.
+  Map<String, dynamic> getChildContext() => const {};
+
+  /// The keys this component uses in its child context map (returned by [getChildContext]).
+  ///
+  /// __This method is called only once, upon component registration.__
+  Iterable<String> get childContextKeys => const [];
+
+  /// The keys of context used by this component.
+  ///
+  /// __This method is called only once, upon component registration.__
+  Iterable<String> get contextKeys => const [];
 
   /// Invoked once before the `Component` is mounted. The return value will be used as the initial value of [state].
   ///
@@ -267,11 +371,132 @@ abstract class Component {
   dynamic render();
 }
 
-/// Typedef of a transactional [Component.setState] callback.
-///
-/// See: <https://facebook.github.io/react/docs/react-component.html#setstate>
-typedef Map _TransactionalSetStateCallback(Map prevState, Map props);
+/// Creates a ReactJS virtual DOM instance (`ReactElement` on the client).
+abstract class ReactComponentFactoryProxy implements Function {
+  /// The type of component created by this factory.
+  get type;
 
+  /// Returns a new rendered component instance with the specified [props] and [children].
+  ///
+  /// Necessary to work around DDC `dart.dcall` issues in <https://github.com/dart-lang/sdk/issues/29904>,
+  /// since invoking the function directly doesn't work.
+  dynamic /*ReactElement*/ build(Map props, [List childrenArgs]);
+
+  /// Returns a new rendered component instance with the specified [props] and `children` ([c1], [c2], et. al.).
+  ///
+  /// > The additional children arguments (c2, c3, et. al.) are a workaround for <https://github.com/dart-lang/sdk/issues/16030>.
+  dynamic /*ReactElement*/ call(Map props,
+      [c1 = _notSpecified,
+      c2 = _notSpecified,
+      c3 = _notSpecified,
+      c4 = _notSpecified,
+      c5 = _notSpecified,
+      c6 = _notSpecified,
+      c7 = _notSpecified,
+      c8 = _notSpecified,
+      c9 = _notSpecified,
+      c10 = _notSpecified,
+      c11 = _notSpecified,
+      c12 = _notSpecified,
+      c13 = _notSpecified,
+      c14 = _notSpecified,
+      c15 = _notSpecified,
+      c16 = _notSpecified,
+      c17 = _notSpecified,
+      c18 = _notSpecified,
+      c19 = _notSpecified,
+      c20 = _notSpecified,
+      c21 = _notSpecified,
+      c22 = _notSpecified,
+      c23 = _notSpecified,
+      c24 = _notSpecified,
+      c25 = _notSpecified,
+      c26 = _notSpecified,
+      c27 = _notSpecified,
+      c28 = _notSpecified,
+      c29 = _notSpecified,
+      c30 = _notSpecified,
+      c31 = _notSpecified,
+      c32 = _notSpecified,
+      c33 = _notSpecified,
+      c34 = _notSpecified,
+      c35 = _notSpecified,
+      c36 = _notSpecified,
+      c37 = _notSpecified,
+      c38 = _notSpecified,
+      c39 = _notSpecified,
+      c40 = _notSpecified]) {
+    List childArguments;
+    // Use `identical` since it compiles down to `===` in dart2js instead of calling equality helper functions,
+    // and we don't want to allow any object overriding `operator==` to claim it's equal to `_notSpecified`.
+    if (identical(c1, _notSpecified)) {
+      childArguments = [];
+    } else if (identical(c2, _notSpecified)) {
+      childArguments = [c1];
+    } else if (identical(c3, _notSpecified)) {
+      childArguments = [c1, c2];
+    } else if (identical(c4, _notSpecified)) {
+      childArguments = [c1, c2, c3];
+    } else if (identical(c5, _notSpecified)) {
+      childArguments = [c1, c2, c3, c4];
+    } else if (identical(c6, _notSpecified)) {
+      childArguments = [c1, c2, c3, c4, c5];
+    } else if (identical(c7, _notSpecified)) {
+      childArguments = [c1, c2, c3, c4, c5, c6];
+    } else {
+      childArguments = [
+        c1,
+        c2,
+        c3,
+        c4,
+        c5,
+        c6,
+        c7,
+        c8,
+        c9,
+        c10,
+        c11,
+        c12,
+        c13,
+        c14,
+        c15,
+        c16,
+        c17,
+        c18,
+        c19,
+        c20,
+        c21,
+        c22,
+        c23,
+        c24,
+        c25,
+        c26,
+        c27,
+        c28,
+        c29,
+        c30,
+        c31,
+        c32,
+        c33,
+        c34,
+        c35,
+        c36,
+        c37,
+        c38,
+        c39,
+        c40
+      ].takeWhile((child) => !identical(child, _notSpecified)).toList();
+    }
+
+    return build(props, childArguments);
+  }
+}
+
+const _notSpecified = const NotSpecified();
+
+class NotSpecified {
+  const NotSpecified();
+}
 
 /// A cross-browser wrapper around the browser's [nativeEvent].
 ///
@@ -381,23 +606,42 @@ class SyntheticEvent {
       this.nativeEvent,
       this.target,
       this.timeStamp,
-      this.type){}
+      this.type) {}
 }
 
 class SyntheticClipboardEvent extends SyntheticEvent {
-
   final clipboardData;
 
-  SyntheticClipboardEvent(bubbles, cancelable, currentTarget, _defaultPrevented,
-      _preventDefault, stopPropagation, eventPhase, isTrusted, nativeEvent, target,
-      timeStamp, type, this.clipboardData) : super( bubbles, cancelable, currentTarget, _defaultPrevented,
-          _preventDefault, stopPropagation, eventPhase, isTrusted, nativeEvent, target,
-          timeStamp, type){}
-
+  SyntheticClipboardEvent(
+      bubbles,
+      cancelable,
+      currentTarget,
+      _defaultPrevented,
+      _preventDefault,
+      stopPropagation,
+      eventPhase,
+      isTrusted,
+      nativeEvent,
+      target,
+      timeStamp,
+      type,
+      this.clipboardData)
+      : super(
+            bubbles,
+            cancelable,
+            currentTarget,
+            _defaultPrevented,
+            _preventDefault,
+            stopPropagation,
+            eventPhase,
+            isTrusted,
+            nativeEvent,
+            target,
+            timeStamp,
+            type) {}
 }
 
 class SyntheticKeyboardEvent extends SyntheticEvent {
-
   final bool altKey;
   final String char;
   final bool ctrlKey;
@@ -410,38 +654,104 @@ class SyntheticKeyboardEvent extends SyntheticEvent {
   final num keyCode;
   final num charCode;
 
-  SyntheticKeyboardEvent(bubbles, cancelable, currentTarget, _defaultPrevented,
-      _preventDefault, stopPropagation, eventPhase, isTrusted, nativeEvent, target,
-      timeStamp, type, this.altKey, this.char, this.charCode, this.ctrlKey,
-      this.locale, this.location, this.key, this.keyCode, this.metaKey,
-      this.repeat, this.shiftKey) :
-        super( bubbles, cancelable, currentTarget, _defaultPrevented,
-          _preventDefault, stopPropagation, eventPhase, isTrusted, nativeEvent, target,
-          timeStamp, type){}
-
+  SyntheticKeyboardEvent(
+      bubbles,
+      cancelable,
+      currentTarget,
+      _defaultPrevented,
+      _preventDefault,
+      stopPropagation,
+      eventPhase,
+      isTrusted,
+      nativeEvent,
+      target,
+      timeStamp,
+      type,
+      this.altKey,
+      this.char,
+      this.charCode,
+      this.ctrlKey,
+      this.locale,
+      this.location,
+      this.key,
+      this.keyCode,
+      this.metaKey,
+      this.repeat,
+      this.shiftKey)
+      : super(
+            bubbles,
+            cancelable,
+            currentTarget,
+            _defaultPrevented,
+            _preventDefault,
+            stopPropagation,
+            eventPhase,
+            isTrusted,
+            nativeEvent,
+            target,
+            timeStamp,
+            type) {}
 }
 
 class SyntheticFocusEvent extends SyntheticEvent {
-
   final /*DOMEventTarget*/ relatedTarget;
 
-  SyntheticFocusEvent(bubbles, cancelable, currentTarget, _defaultPrevented,
-      _preventDefault, stopPropagation, eventPhase, isTrusted, nativeEvent, target,
-      timeStamp, type, this.relatedTarget) :
-        super( bubbles, cancelable, currentTarget, _defaultPrevented,
-            _preventDefault, stopPropagation, eventPhase, isTrusted, nativeEvent, target,
-            timeStamp, type){}
-
+  SyntheticFocusEvent(
+      bubbles,
+      cancelable,
+      currentTarget,
+      _defaultPrevented,
+      _preventDefault,
+      stopPropagation,
+      eventPhase,
+      isTrusted,
+      nativeEvent,
+      target,
+      timeStamp,
+      type,
+      this.relatedTarget)
+      : super(
+            bubbles,
+            cancelable,
+            currentTarget,
+            _defaultPrevented,
+            _preventDefault,
+            stopPropagation,
+            eventPhase,
+            isTrusted,
+            nativeEvent,
+            target,
+            timeStamp,
+            type) {}
 }
 
 class SyntheticFormEvent extends SyntheticEvent {
-
-  SyntheticFormEvent(bubbles, cancelable, currentTarget, _defaultPrevented,
-      _preventDefault, stopPropagation, eventPhase, isTrusted, nativeEvent, target,
-      timeStamp, type) : super( bubbles, cancelable, currentTarget, _defaultPrevented,
-          _preventDefault, stopPropagation, eventPhase, isTrusted, nativeEvent, target,
-          timeStamp, type){}
-
+  SyntheticFormEvent(
+      bubbles,
+      cancelable,
+      currentTarget,
+      _defaultPrevented,
+      _preventDefault,
+      stopPropagation,
+      eventPhase,
+      isTrusted,
+      nativeEvent,
+      target,
+      timeStamp,
+      type)
+      : super(
+            bubbles,
+            cancelable,
+            currentTarget,
+            _defaultPrevented,
+            _preventDefault,
+            stopPropagation,
+            eventPhase,
+            isTrusted,
+            nativeEvent,
+            target,
+            timeStamp,
+            type) {}
 }
 
 class SyntheticDataTransfer {
@@ -450,11 +760,11 @@ class SyntheticDataTransfer {
   final List files;
   final List<String> types;
 
-  SyntheticDataTransfer(this.dropEffect, this.effectAllowed, this.files, this.types);
+  SyntheticDataTransfer(
+      this.dropEffect, this.effectAllowed, this.files, this.types);
 }
 
 class SyntheticMouseEvent extends SyntheticEvent {
-
   final bool altKey;
   final num button;
   final num buttons;
@@ -465,24 +775,54 @@ class SyntheticMouseEvent extends SyntheticEvent {
   final bool metaKey;
   final num pageX;
   final num pageY;
-  final /*DOMEventTarget*/relatedTarget;
+  final /*DOMEventTarget*/ relatedTarget;
   final num screenX;
   final num screenY;
   final bool shiftKey;
 
-  SyntheticMouseEvent(bubbles, cancelable, currentTarget, _defaultPrevented,
-      _preventDefault, stopPropagation, eventPhase, isTrusted, nativeEvent, target,
-      timeStamp, type, this.altKey, this.button, this.buttons, this.clientX, this.clientY,
-      this.ctrlKey, this.dataTransfer, this.metaKey, this.pageX, this.pageY, this.relatedTarget,
-      this.screenX, this.screenY, this.shiftKey) :
-        super( bubbles, cancelable, currentTarget, _defaultPrevented,
-            _preventDefault, stopPropagation, eventPhase, isTrusted, nativeEvent, target,
-            timeStamp, type){}
-
+  SyntheticMouseEvent(
+      bubbles,
+      cancelable,
+      currentTarget,
+      _defaultPrevented,
+      _preventDefault,
+      stopPropagation,
+      eventPhase,
+      isTrusted,
+      nativeEvent,
+      target,
+      timeStamp,
+      type,
+      this.altKey,
+      this.button,
+      this.buttons,
+      this.clientX,
+      this.clientY,
+      this.ctrlKey,
+      this.dataTransfer,
+      this.metaKey,
+      this.pageX,
+      this.pageY,
+      this.relatedTarget,
+      this.screenX,
+      this.screenY,
+      this.shiftKey)
+      : super(
+            bubbles,
+            cancelable,
+            currentTarget,
+            _defaultPrevented,
+            _preventDefault,
+            stopPropagation,
+            eventPhase,
+            isTrusted,
+            nativeEvent,
+            target,
+            timeStamp,
+            type) {}
 }
 
 class SyntheticTouchEvent extends SyntheticEvent {
-
   final bool altKey;
   final /*DOMTouchList*/ changedTouches;
   final bool ctrlKey;
@@ -491,48 +831,119 @@ class SyntheticTouchEvent extends SyntheticEvent {
   final /*DOMTouchList*/ targetTouches;
   final /*DOMTouchList*/ touches;
 
-  SyntheticTouchEvent(bubbles, cancelable, currentTarget, _defaultPrevented,
-      _preventDefault, stopPropagation, eventPhase, isTrusted, nativeEvent, target,
-      timeStamp, type, this.altKey, this.changedTouches, this.ctrlKey, this.metaKey,
-      this.shiftKey, this.targetTouches, this.touches) :
-        super( bubbles, cancelable, currentTarget, _defaultPrevented,
-            _preventDefault, stopPropagation, eventPhase, isTrusted, nativeEvent, target,
-            timeStamp, type){}
-
+  SyntheticTouchEvent(
+      bubbles,
+      cancelable,
+      currentTarget,
+      _defaultPrevented,
+      _preventDefault,
+      stopPropagation,
+      eventPhase,
+      isTrusted,
+      nativeEvent,
+      target,
+      timeStamp,
+      type,
+      this.altKey,
+      this.changedTouches,
+      this.ctrlKey,
+      this.metaKey,
+      this.shiftKey,
+      this.targetTouches,
+      this.touches)
+      : super(
+            bubbles,
+            cancelable,
+            currentTarget,
+            _defaultPrevented,
+            _preventDefault,
+            stopPropagation,
+            eventPhase,
+            isTrusted,
+            nativeEvent,
+            target,
+            timeStamp,
+            type) {}
 }
 
 class SyntheticUIEvent extends SyntheticEvent {
-
   final num detail;
   final /*DOMAbstractView*/ view;
 
-  SyntheticUIEvent(bubbles, cancelable, currentTarget, _defaultPrevented,
-      _preventDefault, stopPropagation, eventPhase, isTrusted, nativeEvent, target,
-      timeStamp, type, this.detail, this.view) : super( bubbles, cancelable, currentTarget, _defaultPrevented,
-          _preventDefault, stopPropagation, eventPhase, isTrusted, nativeEvent, target,
-          timeStamp, type){}
-
+  SyntheticUIEvent(
+      bubbles,
+      cancelable,
+      currentTarget,
+      _defaultPrevented,
+      _preventDefault,
+      stopPropagation,
+      eventPhase,
+      isTrusted,
+      nativeEvent,
+      target,
+      timeStamp,
+      type,
+      this.detail,
+      this.view)
+      : super(
+            bubbles,
+            cancelable,
+            currentTarget,
+            _defaultPrevented,
+            _preventDefault,
+            stopPropagation,
+            eventPhase,
+            isTrusted,
+            nativeEvent,
+            target,
+            timeStamp,
+            type) {}
 }
 
 class SyntheticWheelEvent extends SyntheticEvent {
-
   final num deltaX;
   final num deltaMode;
   final num deltaY;
   final num deltaZ;
 
-  SyntheticWheelEvent(bubbles, cancelable, currentTarget, _defaultPrevented,
-      _preventDefault, stopPropagation, eventPhase, isTrusted, nativeEvent, target,
-      timeStamp, type, this.deltaX, this.deltaMode, this.deltaY, this.deltaZ) : super( bubbles, cancelable, currentTarget, _defaultPrevented,
-          _preventDefault, stopPropagation, eventPhase, isTrusted, nativeEvent, target,
-          timeStamp, type){}
-
-
+  SyntheticWheelEvent(
+      bubbles,
+      cancelable,
+      currentTarget,
+      _defaultPrevented,
+      _preventDefault,
+      stopPropagation,
+      eventPhase,
+      isTrusted,
+      nativeEvent,
+      target,
+      timeStamp,
+      type,
+      this.deltaX,
+      this.deltaMode,
+      this.deltaY,
+      this.deltaZ)
+      : super(
+            bubbles,
+            cancelable,
+            currentTarget,
+            _defaultPrevented,
+            _preventDefault,
+            stopPropagation,
+            eventPhase,
+            isTrusted,
+            nativeEvent,
+            target,
+            timeStamp,
+            type) {}
 }
 
 /// Registers [componentFactory] on both client and server.
-Function registerComponent = (componentFactory, [skipMethods]) {
-  throw new Exception('setClientConfiguration must be called before registerComponent.');
+/*ComponentRegistrar*/ Function registerComponent =
+    (/*ComponentFactory*/ componentFactory,
+        [/*Iterable<String>*/ skipMethods]) {
+  throw new Exception(
+      'setClientConfiguration must be called before registerComponent.');
 };
 
 /// The HTML `<a>` [AnchorElement].
@@ -1132,7 +1543,7 @@ var view;
 var vkern;
 
 /// Create React DOM `Component`s by calling the specified [creator].
-_createDOMComponents(creator){
+_createDOMComponents(creator) {
   a = creator('a');
   abbr = creator('abbr');
   address = creator('address');
@@ -1339,7 +1750,7 @@ _createDOMComponents(creator){
 ///
 /// The arguments are assigned to global variables, and React DOM `Component`s are created by calling
 /// [_createDOMComponents] with [domCreator].
-setReactConfiguration(domCreator, customRegisterComponent){
+setReactConfiguration(domCreator, customRegisterComponent) {
   registerComponent = customRegisterComponent;
   // HTML Elements
   _createDOMComponents(domCreator);

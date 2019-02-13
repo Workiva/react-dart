@@ -7,11 +7,12 @@ import "react_test_components.dart";
 
 void main() {
   setClientConfiguration();
-  react_dom.render(mainComponent({}, [
-                                            helloGreeter({}, []),
-                                            listComponent({}, []),
-                                            //clockComponent({"name": 'my-clock'}, []),
-                                            checkBoxComponent({}, [])
-                                          ]
-    ), querySelector('#content'));
+  react_dom.render(
+      mainComponent({}, [
+        helloGreeter({'key': 'hello'}, []),
+        listComponent({'key': 'list'}, []),
+        //clockComponent({"name": 'my-clock'}, []),
+        checkBoxComponent({'key': 'checkbox'}, [])
+      ]),
+      querySelector('#content'));
 }
