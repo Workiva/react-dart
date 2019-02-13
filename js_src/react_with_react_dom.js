@@ -1,2 +1,2 @@
-require('react');
-require('react-dom');
+require('./react');
+require('./react_dom');
