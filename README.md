@@ -203,9 +203,9 @@ class MyComponent extends Component {
 
 ## Testing using React Test Utilities
 
-[lib/react_test_utils.dart](lib/react_test_utils.dart) is a Dart wrapper for the [React TestUtils](http://facebook.github.io/react/docs/test-utils.html) library allowing for tests to be made for React components in Dart.
+[lib/react_test_utils.dart](lib/react_test_utils.dart) is a Dart wrapper for the [React ReactTestUtils](http://facebook.github.io/react/docs/test-utils.html) library allowing for tests to be made for React components in Dart.
 
-Here is an example of how to use React TestUtils within a Dart test.
+Here is an example of how to use React ReactTestUtils within a Dart test.
 
 ```dart
 import 'package:test/test.dart';

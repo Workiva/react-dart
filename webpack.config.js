@@ -1,76 +1,138 @@
 var webpack = require('webpack');
+const path = require('path');
 
-var moduleDevConfig = {
-  rules: [
-    {
-      test: /\.jsx?$/,
-      use: {
-        loader: 'babel-loader',
-        options: {
-          presets: ['@babel/preset-env', '@babel/preset-react']
-        }
-      },
+var babelPlugin = new webpack.DefinePlugin({
+  test: /\.jsx?$/,
+  use: {
+    loader: 'babel-loader',
+    options: {
+        presets: ['@babel/preset-env', '@babel/preset-react']
     }
-  ]
-}
+  },
+});
 
-var moduleProdConfig = moduleDevConfig;
-moduleProdConfig.rules[0].use.options.presets.push(['minify', {
-  builtIns: false,
-  evaluate: false,
-  mangle: false,
-}]);
+var outputPath = path.resolve(__dirname,'lib/');
+var inputPath = path.resolve(__dirname,'js_src/');
+
+var devPlugins = [
+  new webpack.DefinePlugin({
+    'process.env': {
+      NODE_ENV: JSON.stringify('development')
+    },
+  }),
+  babelPlugin,
+];
+
+var prodPlugins = [
+  new webpack.DefinePlugin({
+    'process.env': {
+      NODE_ENV: JSON.stringify('production')
+    },
+  }),
+  babelPlugin,
+  new webpack.DefinePlugin({
+    test: /\.jsx?$/,
+    use: {
+      loader: 'babel-loader',
+      options: {
+        presets: [
+          '@babel/preset-env',
+          '@babel/preset-react',
+          [
+            'minify', {
+              builtIns: false,
+              evaluate: false,
+              mangle: false,
+            }
+          ]
+        ]
+      }
+    },
+ })
+];
 
 module.exports = [
   // Dev
   {
-    output: {filename: './lib/react_with_addons.js',},
-    entry: './js_src/react.js',
+    output: {
+      path: outputPath,
+      filename: 'react_with_addons.js',
+    },
+    entry: path.resolve(inputPath, 'react.js'),
+    plugins: devPlugins,
     mode: 'development',
-    module: moduleDevConfig,
+    externals: [{"window": "window"}]
   },
   {
-    output: {filename: './lib/react.js',},
-    entry: './js_src/react.js',
+    output: {
+      path: outputPath,
+      filename: 'react.js',
+    },
+    entry: path.resolve(inputPath, 'react.js'),
+    plugins: devPlugins,
     mode: 'development',
-    module: moduleDevConfig,
+    externals: [{"window": "window"}]
   },
   {
-    output: {filename: './lib/react_dom.js',},
-    entry: './js_src/react_dom.js',
+    output: {
+      path: outputPath,
+      filename: 'react_dom.js',
+    },
+    entry: path.resolve(inputPath, 'react_dom.js'),
+    plugins: devPlugins,
     mode: 'development',
-    module: moduleDevConfig,
+    externals: [{"window": "window"}]
   },
   {
-    output: {filename: './lib/react_dom_server.js',},
-    entry: './js_src/react_dom_server.js',
+    output: {
+      path: outputPath,
+      filename: 'react_dom_server.js',
+    },
+    entry: path.resolve(inputPath, 'react_dom_server.js'),
+    plugins: devPlugins,
     mode: 'development',
-    module: moduleDevConfig,
+    externals: [{"window": "window"}]
   },
 
   // Prod
   {
-    output: {filename: './lib/react_prod.js',},
-    entry: './js_src/react.js',
+    output: {
+      path: outputPath,
+      filename: 'react_prod.js',
+    },
+    entry: path.resolve(inputPath, 'react.js'),
+    plugins: prodPlugins,
     mode: 'production',
-    module: moduleProdConfig,
+    externals: [{"window": "window"}]
   },
   {
-    output: {filename: './lib/react_dom_prod.js',},
-    entry: './js_src/react_dom.js',
+    output: {
+        path: outputPath,
+        filename: 'react_dom_prod.js',
+      },
+    entry: path.resolve(inputPath, 'react_dom.js'),
+    plugins: prodPlugins,
     mode: 'production',
-    module: moduleProdConfig,
+    externals: [{"window": "window"}]
   },
   {
-    output: {filename: './lib/react_dom_server_prod.js',},
-    entry: './js_src/react_dom_server.js',
+    output: {
+        path: outputPath,
+        filename: 'react_dom_server_prod.js',
+      },
+    entry: path.resolve(inputPath, 'react_dom_server.js'),
+    plugins: prodPlugins,
     mode: 'production',
-    module: moduleProdConfig,
+    externals: [{"window": "window"}]
   },
   {
-    output: {filename: './lib/react_with_react_dom_prod.js',},
-    entry: './js_src/react_with_react_dom.js',
+    output: {
+      path: outputPath,
+      filename: 'react_with_react_dom_prod.js',
+    },
+    entry: path.resolve(inputPath, 'react_with_react_dom.js'),
+    plugins: prodPlugins,
     mode: 'production',
-    module: moduleProdConfig,
+    externals: [{"window": "window"}]
   },
 ];

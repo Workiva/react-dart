@@ -1,5 +1,5 @@
-import React from 'react';
-import DartHelpers from './_dart_helpers';
+const React = require('react');
+const DartHelpers = require('./_dart_helpers');
 
 window.React = React;
 Object.assign(window, DartHelpers);

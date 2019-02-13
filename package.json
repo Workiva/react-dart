@@ -1,21 +1,26 @@
 {
-    "name": "react-dart",
-    "scripts": {
-        "build": "./node_modules/.bin/webpack"
-    },
-    "devDependencies": {
-        "@babel/core": "^7.1.2",
-        "@babel/preset-env": "^7.1.0",
-        "@babel/preset-react": "^7.0.0",
-        "babel-loader": "^8.0.4",
-        "babel-minify": "^0.5.0",
-        "create-react-class": "^15.6.3",
-        "react": "^16.8.1",
-        "react-dom": "^16.8.1",
-        "react-dom-factories": "^1.0.2",
-        "react-test-renderer": "^16.8.1",
-        "webpack": "^4.23.1",
-        "webpack-cli": "^3.1.2",
-        "webpack-dev-server": "^3.1.10"
-    }
+  "name": "react-dart",
+  "scripts": {
+    "build": "./node_modules/.bin/webpack"
+  },
+  "devDependencies": {
+    "babel-webpack-plugin": "^0.1.1",
+    "bundle-collapser": "^1.2.1",
+    "envify": "^4.1.0",
+    "uglify-js": "^3.0.27",
+    "uglifyify": "^4.0.3",
+    "@babel/core": "^7.1.2",
+    "@babel/preset-env": "^7.1.0",
+    "@babel/preset-react": "^7.0.0",
+    "babel-loader": "^8.0.4",
+    "babel-minify": "^0.5.0",
+    "create-react-class": "^15.6.3",
+    "react": "^16.8.1",
+    "react-dom": "^16.8.1",
+    "react-dom-factories": "^1.0.2",
+    "react-test-renderer": "^16.8.1",
+    "webpack": "^4.23.1",
+    "webpack-cli": "^3.1.2",
+    "webpack-dev-server": "^3.1.10"
+  }
 }

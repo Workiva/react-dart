@@ -1,3 +1,3 @@
-import ReactDOMServer from 'react-dom/server';
+const ReactDOMServer = require('react-dom/server');
 
 module.exports = ReactDOMServer;
