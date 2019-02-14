@@ -3,5 +3,5 @@ const TestUtils = require('react-dom/test-utils');
 const ShallowRenderer = require('react-test-renderer/shallow');
 
 window.ReactTestUtils = TestUtils;
-window.ShallowRenderer = ShallowRenderer;
+window.ReactShallowRenderer = ShallowRenderer;
 window.ReactDOM = ReactDOM;

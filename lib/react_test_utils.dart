@@ -308,7 +308,7 @@ external ReactClass mockComponent(
 /// Returns a ReactShallowRenderer instance
 ///
 /// More info on using shallow rendering: https://facebook.github.io/react/docs/test-utils.html#shallow-rendering
-@JS('ShallowRenderer.createRenderer')
+@JS('ReactShallowRenderer.createRenderer')
 external ReactShallowRenderer createRenderer();
 
 /// ReactShallowRenderer wrapper
