@@ -164,6 +164,7 @@ main() {
 
 @JS()
 external Function compositeComponent();
+
 /// A factory for a JS composite component, for use in testing.
 final Function testJsComponentFactory = (() {
   var reactFactory = React.createFactory(compositeComponent());

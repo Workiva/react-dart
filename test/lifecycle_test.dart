@@ -759,7 +759,8 @@ void main() {
 
         // Check against the JS component to ensure no regressions.
         expect(component.state['counter'], 3);
-        expect(component.lifecycleCalls, orderedEquals(getNonUpdatingSetStateLifeCycleCalls()));
+        expect(component.lifecycleCalls,
+            orderedEquals(getNonUpdatingSetStateLifeCycleCalls()));
         expect(renderedNode.children.first.text, '1');
       });
 
@@ -773,7 +774,8 @@ void main() {
 
         // Check against the JS component to ensure no regressions.
         expect(component.state['counter'], 3);
-        expect(component.lifecycleCalls, orderedEquals(getUpdatingSetStateLifeCycleCalls()));
+        expect(component.lifecycleCalls,
+            orderedEquals(getUpdatingSetStateLifeCycleCalls()));
         expect(renderedNode.children.first.text, '3');
       });
     });

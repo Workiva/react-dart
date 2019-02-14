@@ -60,28 +60,30 @@ void main() {
     });
 
     void testEvent(
-      void event(dynamic instanceOrNode, Map eventData), String eventName) {
-        Map eventData;
-        int fakeTimeStamp;
+        void event(dynamic instanceOrNode, Map eventData), String eventName) {
+      Map eventData;
+      int fakeTimeStamp;
 
-        setUp(() {
-          fakeTimeStamp = eventName.hashCode;
-          eventData = {
-            'type': eventName,
-            'timeStamp': fakeTimeStamp,
-          };
-        });
+      setUp(() {
+        fakeTimeStamp = eventName.hashCode;
+        eventData = {
+          'type': eventName,
+          'timeStamp': fakeTimeStamp,
+        };
+      });
 
-        test('with React instance as arg', () {
-          event(findRenderedDOMComponentWithTag(component, 'div'), eventData);
-          expect(domNode.text, equals('$eventName $fakeTimeStamp'));
-        });
+      test('with React instance as arg', () {
+        event(findRenderedDOMComponentWithTag(component, 'div'), eventData);
+        expect(domNode.text, equals('$eventName $fakeTimeStamp'));
+      });
 
-        test('with DOM Element as arg', () {
-          event(domNode, eventData);
-          expect(domNode.text, equals('$eventName $fakeTimeStamp'));
-        });
-    };
+      test('with DOM Element as arg', () {
+        event(domNode, eventData);
+        expect(domNode.text, equals('$eventName $fakeTimeStamp'));
+      });
+    }
+
+    ;
 
     group('event', () {
       group('blur', () => testEvent(Simulate.blur, 'blur'));
@@ -89,7 +91,8 @@ void main() {
       group('click', () => testEvent(Simulate.click, 'click'));
       group('copy', () => testEvent(Simulate.copy, 'copy'));
       group('cut', () => testEvent(Simulate.cut, 'cut'));
-      group('doubleClick', () => testEvent(Simulate.doubleClick, 'doubleClick'));
+      group(
+          'doubleClick', () => testEvent(Simulate.doubleClick, 'doubleClick'));
       group('drag', () => testEvent(Simulate.drag, 'drag'));
       group('dragEnd', () => testEvent(Simulate.dragEnd, 'dragEnd'));
       group('dragEnter', () => testEvent(Simulate.dragEnter, 'dragEnter'));
@@ -111,7 +114,8 @@ void main() {
       group('paste', () => testEvent(Simulate.paste, 'paste'));
       group('scroll', () => testEvent(Simulate.scroll, 'scroll'));
       group('submit', () => testEvent(Simulate.submit, 'submit'));
-      group('touchCancel', () => testEvent(Simulate.touchCancel, 'touchCancel'));
+      group(
+          'touchCancel', () => testEvent(Simulate.touchCancel, 'touchCancel'));
       group('touchEnd', () => testEvent(Simulate.touchEnd, 'touchEnd'));
       group('touchMove', () => testEvent(Simulate.touchMove, 'touchMove'));
       group('touchStart', () => testEvent(Simulate.touchStart, 'touchStart'));

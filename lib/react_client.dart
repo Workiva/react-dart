@@ -391,7 +391,8 @@ ReactDartComponentFactoryProxy _registerComponent(
 
   /// Create the JS [`ReactClass` component class](https://facebook.github.io/react/docs/top-level-api.html#react.createclass)
   /// with custom JS lifecycle methods.
-  var reactComponentClass = createReactDartComponentClass(_dartInteropStatics, componentStatics, jsConfig)
+  var reactComponentClass = createReactDartComponentClass(
+      _dartInteropStatics, componentStatics, jsConfig)
     ..displayName = componentFactory().displayName;
 
   // Cache default props and store them on the ReactClass so they can be used
@@ -810,8 +811,8 @@ SyntheticWheelEvent syntheticWheelEventFactory(events.SyntheticWheelEvent e) {
 }
 
 dynamic _findDomNode(component) {
-  return ReactDom.findDOMNode(
-      component is Component ? component.jsThis : component);
+  return ReactDom
+      .findDOMNode(component is Component ? component.jsThis : component);
 }
 
 void setClientConfiguration() {

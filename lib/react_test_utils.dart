@@ -145,23 +145,26 @@ class Simulate {
 ///
 /// Included in Dart for completeness
 @JS('ReactTestUtils.findAllInRenderedTree')
-external List<dynamic> findAllInRenderedTree(/* [1] */ tree, ComponentTestFunction test);
+external List<dynamic> findAllInRenderedTree(
+    /* [1] */ tree, ComponentTestFunction test);
 
 /// Like scryRenderedDOMComponentsWithClass() but expects there to be one
 /// result, and returns that one result, or throws exception if there is
 /// any other number of matches besides one.
 @JS('ReactTestUtils.findRenderedDOMComponentWithClass')
-external dynamic /* [1] */ findRenderedDOMComponentWithClass(/* [1] */ tree, String className);
+external dynamic /* [1] */ findRenderedDOMComponentWithClass(
+    /* [1] */ tree, String className);
 
 /// Like scryRenderedDOMComponentsWithTag() but expects there to be one result,
 /// and returns that one result, or throws exception if there is any other
 /// number of matches besides one.
 @JS('ReactTestUtils.findRenderedDOMComponentWithTag')
-external dynamic /* [1] */ findRenderedDOMComponentWithTag(/* [1] */ tree, String tag);
-
+external dynamic /* [1] */ findRenderedDOMComponentWithTag(
+    /* [1] */ tree, String tag);
 
 @JS('ReactTestUtils.findRenderedComponentWithType')
-external dynamic /* [1] */ _findRenderedComponentWithType(/* [1] */ tree, dynamic type);
+external dynamic /* [1] */ _findRenderedComponentWithType(
+    /* [1] */ tree, dynamic type);
 
 /// __Deprecated. Will be removed in the `5.0.0` release.__ Use [findRenderedComponentWithTypeV2] instead.
 ///
@@ -250,7 +253,8 @@ bool isElementOfTypeV2(
 }
 
 @JS('ReactTestUtils.scryRenderedComponentsWithType')
-external List<dynamic> /* [1] */ _scryRenderedComponentsWithType(/* [1] */ tree, dynamic type);
+external List<dynamic> /* [1] */ _scryRenderedComponentsWithType(
+    /* [1] */ tree, dynamic type);
 
 /// __Deprecated. Will be removed in the `5.0.0` release.__ Use [scryRenderedComponentsWithTypeV2] instead.
 ///
@@ -274,6 +278,7 @@ List<dynamic> /* [1] */ scryRenderedComponentsWithTypeV2(
 }
 
 @JS('ReactTestUtils.scryRenderedDOMComponentsWithClass')
+
 /// Finds all instances of components in the rendered tree that are DOM
 /// components with the class name matching className.
 external List<dynamic> scryRenderedDOMComponentsWithClass(
@@ -281,6 +286,7 @@ external List<dynamic> scryRenderedDOMComponentsWithClass(
     String className);
 
 @JS('ReactTestUtils.scryRenderedDOMComponentsWithTag')
+
 /// Finds all instances of components in the rendered tree that are DOM
 /// components with the tag name matching tagName.
 external List<dynamic> scryRenderedDOMComponentsWithTag(
@@ -296,7 +302,8 @@ external /* [1] */ renderIntoDocument(ReactElement instance);
 /// rendering as usual, the component will become a simple <div> (or other tag
 /// if mockTagName is provided) containing any provided children.
 @JS('ReactTestUtils.mockComponent')
-external ReactClass mockComponent(ReactClass componentClass, String mockTagName);
+external ReactClass mockComponent(
+    ReactClass componentClass, String mockTagName);
 
 /// Returns a ReactShallowRenderer instance
 ///

@@ -76,20 +76,19 @@ class ReactClass {
 @JS()
 @anonymous
 class ReactClassConfig {
-  external factory ReactClassConfig({
-    String displayName,
-    List mixins,
-    Function componentWillMount,
-    Function componentDidMount,
-    Function componentWillReceiveProps,
-    Function shouldComponentUpdate,
-    Function componentWillUpdate,
-    Function componentDidUpdate,
-    Function componentWillUnmount,
-    Function getDefaultProps,
-    Function getInitialState,
-    Function render
-  });
+  external factory ReactClassConfig(
+      {String displayName,
+      List mixins,
+      Function componentWillMount,
+      Function componentDidMount,
+      Function componentWillReceiveProps,
+      Function shouldComponentUpdate,
+      Function componentWillUpdate,
+      Function componentDidUpdate,
+      Function componentWillUnmount,
+      Function getDefaultProps,
+      Function getInitialState,
+      Function render});
 
   /// The `displayName` string is used in debugging messages.
   ///
@@ -239,7 +238,10 @@ void markChildrenValidated(List<dynamic> children) {
 /// [dartInteropStatics] and [componentStatics] internally to proxy between
 /// the JS and Dart component instances.
 @JS('_createReactDartComponentClass')
-external ReactClass createReactDartComponentClass(ReactDartInteropStatics dartInteropStatics, ComponentStatics componentStatics, [JsComponentConfig jsConfig]);
+external ReactClass createReactDartComponentClass(
+    ReactDartInteropStatics dartInteropStatics,
+    ComponentStatics componentStatics,
+    [JsComponentConfig jsConfig]);
 
 typedef Component _InitComponent(
     ReactComponent jsThis,
