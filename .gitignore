@@ -5,8 +5,5 @@ pubspec.lock
 .idea
 .pub/
 .packages
-<<<<<<< HEAD
 node_modules/
-=======
 .dart_tool
->>>>>>> master
