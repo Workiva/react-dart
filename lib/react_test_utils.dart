@@ -146,25 +146,29 @@ class Simulate {
 /// Included in Dart for completeness
 @JS('ReactTestUtils.findAllInRenderedTree')
 external List<dynamic> findAllInRenderedTree(
-    /* [1] */ tree, ComponentTestFunction test);
+    /* [1] */ tree,
+    ComponentTestFunction test);
 
 /// Like scryRenderedDOMComponentsWithClass() but expects there to be one
 /// result, and returns that one result, or throws exception if there is
 /// any other number of matches besides one.
 @JS('ReactTestUtils.findRenderedDOMComponentWithClass')
 external dynamic /* [1] */ findRenderedDOMComponentWithClass(
-    /* [1] */ tree, String className);
+    /* [1] */ tree,
+    String className);
 
 /// Like scryRenderedDOMComponentsWithTag() but expects there to be one result,
 /// and returns that one result, or throws exception if there is any other
 /// number of matches besides one.
 @JS('ReactTestUtils.findRenderedDOMComponentWithTag')
 external dynamic /* [1] */ findRenderedDOMComponentWithTag(
-    /* [1] */ tree, String tag);
+    /* [1] */ tree,
+    String tag);
 
 @JS('ReactTestUtils.findRenderedComponentWithType')
 external dynamic /* [1] */ _findRenderedComponentWithType(
-    /* [1] */ tree, dynamic type);
+    /* [1] */ tree,
+    dynamic type);
 
 /// __Deprecated. Will be removed in the `5.0.0` release.__ Use [findRenderedComponentWithTypeV2] instead.
 ///
@@ -254,7 +258,8 @@ bool isElementOfTypeV2(
 
 @JS('ReactTestUtils.scryRenderedComponentsWithType')
 external List<dynamic> /* [1] */ _scryRenderedComponentsWithType(
-    /* [1] */ tree, dynamic type);
+    /* [1] */ tree,
+    dynamic type);
 
 /// __Deprecated. Will be removed in the `5.0.0` release.__ Use [scryRenderedComponentsWithTypeV2] instead.
 ///
