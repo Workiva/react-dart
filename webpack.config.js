@@ -1,141 +1,80 @@
-var webpack = require('webpack');
-const path = require('path');
-const UglifyJsPlugin = require('uglifyjs-webpack-plugin');
+const webpack = require("webpack");
+const path = require("path");
+const UglifyJsPlugin = require("uglifyjs-webpack-plugin");
+
+const outputPath = path.resolve(__dirname, "lib/");
+const inputPath = path.resolve(__dirname, "js_src/");
+
 
 var babelPlugin = new webpack.DefinePlugin({
   test: /\.jsx?$/,
   use: {
-    loader: 'babel-loader',
+    loader: "babel-loader",
     options: {
-        presets: ['@babel/preset-env', '@babel/preset-react']
+      presets: ["@babel/preset-env", "@babel/preset-react"]
     }
-  },
+  }
 });
 
-var outputPath = path.resolve(__dirname,'lib/');
-var inputPath = path.resolve(__dirname,'js_src/');
-
 var devPlugins = [
-  new webpack.DefinePlugin({
-    'process.env.NODE_ENV': JSON.stringify('development')
-  }),
-  babelPlugin,
+  babelPlugin
 ];
 
 var prodPlugins = [
-  new webpack.DefinePlugin({
-    'process.env.NODE_ENV': JSON.stringify('production')
-  }),
   babelPlugin,
   new webpack.DefinePlugin({
-    test: /\.jsx?$/,
-    use: {
-      loader: 'babel-loader',
-      options: {
-        presets: [
-          '@babel/preset-env',
-          '@babel/preset-react',
-          [
-            'minify', {
-              builtIns: false,
-              evaluate: false,
-              mangle: false,
-            }
-          ]
-        ]
-      }
-    },
     optimization: {
-      minimizer: [
-        new UglifyJsPlugin()
-      ]
+      minimizer: [new UglifyJsPlugin({ sourceMap: true })]
+    },
+  })
+];
+
+/// Helper function that generates the webpack export objects array
+///
+/// Usage:
+/// createExports([
+///   [entryFilename, outputFilename, [isProduction]],
+///   {
+///   ...NORMAL WEBPACK CONFIG OBJECT...
+///   },
+///   ...
+/// ]);
+///
+function createExports(exportMappings) {
+  exportObjects = [];
+  exportMappings.forEach(function(mapping) {
+    if (Array.isArray(mapping)) {
+      entryFilename = mapping[0];
+      outputFilename = mapping[1] || mapping[0];
+      isProduction = mapping[2] || outputFilename.includes('_prod');
+      exportObjects.push(
+        {
+          output: {
+            path: outputPath,
+            filename: outputFilename
+          },
+          entry: path.resolve(inputPath, entryFilename),
+          plugins: isProduction ? prodPlugins : devPlugins,
+          mode: isProduction ? "production" : "development",
+          externals: [{ window: "window" }]
+        }
+      );
+    } else {
+      exportObjects.push(mapping);
     }
- }),
+  });
+  return exportObjects;
+}
 
-];
-
-module.exports = [
-  // Dev
-  {
-    output: {
-      path: outputPath,
-      filename: 'react_with_addons.js',
-    },
-    entry: path.resolve(inputPath, 'react.js'),
-    plugins: devPlugins,
-    mode: 'development',
-    externals: [{"window": "window"}]
-  },
-  {
-    output: {
-      path: outputPath,
-      filename: 'react.js',
-    },
-    entry: path.resolve(inputPath, 'react.js'),
-    plugins: devPlugins,
-    mode: 'development',
-    externals: [{"window": "window"}]
-  },
-  {
-    output: {
-      path: outputPath,
-      filename: 'react_dom.js',
-    },
-    entry: path.resolve(inputPath, 'react_dom.js'),
-    plugins: devPlugins,
-    mode: 'development',
-    externals: [{"window": "window"}]
-  },
-  {
-    output: {
-      path: outputPath,
-      filename: 'react_dom_server.js',
-    },
-    entry: path.resolve(inputPath, 'react_dom_server.js'),
-    plugins: devPlugins,
-    mode: 'development',
-    externals: [{"window": "window"}]
-  },
-
-  // Prod
-  {
-    output: {
-      path: outputPath,
-      filename: 'react_prod.js',
-    },
-    entry: path.resolve(inputPath, 'react.js'),
-    plugins: prodPlugins,
-    mode: 'production',
-    externals: [{"window": "window"}]
-  },
-  {
-    output: {
-        path: outputPath,
-        filename: 'react_dom_prod.js',
-      },
-    entry: path.resolve(inputPath, 'react_dom.js'),
-    plugins: prodPlugins,
-    mode: 'production',
-    externals: [{"window": "window"}]
-  },
-  {
-    output: {
-        path: outputPath,
-        filename: 'react_dom_server_prod.js',
-      },
-    entry: path.resolve(inputPath, 'react_dom_server.js'),
-    plugins: prodPlugins,
-    mode: 'production',
-    externals: [{"window": "window"}]
-  },
-  {
-    output: {
-      path: outputPath,
-      filename: 'react_with_react_dom_prod.js',
-    },
-    entry: path.resolve(inputPath, 'react_with_react_dom.js'),
-    plugins: prodPlugins,
-    mode: 'production',
-    externals: [{"window": "window"}]
-  },
-];
+module.exports = createExports(
+    [
+      ["react.js",                "react_with_addons.js"],
+      ["react.js",                "react.js"],
+      ["react_dom.js",            "react_dom.js"],
+      ["react_dom_server.js",     "react_dom_server.js"],
+      ["react.js",                "react_prod.js"],
+      ["react_dom.js",            "react_dom_prod.js"],
+      ["react_dom_server.js",     "react_dom_server_prod.js"],
+      ["react_with_react_dom.js", "react_with_react_dom_prod.js"],
+    ]
+  );
