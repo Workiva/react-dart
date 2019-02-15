@@ -144,7 +144,7 @@ class Simulate {
 /// used as a primitive for other test utils
 ///
 /// Included in Dart for completeness
-@JS('ReactTestUtils.findAllInRenderedTree')
+@JS('React.addons.TestUtils.findAllInRenderedTree')
 external List<dynamic> findAllInRenderedTree(
     /* [1] */ tree,
     ComponentTestFunction test);
@@ -152,7 +152,7 @@ external List<dynamic> findAllInRenderedTree(
 /// Like scryRenderedDOMComponentsWithClass() but expects there to be one
 /// result, and returns that one result, or throws exception if there is
 /// any other number of matches besides one.
-@JS('ReactTestUtils.findRenderedDOMComponentWithClass')
+@JS('React.addons.TestUtils.findRenderedDOMComponentWithClass')
 external dynamic /* [1] */ findRenderedDOMComponentWithClass(
     /* [1] */ tree,
     String className);
@@ -160,12 +160,12 @@ external dynamic /* [1] */ findRenderedDOMComponentWithClass(
 /// Like scryRenderedDOMComponentsWithTag() but expects there to be one result,
 /// and returns that one result, or throws exception if there is any other
 /// number of matches besides one.
-@JS('ReactTestUtils.findRenderedDOMComponentWithTag')
+@JS('React.addons.TestUtils.findRenderedDOMComponentWithTag')
 external dynamic /* [1] */ findRenderedDOMComponentWithTag(
     /* [1] */ tree,
     String tag);
 
-@JS('ReactTestUtils.findRenderedComponentWithType')
+@JS('React.addons.TestUtils.findRenderedComponentWithType')
 external dynamic /* [1] */ _findRenderedComponentWithType(
     /* [1] */ tree,
     dynamic type);
@@ -193,7 +193,7 @@ external dynamic /* [1] */ _findRenderedComponentWithType(
       tree, getComponentTypeV2(componentFactory));
 }
 
-@JS('ReactTestUtils.isCompositeComponent')
+@JS('React.addons.TestUtils.isCompositeComponent')
 external bool _isCompositeComponent(/* [1] */ instance);
 
 /// Returns true if element is a composite component.
@@ -205,7 +205,7 @@ bool isCompositeComponent(/* [1] */ instance) {
       getProperty(instance, 'tagName') == null;
 }
 
-@JS('ReactTestUtils.isCompositeComponentWithType')
+@JS('React.addons.TestUtils.isCompositeComponentWithType')
 external bool _isCompositeComponentWithType(/* [1] */ instance, dynamic type);
 
 /// __Deprecated. Will be removed in the `5.0.0` release.__ Use [isCompositeComponentWithTypeV2] instead.
@@ -230,14 +230,14 @@ bool isCompositeComponentWithTypeV2(
 }
 
 /// Returns true if instance is a DOM component (such as a <div> or <span>).
-@JS('ReactTestUtils.isDOMComponent')
+@JS('React.addons.TestUtils.isDOMComponent')
 external bool isDOMComponent(/* [1] */ instance);
 
 /// Returns true if [object] is a valid React component.
-@JS('ReactTestUtils.isElement')
+@JS('React.addons.TestUtils.isElement')
 external bool isElement(dynamic object);
 
-@JS('ReactTestUtils.isElementOfType')
+@JS('React.addons.TestUtils.isElementOfType')
 external bool _isElementOfType(dynamic element, dynamic componentClass);
 
 /// __Deprecated. Will be removed in the `5.0.0` release.__ Use [isElementOfTypeV2] instead.
@@ -256,7 +256,7 @@ bool isElementOfTypeV2(
   return _isElementOfType(element, getComponentTypeV2(componentFactory));
 }
 
-@JS('ReactTestUtils.scryRenderedComponentsWithType')
+@JS('React.addons.TestUtils.scryRenderedComponentsWithType')
 external List<dynamic> /* [1] */ _scryRenderedComponentsWithType(
     /* [1] */ tree,
     dynamic type);
@@ -282,7 +282,7 @@ List<dynamic> /* [1] */ scryRenderedComponentsWithTypeV2(
       tree, getComponentTypeV2(componentFactory));
 }
 
-@JS('ReactTestUtils.scryRenderedDOMComponentsWithClass')
+@JS('React.addons.TestUtils.scryRenderedDOMComponentsWithClass')
 
 /// Finds all instances of components in the rendered tree that are DOM
 /// components with the class name matching className.
@@ -290,7 +290,7 @@ external List<dynamic> scryRenderedDOMComponentsWithClass(
     /* [1] */ tree,
     String className);
 
-@JS('ReactTestUtils.scryRenderedDOMComponentsWithTag')
+@JS('React.addons.TestUtils.scryRenderedDOMComponentsWithTag')
 
 /// Finds all instances of components in the rendered tree that are DOM
 /// components with the tag name matching tagName.
@@ -299,14 +299,14 @@ external List<dynamic> scryRenderedDOMComponentsWithTag(
     String tagName);
 
 /// Render a Component into a detached DOM node in the document.
-@JS('ReactTestUtils.renderIntoDocument')
+@JS('React.addons.TestUtils.renderIntoDocument')
 external /* [1] */ renderIntoDocument(ReactElement instance);
 
 /// Pass a mocked component module to this method to augment it with useful
 /// methods that allow it to be used as a dummy React component. Instead of
 /// rendering as usual, the component will become a simple <div> (or other tag
 /// if mockTagName is provided) containing any provided children.
-@JS('ReactTestUtils.mockComponent')
+@JS('React.addons.TestUtils.mockComponent')
 external ReactClass mockComponent(
     ReactClass componentClass, String mockTagName);
 

@@ -7,7 +7,7 @@ library react.test_utils.simulate_wrappers;
 
 import 'package:js/js.dart';
 
-@JS('ReactTestUtils.Simulate')
+@JS('React.addons.TestUtils.Simulate')
 abstract class Simulate {
   external static void blur(componentOrNode, [eventData]);
   external static void change(componentOrNode, [eventData]);

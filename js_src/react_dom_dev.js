@@ -1,6 +1,10 @@
 const ShallowRenderer = require('react-test-renderer/shallow');
 const TestUtils = require('react-dom/test-utils');
 
-window.ReactTestUtils = TestUtils;
+
+if (!window.React.addons) {
+    window.React.addons = {};
+}
+window.React.addons.TestUtils = TestUtils;
 window.ReactShallowRenderer = ShallowRenderer;
 

@@ -82,6 +82,6 @@ var nonUpdatingInstance = ReactDOM.render(
   document.createElement("div")
 );
 
-ReactTestUtils.Simulate.click(ReactDOM.findDOMNode(updatingInstance).children[0]);
+React.addons.TestUtils.Simulate.click(ReactDOM.findDOMNode(updatingInstance).children[0]);
 
-ReactTestUtils.Simulate.click(ReactDOM.findDOMNode(nonUpdatingInstance).children[0]);
+React.addons.TestUtils.Simulate.click(ReactDOM.findDOMNode(nonUpdatingInstance).children[0]);

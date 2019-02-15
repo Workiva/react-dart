@@ -346,7 +346,7 @@ For more robust examples take a look at our [examples](https://github.com/cleand
 Dart wrapper for the [ReactJS TestUtils](https://reactjs.org/docs/test-utils.html) library allowing for unit tests
 to be made for React components in Dart.
 
-Here is an example of how to use React ReactTestUtils within a Dart test.
+Here is an example of how to use React React.addons.TestUtils. within a Dart test.
 
 ```dart
 import 'package:test/test.dart';
