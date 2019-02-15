@@ -811,8 +811,8 @@ SyntheticWheelEvent syntheticWheelEventFactory(events.SyntheticWheelEvent e) {
 }
 
 dynamic _findDomNode(component) {
-  return ReactDom
-      .findDOMNode(component is Component ? component.jsThis : component);
+  return ReactDom.findDOMNode(
+      component is Component ? component.jsThis : component);
 }
 
 void setClientConfiguration() {
