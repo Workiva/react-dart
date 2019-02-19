@@ -23,6 +23,7 @@ main() {
       'color': ['#f00', '#0f0', '#00f'][new Random().nextInt(3)]
     },
     'onMouseEnter': (react.SyntheticMouseEvent e) {
+      print(e.runtimeType);
       print('Entered!');
     },
 
