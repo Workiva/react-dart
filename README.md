@@ -1,7 +1,7 @@
 # Dart wrapper for [React JS](https://reactjs.org/)
 
 [![Pub](https://img.shields.io/pub/v/react.svg)](https://pub.dartlang.org/packages/react)
-![ReactJS v15.6.0](https://img.shields.io/badge/React_JS-v15.6.0-green.svg)
+![ReactJS v16.8.1](https://img.shields.io/badge/React_JS-v16.8.1-green.svg)
 [![Build Status](https://travis-ci.com/cleandart/react-dart.svg?branch=master)](https://travis-ci.com/cleandart/react-dart)
 [![React Dart API Docs](https://img.shields.io/badge/api_docs-react-blue.svg)](https://pub.dartlang.org/documentation/react/latest/)
 
@@ -25,7 +25,7 @@ If you are not familiar with the ReactJS library, read this [react tutorial](htt
     environment:
       sdk: ^2.0.0
     dependencies:
-      react: ^4.5.0
+      react: ^5.0.0
     ```
 
 3. Install the dependencies using pub:
@@ -445,8 +445,13 @@ _Or any other browser platform, e.g. `-p firefox`._
 
 ### Building React JS Source Files
 
-After modifying dart_helpers.js, run:
+Make sure the packages you need are dependencies in `package.json` then run:
+```bash
+npm install
+```
+
+After modifying files any files in ./js_src/, run:
 
 ```bash
-./tool/build_js.sh
+npm run build
 ```
