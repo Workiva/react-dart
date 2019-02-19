@@ -11,8 +11,10 @@ import "dart:html";
 import 'dart:js';
 
 import "package:js/js.dart";
+import 'package:js/js_util.dart';
 import "package:react/react.dart";
-import "package:react/react_client/js_interop_helpers.dart";
+import "package:react/react_client/js_interop_helpers.dart"
+    hide getProperty, setProperty, jsify;
 import 'package:react/react_client/react_interop.dart';
 import "package:react/react_dom.dart";
 import "package:react/react_dom_server.dart";
@@ -27,6 +29,8 @@ export 'package:react/react_client/react_interop.dart'
 export 'package:react/react.dart'
     show ReactComponentFactoryProxy, ComponentFactory;
 
+@Deprecated('5.0.0')
+// ignore: deprecated_member_use
 final EmptyObject emptyJsMap = new EmptyObject();
 
 /// __Deprecated. Will be removed in the `5.0.0` release.__ Use [ReactComponentFactoryProxy] instead.
@@ -184,6 +188,8 @@ Map<String, dynamic> _unjsifyContext(InteropContextValue interopContext) {
   });
 }
 
+final _emptyJsMap = newObject();
+
 /// The static methods that proxy JS component lifecycle methods to Dart components.
 final ReactDartInteropStatics _dartInteropStatics = (() {
   var zone = Zone.current;
@@ -196,7 +202,7 @@ final ReactDartInteropStatics _dartInteropStatics = (() {
           ComponentStatics componentStatics) =>
       zone.run(() {
         void jsRedraw() {
-          jsThis.setState(emptyJsMap);
+          jsThis.setState(_emptyJsMap);
         }
 
         Ref getRef = (name) {
@@ -404,6 +410,68 @@ ReactDartComponentFactoryProxy _registerComponent(
   return new ReactDartComponentFactoryProxy(reactComponentClass);
 }
 
+/// Creates ReactJS [ReactElement] instances for components defined in the JS.
+class ReactJsComponentFactoryProxy extends ReactComponentFactoryProxy {
+  /// The JS class used by this factory.
+  @override
+  final ReactClass type;
+
+  /// The JS component factory used by this factory to build [ReactElement]s.
+  final Function factory;
+
+  /// Whether to automatically prepare props relating to bound values and event handlers
+  /// via [ReactDomComponentFactoryProxy.convertProps] for consumption by React JS DOM components.
+  ///
+  /// Useful when the JS component forwards DOM props to its rendered DOM components.
+  ///
+  /// Disable for more custom handling of these props.
+  final bool convertDomProps;
+
+  ReactJsComponentFactoryProxy(ReactClass jsClass,
+      {bool this.convertDomProps: true})
+      : this.type = jsClass,
+        this.factory = React.createFactory(jsClass) {
+    if (jsClass == null) {
+      throw new ArgumentError('`jsClass` must not be null. '
+          'Ensure that the JS component class you\'re referencing is available and being accessed correctly.');
+    }
+  }
+
+  @override
+  ReactElement build(Map props, [List childrenArgs = const []]) {
+    var children = _convertArgsToChildren(childrenArgs);
+    children = listifyChildren(children);
+
+    Map potentiallyConvertedProps;
+    if (convertDomProps) {
+      // We can't mutate the original since we can't be certain that the value of the
+      // the converted event handler will be compatible with the Map's type parameters.
+      potentiallyConvertedProps = new Map.from(props);
+      ReactDomComponentFactoryProxy.convertProps(potentiallyConvertedProps);
+    } else {
+      potentiallyConvertedProps = props;
+    }
+
+    return factory(jsifyAndAllowInterop(potentiallyConvertedProps), children);
+  }
+
+  @override
+  dynamic noSuchMethod(Invocation invocation) {
+    if (invocation.memberName == #call && invocation.isMethod) {
+      Map props = invocation.positionalArguments[0];
+      List children =
+          listifyChildren(invocation.positionalArguments.sublist(1));
+
+      if (convertDomProps) ReactDomComponentFactoryProxy.convertProps(props);
+      markChildrenValidated(children);
+
+      return factory(jsifyAndAllowInterop(props), children);
+    }
+
+    return super.noSuchMethod(invocation);
+  }
+}
+
 /// Creates ReactJS [ReactElement] instances for DOM components.
 class ReactDomComponentFactoryProxy extends ReactComponentFactoryProxy {
   /// The name of the proxied DOM component.
@@ -435,10 +503,11 @@ class ReactDomComponentFactoryProxy extends ReactComponentFactoryProxy {
     var convertibleProps = {}..addAll(props);
     convertProps(convertibleProps);
 
-    return factory(jsify(convertibleProps), children);
+    return factory(jsifyAndAllowInterop(convertibleProps), children);
   }
 
-  /// Prepares the bound values, event handlers, and style props for consumption by ReactJS DOM components.
+  /// Sets up bound value handling and wraps DOM event handlers with SyntheticEvent conversion logic
+  /// for consumption by React JS DOM components.
   static void convertProps(Map props) {
     _convertBoundValues(props);
     _convertEventHandlers(props);
@@ -569,6 +638,54 @@ _convertEventHandlers(Map args) {
     }
   });
 }
+
+///// Wraps an event [handler] function in the same manner that DOM event handlers are normally wrapped,
+///// adding automatic conversion of JS synthetic events to their Dart [SyntheticEvent] counterparts.
+/////
+///// Useful when specifying custom event handlers on JS components that are passed synthetic events.
+/////
+///// [type] must be either be:
+/////
+///// - a [Function] that converts the JS synthetic event into a [SyntheticEvent] (e.g., [syntheticMouseEventFactory])
+///// - the name of a DOM event prop to match the wrapping of, for convenience (e.g., 'onClick')
+/////
+///// Examples:
+/////
+/////     _handleClick(react.SyntheticMouseEvent event) {
+/////       // ...
+/////     }
+/////
+/////     render() {
+/////       return MyJsComponent({
+/////         'onMyButtonClick': wrapEventHandler(_handleClick, 'onClick')
+/////       });
+/////
+/////       return MyJsComponent({
+/////         'onMyButtonClick': wrapEventHandler(_handleClick, syntheticMouseEventFactory)
+/////       })
+/////     }
+/////
+//JsEventHandler wrapEventHandler(handler(event), dynamic type) {
+//  SyntheticEventFactory eventFactory;
+//
+//  if (type is String) {
+//    eventFactory = eventPropKeyToEventFactory[type];
+//  } else if (type is SyntheticEventFactory) {
+//    eventFactory = type;
+//  }
+//
+//  if (eventFactory == null) {
+//    throw new ArgumentError.value(type, 'type',
+//        'must be a function that converts the JS synthetic event, or the name of a DOM event prop');
+//  }
+//
+//  final zone = Zone.current;
+//  void wrappedHandler(events.SyntheticEvent jsEvent, [_, __]) => zone.run(() {
+//    handler(eventFactory(jsEvent));
+//  });
+//
+//  return wrappedHandler;
+//}
 
 /// Returns a Dart Map copy of the JS property key-value pairs in [jsMap].
 Map _dartifyJsMap(jsMap) {
@@ -813,6 +930,18 @@ SyntheticWheelEvent syntheticWheelEventFactory(events.SyntheticWheelEvent e) {
 dynamic _findDomNode(component) {
   return ReactDom.findDOMNode(
       component is Component ? component.jsThis : component);
+}
+
+class ReactDartContext {
+  ReactDartContext(this.Provider, this.Consumer);
+  ReactJsComponentFactoryProxy Provider;
+  ReactJsComponentFactoryProxy Consumer;
+}
+
+createContext([dynamic defaultValue, Function calculateChangedBits]) {
+  var JSContext = React.createContext(defaultValue, calculateChangedBits);
+  return ReactDartContext(ReactJsComponentFactoryProxy(JSContext.Provider),
+      ReactJsComponentFactoryProxy(JSContext.Consumer));
 }
 
 void setClientConfiguration() {

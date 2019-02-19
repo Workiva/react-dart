@@ -19,12 +19,12 @@ typedef ReactElement ReactJsComponentFactory(props, children);
 @JS()
 abstract class React {
   external static String get version;
+  external static ReactContext createContext(
+      [dynamic defaultValue, Function calculateChangedBits]);
   external static ReactClass createClass(ReactClassConfig reactClassConfig);
   external static ReactJsComponentFactory createFactory(type);
-
   external static ReactElement createElement(dynamic type, props,
       [dynamic children]);
-
   external static bool isValidElement(dynamic object);
 }
 
@@ -170,6 +170,18 @@ class ReactComponent {
 @anonymous
 class InteropContextValue {
   external factory InteropContextValue();
+}
+
+/// A JavaScript interop class representing the return value of `createContext`.
+///
+/// Used for accessing Dart [Context.Provider] & [Context.Consumer] components.
+///
+/// __For internal/advanced use only.__
+@JS()
+@anonymous
+class ReactContext {
+  external get Provider;
+  external get Consumer;
 }
 
 /// A JavaScript interop class representing a React JS `props` object.

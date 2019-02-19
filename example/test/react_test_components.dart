@@ -1,6 +1,7 @@
 import "dart:async";
 
 import "package:react/react.dart" as react;
+import 'package:react/react_client.dart';
 import "package:react/react_dom.dart" as react_dom;
 
 class _HelloComponent extends react.Component {
@@ -167,32 +168,27 @@ class _MainComponent extends react.Component {
 
 var mainComponent = react.registerComponent(() => new _MainComponent());
 
+var TestContext = createContext({'test': true});
+
 class _ContextComponent extends react.Component {
-  @override
-  Iterable<String> get childContextKeys => const ['foo', 'bar', 'renderCount'];
-
-  @override
-  Map<String, dynamic> getChildContext() => {
-        'foo': {'object': 'with value'},
-        'bar': true,
-        'renderCount': this.state['renderCount']
-      };
-
   render() {
     return react.ul({
       'key': 'ul'
     }, [
       react.button({
         'key': 'button',
+        'type': 'button',
         'className': 'btn btn-primary',
         'onClick': _onButtonClick
       }, 'Redraw'),
       react.br({'key': 'break1'}),
       'ContextComponent.getChildContext(): ',
-      getChildContext().toString(),
       react.br({'key': 'break2'}),
       react.br({'key': 'break3'}),
-      props['children'],
+      TestContext.Provider(
+        {'value': 'Hi from context'},
+        props['children'],
+      ),
     ]);
   }
 
@@ -204,19 +200,18 @@ class _ContextComponent extends react.Component {
 var contextComponent = react.registerComponent(() => new _ContextComponent());
 
 class _ContextConsumerComponent extends react.Component {
-  @override
-  Iterable<String> get contextKeys => const ['foo'];
-
   render() {
-    return react.ul({
-      'key': 'ul'
-    }, [
-      'ContextConsumerComponent.context: ',
-      context.toString(),
-      react.br({'key': 'break1'}),
-      react.br({'key': 'break2'}),
-      props['children'],
-    ]);
+    return TestContext.Consumer({}, (value) {
+      print(value);
+      return react.ul({
+        'key': 'ul'
+      }, [
+        'ContextConsumerComponent.context: ',
+        react.br({'key': 'break1'}),
+        react.br({'key': 'break2'}),
+        props['children'],
+      ]);
+    });
   }
 }
 

@@ -170,6 +170,6 @@ final Function testJsComponentFactory = (() {
   var reactFactory = React.createFactory(compositeComponent());
 
   return ([props = const {}, children]) {
-    return reactFactory(jsify(props), listifyChildren(children));
+    return reactFactory(jsifyAndAllowInterop(props), listifyChildren(children));
   };
 })();
