@@ -763,7 +763,8 @@ void main() {
         expect(component.lifecycleCalls,
             orderedEquals(getNonUpdatingSetStateLifeCycleCalls()));
         expect(renderedNode.children.first.text, '1');
-        expect(renderedNode.children.first.text, getNonUpdatingRenderedCounter());
+        expect(
+            renderedNode.children.first.text, getNonUpdatingRenderedCounter());
       });
 
       test('when shouldComponentUpdate returns true', () {
