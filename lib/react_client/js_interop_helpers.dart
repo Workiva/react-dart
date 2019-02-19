@@ -40,13 +40,13 @@ final _GetPropertyFn getProperty = (() {
   try {
     // If this throws, then the JS function isn't available.
     _getProperty(js_util.newObject(), null);
-  } catch(_) {
-    throw new _MissingJsMemberError('_getProperty',
+  } catch (_) {
+    throw new _MissingJsMemberError(
+        '_getProperty',
         'Be sure to include React JS files included in this package '
         '(which has this and other JS interop helper functions included) '
         'or, alternatively, define the function yourself:\n'
-        '    function _getProperty(obj, key) { return obj[key]; }'
-    );
+        '    function _getProperty(obj, key) { return obj[key]; }');
   }
 
   return _getProperty;
@@ -66,13 +66,13 @@ final _SetPropertyFn setProperty = (() {
   try {
     // If this throws, then the JS function isn't available.
     _setProperty(js_util.newObject(), null, null);
-  } catch(_) {
-    throw new _MissingJsMemberError('_setProperty',
+  } catch (_) {
+    throw new _MissingJsMemberError(
+        '_setProperty',
         'Be sure to include React JS files included in this package '
         '(which has this and other JS interop helper functions included) '
         'or, alternatively, define the function yourself:\n'
-        '    function _setProperty(obj, key, value) { return obj[key] = value; }'
-    );
+        '    function _setProperty(obj, key, value) { return obj[key] = value; }');
   }
 
   return _setProperty;
@@ -86,7 +86,7 @@ final _SetPropertyFn setProperty = (() {
 /// For use when dealing with dynamic properties via [getProperty]/[setProperty].
 @JS()
 @anonymous
-@Deprecated('4.0.0')
+@Deprecated('5.0.0')
 class EmptyObject {
   external factory EmptyObject();
 }
@@ -102,13 +102,16 @@ dynamic jsify(Map map) {
   var jsMap = js_util.newObject();
 
   map.forEach((key, value) {
+    var jsValue;
     if (value is Map) {
-      value = jsify(value);
+      jsValue = jsify(value);
     } else if (value is Function) {
-      value = allowInterop(value);
+      jsValue = allowInterop(value);
+    } else {
+      jsValue = value;
     }
 
-    js_util.setProperty(jsMap, key, value);
+    js_util.setProperty(jsMap, key, jsValue);
   });
 
   return jsMap;

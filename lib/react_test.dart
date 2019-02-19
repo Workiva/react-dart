@@ -30,11 +30,12 @@ _reactDom(String name) {
   };
 }
 
-initializeComponent(Component component, [Map props = const {}, List children, redraw, Ref ref]) {
+initializeComponent(Component component,
+    [Map props = const {}, List children, redraw, Ref ref]) {
   if (redraw == null) redraw = () {};
-  var extendedProps = new Map.from(component.getDefaultProps())
-    ..addAll(props);
-  component.initComponentInternal(extendedProps, redraw, ref);
+  var extendedProps = new Map.from(component.getDefaultProps())..addAll(props);
+  component.initComponentInternal(
+      extendedProps, redraw, ref, null, component.context);
   component.initStateInternal();
   component.componentWillMount();
 }

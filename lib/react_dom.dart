@@ -9,22 +9,25 @@ library react_dom;
 ///
 /// If the ReactElement was previously rendered into the [container], this will perform an update on it and only
 /// mutate the DOM as necessary to reflect the latest React component.
-var render = (component, container) {
+///
+/// TODO: Is there any reason to omit the [ReactElement] type for [component] or the [Element] type for [container]?
+Function render = (/* ReactComponent */ component, /* Element */ container) {
   throw new Exception('setClientConfiguration must be called before render.');
 };
 
-/// Removes a mounted React [Component] from the DOM and cleans up its event handlers and state. If no component
-/// was mounted in the container, calling this function does nothing. Returns true if a component was unmounted
-/// and false if there was no component to unmount.
-var unmountComponentAtNode;
+/// Removes a mounted React [Component] from the DOM and cleans up its event handlers and state.
+///
+/// > Returns `false` if no component was mounted in the container specified via [render], otherwise returns `true`.
+Function unmountComponentAtNode;
 
 /// If the [Component] has been mounted into the DOM, this returns the corresponding native browser DOM [Element].
-var findDOMNode;
+Function findDOMNode;
 
 /// Sets configuration based on passed functions.
 ///
 /// Passes arguments to global variables.
-setReactDOMConfiguration(customRender, customUnmountComponentAtNode, customFindDOMNode) {
+setReactDOMConfiguration(Function customRender,
+    Function customUnmountComponentAtNode, Function customFindDOMNode) {
   render = customRender;
   unmountComponentAtNode = customUnmountComponentAtNode;
   findDOMNode = customFindDOMNode;

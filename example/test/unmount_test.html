@@ -1,19 +1,28 @@
-<!DOCTYPE html>
-
-<html>
+<!doctype html>
+<html lang="en">
   <head>
-    <title>order_test</title>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
+
+    <title>React Dart Examples: unmount test</title>
   </head>
 
   <body>
-    <button id="mount">Mount</button>
-    <button id="unmount">Unmount</button>
-    <div id="content"></div>
+    <div class="container">
+      <div class="btn-toolbar">
+        <button class="btn btn-primary" id="mount">Mount</button>
+        &nbsp;
+        <button class="btn btn-primary" id="unmount">Unmount</button>
+      </div>
+      <div id="content"></div>
+    </div>
 
     <script src="packages/react/react.js"></script>
     <script src="packages/react/react_dom.js"></script>
-    <script type="application/dart" src="unmount_test.dart"></script>
+    <script defer src="unmount_test.dart.js"></script>
     <!-- for this next line to work, your pubspec.yaml file must have a dependency on 'browser' -->
-    <script src="packages/browser/dart.js"></script>
+    
   </body>
 </html>
