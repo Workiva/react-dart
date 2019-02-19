@@ -26,6 +26,7 @@ class _MissingJsMemberError extends Error {
       '_MissingJsMemberError: The JS member `$name` is missing and thus '
       'cannot be used as expected. $message';
 }
+
 /// __Deprecated: use [js_util.getProperty] instead.
 ///
 /// Returns the property at the given [_GetPropertyFn.key] on the

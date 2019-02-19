@@ -5,7 +5,7 @@ import 'dart:html';
 
 import 'package:js/js.dart';
 import 'package:js/js_util.dart' show newObject;
-// TODO: remove in 4.0.0
+// TODO: remove in 5.0.0
 import 'package:react/react_client/js_interop_helpers.dart';
 import 'package:react/react_client/react_interop.dart';
 import 'package:test/test.dart';
@@ -21,7 +21,7 @@ void verifyJsFileLoaded(String filename) {
 
 void sharedJsFunctionTests() {
   group('JS functions:', () {
-    // TODO: remove in 4.0.0
+    // TODO: remove in 5.0.0
     group('getProperty', () {
       test('is function that does not throw upon initialization', () {
         // ignore: deprecated_member_use
@@ -37,7 +37,7 @@ void sharedJsFunctionTests() {
       });
     });
 
-    // TODO: remove in 4.0.0
+    // TODO: remove in 5.0.0
     group('setProperty', () {
       test('is function that does not throw upon initialization', () {
         // ignore: deprecated_member_use
