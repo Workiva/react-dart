@@ -330,6 +330,7 @@ external ReactShallowRenderer createRenderer();
 ///
 /// See react_with_addons.js#ReactShallowRenderer
 @JS()
+@anonymous
 class ReactShallowRenderer {
   /// Get the rendered output. [render] must be called first
   external ReactElement getRenderOutput();

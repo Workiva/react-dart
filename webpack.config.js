@@ -24,7 +24,7 @@ var prodPlugins = [
   babelPlugin,
   new webpack.DefinePlugin({
     optimization: {
-      minimizer: [new UglifyJsPlugin({ sourceMap: true })]
+      minimizer: [new UglifyJsPlugin()]
     },
   })
 ];
@@ -57,7 +57,7 @@ function createExports(exportMappings) {
           plugins: isProduction ? prodPlugins : devPlugins,
           mode: isProduction ? "production" : "development",
           externals: [{ window: "window" }],
-          devtool: isProduction ? false : 'inline-source-map'
+          devtool: "source-map",
         }
       );
     } else {
