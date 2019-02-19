@@ -28,7 +28,9 @@ main() {
 
     // Refs work the same, only you get back the JS component instance.
     // See below for how you can use this.
-    'ref': (ref) { fooRef = ref; },
+    'ref': (ref) {
+      fooRef = ref;
+    },
 
     // Props specific to the component can be specified as well!
     'foo': 'bar',
@@ -51,7 +53,6 @@ main() {
 void _handleButtonClick(react.SyntheticMouseEvent event) {
   print('Clicked!');
 }
-
 
 /// The JS component class.
 ///

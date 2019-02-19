@@ -8,7 +8,8 @@ library react.test_utils;
 import 'package:js/js.dart';
 import 'package:js/js_util.dart';
 import 'package:react/react_client.dart';
-import 'package:react/react_client/js_interop_helpers.dart' hide getProperty, setProperty, jsify;
+import 'package:react/react_client/js_interop_helpers.dart'
+    hide getProperty, setProperty, jsify;
 import 'package:react/react_client/react_interop.dart';
 import 'package:react/src/react_test_utils/simulate_wrappers.dart'
     as simulate_wrappers;
@@ -51,7 +52,8 @@ dynamic getComponentTypeV2(ReactComponentFactoryProxy componentFactory) =>
 
 typedef bool ComponentTestFunction(/* [1] */ component);
 
-dynamic _jsifyEventData(Map eventData) => jsifyAndAllowInterop(eventData ?? const {});
+dynamic _jsifyEventData(Map eventData) =>
+    jsifyAndAllowInterop(eventData ?? const {});
 
 /// Event simulation interface.
 ///
@@ -64,82 +66,104 @@ dynamic _jsifyEventData(Map eventData) => jsifyAndAllowInterop(eventData ?? cons
 /// http://facebook.github.io/react/docs/events.html
 class Simulate {
   static void blur(/* [1] */ componentOrNode, [Map eventData]) =>
-      simulate_wrappers.Simulate.blur(componentOrNode, _jsifyEventData(eventData));
+      simulate_wrappers.Simulate
+          .blur(componentOrNode, _jsifyEventData(eventData));
   static void change(/* [1] */ componentOrNode, [Map eventData]) =>
-      simulate_wrappers.Simulate.change(componentOrNode, _jsifyEventData(eventData));
+      simulate_wrappers.Simulate
+          .change(componentOrNode, _jsifyEventData(eventData));
   static void click(/* [1] */ componentOrNode, [Map eventData]) =>
-      simulate_wrappers.Simulate.click(componentOrNode, _jsifyEventData(eventData));
-  static void contextMenu(/* [1] */ componentOrNode,
-          [Map eventData]) =>
-      simulate_wrappers.Simulate.contextMenu(componentOrNode, _jsifyEventData(eventData));
+      simulate_wrappers.Simulate
+          .click(componentOrNode, _jsifyEventData(eventData));
+  static void contextMenu(/* [1] */ componentOrNode, [Map eventData]) =>
+      simulate_wrappers.Simulate
+          .contextMenu(componentOrNode, _jsifyEventData(eventData));
   static void copy(/* [1] */ componentOrNode, [Map eventData]) =>
-      simulate_wrappers.Simulate.copy(componentOrNode, _jsifyEventData(eventData));
+      simulate_wrappers.Simulate
+          .copy(componentOrNode, _jsifyEventData(eventData));
   static void cut(/* [1] */ componentOrNode, [Map eventData]) =>
-      simulate_wrappers.Simulate.cut(componentOrNode, _jsifyEventData(eventData));
-  static void doubleClick(/* [1] */ componentOrNode,
-          [Map eventData]) =>
-      simulate_wrappers.Simulate.doubleClick(componentOrNode, _jsifyEventData(eventData));
+      simulate_wrappers.Simulate
+          .cut(componentOrNode, _jsifyEventData(eventData));
+  static void doubleClick(/* [1] */ componentOrNode, [Map eventData]) =>
+      simulate_wrappers.Simulate
+          .doubleClick(componentOrNode, _jsifyEventData(eventData));
   static void drag(/* [1] */ componentOrNode, [Map eventData]) =>
-      simulate_wrappers.Simulate.drag(componentOrNode, _jsifyEventData(eventData));
+      simulate_wrappers.Simulate
+          .drag(componentOrNode, _jsifyEventData(eventData));
   static void dragEnd(/* [1] */ componentOrNode, [Map eventData]) =>
-      simulate_wrappers.Simulate.dragEnd(componentOrNode, _jsifyEventData(eventData));
-  static void dragEnter(/* [1] */ componentOrNode,
-          [Map eventData]) =>
-      simulate_wrappers.Simulate.dragEnter(componentOrNode, _jsifyEventData(eventData));
+      simulate_wrappers.Simulate
+          .dragEnd(componentOrNode, _jsifyEventData(eventData));
+  static void dragEnter(/* [1] */ componentOrNode, [Map eventData]) =>
+      simulate_wrappers.Simulate
+          .dragEnter(componentOrNode, _jsifyEventData(eventData));
   static void dragExit(/* [1] */ componentOrNode, [Map eventData]) =>
-      simulate_wrappers.Simulate.dragExit(componentOrNode, _jsifyEventData(eventData));
-  static void dragLeave(/* [1] */ componentOrNode,
-          [Map eventData]) =>
-      simulate_wrappers.Simulate.dragLeave(componentOrNode, _jsifyEventData(eventData));
+      simulate_wrappers.Simulate
+          .dragExit(componentOrNode, _jsifyEventData(eventData));
+  static void dragLeave(/* [1] */ componentOrNode, [Map eventData]) =>
+      simulate_wrappers.Simulate
+          .dragLeave(componentOrNode, _jsifyEventData(eventData));
   static void dragOver(/* [1] */ componentOrNode, [Map eventData]) =>
-      simulate_wrappers.Simulate.dragOver(componentOrNode, _jsifyEventData(eventData));
-  static void dragStart(/* [1] */ componentOrNode,
-          [Map eventData]) =>
-      simulate_wrappers.Simulate.dragStart(componentOrNode, _jsifyEventData(eventData));
+      simulate_wrappers.Simulate
+          .dragOver(componentOrNode, _jsifyEventData(eventData));
+  static void dragStart(/* [1] */ componentOrNode, [Map eventData]) =>
+      simulate_wrappers.Simulate
+          .dragStart(componentOrNode, _jsifyEventData(eventData));
   static void drop(/* [1] */ componentOrNode, [Map eventData]) =>
-      simulate_wrappers.Simulate.drop(componentOrNode, _jsifyEventData(eventData));
+      simulate_wrappers.Simulate
+          .drop(componentOrNode, _jsifyEventData(eventData));
   static void focus(/* [1] */ componentOrNode, [Map eventData]) =>
-      simulate_wrappers.Simulate.focus(componentOrNode, _jsifyEventData(eventData));
+      simulate_wrappers.Simulate
+          .focus(componentOrNode, _jsifyEventData(eventData));
   static void input(/* [1] */ componentOrNode, [Map eventData]) =>
-      simulate_wrappers.Simulate.input(componentOrNode, _jsifyEventData(eventData));
+      simulate_wrappers.Simulate
+          .input(componentOrNode, _jsifyEventData(eventData));
   static void keyDown(/* [1] */ componentOrNode, [Map eventData]) =>
-      simulate_wrappers.Simulate.keyDown(componentOrNode, _jsifyEventData(eventData));
+      simulate_wrappers.Simulate
+          .keyDown(componentOrNode, _jsifyEventData(eventData));
   static void keyPress(/* [1] */ componentOrNode, [Map eventData]) =>
-      simulate_wrappers.Simulate.keyPress(componentOrNode, _jsifyEventData(eventData));
+      simulate_wrappers.Simulate
+          .keyPress(componentOrNode, _jsifyEventData(eventData));
   static void keyUp(/* [1] */ componentOrNode, [Map eventData]) =>
-      simulate_wrappers.Simulate.keyUp(componentOrNode, _jsifyEventData(eventData));
-  static void mouseDown(/* [1] */ componentOrNode,
-          [Map eventData]) =>
-      simulate_wrappers.Simulate.mouseDown(componentOrNode, _jsifyEventData(eventData));
-  static void mouseMove(/* [1] */ componentOrNode,
-          [Map eventData]) =>
-      simulate_wrappers.Simulate.mouseMove(componentOrNode, _jsifyEventData(eventData));
+      simulate_wrappers.Simulate
+          .keyUp(componentOrNode, _jsifyEventData(eventData));
+  static void mouseDown(/* [1] */ componentOrNode, [Map eventData]) =>
+      simulate_wrappers.Simulate
+          .mouseDown(componentOrNode, _jsifyEventData(eventData));
+  static void mouseMove(/* [1] */ componentOrNode, [Map eventData]) =>
+      simulate_wrappers.Simulate
+          .mouseMove(componentOrNode, _jsifyEventData(eventData));
   static void mouseOut(/* [1] */ componentOrNode, [Map eventData]) =>
-      simulate_wrappers.Simulate.mouseOut(componentOrNode, _jsifyEventData(eventData));
-  static void mouseOver(/* [1] */ componentOrNode,
-          [Map eventData]) =>
-      simulate_wrappers.Simulate.mouseOver(componentOrNode, _jsifyEventData(eventData));
+      simulate_wrappers.Simulate
+          .mouseOut(componentOrNode, _jsifyEventData(eventData));
+  static void mouseOver(/* [1] */ componentOrNode, [Map eventData]) =>
+      simulate_wrappers.Simulate
+          .mouseOver(componentOrNode, _jsifyEventData(eventData));
   static void mouseUp(/* [1] */ componentOrNode, [Map eventData]) =>
-      simulate_wrappers.Simulate.mouseUp(componentOrNode, _jsifyEventData(eventData));
+      simulate_wrappers.Simulate
+          .mouseUp(componentOrNode, _jsifyEventData(eventData));
   static void paste(/* [1] */ componentOrNode, [Map eventData]) =>
-      simulate_wrappers.Simulate.paste(componentOrNode, _jsifyEventData(eventData));
+      simulate_wrappers.Simulate
+          .paste(componentOrNode, _jsifyEventData(eventData));
   static void scroll(/* [1] */ componentOrNode, [Map eventData]) =>
-      simulate_wrappers.Simulate.scroll(componentOrNode, _jsifyEventData(eventData));
+      simulate_wrappers.Simulate
+          .scroll(componentOrNode, _jsifyEventData(eventData));
   static void submit(/* [1] */ componentOrNode, [Map eventData]) =>
-      simulate_wrappers.Simulate.submit(componentOrNode, _jsifyEventData(eventData));
-  static void touchCancel(/* [1] */ componentOrNode,
-          [Map eventData]) =>
-      simulate_wrappers.Simulate.touchCancel(componentOrNode, _jsifyEventData(eventData));
+      simulate_wrappers.Simulate
+          .submit(componentOrNode, _jsifyEventData(eventData));
+  static void touchCancel(/* [1] */ componentOrNode, [Map eventData]) =>
+      simulate_wrappers.Simulate
+          .touchCancel(componentOrNode, _jsifyEventData(eventData));
   static void touchEnd(/* [1] */ componentOrNode, [Map eventData]) =>
-      simulate_wrappers.Simulate.touchEnd(componentOrNode, _jsifyEventData(eventData));
-  static void touchMove(/* [1] */ componentOrNode,
-          [Map eventData]) =>
-      simulate_wrappers.Simulate.touchMove(componentOrNode, _jsifyEventData(eventData));
-  static void touchStart(/* [1] */ componentOrNode,
-          [Map eventData]) =>
-      simulate_wrappers.Simulate.touchStart(componentOrNode, _jsifyEventData(eventData));
+      simulate_wrappers.Simulate
+          .touchEnd(componentOrNode, _jsifyEventData(eventData));
+  static void touchMove(/* [1] */ componentOrNode, [Map eventData]) =>
+      simulate_wrappers.Simulate
+          .touchMove(componentOrNode, _jsifyEventData(eventData));
+  static void touchStart(/* [1] */ componentOrNode, [Map eventData]) =>
+      simulate_wrappers.Simulate
+          .touchStart(componentOrNode, _jsifyEventData(eventData));
   static void wheel(/* [1] */ componentOrNode, [Map eventData]) =>
-      simulate_wrappers.Simulate.wheel(componentOrNode, _jsifyEventData(eventData));
+      simulate_wrappers.Simulate
+          .wheel(componentOrNode, _jsifyEventData(eventData));
 }
 
 /// Native event simulation interface.
@@ -152,98 +176,98 @@ class Simulate {
 ///   SimulateNative.{eventName}(/* [1] */ componentOrNode, [Map] eventData)
 class SimulateNative {
   static void blur(/* [1] */ componentOrNode, [Map eventData]) =>
-      simulate_wrappers.SimulateNative.blur(componentOrNode, _jsifyEventData(eventData));
+      simulate_wrappers.SimulateNative
+          .blur(componentOrNode, _jsifyEventData(eventData));
   static void click(/* [1] */ componentOrNode, [Map eventData]) =>
-      simulate_wrappers.SimulateNative.click(componentOrNode, _jsifyEventData(eventData));
-  static void contextMenu(/* [1] */ componentOrNode,
-          [Map eventData]) =>
-      simulate_wrappers.SimulateNative.contextMenu(
-          componentOrNode, _jsifyEventData(eventData));
+      simulate_wrappers.SimulateNative
+          .click(componentOrNode, _jsifyEventData(eventData));
+  static void contextMenu(/* [1] */ componentOrNode, [Map eventData]) =>
+      simulate_wrappers.SimulateNative
+          .contextMenu(componentOrNode, _jsifyEventData(eventData));
   static void copy(/* [1] */ componentOrNode, [Map eventData]) =>
-      simulate_wrappers.SimulateNative.copy(componentOrNode, _jsifyEventData(eventData));
+      simulate_wrappers.SimulateNative
+          .copy(componentOrNode, _jsifyEventData(eventData));
   static void cut(/* [1] */ componentOrNode, [Map eventData]) =>
-      simulate_wrappers.SimulateNative.cut(componentOrNode, _jsifyEventData(eventData));
-  static void doubleClick(/* [1] */ componentOrNode,
-          [Map eventData]) =>
-      simulate_wrappers.SimulateNative.doubleClick(
-          componentOrNode, _jsifyEventData(eventData));
+      simulate_wrappers.SimulateNative
+          .cut(componentOrNode, _jsifyEventData(eventData));
+  static void doubleClick(/* [1] */ componentOrNode, [Map eventData]) =>
+      simulate_wrappers.SimulateNative
+          .doubleClick(componentOrNode, _jsifyEventData(eventData));
   static void drag(/* [1] */ componentOrNode, [Map eventData]) =>
-      simulate_wrappers.SimulateNative.drag(componentOrNode, _jsifyEventData(eventData));
+      simulate_wrappers.SimulateNative
+          .drag(componentOrNode, _jsifyEventData(eventData));
   static void dragEnd(/* [1] */ componentOrNode, [Map eventData]) =>
-      simulate_wrappers.SimulateNative.dragEnd(
-          componentOrNode, _jsifyEventData(eventData));
-  static void dragEnter(/* [1] */ componentOrNode,
-          [Map eventData]) =>
-      simulate_wrappers.SimulateNative.dragEnter(
-          componentOrNode, _jsifyEventData(eventData));
+      simulate_wrappers.SimulateNative
+          .dragEnd(componentOrNode, _jsifyEventData(eventData));
+  static void dragEnter(/* [1] */ componentOrNode, [Map eventData]) =>
+      simulate_wrappers.SimulateNative
+          .dragEnter(componentOrNode, _jsifyEventData(eventData));
   static void dragExit(/* [1] */ componentOrNode, [Map eventData]) =>
-      simulate_wrappers.SimulateNative.dragExit(
-          componentOrNode, _jsifyEventData(eventData));
-  static void dragLeave(/* [1] */ componentOrNode,
-          [Map eventData]) =>
-      simulate_wrappers.SimulateNative.dragLeave(
-          componentOrNode, _jsifyEventData(eventData));
+      simulate_wrappers.SimulateNative
+          .dragExit(componentOrNode, _jsifyEventData(eventData));
+  static void dragLeave(/* [1] */ componentOrNode, [Map eventData]) =>
+      simulate_wrappers.SimulateNative
+          .dragLeave(componentOrNode, _jsifyEventData(eventData));
   static void dragOver(/* [1] */ componentOrNode, [Map eventData]) =>
-      simulate_wrappers.SimulateNative.dragOver(
-          componentOrNode, _jsifyEventData(eventData));
-  static void dragStart(/* [1] */ componentOrNode,
-          [Map eventData]) =>
-      simulate_wrappers.SimulateNative.dragStart(
-          componentOrNode, _jsifyEventData(eventData));
+      simulate_wrappers.SimulateNative
+          .dragOver(componentOrNode, _jsifyEventData(eventData));
+  static void dragStart(/* [1] */ componentOrNode, [Map eventData]) =>
+      simulate_wrappers.SimulateNative
+          .dragStart(componentOrNode, _jsifyEventData(eventData));
   static void drop(/* [1] */ componentOrNode, [Map eventData]) =>
-      simulate_wrappers.SimulateNative.drop(componentOrNode, _jsifyEventData(eventData));
+      simulate_wrappers.SimulateNative
+          .drop(componentOrNode, _jsifyEventData(eventData));
   static void focus(/* [1] */ componentOrNode, [Map eventData]) =>
-      simulate_wrappers.SimulateNative.focus(componentOrNode, _jsifyEventData(eventData));
+      simulate_wrappers.SimulateNative
+          .focus(componentOrNode, _jsifyEventData(eventData));
   static void input(/* [1] */ componentOrNode, [Map eventData]) =>
-      simulate_wrappers.SimulateNative.input(componentOrNode, _jsifyEventData(eventData));
+      simulate_wrappers.SimulateNative
+          .input(componentOrNode, _jsifyEventData(eventData));
   static void keyDown(/* [1] */ componentOrNode, [Map eventData]) =>
-      simulate_wrappers.SimulateNative.keyDown(
-          componentOrNode, _jsifyEventData(eventData));
+      simulate_wrappers.SimulateNative
+          .keyDown(componentOrNode, _jsifyEventData(eventData));
   static void keyUp(/* [1] */ componentOrNode, [Map eventData]) =>
-      simulate_wrappers.SimulateNative.keyUp(componentOrNode, _jsifyEventData(eventData));
-  static void mouseDown(/* [1] */ componentOrNode,
-          [Map eventData]) =>
-      simulate_wrappers.SimulateNative.mouseDown(
-          componentOrNode, _jsifyEventData(eventData));
-  static void mouseMove(/* [1] */ componentOrNode,
-          [Map eventData]) =>
-      simulate_wrappers.SimulateNative.mouseMove(
-          componentOrNode, _jsifyEventData(eventData));
+      simulate_wrappers.SimulateNative
+          .keyUp(componentOrNode, _jsifyEventData(eventData));
+  static void mouseDown(/* [1] */ componentOrNode, [Map eventData]) =>
+      simulate_wrappers.SimulateNative
+          .mouseDown(componentOrNode, _jsifyEventData(eventData));
+  static void mouseMove(/* [1] */ componentOrNode, [Map eventData]) =>
+      simulate_wrappers.SimulateNative
+          .mouseMove(componentOrNode, _jsifyEventData(eventData));
   static void mouseOut(/* [1] */ componentOrNode, [Map eventData]) =>
-      simulate_wrappers.SimulateNative.mouseOut(
-          componentOrNode, _jsifyEventData(eventData));
-  static void mouseOver(/* [1] */ componentOrNode,
-          [Map eventData]) =>
-      simulate_wrappers.SimulateNative.mouseOver(
-          componentOrNode, _jsifyEventData(eventData));
+      simulate_wrappers.SimulateNative
+          .mouseOut(componentOrNode, _jsifyEventData(eventData));
+  static void mouseOver(/* [1] */ componentOrNode, [Map eventData]) =>
+      simulate_wrappers.SimulateNative
+          .mouseOver(componentOrNode, _jsifyEventData(eventData));
   static void mouseUp(/* [1] */ componentOrNode, [Map eventData]) =>
-      simulate_wrappers.SimulateNative.mouseUp(
-          componentOrNode, _jsifyEventData(eventData));
+      simulate_wrappers.SimulateNative
+          .mouseUp(componentOrNode, _jsifyEventData(eventData));
   static void paste(/* [1] */ componentOrNode, [Map eventData]) =>
-      simulate_wrappers.SimulateNative.paste(componentOrNode, _jsifyEventData(eventData));
+      simulate_wrappers.SimulateNative
+          .paste(componentOrNode, _jsifyEventData(eventData));
   static void scroll(/* [1] */ componentOrNode, [Map eventData]) =>
-      simulate_wrappers.SimulateNative.scroll(
-          componentOrNode, _jsifyEventData(eventData));
+      simulate_wrappers.SimulateNative
+          .scroll(componentOrNode, _jsifyEventData(eventData));
   static void submit(/* [1] */ componentOrNode, [Map eventData]) =>
-      simulate_wrappers.SimulateNative.submit(
-          componentOrNode, _jsifyEventData(eventData));
-  static void touchCancel(/* [1] */ componentOrNode,
-          [Map eventData]) =>
-      simulate_wrappers.SimulateNative.touchCancel(
-          componentOrNode, _jsifyEventData(eventData));
+      simulate_wrappers.SimulateNative
+          .submit(componentOrNode, _jsifyEventData(eventData));
+  static void touchCancel(/* [1] */ componentOrNode, [Map eventData]) =>
+      simulate_wrappers.SimulateNative
+          .touchCancel(componentOrNode, _jsifyEventData(eventData));
   static void touchEnd(/* [1] */ componentOrNode, [Map eventData]) =>
-      simulate_wrappers.SimulateNative.touchEnd(
-          componentOrNode, _jsifyEventData(eventData));
-  static void touchMove(/* [1] */ componentOrNode,
-          [Map eventData]) =>
-      simulate_wrappers.SimulateNative.touchMove(
-          componentOrNode, _jsifyEventData(eventData));
-  static void touchStart(/* [1] */ componentOrNode,
-          [Map eventData]) =>
-      simulate_wrappers.SimulateNative.touchStart(
-          componentOrNode, _jsifyEventData(eventData));
+      simulate_wrappers.SimulateNative
+          .touchEnd(componentOrNode, _jsifyEventData(eventData));
+  static void touchMove(/* [1] */ componentOrNode, [Map eventData]) =>
+      simulate_wrappers.SimulateNative
+          .touchMove(componentOrNode, _jsifyEventData(eventData));
+  static void touchStart(/* [1] */ componentOrNode, [Map eventData]) =>
+      simulate_wrappers.SimulateNative
+          .touchStart(componentOrNode, _jsifyEventData(eventData));
   static void wheel(/* [1] */ componentOrNode, [Map eventData]) =>
-      simulate_wrappers.SimulateNative.wheel(componentOrNode, _jsifyEventData(eventData));
+      simulate_wrappers.SimulateNative
+          .wheel(componentOrNode, _jsifyEventData(eventData));
 }
 
 /// Traverse all components in tree and accumulate all components where

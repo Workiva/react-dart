@@ -13,7 +13,8 @@ import 'dart:js';
 import "package:js/js.dart";
 import 'package:js/js_util.dart';
 import "package:react/react.dart";
-import "package:react/react_client/js_interop_helpers.dart" hide getProperty, setProperty, jsify;
+import "package:react/react_client/js_interop_helpers.dart"
+    hide getProperty, setProperty, jsify;
 import 'package:react/react_client/react_interop.dart';
 import "package:react/react_dom.dart";
 import "package:react/react_dom_server.dart";
@@ -427,13 +428,13 @@ class ReactJsComponentFactoryProxy extends ReactComponentFactoryProxy {
   /// Disable for more custom handling of these props.
   final bool convertDomProps;
 
-  ReactJsComponentFactoryProxy(ReactClass jsClass, {bool this.convertDomProps: true}) :
-      this.type = jsClass,
-      this.factory = React.createFactory(jsClass) {
+  ReactJsComponentFactoryProxy(ReactClass jsClass,
+      {bool this.convertDomProps: true})
+      : this.type = jsClass,
+        this.factory = React.createFactory(jsClass) {
     if (jsClass == null) {
       throw new ArgumentError('`jsClass` must not be null. '
-          'Ensure that the JS component class you\'re referencing is available and being accessed correctly.'
-      );
+          'Ensure that the JS component class you\'re referencing is available and being accessed correctly.');
     }
   }
 
@@ -459,7 +460,8 @@ class ReactJsComponentFactoryProxy extends ReactComponentFactoryProxy {
   dynamic noSuchMethod(Invocation invocation) {
     if (invocation.memberName == #call && invocation.isMethod) {
       Map props = invocation.positionalArguments[0];
-      List children = listifyChildren(invocation.positionalArguments.sublist(1));
+      List children =
+          listifyChildren(invocation.positionalArguments.sublist(1));
 
       if (convertDomProps) ReactDomComponentFactoryProxy.convertProps(props);
       markChildrenValidated(children);
@@ -927,8 +929,8 @@ SyntheticWheelEvent syntheticWheelEventFactory(events.SyntheticWheelEvent e) {
 }
 
 dynamic _findDomNode(component) {
-  return ReactDom.findDOMNode(
-      component is Component ? component.jsThis : component);
+  return ReactDom
+      .findDOMNode(component is Component ? component.jsThis : component);
 }
 
 void setClientConfiguration() {
