@@ -312,14 +312,15 @@ class _DartComponent extends Component {
 
 var ParentComponent = registerComponent(() => new _ParentComponent());
 class _ParentComponent extends Component {
+  InputElement inputRef; // Returns the DOM node.
+  _DartComponent dartComponentRef; // Returns instance of _DartComponent
+
   @override
   void componentDidMount() {
-    InputElement input = ref("input"); // Returns the DOM node.
-    print(input.value); // Prints "hello" to the console.
+    print(inputRef.value); // Prints "hello" to the console.
 
-    _DartComponent dartComponentRef = ref("dartComponent"); // Returns instance of _DartComponent
     dartComponentRef.someInstanceMethod(5); // Calls the method defined in _DartComponent
-    react_dom.findDOMNode(dartRef); // Returns div element rendered from _DartComponent
+    react_dom.findDOMNode(dartComponentRef); // Returns div element rendered from _DartComponent
 
     react_dom.findDOMNode(this); // Returns root dom element rendered from this component
   }
@@ -327,8 +328,8 @@ class _ParentComponent extends Component {
   @override
   render() {
     return div({},
-      input({"ref": "input", "value": "hello"}),
-      DartComponent({"ref": "dartComponent"}),
+      input({"ref": (ref){ inputRef = ref; }, "defaultValue": "hello"}),
+      DartComponent({"ref": (ref) { dartComponentRef = ref; }}),
     );
   }
 }
