@@ -29,6 +29,7 @@ export 'package:react/react.dart'
     show ReactComponentFactoryProxy, ComponentFactory;
 
 @Deprecated('5.0.0')
+// ignore: deprecated_member_use
 final EmptyObject emptyJsMap = new EmptyObject();
 
 /// __Deprecated. Will be removed in the `5.0.0` release.__ Use [ReactComponentFactoryProxy] instead.

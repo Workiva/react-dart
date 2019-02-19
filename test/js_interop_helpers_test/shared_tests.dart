@@ -24,6 +24,7 @@ void sharedJsFunctionTests() {
     // TODO: remove in 4.0.0
     group('getProperty', () {
       test('is function that does not throw upon initialization', () {
+        // ignore: deprecated_member_use
         expect(() => getProperty, const isInstanceOf<Function>());
       });
 
@@ -31,6 +32,7 @@ void sharedJsFunctionTests() {
         var jsObj = new TestJsObject(foo: 'bar');
         expect(jsObj.foo, equals('bar'), reason: 'test setup sanity-check');
 
+        // ignore: deprecated_member_use
         expect(getProperty(jsObj, 'foo'), equals('bar'));
       });
     });
@@ -38,6 +40,7 @@ void sharedJsFunctionTests() {
     // TODO: remove in 4.0.0
     group('setProperty', () {
       test('is function that does not throw upon initialization', () {
+        // ignore: deprecated_member_use
         expect(() => getProperty, const isInstanceOf<Function>());
       });
 
@@ -45,6 +48,7 @@ void sharedJsFunctionTests() {
         var jsObj = new TestJsObject();
         expect(jsObj.foo, isNull, reason: 'test setup sanity-check');
 
+        // ignore: deprecated_member_use
         expect(setProperty(jsObj, 'foo', 'bar'), equals('bar'),
             reason: 'should return the result of the assignment expression');
 
