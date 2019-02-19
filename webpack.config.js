@@ -56,7 +56,8 @@ function createExports(exportMappings) {
           entry: path.resolve(inputPath, entryFilename),
           plugins: isProduction ? prodPlugins : devPlugins,
           mode: isProduction ? "production" : "development",
-          externals: [{ window: "window" }]
+          externals: [{ window: "window" }],
+          devtool: isProduction ? false : 'inline-source-map'
         }
       );
     } else {

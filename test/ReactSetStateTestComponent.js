@@ -10,14 +10,34 @@ function getNonUpdatingSetStateLifeCycleCalls() {
 
 var _nonUpdatingSetStateLifeCycleCalls = [];
 
+function getLatestJSCounter() {
+  return _counter;
+}
+
+function getUpdatingRenderedCounter() {
+  return ReactDOM.findDOMNode(updatingInstance).textContent;
+}
+
+function getNonUpdatingRenderedCounter() {
+  return ReactDOM.findDOMNode(nonUpdatingInstance).textContent;
+}
+
+var _counter;
+
 class ReactSetStateTestComponent extends React.Component {
   constructor(props) {
     super(props);
-    this.state = {counter: 1};
+    _counter = 1;
+    this.state = {counter: _counter};
+  }
+
+  recordStateChange(newCount) {
+    _counter = newCount;
   }
 
   recordLifecyleCall(name) {
-    this.props.shouldUpdate ? _updatingSetStateLifeCycleCalls.push(name) : _nonUpdatingSetStateLifeCycleCalls.push(name)
+    this.props.shouldUpdate ? _updatingSetStateLifeCycleCalls.push(name) : _nonUpdatingSetStateLifeCycleCalls.push(name);
+    this.recordStateChange(this.state.counter);
   }
 
   UNSAFE_componentWillReceiveProps(_) {
