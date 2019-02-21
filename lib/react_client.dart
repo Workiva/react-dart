@@ -747,15 +747,15 @@ SyntheticMouseEvent syntheticMouseEventFactory(events.SyntheticMouseEvent e) {
 }
 
 /// Wrapper for [SyntheticPointerEvent].
-SyntheticPointerEvent syntheticPointerEventFactory(events.SyntheticPointerEvent
-e) {
+SyntheticPointerEvent syntheticPointerEventFactory(
+    events.SyntheticPointerEvent e) {
   return new SyntheticPointerEvent(
       e.bubbles,
       e.cancelable,
       e.currentTarget,
       e.defaultPrevented,
-          () => e.preventDefault(),
-          () => e.stopPropagation(),
+      () => e.preventDefault(),
+      () => e.stopPropagation(),
       e.eventPhase,
       e.isTrusted,
       e.nativeEvent,

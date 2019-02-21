@@ -858,18 +858,18 @@ class SyntheticPointerEvent extends SyntheticEvent {
       this.pointerType,
       this.isPrimary)
       : super(
-        bubbles,
-        cancelable,
-        currentTarget,
-        _defaultPrevented,
-        _preventDefault,
-        stopPropagation,
-        eventPhase,
-        isTrusted,
-        nativeEvent,
-        target,
-        timeStamp,
-        type) {}
+            bubbles,
+            cancelable,
+            currentTarget,
+            _defaultPrevented,
+            _preventDefault,
+            stopPropagation,
+            eventPhase,
+            isTrusted,
+            nativeEvent,
+            target,
+            timeStamp,
+            type) {}
 }
 
 class SyntheticTouchEvent extends SyntheticEvent {

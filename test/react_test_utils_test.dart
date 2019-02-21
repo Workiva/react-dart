@@ -102,19 +102,22 @@ void main() {
       group('dragStart', () => testEvent(Simulate.dragStart, 'dragStart'));
       group('drop', () => testEvent(Simulate.drop, 'drop'));
       group('focus', () => testEvent(Simulate.focus, 'focus'));
-      group('gotPointerCapture', () => testEvent(Simulate.input, 'gotPointerCapture'));
+      group('gotPointerCapture',
+          () => testEvent(Simulate.input, 'gotPointerCapture'));
       group('input', () => testEvent(Simulate.input, 'input'));
       group('keyDown', () => testEvent(Simulate.keyDown, 'keyDown'));
       group('keyPress', () => testEvent(Simulate.keyPress, 'keyPress'));
       group('keyUp', () => testEvent(Simulate.keyUp, 'keyUp'));
-      group('lostPointerCapture', () => testEvent(Simulate.input, 'lostPointerCapture'));
+      group('lostPointerCapture',
+          () => testEvent(Simulate.input, 'lostPointerCapture'));
       group('mouseDown', () => testEvent(Simulate.mouseDown, 'mouseDown'));
       group('mouseMove', () => testEvent(Simulate.mouseMove, 'mouseMove'));
       group('mouseOut', () => testEvent(Simulate.mouseOut, 'mouseOut'));
       group('mouseOver', () => testEvent(Simulate.mouseOver, 'mouseOver'));
       group('mouseUp', () => testEvent(Simulate.mouseUp, 'mouseUp'));
       group('paste', () => testEvent(Simulate.paste, 'paste'));
-      group('pointerCancel', () => testEvent(Simulate.mouseUp, 'pointerCancel'));
+      group(
+          'pointerCancel', () => testEvent(Simulate.mouseUp, 'pointerCancel'));
       group('pointerDown', () => testEvent(Simulate.mouseUp, 'pointerDown'));
       group('pointerEnter', () => testEvent(Simulate.mouseUp, 'pointerEnter'));
       group('pointerLeave', () => testEvent(Simulate.mouseUp, 'pointerLeave'));
