@@ -20,6 +20,7 @@ class _ChildComponent extends react.Component {
         "Test element",
         counter.toString(),
         react.button({
+          'type': 'button',
           'key': 'button',
           'className': 'btn btn-primary',
           'onClick': (_) {
@@ -33,6 +34,10 @@ class _ChildComponent extends react.Component {
 var simpleComponent = react.registerComponent(() => new SimpleComponent());
 
 class SimpleComponent extends react.Component {
+
+  var refToSpan;
+  var refToElement;
+
   componentWillMount() => print("mount");
 
   componentWillUnmount() => print("unmount");
@@ -40,20 +45,21 @@ class SimpleComponent extends react.Component {
   componentDidMount() {
     customAssert(
         "ref to span return span ",
-        (react_dom.findDOMNode(ref("refToSpan")) as SpanElement).text ==
+        refToSpan.text ==
             "Test");
     customAssert(
         "findDOMNode works on this", react_dom.findDOMNode(this) != null);
     customAssert("random ref resolves to null",
-        react_dom.findDOMNode(ref("someRandomRef")) == null);
+        this.ref("someRandomRef") == null);
   }
 
   var counter = 0;
 
   render() => react.div({}, [
-        react.span({'key': 'span1', "ref": "refToSpan"}, "Test"),
+        react.span({'key': 'span1', "ref": (ref){ refToSpan = ref; }}, "Test"),
         react.span({'key': 'span2'}, counter),
         react.button({
+          'type': 'button',
           'key': 'button1',
           'className': 'btn btn-primary',
           'onClick': (_) => (react_dom.findDOMNode(this) as HtmlElement)
@@ -62,12 +68,13 @@ class SimpleComponent extends react.Component {
               .text = (++counter).toString()
         }, 'Increase counter'),
         react.br({'key': 'br'}),
-        ChildComponent({'key': 'child', "ref": "refToElement"}),
+        ChildComponent({'key': 'child', "ref": (ref) { refToElement = ref; }}),
         react.button({
+          'type': 'button',
           'key': 'button2',
           'className': 'btn btn-primary',
           'onClick': (_) => window.alert(
-              (this.ref('refToElement') as _ChildComponent).counter.toString())
+              refToElement.counter.toString())
         }, 'Show value of child element'),
       ]);
 }
