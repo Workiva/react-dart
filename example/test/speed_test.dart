@@ -47,7 +47,7 @@ class _Hello extends react.Component {
 
   render() {
     timeprint("rendering start");
-    List<List<String>> data = (props['data'] as List<List<String>>);
+    var data = props['data'];
     var children = [];
     for (var elem in data) {
       children.add(react.div({

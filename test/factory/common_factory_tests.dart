@@ -192,7 +192,8 @@ void _childKeyWarningTests(Function factory) {
       consoleErrorMessage = null;
 
       originalConsoleError = context['console']['error'];
-      context['console']['error'] = new JsFunction.withThis((self, message) {
+      context['console']['error'] =
+          new JsFunction.withThis((self, message, arg1, arg2, arg3) {
         consoleErrorCalled = true;
         consoleErrorMessage = message;
 
@@ -209,22 +210,16 @@ void _childKeyWarningTests(Function factory) {
 
       expect(consoleErrorCalled, isTrue,
           reason: 'should have outputted a warning');
-      expect(
-          consoleErrorMessage,
-          contains(
-              'Each child in an array or iterator should have a unique "key" prop.'));
+      expect(consoleErrorMessage,
+          contains('Each child in a list should have a unique "key" prop.'));
     });
 
-    test('warns when multiple children are passed as a list', () {
+    test('does not warn when multiple children are passed as a list', () {
       _renderWithUniqueOwnerName(
           () => factory({}, [react.span({}), react.span({}), react.span({})]));
 
-      expect(consoleErrorCalled, isTrue,
-          reason: 'should have outputted a warning');
-      expect(
-          consoleErrorMessage,
-          contains(
-              'Each child in an array or iterator should have a unique "key" prop.'));
+      expect(consoleErrorCalled, isFalse,
+          reason: 'should not have have outputted a warning');
     });
 
     test('does not warn when multiple children are passed as variadic args',

@@ -1,4 +1,5 @@
 @TestOn('browser')
+@JS()
 library react_test_utils_test;
 
 import 'dart:html' show DivElement;
@@ -6,10 +7,10 @@ import 'dart:html' show DivElement;
 import 'package:js/js.dart';
 import 'package:test/test.dart';
 
-import 'package:react/react.dart' as react show div;
+import 'package:react/react.dart' as react;
 import 'package:react/react_client.dart';
 import 'package:react/react_client/react_interop.dart'
-    show React, ReactClassConfig, ReactComponent;
+    show React, ReactClass, ReactComponent;
 import 'package:react/react_client/js_interop_helpers.dart';
 import 'package:react/react_dom.dart' as react_dom;
 import 'package:react/src/react_client/event_prop_key_to_event_factory.dart';
@@ -161,13 +162,12 @@ main() {
   });
 }
 
+@JS()
+external Function compositeComponent();
+
 /// A factory for a JS composite component, for use in testing.
 final Function testJsComponentFactory = (() {
-  var componentClass = React.createClass(new ReactClassConfig(
-      displayName: 'testJsComponent',
-      render: allowInterop(() => react.div({}, 'test js component'))));
-
-  var reactFactory = React.createFactory(componentClass);
+  var reactFactory = React.createFactory(compositeComponent());
 
   return ([props = const {}, children]) {
     return reactFactory(jsify(props), listifyChildren(children));

@@ -5,4 +5,5 @@ pubspec.lock
 .idea
 .pub/
 .packages
+node_modules/
 .dart_tool
