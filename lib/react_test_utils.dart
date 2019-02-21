@@ -80,11 +80,6 @@ class Simulate {
       simulate_wrappers.Simulate.drag(componentOrNode, jsify(eventData));
   static void dragEnd(/* [1] */ componentOrNode, [Map eventData = const {}]) =>
       simulate_wrappers.Simulate.dragEnd(componentOrNode, jsify(eventData));
-
-  /*onPointerMove onPointerUp onPointerCancel
-  onGotPointerCapture
-  onLostPointerCapture onPointerEnter onPointerLeave onPointerOver
-  onPointerOut*/
   static void dragEnter(/* [1] */ componentOrNode,
           [Map eventData = const {}]) =>
       simulate_wrappers.Simulate.dragEnter(componentOrNode, jsify(eventData));
