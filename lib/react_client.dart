@@ -391,10 +391,9 @@ ReactDartComponentFactoryProxy _registerComponent(
 
   /// Create the JS [`ReactClass` component class](https://facebook.github.io/react/docs/top-level-api.html#react.createclass)
   /// with custom JS lifecycle methods.
-  var reactComponentClass = React.createClass(
-      createReactDartComponentClassConfig(
-          _dartInteropStatics, componentStatics, jsConfig)
-        ..displayName = componentInstance.displayName);
+  var reactComponentClass = createReactDartComponentClass(
+      _dartInteropStatics, componentStatics, jsConfig)
+    ..displayName = componentFactory().displayName;
 
   // Cache default props and store them on the ReactClass so they can be used
   // by ReactDartComponentFactoryProxy and externally.
@@ -828,7 +827,7 @@ void setClientConfiguration() {
     // corresponding JS functions are not available.
     React.isValidElement(null);
     ReactDom.findDOMNode(null);
-    createReactDartComponentClassConfig(null, null);
+    createReactDartComponentClass(null, null, null);
   } on NoSuchMethodError catch (_) {
     throw new Exception('react.js and react_dom.js must be loaded.');
   } catch (_) {

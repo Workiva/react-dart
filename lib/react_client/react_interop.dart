@@ -18,6 +18,7 @@ typedef ReactElement ReactJsComponentFactory(props, children);
 
 @JS()
 abstract class React {
+  external static String get version;
   @Deprecated('6.0.0')
   external static ReactClass createClass(ReactClassConfig reactClassConfig);
   external static ReactJsComponentFactory createFactory(type);
@@ -369,14 +370,14 @@ class ReactDartInteropStatics {
 /// This object is made accessible to a component's JS ReactClass config, which
 /// passes it to certain methods in [ReactDartInteropStatics].
 ///
-/// See [ReactDartInteropStatics], [createReactDartComponentClassConfig].
+/// See [ReactDartInteropStatics], [createReactDartComponentClass].
 class ComponentStatics {
   final ComponentFactory componentFactory;
 
   ComponentStatics(this.componentFactory);
 }
 
-/// Additional configuration passed to [createReactDartComponentClassConfig]
+/// Additional configuration passed to [createReactDartComponentClass]
 /// that needs to be directly accessible by that JS code.
 ///
 /// > __DEPRECATED - DO NOT USE__

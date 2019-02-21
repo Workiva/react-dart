@@ -138,9 +138,8 @@ class _GeocodesForm extends react.Component {
           'value': state['value'],
           'onChange': handleChange,
           // Input is referenced to access it's value
-          'ref': (searchInputInstance) {
-            this.searchInputInstance = searchInputInstance;
-          }
+          'ref': (searchInputInstance) =>
+              this.searchInputInstance = searchInputInstance,
         }),
         react.span({
           'key': 'spacer',
@@ -183,6 +182,7 @@ class _GeocodesHistoryItem extends react.Component {
   render() {
     return react.li({}, [
       react.button({
+        'type': 'button',
         'key': 'button',
         'className': 'btn btn-sm btn-default',
         'onClick': reload,

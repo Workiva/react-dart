@@ -122,49 +122,6 @@ void main() {
       group('touchStart', () => testEvent(Simulate.touchStart, 'touchStart'));
       group('wheel', () => testEvent(Simulate.wheel, 'wheel'));
     });
-
-    group('native event', () {
-      group('blur', () => testEvent(SimulateNative.blur, 'blur'));
-      group('click', () => testEvent(SimulateNative.click, 'click'));
-      group('copy', () => testEvent(SimulateNative.copy, 'copy'));
-      group('cut', () => testEvent(SimulateNative.cut, 'cut'));
-      group('doubleClick',
-          () => testEvent(SimulateNative.doubleClick, 'doubleClick'));
-      group('drag', () => testEvent(SimulateNative.drag, 'drag'));
-      group('dragEnd', () => testEvent(SimulateNative.dragEnd, 'dragEnd'));
-      group(
-          'dragEnter', () => testEvent(SimulateNative.dragEnter, 'dragEnter'));
-      group('dragExit', () => testEvent(SimulateNative.dragExit, 'dragExit'));
-      group(
-          'dragLeave', () => testEvent(SimulateNative.dragLeave, 'dragLeave'));
-      group('dragOver', () => testEvent(SimulateNative.dragOver, 'dragOver'));
-      group(
-          'dragStart', () => testEvent(SimulateNative.dragStart, 'dragStart'));
-      group('drop', () => testEvent(SimulateNative.drop, 'drop'));
-      group('focus', () => testEvent(SimulateNative.focus, 'focus'));
-      group('input', () => testEvent(SimulateNative.input, 'input'));
-      group('keyDown', () => testEvent(SimulateNative.keyDown, 'keyDown'));
-      group('keyUp', () => testEvent(SimulateNative.keyUp, 'keyUp'));
-      group(
-          'mouseDown', () => testEvent(SimulateNative.mouseDown, 'mouseDown'));
-      group(
-          'mouseMove', () => testEvent(SimulateNative.mouseMove, 'mouseMove'));
-      group('mouseOut', () => testEvent(SimulateNative.mouseOut, 'mouseOut'));
-      group(
-          'mouseOver', () => testEvent(SimulateNative.mouseOver, 'mouseOver'));
-      group('mouseUp', () => testEvent(SimulateNative.mouseUp, 'mouseUp'));
-      group('paste', () => testEvent(SimulateNative.paste, 'paste'));
-      group('scroll', () => testEvent(SimulateNative.scroll, 'scroll'));
-      group('submit', () => testEvent(SimulateNative.submit, 'submit'));
-      group('touchCancel',
-          () => testEvent(SimulateNative.touchCancel, 'touchCancel'));
-      group('touchEnd', () => testEvent(SimulateNative.touchEnd, 'touchEnd'));
-      group(
-          'touchMove', () => testEvent(SimulateNative.touchMove, 'touchMove'));
-      group('touchStart',
-          () => testEvent(SimulateNative.touchStart, 'touchStart'));
-      group('wheel', () => testEvent(SimulateNative.wheel, 'wheel'));
-    });
   });
 
   test('findRenderedDOMComponentWithClass', () {

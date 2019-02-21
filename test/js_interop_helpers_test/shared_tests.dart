@@ -63,10 +63,10 @@ void sharedJsFunctionTests() {
       });
     });
 
-    group('createReactDartComponentClassConfig', () {
+    group('createReactDartComponentClass', () {
       test('is function that does not throw when called', () {
-        expect(() => createReactDartComponentClassConfig(null, null),
-            returnsNormally);
+        expect(
+            () => createReactDartComponentClass(null, null), returnsNormally);
       });
     });
   });
