@@ -80,6 +80,12 @@ class Simulate {
       simulate_wrappers.Simulate.drag(componentOrNode, jsify(eventData));
   static void dragEnd(/* [1] */ componentOrNode, [Map eventData = const {}]) =>
       simulate_wrappers.Simulate.dragEnd(componentOrNode, jsify(eventData));
+
+
+  /*onPointerMove onPointerUp onPointerCancel
+  onGotPointerCapture
+  onLostPointerCapture onPointerEnter onPointerLeave onPointerOver
+  onPointerOut*/
   static void dragEnter(/* [1] */ componentOrNode,
           [Map eventData = const {}]) =>
       simulate_wrappers.Simulate.dragEnter(componentOrNode, jsify(eventData));
@@ -97,6 +103,10 @@ class Simulate {
       simulate_wrappers.Simulate.drop(componentOrNode, jsify(eventData));
   static void focus(/* [1] */ componentOrNode, [Map eventData = const {}]) =>
       simulate_wrappers.Simulate.focus(componentOrNode, jsify(eventData));
+  static void gotPointerCapture(/* [1] */ componentOrNode, [Map eventData =
+  const {}]) =>
+      simulate_wrappers.Simulate.gotPointerCapture(componentOrNode, jsify
+        (eventData));
   static void input(/* [1] */ componentOrNode, [Map eventData = const {}]) =>
       simulate_wrappers.Simulate.input(componentOrNode, jsify(eventData));
   static void keyDown(/* [1] */ componentOrNode, [Map eventData = const {}]) =>
@@ -105,6 +115,10 @@ class Simulate {
       simulate_wrappers.Simulate.keyPress(componentOrNode, jsify(eventData));
   static void keyUp(/* [1] */ componentOrNode, [Map eventData = const {}]) =>
       simulate_wrappers.Simulate.keyUp(componentOrNode, jsify(eventData));
+  static void lostPointerCapture(/* [1] */ componentOrNode, [Map eventData =
+  const {}]) =>
+      simulate_wrappers.Simulate.lostPointerCapture(componentOrNode, jsify
+        (eventData));
   static void mouseDown(/* [1] */ componentOrNode,
           [Map eventData = const {}]) =>
       simulate_wrappers.Simulate.mouseDown(componentOrNode, jsify(eventData));
@@ -118,6 +132,34 @@ class Simulate {
       simulate_wrappers.Simulate.mouseOver(componentOrNode, jsify(eventData));
   static void mouseUp(/* [1] */ componentOrNode, [Map eventData = const {}]) =>
       simulate_wrappers.Simulate.mouseUp(componentOrNode, jsify(eventData));
+  static void pointerCancel(/* [1] */ componentOrNode, [Map eventData = const
+  {}]) =>
+      simulate_wrappers.Simulate.pointerCancel(componentOrNode, jsify
+        (eventData));
+  static void pointerDown(/* [1] */ componentOrNode, [Map eventData = const
+  {}]) =>
+      simulate_wrappers.Simulate.pointerDown(componentOrNode, jsify
+        (eventData));
+  static void pointerEnter(/* [1] */ componentOrNode, [Map eventData = const
+  {}]) =>
+      simulate_wrappers.Simulate.pointerEnter(componentOrNode, jsify
+        (eventData));
+  static void pointerLeave(/* [1] */ componentOrNode, [Map eventData = const
+  {}]) =>
+      simulate_wrappers.Simulate.pointerLeave(componentOrNode, jsify
+        (eventData));
+  static void pointerMove(/* [1] */ componentOrNode, [Map eventData = const
+  {}]) =>
+      simulate_wrappers.Simulate.pointerMove(componentOrNode, jsify(eventData));
+  static void pointerOut(/* [1] */ componentOrNode, [Map eventData = const
+  {}]) =>
+      simulate_wrappers.Simulate.pointerOut(componentOrNode, jsify(eventData));
+  static void pointerOver(/* [1] */ componentOrNode, [Map eventData = const
+  {}]) =>
+      simulate_wrappers.Simulate.pointerOver(componentOrNode, jsify(eventData));
+  static void pointerUp(/* [1] */ componentOrNode, [Map eventData = const
+  {}]) =>
+      simulate_wrappers.Simulate.pointerUp(componentOrNode, jsify(eventData));
   static void paste(/* [1] */ componentOrNode, [Map eventData = const {}]) =>
       simulate_wrappers.Simulate.paste(componentOrNode, jsify(eventData));
   static void scroll(/* [1] */ componentOrNode, [Map eventData = const {}]) =>

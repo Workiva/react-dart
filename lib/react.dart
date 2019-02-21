@@ -822,6 +822,56 @@ class SyntheticMouseEvent extends SyntheticEvent {
             type) {}
 }
 
+class SyntheticPointerEvent extends SyntheticEvent {
+  final num pointerId;
+  final num width;
+  final num height;
+  final num pressure;
+  final num tangentialPressure;
+  final num tiltX;
+  final num tiltY;
+  final num twist;
+  final String pointerType;
+  final bool isPrimary;
+
+  SyntheticPointerEvent(
+      bubbles,
+      cancelable,
+      currentTarget,
+      _defaultPrevented,
+      _preventDefault,
+      stopPropagation,
+      eventPhase,
+      isTrusted,
+      nativeEvent,
+      target,
+      timeStamp,
+      type,
+      this.pointerId,
+      this.width,
+      this.height,
+      this.pressure,
+      this.tangentialPressure,
+      this.tiltX,
+      this.tiltY,
+      this.twist,
+      this.pointerType,
+      this.isPrimary)
+      : super(
+        bubbles,
+        cancelable,
+        currentTarget,
+        _defaultPrevented,
+        _preventDefault,
+        stopPropagation,
+        eventPhase,
+        isTrusted,
+        nativeEvent,
+        target,
+        timeStamp,
+        type) {}
+}
+
 class SyntheticTouchEvent extends SyntheticEvent {
   final bool altKey;
   final /*DOMTouchList*/ changedTouches;
