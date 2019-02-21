@@ -137,7 +137,8 @@ class _GeocodesForm extends react.Component {
           'value': state['value'],
           'onChange': handleChange,
           // Input is referenced to access it's value
-          'ref': (searchInputInstance) => this.searchInputInstance = searchInputInstance,
+          'ref': (searchInputInstance) =>
+              this.searchInputInstance = searchInputInstance,
         }),
         react.span({
           'key': 'spacer',

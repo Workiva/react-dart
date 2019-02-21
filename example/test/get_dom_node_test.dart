@@ -34,7 +34,6 @@ class _ChildComponent extends react.Component {
 var simpleComponent = react.registerComponent(() => new SimpleComponent());
 
 class SimpleComponent extends react.Component {
-
   var refToSpan;
   var refToElement;
 
@@ -43,20 +42,22 @@ class SimpleComponent extends react.Component {
   componentWillUnmount() => print("unmount");
 
   componentDidMount() {
-    customAssert(
-        "ref to span return span ",
-        refToSpan.text ==
-            "Test");
+    customAssert("ref to span return span ", refToSpan.text == "Test");
     customAssert(
         "findDOMNode works on this", react_dom.findDOMNode(this) != null);
-    customAssert("random ref resolves to null",
-        this.ref("someRandomRef") == null);
+    customAssert(
+        "random ref resolves to null", this.ref("someRandomRef") == null);
   }
 
   var counter = 0;
 
   render() => react.div({}, [
-        react.span({'key': 'span1', "ref": (ref){ refToSpan = ref; }}, "Test"),
+        react.span({
+          'key': 'span1',
+          "ref": (ref) {
+            refToSpan = ref;
+          }
+        }, "Test"),
         react.span({'key': 'span2'}, counter),
         react.button({
           'type': 'button',
@@ -68,13 +69,17 @@ class SimpleComponent extends react.Component {
               .text = (++counter).toString()
         }, 'Increase counter'),
         react.br({'key': 'br'}),
-        ChildComponent({'key': 'child', "ref": (ref) { refToElement = ref; }}),
+        ChildComponent({
+          'key': 'child',
+          "ref": (ref) {
+            refToElement = ref;
+          }
+        }),
         react.button({
           'type': 'button',
           'key': 'button2',
           'className': 'btn btn-primary',
-          'onClick': (_) => window.alert(
-              refToElement.counter.toString())
+          'onClick': (_) => window.alert(refToElement.counter.toString())
         }, 'Show value of child element'),
       ]);
 }
