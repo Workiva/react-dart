@@ -59,8 +59,7 @@ void main() {
       expect(domNode.text, equals(''));
     });
 
-    void testEvent(
-        void event(dynamic instanceOrNode), String eventName) {
+    void testEvent(void event(dynamic instanceOrNode), String eventName) {
       eventName = eventName.toLowerCase();
 
       test('with React instance as arg', () {
