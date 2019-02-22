@@ -116,43 +116,18 @@ void main() {
       group('mouseOver', () => testEvent(Simulate.mouseOver, 'mouseOver'));
       group('mouseUp', () => testEvent(Simulate.mouseUp, 'mouseUp'));
       group('paste', () => testEvent(Simulate.paste, 'paste'));
+      group('pointerCancel',
+          () => testEvent(Simulate.pointerCancel, 'pointerCancel'));
       group(
-          'pointerCancel',
-          () => testEvent(
-              Simulate.pointerCancel,
-              'pointerCan'
-              'cel'
-              ''));
+          'pointerDown', () => testEvent(Simulate.pointerDown, 'pointerDown'));
+      group('pointerEnter',
+          () => testEvent(Simulate.pointerEnter, 'pointerEnter'));
+      group('pointerLeave',
+          () => testEvent(Simulate.pointerLeave, 'pointerLeave'));
       group(
-          'pointerDown',
-          () => testEvent(
-              Simulate.pointerDown,
-              'pointerDown'
-              ''));
+          'pointerMove', () => testEvent(Simulate.pointerMove, 'pointerMove'));
       group(
-          'pointerEnter',
-          () => testEvent(
-              Simulate.pointerEnter,
-              'pointerEn'
-              'ter'));
-      group(
-          'pointerLeave',
-          () => testEvent(
-              Simulate.pointerLeave,
-              'pointerLe'
-              'ave'));
-      group(
-          'pointerMove',
-          () => testEvent(
-              Simulate.pointerMove,
-              'pointerMove'
-              ''));
-      group(
-          'pointerOver',
-          () => testEvent(
-              Simulate.pointerOver,
-              'pointerOver'
-              ''));
+          'pointerOver', () => testEvent(Simulate.pointerOver, 'pointerOver'));
       group('pointerOut', () => testEvent(Simulate.pointerOut, 'pointerOut'));
       group('pointerUp', () => testEvent(Simulate.pointerUp, 'pointerUp'));
       group('scroll', () => testEvent(Simulate.scroll, 'scroll'));
