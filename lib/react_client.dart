@@ -531,7 +531,7 @@ Map unconvertJsProps(/* ReactElement|ReactComponent */ instance) {
   // Convert the nested style map so it can be read by Dart code.
   var style = props['style'];
   if (style != null) {
-    props['style'] = _dartifyJsMap(style);
+    props['style'] = _dartifyJsMap<String, dynamic>(style);
   }
 
   return props;
@@ -572,8 +572,8 @@ _convertEventHandlers(Map args) {
 }
 
 /// Returns a Dart Map copy of the JS property key-value pairs in [jsMap].
-Map _dartifyJsMap(jsMap) {
-  return new Map.fromIterable(_objectKeys(jsMap),
+Map<K, V> _dartifyJsMap<K, V>(jsMap) {
+  return new Map<K, V>.fromIterable(_objectKeys(jsMap),
       value: (key) => getProperty(jsMap, key));
 }
 
