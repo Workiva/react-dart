@@ -615,7 +615,7 @@ class SyntheticClipboardEvent extends SyntheticEvent {
   SyntheticClipboardEvent(
     bool bubbles,
     bool cancelable,
-    bool currentTarget,
+    dynamic currentTarget,
     bool defaultPrevented,
     dynamic preventDefault,
     dynamic stopPropagation,
@@ -657,7 +657,7 @@ class SyntheticKeyboardEvent extends SyntheticEvent {
   SyntheticKeyboardEvent(
     bool bubbles,
     bool cancelable,
-    bool currentTarget,
+    dynamic currentTarget,
     bool defaultPrevented,
     dynamic preventDefault,
     dynamic stopPropagation,
@@ -699,7 +699,7 @@ class SyntheticFocusEvent extends SyntheticEvent {
   SyntheticFocusEvent(
     bool bubbles,
     bool cancelable,
-    bool currentTarget,
+    dynamic currentTarget,
     bool defaultPrevented,
     dynamic preventDefault,
     dynamic stopPropagation,
@@ -729,7 +729,7 @@ class SyntheticFormEvent extends SyntheticEvent {
   SyntheticFormEvent(
     bool bubbles,
     bool cancelable,
-    bool currentTarget,
+    dynamic currentTarget,
     bool defaultPrevented,
     dynamic preventDefault,
     dynamic stopPropagation,
@@ -783,7 +783,7 @@ class SyntheticMouseEvent extends SyntheticEvent {
   SyntheticMouseEvent(
     bool bubbles,
     bool cancelable,
-    bool currentTarget,
+    dynamic currentTarget,
     bool defaultPrevented,
     dynamic preventDefault,
     dynamic stopPropagation,
@@ -837,7 +837,7 @@ class SyntheticPointerEvent extends SyntheticEvent {
   SyntheticPointerEvent(
       bool bubbles,
       bool cancelable,
-      bool currentTarget,
+      dynamic currentTarget,
       bool defaultPrevented,
       dynamic preventDefault,
       dynamic stopPropagation,
@@ -884,7 +884,7 @@ class SyntheticTouchEvent extends SyntheticEvent {
   SyntheticTouchEvent(
     bool bubbles,
     bool cancelable,
-    bool currentTarget,
+    dynamic currentTarget,
     bool defaultPrevented,
     dynamic preventDefault,
     dynamic stopPropagation,
@@ -923,7 +923,7 @@ class SyntheticUIEvent extends SyntheticEvent {
   SyntheticUIEvent(
     bool bubbles,
     bool cancelable,
-    bool currentTarget,
+    dynamic currentTarget,
     bool _defaultPrevented,
     dynamic _preventDefault,
     dynamic stopPropagation,
@@ -959,7 +959,7 @@ class SyntheticWheelEvent extends SyntheticEvent {
   SyntheticWheelEvent(
     bool bubbles,
     bool cancelable,
-    bool currentTarget,
+    dynamic currentTarget,
     bool defaultPrevented,
     dynamic preventDefault,
     dynamic stopPropagation,
