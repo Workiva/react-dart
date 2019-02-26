@@ -174,17 +174,15 @@ external List<String> _objectKeys(Object object);
 InteropContextValue _jsifyContext(Map<String, dynamic> context) {
   var interopContext = new InteropContextValue();
   context.forEach((key, value) {
-    setProperty(interopContext, key, new ReactDartContextInternal(value));
+    setProperty(interopContext, key, value);
   });
 
   return interopContext;
 }
 
 Map<String, dynamic> _unjsifyContext(InteropContextValue interopContext) {
-  // TODO consider using `contextKeys` for this if perf of objectKeys is bad.
   return new Map.fromIterable(_objectKeys(interopContext), value: (key) {
-    ReactDartContextInternal internal = getProperty(interopContext, key);
-    return internal?.value;
+    return getProperty(interopContext, key);
   });
 }
 
@@ -221,11 +219,6 @@ final ReactDartInteropStatics _dartInteropStatics = (() {
         // Return the component so that the JS proxying component can store it,
         // avoiding an interceptor lookup.
         return component;
-      });
-
-  InteropContextValue handleGetChildContext(Component component) =>
-      zone.run(() {
-        return _jsifyContext(component.getChildContext());
       });
 
   /// Wrapper for [Component.componentWillMount].
@@ -370,7 +363,6 @@ final ReactDartInteropStatics _dartInteropStatics = (() {
 
   return new ReactDartInteropStatics(
       initComponent: allowInterop(initComponent),
-      handleGetChildContext: allowInterop(handleGetChildContext),
       handleComponentWillMount: allowInterop(handleComponentWillMount),
       handleComponentDidMount: allowInterop(handleComponentDidMount),
       handleComponentWillReceiveProps:
@@ -391,8 +383,7 @@ ReactDartComponentFactoryProxy _registerComponent(
   var componentStatics = new ComponentStatics(componentFactory);
 
   var jsConfig = new JsComponentConfig(
-    childContextKeys: componentInstance.childContextKeys,
-    contextKeys: componentInstance.contextKeys,
+    contextType: componentInstance.contextType,
   );
 
   /// Create the JS [`ReactClass` component class](https://facebook.github.io/react/docs/top-level-api.html#react.createclass)
@@ -415,6 +406,7 @@ class ReactJsComponentFactoryProxy extends ReactComponentFactoryProxy {
   /// The JS class used by this factory.
   @override
   final ReactClass type;
+  final bool isContextComponent;
 
   /// The JS component factory used by this factory to build [ReactElement]s.
   final Function factory;
@@ -428,7 +420,7 @@ class ReactJsComponentFactoryProxy extends ReactComponentFactoryProxy {
   final bool convertDomProps;
 
   ReactJsComponentFactoryProxy(ReactClass jsClass,
-      {bool this.convertDomProps: true})
+      {bool this.convertDomProps: true, bool this.isContextComponent: false})
       : this.type = jsClass,
         this.factory = React.createFactory(jsClass) {
     if (jsClass == null) {
@@ -438,37 +430,35 @@ class ReactJsComponentFactoryProxy extends ReactComponentFactoryProxy {
   }
 
   @override
-  ReactElement build(Map props, [List childrenArgs = const []]) {
-    var children = _convertArgsToChildren(childrenArgs);
-    children = listifyChildren(children);
+  ReactElement build(Map props, [List childrenArgs]) {
+    dynamic potentiallyConvertedProps;
+    dynamic children;
+    children = _convertArgsToChildren(childrenArgs);
 
-    Map potentiallyConvertedProps;
+    if (isContextComponent) {
+      if(props.containsKey('value')) {
+        props['value'] = _jsifyContext(props['value']);
+      }
+      if (children.single is Function) {
+        children = (args) {
+          return children.single(_unjsifyContext(args));
+        };
+      }
+    }
+
+
     if (convertDomProps) {
       // We can't mutate the original since we can't be certain that the value of the
       // the converted event handler will be compatible with the Map's type parameters.
       potentiallyConvertedProps = new Map.from(props);
-      ReactDomComponentFactoryProxy.convertProps(potentiallyConvertedProps);
+      _convertEventHandlers(potentiallyConvertedProps);
     } else {
       potentiallyConvertedProps = props;
     }
 
-    return factory(jsifyAndAllowInterop(potentiallyConvertedProps), children);
-  }
+    potentiallyConvertedProps = jsifyAndAllowInterop(potentiallyConvertedProps);
 
-  @override
-  dynamic noSuchMethod(Invocation invocation) {
-    if (invocation.memberName == #call && invocation.isMethod) {
-      Map props = invocation.positionalArguments[0];
-      List children =
-          listifyChildren(invocation.positionalArguments.sublist(1));
-
-      if (convertDomProps) ReactDomComponentFactoryProxy.convertProps(props);
-      markChildrenValidated(children);
-
-      return factory(jsifyAndAllowInterop(props), children);
-    }
-
-    return super.noSuchMethod(invocation);
+    return factory(potentiallyConvertedProps, children);
   }
 }
 
@@ -933,15 +923,21 @@ dynamic _findDomNode(component) {
 }
 
 class ReactDartContext {
-  ReactDartContext(this.Provider, this.Consumer);
+  dynamic _jsThis;
+  ReactDartContext(this.Provider, this.Consumer, this._jsThis);
   ReactJsComponentFactoryProxy Provider;
   ReactJsComponentFactoryProxy Consumer;
+  dynamic get jsThis => _jsThis;
 }
 
 createContext([dynamic defaultValue, Function calculateChangedBits]) {
   var JSContext = React.createContext(defaultValue, calculateChangedBits);
-  return ReactDartContext(ReactJsComponentFactoryProxy(JSContext.Provider),
-      ReactJsComponentFactoryProxy(JSContext.Consumer));
+  return ReactDartContext(
+      ReactJsComponentFactoryProxy(JSContext.Provider,
+          isContextComponent: true),
+      ReactJsComponentFactoryProxy(JSContext.Consumer,
+          isContextComponent: true),
+      JSContext);
 }
 
 void setClientConfiguration() {

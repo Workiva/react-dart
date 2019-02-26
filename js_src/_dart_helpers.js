@@ -50,29 +50,9 @@ function _createReactDartComponentClass(dartInteropStatics, componentStatics, js
     }
   }
 
-      // React limits the accessible context entries
-      // to the keys specified in childContextTypes/contextTypes.
-      var childContextKeys = jsConfig && jsConfig.childContextKeys;
-      var contextKeys = jsConfig && jsConfig.contextKeys;
-
-      if (childContextKeys && childContextKeys.length !== 0) {
-        ReactDartComponent.childContextTypes = {};
-        for (var i = 0; i < childContextKeys.length; i++) {
-          ReactDartComponent.childContextTypes[childContextKeys[i]] = React.PropTypes.object;
-        }
-        // Only declare this when `childContextKeys` is non-empty to avoid unnecessarily
-        // creating interop context objects for components that won't use it.
-        ReactDartComponent.prototype['getChildContext'] = function() {
-          return dartInteropStatics.handleGetChildContext(this.dartComponent);
-        };
-      }
-
-      if (contextKeys && contextKeys.length !== 0) {
-        ReactDartComponent.contextTypes = {};
-        for (var i = 0; i < contextKeys.length; i++) {
-          ReactDartComponent.contextTypes[contextKeys[i]] = React.PropTypes.object;
-        }
-      }
+  if (jsConfig && jsConfig.contextType) {
+    ReactDartComponent.contextType = jsConfig.contextType.jsThis;
+  }
 
   return ReactDartComponent;
 }

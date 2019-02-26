@@ -149,7 +149,7 @@ void main() {
           ]));
     });
 
-    test('does not call getChildContext when childContextKeys is empty', () {
+    /*test('does not call getChildContext when childContextKeys is empty', () {
       var mountNode = new DivElement();
       var instance = react_dom.render(
           ContextWrapperWithoutKeys(
@@ -268,7 +268,7 @@ void main() {
                 props: newPropsWithDefaults,
                 context: expectedContext),
           ]));
-    });
+    });*/
 
     test(
         'receives updated props with correct lifecycle calls and defaults properly merged in',

@@ -193,7 +193,7 @@ void _childKeyWarningTests(Function factory) {
 
       originalConsoleError = context['console']['error'];
       context['console']['error'] =
-          new JsFunction.withThis((self, message, arg1, arg2, arg3) {
+          new JsFunction.withThis((self, message, [arg1, arg2, arg3, arg4, arg5, arg6]) {
         consoleErrorCalled = true;
         consoleErrorMessage = message;
 

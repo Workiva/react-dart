@@ -17,16 +17,11 @@ var babelPlugin = new webpack.DefinePlugin({
 });
 
 var devPlugins = [
-  babelPlugin
+  babelPlugin,
 ];
 
 var prodPlugins = [
   babelPlugin,
-  new webpack.DefinePlugin({
-    optimization: {
-      minimizer: [new UglifyJsPlugin({ sourceMap: true })]
-    },
-  })
 ];
 
 /// Helper function that generates the webpack export objects array
@@ -56,7 +51,8 @@ function createExports(exportMappings) {
           entry: path.resolve(inputPath, entryFilename),
           plugins: isProduction ? prodPlugins : devPlugins,
           mode: isProduction ? "production" : "development",
-          externals: [{ window: "window" }]
+          externals: [{ window: "window" }],
+          devtool: "source-map",
         }
       );
     } else {

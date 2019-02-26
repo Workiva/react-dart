@@ -296,7 +296,6 @@ bool get inReactDevMode => _inReactDevMode;
 class ReactDartInteropStatics {
   external factory ReactDartInteropStatics({
     _InitComponent initComponent,
-    _HandleGetChildContext handleGetChildContext,
     _HandleComponentWillMount handleComponentWillMount,
     _HandleComponentDidMount handleComponentDidMount,
     _HandleComponentWillReceiveProps handleComponentWillReceiveProps,
@@ -326,7 +325,6 @@ class ComponentStatics {
 @anonymous
 class JsComponentConfig {
   external factory JsComponentConfig({
-    Iterable<String> childContextKeys,
-    Iterable<String> contextKeys,
+    contextType,
   });
 }

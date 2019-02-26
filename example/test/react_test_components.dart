@@ -1,4 +1,5 @@
 import "dart:async";
+import 'dart:convert';
 
 import "package:react/react.dart" as react;
 import 'package:react/react_client.dart';
@@ -168,9 +169,11 @@ class _MainComponent extends react.Component {
 
 var mainComponent = react.registerComponent(() => new _MainComponent());
 
-var TestContext = createContext({'test': true});
+var TestContext = createContext({'dartClass': react.Component, 'map':{'test':true},  'renderCount': 0});
 
 class _ContextComponent extends react.Component {
+  getInitialState() => {'dartClass': react.Component, 'map':{'test':true},  'renderCount': 0};
+
   render() {
     return react.ul({
       'key': 'ul'
@@ -182,18 +185,21 @@ class _ContextComponent extends react.Component {
         'onClick': _onButtonClick
       }, 'Redraw'),
       react.br({'key': 'break1'}),
-      'ContextComponent.getChildContext(): ',
+      'TestContext.Provider props.value: $state',
       react.br({'key': 'break2'}),
       react.br({'key': 'break3'}),
       TestContext.Provider(
-        {'value': 'Hi from context'},
+        {
+          'key': 'tcp',
+          'value': this.state
+        },
         props['children'],
       ),
     ]);
   }
 
   _onButtonClick(event) {
-    this.setState({'renderCount': (this.state['renderCount'] ?? 0) + 1});
+    this.setState({'renderCount': this.state['renderCount'] + 1, 'dartClass': react.Component, 'map':{'test':true}});
   }
 }
 
@@ -202,11 +208,11 @@ var contextComponent = react.registerComponent(() => new _ContextComponent());
 class _ContextConsumerComponent extends react.Component {
   render() {
     return TestContext.Consumer({}, (value) {
-      print(value);
+      print(value.runtimeType);
       return react.ul({
         'key': 'ul'
       }, [
-        'ContextConsumerComponent.context: ',
+        'TestContext.Consumer (value): ${value["map"]["test"]}',
         react.br({'key': 'break1'}),
         react.br({'key': 'break2'}),
         props['children'],
@@ -218,19 +224,17 @@ class _ContextConsumerComponent extends react.Component {
 var contextConsumerComponent =
     react.registerComponent(() => new _ContextConsumerComponent());
 
-class _GrandchildContextConsumerComponent extends react.Component {
-  @override
-  Iterable<String> get contextKeys => const ['renderCount'];
+class _ContextTypeConsumerComponent extends react.Component {
+  var contextType = TestContext;
 
   render() {
     return react.ul({
       'key': 'ul'
     }, [
-      'GrandchildContextConsumerComponent.context: ',
-      context.toString(),
+      'Using Component.contextType - this.context: ${this.context}',
     ]);
   }
 }
 
 var grandchildContextConsumerComponent =
-    react.registerComponent(() => new _GrandchildContextConsumerComponent());
+    react.registerComponent(() => new _ContextTypeConsumerComponent());
