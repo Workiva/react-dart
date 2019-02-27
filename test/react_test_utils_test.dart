@@ -29,7 +29,8 @@ void main() {
     ReactShallowRenderer shallowRenderer;
 
     setUp(() {
-      content = sampleComponent({'className': 'test', 'id': 'createRendererTest'});
+      content =
+          sampleComponent({'className': 'test', 'id': 'createRendererTest'});
 
       shallowRenderer = createRenderer();
     });
@@ -58,7 +59,8 @@ void main() {
       expect(domNode.text, equals(''));
     });
 
-    void testEvent(void event(dynamic instanceOrNode, Map eventData), String eventName) {
+    void testEvent(
+        void event(dynamic instanceOrNode, Map eventData), String eventName) {
       Map eventData;
       int fakeTimeStamp;
 
@@ -79,7 +81,9 @@ void main() {
         event(domNode, eventData);
         expect(domNode.text, equals('$eventName $fakeTimeStamp'));
       });
-    };
+    }
+
+    ;
 
     group('event', () {
       group('blur', () => testEvent(Simulate.blur, 'blur'));
@@ -87,7 +91,8 @@ void main() {
       group('click', () => testEvent(Simulate.click, 'click'));
       group('copy', () => testEvent(Simulate.copy, 'copy'));
       group('cut', () => testEvent(Simulate.cut, 'cut'));
-      group('doubleClick', () => testEvent(Simulate.doubleClick, 'doubleClick'));
+      group(
+          'doubleClick', () => testEvent(Simulate.doubleClick, 'doubleClick'));
       group('drag', () => testEvent(Simulate.drag, 'drag'));
       group('dragEnd', () => testEvent(Simulate.dragEnd, 'dragEnd'));
       group('dragEnter', () => testEvent(Simulate.dragEnter, 'dragEnter'));
@@ -109,7 +114,8 @@ void main() {
       group('paste', () => testEvent(Simulate.paste, 'paste'));
       group('scroll', () => testEvent(Simulate.scroll, 'scroll'));
       group('submit', () => testEvent(Simulate.submit, 'submit'));
-      group('touchCancel', () => testEvent(Simulate.touchCancel, 'touchCancel'));
+      group(
+          'touchCancel', () => testEvent(Simulate.touchCancel, 'touchCancel'));
       group('touchEnd', () => testEvent(Simulate.touchEnd, 'touchEnd'));
       group('touchMove', () => testEvent(Simulate.touchMove, 'touchMove'));
       group('touchStart', () => testEvent(Simulate.touchStart, 'touchStart'));
@@ -121,31 +127,41 @@ void main() {
       group('click', () => testEvent(SimulateNative.click, 'click'));
       group('copy', () => testEvent(SimulateNative.copy, 'copy'));
       group('cut', () => testEvent(SimulateNative.cut, 'cut'));
-      group('doubleClick', () => testEvent(SimulateNative.doubleClick, 'doubleClick'));
+      group('doubleClick',
+          () => testEvent(SimulateNative.doubleClick, 'doubleClick'));
       group('drag', () => testEvent(SimulateNative.drag, 'drag'));
       group('dragEnd', () => testEvent(SimulateNative.dragEnd, 'dragEnd'));
-      group('dragEnter', () => testEvent(SimulateNative.dragEnter, 'dragEnter'));
+      group(
+          'dragEnter', () => testEvent(SimulateNative.dragEnter, 'dragEnter'));
       group('dragExit', () => testEvent(SimulateNative.dragExit, 'dragExit'));
-      group('dragLeave', () => testEvent(SimulateNative.dragLeave, 'dragLeave'));
+      group(
+          'dragLeave', () => testEvent(SimulateNative.dragLeave, 'dragLeave'));
       group('dragOver', () => testEvent(SimulateNative.dragOver, 'dragOver'));
-      group('dragStart', () => testEvent(SimulateNative.dragStart, 'dragStart'));
+      group(
+          'dragStart', () => testEvent(SimulateNative.dragStart, 'dragStart'));
       group('drop', () => testEvent(SimulateNative.drop, 'drop'));
       group('focus', () => testEvent(SimulateNative.focus, 'focus'));
       group('input', () => testEvent(SimulateNative.input, 'input'));
       group('keyDown', () => testEvent(SimulateNative.keyDown, 'keyDown'));
       group('keyUp', () => testEvent(SimulateNative.keyUp, 'keyUp'));
-      group('mouseDown', () => testEvent(SimulateNative.mouseDown, 'mouseDown'));
-      group('mouseMove', () => testEvent(SimulateNative.mouseMove, 'mouseMove'));
+      group(
+          'mouseDown', () => testEvent(SimulateNative.mouseDown, 'mouseDown'));
+      group(
+          'mouseMove', () => testEvent(SimulateNative.mouseMove, 'mouseMove'));
       group('mouseOut', () => testEvent(SimulateNative.mouseOut, 'mouseOut'));
-      group('mouseOver', () => testEvent(SimulateNative.mouseOver, 'mouseOver'));
+      group(
+          'mouseOver', () => testEvent(SimulateNative.mouseOver, 'mouseOver'));
       group('mouseUp', () => testEvent(SimulateNative.mouseUp, 'mouseUp'));
       group('paste', () => testEvent(SimulateNative.paste, 'paste'));
       group('scroll', () => testEvent(SimulateNative.scroll, 'scroll'));
       group('submit', () => testEvent(SimulateNative.submit, 'submit'));
-      group('touchCancel', () => testEvent(SimulateNative.touchCancel, 'touchCancel'));
+      group('touchCancel',
+          () => testEvent(SimulateNative.touchCancel, 'touchCancel'));
       group('touchEnd', () => testEvent(SimulateNative.touchEnd, 'touchEnd'));
-      group('touchMove', () => testEvent(SimulateNative.touchMove, 'touchMove'));
-      group('touchStart', () => testEvent(SimulateNative.touchStart, 'touchStart'));
+      group(
+          'touchMove', () => testEvent(SimulateNative.touchMove, 'touchMove'));
+      group('touchStart',
+          () => testEvent(SimulateNative.touchStart, 'touchStart'));
       group('wheel', () => testEvent(SimulateNative.wheel, 'wheel'));
     });
   });
@@ -164,61 +180,45 @@ void main() {
     expect(getProperty(h1Component, 'tagName'), equals('H1'));
   });
 
-  test('findRenderedComponentWithType (deprecated)', () {
-    component = renderIntoDocument(wrapperComponent({}, [sampleComponent({})]));
-    // ignore: deprecated_member_use
-    var result = findRenderedComponentWithType(component, sampleComponent);
-    // ignore: deprecated_member_use
-    expect(isCompositeComponentWithType(result, sampleComponent), isTrue);
-  });
-
   test('findRenderedComponentWithTypeV2', () {
-    component = renderIntoDocument(wrapperComponent({}, [sampleComponentV2({})]));
-    var result = findRenderedComponentWithTypeV2(component, sampleComponentV2);
-    expect(isCompositeComponentWithTypeV2(result, sampleComponentV2), isTrue);
+    component = renderIntoDocument(wrapperComponent({}, [sampleComponent({})]));
+    var result = findRenderedComponentWithTypeV2(component, sampleComponent);
+    expect(isCompositeComponentWithTypeV2(result, sampleComponent), isTrue);
   });
 
   group('isCompositeComponent', () {
-    test('returns true when element is a composite component (created with React.createClass())', () {
+    test(
+        'returns true when element is a composite component (created with React.createClass())',
+        () {
       component = renderIntoDocument(eventComponent({}));
 
       expect(isCompositeComponent(component), isTrue);
     });
 
-    test('returns false when element is not a composite component (created with React.createClass())', () {
+    test(
+        'returns false when element is not a composite component (created with React.createClass())',
+        () {
       component = renderIntoDocument(div({}));
 
       expect(isCompositeComponent(component), isFalse);
     });
   });
 
-  group('isCompositeComponentWithType (deprecated)', () {
+  group('isCompositeComponentWithTypeV2', () {
     var renderedInstance = renderIntoDocument(sampleComponent({}));
 
-    test('returns true when element is a composite component (created with React.createClass()) of the specified type', () {
-      // ignore: deprecated_member_use
-      expect(isCompositeComponentWithType(
-          renderedInstance, sampleComponent), isTrue);
+    test(
+        'returns true when element is a composite component (created with React.createClass()) of the specified type',
+        () {
+      expect(isCompositeComponentWithTypeV2(renderedInstance, sampleComponent),
+          isTrue);
     });
 
-    test('returns false when element is not a composite component (created with React.createClass()) of the specified type', () {
-      // ignore: deprecated_member_use
-      expect(isCompositeComponentWithType(
-          renderedInstance, eventComponent), isFalse);
-    });
-  });
-
-  group('isCompositeComponentWithTypeV2', () {
-    var renderedInstance = renderIntoDocument(sampleComponentV2({}));
-
-    test('returns true when element is a composite component (created with React.createClass()) of the specified type', () {
-      expect(isCompositeComponentWithTypeV2(
-          renderedInstance, sampleComponentV2), isTrue);
-    });
-
-    test('returns false when element is not a composite component (created with React.createClass()) of the specified type', () {
-      expect(isCompositeComponentWithTypeV2(
-          renderedInstance, eventComponentV2), isFalse);
+    test(
+        'returns false when element is not a composite component (created with React.createClass()) of the specified type',
+        () {
+      expect(isCompositeComponentWithTypeV2(renderedInstance, eventComponent),
+          isFalse);
     });
   });
 
@@ -245,18 +245,6 @@ void main() {
     });
   });
 
-  group('isElementOfType (deprecated)', () {
-    test('returns true argument is an element of type', () {
-      // ignore: deprecated_member_use
-      expect(isElementOfType(div({}), div as ReactComponentFactoryProxy), isTrue);
-    });
-
-    test('returns false argument is not an element of type', () {
-      // ignore: deprecated_member_use
-      expect(isElementOfType(div({}), span as ReactComponentFactoryProxy), isFalse);
-    });
-  });
-
   group('isElementOfTypeV2', () {
     test('returns true argument is an element of type', () {
       expect(isElementOfTypeV2(div({}), div), isTrue);
@@ -267,36 +255,22 @@ void main() {
     });
   });
 
-  test('scryRenderedComponentsWithType (deprecated)', () {
-    component = renderIntoDocument(wrapperComponent({}, [
-        sampleComponent({}), sampleComponent({}), eventComponent({})]));
-
-    // ignore: deprecated_member_use
-    var results = scryRenderedComponentsWithType(component, sampleComponent);
-
-    expect(results.length, 2);
-    // ignore: deprecated_member_use
-    expect(isCompositeComponentWithType(results[0], sampleComponent), isTrue);
-    // ignore: deprecated_member_use
-    expect(isCompositeComponentWithType(results[1], sampleComponent), isTrue);
-  });
-
   test('scryRenderedComponentsWithTypeV2', () {
-    component = renderIntoDocument(wrapperComponentV2({}, [
-        sampleComponentV2({}), sampleComponentV2({}), eventComponentV2({})]));
+    component = renderIntoDocument(wrapperComponent(
+        {}, [sampleComponent({}), sampleComponent({}), eventComponent({})]));
 
-    var results = scryRenderedComponentsWithTypeV2(component, sampleComponentV2);
+    var results = scryRenderedComponentsWithTypeV2(component, sampleComponent);
 
     expect(results.length, 2);
-    expect(isCompositeComponentWithTypeV2(results[0], sampleComponentV2), isTrue);
-    expect(isCompositeComponentWithTypeV2(results[1], sampleComponentV2), isTrue);
+    expect(isCompositeComponentWithTypeV2(results[0], sampleComponent), isTrue);
+    expect(isCompositeComponentWithTypeV2(results[1], sampleComponent), isTrue);
   });
 
   test('scryRenderedDOMComponentsWithClass', () {
     component = renderIntoDocument(wrapperComponent({}, [
-        div({'className': 'divClass'}),
-        div({'className': 'divClass'}),
-        span({})
+      div({'className': 'divClass'}),
+      div({'className': 'divClass'}),
+      span({})
     ]));
 
     var results = scryRenderedDOMComponentsWithClass(component, 'divClass');
@@ -307,7 +281,8 @@ void main() {
   });
 
   test('scryRenderedDOMComponentsWithTag', () {
-    component = renderIntoDocument(wrapperComponent({}, [div({}), div({}), span({})]));
+    component =
+        renderIntoDocument(wrapperComponent({}, [div({}), div({}), span({})]));
 
     var results = scryRenderedDOMComponentsWithTag(component, 'div');
 
@@ -325,8 +300,8 @@ void main() {
 
     expect(divElements.length, equals(3));
     // First div should be the parent div created by renderIntoDocument()
-    expect(react_dom.findDOMNode(
-        divElements[0]).text, equals('A headerFirst divSecond div'));
+    expect(react_dom.findDOMNode(divElements[0]).text,
+        equals('A headerFirst divSecond div'));
     expect(react_dom.findDOMNode(divElements[1]).text, equals('First div'));
     expect(react_dom.findDOMNode(divElements[2]).text, equals('Second div'));
     expect(h1Elements.length, equals(1));

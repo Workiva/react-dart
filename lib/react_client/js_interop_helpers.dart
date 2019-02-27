@@ -38,13 +38,13 @@ final _GetPropertyFn getProperty = (() {
   try {
     // If this throws, then the JS function isn't available.
     _getProperty(new EmptyObject(), null);
-  } catch(_) {
-    throw new _MissingJsMemberError('_getProperty',
+  } catch (_) {
+    throw new _MissingJsMemberError(
+        '_getProperty',
         'Be sure to include React JS files included in this package '
         '(which has this and other JS interop helper functions included) '
         'or, alternatively, define the function yourself:\n'
-        '    function _getProperty(obj, key) { return obj[key]; }'
-    );
+        '    function _getProperty(obj, key) { return obj[key]; }');
   }
 
   return _getProperty;
@@ -61,18 +61,17 @@ final _SetPropertyFn setProperty = (() {
   try {
     // If this throws, then the JS function isn't available.
     _setProperty(new EmptyObject(), null, null);
-  } catch(_) {
-    throw new _MissingJsMemberError('_setProperty',
+  } catch (_) {
+    throw new _MissingJsMemberError(
+        '_setProperty',
         'Be sure to include React JS files included in this package '
         '(which has this and other JS interop helper functions included) '
         'or, alternatively, define the function yourself:\n'
-        '    function _setProperty(obj, key, value) { return obj[key] = value; }'
-    );
+        '    function _setProperty(obj, key, value) { return obj[key] = value; }');
   }
 
   return _setProperty;
 })();
-
 
 /// An interop class for an anonymous JavaScript object, with no properties.
 ///

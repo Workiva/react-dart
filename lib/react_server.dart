@@ -14,10 +14,8 @@ import 'package:react/react_dom_server.dart';
 String _SEPARATOR = '.';
 String _ID_ATTR_NAME = 'data-reactid';
 String _CHECKSUM_ATTR_NAME = 'data-react-checksum';
-num    _GLOBAL_MOUNT_POINT_MAX = 9999999;
-num    _MOD = 65521;
-
-
+num _GLOBAL_MOUNT_POINT_MAX = 9999999;
+num _MOD = 65521;
 
 typedef String OwnerFactory([String ownerId, num position, String key]);
 typedef OwnerFactory ReactComponentFactory(Map props, [dynamic children]);
@@ -25,7 +23,8 @@ typedef Component ComponentFactory();
 
 /// Creates a method that creates a new [Component], runs lifecycle methods and returns the result of the
 /// [componentFactory] instance `render` method.
-ReactComponentFactory _registerComponent(ComponentFactory componentFactory, [Iterable<String> skipMethods = const []]) {
+ReactComponentFactory _registerComponent(ComponentFactory componentFactory,
+    [Iterable<String> skipMethods = const []]) {
   /// Cached default props.
   final Map defaultProps = componentFactory().getDefaultProps();
 
@@ -58,7 +57,8 @@ ReactComponentFactory _reactDom(String name) {
     // Pack component string creation into function to easily pass owner id, position and key
     // (from its custom component owner)
     return ([String ownerId, num position, String key]) {
-      if (_selfClosingElementTags.contains(name) && (children != null && children.length > 0)) {
+      if (_selfClosingElementTags.contains(name) &&
+          (children != null && children.length > 0)) {
         throw new Exception('$name element does not accept children.');
       }
 
@@ -74,14 +74,19 @@ ReactComponentFactory _reactDom(String name) {
         thisId = _createRootId();
       } else {
         // If ownerId is set, append adequate string to parent id based on position and key.
-        thisId = ownerId + (key != null ? '.\$$key' : (position != null ? '.${position.toInt().toRadixString(36)}' : '.0'));
+        thisId = ownerId +
+            (key != null
+                ? '.\$$key'
+                : (position != null
+                    ? '.${position.toInt().toRadixString(36)}'
+                    : '.0'));
       }
 
       // Create StringBuffer to build result, append open tag to it
       StringBuffer result = new StringBuffer('<$name');
 
       // Add attributes to it and prepare args to be the same as in ReactJS
-      args.forEach((key,value) {
+      args.forEach((key, value) {
         String toWrite = _parseDomArgument(key, value);
         if (toWrite != null) result.write(toWrite);
       });
@@ -129,11 +134,11 @@ ReactComponentFactory _reactDom(String name) {
 
 /// Convert DOM arguments (delete event handlers and [key])
 String _parseDomArgument(String key, dynamic value) {
-  if(value == null) return '';
+  if (value == null) return '';
   // Synthetic events must not pass to string and key too
-  if(_syntheticEvents.contains(key)) return null;
-  if(key == 'key') return null;
-  if(key == 'ref') return null;
+  if (_syntheticEvents.contains(key)) return null;
+  if (key == 'key') return null;
+  if (key == 'ref') return null;
 
   // Change "className" to class
   if (key == 'className') {
@@ -150,7 +155,7 @@ String _parseDomArgument(String key, dynamic value) {
     value = style.keys.map((key) => '$key:${style[key]};').join('');
   }
 
-  if(key == 'value' && value is List) {
+  if (key == 'value' && value is List) {
     value = value[0];
     if (value is! String) value = value.toString();
   }
@@ -181,30 +186,180 @@ String _escapeTextForBrowser(text) {
 
 /// Set of all in client converted synthetic events
 Set _syntheticEvents = new Set.from([
-  'onCopy', 'onCut', 'onPaste', 'onKeyDown', 'onKeyPress', 'onKeyUp', 'onFocus', 'onBlur', 'onChange', 'onInput',
-  'onSubmit', 'onClick', 'onDoubleClick', 'onDrag', 'onDragEnd', 'onDragEnter', 'onDragExit', 'onDragLeave',
-  'onDragOver', 'onDragStart', 'onDrop', 'onMouseDown', 'onMouseEnter', 'onMouseLeave', 'onMouseMove', 'onMouseOut',
-  'onMouseOver', 'onMouseUp', 'onTouchCancel', 'onTouchEnd', 'onTouchMove', 'onTouchStart', 'onScroll', 'onWheel',
+  'onCopy',
+  'onCut',
+  'onPaste',
+  'onKeyDown',
+  'onKeyPress',
+  'onKeyUp',
+  'onFocus',
+  'onBlur',
+  'onChange',
+  'onInput',
+  'onSubmit',
+  'onClick',
+  'onDoubleClick',
+  'onDrag',
+  'onDragEnd',
+  'onDragEnter',
+  'onDragExit',
+  'onDragLeave',
+  'onDragOver',
+  'onDragStart',
+  'onDrop',
+  'onMouseDown',
+  'onMouseEnter',
+  'onMouseLeave',
+  'onMouseMove',
+  'onMouseOut',
+  'onMouseOver',
+  'onMouseUp',
+  'onTouchCancel',
+  'onTouchEnd',
+  'onTouchMove',
+  'onTouchStart',
+  'onScroll',
+  'onWheel',
 ]);
 
 /// Set of HTML [Element] names that can contain children
+// ignore: unused_element
 Set _elementTags = new Set.from([
-  'a', 'abbr', 'address', 'article', 'aside', 'audio', 'b', 'bdi', 'bdo', 'big', 'blockquote', 'body', 'button',
-  'canvas', 'caption', 'cite', 'code', 'colgroup', 'data', 'datalist', 'dd', 'del', 'details', 'dfn', 'dialog', 'div',
-  'dl', 'dt', 'em', 'fieldset', 'figcaption', 'figure', 'footer', 'form', 'h1', 'h2', 'h3', 'h4', 'h5', 'h6', 'head',
-  'header', 'html', 'i', 'iframe', 'ins', 'kbd', 'label', 'legend', 'li', 'main', 'map', 'mark', 'menu', 'menuitem',
-  'meter', 'nav', 'noscript', 'object', 'ol', 'optgroup', 'option', 'output', 'p', 'picture', 'pre', 'progress', 'q',
-  'rp', 'rt', 'ruby', 's', 'samp', 'script', 'section', 'select', 'small', 'span', 'strong', 'style', 'sub', 'summary',
-  'sup', 'table', 'tbody', 'td', 'textarea', 'tfoot', 'th', 'thead', 'time', 'title', 'tr', 'u', 'ul', 'variable',
-  'video', 'defs', 'g', 'linearGradient', 'mask', 'pattern', 'radialGradient', 'svg', 'text', 'tspan',
+  'a',
+  'abbr',
+  'address',
+  'article',
+  'aside',
+  'audio',
+  'b',
+  'bdi',
+  'bdo',
+  'big',
+  'blockquote',
+  'body',
+  'button',
+  'canvas',
+  'caption',
+  'cite',
+  'code',
+  'colgroup',
+  'data',
+  'datalist',
+  'dd',
+  'del',
+  'details',
+  'dfn',
+  'dialog',
+  'div',
+  'dl',
+  'dt',
+  'em',
+  'fieldset',
+  'figcaption',
+  'figure',
+  'footer',
+  'form',
+  'h1',
+  'h2',
+  'h3',
+  'h4',
+  'h5',
+  'h6',
+  'head',
+  'header',
+  'html',
+  'i',
+  'iframe',
+  'ins',
+  'kbd',
+  'label',
+  'legend',
+  'li',
+  'main',
+  'map',
+  'mark',
+  'menu',
+  'menuitem',
+  'meter',
+  'nav',
+  'noscript',
+  'object',
+  'ol',
+  'optgroup',
+  'option',
+  'output',
+  'p',
+  'picture',
+  'pre',
+  'progress',
+  'q',
+  'rp',
+  'rt',
+  'ruby',
+  's',
+  'samp',
+  'script',
+  'section',
+  'select',
+  'small',
+  'span',
+  'strong',
+  'style',
+  'sub',
+  'summary',
+  'sup',
+  'table',
+  'tbody',
+  'td',
+  'textarea',
+  'tfoot',
+  'th',
+  'thead',
+  'time',
+  'title',
+  'tr',
+  'u',
+  'ul',
+  'variable',
+  'video',
+  'defs',
+  'g',
+  'linearGradient',
+  'mask',
+  'pattern',
+  'radialGradient',
+  'svg',
+  'text',
+  'tspan',
 ]);
 
 /// Set of HTML [Element] names that are "self-closing"
 Set _selfClosingElementTags = new Set.from([
-  'area', 'base', 'br', 'col', 'hr', 'img', 'input', 'link', 'meta', 'param', 'command', 'embed', 'keygen', 'source',
-  'track', 'wbr', 'circle', 'ellipse', 'line', 'path', 'polygon', 'polyline', 'rect', 'stop',
+  'area',
+  'base',
+  'br',
+  'col',
+  'hr',
+  'img',
+  'input',
+  'link',
+  'meta',
+  'param',
+  'command',
+  'embed',
+  'keygen',
+  'source',
+  'track',
+  'wbr',
+  'circle',
+  'ellipse',
+  'line',
+  'path',
+  'polygon',
+  'polyline',
+  'rect',
+  'stop',
 ]);
-
 
 String _renderComponentToString(OwnerFactory component) {
   return _addChecksumToMarkup(component());
@@ -223,10 +378,7 @@ String _createRootId() {
 /// Count checksum and add it to markup as last attribute of root element
 String _addChecksumToMarkup(String markup) {
   var checksum = _adler32(markup);
-  return markup.replaceFirst(
-      '>',
-      ' $_CHECKSUM_ATTR_NAME="$checksum">'
-  );
+  return markup.replaceFirst('>', ' $_CHECKSUM_ATTR_NAME="$checksum">');
 }
 
 String _removeReactIdFromMarkup(String markup) {
@@ -253,5 +405,6 @@ _adler32(String data) {
 
 void setServerConfiguration() {
   setReactConfiguration(_reactDom, _registerComponent);
-  setReactDOMServerConfiguration(_renderComponentToString, _renderToStaticMarkup);
+  setReactDOMServerConfiguration(
+      _renderComponentToString, _renderToStaticMarkup);
 }

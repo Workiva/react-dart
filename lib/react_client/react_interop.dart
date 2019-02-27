@@ -11,6 +11,7 @@ import 'package:react/react.dart';
 import 'package:react/react_client.dart' show ComponentFactory;
 import 'package:react/react_client/js_interop_helpers.dart';
 import 'package:react/src/react_client/js_backed_map.dart';
+import 'package:react/src/react_client/dart2_interop_workaround_bindings.dart';
 
 typedef ReactElement ReactJsComponentFactory(props, children);
 
@@ -23,16 +24,18 @@ abstract class React {
   external static ReactClass createClass(ReactClassConfig reactClassConfig);
   external static ReactJsComponentFactory createFactory(type);
 
-  external static ReactElement createElement(dynamic type, props, [dynamic children]);
+  external static ReactElement createElement(dynamic type, props,
+      [dynamic children]);
 
   external static bool isValidElement(dynamic object);
 }
 
-@JS('ReactDOM')
 abstract class ReactDom {
-  external static Element findDOMNode(object);
-  external static ReactComponent render(ReactElement component, Element element);
-  external static bool unmountComponentAtNode(Element element);
+  static Element findDOMNode(object) => ReactDOM.findDOMNode(object);
+  static ReactComponent render(ReactElement component, Element element) =>
+      ReactDOM.render(component, element);
+  static bool unmountComponentAtNode(Element element) =>
+      ReactDOM.unmountComponentAtNode(element);
 }
 
 @JS('ReactDOMServer')
@@ -82,22 +85,21 @@ class ReactClass {
 @JS()
 @anonymous
 class ReactClassConfig {
-  external factory ReactClassConfig({
-    String displayName,
-    List mixins,
-    Function componentWillMount,
-    Function componentDidMount,
-    Function componentWillReceiveProps,
-    Function shouldComponentUpdate,
-    Function componentWillUpdate,
-    Function componentDidUpdate,
-    Function componentWillUnmount,
-    Function getChildContext,
-    Map<String, dynamic> childContextTypes,
-    Function getDefaultProps,
-    Function getInitialState,
-    Function render
-  });
+  external factory ReactClassConfig(
+      {String displayName,
+      List mixins,
+      Function componentWillMount,
+      Function componentDidMount,
+      Function componentWillReceiveProps,
+      Function shouldComponentUpdate,
+      Function componentWillUpdate,
+      Function componentDidUpdate,
+      Function componentWillUnmount,
+      Function getChildContext,
+      Map<String, dynamic> childContextTypes,
+      Function getDefaultProps,
+      Function getInitialState,
+      Function render});
 
   /// The `displayName` string is used in debugging messages.
   ///
@@ -256,8 +258,7 @@ void markChildrenValidated(List<dynamic> children) {
 external ReactClassConfig createReactDartComponentClassConfig(
     ReactDartInteropStatics dartInteropStatics,
     ComponentStatics componentStatics,
-    [JsComponentConfig jsConfig]
-);
+    [JsComponentConfig jsConfig]);
 
 /// Returns a new JS [ReactClassConfig] for a component that uses
 /// [dartInteropStatics] and [componentStatics] internally to proxy between
@@ -267,16 +268,23 @@ external ReactClassConfig createReactDartComponentClassConfig2(
   ReactDartInteropStatics2 dartInteropStatics,
   ComponentStatics<Component2> componentStatics,
 );
-
-typedef Component _InitComponent(ReactComponent jsThis, ReactDartComponentInternal internal, InteropContextValue context, ComponentStatics componentStatics);
+typedef Component _InitComponent(
+    ReactComponent jsThis,
+    ReactDartComponentInternal internal,
+    InteropContextValue context,
+    ComponentStatics componentStatics);
 typedef InteropContextValue _HandleGetChildContext(Component component);
 typedef void _HandleComponentWillMount(Component component);
 typedef void _HandleComponentDidMount(Component component);
-typedef void _HandleComponentWillReceiveProps(Component component, ReactDartComponentInternal nextInternal, InteropContextValue nextContext);
-typedef bool _HandleShouldComponentUpdate(Component component, InteropContextValue nextContext);
-typedef void _HandleComponentWillUpdate(Component component, InteropContextValue nextContext);
+typedef void _HandleComponentWillReceiveProps(Component component,
+    ReactDartComponentInternal nextInternal, InteropContextValue nextContext);
+typedef bool _HandleShouldComponentUpdate(
+    Component component, InteropContextValue nextContext);
+typedef void _HandleComponentWillUpdate(
+    Component component, InteropContextValue nextContext);
 // Ignore prevContext in componentDidUpdate, since it's not supported in React 16
-typedef void _HandleComponentDidUpdate(Component component, ReactDartComponentInternal prevInternal);
+typedef void _HandleComponentDidUpdate(
+    Component component, ReactDartComponentInternal prevInternal);
 typedef void _HandleComponentWillUnmount(Component component);
 typedef dynamic _HandleRender(Component component);
 

@@ -1,7 +1,0 @@
-#
-# `test` package configuration
-#
-
-tags:
-  # tests that fail in ddc
-  ddcFailure:
