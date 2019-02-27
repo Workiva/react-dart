@@ -62,13 +62,13 @@ void main() {
 
     void testEvent(
         void event(dynamic instanceOrNode, Map eventData), String eventName) {
+      eventName = eventName.toLowerCase();
       Map eventData;
       int fakeTimeStamp;
 
       setUp(() {
         fakeTimeStamp = eventName.hashCode;
         eventData = {
-          'type': eventName,
           'timeStamp': fakeTimeStamp,
         };
       });
