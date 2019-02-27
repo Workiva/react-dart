@@ -102,16 +102,34 @@ void main() {
       group('dragStart', () => testEvent(Simulate.dragStart, 'dragStart'));
       group('drop', () => testEvent(Simulate.drop, 'drop'));
       group('focus', () => testEvent(Simulate.focus, 'focus'));
+      group('gotPointerCapture',
+          () => testEvent(Simulate.gotPointerCapture, 'gotPointerCapture'));
       group('input', () => testEvent(Simulate.input, 'input'));
       group('keyDown', () => testEvent(Simulate.keyDown, 'keyDown'));
       group('keyPress', () => testEvent(Simulate.keyPress, 'keyPress'));
       group('keyUp', () => testEvent(Simulate.keyUp, 'keyUp'));
+      group('lostPointerCapture',
+          () => testEvent(Simulate.lostPointerCapture, 'lostPointerCapture'));
       group('mouseDown', () => testEvent(Simulate.mouseDown, 'mouseDown'));
       group('mouseMove', () => testEvent(Simulate.mouseMove, 'mouseMove'));
       group('mouseOut', () => testEvent(Simulate.mouseOut, 'mouseOut'));
       group('mouseOver', () => testEvent(Simulate.mouseOver, 'mouseOver'));
       group('mouseUp', () => testEvent(Simulate.mouseUp, 'mouseUp'));
       group('paste', () => testEvent(Simulate.paste, 'paste'));
+      group('pointerCancel',
+          () => testEvent(Simulate.pointerCancel, 'pointerCancel'));
+      group(
+          'pointerDown', () => testEvent(Simulate.pointerDown, 'pointerDown'));
+      group('pointerEnter',
+          () => testEvent(Simulate.pointerEnter, 'pointerEnter'));
+      group('pointerLeave',
+          () => testEvent(Simulate.pointerLeave, 'pointerLeave'));
+      group(
+          'pointerMove', () => testEvent(Simulate.pointerMove, 'pointerMove'));
+      group(
+          'pointerOver', () => testEvent(Simulate.pointerOver, 'pointerOver'));
+      group('pointerOut', () => testEvent(Simulate.pointerOut, 'pointerOut'));
+      group('pointerUp', () => testEvent(Simulate.pointerUp, 'pointerUp'));
       group('scroll', () => testEvent(Simulate.scroll, 'scroll'));
       group('submit', () => testEvent(Simulate.submit, 'submit'));
       group(
