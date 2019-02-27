@@ -74,12 +74,12 @@ void main() {
 
       test('with React instance as arg', () {
         event(findRenderedDOMComponentWithTag(component, 'div'), eventData);
-        expect(domNode.text, contains('$eventName $fakeTimeStamp'));
+        expect(domNode.text, equals('$eventName $fakeTimeStamp'));
       });
 
       test('with DOM Element as arg', () {
         event(domNode, eventData);
-        expect(domNode.text, contains('$eventName $fakeTimeStamp'));
+        expect(domNode.text, equals('$eventName $fakeTimeStamp'));
       });
     }
 
