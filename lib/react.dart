@@ -16,8 +16,23 @@ typedef ReactComponentFactoryProxy ComponentRegistrar(
 /// Top-level ReactJS [Component class](https://facebook.github.io/react/docs/react-component.html)
 /// which provides the [ReactJS Component API](https://facebook.github.io/react/docs/react-component.html#reference)
 abstract class Component {
-  ReactDartContext contextType;
 
+  /// A private field that backs [contextType], which is exposed via getter/setter so
+  /// it can be overridden in strong mode.
+  ///
+  /// Necessary since the `@virtual` annotation within the meta package
+  /// [doesn't work for overriding fields](https://github.com/dart-lang/sdk/issues/27452).
+  ///
+  /// TODO: Switch back to a plain field once this issue is fixed.
+  ReactDartContext _contextType;
+
+  /// A private field that backs [context], which is exposed via getter/setter so
+  /// it can be overridden in strong mode.
+  ///
+  /// Necessary since the `@virtual` annotation within the meta package
+  /// [doesn't work for overriding fields](https://github.com/dart-lang/sdk/issues/27452).
+  ///
+  /// TODO: Switch back to a plain field once this issue is fixed.
   dynamic _context;
 
   /// A private field that backs [props], which is exposed via getter/setter so
@@ -47,9 +62,15 @@ abstract class Component {
   /// TODO: Switch back to a plain field once this issue is fixed.
   Ref _ref;
 
-  /// The React context map of this component, passed down from its Provider.
+  /// The React context value of this component, passed down from its Provider.
   dynamic get context => _context;
   set context(dynamic value) => _context = value;
+
+  /// The contextType property on a class can be assigned a Context object created by createContext().
+  /// This lets you consume the nearest current value of that Context type using this.context.
+  /// You can reference this in any of the lifecycle methods including the render function.
+  ReactDartContext get contextType => _contextType;
+  set contextType(ReactDartContext value) => _contextType = value;
 
   /// ReactJS [Component] props.
   ///
