@@ -258,8 +258,7 @@ class _GeocodesApp extends react.Component {
         'https://maps.googleapis.com/maps/api/geocode/json?address=$addressQuery';
 
     // Send the request
-    HttpRequest
-        .getString(path)
+    HttpRequest.getString(path)
         .then((String value) =>
             // Delay the answer 2 more seconds, for test purposes
             new Future.delayed(new Duration(seconds: 2), () => value))

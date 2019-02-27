@@ -99,8 +99,8 @@ class Simulate {
       simulate_wrappers.Simulate.focus(componentOrNode, jsify(eventData));
   static void gotPointerCapture(/* [1] */ componentOrNode,
           [Map eventData = const {}]) =>
-      simulate_wrappers.Simulate
-          .gotPointerCapture(componentOrNode, jsify(eventData));
+      simulate_wrappers.Simulate.gotPointerCapture(
+          componentOrNode, jsify(eventData));
   static void input(/* [1] */ componentOrNode, [Map eventData = const {}]) =>
       simulate_wrappers.Simulate.input(componentOrNode, jsify(eventData));
   static void keyDown(/* [1] */ componentOrNode, [Map eventData = const {}]) =>
@@ -111,8 +111,8 @@ class Simulate {
       simulate_wrappers.Simulate.keyUp(componentOrNode, jsify(eventData));
   static void lostPointerCapture(/* [1] */ componentOrNode,
           [Map eventData = const {}]) =>
-      simulate_wrappers.Simulate
-          .lostPointerCapture(componentOrNode, jsify(eventData));
+      simulate_wrappers.Simulate.lostPointerCapture(
+          componentOrNode, jsify(eventData));
   static void mouseDown(/* [1] */ componentOrNode,
           [Map eventData = const {}]) =>
       simulate_wrappers.Simulate.mouseDown(componentOrNode, jsify(eventData));
@@ -128,19 +128,19 @@ class Simulate {
       simulate_wrappers.Simulate.mouseUp(componentOrNode, jsify(eventData));
   static void pointerCancel(/* [1] */ componentOrNode,
           [Map eventData = const {}]) =>
-      simulate_wrappers.Simulate
-          .pointerCancel(componentOrNode, jsify(eventData));
+      simulate_wrappers.Simulate.pointerCancel(
+          componentOrNode, jsify(eventData));
   static void pointerDown(/* [1] */ componentOrNode,
           [Map eventData = const {}]) =>
       simulate_wrappers.Simulate.pointerDown(componentOrNode, jsify(eventData));
   static void pointerEnter(/* [1] */ componentOrNode,
           [Map eventData = const {}]) =>
-      simulate_wrappers.Simulate
-          .pointerEnter(componentOrNode, jsify(eventData));
+      simulate_wrappers.Simulate.pointerEnter(
+          componentOrNode, jsify(eventData));
   static void pointerLeave(/* [1] */ componentOrNode,
           [Map eventData = const {}]) =>
-      simulate_wrappers.Simulate
-          .pointerLeave(componentOrNode, jsify(eventData));
+      simulate_wrappers.Simulate.pointerLeave(
+          componentOrNode, jsify(eventData));
   static void pointerMove(/* [1] */ componentOrNode,
           [Map eventData = const {}]) =>
       simulate_wrappers.Simulate.pointerMove(componentOrNode, jsify(eventData));
