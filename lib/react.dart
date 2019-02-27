@@ -626,7 +626,8 @@ class SyntheticClipboardEvent extends SyntheticEvent {
     num timeStamp,
     String type,
     this.clipboardData,
-  ) : super(
+  )
+      : super(
             bubbles,
             cancelable,
             currentTarget,
@@ -678,7 +679,8 @@ class SyntheticKeyboardEvent extends SyntheticEvent {
     this.metaKey,
     this.repeat,
     this.shiftKey,
-  ) : super(
+  )
+      : super(
             bubbles,
             cancelable,
             currentTarget,
@@ -710,7 +712,8 @@ class SyntheticFocusEvent extends SyntheticEvent {
     num timeStamp,
     String type,
     this.relatedTarget,
-  ) : super(
+  )
+      : super(
             bubbles,
             cancelable,
             currentTarget,
@@ -739,7 +742,8 @@ class SyntheticFormEvent extends SyntheticEvent {
     dynamic target,
     num timeStamp,
     String type,
-  ) : super(
+  )
+      : super(
             bubbles,
             cancelable,
             currentTarget,
@@ -807,7 +811,8 @@ class SyntheticMouseEvent extends SyntheticEvent {
     this.screenX,
     this.screenY,
     this.shiftKey,
-  ) : super(
+  )
+      : super(
             bubbles,
             cancelable,
             currentTarget,
@@ -835,28 +840,29 @@ class SyntheticPointerEvent extends SyntheticEvent {
   final bool isPrimary;
 
   SyntheticPointerEvent(
-      bool bubbles,
-      bool cancelable,
-      dynamic currentTarget,
-      bool defaultPrevented,
-      dynamic preventDefault,
-      dynamic stopPropagation,
-      num eventPhase,
-      bool isTrusted,
-      dynamic nativeEvent,
-      dynamic target,
-      num timeStamp,
-      String type,
-      this.pointerId,
-      this.width,
-      this.height,
-      this.pressure,
-      this.tangentialPressure,
-      this.tiltX,
-      this.tiltY,
-      this.twist,
-      this.pointerType,
-      this.isPrimary)
+    bool bubbles,
+    bool cancelable,
+    dynamic currentTarget,
+    bool defaultPrevented,
+    dynamic preventDefault,
+    dynamic stopPropagation,
+    num eventPhase,
+    bool isTrusted,
+    dynamic nativeEvent,
+    dynamic target,
+    num timeStamp,
+    String type,
+    this.pointerId,
+    this.width,
+    this.height,
+    this.pressure,
+    this.tangentialPressure,
+    this.tiltX,
+    this.tiltY,
+    this.twist,
+    this.pointerType,
+    this.isPrimary,
+  )
       : super(
             bubbles,
             cancelable,
@@ -901,7 +907,8 @@ class SyntheticTouchEvent extends SyntheticEvent {
     this.shiftKey,
     this.targetTouches,
     this.touches,
-  ) : super(
+  )
+      : super(
             bubbles,
             cancelable,
             currentTarget,
@@ -935,7 +942,8 @@ class SyntheticUIEvent extends SyntheticEvent {
     String type,
     this.detail,
     this.view,
-  ) : super(
+  )
+      : super(
             bubbles,
             cancelable,
             currentTarget,
@@ -973,7 +981,8 @@ class SyntheticWheelEvent extends SyntheticEvent {
     this.deltaMode,
     this.deltaY,
     this.deltaZ,
-  ) : super(
+  )
+      : super(
             bubbles,
             cancelable,
             currentTarget,
