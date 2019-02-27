@@ -59,17 +59,27 @@ void main() {
       expect(domNode.text, equals(''));
     });
 
-    void testEvent(void event(dynamic instanceOrNode), String eventName) {
+    void testEvent(
+        void event(dynamic instanceOrNode, Map eventData), String eventName) {
       eventName = eventName.toLowerCase();
+      Map eventData;
+      int fakeTimeStamp;
+
+      setUp(() {
+        fakeTimeStamp = eventName.hashCode;
+        eventData = {
+          'timeStamp': fakeTimeStamp,
+        };
+      });
 
       test('with React instance as arg', () {
-        event(findRenderedDOMComponentWithTag(component, 'div'));
-        expect(domNode.text, contains('$eventName'));
+        event(findRenderedDOMComponentWithTag(component, 'div'), eventData);
+        expect(domNode.text, contains('$eventName $fakeTimeStamp'));
       });
 
       test('with DOM Element as arg', () {
-        event(domNode);
-        expect(domNode.text, contains('$eventName'));
+        event(domNode, eventData);
+        expect(domNode.text, contains('$eventName $fakeTimeStamp'));
       });
     }
 
