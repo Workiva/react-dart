@@ -8,3 +8,4 @@ linter:
     - cancel_subscriptions
     - close_sinks
     - unawaited_futures
+    - avoid_init_to_null
