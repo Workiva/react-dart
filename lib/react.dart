@@ -5,6 +5,7 @@
 /// A Dart library for building UI using ReactJS.
 library react;
 
+import 'package:react/react_client.dart' show ReactDartContext;
 import 'package:react/src/typedefs.dart';
 
 typedef Component ComponentFactory();
@@ -15,9 +16,9 @@ typedef ReactComponentFactoryProxy ComponentRegistrar(
 /// Top-level ReactJS [Component class](https://facebook.github.io/react/docs/react-component.html)
 /// which provides the [ReactJS Component API](https://facebook.github.io/react/docs/react-component.html#reference)
 abstract class Component {
-  var contextType;
+  ReactDartContext contextType;
 
-  Map _context;
+  dynamic _context;
 
   /// A private field that backs [props], which is exposed via getter/setter so
   /// it can be overridden in strong mode.
@@ -47,8 +48,8 @@ abstract class Component {
   Ref _ref;
 
   /// The React context map of this component, passed down from its Provider.
-  Map get context => _context;
-  set context(Map value) => _context = value;
+  dynamic get context => _context;
+  set context(dynamic value) => _context = value;
 
   /// ReactJS [Component] props.
   ///
@@ -107,7 +108,7 @@ abstract class Component {
 
   /// Initializes context
   _initContext(context) {
-    this.context = new Map.from(context ?? const {});
+    this.context = context;
     this.nextContext = this.context;
   }
 
@@ -126,7 +127,7 @@ abstract class Component {
   /// Private reference to the value of [context] for the upcoming render cycle.
   ///
   /// Useful for ReactJS lifecycle methods [shouldComponentUpdateWithContext] and [componentWillUpdateWithContext].
-  Map nextContext;
+  dynamic nextContext;
 
   /// Private reference to the value of [state] for the upcoming render cycle.
   ///
@@ -137,7 +138,7 @@ abstract class Component {
   /// the ReactJS lifecycle method.
   ///
   /// __DO NOT set__ from anywhere outside react-dart lifecycle internals.
-  Map prevContext;
+  dynamic prevContext;
 
   /// Reference to the value of [state] from the previous render cycle, used internally for proxying
   /// the ReactJS lifecycle method and [componentDidUpdate].
@@ -260,7 +261,7 @@ abstract class Component {
   /// both provides no added benefit.
   ///
   /// See: <https://facebook.github.io/react/docs/react-component.html#updating-componentwillreceiveprops>
-  void componentWillReceivePropsWithContext(Map newProps, nextContext) {}
+  void componentWillReceivePropsWithContext(Map newProps, dynamic nextContext) {}
 
   /// ReactJS lifecycle method that is invoked before rendering when [nextProps] or [nextState] are being received.
   ///
@@ -284,7 +285,7 @@ abstract class Component {
   ///
   /// See: <https://facebook.github.io/react/docs/react-component.html#updating-shouldcomponentupdate>
   bool shouldComponentUpdateWithContext(
-          Map nextProps, Map nextState, Map nextContext) =>
+          Map nextProps, Map nextState, dynamic nextContext) =>
       null;
 
   /// ReactJS lifecycle method that is invoked immediately before rendering when [nextProps] or [nextState] are being
@@ -312,7 +313,7 @@ abstract class Component {
   ///
   /// See: <https://facebook.github.io/react/docs/react-component.html#updating-componentwillupdate>
   void componentWillUpdateWithContext(
-      Map nextProps, Map nextState, Map nextContext) {}
+      Map nextProps, Map nextState, dynamic nextContext) {}
 
   /// ReactJS lifecycle method that is invoked immediately after the `Component`'s updates are flushed to the DOM.
   ///

@@ -199,7 +199,7 @@ class _ContextComponent extends react.Component {
   }
 
   _onButtonClick(event) {
-    this.setState({'renderCount': this.state['renderCount'] + 1, 'dartClass': react.Component, 'map':{'test':true}});
+    this.setState({'renderCount': this.state['renderCount'] + 1});
   }
 }
 
@@ -208,11 +208,10 @@ var contextComponent = react.registerComponent(() => new _ContextComponent());
 class _ContextConsumerComponent extends react.Component {
   render() {
     return TestContext.Consumer({}, (value) {
-      print(value.runtimeType);
       return react.ul({
         'key': 'ul'
       }, [
-        'TestContext.Consumer (value): ${value["map"]["test"]}',
+        'TestContext.Consumer: value = ${value}',
         react.br({'key': 'break1'}),
         react.br({'key': 'break2'}),
         props['children'],
@@ -231,7 +230,7 @@ class _ContextTypeConsumerComponent extends react.Component {
     return react.ul({
       'key': 'ul'
     }, [
-      'Using Component.contextType - this.context: ${this.context}',
+      'Using Component.contextType: this.context = ${this.context}',
     ]);
   }
 }

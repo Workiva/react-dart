@@ -152,8 +152,6 @@ class ReactComponent {
   external get refs;
   external void setState(state, [callback]);
   external void forceUpdate([callback]);
-
-  external bool isMounted();
 }
 
 // ----------------------------------------------------------------------------

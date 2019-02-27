@@ -171,19 +171,14 @@ dynamic _convertArgsToChildren(List childrenArgs) {
 @JS('Object.keys')
 external List<String> _objectKeys(Object object);
 
-InteropContextValue _jsifyContext(Map<String, dynamic> context) {
+InteropContextValue _jsifyContext(context) {
   var interopContext = new InteropContextValue();
-  context.forEach((key, value) {
-    setProperty(interopContext, key, value);
-  });
-
+  setProperty(interopContext, '___internal_dart_context_value___', new ReactDartContextInternal(context));
   return interopContext;
 }
 
-Map<String, dynamic> _unjsifyContext(InteropContextValue interopContext) {
-  return new Map.fromIterable(_objectKeys(interopContext), value: (key) {
-    return getProperty(interopContext, key);
-  });
+dynamic _unjsifyContext(interopContext) {
+  return getProperty(interopContext, '___internal_dart_context_value___')?.value;
 }
 
 final _emptyJsMap = newObject();
@@ -196,7 +191,7 @@ final ReactDartInteropStatics _dartInteropStatics = (() {
   Component initComponent(
           ReactComponent jsThis,
           ReactDartComponentInternal internal,
-          InteropContextValue context,
+          dynamic context,
           ComponentStatics componentStatics) =>
       zone.run(() {
         void jsRedraw() {
@@ -244,7 +239,7 @@ final ReactDartInteropStatics _dartInteropStatics = (() {
   /// 2. Update [Component.context] using the value stored to [Component.nextContext]
   ///    in `componentWillReceivePropsWithContext`.
   /// 3. Update [Component.state] by calling [Component.transferComponentState]
-  void _afterPropsChange(Component component, InteropContextValue nextContext) {
+  void _afterPropsChange(Component component, dynamic nextContext) {
     component
       ..props = component.nextProps // [1]
       ..context = component.nextContext // [2]
@@ -278,7 +273,7 @@ final ReactDartInteropStatics _dartInteropStatics = (() {
   void handleComponentWillReceiveProps(
           Component component,
           ReactDartComponentInternal nextInternal,
-          InteropContextValue nextContext) =>
+          dynamic nextContext) =>
       zone.run(() {
         var nextProps = _getNextProps(component, nextInternal);
         var newContext = _unjsifyContext(nextContext);
@@ -292,7 +287,7 @@ final ReactDartInteropStatics _dartInteropStatics = (() {
 
   /// Wrapper for [Component.shouldComponentUpdate].
   bool handleShouldComponentUpdate(
-          Component component, InteropContextValue nextContext) =>
+          Component component, dynamic nextContext) =>
       zone.run(() {
         _callSetStateTransactionalCallbacks(component);
 
@@ -320,7 +315,7 @@ final ReactDartInteropStatics _dartInteropStatics = (() {
 
   /// Wrapper for [Component.componentWillUpdate].
   void handleComponentWillUpdate(
-          Component component, InteropContextValue nextContext) =>
+          Component component, dynamic nextContext) =>
       zone.run(() {
         /// Call `componentWillUpdate` and the context variant
         component
@@ -383,7 +378,7 @@ ReactDartComponentFactoryProxy _registerComponent(
   var componentStatics = new ComponentStatics(componentFactory);
 
   var jsConfig = new JsComponentConfig(
-    contextType: componentInstance.contextType,
+    contextType: componentInstance.contextType?.jsThis,
   );
 
   /// Create the JS [`ReactClass` component class](https://facebook.github.io/react/docs/top-level-api.html#react.createclass)
@@ -430,35 +425,33 @@ class ReactJsComponentFactoryProxy extends ReactComponentFactoryProxy {
   }
 
   @override
-  ReactElement build(Map props, [List childrenArgs]) {
+  ReactElement build(Map<dynamic, dynamic> props, [List childrenArgs]) {
     dynamic potentiallyConvertedProps;
-    dynamic children;
-    children = _convertArgsToChildren(childrenArgs);
+    dynamic children = _convertArgsToChildren(childrenArgs);
 
     if (isContextComponent) {
       if(props.containsKey('value')) {
-        props['value'] = _jsifyContext(props['value']);
+        potentiallyConvertedProps = new Map.from(props);
+        potentiallyConvertedProps['value'] = _jsifyContext(potentiallyConvertedProps['value']);
       }
-      if (children.single is Function) {
-        children = (args) {
-          return children.single(_unjsifyContext(args));
-        };
+      if (children is Function) {
+        Function contextCallback = children;
+        children = allowInterop((args) {
+          return contextCallback(_unjsifyContext(args));
+        });
       }
     }
-
 
     if (convertDomProps) {
       // We can't mutate the original since we can't be certain that the value of the
       // the converted event handler will be compatible with the Map's type parameters.
-      potentiallyConvertedProps = new Map.from(props);
+      potentiallyConvertedProps ??= new Map.from(props);
       _convertEventHandlers(potentiallyConvertedProps);
     } else {
-      potentiallyConvertedProps = props;
+      potentiallyConvertedProps ??= props;
     }
 
-    potentiallyConvertedProps = jsifyAndAllowInterop(potentiallyConvertedProps);
-
-    return factory(potentiallyConvertedProps, children);
+    return factory(jsifyAndAllowInterop(potentiallyConvertedProps), children);
   }
 }
 
@@ -930,7 +923,7 @@ class ReactDartContext {
   dynamic get jsThis => _jsThis;
 }
 
-createContext([dynamic defaultValue, Function calculateChangedBits]) {
+ReactDartContext createContext([dynamic defaultValue, Function calculateChangedBits]) {
   var JSContext = React.createContext(defaultValue, calculateChangedBits);
   return ReactDartContext(
       ReactJsComponentFactoryProxy(JSContext.Provider,

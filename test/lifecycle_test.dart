@@ -149,31 +149,6 @@ void main() {
           ]));
     });
 
-    /*test('does not call getChildContext when childContextKeys is empty', () {
-      var mountNode = new DivElement();
-      var instance = react_dom.render(
-          ContextWrapperWithoutKeys(
-              {'foo': false}, LifecycleTestWithContext({})),
-          mountNode);
-      _ContextWrapperWithoutKeys component = getDartComponent(instance);
-
-      expect(component.lifecycleCalls, isEmpty);
-    });
-
-    test('calls getChildContext when childContextKeys exist', () {
-      var mountNode = new DivElement();
-      var instance = react_dom.render(
-          ContextWrapper({'foo': false}, LifecycleTestWithContext({})),
-          mountNode);
-      _ContextWrapper component = getDartComponent(instance);
-
-      expect(
-          component.lifecycleCalls,
-          equals([
-            matchCall('getChildContext'),
-          ]));
-    });
-
     test('receives updated context with correct lifecycle calls', () {
       _LifecycleTestWithContext component;
 
@@ -210,7 +185,7 @@ void main() {
       // Render the initial instance
       var mountNode = new DivElement();
       react_dom.render(
-          ContextWrapper(
+          ContextProviderWrapper(
               {'foo': false}, LifecycleTestWithContext(initialPropsWithRef)),
           mountNode);
 
@@ -233,7 +208,7 @@ void main() {
 
       // Trigger a re-render with new content
       react_dom.render(
-          ContextWrapper(
+          ContextProviderWrapper(
               {'foo': true}, LifecycleTestWithContext(newPropsWithRef)),
           mountNode);
 
@@ -247,10 +222,6 @@ void main() {
                 context: initialContext),
             matchCall('componentWillReceivePropsWithContext',
                 args: [newPropsWithDefaults, expectedContext],
-                props: initialPropsWithDefaults,
-                context: initialContext),
-            matchCall('shouldComponentUpdateWithContext',
-                args: [newPropsWithDefaults, expectedState, expectedContext],
                 props: initialPropsWithDefaults,
                 context: initialContext),
             matchCall('componentWillUpdate',
@@ -268,7 +239,7 @@ void main() {
                 props: newPropsWithDefaults,
                 context: expectedContext),
           ]));
-    });*/
+    });
 
     test(
         'receives updated props with correct lifecycle calls and defaults properly merged in',
@@ -285,7 +256,7 @@ void main() {
           unmodifiableMap({}..addAll(defaultProps)..addAll(newProps));
 
       const Map expectedState = const {};
-      const Map expectedContext = const {};
+      const dynamic expectedContext = null;
 
       var mountNode = new DivElement();
       var instance = react_dom.render(LifecycleTest(initialProps), mountNode);
@@ -334,7 +305,7 @@ void main() {
       final Map initialProps =
           unmodifiableMap({'getInitialState': (_) => initialState});
 
-      final Map newContext = const {};
+      final dynamic newContext = null;
 
       final Map expectedProps =
           unmodifiableMap(defaultProps, initialProps, emptyChildrenProps);
@@ -372,7 +343,7 @@ void main() {
       final Map initialProps =
           unmodifiableMap({'getInitialState': (_) => initialState});
 
-      final Map newContext = const {};
+      final dynamic newContext = null;
 
       final Map expectedProps =
           unmodifiableMap(defaultProps, initialProps, emptyChildrenProps);
@@ -506,7 +477,7 @@ void main() {
       const Map stateDelta = const {
         'newState': 'new',
       };
-      const Map expectedContext = const {};
+      const dynamic expectedContext = null;
 
       final Map lifecycleTestProps = unmodifiableMap({
         'getInitialState': (_) => initialState,
@@ -568,7 +539,7 @@ void main() {
       test(
           'receives updated props with correct lifecycle calls and does not rerender',
           () {
-        final Map expectedContext = const {};
+        final dynamic expectedContext = null;
         final Map initialProps = unmodifiableMap({
           'shouldComponentUpdate': (_, __, ___) => shouldComponentUpdate,
           'shouldComponentUpdateWithContext': (_, __, ___, ____) =>
@@ -618,7 +589,7 @@ void main() {
 
       test('updates state with correct lifecycle calls and does not rerender',
           () {
-        const Map expectedContext = const {};
+        const dynamic expectedContext = null;
         const Map initialState = const {
           'initialState': 'initial',
         };
@@ -696,7 +667,7 @@ void main() {
         final Map newPropsWithDefaults =
             unmodifiableMap(defaultProps, newProps, emptyChildrenProps);
 
-        final Map expectedContext = const {};
+        final dynamic expectedContext = null;
 
         var mountNode = new DivElement();
         var instance = react_dom.render(LifecycleTest(initialProps), mountNode);
@@ -810,7 +781,7 @@ external List getNonUpdatingSetStateLifeCycleCalls();
 
 /// A test helper to record lifecycle calls
 abstract class LifecycleTestHelper {
-  Map context;
+  dynamic context;
   Map props;
   Map state;
 
@@ -823,7 +794,7 @@ abstract class LifecycleTestHelper {
       'arguments': arguments,
       'props': props == null ? null : new Map.from(props),
       'state': state == null ? null : new Map.from(state),
-      'context': new Map.from(context ?? const {}),
+      'context': context,
     });
 
     var lifecycleCallback = props == null ? null : props[memberName];
@@ -936,52 +907,23 @@ class _DefaultPropsTest extends react.Component {
   render() => false;
 }
 
-ReactDartComponentFactoryProxy ContextWrapperWithoutKeys =
-    react.registerComponent(() => new _ContextWrapperWithoutKeys());
+var TestContext = createContext({'foo': false});
 
-class _ContextWrapperWithoutKeys extends react.Component
-    with LifecycleTestHelper {
-  @override
-  Iterable<String> get childContextKeys => const [];
+ReactDartComponentFactoryProxy ContextProviderWrapper =
+    react.registerComponent(() => new _ContextProviderWrapper());
 
-  @override
-  Map<String, dynamic> getChildContext() {
-    lifecycleCall('getChildContext');
-    return {
-      'foo': props['foo'],
-      'extraContext': props['extraContext'],
-    };
+class _ContextProviderWrapper extends react.Component with LifecycleTestHelper {
+  render() {
+    print(props['foo']);
+    return react.div({},[TestContext.Provider({'value': {'foo': props['foo']}}, props['children'])]);
   }
-
-  dynamic render() => react.div({}, props['children']);
-}
-
-ReactDartComponentFactoryProxy ContextWrapper =
-    react.registerComponent(() => new _ContextWrapper());
-
-class _ContextWrapper extends react.Component with LifecycleTestHelper {
-  @override
-  Iterable<String> get childContextKeys => const ['foo', 'extraContext'];
-
-  @override
-  Map<String, dynamic> getChildContext() {
-    lifecycleCall('getChildContext');
-    return {
-      'foo': props['foo'],
-      'extraContext': props['extraContext'],
-    };
-  }
-
-  dynamic render() => react.div({}, props['children']);
 }
 
 ReactDartComponentFactoryProxy LifecycleTestWithContext =
     react.registerComponent(() => new _LifecycleTestWithContext());
 
 class _LifecycleTestWithContext extends _LifecycleTest {
-  @override
-  Iterable<String> get contextKeys =>
-      const ['foo']; // only listening to one context key
+  var contextType = TestContext;
 }
 
 ReactDartComponentFactoryProxy LifecycleTest =
@@ -998,7 +940,7 @@ class _LifecycleTest extends react.Component with LifecycleTestHelper {
 
   void componentWillReceivePropsWithContext(newProps, newContext) =>
       lifecycleCall('componentWillReceivePropsWithContext',
-          arguments: [new Map.from(newProps), new Map.from(newContext)]);
+          arguments: [new Map.from(newProps), newContext]);
 
   void componentWillUpdate(nextProps, nextState) =>
       lifecycleCall('componentWillUpdate',
@@ -1008,7 +950,7 @@ class _LifecycleTest extends react.Component with LifecycleTestHelper {
       lifecycleCall('componentWillUpdateWithContext', arguments: [
         new Map.from(nextProps),
         new Map.from(nextState),
-        new Map.from(nextContext)
+        nextContext
       ]);
 
   void componentDidUpdate(prevProps, prevState) =>
@@ -1025,7 +967,7 @@ class _LifecycleTest extends react.Component with LifecycleTestHelper {
           arguments: [
             new Map.from(nextProps),
             new Map.from(nextState),
-            new Map.from(nextContext)
+            nextContext
           ],
           defaultReturnValue: () => true);
 

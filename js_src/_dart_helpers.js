@@ -51,7 +51,7 @@ function _createReactDartComponentClass(dartInteropStatics, componentStatics, js
   }
 
   if (jsConfig && jsConfig.contextType) {
-    ReactDartComponent.contextType = jsConfig.contextType.jsThis;
+    ReactDartComponent.contextType = jsConfig.contextType;
   }
 
   return ReactDartComponent;
