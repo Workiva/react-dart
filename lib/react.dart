@@ -131,7 +131,7 @@ abstract class Component {
   /// Private reference to the value of [state] for the upcoming render cycle.
   ///
   /// Useful for ReactJS lifecycle methods [shouldComponentUpdate], [componentWillUpdate] and [componentDidUpdate].
-  Map _nextState = null;
+  Map _nextState;
 
   /// Reference to the value of [context] from the previous render cycle, used internally for proxying
   /// the ReactJS lifecycle method.
