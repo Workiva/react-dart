@@ -173,12 +173,14 @@ external List<String> _objectKeys(Object object);
 
 InteropContextValue _jsifyContext(context) {
   var interopContext = new InteropContextValue();
-  setProperty(interopContext, '___internal_dart_context_value___', new ReactDartContextInternal(context));
+  setProperty(interopContext, '___internal_dart_context_value___',
+      new ReactDartContextInternal(context));
   return interopContext;
 }
 
 dynamic _unjsifyContext(interopContext) {
-  return getProperty(interopContext, '___internal_dart_context_value___')?.value;
+  return getProperty(interopContext, '___internal_dart_context_value___')
+      ?.value;
 }
 
 final _emptyJsMap = newObject();
@@ -270,10 +272,8 @@ final ReactDartInteropStatics _dartInteropStatics = (() {
   }
 
   /// Wrapper for [Component.componentWillReceiveProps].
-  void handleComponentWillReceiveProps(
-          Component component,
-          ReactDartComponentInternal nextInternal,
-          dynamic nextContext) =>
+  void handleComponentWillReceiveProps(Component component,
+          ReactDartComponentInternal nextInternal, dynamic nextContext) =>
       zone.run(() {
         var nextProps = _getNextProps(component, nextInternal);
         var newContext = _unjsifyContext(nextContext);
@@ -286,8 +286,7 @@ final ReactDartInteropStatics _dartInteropStatics = (() {
       });
 
   /// Wrapper for [Component.shouldComponentUpdate].
-  bool handleShouldComponentUpdate(
-          Component component, dynamic nextContext) =>
+  bool handleShouldComponentUpdate(Component component, dynamic nextContext) =>
       zone.run(() {
         _callSetStateTransactionalCallbacks(component);
 
@@ -314,8 +313,7 @@ final ReactDartInteropStatics _dartInteropStatics = (() {
       });
 
   /// Wrapper for [Component.componentWillUpdate].
-  void handleComponentWillUpdate(
-          Component component, dynamic nextContext) =>
+  void handleComponentWillUpdate(Component component, dynamic nextContext) =>
       zone.run(() {
         /// Call `componentWillUpdate` and the context variant
         component
@@ -430,9 +428,10 @@ class ReactJsComponentFactoryProxy extends ReactComponentFactoryProxy {
     dynamic children = _convertArgsToChildren(childrenArgs);
 
     if (isContextComponent) {
-      if(props.containsKey('value')) {
+      if (props.containsKey('value')) {
         potentiallyConvertedProps = new Map.from(props);
-        potentiallyConvertedProps['value'] = _jsifyContext(potentiallyConvertedProps['value']);
+        potentiallyConvertedProps['value'] =
+            _jsifyContext(potentiallyConvertedProps['value']);
       }
       if (children is Function) {
         Function contextCallback = children;
@@ -952,7 +951,8 @@ class ReactDartContext {
   dynamic get jsThis => _jsThis;
 }
 
-ReactDartContext createContext([dynamic defaultValue, Function calculateChangedBits]) {
+ReactDartContext createContext(
+    [dynamic defaultValue, Function calculateChangedBits]) {
   var JSContext = React.createContext(defaultValue, calculateChangedBits);
   return ReactDartContext(
       ReactJsComponentFactoryProxy(JSContext.Provider,

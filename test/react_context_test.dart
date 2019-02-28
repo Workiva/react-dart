@@ -11,23 +11,35 @@ import 'package:react/react.dart' as react;
 import 'package:react/react_client.dart';
 import 'package:react/react_dom.dart' as react_dom;
 
-
 main() {
   setClientConfiguration();
 
-  testContextValue(dynamic testValue){
+  testContextValue(dynamic testValue) {
     var mountNode = new DivElement();
     var contextTypeRef;
     var consumerRef;
-    react_dom.render(ContextProviderWrapper({'contextValue': testValue},[
-      ContextTypeComponent({'ref':(ref){contextTypeRef = ref;}}),
-      ContextConsumerComponent({'ref':(ref){consumerRef = ref;}})
-    ]), mountNode);
+    react_dom.render(
+        ContextProviderWrapper({
+          'contextValue': testValue
+        }, [
+          ContextTypeComponent({
+            'ref': (ref) {
+              contextTypeRef = ref;
+            }
+          }),
+          ContextConsumerComponent({
+            'ref': (ref) {
+              consumerRef = ref;
+            }
+          })
+        ]),
+        mountNode);
     Element contextTypeNode = react_dom.findDOMNode(contextTypeRef);
     Element consumerNode = react_dom.findDOMNode(consumerRef);
     expect(contextTypeNode.firstChild.text, testValue.toString());
     expect(consumerNode.firstChild.text, testValue.toString());
   }
+
   group('Context', () {
     group('work with a value of type: ', () {
       test('String', () {
@@ -37,7 +49,7 @@ main() {
         testContextValue(1);
       });
       test('Map', () {
-        testContextValue({'key1':'value1','key2': 'value2'});
+        testContextValue({'key1': 'value1', 'key2': 'value2'});
       });
 
       test('bool', () {
@@ -47,8 +59,6 @@ main() {
   });
 }
 
-
-
 var TestContext = createContext();
 
 ReactDartComponentFactoryProxy ContextProviderWrapper =
@@ -56,7 +66,9 @@ ReactDartComponentFactoryProxy ContextProviderWrapper =
 
 class _ContextProviderWrapper extends react.Component {
   render() {
-    return react.div({},[TestContext.Provider({'value': props['contextValue']}, props['children'])]);
+    return react.div({}, [
+      TestContext.Provider({'value': props['contextValue']}, props['children'])
+    ]);
   }
 }
 

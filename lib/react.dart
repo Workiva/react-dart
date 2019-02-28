@@ -16,7 +16,6 @@ typedef ReactComponentFactoryProxy ComponentRegistrar(
 /// Top-level ReactJS [Component class](https://facebook.github.io/react/docs/react-component.html)
 /// which provides the [ReactJS Component API](https://facebook.github.io/react/docs/react-component.html#reference)
 abstract class Component {
-
   /// A private field that backs [contextType], which is exposed via getter/setter so
   /// it can be overridden in strong mode.
   ///
@@ -282,7 +281,8 @@ abstract class Component {
   /// both provides no added benefit.
   ///
   /// See: <https://facebook.github.io/react/docs/react-component.html#updating-componentwillreceiveprops>
-  void componentWillReceivePropsWithContext(Map newProps, dynamic nextContext) {}
+  void componentWillReceivePropsWithContext(
+      Map newProps, dynamic nextContext) {}
 
   /// ReactJS lifecycle method that is invoked before rendering when [nextProps] or [nextState] are being received.
   ///

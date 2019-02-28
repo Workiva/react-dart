@@ -171,10 +171,18 @@ class _MainComponent extends react.Component {
 
 var mainComponent = react.registerComponent(() => new _MainComponent());
 
-var TestContext = createContext({'dartClass': react.Component, 'map':{'test':true},  'renderCount': 0});
+var TestContext = createContext({
+  'dartClass': react.Component,
+  'map': {'test': true},
+  'renderCount': 0
+});
 
 class _ContextComponent extends react.Component {
-  getInitialState() => {'dartClass': react.Component, 'map':{'test':true},  'renderCount': 0};
+  getInitialState() => {
+        'dartClass': react.Component,
+        'map': {'test': true},
+        'renderCount': 0
+      };
 
   render() {
     return react.ul({
@@ -183,7 +191,6 @@ class _ContextComponent extends react.Component {
       react.button({
         'type': 'button',
         'key': 'button',
-        'type': 'button',
         'className': 'btn btn-primary',
         'onClick': _onButtonClick
       }, 'Redraw'),
@@ -192,10 +199,7 @@ class _ContextComponent extends react.Component {
       react.br({'key': 'break2'}),
       react.br({'key': 'break3'}),
       TestContext.Provider(
-        {
-          'key': 'tcp',
-          'value': this.state
-        },
+        {'key': 'tcp', 'value': this.state},
         props['children'],
       ),
     ]);

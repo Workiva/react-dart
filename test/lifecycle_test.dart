@@ -929,7 +929,11 @@ ReactDartComponentFactoryProxy ContextProviderWrapper =
 class _ContextProviderWrapper extends react.Component with LifecycleTestHelper {
   render() {
     print(props['foo']);
-    return react.div({},[TestContext.Provider({'value': {'foo': props['foo']}}, props['children'])]);
+    return react.div({}, [
+      TestContext.Provider({
+        'value': {'foo': props['foo']}
+      }, props['children'])
+    ]);
   }
 }
 
