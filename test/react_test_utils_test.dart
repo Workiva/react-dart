@@ -61,13 +61,13 @@ void main() {
 
     void testEvent(
         void event(dynamic instanceOrNode, Map eventData), String eventName) {
+      eventName = eventName.toLowerCase();
       Map eventData;
       int fakeTimeStamp;
 
       setUp(() {
         fakeTimeStamp = eventName.hashCode;
         eventData = {
-          'type': eventName,
           'timeStamp': fakeTimeStamp,
         };
       });
@@ -102,16 +102,34 @@ void main() {
       group('dragStart', () => testEvent(Simulate.dragStart, 'dragStart'));
       group('drop', () => testEvent(Simulate.drop, 'drop'));
       group('focus', () => testEvent(Simulate.focus, 'focus'));
+      group('gotPointerCapture',
+          () => testEvent(Simulate.gotPointerCapture, 'gotPointerCapture'));
       group('input', () => testEvent(Simulate.input, 'input'));
       group('keyDown', () => testEvent(Simulate.keyDown, 'keyDown'));
       group('keyPress', () => testEvent(Simulate.keyPress, 'keyPress'));
       group('keyUp', () => testEvent(Simulate.keyUp, 'keyUp'));
+      group('lostPointerCapture',
+          () => testEvent(Simulate.lostPointerCapture, 'lostPointerCapture'));
       group('mouseDown', () => testEvent(Simulate.mouseDown, 'mouseDown'));
       group('mouseMove', () => testEvent(Simulate.mouseMove, 'mouseMove'));
       group('mouseOut', () => testEvent(Simulate.mouseOut, 'mouseOut'));
       group('mouseOver', () => testEvent(Simulate.mouseOver, 'mouseOver'));
       group('mouseUp', () => testEvent(Simulate.mouseUp, 'mouseUp'));
       group('paste', () => testEvent(Simulate.paste, 'paste'));
+      group('pointerCancel',
+          () => testEvent(Simulate.pointerCancel, 'pointerCancel'));
+      group(
+          'pointerDown', () => testEvent(Simulate.pointerDown, 'pointerDown'));
+      group('pointerEnter',
+          () => testEvent(Simulate.pointerEnter, 'pointerEnter'));
+      group('pointerLeave',
+          () => testEvent(Simulate.pointerLeave, 'pointerLeave'));
+      group(
+          'pointerMove', () => testEvent(Simulate.pointerMove, 'pointerMove'));
+      group(
+          'pointerOver', () => testEvent(Simulate.pointerOver, 'pointerOver'));
+      group('pointerOut', () => testEvent(Simulate.pointerOut, 'pointerOut'));
+      group('pointerUp', () => testEvent(Simulate.pointerUp, 'pointerUp'));
       group('scroll', () => testEvent(Simulate.scroll, 'scroll'));
       group('submit', () => testEvent(Simulate.submit, 'submit'));
       group(
@@ -120,49 +138,6 @@ void main() {
       group('touchMove', () => testEvent(Simulate.touchMove, 'touchMove'));
       group('touchStart', () => testEvent(Simulate.touchStart, 'touchStart'));
       group('wheel', () => testEvent(Simulate.wheel, 'wheel'));
-    });
-
-    group('native event', () {
-      group('blur', () => testEvent(SimulateNative.blur, 'blur'));
-      group('click', () => testEvent(SimulateNative.click, 'click'));
-      group('copy', () => testEvent(SimulateNative.copy, 'copy'));
-      group('cut', () => testEvent(SimulateNative.cut, 'cut'));
-      group('doubleClick',
-          () => testEvent(SimulateNative.doubleClick, 'doubleClick'));
-      group('drag', () => testEvent(SimulateNative.drag, 'drag'));
-      group('dragEnd', () => testEvent(SimulateNative.dragEnd, 'dragEnd'));
-      group(
-          'dragEnter', () => testEvent(SimulateNative.dragEnter, 'dragEnter'));
-      group('dragExit', () => testEvent(SimulateNative.dragExit, 'dragExit'));
-      group(
-          'dragLeave', () => testEvent(SimulateNative.dragLeave, 'dragLeave'));
-      group('dragOver', () => testEvent(SimulateNative.dragOver, 'dragOver'));
-      group(
-          'dragStart', () => testEvent(SimulateNative.dragStart, 'dragStart'));
-      group('drop', () => testEvent(SimulateNative.drop, 'drop'));
-      group('focus', () => testEvent(SimulateNative.focus, 'focus'));
-      group('input', () => testEvent(SimulateNative.input, 'input'));
-      group('keyDown', () => testEvent(SimulateNative.keyDown, 'keyDown'));
-      group('keyUp', () => testEvent(SimulateNative.keyUp, 'keyUp'));
-      group(
-          'mouseDown', () => testEvent(SimulateNative.mouseDown, 'mouseDown'));
-      group(
-          'mouseMove', () => testEvent(SimulateNative.mouseMove, 'mouseMove'));
-      group('mouseOut', () => testEvent(SimulateNative.mouseOut, 'mouseOut'));
-      group(
-          'mouseOver', () => testEvent(SimulateNative.mouseOver, 'mouseOver'));
-      group('mouseUp', () => testEvent(SimulateNative.mouseUp, 'mouseUp'));
-      group('paste', () => testEvent(SimulateNative.paste, 'paste'));
-      group('scroll', () => testEvent(SimulateNative.scroll, 'scroll'));
-      group('submit', () => testEvent(SimulateNative.submit, 'submit'));
-      group('touchCancel',
-          () => testEvent(SimulateNative.touchCancel, 'touchCancel'));
-      group('touchEnd', () => testEvent(SimulateNative.touchEnd, 'touchEnd'));
-      group(
-          'touchMove', () => testEvent(SimulateNative.touchMove, 'touchMove'));
-      group('touchStart',
-          () => testEvent(SimulateNative.touchStart, 'touchStart'));
-      group('wheel', () => testEvent(SimulateNative.wheel, 'wheel'));
     });
   });
 

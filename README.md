@@ -1,7 +1,7 @@
 # Dart wrapper for [React JS](https://reactjs.org/)
 
 [![Pub](https://img.shields.io/pub/v/react.svg)](https://pub.dartlang.org/packages/react)
-![ReactJS v15.6.0](https://img.shields.io/badge/React_JS-v15.6.0-green.svg)
+![ReactJS v16.8.2](https://img.shields.io/badge/React_JS-v16.8.2-green.svg)
 [![Build Status](https://travis-ci.com/cleandart/react-dart.svg?branch=master)](https://travis-ci.com/cleandart/react-dart)
 [![React Dart API Docs](https://img.shields.io/badge/api_docs-react-blue.svg)](https://pub.dartlang.org/documentation/react/latest/)
 
@@ -16,16 +16,16 @@ If you are not familiar with the ReactJS library, read this [react tutorial](htt
     ```bash
     brew install dart
     ```
-    
-2. Create a `pubspec.yaml` file in the root of your project, and add `react` as a dependency: 
+
+2. Create a `pubspec.yaml` file in the root of your project, and add `react` as a dependency:
 
     ```yaml
     name: your_package_name
     version: 1.0.0
     environment:
-      sdk: ^2.0.0 
+      sdk: ^2.0.0
     dependencies:
-      react: ^4.5.0
+      react: ^5.0.0
     ```
 
 3. Install the dependencies using pub:
@@ -38,8 +38,8 @@ If you are not familiar with the ReactJS library, read this [react tutorial](htt
 
 #### HTML
 
-In a `.html` file where Include the native javascript `react` and `react_dom` libraries 
-_(provided with this library for compatibility reasons)_ within your `.html` file, 
+In a `.html` file where Include the native javascript `react` and `react_dom` libraries
+_(provided with this library for compatibility reasons)_ within your `.html` file,
 and add an element with an `id` to mount your React component into.
 
 Lastly, add the `.js` file that Dart will generate. The file will be the name of the `.dart` file that
@@ -52,7 +52,7 @@ contains your `main` entrypoint, with `.js` at the end.
   </head>
   <body>
     <div id="react_mount_point">Here will be react content</div>
-    
+
     <script src="packages/react/react.js"></script>
     <script src="packages/react/react_dom.js"></script>
     <script defer src="your_dart_file_name.dart.js"></script>
@@ -61,11 +61,11 @@ contains your `main` entrypoint, with `.js` at the end.
 ```
 
 > __Note:__ When serving your application in production, use `packages/react/react_with_react_dom_prod.js`
-  file instead of the un-minified `react.js` / `react_dom.js` files shown in the example above.  
+  file instead of the un-minified `react.js` / `react_dom.js` files shown in the example above.
 
 #### Dart App
 
-Once you have an `.html` file containing the necessary `.js` files, you can initialize React 
+Once you have an `.html` file containing the necessary `.js` files, you can initialize React
 in the `main` entrypoint of your Dart application.
 
 ```dart
@@ -78,11 +78,11 @@ import 'package:react/react_dom.dart' as react_dom;
 main() {
   // This should be called once at the beginning of the application.
   react_client.setClientConfiguration();
-  
+
   // Something to render... in this case a simple <div> with no props, and a string as its children.
   var component = div({}, "Hello world!");
-  
-  // Render it into the mount node we created in our .html file. 
+
+  // Render it into the mount node we created in our .html file.
   react_dom.render(component, querySelector('#react_mount_point'));
 }
 ```
@@ -114,9 +114,9 @@ var aButton = button({"onClick": (SyntheticMouseEvent event) => print(event)});
 
     ```dart
     // cool_widget.dart
- 
+
     import 'package:react/react.dart';
-    
+
     class CoolWidgetComponent extends Component {
       render() => div({}, "CoolWidgetComponent");
     }
@@ -142,7 +142,7 @@ var aButton = button({"onClick": (SyntheticMouseEvent event) => print(event)});
     import 'package:react/react_dom.dart' as react_dom;
 
     import 'cool_widget.dart';
- 
+
     main() {
       // This should be called once at the beginning of the application.
       react_client.setClientConfiguration();
@@ -182,7 +182,7 @@ import 'cool_widget.dart';
 main() {
   // This should be called once at the beginning of the application.
   react_client.setClientConfiguration();
-      
+
   react_dom.render(CoolWidget({"text": "Something"}), querySelector('#react_mount_point'));
 }
 ```
@@ -190,8 +190,8 @@ main() {
 #### Custom component with a typed interface
 
 > __Note:__ The typed interface capabilities of this library are fairly limited, and can result in
-  extremely verbose implementations. We strongly recommend using the 
-  [OverReact](https://pub.dartlang.org/packages/over_react) package - which 
+  extremely verbose implementations. We strongly recommend using the
+  [OverReact](https://pub.dartlang.org/packages/over_react) package - which
   makes creating statically-typed React UI components using Dart easy.
 
 ```dart
@@ -208,10 +208,10 @@ class CoolWidgetComponent extends Component {
   String get headline => props['headline'];
   String get text => props['text'];
   int get counter => props['counter'];
-  
+
   @override
   render() {
-    return div({}, 
+    return div({},
       h1({}, headline),
       span({}, text),
       span({}, counter),
@@ -248,7 +248,7 @@ void main() {
 
 #### React Component Lifecycle methods
 
-The `Component` class mirrors ReactJS' `React.Component` class, and contains all the same methods. 
+The `Component` class mirrors ReactJS' `React.Component` class, and contains all the same methods.
 
 > See: [ReactJS Lifecycle Method Documentation](https://reactjs.org/docs/react-component.html) for more information.
 
@@ -256,31 +256,31 @@ The `Component` class mirrors ReactJS' `React.Component` class, and contains all
 class MyComponent extends Component {
   @override
   void componentWillMount() {}
-  
+
   @override
   void componentDidMount() {}
-  
+
   @override
   void componentWillReceiveProps(Map nextProps) {}
-  
+
   @override
   void componentWillUpdate(Map nextProps, Map nextState) {}
-  
+
   @override
   void componentDidUpdate(Map prevProps, Map prevState) {}
-  
+
   @override
   void componentWillUnmount() {}
-  
+
   @override
   bool shouldComponentUpdate(Map nextProps, Map nextState) => true;
-  
+
   @override
   Map getInitialState() => {};
-  
+
   @override
   Map getDefaultProps() => {};
-  
+
   @override
   render() => div({}, props['text']);
 }
@@ -288,15 +288,15 @@ class MyComponent extends Component {
 
 #### Using refs and findDOMNode
 
-The use of component `ref`s in react-dart is a bit different from React JS. 
+The use of component `ref`s in react-dart is a bit different from React JS.
 
 * You can specify a ref name in component props and then call ref method to get the referenced element.
 * Return values for Dart components, DOM components and JavaScript components are different.
     * For a Dart component, you get an instance of the Dart class of the component.
-    * For primitive components (like DOM elements), you get the DOM node. 
+    * For primitive components (like DOM elements), you get the DOM node.
     * For JavaScript composite components, you get a `ReactElement` representing the react component.
 
-If you want to work with DOM nodes of dart or JS components instead, 
+If you want to work with DOM nodes of dart or JS components instead,
 you can call top level `findDOMNode` on anything the ref returns.
 
 ```dart
@@ -304,7 +304,7 @@ var DartComponent = registerComponent(() => new _DartComponent());
 class _DartComponent extends Component {
   @override
   render() => div({});
-  
+
   void someInstanceMethod(int count) {
     window.alert('count: $count');
   }
@@ -312,23 +312,24 @@ class _DartComponent extends Component {
 
 var ParentComponent = registerComponent(() => new _ParentComponent());
 class _ParentComponent extends Component {
+  InputElement inputRef; // Returns the DOM node.
+  _DartComponent dartComponentRef; // Returns instance of _DartComponent
+
   @override
   void componentDidMount() {
-    InputElement input = ref("input"); // Returns the DOM node.
-    print(input.value); // Prints "hello" to the console.
+    print(inputRef.value); // Prints "hello" to the console.
 
-    _DartComponent dartComponentRef = ref("dartComponent"); // Returns instance of _DartComponent
     dartComponentRef.someInstanceMethod(5); // Calls the method defined in _DartComponent
-    react_dom.findDOMNode(dartRef); // Returns div element rendered from _DartComponent
+    react_dom.findDOMNode(dartComponentRef); // Returns div element rendered from _DartComponent
 
     react_dom.findDOMNode(this); // Returns root dom element rendered from this component
   }
-  
+
   @override
   render() {
     return div({},
-      input({"ref": "input", "value": "hello"}),
-      DartComponent({"ref": "dartComponent"}),
+      input({"ref": (ref){ inputRef = ref; }, "defaultValue": "hello"}),
+      DartComponent({"ref": (ref) { dartComponentRef = ref; }}),
     );
   }
 }
@@ -342,11 +343,11 @@ For more robust examples take a look at our [examples](https://github.com/cleand
 
 ## Unit Testing Utilities
 
-[lib/react_test_utils.dart](https://github.com/cleandart/react-dart/blob/master/lib/react_test_utils.dart) is a 
-Dart wrapper for the [ReactJS TestUtils](https://reactjs.org/docs/test-utils.html) library allowing for unit tests 
+[lib/react_test_utils.dart](https://github.com/cleandart/react-dart/blob/master/lib/react_test_utils.dart) is a
+Dart wrapper for the [ReactJS TestUtils](https://reactjs.org/docs/test-utils.html) library allowing for unit tests
 to be made for React components in Dart.
 
-Here is an example of how to use React TestUtils within a Dart test.
+Here is an example of how to use React React.addons.TestUtils. within a Dart test.
 
 ```dart
 import 'package:test/test.dart';
@@ -358,10 +359,10 @@ import 'package:react/react_test_utils.dart' as react_test_utils;
 class MyTestComponent extends react.Component {
   @override
   Map getInitialState() => {'text': 'testing...'};
-  
+
   @override
   render() {
-    return react.div({}, 
+    return react.div({},
         react.button({'onClick': (_) => setState({'text': 'success'})}),
         react.span({'className': 'spanText'}, state['text']),
     );
@@ -440,13 +441,18 @@ _Or any other browser platform, e.g. `-p firefox`._
 2. In another terminal, run the tests, referencing the port the dev compiler is using to serve the test directory:
     ```bash
     pub run test -p chrome --pub-serve=8090
-    ``` 
+    ```
     _DDC only works in chrome._
 
 ### Building React JS Source Files
 
-After modifying dart_helpers.js, run:
+Make sure the packages you need are dependencies in `package.json` then run:
+```bash
+npm install
+```
+
+After modifying files any files in ./js_src/, run:
 
 ```bash
-./tool/build_js.sh
+npm run build
 ```

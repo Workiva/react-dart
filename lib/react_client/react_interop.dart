@@ -21,6 +21,7 @@ typedef ReactElement ReactJsComponentFactory(props, children);
 
 @JS()
 abstract class React {
+  external static String get version;
   external static ReactClass createClass(ReactClassConfig reactClassConfig);
   external static ReactJsComponentFactory createFactory(type);
 
@@ -95,8 +96,6 @@ class ReactClassConfig {
       Function componentWillUpdate,
       Function componentDidUpdate,
       Function componentWillUnmount,
-      Function getChildContext,
-      Map<String, dynamic> childContextTypes,
       Function getDefaultProps,
       Function getInitialState,
       Function render});
@@ -254,8 +253,8 @@ void markChildrenValidated(List<dynamic> children) {
 /// Returns a new JS [ReactClassConfig] for a component that uses
 /// [dartInteropStatics] and [componentStatics] internally to proxy between
 /// the JS and Dart component instances.
-@JS('_createReactDartComponentClassConfig')
-external ReactClassConfig createReactDartComponentClassConfig(
+@JS('_createReactDartComponentClass')
+external ReactClass createReactDartComponentClass(
     ReactDartInteropStatics dartInteropStatics,
     ComponentStatics componentStatics,
     [JsComponentConfig jsConfig]);
@@ -362,14 +361,14 @@ class ReactDartInteropStatics2 implements ReactDartInteropStatics {
 /// This object is made accessible to a component's JS ReactClass config, which
 /// passes it to certain methods in [ReactDartInteropStatics].
 ///
-/// See [ReactDartInteropStatics], [createReactDartComponentClassConfig].
+/// See [ReactDartInteropStatics], [createReactDartComponentClass].
 class ComponentStatics<T extends Component> {
   final ComponentFactory<T> componentFactory;
 
   ComponentStatics(this.componentFactory);
 }
 
-/// Additional configuration passed to [createReactDartComponentClassConfig]
+/// Additional configuration passed to [createReactDartComponentClass]
 /// that needs to be directly accessible by that JS code.
 @JS()
 @anonymous
