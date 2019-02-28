@@ -954,10 +954,10 @@ class ReactDartContext {
 ReactDartContext createContext(
     [dynamic defaultValue, Function calculateChangedBits]) {
   var JSContext = React.createContext(defaultValue, calculateChangedBits);
-  return ReactDartContext(
-      ReactJsComponentFactoryProxy(JSContext.Provider,
+  return new ReactDartContext(
+      new ReactJsComponentFactoryProxy(JSContext.Provider,
           isContextComponent: true),
-      ReactJsComponentFactoryProxy(JSContext.Consumer,
+      new ReactJsComponentFactoryProxy(JSContext.Consumer,
           isContextComponent: true),
       JSContext);
 }
