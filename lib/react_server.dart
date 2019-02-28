@@ -207,6 +207,8 @@ Set _syntheticEvents = new Set.from([
   'onDragOver',
   'onDragStart',
   'onDrop',
+  'onGotPointerCapture',
+  'onLostPointerCapture',
   'onMouseDown',
   'onMouseEnter',
   'onMouseLeave',
@@ -214,6 +216,14 @@ Set _syntheticEvents = new Set.from([
   'onMouseOut',
   'onMouseOver',
   'onMouseUp',
+  'onPointerCancel',
+  'onPointerDown',
+  'onPointerEnter',
+  'onPointerLeave',
+  'onPointerMove',
+  'onPointerOver',
+  'onPointerOut',
+  'onPointerUp',
   'onTouchCancel',
   'onTouchEnd',
   'onTouchMove',
@@ -223,6 +233,7 @@ Set _syntheticEvents = new Set.from([
 ]);
 
 /// Set of HTML [Element] names that can contain children
+// ignore: unused_element
 Set _elementTags = new Set.from([
   'a',
   'abbr',

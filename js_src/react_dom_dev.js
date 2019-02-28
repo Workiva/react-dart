@@ -6,5 +6,7 @@ if (!window.React.addons) {
     window.React.addons = {};
 }
 window.React.addons.TestUtils = TestUtils;
-window.ReactShallowRenderer = ShallowRenderer;
+if (!window.React.addons.TestUtils.createRenderer) {
+    window.React.addons.TestUtils.createRenderer = ShallowRenderer.createRenderer;
+}
 

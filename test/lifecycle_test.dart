@@ -730,9 +730,12 @@ void main() {
 
         // Check against the JS component to ensure no regressions.
         expect(component.state['counter'], 3);
+        expect(component.state['counter'], getLatestJSCounter());
         expect(component.lifecycleCalls,
             orderedEquals(getNonUpdatingSetStateLifeCycleCalls()));
         expect(renderedNode.children.first.text, '1');
+        expect(
+            renderedNode.children.first.text, getNonUpdatingRenderedCounter());
       });
 
       test('when shouldComponentUpdate returns true', () {
@@ -745,9 +748,11 @@ void main() {
 
         // Check against the JS component to ensure no regressions.
         expect(component.state['counter'], 3);
+        expect(component.state['counter'], getLatestJSCounter());
         expect(component.lifecycleCalls,
             orderedEquals(getUpdatingSetStateLifeCycleCalls()));
         expect(renderedNode.children.first.text, '3');
+        expect(renderedNode.children.first.text, getUpdatingRenderedCounter());
       });
     });
 
@@ -778,6 +783,15 @@ external List getUpdatingSetStateLifeCycleCalls();
 
 @JS()
 external List getNonUpdatingSetStateLifeCycleCalls();
+
+@JS()
+external int getLatestJSCounter();
+
+@JS()
+external String getUpdatingRenderedCounter();
+
+@JS()
+external String getNonUpdatingRenderedCounter();
 
 /// A test helper to record lifecycle calls
 abstract class LifecycleTestHelper {
