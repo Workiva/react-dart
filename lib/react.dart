@@ -473,7 +473,6 @@ abstract class Component2<T extends Map> implements Component {
   /// See: <https://facebook.github.io/react/docs/react-component.html#updating-componentwillupdate>
   void componentWillUpdate(Map nextProps, Map nextState) {}
 
-
   /// ReactJS lifecycle method that is invoked immediately after the `Component`'s updates are flushed to the DOM.
   ///
   /// This method is not called for the initial [render].
@@ -520,19 +519,23 @@ abstract class Component2<T extends Map> implements Component {
   // Unsupported things
 
   @Deprecated('3.0.0')
-  void replaceState(Map newState, [SetStateCallback callback]) => throw new UnimplementedError();
+  void replaceState(Map newState, [SetStateCallback callback]) =>
+      throw new UnimplementedError();
 
   @Deprecated('3.0.0')
   Map<String, dynamic> getChildContext() => const {};
 
   @Deprecated('3.0.0')
-  void componentWillUpdateWithContext(Map nextProps, Map nextState, Map nextContext) {}
+  void componentWillUpdateWithContext(
+      Map nextProps, Map nextState, Map nextContext) {}
 
   @Deprecated('3.0.0')
   void componentWillReceivePropsWithContext(Map newProps, nextContext) {}
 
   @Deprecated('3.0.0')
-  bool shouldComponentUpdateWithContext(Map nextProps, Map nextState, Map nextContext) => null;
+  bool shouldComponentUpdateWithContext(
+          Map nextProps, Map nextState, Map nextContext) =>
+      null;
 
   @Deprecated('3.0.0')
   Iterable<String> get childContextKeys => const [];
@@ -541,7 +544,10 @@ abstract class Component2<T extends Map> implements Component {
   Iterable<String> get contextKeys => const [];
 
   @Deprecated('3.0.0')
-  bind(key) => [state[key], (value) => setState({key: value})];
+  bind(key) => [
+        state[key],
+        (value) => setState({key: value})
+      ];
 
   @Deprecated('3.0.0')
   initComponentInternal(props, _jsRedraw, [Ref ref, _jsThis, context]) {
@@ -615,10 +621,12 @@ abstract class Component2<T extends Map> implements Component {
   }
 
   @override
-  List<SetStateCallback> get setStateCallbacks => throw new UnimplementedError();
+  List<SetStateCallback> get setStateCallbacks =>
+      throw new UnimplementedError();
 
   @override
-  List<TransactionalSetStateCallback> get transactionalSetStateCallbacks => throw new UnimplementedError();
+  List<TransactionalSetStateCallback> get transactionalSetStateCallbacks =>
+      throw new UnimplementedError();
 }
 
 /// Creates a ReactJS virtual DOM instance (`ReactElement` on the client).
@@ -636,7 +644,46 @@ abstract class ReactComponentFactoryProxy implements Function {
   ///
   /// > The additional children arguments (c2, c3, et. al.) are a workaround for <https://github.com/dart-lang/sdk/issues/16030>.
   dynamic /*ReactElement*/ call(Map props,
-      [c1 = _notSpecified, c2 = _notSpecified, c3 = _notSpecified, c4 = _notSpecified, c5 = _notSpecified, c6 = _notSpecified, c7 = _notSpecified, c8 = _notSpecified, c9 = _notSpecified, c10 = _notSpecified, c11 = _notSpecified, c12 = _notSpecified, c13 = _notSpecified, c14 = _notSpecified, c15 = _notSpecified, c16 = _notSpecified, c17 = _notSpecified, c18 = _notSpecified, c19 = _notSpecified, c20 = _notSpecified, c21 = _notSpecified, c22 = _notSpecified, c23 = _notSpecified, c24 = _notSpecified, c25 = _notSpecified, c26 = _notSpecified, c27 = _notSpecified, c28 = _notSpecified, c29 = _notSpecified, c30 = _notSpecified, c31 = _notSpecified, c32 = _notSpecified, c33 = _notSpecified, c34 = _notSpecified, c35 = _notSpecified, c36 = _notSpecified, c37 = _notSpecified, c38 = _notSpecified, c39 = _notSpecified, c40 = _notSpecified]) {
+      [c1 = _notSpecified,
+      c2 = _notSpecified,
+      c3 = _notSpecified,
+      c4 = _notSpecified,
+      c5 = _notSpecified,
+      c6 = _notSpecified,
+      c7 = _notSpecified,
+      c8 = _notSpecified,
+      c9 = _notSpecified,
+      c10 = _notSpecified,
+      c11 = _notSpecified,
+      c12 = _notSpecified,
+      c13 = _notSpecified,
+      c14 = _notSpecified,
+      c15 = _notSpecified,
+      c16 = _notSpecified,
+      c17 = _notSpecified,
+      c18 = _notSpecified,
+      c19 = _notSpecified,
+      c20 = _notSpecified,
+      c21 = _notSpecified,
+      c22 = _notSpecified,
+      c23 = _notSpecified,
+      c24 = _notSpecified,
+      c25 = _notSpecified,
+      c26 = _notSpecified,
+      c27 = _notSpecified,
+      c28 = _notSpecified,
+      c29 = _notSpecified,
+      c30 = _notSpecified,
+      c31 = _notSpecified,
+      c32 = _notSpecified,
+      c33 = _notSpecified,
+      c34 = _notSpecified,
+      c35 = _notSpecified,
+      c36 = _notSpecified,
+      c37 = _notSpecified,
+      c38 = _notSpecified,
+      c39 = _notSpecified,
+      c40 = _notSpecified]) {
     List childArguments;
     // Use `identical` since it compiles down to `===` in dart2js instead of calling equality helper functions,
     // and we don't want to allow any object overriding `operator==` to claim it's equal to `_notSpecified`.

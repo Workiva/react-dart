@@ -288,15 +288,21 @@ typedef void _HandleComponentDidUpdate(
 typedef void _HandleComponentWillUnmount(Component component);
 typedef dynamic _HandleRender(Component component);
 
-typedef Component _InitComponent2(ReactComponent jsThis, ComponentStatics<Component2> componentStatics);
+typedef Component _InitComponent2(
+    ReactComponent jsThis, ComponentStatics<Component2> componentStatics);
 typedef dynamic _HandleGetInitialState2(Component2 component);
-typedef void _HandleComponentWillMount2(Component2 component, ReactComponent jsThis);
+typedef void _HandleComponentWillMount2(
+    Component2 component, ReactComponent jsThis);
 typedef void _HandleComponentDidMount2(Component2 component);
-typedef void _HandleComponentWillReceiveProps2(Component2 component, JsMap jsNextProps);
-typedef bool _HandleShouldComponentUpdate2(Component2 component, JsMap jsNextProps, JsMap jsNextState);
-typedef void _HandleComponentWillUpdate2(Component2 component, JsMap jsNextProps, JsMap jsNextState);
+typedef void _HandleComponentWillReceiveProps2(
+    Component2 component, JsMap jsNextProps);
+typedef bool _HandleShouldComponentUpdate2(
+    Component2 component, JsMap jsNextProps, JsMap jsNextState);
+typedef void _HandleComponentWillUpdate2(
+    Component2 component, JsMap jsNextProps, JsMap jsNextState);
 // Ignore prevContext in componentDidUpdate, since it's not supported in React 16
-typedef void _HandleComponentDidUpdate2(Component2 component, ReactComponent jsThis, JsMap jsPrevProps, JsMap jsPrevState);
+typedef void _HandleComponentDidUpdate2(Component2 component,
+    ReactComponent jsThis, JsMap jsPrevProps, JsMap jsPrevState);
 typedef void _HandleComponentWillUnmount2(Component2 component);
 typedef dynamic _HandleRender2(Component2 component);
 

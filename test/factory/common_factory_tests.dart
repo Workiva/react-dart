@@ -21,9 +21,8 @@ void commonFactoryTests(ReactComponentFactoryProxy factory) {
     expect(instance.type, equals(factory.type));
   });
 
-  void sharedChildrenTests(dynamic getChildren(ReactElement instance), {
-    @required bool shouldAlwaysBeList
-  }) {
+  void sharedChildrenTests(dynamic getChildren(ReactElement instance),
+      {@required bool shouldAlwaysBeList}) {
     // There are different code paths for 0, 1, 2, 3, 4, 5, 6, and 6+ arguments.
     // Test all of them.
     group('a number of variadic children:', () {

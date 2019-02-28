@@ -24,7 +24,8 @@ bool isDartComponent1(ReactElement element) {
 }
 
 bool isDartComponent2(ReactElement element) {
-  return element.type is! String && (element.type as ReactClass).isDartClass == true;
+  return element.type is! String &&
+      (element.type as ReactClass).isDartClass == true;
 }
 
 bool isDartComponent(ReactElement element) {
@@ -41,6 +42,7 @@ Map getDartComponentProps(ReactComponent dartComponent) {
 
 Map getDartElementProps(ReactElement dartElement) {
   return isDartComponent2(dartElement)
-      ? new JsBackedMap.fromJs(dartElement.props as JsMap) // FIXME need to normalize event handlers?
+      ? new JsBackedMap.fromJs(
+          dartElement.props as JsMap) // FIXME need to normalize event handlers?
       : dartElement.props.internal.props;
 }

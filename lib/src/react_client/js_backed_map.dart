@@ -55,7 +55,6 @@ class JsBackedMap<K, V> extends MapBase<K, V> implements Map<K, V> {
     return value;
   }
 
-
   @override
   void clear() {
     for (var key in keys) {

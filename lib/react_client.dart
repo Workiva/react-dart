@@ -147,9 +147,10 @@ class ReactDartComponentFactoryProxy<TComponent extends Component>
   }
 }
 
-
 /// Creates ReactJS [Component] instances for Dart components.
-class ReactDartComponentFactoryProxy2<TComponent extends Component> extends ReactComponentFactoryProxy implements ReactDartComponentFactoryProxy {
+class ReactDartComponentFactoryProxy2<TComponent extends Component>
+    extends ReactComponentFactoryProxy
+    implements ReactDartComponentFactoryProxy {
   /// The ReactJS class used as the type for all [ReactElement]s built by
   /// this factory.
   final ReactClass reactClass;
@@ -159,10 +160,10 @@ class ReactDartComponentFactoryProxy2<TComponent extends Component> extends Reac
 
   final Map defaultProps;
 
-  ReactDartComponentFactoryProxy2(ReactClass reactClass) :
-      this.reactClass = reactClass,
-      this.reactComponentFactory = React.createFactory(reactClass),
-      this.defaultProps = new JsBackedMap.fromJs(reactClass.defaultProps);
+  ReactDartComponentFactoryProxy2(ReactClass reactClass)
+      : this.reactClass = reactClass,
+        this.reactComponentFactory = React.createFactory(reactClass),
+        this.defaultProps = new JsBackedMap.fromJs(reactClass.defaultProps);
 
   ReactClass get type => reactClass;
 
@@ -204,7 +205,8 @@ class ReactDartComponentFactoryProxy2<TComponent extends Component> extends Reac
       // If the ref is a callback, pass ReactJS a function that will call it
       // with the Dart Component instance, not the ReactComponent instance.
       if (ref is _CallbackRef) {
-        propsForJs['ref'] = allowInterop((ReactComponent instance) => ref(instance?.dartComponent));
+        propsForJs['ref'] = allowInterop(
+            (ReactComponent instance) => ref(instance?.dartComponent));
       } else {
         propsForJs['ref'] = ref;
       }
@@ -213,7 +215,6 @@ class ReactDartComponentFactoryProxy2<TComponent extends Component> extends Reac
     return propsForJs.jsObject as EmptyObject;
   }
 }
-
 
 /// Converts a list of variadic children arguments to children that should be passed to ReactJS.
 ///
@@ -447,7 +448,6 @@ final ReactDartInteropStatics _dartInteropStatics = (() {
 
 // TODO custom adapter for over_react to avoid typedPropsFactory usages?
 class JsComponent2Adapter extends Component2Adapter {
-
   // TODO find a way to inject this better
   final ReactComponent jsThis;
 
@@ -478,7 +478,8 @@ class JsComponent2Adapter extends Component2Adapter {
         ));
       });
     } else if (newState != null) {
-      throw new ArgumentError('setState expects its first parameter to either be a Map or a `TransactionalSetStateCallback`.');
+      throw new ArgumentError(
+          'setState expects its first parameter to either be a Map or a `TransactionalSetStateCallback`.');
     }
 
     if (callback == null) {
@@ -495,93 +496,107 @@ final ReactDartInteropStatics2 _dartInteropStatics2 = (() {
   final zone = Zone.current;
 
   /// Wrapper for [Component.getInitialState].
-  Component2 initComponent(ReactComponent jsThis, ComponentStatics<Component2> componentStatics) => zone.run(() {
-    final component = componentStatics.componentFactory();
-    component.adapter = new JsComponent2Adapter(jsThis: jsThis); // TODO displayName;
-    // Return the component so that the JS proxying component can store it,
-    // avoiding an interceptor lookup.
+  Component2 initComponent(ReactComponent jsThis,
+          ComponentStatics<Component2> componentStatics) =>
+      zone.run(() {
+        final component = componentStatics.componentFactory();
+        component.adapter =
+            new JsComponent2Adapter(jsThis: jsThis); // TODO displayName;
+        // Return the component so that the JS proxying component can store it,
+        // avoiding an interceptor lookup.
 
-    component
-      ..jsThis = jsThis
-      // FIXME fix casts
-      ..props = new JsBackedMap.backedBy(jsThis.props as dynamic);
+        component
+          ..jsThis = jsThis
+          // FIXME fix casts
+          ..props = new JsBackedMap.backedBy(jsThis.props as dynamic);
 
-    return component;
-  });
+        return component;
+      });
 
   JsMap handleGetInitialState(Component2 component) => zone.run(() {
-    return jsBackingMapOrJsCopy(component.getInitialState());
-  });
+        return jsBackingMapOrJsCopy(component.getInitialState());
+      });
 
-  void handleComponentWillMount(Component2 component, ReactComponent jsThis) => zone.run(() {
-    component
-      // FIXME fix casts
-      ..state = new JsBackedMap.backedBy(jsThis.state as dynamic);
+  void handleComponentWillMount(Component2 component, ReactComponent jsThis) =>
+      zone.run(() {
+        component
+          // FIXME fix casts
+          ..state = new JsBackedMap.backedBy(jsThis.state as dynamic);
 
-    component.componentWillMount();
-  });
+        component.componentWillMount();
+      });
 
   void handleComponentDidMount(Component2 component) => zone.run(() {
-    component.componentDidMount();
-  });
+        component.componentDidMount();
+      });
 
-  void handleComponentWillReceiveProps(Component2 component, JsMap jsNextProps) => zone.run(() {
-    component.componentWillReceiveProps(new JsBackedMap.backedBy(jsNextProps));
-  });
+  void handleComponentWillReceiveProps(
+          Component2 component, JsMap jsNextProps) =>
+      zone.run(() {
+        component
+            .componentWillReceiveProps(new JsBackedMap.backedBy(jsNextProps));
+      });
 
-
-  void _updatePropsAndStateWithJs(Component2 component, JsMap props, JsMap state) {
+  void _updatePropsAndStateWithJs(
+      Component2 component, JsMap props, JsMap state) {
     component
       // FIXME fix casts
       ..props = new JsBackedMap.backedBy(props)
       ..state = new JsBackedMap.backedBy(state);
   }
 
-  bool handleShouldComponentUpdate(Component2 component, JsMap jsNextProps, JsMap jsNextState) => zone.run(() {
-    final value = component.shouldComponentUpdate(
-      new JsBackedMap.backedBy(jsNextProps),
-      new JsBackedMap.backedBy(jsNextState),
-    );
+  bool handleShouldComponentUpdate(
+          Component2 component, JsMap jsNextProps, JsMap jsNextState) =>
+      zone.run(() {
+        final value = component.shouldComponentUpdate(
+          new JsBackedMap.backedBy(jsNextProps),
+          new JsBackedMap.backedBy(jsNextState),
+        );
 
-    if (!value) {
-      _updatePropsAndStateWithJs(component, jsNextProps, jsNextState);
-    }
+        if (!value) {
+          _updatePropsAndStateWithJs(component, jsNextProps, jsNextState);
+        }
 
-    return value;
-  });
+        return value;
+      });
 
-  void handleComponentWillUpdate(Component2 component, JsMap jsNextProps, JsMap jsNextState) => zone.run(() {
-    component.componentWillUpdate(
-      new JsBackedMap.backedBy(jsNextProps),
-      new JsBackedMap.backedBy(jsNextState),
-    );
+  void handleComponentWillUpdate(
+          Component2 component, JsMap jsNextProps, JsMap jsNextState) =>
+      zone.run(() {
+        component.componentWillUpdate(
+          new JsBackedMap.backedBy(jsNextProps),
+          new JsBackedMap.backedBy(jsNextState),
+        );
 
-    _updatePropsAndStateWithJs(component, jsNextProps, jsNextState);
-  });
+        _updatePropsAndStateWithJs(component, jsNextProps, jsNextState);
+      });
 
-  void handleComponentDidUpdate(Component2 component, ReactComponent jsThis, JsMap jsPrevProps, JsMap jsPrevState) => zone.run(() {
+  void handleComponentDidUpdate(Component2 component, ReactComponent jsThis,
+          JsMap jsPrevProps, JsMap jsPrevState) =>
+      zone.run(() {
 //    final prevProps = component.props; // todo do this instead of creating new wrappers?
 //    final prevState = component.state; // todo do this instead of creating new wrappers?
-    component.componentDidUpdate(
-      new JsBackedMap.backedBy(jsPrevProps),
-      new JsBackedMap.backedBy(jsPrevState),
-    );
-  });
+        component.componentDidUpdate(
+          new JsBackedMap.backedBy(jsPrevProps),
+          new JsBackedMap.backedBy(jsPrevState),
+        );
+      });
 
   void handleComponentWillUnmount(Component2 component) => zone.run(() {
-    component.componentWillUnmount();
-  });
+        component.componentWillUnmount();
+      });
 
   dynamic handleRender(Component2 component) => zone.run(() {
-    return component.render();
-  });
+        return component.render();
+      });
 
   return new ReactDartInteropStatics2(
     initComponent: allowInterop(initComponent),
     handleGetInitialState: allowInterop(handleGetInitialState),
     handleComponentWillMount: allowInterop(handleComponentWillMount),
     handleComponentDidMount: allowInterop(handleComponentDidMount),
-    handleComponentWillReceiveProps: allowInterop(handleComponentWillReceiveProps),
+    handleComponentWillReceiveProps:
+        allowInterop(handleComponentWillReceiveProps),
     handleShouldComponentUpdate: allowInterop(handleShouldComponentUpdate),
     handleComponentWillUpdate: allowInterop(handleComponentWillUpdate),
     handleComponentDidUpdate: allowInterop(handleComponentDidUpdate),
@@ -626,20 +641,23 @@ ReactDartComponentFactoryProxy _registerComponent(
 
 /// Creates and returns a new [ReactDartComponentFactoryProxy] from the provided [componentFactory]
 /// which produces a new JS [`ReactClass` component class](https://facebook.github.io/react/docs/top-level-api.html#react.createclass).
-ReactDartComponentFactoryProxy2 _registerComponent2(ComponentFactory<Component2> componentFactory, [Iterable<String> skipMethods = const []]) {
+ReactDartComponentFactoryProxy2 _registerComponent2(
+    ComponentFactory<Component2> componentFactory,
+    [Iterable<String> skipMethods = const []]) {
   final componentInstance = componentFactory();
   final componentStatics = new ComponentStatics(componentFactory);
 
   /// Create the JS [`ReactClass` component class](https://facebook.github.io/react/docs/top-level-api.html#react.createclass)
   /// with custom JS lifecycle methods.
   var reactComponentClass = React.createClass(
-      createReactDartComponentClassConfig2(_dartInteropStatics2, componentStatics)
-        ..displayName = componentInstance.displayName
-  );
+      createReactDartComponentClassConfig2(
+          _dartInteropStatics2, componentStatics)
+        ..displayName = componentInstance.displayName);
 
   // Cache default props and store them on the ReactClass so they can be used
   // by ReactDartComponentFactoryProxy and externally.
-  final JsBackedMap defaultProps = new JsBackedMap.from(componentInstance.getDefaultProps());
+  final JsBackedMap defaultProps =
+      new JsBackedMap.from(componentInstance.getDefaultProps());
   // TODO move this to JS
   reactComponentClass.defaultProps = defaultProps.jsObject;
   reactComponentClass.isDartClass = true;
