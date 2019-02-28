@@ -21,7 +21,7 @@ void commonFactoryTests(ReactComponentFactoryProxy factory) {
 
   group('passes children to the component when specified as', () {
     dynamic getJsChildren(ReactElement instance) =>
-        getProperty(instance.props, 'children');
+        getProperty(instance.props as dynamic, 'children');
 
     // There are different code paths for 0, 1, 2, 3, 4, 5, 6, and 6+ arguments.
     // Test all of them.

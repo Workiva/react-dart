@@ -172,7 +172,7 @@ dynamic _convertArgsToChildren(List childrenArgs) {
 external List<String> _objectKeys(Object object);
 
 InteropContextValue _jsifyContext(context) {
-  var interopContext = new InteropContextValue();
+  dynamic interopContext = new InteropContextValue();
   setProperty(interopContext, '___internal_dart_context_value___',
       new ReactDartContextInternal(context));
   return interopContext;
