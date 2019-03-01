@@ -4,19 +4,19 @@
     "build": "./node_modules/.bin/webpack"
   },
   "devDependencies": {
-    "@babel/core": "^7.1.2",
-    "@babel/preset-env": "^7.1.0",
+    "@babel/core": "^7.3.4",
+    "@babel/preset-env": "^7.3.4",
     "@babel/preset-react": "^7.0.0",
     "babel-loader": "^8.0.4",
     "create-react-class": "^15.6.3",
     "object-assign": "^4.1.1",
-    "prop-types": "^15.7.1",
-    "react": "^16.8.1",
-    "react-dom": "^16.8.1",
+    "prop-types": "^15.7.2",
+    "react": "^16.8.3",
+    "react-dom": "^16.8.3",
     "react-dom-factories": "^1.0.2",
-    "react-test-renderer": "^16.8.1",
-    "uglifyjs-webpack-plugin": "^2.1.1",
-    "webpack": "^4.23.1",
+    "react-test-renderer": "^16.8.3",
+    "uglifyjs-webpack-plugin": "^2.1.2",
+    "webpack": "^4.29.6",
     "webpack-cli": "^3.2.3"
   }
 }
