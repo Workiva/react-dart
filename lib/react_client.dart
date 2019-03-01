@@ -694,8 +694,9 @@ class ReactDomComponentFactoryProxy extends ReactComponentFactoryProxy {
     // the converted event handler will be compatible with the Map's type parameters.
     var convertibleProps = new JsBackedMap.from(props);
     convertProps(convertibleProps);
+    jsifyMapProperties(props);
 
-    return factory(jsify(convertibleProps), children);
+    return factory(convertibleProps, children);
   }
 
   /// Prepares the bound values, event handlers, and style props for consumption by ReactJS DOM components.

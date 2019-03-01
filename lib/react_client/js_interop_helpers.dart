@@ -114,3 +114,11 @@ void jsifyProperties(JsBackedMap map) {
     }
   });
 }
+
+void jsifyMapProperties(JsBackedMap map) {
+  map.forEach((key, value) {
+    if (value is Map) {
+      map[key] = jsify(value);
+    }
+  });
+}
