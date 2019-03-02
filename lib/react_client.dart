@@ -195,8 +195,8 @@ class ReactDartComponentFactoryProxy2<TComponent extends Component>
 
   /// Returns a JavaScript version of the specified [props], preprocessed for consumption by ReactJS and prepared for
   /// consumption by the [react] library internals.
-  static EmptyObject generateExtendedJsProps(Map props) {
-    final JsBackedMap propsForJs = new JsBackedMap.from(props);
+  static JsMap generateExtendedJsProps(Map props) {
+    final propsForJs = new JsBackedMap.from(props);
 
     // FIXME forwarded DOM props???
 
@@ -207,12 +207,10 @@ class ReactDartComponentFactoryProxy2<TComponent extends Component>
       if (ref is _CallbackRef) {
         propsForJs['ref'] = allowInterop(
             (ReactComponent instance) => ref(instance?.dartComponent));
-      } else {
-        propsForJs['ref'] = ref;
       }
     }
 
-    return propsForJs.jsObject as EmptyObject;
+    return propsForJs.jsObject;
   }
 }
 

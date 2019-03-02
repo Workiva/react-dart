@@ -115,7 +115,6 @@ class JsMap {
 
 @JS('Object')
 abstract class _Object {
-  // FIXME needs polyfill for IE
   external static void assign(JsMap to, JsMap from);
   external static List<dynamic> keys(JsMap object);
   external static List<dynamic> values(JsMap object);
@@ -123,7 +122,6 @@ abstract class _Object {
 
 @JS('Reflect')
 abstract class _Reflect {
-  // FIXME needs polyfill for IE
   external static bool deleteProperty(JsMap target, dynamic propertyKey);
 }
 
