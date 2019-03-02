@@ -99,6 +99,12 @@ class JsBackedMap<K, V> extends MapBase<K, V> implements Map<K, V> {
 // overridden for to avoid cast in case the implementation of keys changes
 //  @override
 //  int get length => _Object.keys(jsObject).length;
+
+  @override
+  bool operator ==(other) => other is JsBackedMap && other.jsObject == jsObject;
+
+  @override
+  int get hashCode => jsObject.hashCode;
 }
 
 @JS()
