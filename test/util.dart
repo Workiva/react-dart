@@ -46,3 +46,17 @@ Map getDartElementProps(ReactElement dartElement) {
           dartElement.props as JsMap) // FIXME need to normalize event handlers?
       : dartElement.props.internal.props;
 }
+
+ReactComponent render(ReactElement reactElement) {
+  return rtu.renderIntoDocument(reactElement);
+}
+
+/// Returns a new [Map.unmodifiable] with all argument maps merged in.
+Map unmodifiableMap([Map map1, Map map2, Map map3, Map map4]) {
+  var merged = {};
+  if (map1 != null) merged.addAll(map1);
+  if (map2 != null) merged.addAll(map2);
+  if (map3 != null) merged.addAll(map3);
+  if (map4 != null) merged.addAll(map4);
+  return new Map.unmodifiable(merged);
+}
