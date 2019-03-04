@@ -262,8 +262,8 @@ external ReactClass createReactDartComponentClass(
 /// Returns a new JS [ReactClassConfig] for a component that uses
 /// [dartInteropStatics] and [componentStatics] internally to proxy between
 /// the JS and Dart component instances.
-@JS('_createReactDartComponentClassConfig2')
-external ReactClassConfig createReactDartComponentClassConfig2(
+@JS('_createReactDartComponentClass2')
+external ReactClass createReactDartComponentClass2(
   ReactDartInteropStatics2 dartInteropStatics,
   ComponentStatics<Component2> componentStatics,
 );

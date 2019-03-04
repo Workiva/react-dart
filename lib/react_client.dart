@@ -646,10 +646,9 @@ ReactDartComponentFactoryProxy2 _registerComponent2(
 
   /// Create the JS [`ReactClass` component class](https://facebook.github.io/react/docs/top-level-api.html#react.createclass)
   /// with custom JS lifecycle methods.
-  var reactComponentClass = React.createClass(
-      createReactDartComponentClassConfig2(
-          _dartInteropStatics2, componentStatics)
-        ..displayName = componentInstance.displayName);
+  var reactComponentClass = createReactDartComponentClass2(
+      _dartInteropStatics2, componentStatics)
+    ..displayName = componentInstance.displayName;
 
   // Cache default props and store them on the ReactClass so they can be used
   // by ReactDartComponentFactoryProxy and externally.
@@ -690,11 +689,12 @@ class ReactDomComponentFactoryProxy extends ReactComponentFactoryProxy {
 
     // We can't mutate the original since we can't be certain that the value of the
     // the converted event handler will be compatible with the Map's type parameters.
-    var convertibleProps = new JsBackedMap.from(props);
-    convertProps(convertibleProps);
-    jsifyMapProperties(props);
+    final convertibleProps = new JsBackedMap.from(props);
 
-    return factory(convertibleProps, children);
+    convertProps(convertibleProps);
+    jsifyMapProperties(convertibleProps);
+
+    return factory(convertibleProps.jsObject, children);
   }
 
   /// Prepares the bound values, event handlers, and style props for consumption by ReactJS DOM components.
@@ -779,7 +779,7 @@ final Expando<Function> _originalEventHandlers = new Expando();
 /// unconverted such that the original JS handlers are returned instead of their
 /// Dart synthetic counterparts.
 Map unconvertJsProps(/* ReactElement|ReactComponent */ instance) {
-  var props = _dartifyJsMap(instance.props);
+  var props = JsBackedMap.copyToDart(instance.props);
   eventPropKeyToEventFactory.keys.forEach((key) {
     if (props.containsKey(key)) {
       props[key] = unconvertJsEventHandler(props[key]) ?? props[key];
@@ -789,7 +789,7 @@ Map unconvertJsProps(/* ReactElement|ReactComponent */ instance) {
   // Convert the nested style map so it can be read by Dart code.
   var style = props['style'];
   if (style != null) {
-    props['style'] = _dartifyJsMap<String, dynamic>(style);
+    props['style'] = JsBackedMap.copyToDart<String, dynamic>(style);
   }
 
   return props;
@@ -827,12 +827,6 @@ _convertEventHandlers(Map args) {
       _originalEventHandlers[reactDartConvertedEventHandler] = value;
     }
   });
-}
-
-/// Returns a Dart Map copy of the JS property key-value pairs in [jsMap].
-Map<K, V> _dartifyJsMap<K, V>(jsMap) {
-  return new Map<K, V>.fromIterable(_objectKeys(jsMap),
-      value: (key) => getProperty(jsMap, key));
 }
 
 /// Wrapper for [SyntheticEvent].

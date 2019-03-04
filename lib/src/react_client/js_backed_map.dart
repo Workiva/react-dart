@@ -21,6 +21,10 @@ class JsBackedMap<K, V> extends MapBase<K, V> implements Map<K, V> {
     return new JsBackedMap.from(new JsBackedMap.backedBy(other));
   }
 
+  static Map<K, V> copyToDart<K, V>(JsMap jsObject) {
+    return new Map<K, V>.from(new JsBackedMap.backedBy(jsObject));
+  }
+
   // these checks moved to asserts for better inlining...
   // todo see if we can keep toString() behavior of keys without asserts without breaking map behavior? probably not
   bool _isValidKey(Object key) => key == null || key is String;
