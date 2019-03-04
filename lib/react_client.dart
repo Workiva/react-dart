@@ -171,14 +171,14 @@ dynamic _convertArgsToChildren(List childrenArgs) {
 @JS('Object.keys')
 external List<String> _objectKeys(Object object);
 
-InteropContextValue _jsifyContext(context) {
+InteropContextValue _jsifyContext(dynamic context) {
   dynamic interopContext = new InteropContextValue();
   setProperty(interopContext, '___internal_dart_context_value___',
       new ReactDartContextInternal(context));
   return interopContext;
 }
 
-dynamic _unjsifyContext(interopContext) {
+dynamic _unjsifyContext(dynamic interopContext) {
   return getProperty(interopContext, '___internal_dart_context_value___')
       ?.value;
 }
@@ -620,54 +620,6 @@ _convertEventHandlers(Map args) {
     }
   });
 }
-
-///// Wraps an event [handler] function in the same manner that DOM event handlers are normally wrapped,
-///// adding automatic conversion of JS synthetic events to their Dart [SyntheticEvent] counterparts.
-/////
-///// Useful when specifying custom event handlers on JS components that are passed synthetic events.
-/////
-///// [type] must be either be:
-/////
-///// - a [Function] that converts the JS synthetic event into a [SyntheticEvent] (e.g., [syntheticMouseEventFactory])
-///// - the name of a DOM event prop to match the wrapping of, for convenience (e.g., 'onClick')
-/////
-///// Examples:
-/////
-/////     _handleClick(react.SyntheticMouseEvent event) {
-/////       // ...
-/////     }
-/////
-/////     render() {
-/////       return MyJsComponent({
-/////         'onMyButtonClick': wrapEventHandler(_handleClick, 'onClick')
-/////       });
-/////
-/////       return MyJsComponent({
-/////         'onMyButtonClick': wrapEventHandler(_handleClick, syntheticMouseEventFactory)
-/////       })
-/////     }
-/////
-//JsEventHandler wrapEventHandler(handler(event), dynamic type) {
-//  SyntheticEventFactory eventFactory;
-//
-//  if (type is String) {
-//    eventFactory = eventPropKeyToEventFactory[type];
-//  } else if (type is SyntheticEventFactory) {
-//    eventFactory = type;
-//  }
-//
-//  if (eventFactory == null) {
-//    throw new ArgumentError.value(type, 'type',
-//        'must be a function that converts the JS synthetic event, or the name of a DOM event prop');
-//  }
-//
-//  final zone = Zone.current;
-//  void wrappedHandler(events.SyntheticEvent jsEvent, [_, __]) => zone.run(() {
-//    handler(eventFactory(jsEvent));
-//  });
-//
-//  return wrappedHandler;
-//}
 
 /// Returns a Dart Map copy of the JS property key-value pairs in [jsMap].
 Map<K, V> _dartifyJsMap<K, V>(jsMap) {

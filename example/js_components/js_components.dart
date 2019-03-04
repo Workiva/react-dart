@@ -35,12 +35,6 @@ main() {
 
     // Props specific to the component can be specified as well!
     'foo': 'bar',
-//    // Non-DOM event handlers props can't be automatically wrapped with
-//    // conversion logic, so this has to be done manually if you need
-//    // access to the Dart [react.SyntheticEvent] and not the JS one.
-//    //
-//    // See [wrapEventHandler] docs for more info.
-//    'onButtonClick': wrapEventHandler(_handleButtonClick, 'onClick'),
   });
 
   react_dom.render(content, querySelector('#content'));
