@@ -3,7 +3,7 @@ import "dart:async";
 import "package:react/react.dart" as react;
 import "package:react/react_dom.dart" as react_dom;
 
-class _HelloComponent extends react.Component2 {
+class _HelloComponent extends react.Component {
   void componentWillReceiveProps(nextProps) {
     if (nextProps["name"].length > 20) {
       print("Too long Hello!");
@@ -17,7 +17,7 @@ class _HelloComponent extends react.Component2 {
 
 var helloComponent = react.registerComponent(() => new _HelloComponent());
 
-class _HelloGreeter extends react.Component2 {
+class _HelloGreeter extends react.Component {
   var myInput;
   getInitialState() => {"name": "World"};
 
@@ -42,7 +42,7 @@ class _HelloGreeter extends react.Component2 {
 
 var helloGreeter = react.registerComponent(() => new _HelloGreeter());
 
-class _CheckBoxComponent extends react.Component2 {
+class _CheckBoxComponent extends react.Component {
   getInitialState() => {"checked": false};
 
   change(e) {
@@ -72,7 +72,7 @@ class _CheckBoxComponent extends react.Component2 {
 
 var checkBoxComponent = react.registerComponent(() => new _CheckBoxComponent());
 
-class _ClockComponent extends react.Component2 {
+class _ClockComponent extends react.Component {
   Timer timer;
 
   getInitialState() => {'secondsElapsed': 0};
@@ -116,7 +116,7 @@ class _ClockComponent extends react.Component2 {
 
 var clockComponent = react.registerComponent(() => new _ClockComponent());
 
-class _ListComponent extends react.Component2 {
+class _ListComponent extends react.Component {
   Map getInitialState() {
     return {
       "items": new List.from([0, 1, 2, 3])
@@ -161,7 +161,7 @@ class _ListComponent extends react.Component2 {
 
 var listComponent = react.registerComponent(() => new _ListComponent());
 
-class _MainComponent extends react.Component2 {
+class _MainComponent extends react.Component {
   render() {
     return react.div({}, props['children']);
   }
@@ -169,7 +169,7 @@ class _MainComponent extends react.Component2 {
 
 var mainComponent = react.registerComponent(() => new _MainComponent());
 
-class _ContextComponent extends react.Component2 {
+class _ContextComponent extends react.Component {
   @override
   Iterable<String> get childContextKeys => const ['foo', 'bar', 'renderCount'];
 
@@ -206,7 +206,7 @@ class _ContextComponent extends react.Component2 {
 
 var contextComponent = react.registerComponent(() => new _ContextComponent());
 
-class _ContextConsumerComponent extends react.Component2 {
+class _ContextConsumerComponent extends react.Component {
   @override
   Iterable<String> get contextKeys => const ['foo'];
 
@@ -226,7 +226,7 @@ class _ContextConsumerComponent extends react.Component2 {
 var contextConsumerComponent =
     react.registerComponent(() => new _ContextConsumerComponent());
 
-class _GrandchildContextConsumerComponent extends react.Component2 {
+class _GrandchildContextConsumerComponent extends react.Component {
   @override
   Iterable<String> get contextKeys => const ['renderCount'];
 
