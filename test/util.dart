@@ -12,7 +12,7 @@ import 'package:react/src/react_client/js_backed_map.dart';
 @JS('Object.keys')
 external List _objectKeys(obj);
 
-Map getProps(elementOrComponent) {
+Map getProps(dynamic elementOrComponent) {
   var props = elementOrComponent.props;
 
   return new Map.fromIterable(_objectKeys(props),
@@ -20,16 +20,18 @@ Map getProps(elementOrComponent) {
 }
 
 bool isDartComponent1(ReactElement element) {
-  return element.props.internal != null;
+  return element.type is! String &&
+      (element.type as ReactClass).dartComponentVersion == '1';
 }
 
 bool isDartComponent2(ReactElement element) {
   return element.type is! String &&
-      (element.type as ReactClass).isDartClass == true;
+      (element.type as ReactClass).dartComponentVersion == '2';
 }
 
 bool isDartComponent(ReactElement element) {
-  return isDartComponent1(element) || isDartComponent2(element);
+  return element.type is! String &&
+      (element.type as ReactClass).dartComponentVersion != null;
 }
 
 react.Component getDartComponent(ReactComponent dartComponent) {

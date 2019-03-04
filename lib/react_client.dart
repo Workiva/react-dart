@@ -625,6 +625,7 @@ ReactDartComponentFactoryProxy _registerComponent(
   /// with custom JS lifecycle methods.
   var reactComponentClass = createReactDartComponentClass(
       _dartInteropStatics, componentStatics, jsConfig)
+    ..dartComponentVersion = '1'
     ..displayName = componentFactory().displayName;
 
   // Cache default props and store them on the ReactClass so they can be used
@@ -656,7 +657,7 @@ ReactDartComponentFactoryProxy2 _registerComponent2(
       new JsBackedMap.from(componentInstance.getDefaultProps());
   // TODO move this to JS
   reactComponentClass.defaultProps = defaultProps.jsObject;
-  reactComponentClass.isDartClass = true;
+  reactComponentClass.dartComponentVersion = '2';
 
   return new ReactDartComponentFactoryProxy2(reactComponentClass);
 }

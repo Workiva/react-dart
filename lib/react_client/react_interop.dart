@@ -76,8 +76,8 @@ class ReactClass {
   external Map get dartDefaultProps;
   external set dartDefaultProps(Map value);
 
-  external bool get isDartClass;
-  external set isDartClass(bool value);
+  external String get dartComponentVersion;
+  external set dartComponentVersion(String value);
 }
 
 /// A JS interop class used as an argument to [React.createClass].
