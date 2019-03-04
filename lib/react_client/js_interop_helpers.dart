@@ -104,21 +104,3 @@ EmptyObject jsify(Map map) {
 
   return jsMap;
 }
-
-void jsifyProperties(JsBackedMap map) {
-  map.forEach((key, value) {
-    if (value is Map) {
-      map[key] = jsify(value);
-    } else if (value is Function) {
-      map[key] = allowInterop(value);
-    }
-  });
-}
-
-void jsifyMapProperties(JsBackedMap map) {
-  map.forEach((key, value) {
-    if (value is Map) {
-      map[key] = jsify(value);
-    }
-  });
-}

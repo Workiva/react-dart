@@ -20,6 +20,7 @@ import 'util.dart';
 
 main() {
   setClientConfiguration();
+
   group('React component lifecycle:', () {
     group('Component', () {
       sharedLifecycleTests(
