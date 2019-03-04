@@ -54,4 +54,3 @@ abstract class DefaultPropsCachingTestHelper implements Component {
   int get staticGetDefaultPropsCallCount;
   set staticGetDefaultPropsCallCount(int value);
 }
-

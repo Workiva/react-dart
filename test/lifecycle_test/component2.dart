@@ -79,15 +79,18 @@ class _SetStateTest extends react.Component2 with LifecycleTestHelper {
   }
 }
 
-_DefaultPropsCachingTest defaultPropsCachingTestComponentFactory() => new _DefaultPropsCachingTest();
+_DefaultPropsCachingTest defaultPropsCachingTestComponentFactory() =>
+    new _DefaultPropsCachingTest();
 
-class _DefaultPropsCachingTest extends react.Component2 implements DefaultPropsCachingTestHelper {
+class _DefaultPropsCachingTest extends react.Component2
+    implements DefaultPropsCachingTestHelper {
   static int getDefaultPropsCallCount = 0;
 
   int get staticGetDefaultPropsCallCount => getDefaultPropsCallCount;
 
   @override
-  set staticGetDefaultPropsCallCount(int value) => getDefaultPropsCallCount = value;
+  set staticGetDefaultPropsCallCount(int value) =>
+      getDefaultPropsCallCount = value;
 
   Map getDefaultProps() {
     getDefaultPropsCallCount++;
@@ -95,7 +98,6 @@ class _DefaultPropsCachingTest extends react.Component2 implements DefaultPropsC
   }
 
   render() => false;
-
 }
 
 ReactDartComponentFactoryProxy DefaultPropsTest =

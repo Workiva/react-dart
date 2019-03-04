@@ -79,15 +79,18 @@ class _SetStateTest extends react.Component with LifecycleTestHelper {
   }
 }
 
-_DefaultPropsCachingTest defaultPropsCachingTestComponentFactory() => new _DefaultPropsCachingTest();
+_DefaultPropsCachingTest defaultPropsCachingTestComponentFactory() =>
+    new _DefaultPropsCachingTest();
 
-class _DefaultPropsCachingTest extends react.Component implements DefaultPropsCachingTestHelper {
+class _DefaultPropsCachingTest extends react.Component
+    implements DefaultPropsCachingTestHelper {
   static int getDefaultPropsCallCount = 0;
 
   int get staticGetDefaultPropsCallCount => getDefaultPropsCallCount;
 
   @override
-  set staticGetDefaultPropsCallCount(int value) => getDefaultPropsCallCount = value;
+  set staticGetDefaultPropsCallCount(int value) =>
+      getDefaultPropsCallCount = value;
 
   Map getDefaultProps() {
     getDefaultPropsCallCount++;
@@ -217,4 +220,3 @@ class _LifecycleTest extends react.Component with LifecycleTestHelper {
     return {'defaultProp': 'default'};
   }
 }
-

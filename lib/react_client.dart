@@ -646,9 +646,9 @@ ReactDartComponentFactoryProxy2 _registerComponent2(
 
   /// Create the JS [`ReactClass` component class](https://facebook.github.io/react/docs/top-level-api.html#react.createclass)
   /// with custom JS lifecycle methods.
-  var reactComponentClass = createReactDartComponentClass2(
-      _dartInteropStatics2, componentStatics)
-    ..displayName = componentInstance.displayName;
+  var reactComponentClass =
+      createReactDartComponentClass2(_dartInteropStatics2, componentStatics)
+        ..displayName = componentInstance.displayName;
 
   // Cache default props and store them on the ReactClass so they can be used
   // by ReactDartComponentFactoryProxy and externally.

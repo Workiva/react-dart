@@ -24,7 +24,8 @@ main() {
     group('Component', () {
       sharedLifecycleTests(
         skipLegacyContextTests: false,
-        defaultPropsCachingTestComponentFactory: components.defaultPropsCachingTestComponentFactory,
+        defaultPropsCachingTestComponentFactory:
+            components.defaultPropsCachingTestComponentFactory,
         SetStateTest: components.SetStateTest,
         DefaultPropsTest: components.DefaultPropsTest,
         ContextWrapperWithoutKeys: components.ContextWrapperWithoutKeys,
@@ -37,7 +38,8 @@ main() {
     group('Component2', () {
       sharedLifecycleTests(
         skipLegacyContextTests: true,
-        defaultPropsCachingTestComponentFactory: components2.defaultPropsCachingTestComponentFactory,
+        defaultPropsCachingTestComponentFactory:
+            components2.defaultPropsCachingTestComponentFactory,
         SetStateTest: components2.SetStateTest,
         DefaultPropsTest: components2.DefaultPropsTest,
         ContextWrapperWithoutKeys: components2.ContextWrapperWithoutKeys,
@@ -97,7 +99,8 @@ void sharedLifecycleTests<T extends react.Component>({
       test(
           'getDefaultProps() is only called once per component factory and cached',
           () {
-        final staticHelperInstance = defaultPropsCachingTestComponentFactory() as DefaultPropsCachingTestHelper;
+        final staticHelperInstance = defaultPropsCachingTestComponentFactory()
+            as DefaultPropsCachingTestHelper;
         staticHelperInstance.staticGetDefaultPropsCallCount = 0;
         expect(staticHelperInstance.staticGetDefaultPropsCallCount, 0);
 
@@ -159,7 +162,8 @@ void sharedLifecycleTests<T extends react.Component>({
     });
 
     test('receives correct lifecycle calls on component mount', () {
-      LifecycleTestHelper component = getDartComponent(render(LifecycleTest({})));
+      LifecycleTestHelper component =
+          getDartComponent(render(LifecycleTest({})));
 
       expect(
           component.lifecycleCalls,
@@ -529,10 +533,12 @@ void sharedLifecycleTests<T extends react.Component>({
         void handleFirstStateUpdate() {
           firstStateUpdateCalls++;
           expect(component.state, expectedState1);
-          component.setState(newState2, Zone.current.bindCallback(handleSecondStateUpdate));
+          component.setState(
+              newState2, Zone.current.bindCallback(handleSecondStateUpdate));
         }
 
-        component.setState(newState1, Zone.current.bindCallback(handleFirstStateUpdate));
+        component.setState(
+            newState1, Zone.current.bindCallback(handleFirstStateUpdate));
 
         expect(firstStateUpdateCalls, 1);
         expect(secondStateUpdateCalls, 1);
@@ -558,10 +564,12 @@ void sharedLifecycleTests<T extends react.Component>({
         void handleFirstStateUpdate() {
           firstStateUpdateCalls++;
           expect(component.state, newState1);
-          component.replaceState(newState2, Zone.current.bindCallback(handleSecondStateUpdate));
+          component.replaceState(
+              newState2, Zone.current.bindCallback(handleSecondStateUpdate));
         }
 
-        component.replaceState(newState1, Zone.current.bindCallback(handleFirstStateUpdate));
+        component.replaceState(
+            newState1, Zone.current.bindCallback(handleFirstStateUpdate));
 
         expect(firstStateUpdateCalls, 1);
         expect(secondStateUpdateCalls, 1);
@@ -591,7 +599,8 @@ void sharedLifecycleTests<T extends react.Component>({
 
       final Map lifecycleTestProps = unmodifiableMap({
         'getInitialState': (_) => initialState,
-        'componentWillReceiveProps': (LifecycleTestHelper component, Map props) {
+        'componentWillReceiveProps':
+            (LifecycleTestHelper component, Map props) {
           component.setState(stateDelta);
         },
       });
@@ -778,7 +787,8 @@ void sharedLifecycleTests<T extends react.Component>({
           'shouldComponentUpdateWithContext': (_, __, ___, ____) =>
               shouldComponentUpdateWithContext,
           'getInitialState': (_) => initialState,
-          'componentWillReceiveProps': (LifecycleTestHelper component, Map props) {
+          'componentWillReceiveProps':
+              (LifecycleTestHelper component, Map props) {
             component.setState(stateDelta);
           },
         });
@@ -841,7 +851,9 @@ void sharedLifecycleTests<T extends react.Component>({
 
     if (!skipLegacyContextTests) {
       group('when shouldComponentUpdateWithContext returns false:', () {
-        testShouldUpdates(shouldComponentUpdateWithContext: false, shouldComponentUpdate: false);
+        testShouldUpdates(
+            shouldComponentUpdateWithContext: false,
+            shouldComponentUpdate: false);
       });
     }
 
