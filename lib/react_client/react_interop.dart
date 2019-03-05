@@ -72,8 +72,9 @@ class ReactClass {
   ///
   /// For use in [ReactDartComponentFactoryProxy] when creating new [ReactElement]s,
   /// or for external use involving inspection of Dart prop defaults.
-  @Deprecated('2.0.0')
+  @Deprecated('6.0.0')
   external Map get dartDefaultProps;
+  @Deprecated('6.0.0')
   external set dartDefaultProps(Map value);
 
   external String get dartComponentVersion;
@@ -321,8 +322,14 @@ external bool get _inReactDevMode;
 bool get inReactDevMode => _inReactDevMode;
 
 /// An object that stores static methods used by all Dart components.
+///
+/// __Deprecated.__ Use [ReactDartInteropStatics2] instead.
+///
+/// Will be removed when [Component] is removed in the `6.0.0` release.
 @JS()
 @anonymous
+
+@Deprecated('6.0.0')
 class ReactDartInteropStatics {
   external factory ReactDartInteropStatics({
     _InitComponent initComponent,
@@ -362,6 +369,7 @@ class ReactDartInteropStatics2 implements ReactDartInteropStatics {
 /// passes it to certain methods in [ReactDartInteropStatics].
 ///
 /// See [ReactDartInteropStatics], [createReactDartComponentClass].
+// TODO: Do we need a version 2 of this?
 class ComponentStatics<T extends Component> {
   final ComponentFactory<T> componentFactory;
 
