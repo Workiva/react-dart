@@ -15,6 +15,9 @@ typedef ReactComponentFactoryProxy ComponentRegistrar(
 
 /// Top-level ReactJS [Component class](https://facebook.github.io/react/docs/react-component.html)
 /// which provides the [ReactJS Component API](https://facebook.github.io/react/docs/react-component.html#reference)
+///
+/// __Deprecated. Use [Component2] instead.__
+@Deprecated('6.0.0')
 abstract class Component {
   Map _context;
 
@@ -516,66 +519,115 @@ abstract class Component2<T extends Map> implements Component {
 
   // Unsupported things
 
-  // Unsupported things
-
-  @Deprecated('3.0.0')
+  /// Do not use.
+  ///
+  /// Will be removed when [Component] is removed in the `6.0.0` release.
+  @Deprecated('6.0.0')
   void replaceState(Map newState, [SetStateCallback callback]) =>
       throw new UnimplementedError();
 
-  @Deprecated('3.0.0')
+  /// Do not use.
+  ///
+  /// Will be removed when [Component] is removed in the `6.0.0` release.
+  @Deprecated('6.0.0')
   Map<String, dynamic> getChildContext() => const {};
 
-  @Deprecated('3.0.0')
+  /// Do not use.
+  ///
+  /// Will be removed when [Component] is removed in the `6.0.0` release.
+  @Deprecated('6.0.0')
   void componentWillUpdateWithContext(
       Map nextProps, Map nextState, Map nextContext) {}
 
-  @Deprecated('3.0.0')
+  /// Do not use.
+  ///
+  /// Will be removed when [Component] is removed in the `6.0.0` release.
+  @Deprecated('6.0.0')
   void componentWillReceivePropsWithContext(Map newProps, nextContext) {}
 
-  @Deprecated('3.0.0')
+  /// Do not use.
+  ///
+  /// Will be removed when [Component] is removed in the `6.0.0` release.
+  @Deprecated('6.0.0')
   bool shouldComponentUpdateWithContext(
           Map nextProps, Map nextState, Map nextContext) =>
       null;
 
-  @Deprecated('3.0.0')
+  /// Do not use.
+  ///
+  /// Will be removed when [Component] is removed in the `6.0.0` release.
+  @Deprecated('6.0.0')
   Iterable<String> get childContextKeys => const [];
 
-  @Deprecated('3.0.0')
+  /// Do not use.
+  ///
+  /// Will be removed when [Component] is removed in the `6.0.0` release.
+  @Deprecated('6.0.0')
   Iterable<String> get contextKeys => const [];
 
-  @Deprecated('3.0.0')
+  /// Do not use.
+  ///
+  /// Will be removed when [Component] is removed in the `6.0.0` release.
+  @Deprecated('6.0.0')
   bind(key) => [
         state[key],
         (value) => setState({key: value})
       ];
 
-  @Deprecated('3.0.0')
+  /// Do not use.
+  ///
+  /// Will be removed when [Component] is removed in the `6.0.0` release.
+  @Deprecated('6.0.0')
   initComponentInternal(props, _jsRedraw, [Ref ref, _jsThis, context]) {
     throw new UnimplementedError();
   }
 
-  @Deprecated('3.0.0')
+  /// Do not use.
+  ///
+  /// Will be removed when [Component] is removed in the `6.0.0` release.
+  @Deprecated('6.0.0')
   initStateInternal() => throw new UnimplementedError();
 
-  @Deprecated('3.0.0')
+  /// Do not use.
+  ///
+  /// Will be removed when [Component] is removed in the `6.0.0` release.
+  @Deprecated('6.0.0')
   Map nextContext; // todo make throwing getters/setters
 
-  @Deprecated('3.0.0')
+  /// Do not use.
+  ///
+  /// Will be removed when [Component] is removed in the `6.0.0` release.
+  @Deprecated('6.0.0')
   Map prevContext; // todo make throwing getters/setters
 
-  @Deprecated('3.0.0')
+  /// Do not use.
+  ///
+  /// Will be removed when [Component] is removed in the `6.0.0` release.
+  @Deprecated('6.0.0')
   Map prevState; // todo make throwing getters/setters
 
-  @Deprecated('3.0.0')
+  /// Do not use.
+  ///
+  /// Will be removed when [Component] is removed in the `6.0.0` release.
+  @Deprecated('6.0.0')
   Map get nextState => throw new UnimplementedError();
 
-  @Deprecated('3.0.0')
+  /// Do not use.
+  ///
+  /// Will be removed when [Component] is removed in the `6.0.0` release.
+  @Deprecated('6.0.0')
   Map nextProps; // todo make throwing getters/setters
 
-  @Deprecated('3.0.0')
+  /// Do not use.
+  ///
+  /// Will be removed when [Component] is removed in the `6.0.0` release.
+  @Deprecated('6.0.0')
   void transferComponentState() => throw new UnimplementedError();
 
-  @Deprecated('3.0.0')
+  /// Do not use.
+  ///
+  /// Will be removed when [Component] is removed in the `6.0.0` release.
+  @Deprecated('6.0.0')
   void redraw([SetStateCallback callback]) {
     setState({}, callback);
   }

@@ -67,7 +67,10 @@ dynamic listifyChildren(dynamic children) {
   }
 }
 
-/// Creates ReactJS [Component] instances for Dart components.
+/// Use [ReactDartComponentFactoryProxy2] instead.
+///
+/// Will be removed when [Component] is removed in the `6.0.0` release.
+@Deprecated('6.0.0')
 class ReactDartComponentFactoryProxy<TComponent extends Component>
     extends ReactComponentFactoryProxy {
   /// The ReactJS class used as the type for all [ReactElement]s built by
@@ -182,7 +185,7 @@ class ReactDartComponentFactoryProxy2<TComponent extends Component2>
 
     if (children == null) {
       // FIXME are we cool to modify this list?
-      // FIXME why are there unmofiable lists here?
+      // FIXME why are there unmodifiable lists here?
       children = childrenArgs.map(listifyChildren).toList();
       markChildrenValidated(children);
     }
@@ -253,6 +256,7 @@ Map<String, dynamic> _unjsifyContext(InteropContextValue interopContext) {
 }
 
 /// The static methods that proxy JS component lifecycle methods to Dart components.
+// TODO: Remove in the 6.0.0 release
 final ReactDartInteropStatics _dartInteropStatics = (() {
   var zone = Zone.current;
 
@@ -605,6 +609,7 @@ final ReactDartInteropStatics2 _dartInteropStatics2 = (() {
 
 /// Creates and returns a new [ReactDartComponentFactoryProxy] from the provided [componentFactory]
 /// which produces a new JS [`ReactClass` component class](https://facebook.github.io/react/docs/top-level-api.html#react.createclass).
+// TODO: Remove in the 6.0.0 release
 ReactDartComponentFactoryProxy _registerComponent(
     ComponentFactory componentFactory,
     [Iterable<String> skipMethods = const []]) {
@@ -675,6 +680,7 @@ class ReactDomComponentFactoryProxy extends ReactComponentFactoryProxy {
   ReactDomComponentFactoryProxy(name)
       : this.name = name,
         this.factory = React.createFactory(name) {
+    // TODO: Should we remove this once we validate that the bug is gone in Dart 2 DDC?
     if (ddc_emulated_function_name_bug.isBugPresent) {
       ddc_emulated_function_name_bug.patchName(this);
     }
