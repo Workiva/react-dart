@@ -147,8 +147,8 @@ class ReactDartComponentFactoryProxy<TComponent extends Component>
   }
 }
 
-/// Creates ReactJS [Component] instances for Dart components.
-class ReactDartComponentFactoryProxy2<TComponent extends Component>
+/// Creates ReactJS [Component2] instances for Dart components.
+class ReactDartComponentFactoryProxy2<TComponent extends Component2>
     extends ReactComponentFactoryProxy
     implements ReactDartComponentFactoryProxy {
   /// The ReactJS class used as the type for all [ReactElement]s built by
