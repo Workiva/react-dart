@@ -687,15 +687,14 @@ class ReactDomComponentFactoryProxy extends ReactComponentFactoryProxy {
 
     // We can't mutate the original since we can't be certain that the value of the
     // the converted event handler will be compatible with the Map's type parameters.
-    final convertibleProps = new JsBackedMap.from(props);
+    var convertibleProps = new Map.from(props);
     convertProps(convertibleProps);
 
-    return factory(convertibleProps.jsObject, children);
+    return factory(jsify(convertibleProps), children);
   }
 
   /// Prepares the bound values, event handlers, and style props for consumption by ReactJS DOM components.
   static void convertProps(Map props) {
-    _jsifyMapProps(props);
     _convertBoundValues(props);
     _convertEventHandlers(props);
   }
@@ -760,14 +759,6 @@ _convertBoundValues(Map args) {
       }
     };
   }
-}
-
-void _jsifyMapProps(Map map) {
-  map.forEach((key, value) {
-    if (value is Map) {
-      map[key] = jsify(value);
-    }
-  });
 }
 
 /// A mapping from converted/wrapped JS handler functions (the result of [_convertEventHandlers])
