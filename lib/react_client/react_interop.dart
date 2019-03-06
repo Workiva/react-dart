@@ -85,8 +85,9 @@ class ReactClassConfig {
       Function componentWillUpdate,
       Function componentDidUpdate,
       Function componentWillUnmount,
+      @Deprecated('6.0.0')
       Function getChildContext,
-      @Deprecated('5.0.0')
+      @Deprecated('6.0.0')
       Map<String, dynamic> childContextTypes,
       Function getDefaultProps,
       Function getInitialState,
