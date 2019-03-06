@@ -2,6 +2,10 @@
 // for details. All rights reserved. Use of this source code is governed by a
 // BSD-style license that can be found in the LICENSE file.
 
+/// __DEPRECATED.__
+///
+/// This library will not be maintained beyond the `5.0.0` release.
+@Deprecated('5.0.0')
 library react_server;
 
 import 'dart:math';
@@ -17,8 +21,22 @@ String _CHECKSUM_ATTR_NAME = 'data-react-checksum';
 num _GLOBAL_MOUNT_POINT_MAX = 9999999;
 num _MOD = 65521;
 
+/// __DEPRECATED.__
+///
+/// Server-side rendering support via APIs in the `react` package will not be maintained beyond the `5.0.0` release.
+@Deprecated('5.0.0')
 typedef String OwnerFactory([String ownerId, num position, String key]);
+
+/// __DEPRECATED.__
+///
+/// Server-side rendering support via APIs in the `react` package will not be maintained beyond the `5.0.0` release.
+@Deprecated('5.0.0')
 typedef OwnerFactory ReactComponentFactory(Map props, [dynamic children]);
+
+/// __DEPRECATED.__
+///
+/// Server-side rendering support via APIs in the `react` package will not be maintained beyond the `5.0.0` release.
+@Deprecated('5.0.0')
 typedef Component ComponentFactory();
 
 /// Creates a method that creates a new [Component], runs lifecycle methods and returns the result of the
@@ -413,6 +431,10 @@ _adler32(String data) {
   return (A | B).x;
 }
 
+/// __DEPRECATED.__
+///
+/// Server-side rendering support via APIs in the `react` package will not be maintained beyond the `5.0.0` release.
+@Deprecated('5.0.0')
 void setServerConfiguration() {
   setReactConfiguration(_reactDom, _registerComponent);
   setReactDOMServerConfiguration(

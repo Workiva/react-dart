@@ -641,6 +641,8 @@ ReactDartComponentFactoryProxy2 _registerComponent2(
   final componentInstance = componentFactory();
   final componentStatics = new ComponentStatics(componentFactory);
 
+  // TODO: Instantiate a JsComponentConfig2 instance here
+
   /// Create the JS [`ReactClass` component class](https://facebook.github.io/react/docs/top-level-api.html#react.createclass)
   /// with custom JS lifecycle methods.
   var reactComponentClass =
@@ -742,6 +744,8 @@ _setValueToProps(Map props, val) {
 }
 
 /// Convert bound values to pure value and packed onChange function
+///
+/// TODO: Remove in 6.0.0 when [Component.bind] is removed.
 _convertBoundValues(Map args) {
   var boundValue = args['value'];
 
