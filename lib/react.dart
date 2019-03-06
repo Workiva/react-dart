@@ -47,7 +47,24 @@ abstract class Component {
   /// The React context map of this component, passed down from its ancestors' [getChildContext] value.
   ///
   /// Only keys declared in this component's [contextKeys] will be present.
+  ///
+  /// > __DEPRECATED - DO NOT USE__
+  /// >
+  /// > This API was never stable in any version of ReactJS, and was replaced with a new, incompatible context API
+  /// > in ReactJS 16 that will be exposed in version `5.0.0` of the `react` Dart package via a
+  /// > new version of `Component` called `Component2`.
+  /// >
+  /// > This will be completely removed when the JS side of it is slated for removal (ReactJS 17 / react.dart 6.0.0)
+  @Deprecated('6.0.0')
   Map get context => _context;
+  /// > __DEPRECATED - DO NOT USE__
+  /// >
+  /// > This API was never stable in any version of ReactJS, and was replaced with a new, incompatible context API
+  /// > in ReactJS 16 that will be exposed in version `5.0.0` of the `react` Dart package via a
+  /// > new version of `Component` called `Component2`.
+  /// >
+  /// > This will be completely removed when the JS side of it is slated for removal (ReactJS 17 / react.dart 6.0.0)
+  @Deprecated('6.0.0')
   set context(Map value) => _context = value;
 
   /// ReactJS [Component] props.
@@ -126,6 +143,15 @@ abstract class Component {
   /// Private reference to the value of [context] for the upcoming render cycle.
   ///
   /// Useful for ReactJS lifecycle methods [shouldComponentUpdateWithContext] and [componentWillUpdateWithContext].
+  ///
+  /// > __DEPRECATED - DO NOT USE__
+  /// >
+  /// > This API was never stable in any version of ReactJS, and was replaced with a new, incompatible context API
+  /// > in ReactJS 16 that will be exposed in version `5.0.0` of the `react` Dart package via a
+  /// > new version of `Component` called `Component2`.
+  /// >
+  /// > This will be completely removed when the JS side of it is slated for removal (ReactJS 17 / react.dart 6.0.0)
+  @Deprecated('6.0.0')
   Map nextContext;
 
   /// Private reference to the value of [state] for the upcoming render cycle.
@@ -137,6 +163,15 @@ abstract class Component {
   /// the ReactJS lifecycle method.
   ///
   /// __DO NOT set__ from anywhere outside react-dart lifecycle internals.
+  ///
+  /// > __DEPRECATED - DO NOT USE__
+  /// >
+  /// > This API was never stable in any version of ReactJS, and was replaced with a new, incompatible context API
+  /// > in ReactJS 16 that will be exposed in version `5.0.0` of the `react` Dart package via a
+  /// > new version of `Component` called `Component2`.
+  /// >
+  /// > This will be completely removed when the JS side of it is slated for removal (ReactJS 17 / react.dart 6.0.0)
+  @Deprecated('6.0.0')
   Map prevContext;
 
   /// Reference to the value of [state] from the previous render cycle, used internally for proxying
@@ -241,25 +276,17 @@ abstract class Component {
   ///
   /// Calling [setState] within this function will not trigger an additional [render].
   ///
-  /// __Note__: Choose either this method or [componentWillReceivePropsWithContext]. They are both called at the same
-  /// time so using both provides no added benefit.
-  ///
   /// See: <https://facebook.github.io/react/docs/react-component.html#updating-componentwillreceiveprops>
   void componentWillReceiveProps(Map newProps) {}
 
-  /// ReactJS lifecycle method that is invoked when a `Component` is receiving [newProps].
-  ///
-  /// This method is not called for the initial [render].
-  ///
-  /// Use this as an opportunity to react to a prop or context transition before [render] is called by updating the
-  /// [state] using [setState]. The old props and context can be accessed via [props] and [context], respectively.
-  ///
-  /// Calling [setState] within this function will not trigger an additional [render].
-  ///
-  /// __Note__: Choose either this method or [componentWillReceiveProps]. They are both called at the same time so using
-  /// both provides no added benefit.
-  ///
-  /// See: <https://facebook.github.io/react/docs/react-component.html#updating-componentwillreceiveprops>
+  /// > __DEPRECATED - DO NOT USE__
+  /// >
+  /// > This API was never stable in any version of ReactJS, and was replaced with a new, incompatible context API
+  /// > in ReactJS 16 that will be exposed in version `5.0.0` of the `react` Dart package via a
+  /// > new version of `Component` called `Component2`.
+  /// >
+  /// > This will be completely removed when the JS side of it is slated for removal (ReactJS 17 / react.dart 6.0.0)
+  @Deprecated('6.0.0')
   void componentWillReceivePropsWithContext(Map newProps, nextContext) {}
 
   /// ReactJS lifecycle method that is invoked before rendering when [nextProps] or [nextState] are being received.
@@ -267,22 +294,17 @@ abstract class Component {
   /// Use this as an opportunity to return `false` when you're certain that the transition to the new props and state
   /// will not require a component update.
   ///
-  /// __Note__: This method is called after [shouldComponentUpdateWithContext]. When it returns `null`, the result of
-  /// this method is used, but this is not called if a valid `bool` is returned from [shouldComponentUpdateWithContext].
-  ///
   /// See: <https://facebook.github.io/react/docs/react-component.html#updating-shouldcomponentupdate>
   bool shouldComponentUpdate(Map nextProps, Map nextState) => true;
 
-  /// ReactJS lifecycle method that is invoked before rendering when [nextProps], [nextState], or [nextContext] are
-  /// being received.
-  ///
-  /// Use this as an opportunity to return `false` when you're certain that the transition to the new props, state, and
-  /// context will not require a component update.
-  ///
-  /// __Note__: This method is called before [shouldComponentUpdate]. Returning `null` will defer the update to the
-  /// result of [shouldComponentUpdate], but [shouldComponentUpdate] is not called if a valid `bool` is returned.
-  ///
-  /// See: <https://facebook.github.io/react/docs/react-component.html#updating-shouldcomponentupdate>
+  /// > __DEPRECATED - DO NOT USE__
+  /// >
+  /// > This API was never stable in any version of ReactJS, and was replaced with a new, incompatible context API
+  /// > in ReactJS 16 that will be exposed in version `5.0.0` of the `react` Dart package via a
+  /// > new version of `Component` called `Component2`.
+  /// >
+  /// > This will be completely removed when the JS side of it is slated for removal (ReactJS 17 / react.dart 6.0.0)
+  @Deprecated('6.0.0')
   bool shouldComponentUpdateWithContext(
           Map nextProps, Map nextState, Map nextContext) =>
       null;
@@ -300,17 +322,14 @@ abstract class Component {
   /// See: <https://facebook.github.io/react/docs/react-component.html#updating-componentwillupdate>
   void componentWillUpdate(Map nextProps, Map nextState) {}
 
-  /// ReactJS lifecycle method that is invoked immediately before rendering when [nextProps], [nextState], or
-  /// [nextContext] are being received.
-  ///
-  /// This method is not called for the initial [render].
-  ///
-  /// Use this as an opportunity to perform preparation before an update occurs.
-  ///
-  /// __Note__: Choose either this method or [componentWillUpdate]. They are both called at the same time so using both
-  /// provides no added benefit.
-  ///
-  /// See: <https://facebook.github.io/react/docs/react-component.html#updating-componentwillupdate>
+  /// > __DEPRECATED - DO NOT USE__
+  /// >
+  /// > This API was never stable in any version of ReactJS, and was replaced with a new, incompatible context API
+  /// > in ReactJS 16 that will be exposed in version `5.0.0` of the `react` Dart package via a
+  /// > new version of `Component` called `Component2`.
+  /// >
+  /// > This will be completely removed when the JS side of it is slated for removal (ReactJS 17 / react.dart 6.0.0)
+  @Deprecated('6.0.0')
   void componentWillUpdateWithContext(
       Map nextProps, Map nextState, Map nextContext) {}
 
@@ -335,16 +354,43 @@ abstract class Component {
   /// Returns a Map of context to be passed to descendant components.
   ///
   /// Only keys present in [childContextKeys] will be used; all others will be ignored.
+  ///
+  /// > __DEPRECATED - DO NOT USE__
+  /// >
+  /// > This API was never stable in any version of ReactJS, and was replaced with a new, incompatible context API
+  /// > in ReactJS 16 that will be exposed in version `5.0.0` of the `react` Dart package via a
+  /// > new version of `Component` called `Component2`.
+  /// >
+  /// > This will be completely removed when the JS side of it is slated for removal (ReactJS 17 / react.dart 6.0.0)
+  @Deprecated('6.0.0')
   Map<String, dynamic> getChildContext() => const {};
 
   /// The keys this component uses in its child context map (returned by [getChildContext]).
   ///
   /// __This method is called only once, upon component registration.__
+  ///
+  /// > __DEPRECATED - DO NOT USE__
+  /// >
+  /// > This API was never stable in any version of ReactJS, and was replaced with a new, incompatible context API
+  /// > in ReactJS 16 that will be exposed in version `5.0.0` of the `react` Dart package via a
+  /// > new version of `Component` called `Component2`.
+  /// >
+  /// > This will be completely removed when the JS side of it is slated for removal (ReactJS 17 / react.dart 6.0.0)
+  @Deprecated('6.0.0')
   Iterable<String> get childContextKeys => const [];
 
   /// The keys of context used by this component.
   ///
   /// __This method is called only once, upon component registration.__
+  ///
+  /// > __DEPRECATED - DO NOT USE__
+  /// >
+  /// > This API was never stable in any version of ReactJS, and was replaced with a new, incompatible context API
+  /// > in ReactJS 16 that will be exposed in version `5.0.0` of the `react` Dart package via a
+  /// > new version of `Component` called `Component2`.
+  /// >
+  /// > This will be completely removed when the JS side of it is slated for removal (ReactJS 17 / react.dart 6.0.0)
+  @Deprecated('6.0.0')
   Iterable<String> get contextKeys => const [];
 
   /// Invoked once before the `Component` is mounted. The return value will be used as the initial value of [state].
