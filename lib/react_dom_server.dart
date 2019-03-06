@@ -2,27 +2,28 @@
 // for details. All rights reserved. Use of this source code is governed by a
 // BSD-style license that can be found in the LICENSE file.
 
+/// __DEPRECATED.__
+///
+/// This library will not be maintained beyond the `5.0.0` release.
+@Deprecated('5.0.0')
 library react_dom_server;
 
-/// Renders a ReactElement to its initial HTML. This should only be used on the server.
-/// React will return an HTML string. You can use this method to generate HTML on the
-/// server and send the markup down on the initial request for faster page loads and to
-/// allow search engines to crawl your pages for SEO purposes.
-
-/// If you call `ReactDOM.render()` on a node that already has this server-rendered markup,
-/// React will preserve it and only attach event handlers, allowing you to have a very
-/// performant first-load experience.
+/// __DEPRECATED.__
+///
+/// Server-side rendering support via APIs in the `react` package will not be maintained beyond the `5.0.0` release.
+@Deprecated('5.0.0')
 var renderToString;
 
-/// Similar to [renderToString], except this doesn't create extra DOM attributes such as
-/// data-react-id, that React uses internally. This is useful if you want to use React
-/// as a simple static page generator, as stripping away the extra attributes can save
-/// lots of bytes.
+/// __DEPRECATED.__
+///
+/// Server-side rendering support via APIs in the `react` package will not be maintained beyond the `5.0.0` release.
+@Deprecated('5.0.0')
 var renderToStaticMarkup;
 
-/// Sets configuration based on passed functions.
+/// __DEPRECATED.__
 ///
-/// Passes arguments to global variables.
+/// Server-side rendering support via APIs in the `react` package will not be maintained beyond the `5.0.0` release.
+@Deprecated('5.0.0')
 setReactDOMServerConfiguration(
     customRenderToString, customRenderToStaticMarkup) {
   renderToString = customRenderToString;
