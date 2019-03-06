@@ -234,6 +234,8 @@ abstract class Component {
   /// Optionally accepts a [callback] that gets called after the component updates.
   ///
   /// [A.k.a "forceUpdate"](https://facebook.github.io/react/docs/react-component.html#forceupdate)
+  ///
+  /// TODO: Deprecate in 5.0.0-wip (use `Component2.forceUpdate` instead)
   void redraw([callback()]) {
     setState({}, callback);
   }
