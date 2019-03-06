@@ -18,6 +18,7 @@ typedef ReactElement ReactJsComponentFactory(props, children);
 
 @JS()
 abstract class React {
+  @Deprecated('6.0.0')
   external static ReactClass createClass(ReactClassConfig reactClassConfig);
   external static ReactJsComponentFactory createFactory(type);
 
@@ -72,6 +73,11 @@ class ReactClass {
 /// A JS interop class used as an argument to [React.createClass].
 ///
 /// See: <http://facebook.github.io/react/docs/top-level-api.html#react.createclass>.
+///
+/// > __DEPRECATED.__
+/// >
+/// > Will be removed alongside [React.createClass] in the `6.0.0` release.
+@Deprecated('6.0.0')
 @JS()
 @anonymous
 class ReactClassConfig {
@@ -85,9 +91,7 @@ class ReactClassConfig {
       Function componentWillUpdate,
       Function componentDidUpdate,
       Function componentWillUnmount,
-      @Deprecated('6.0.0')
       Function getChildContext,
-      @Deprecated('6.0.0')
       Map<String, dynamic> childContextTypes,
       Function getDefaultProps,
       Function getInitialState,
@@ -284,12 +288,26 @@ void markChildrenValidated(List<dynamic> children) {
 /// [dartInteropStatics] and [componentStatics] internally to proxy between
 /// the JS and Dart component instances.
 ///
-/// TODO: Deprecate in 5.0.0-wip (use `createReactDartComponentClass` instead)
+/// > __DEPRECATED.__
+/// >
+/// > Use [createReactDartComponentClass] instead.
+@Deprecated('5.0.0')
 @JS('_createReactDartComponentClassConfig')
 external ReactClassConfig createReactDartComponentClassConfig(
     ReactDartInteropStatics dartInteropStatics,
     ComponentStatics componentStatics,
     [JsComponentConfig jsConfig]);
+
+/// Returns a new JS [ReactClassConfig] for a component that uses
+/// [dartInteropStatics] and [componentStatics] internally to proxy between
+/// the JS and Dart component instances.
+ReactClass createReactDartComponentClass(
+    ReactDartInteropStatics dartInteropStatics,
+    ComponentStatics componentStatics,
+    [JsComponentConfig jsConfig]) {
+  // TODO: Change this impl to external in 5.0.0, and deprecate it as 6.0.0 removal
+  return React.createClass(createReactDartComponentClassConfig(dartInteropStatics, componentStatics, jsConfig));
+}
 
 typedef Component _InitComponent(
     ReactComponent jsThis,
