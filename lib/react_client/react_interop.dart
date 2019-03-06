@@ -155,6 +155,31 @@ class ReactComponent {
   external void setState(state, [callback]);
   external void forceUpdate([callback]);
 
+  /// __DEPRECATED.__
+  ///
+  /// Will be completely removed in the `5.0.0` release.
+  ///
+  /// The analogous JS bits for this were removed in ReactJS 16,
+  /// which the `react` Dart package will be upgrading to in the `5.0.0` release.
+  ///
+  /// Instead, set your own flag within a `Component` instance like so:
+  ///
+  ///     class _SomeComponent extends react.Component {
+  ///       bool _isMounted;
+  ///
+  ///       @override
+  ///       void componentDidMount() {
+  ///         _isMounted = true;
+  ///       }
+  ///
+  ///       @override
+  ///       void componentWillUnmount() {
+  ///         _isMounted = false;
+  ///       }
+  ///     }
+  ///
+  /// And then reference the private flag instead of calling `isMounted()`.
+  @Deprecated('5.0.0')
   external bool isMounted();
 }
 
