@@ -201,8 +201,6 @@ class ReactDartComponentFactoryProxy2<TComponent extends Component2>
   static JsMap generateExtendedJsProps(Map props) {
     final propsForJs = new JsBackedMap.from(props);
 
-    // FIXME forwarded DOM props???
-
     final ref = propsForJs['ref'];
     if (ref != null) {
       // If the ref is a callback, pass ReactJS a function that will call it
@@ -502,8 +500,7 @@ final ReactDartInteropStatics2 _dartInteropStatics2 = (() {
           ComponentStatics<Component2> componentStatics) =>
       zone.run(() {
         final component = componentStatics.componentFactory();
-        component.adapter =
-            new JsComponent2Adapter(jsThis: jsThis); // TODO displayName;
+        component.adapter = new JsComponent2Adapter(jsThis: jsThis);
         // Return the component so that the JS proxying component can store it,
         // avoiding an interceptor lookup.
 
@@ -521,9 +518,8 @@ final ReactDartInteropStatics2 _dartInteropStatics2 = (() {
   void handleComponentWillMount(Component2 component, ReactComponent jsThis) =>
       zone.run(() {
         component
-          ..state = new JsBackedMap.backedBy(jsThis.state);
-
-        component.componentWillMount();
+          ..state = new JsBackedMap.backedBy(jsThis.state)
+          ..componentWillMount();
       });
 
   void handleComponentDidMount(Component2 component) => zone.run(() {

@@ -400,7 +400,20 @@ abstract class Component2 implements Component {
 
   /// Allows the [ReactJS `displayName` property](https://facebook.github.io/react/docs/react-component.html#displayname)
   /// to be set for debugging purposes.
-  String get displayName => '';
+  ///
+  /// In DDC, this will be the class name, but in dart2js it will be null unless
+  /// overridden, since using runtimeType can lead to larger dart2js output.
+  ///
+  /// This will result in the dart2js name being `ReactDartComponent2` (the
+  /// name of the proxying JS component defined in _dart_helpers.js).
+  String get displayName {
+    var value;
+    assert(() {
+      value = runtimeType.toString();
+      return true;
+    }());
+    return value;
+  }
 
   /// Triggers a rerender with new state obtained by shallow-merging [newState] into the current [state].
   ///
