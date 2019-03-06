@@ -8,6 +8,9 @@ import 'dart:html';
 
 import 'package:js/js.dart';
 import 'package:react/react.dart';
+import 'package:react/react_client.dart' show ComponentFactory;
+import 'package:react/react_client/js_interop_helpers.dart';
+import 'package:react/src/react_client/js_backed_map.dart';
 import 'package:react/src/react_client/dart2_interop_workaround_bindings.dart';
 
 typedef ReactElement ReactJsComponentFactory(props, children);
@@ -55,6 +58,9 @@ abstract class ReactDomServer {
 @JS()
 @anonymous
 class ReactClass {
+  external JsMap get defaultProps;
+  external set defaultProps(JsMap value);
+
   /// The `displayName` string is used in debugging messages.
   ///
   /// See: <http://facebook.github.io/react/docs/component-specs.html#displayname>
@@ -66,8 +72,13 @@ class ReactClass {
   ///
   /// For use in [ReactDartComponentFactoryProxy] when creating new [ReactElement]s,
   /// or for external use involving inspection of Dart prop defaults.
+  @Deprecated('6.0.0')
   external Map get dartDefaultProps;
+  @Deprecated('6.0.0')
   external set dartDefaultProps(Map value);
+
+  external String get dartComponentVersion;
+  external set dartComponentVersion(String value);
 }
 
 /// A JS interop class used as an argument to [React.createClass].
@@ -149,6 +160,7 @@ class ReactElement {
 class ReactComponent {
   external Component get dartComponent;
   external InteropProps get props;
+  external JsMap get state;
   external get refs;
   external void setState(state, [callback]);
   external void forceUpdate([callback]);
@@ -181,7 +193,8 @@ class InteropContextValue {
 /// __For internal/advanced use only.__
 @JS()
 @anonymous
-class InteropProps {
+class InteropProps implements JsMap {
+  @Deprecated('3.0.0')
   external ReactDartComponentInternal get internal;
   external dynamic get key;
   external dynamic get ref;
@@ -189,8 +202,12 @@ class InteropProps {
   external set key(dynamic value);
   external set ref(dynamic value);
 
-  external factory InteropProps(
-      {ReactDartComponentInternal internal, String key, dynamic ref});
+  @Deprecated('3.0.0')
+  external factory InteropProps({
+    ReactDartComponentInternal internal,
+    String key,
+    dynamic ref,
+  });
 }
 
 /// Internal react-dart information used to proxy React JS lifecycle to Dart
@@ -243,6 +260,14 @@ external ReactClass createReactDartComponentClass(
     ComponentStatics componentStatics,
     [JsComponentConfig jsConfig]);
 
+/// Returns a new JS [ReactClassConfig] for a component that uses
+/// [dartInteropStatics] and [componentStatics] internally to proxy between
+/// the JS and Dart component instances.
+@JS('_createReactDartComponentClass2')
+external ReactClass createReactDartComponentClass2(
+  ReactDartInteropStatics2 dartInteropStatics,
+  ComponentStatics<Component2> componentStatics,
+);
 typedef Component _InitComponent(
     ReactComponent jsThis,
     ReactDartComponentInternal internal,
@@ -263,6 +288,24 @@ typedef void _HandleComponentDidUpdate(
 typedef void _HandleComponentWillUnmount(Component component);
 typedef dynamic _HandleRender(Component component);
 
+typedef Component _InitComponent2(
+    ReactComponent jsThis, ComponentStatics<Component2> componentStatics);
+typedef dynamic _HandleGetInitialState2(Component2 component);
+typedef void _HandleComponentWillMount2(
+    Component2 component, ReactComponent jsThis);
+typedef void _HandleComponentDidMount2(Component2 component);
+typedef void _HandleComponentWillReceiveProps2(
+    Component2 component, JsMap jsNextProps);
+typedef bool _HandleShouldComponentUpdate2(
+    Component2 component, JsMap jsNextProps, JsMap jsNextState);
+typedef void _HandleComponentWillUpdate2(
+    Component2 component, JsMap jsNextProps, JsMap jsNextState);
+// Ignore prevContext in componentDidUpdate, since it's not supported in React 16
+typedef void _HandleComponentDidUpdate2(Component2 component,
+    ReactComponent jsThis, JsMap jsPrevProps, JsMap jsPrevState);
+typedef void _HandleComponentWillUnmount2(Component2 component);
+typedef dynamic _HandleRender2(Component2 component);
+
 @JS('React.__isDevelopment')
 external bool get _inReactDevMode;
 
@@ -279,8 +322,13 @@ external bool get _inReactDevMode;
 bool get inReactDevMode => _inReactDevMode;
 
 /// An object that stores static methods used by all Dart components.
+///
+/// __Deprecated.__ Use [ReactDartInteropStatics2] instead.
+///
+/// Will be removed when [Component] is removed in the `6.0.0` release.
 @JS()
 @anonymous
+@Deprecated('6.0.0')
 class ReactDartInteropStatics {
   external factory ReactDartInteropStatics({
     _InitComponent initComponent,
@@ -296,14 +344,33 @@ class ReactDartInteropStatics {
   });
 }
 
+/// An object that stores static methods used by all Dart components.
+@JS()
+@anonymous
+class ReactDartInteropStatics2 implements ReactDartInteropStatics {
+  external factory ReactDartInteropStatics2({
+    _InitComponent2 initComponent,
+    _HandleGetInitialState2 handleGetInitialState,
+    _HandleComponentWillMount2 handleComponentWillMount,
+    _HandleComponentDidMount2 handleComponentDidMount,
+    _HandleComponentWillReceiveProps2 handleComponentWillReceiveProps,
+    _HandleShouldComponentUpdate2 handleShouldComponentUpdate,
+    _HandleComponentWillUpdate2 handleComponentWillUpdate,
+    _HandleComponentDidUpdate2 handleComponentDidUpdate,
+    _HandleComponentWillUnmount2 handleComponentWillUnmount,
+    _HandleRender2 handleRender,
+  });
+}
+
 /// An object that stores static methods and information for a specific component class.
 ///
 /// This object is made accessible to a component's JS ReactClass config, which
 /// passes it to certain methods in [ReactDartInteropStatics].
 ///
 /// See [ReactDartInteropStatics], [createReactDartComponentClass].
-class ComponentStatics {
-  final ComponentFactory componentFactory;
+// TODO: Do we need a version 2 of this?
+class ComponentStatics<T extends Component> {
+  final ComponentFactory<T> componentFactory;
 
   ComponentStatics(this.componentFactory);
 }
@@ -316,5 +383,6 @@ class JsComponentConfig {
   external factory JsComponentConfig({
     Iterable<String> childContextKeys,
     Iterable<String> contextKeys,
+    EmptyObject defaultProps2,
   });
 }

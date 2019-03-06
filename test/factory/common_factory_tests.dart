@@ -1,5 +1,6 @@
 import 'dart:js';
 
+import 'package:meta/meta.dart';
 import 'package:test/test.dart';
 
 import 'package:react/react_client.dart';
@@ -7,6 +8,7 @@ import 'package:react/react_dom.dart' as react_dom;
 import 'package:react/react_test_utils.dart' as rtu;
 import 'package:react/react.dart' as react;
 import "package:react/react_client/js_interop_helpers.dart";
+import 'package:react/react_client/react_interop.dart';
 
 import '../util.dart';
 
@@ -19,21 +21,19 @@ void commonFactoryTests(ReactComponentFactoryProxy factory) {
     expect(instance.type, equals(factory.type));
   });
 
-  group('passes children to the component when specified as', () {
-    dynamic getJsChildren(ReactElement instance) =>
-        getProperty(instance.props, 'children');
-
+  void sharedChildrenTests(dynamic getChildren(ReactElement instance),
+      {@required bool shouldAlwaysBeList}) {
     // There are different code paths for 0, 1, 2, 3, 4, 5, 6, and 6+ arguments.
     // Test all of them.
     group('a number of variadic children:', () {
       test('0', () {
         final instance = factory({});
-        expect(getJsChildren(instance), isNull);
+        expect(getChildren(instance), shouldAlwaysBeList ? [] : isNull);
       });
 
       test('1', () {
         final instance = factory({}, 1);
-        expect(getJsChildren(instance), equals(1));
+        expect(getChildren(instance), shouldAlwaysBeList ? [1] : 1);
       });
 
       const firstGeneralCaseVariadicChildCount = 2;
@@ -48,7 +48,7 @@ void commonFactoryTests(ReactComponentFactoryProxy factory) {
               new List.generate(childrenCount, (i) => i + 1);
           final arguments = <dynamic>[{}]..add(expectedChildren);
           final instance = Function.apply(factory, arguments);
-          expect(getJsChildren(instance), expectedChildren);
+          expect(getChildren(instance), expectedChildren);
         });
       }
 
@@ -97,7 +97,7 @@ void commonFactoryTests(ReactComponentFactoryProxy factory) {
         // Generate these instead of hard coding them to ensure the arguments passed into this test match maxSupportedVariadicChildCount
         final expectedChildren =
             new List.generate(maxSupportedVariadicChildCount, (i) => i + 1);
-        expect(getJsChildren(instance), equals(expectedChildren));
+        expect(getChildren(instance), equals(expectedChildren));
       });
     });
 
@@ -106,24 +106,47 @@ void commonFactoryTests(ReactComponentFactoryProxy factory) {
         'one',
         'two',
       ]);
-      expect(getJsChildren(instance), equals(['one', 'two']));
+      expect(getChildren(instance), equals(['one', 'two']));
     });
 
     test('an empty List', () {
       var instance = factory({}, []);
-      expect(getJsChildren(instance), equals([]));
+      expect(getChildren(instance), equals([]));
     });
 
     test('an Iterable', () {
       var instance = factory({}, new Iterable.generate(3, (int i) => '$i'));
-      expect(getJsChildren(instance), equals(['0', '1', '2']));
+      expect(getChildren(instance), equals(['0', '1', '2']));
     });
 
     test('an empty Iterable', () {
       var instance = factory({}, new Iterable.empty());
-      expect(getJsChildren(instance), equals([]));
+      expect(getChildren(instance), equals([]));
     });
+  }
+
+  group('passes children to the JS component when specified as', () {
+    dynamic getJsChildren(ReactElement instance) =>
+        getProperty(instance.props, 'children');
+
+    sharedChildrenTests(getJsChildren,
+        // Only Component2 should always get lists.
+        // Component, DOM components, etc. should not for compatibility purposes.
+        shouldAlwaysBeList: isDartComponent2(factory({})));
   });
+
+  if (isDartComponent(factory({}))) {
+    group('passes children to the Dart component when specified as', () {
+      dynamic getDartChildren(ReactElement instance) {
+        // Actually render the component to provide full end-to-end coverage
+        // from ReactElement to `this.props`.
+        ReactComponent renderedInstance = rtu.renderIntoDocument(instance);
+        return renderedInstance.dartComponent.props['children'];
+      }
+
+      sharedChildrenTests(getDartChildren, shouldAlwaysBeList: true);
+    });
+  }
 }
 
 void domEventHandlerWrappingTests(ReactDomComponentFactoryProxy factory) {

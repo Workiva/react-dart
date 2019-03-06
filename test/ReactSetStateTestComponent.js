@@ -84,6 +84,7 @@ class ReactSetStateTestComponent extends React.Component {
   }
 
   render() {
+    this.recordLifecyleCall('render');
     return React.createElement("div", {onClick: this.handleOuterClick.bind(this)},
       React.createElement("div", {onClick: this.handleInnerClick.bind(this)}, this.state.counter)
     );

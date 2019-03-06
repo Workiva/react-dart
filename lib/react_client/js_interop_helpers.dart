@@ -4,6 +4,7 @@
 library react_client.js_interop_helpers;
 
 import "package:js/js.dart";
+import 'package:react/src/react_client/js_backed_map.dart';
 
 @JS()
 external dynamic _getProperty(jsObj, String key);
