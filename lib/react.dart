@@ -119,6 +119,14 @@ abstract class Component {
   String get displayName => runtimeType.toString();
 
   /// Bind the value of input to [state[key]].
+  ///
+  /// __DEPRECATED.__
+  ///
+  /// This will be removed in the `6.0.0` release when `Component` is removed.
+  ///
+  /// There is currently no planned support for it within `Component2` which will be released in `5.0.0`
+  /// since there was never a ReactJS analogue for this API.
+  @Deprecated('6.0.0')
   bind(key) => [
         state[key],
         (value) => setState({key: value})
