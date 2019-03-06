@@ -160,7 +160,7 @@ class ReactElement {
 class ReactComponent {
   external Component get dartComponent;
   external InteropProps get props;
-  external InteropProps get state;
+  external JsMap get state;
   external get refs;
   external void setState(state, [callback]);
   external void forceUpdate([callback]);
@@ -193,7 +193,7 @@ class InteropContextValue {
 /// __For internal/advanced use only.__
 @JS()
 @anonymous
-class InteropProps {
+class InteropProps implements JsMap {
   @Deprecated('3.0.0')
   external ReactDartComponentInternal get internal;
   external dynamic get key;
@@ -328,7 +328,6 @@ bool get inReactDevMode => _inReactDevMode;
 /// Will be removed when [Component] is removed in the `6.0.0` release.
 @JS()
 @anonymous
-
 @Deprecated('6.0.0')
 class ReactDartInteropStatics {
   external factory ReactDartInteropStatics({

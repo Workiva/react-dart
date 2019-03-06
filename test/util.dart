@@ -44,8 +44,7 @@ Map getDartComponentProps(ReactComponent dartComponent) {
 
 Map getDartElementProps(ReactElement dartElement) {
   return isDartComponent2(dartElement)
-      ? new JsBackedMap.fromJs(
-          dartElement.props as JsMap) // FIXME need to normalize event handlers?
+      ? new JsBackedMap.fromJs(dartElement.props)
       : dartElement.props.internal.props;
 }
 

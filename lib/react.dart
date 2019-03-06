@@ -7,7 +7,6 @@ library react;
 
 import 'package:react/src/typedefs.dart';
 
-// todo revert this?
 typedef T ComponentFactory<T extends Component>();
 typedef ReactComponentFactoryProxy ComponentRegistrar(
     ComponentFactory componentFactory,
@@ -382,15 +381,15 @@ abstract class Component2Adapter {
 
 /// Top-level ReactJS [Component class](https://facebook.github.io/react/docs/react-component.html)
 /// which provides the [ReactJS Component API](https://facebook.github.io/react/docs/react-component.html#reference)
-abstract class Component2<T extends Map> implements Component {
+abstract class Component2 implements Component {
   // TODO make private using expando?
   Component2Adapter adapter;
 
   @override
-  covariant T props;
+  Map props;
 
   @override
-  covariant T state;
+  Map state;
 
   @override
   dynamic _jsThis;
