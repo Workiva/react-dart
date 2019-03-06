@@ -40,16 +40,6 @@ abstract class ReactDom {
       ReactDOM.unmountComponentAtNode(element);
 }
 
-/// __DEPRECATED.__
-///
-/// Server-side rendering support via APIs in the `react` package will not be maintained beyond the `5.0.0` release.
-@Deprecated('5.0.0')
-@JS('ReactDOMServer')
-abstract class ReactDomServer {
-  external static String renderToString(ReactElement component);
-  external static String renderToStaticMarkup(ReactElement component);
-}
-
 // ----------------------------------------------------------------------------
 //   Types and data structures
 // ----------------------------------------------------------------------------
@@ -170,39 +160,13 @@ class ReactElement {
 @JS()
 @anonymous
 class ReactComponent {
+  // TODO: Cast as Component2 in 6.0.0
   external Component get dartComponent;
   external InteropProps get props;
   external JsMap get state;
   external get refs;
   external void setState(state, [callback]);
   external void forceUpdate([callback]);
-
-  /// __DEPRECATED.__
-  ///
-  /// Will be completely removed in the `5.0.0` release.
-  ///
-  /// The analogous JS bits for this were removed in ReactJS 16,
-  /// which the `react` Dart package will be upgrading to in the `5.0.0` release.
-  ///
-  /// Instead, set your own flag within a `Component` instance like so:
-  ///
-  ///     class _SomeComponent extends react.Component {
-  ///       bool _isMounted;
-  ///
-  ///       @override
-  ///       void componentDidMount() {
-  ///         _isMounted = true;
-  ///       }
-  ///
-  ///       @override
-  ///       void componentWillUnmount() {
-  ///         _isMounted = false;
-  ///       }
-  ///     }
-  ///
-  /// And then reference the private flag instead of calling `isMounted()`.
-  @Deprecated('5.0.0')
-  external bool isMounted();
 }
 
 // ----------------------------------------------------------------------------
@@ -305,20 +269,6 @@ void markChildrenValidated(List<dynamic> children) {
     }
   });
 }
-
-/// Returns a new JS [ReactClassConfig] for a component that uses
-/// [dartInteropStatics] and [componentStatics] internally to proxy between
-/// the JS and Dart component instances.
-///
-/// > __DEPRECATED.__
-/// >
-/// > Use [createReactDartComponentClass] instead.
-@Deprecated('5.0.0')
-@JS('_createReactDartComponentClassConfig')
-external ReactClassConfig createReactDartComponentClassConfig(
-    ReactDartInteropStatics dartInteropStatics,
-    ComponentStatics componentStatics,
-    [JsComponentConfig jsConfig]);
 
 /// Returns a new JS [ReactClass] for a component that uses
 /// [dartInteropStatics] and [componentStatics] internally to proxy between

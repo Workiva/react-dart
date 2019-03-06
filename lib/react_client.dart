@@ -15,7 +15,6 @@ import "package:react/react.dart";
 import "package:react/react_client/js_interop_helpers.dart";
 import 'package:react/react_client/react_interop.dart';
 import "package:react/react_dom.dart";
-import "package:react/react_dom_server.dart";
 import "package:react/src/react_client/event_prop_key_to_event_factory.dart";
 import 'package:react/src/react_client/js_backed_map.dart';
 import "package:react/src/react_client/synthetic_event_wrappers.dart" as events;
@@ -29,20 +28,6 @@ export 'package:react/react.dart'
     show ReactComponentFactoryProxy, ComponentFactory;
 
 final EmptyObject emptyJsMap = new EmptyObject();
-
-/// __Deprecated. Will be removed in the `5.0.0` release.__ Use [ReactComponentFactoryProxy] instead.
-///
-/// __You should discontinue use of this, and all typedefs for the return value of [registerComponent].__
-///
-///     // Don't do this
-///     ReactComponentFactory customComponent = registerComponent(() => new CustomComponent());
-///
-///     // Do this.
-///     var customComponent = registerComponent(() => new CustomComponent());
-///
-/// > Type of [children] must be child or list of children, when child is [ReactElement] or [String]
-@Deprecated('5.0.0')
-typedef ReactElement ReactComponentFactory(Map props, [dynamic children]);
 
 /// The type of [Component.ref] specified as a callback.
 ///
@@ -1123,9 +1108,4 @@ void setClientConfiguration() {
   setReactConfiguration(_reactDom, _registerComponent);
   setReactDOMConfiguration(
       ReactDom.render, ReactDom.unmountComponentAtNode, _findDomNode);
-  // Accessing ReactDomServer.renderToString when it's not available breaks in DDC.
-  if (context['ReactDOMServer'] != null) {
-    setReactDOMServerConfiguration(
-        ReactDomServer.renderToString, ReactDomServer.renderToStaticMarkup);
-  }
 }
