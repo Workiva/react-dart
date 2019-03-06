@@ -5,6 +5,7 @@
 /// A Dart library for building UI using ReactJS.
 library react;
 
+import 'package:meta/meta.dart';
 import 'package:react/src/typedefs.dart';
 
 typedef Component ComponentFactory();
@@ -48,23 +49,19 @@ abstract class Component {
   ///
   /// Only keys declared in this component's [contextKeys] will be present.
   ///
-  /// > __DEPRECATED - DO NOT USE__
-  /// >
   /// > This API was never stable in any version of ReactJS, and was replaced with a new, incompatible context API
   /// > in ReactJS 16 that will be exposed in version `5.0.0` of the `react` Dart package via a
   /// > new version of `Component` called `Component2`.
   /// >
-  /// > This will be completely removed when the JS side of it is slated for removal (ReactJS 17 / react.dart 6.0.0)
-  @Deprecated('6.0.0')
-  Map get context => _context;
-  /// > __DEPRECATED - DO NOT USE__
-  /// >
+  /// > It is strongly recommended that you do not use this, and instead wait for `Component2.context`.
+  @experimental
+  dynamic get context => _context;
   /// > This API was never stable in any version of ReactJS, and was replaced with a new, incompatible context API
   /// > in ReactJS 16 that will be exposed in version `5.0.0` of the `react` Dart package via a
   /// > new version of `Component` called `Component2`.
   /// >
-  /// > This will be completely removed when the JS side of it is slated for removal (ReactJS 17 / react.dart 6.0.0)
-  @Deprecated('6.0.0')
+  /// > It is strongly recommended that you do not use this, and instead wait for `Component2.context`.
+  @experimental
   set context(Map value) => _context = value;
 
   /// ReactJS [Component] props.
