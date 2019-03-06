@@ -250,6 +250,11 @@ abstract class Component {
   /// Optionally accepts a callback that gets called after the component updates.
   ///
   /// See: <https://facebook.github.io/react/docs/react-component.html#setstate>
+  ///
+  /// > __DEPRECATED.__
+  /// >
+  /// > Use [setState] instead.
+  @Deprecated('6.0.0')
   void replaceState(Map newState, [callback()]) {
     Map nextState = newState == null ? {} : new Map.from(newState);
     _nextState = nextState;
