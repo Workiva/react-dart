@@ -287,9 +287,9 @@ external ReactClass createReactDartComponentClass(
 /// the JS and Dart component instances.
 @JS('_createReactDartComponentClass2')
 external ReactClass createReactDartComponentClass2(
-  ReactDartInteropStatics2 dartInteropStatics,
-  ComponentStatics<Component2> componentStatics,
-  [JsComponentConfig2 jsConfig]);
+    ReactDartInteropStatics2 dartInteropStatics,
+    ComponentStatics<Component2> componentStatics,
+    [JsComponentConfig2 jsConfig]);
 
 typedef Component _InitComponent(
     ReactComponent jsThis,
