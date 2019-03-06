@@ -58,6 +58,7 @@ abstract class Component {
   /// > It is strongly recommended that you migrate to [Component2] and use [Component2.context] instead.
   @experimental
   dynamic get context => _context;
+
   /// > This API was never stable in any version of ReactJS, and was replaced with a new, incompatible context API
   /// > in ReactJS 16 that is exposed via the [Component2] class.
   /// >
@@ -87,6 +88,7 @@ abstract class Component {
   /// TODO: Add better description of how to utilize [Component2] refs.
   @Deprecated('6.0.0')
   Ref get ref => _ref;
+
   /// __DEPRECATED.__
   ///
   /// Support for String `ref`s will be removed in the `6.0.0` release when `Component` is removed.
