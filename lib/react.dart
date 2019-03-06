@@ -56,6 +56,7 @@ abstract class Component {
   /// > It is strongly recommended that you do not use this, and instead wait for `Component2.context`.
   @experimental
   dynamic get context => _context;
+
   /// > This API was never stable in any version of ReactJS, and was replaced with a new, incompatible context API
   /// > in ReactJS 16 that will be exposed in version `5.0.0` of the `react` Dart package via a
   /// > new version of `Component` called `Component2`.
@@ -84,6 +85,7 @@ abstract class Component {
   /// Until then, use a callback ref instead.
   @Deprecated('6.0.0')
   Ref get ref => _ref;
+
   /// __DEPRECATED.__
   ///
   /// Support for String `ref`s will be removed in the `6.0.0` release when `Component` is removed.

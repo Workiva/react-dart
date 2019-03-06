@@ -310,7 +310,8 @@ ReactClass createReactDartComponentClass(
     ComponentStatics componentStatics,
     [JsComponentConfig jsConfig]) {
   // TODO: Change this impl to external in 5.0.0, and deprecate it as 6.0.0 removal
-  return React.createClass(createReactDartComponentClassConfig(dartInteropStatics, componentStatics, jsConfig));
+  return React.createClass(createReactDartComponentClassConfig(
+      dartInteropStatics, componentStatics, jsConfig));
 }
 
 typedef Component _InitComponent(
