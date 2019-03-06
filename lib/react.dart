@@ -79,11 +79,21 @@ abstract class Component {
   Map get state => _state;
   set state(Map value) => _state = value;
 
-  /// A function that returns a component reference:
+  /// __DEPRECATED.__
   ///
-  /// * [Component] if it is a Dart component.
-  /// * `Element` _(DOM node)_ if it is a React DOM component.
+  /// Support for String `ref`s will be removed in the `6.0.0` release when `Component` is removed.
+  ///
+  /// There will be new and improved ways to use / set refs in the `5.0.0` release via APIs exposed in `Component2`.
+  /// Until then, use a callback ref instead.
+  @Deprecated('6.0.0')
   Ref get ref => _ref;
+  /// __DEPRECATED.__
+  ///
+  /// Support for String `ref`s will be removed in the `6.0.0` release when `Component` is removed.
+  ///
+  /// There will be new and improved ways to use / set refs in the `5.0.0` release via APIs exposed in `Component2`.
+  /// Until then, use a callback ref instead.
+  @Deprecated('6.0.0')
   set ref(Ref value) => _ref = value;
 
   dynamic _jsRedraw;
