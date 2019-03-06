@@ -214,6 +214,13 @@ abstract class Component {
   Map nextProps;
 
   /// Transfers `Component` [_nextState] to [state], and [state] to [prevState].
+  ///
+  /// > __DEPRECATED.__
+  /// >
+  /// > This was never designed for public consumption, and there will be no replacement implementation in `Component2`.
+  /// >
+  /// > Will be removed in `6.0.0` along with `Component`.
+  @Deprecated('6.0.0')
   void transferComponentState() {
     prevState = state;
     if (_nextState != null) {
