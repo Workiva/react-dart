@@ -17,11 +17,27 @@ main() {
 
     group('- common factory behavior -', () {
       group('Component -', () {
-        commonFactoryTests(Foo);
+        group('- common factory behavior -', () {
+          commonFactoryTests(Foo);
+        });
+
+        group('- refs -', () {
+          refTests(Foo, verifyCallbackRefValue: (ref) {
+            expect(ref, TypeMatcher<_Foo>());
+          });
+        });
       });
 
       group('Component2 -', () {
-        commonFactoryTests(Foo2);
+        group('- common factory behavior -', () {
+          commonFactoryTests(Foo2);
+        });
+
+        group('- refs -', () {
+          refTests(Foo2, verifyCallbackRefValue: (ref) {
+            expect(ref, TypeMatcher<_Foo2>());
+          });
+        });
       });
 
       group('utils', () {

@@ -1,4 +1,6 @@
 @TestOn('browser')
+import 'dart:html';
+
 import 'package:test/test.dart';
 
 import 'package:react/react.dart' as react;
@@ -16,6 +18,12 @@ main() {
 
     group('- dom event handler wrapping -', () {
       domEventHandlerWrappingTests(react.div);
+    });
+
+    group('- refs -', () {
+      refTests(react.span, verifyCallbackRefValue: (ref) {
+        expect(ref, TypeMatcher<SpanElement>());
+      });
     });
 
     test('has a type corresponding to the DOM tagName', () {
