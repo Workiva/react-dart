@@ -183,8 +183,7 @@ class ReactComponent {
 /// > __DEPRECATED - DO NOT USE__
 /// >
 /// > This API was never stable in any version of ReactJS, and was replaced with a new, incompatible context API
-/// > in ReactJS 16 that will be exposed in version `5.0.0` of the `react` Dart package via a
-/// > new version of `Component` called `Component2`.
+/// > in ReactJS 16 that is exposed via the [Component2] class.
 /// >
 /// > This will be completely removed when the JS side of it is slated for removal (ReactJS 17 / react.dart 6.0.0)
 @Deprecated('6.0.0')
@@ -240,8 +239,7 @@ class ReactDartComponentInternal {
 /// > __DEPRECATED - DO NOT USE__
 /// >
 /// > This API was never stable in any version of ReactJS, and was replaced with a new, incompatible context API
-/// > in ReactJS 16 that will be exposed in version `5.0.0` of the `react` Dart package via a
-/// > new version of `Component` called `Component2`.
+/// > in ReactJS 16 that is exposed via the [Component2] class.
 /// >
 /// > This will be completely removed when the JS side of it is slated for removal (ReactJS 17 / react.dart 6.0.0)
 @Deprecated('6.0.0')
@@ -405,8 +403,7 @@ class ComponentStatics<T extends Component> {
 /// > __DEPRECATED - DO NOT USE__
 /// >
 /// > This API was never stable in any version of ReactJS, and was replaced with a new, incompatible context API
-/// > in ReactJS 16 that will be exposed in version `5.0.0` of the `react` Dart package via a
-/// > new version of `Component` called `Component2`.
+/// > in ReactJS 16 that is exposed via the [Component2] class.
 /// >
 /// > This will be completely removed when the JS side of it is slated for removal (ReactJS 17 / react.dart 6.0.0)
 @Deprecated('6.0.0')
