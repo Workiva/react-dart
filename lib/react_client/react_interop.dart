@@ -22,6 +22,7 @@ typedef ReactElement ReactJsComponentFactory(props, children);
 @JS()
 abstract class React {
   external static String get version;
+  @Deprecated('6.0.0')
   external static ReactClass createClass(ReactClassConfig reactClassConfig);
   external static ReactJsComponentFactory createFactory(type);
 
@@ -39,6 +40,10 @@ abstract class ReactDom {
       ReactDOM.unmountComponentAtNode(element);
 }
 
+/// __DEPRECATED.__
+///
+/// Server-side rendering support via APIs in the `react` package will not be maintained beyond the `5.0.0` release.
+@Deprecated('5.0.0')
 @JS('ReactDOMServer')
 abstract class ReactDomServer {
   external static String renderToString(ReactElement component);
@@ -84,6 +89,11 @@ class ReactClass {
 /// A JS interop class used as an argument to [React.createClass].
 ///
 /// See: <http://facebook.github.io/react/docs/top-level-api.html#react.createclass>.
+///
+/// > __DEPRECATED.__
+/// >
+/// > Will be removed alongside [React.createClass] in the `6.0.0` release.
+@Deprecated('6.0.0')
 @JS()
 @anonymous
 class ReactClassConfig {
@@ -165,6 +175,31 @@ class ReactComponent {
   external void setState(state, [callback]);
   external void forceUpdate([callback]);
 
+  /// __DEPRECATED.__
+  ///
+  /// Will be completely removed in the `5.0.0` release.
+  ///
+  /// The analogous JS bits for this were removed in ReactJS 16,
+  /// which the `react` Dart package will be upgrading to in the `5.0.0` release.
+  ///
+  /// Instead, set your own flag within a `Component` instance like so:
+  ///
+  ///     class _SomeComponent extends react.Component {
+  ///       bool _isMounted;
+  ///
+  ///       @override
+  ///       void componentDidMount() {
+  ///         _isMounted = true;
+  ///       }
+  ///
+  ///       @override
+  ///       void componentWillUnmount() {
+  ///         _isMounted = false;
+  ///       }
+  ///     }
+  ///
+  /// And then reference the private flag instead of calling `isMounted()`.
+  @Deprecated('5.0.0')
   external bool isMounted();
 }
 
@@ -178,6 +213,15 @@ class ReactComponent {
 /// in a way that's opaque to the JS, and avoids the need to use dart2js interceptors.
 ///
 /// __For internal/advanced use only.__
+///
+/// > __DEPRECATED - DO NOT USE__
+/// >
+/// > This API was never stable in any version of ReactJS, and was replaced with a new, incompatible context API
+/// > in ReactJS 16 that will be exposed in version `5.0.0` of the `react` Dart package via a
+/// > new version of `Component` called `Component2`.
+/// >
+/// > This will be completely removed when the JS side of it is slated for removal (ReactJS 17 / react.dart 6.0.0)
+@Deprecated('6.0.0')
 @JS()
 @anonymous
 class InteropContextValue {
@@ -226,6 +270,15 @@ class ReactDartComponentInternal {
 /// [Component] instances.
 ///
 /// __For internal/advanced use only.__
+///
+/// > __DEPRECATED - DO NOT USE__
+/// >
+/// > This API was never stable in any version of ReactJS, and was replaced with a new, incompatible context API
+/// > in ReactJS 16 that will be exposed in version `5.0.0` of the `react` Dart package via a
+/// > new version of `Component` called `Component2`.
+/// >
+/// > This will be completely removed when the JS side of it is slated for removal (ReactJS 17 / react.dart 6.0.0)
+@Deprecated('6.0.0')
 class ReactDartContextInternal {
   final dynamic value;
 
@@ -377,6 +430,17 @@ class ComponentStatics<T extends Component> {
 
 /// Additional configuration passed to [createReactDartComponentClass]
 /// that needs to be directly accessible by that JS code.
+///
+/// > __DEPRECATED - DO NOT USE__
+/// >
+/// > The `context` API that this supports was never stable in any version of ReactJS,
+/// > and was replaced with a new, incompatible context API in ReactJS 16 that will be
+/// > exposed in version `5.0.0` of the `react` Dart package via a new version of
+/// > `Component` called `Component2`.
+/// >
+/// > This will be completely removed when the JS side of `context` it is slated for
+/// > removal (ReactJS 17 / react.dart 6.0.0)
+@Deprecated('6.0.0')
 @JS()
 @anonymous
 class JsComponentConfig {

@@ -741,6 +741,8 @@ _setValueToProps(Map props, val) {
 }
 
 /// Convert bound values to pure value and packed onChange function
+///
+/// TODO: Remove in 6.0.0 when [Component.bind] is removed.
 _convertBoundValues(Map args) {
   var boundValue = args['value'];
 
