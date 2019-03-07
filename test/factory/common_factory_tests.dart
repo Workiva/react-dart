@@ -204,6 +204,24 @@ void domEventHandlerWrappingTests(ReactDomComponentFactoryProxy factory) {
   });
 }
 
+void refTests(ReactComponentFactoryProxy factory,
+    {void verifyCallbackRefValue(dynamic refValue)}) {
+  test('callback refs are called with the correct value', () {
+    var called = false;
+    var refValue;
+
+    rtu.renderIntoDocument(factory({
+      'ref': (ref) {
+        called = true;
+        refValue = ref;
+      }
+    }));
+
+    expect(called, isTrue, reason: 'should have called the callback ref');
+    verifyCallbackRefValue(refValue);
+  });
+}
+
 void _childKeyWarningTests(Function factory) {
   group('key/children validation', () {
     bool consoleErrorCalled;
