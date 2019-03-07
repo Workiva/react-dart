@@ -402,8 +402,8 @@ class ComponentStatics<T extends Component> {
 ///
 /// > __DEPRECATED - DO NOT USE__
 /// >
-/// > The `context` API that this supports was never stable in any version of ReactJS, 
-/// > and was replaced with a new, incompatible context API in ReactJS 16 that is exposed 
+/// > The `context` API that this supports was never stable in any version of ReactJS,
+/// > and was replaced with a new, incompatible context API in ReactJS 16 that is exposed
 /// > via the [Component2] class and is supported by [JsComponentConfig2].
 /// >
 /// > This will be completely removed when the JS side of `context` it is slated for
