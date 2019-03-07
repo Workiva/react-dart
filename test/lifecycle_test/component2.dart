@@ -7,7 +7,7 @@ import 'package:react/react_client.dart';
 
 import 'util.dart';
 
-ReactDartComponentFactoryProxy SetStateTest =
+ReactDartComponentFactoryProxy2 SetStateTest =
     react.registerComponent(() => new _SetStateTest());
 
 class _SetStateTest extends react.Component2 with LifecycleTestHelper {
@@ -43,12 +43,12 @@ class _SetStateTest extends react.Component2 with LifecycleTestHelper {
     return props['shouldUpdate'] as bool;
   }
 
-  Map outerTransactionalSetStateCallback(previousState, __) {
+  Map outerTransactionalSetStateCallback(Map previousState, __) {
     recordLifecyleCall('outerTransactionalSetStateCallback');
     return {'counter': previousState['counter'] + 1};
   }
 
-  Map innerTransactionalSetStateCallback(previousState, __) {
+  Map innerTransactionalSetStateCallback(Map previousState, __) {
     recordLifecyleCall('innerTransactionalSetStateCallback');
     return {'counter': previousState['counter'] + 1};
   }
@@ -64,14 +64,14 @@ class _SetStateTest extends react.Component2 with LifecycleTestHelper {
     return react.div(
         {
           'onClick': (_) {
-            setState(outerTransactionalSetStateCallback, () {
+            setStateTransaction(outerTransactionalSetStateCallback, () {
               recordLifecyleCall('outerSetStateCallback');
             });
           }
         },
         react.div({
           'onClick': (_) {
-            setState(innerTransactionalSetStateCallback, () {
+            setStateTransaction(innerTransactionalSetStateCallback, () {
               recordLifecyleCall('innerSetStateCallback');
             });
           }
@@ -100,7 +100,7 @@ class _DefaultPropsCachingTest extends react.Component2
   render() => false;
 }
 
-ReactDartComponentFactoryProxy DefaultPropsTest =
+ReactDartComponentFactoryProxy2 DefaultPropsTest =
     react.registerComponent(() => new _DefaultPropsTest());
 
 class _DefaultPropsTest extends react.Component2 {
@@ -111,7 +111,7 @@ class _DefaultPropsTest extends react.Component2 {
   render() => false;
 }
 
-ReactDartComponentFactoryProxy ContextWrapperWithoutKeys =
+ReactDartComponentFactoryProxy2 ContextWrapperWithoutKeys =
     react.registerComponent(() => new _ContextWrapperWithoutKeys());
 
 class _ContextWrapperWithoutKeys extends react.Component2
@@ -131,7 +131,7 @@ class _ContextWrapperWithoutKeys extends react.Component2
   dynamic render() => react.div({}, props['children']);
 }
 
-ReactDartComponentFactoryProxy ContextWrapper =
+ReactDartComponentFactoryProxy2 ContextWrapper =
     react.registerComponent(() => new _ContextWrapper());
 
 class _ContextWrapper extends react.Component2 with LifecycleTestHelper {
@@ -150,7 +150,7 @@ class _ContextWrapper extends react.Component2 with LifecycleTestHelper {
   dynamic render() => react.div({}, props['children']);
 }
 
-ReactDartComponentFactoryProxy LifecycleTestWithContext =
+ReactDartComponentFactoryProxy2 LifecycleTestWithContext =
     react.registerComponent(() => new _LifecycleTestWithContext());
 
 class _LifecycleTestWithContext extends _LifecycleTest {
@@ -159,7 +159,7 @@ class _LifecycleTestWithContext extends _LifecycleTest {
       const ['foo']; // only listening to one context key
 }
 
-ReactDartComponentFactoryProxy LifecycleTest =
+ReactDartComponentFactoryProxy2 LifecycleTest =
     react.registerComponent(() => new _LifecycleTest());
 
 class _LifecycleTest extends react.Component2 with LifecycleTestHelper {

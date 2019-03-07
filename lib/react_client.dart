@@ -451,25 +451,29 @@ class JsComponent2Adapter extends Component2Adapter {
   }
 
   @override
-  void setState(newState, SetStateCallback callback) {
+  void setState(Map newState, SetStateCallback callback) {
     // Short-circuit to match the ReactJS 16 behavior of not re-rendering the component if newState is null.
     if (newState == null) return;
 
-    dynamic firstArg;
+    dynamic firstArg = jsBackingMapOrJsCopy(newState);
 
-    if (newState is Map) {
-      firstArg = jsBackingMapOrJsCopy(newState);
-    } else if (newState is TransactionalSetStateCallback) {
-      firstArg = allowInterop((jsPrevState, jsProps, [_]) {
-        return jsBackingMapOrJsCopy(newState(
-          new JsBackedMap.backedBy(jsPrevState),
-          new JsBackedMap.backedBy(jsProps),
-        ));
-      });
-    } else if (newState != null) {
-      throw new ArgumentError(
-          'setState expects its first parameter to either be a Map or a `TransactionalSetStateCallback`.');
+    if (callback == null) {
+      jsThis.setState(firstArg);
+    } else {
+      jsThis.setState(firstArg, allowInterop(([_]) {
+        callback();
+      }));
     }
+  }
+
+  @override
+  void setStateTransaction(TransactionalSetStateCallback stateUpdater, SetStateCallback callback) {
+    final firstArg = allowInterop((jsPrevState, jsProps, [_]) {
+      return jsBackingMapOrJsCopy(stateUpdater(
+        new JsBackedMap.backedBy(jsPrevState),
+        new JsBackedMap.backedBy(jsProps),
+      ));
+    });
 
     if (callback == null) {
       jsThis.setState(firstArg);

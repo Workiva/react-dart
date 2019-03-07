@@ -250,7 +250,13 @@ abstract class Component {
   /// Also allows [newState] to be used as a transactional `setState` callback.
   ///
   /// See: <https://facebook.github.io/react/docs/react-component.html#setstate>
-  void setState(dynamic newState, [callback()]) {
+  ///
+  /// > __DEPRECATED.__
+  /// >
+  /// > Note that when migrating to [Component2], [Component2.setState] will only accept a `Map` for [newState].
+  /// > Transactional `setState` calls will have to be changed to utilize [Component2.setStateTransaction].
+  @Deprecated('6.0.0')
+  void setState(covariant dynamic newState, [callback()]) {
     if (newState is Map) {
       _nextState.addAll(newState);
     } else if (newState is TransactionalSetStateCallback) {
@@ -450,7 +456,8 @@ abstract class Component {
 }
 
 abstract class Component2Adapter {
-  void setState(dynamic newState, SetStateCallback callback);
+  void setState(Map newState, SetStateCallback callback);
+  void setStateTransaction(TransactionalSetStateCallback stateUpdater, SetStateCallback callback);
   void forceUpdate(SetStateCallback callback);
 }
 
@@ -494,11 +501,21 @@ abstract class Component2 implements Component {
   ///
   /// Optionally accepts a [callback] that gets called after the component updates.
   ///
-  /// Also allows [newState] to be used as a transactional `setState` callback.
+  /// To use a transactional `setState` callback, check out [setStateTransaction].
   ///
-  /// See: <https://facebook.github.io/react/docs/react-component.html#setstate>
-  void setState(dynamic newState, [SetStateCallback callback]) {
+  /// See: <https://reactjs.org/docs/react-component.html#setstate>
+  void setState(Map newState, [SetStateCallback callback]) {
     adapter.setState(newState, callback);
+  }
+
+  /// Triggers a rerender with new state obtained by shallow-merging
+  /// the return value of [stateUpdater] into the current [state].
+  ///
+  /// Optionally accepts a [callback] that gets called after the component updates.
+  ///
+  /// See: <https://reactjs.org/docs/react-component.html#setstate>
+  void setStateTransaction(TransactionalSetStateCallback stateUpdater, [SetStateCallback callback]) {
+    adapter.setStateTransaction(stateUpdater, callback);
   }
 
   void forceUpdate([SetStateCallback callback]) {
