@@ -205,7 +205,7 @@ void domEventHandlerWrappingTests(ReactDomComponentFactoryProxy factory) {
 }
 
 void refTests(ReactComponentFactoryProxy factory,
-    {void verifyCallbackRefValue(dynamic refValue)}) {
+    {void verifyRefValue(dynamic refValue)}) {
   test('callback refs are called with the correct value', () {
     var called = false;
     var refValue;
@@ -218,7 +218,15 @@ void refTests(ReactComponentFactoryProxy factory,
     }));
 
     expect(called, isTrue, reason: 'should have called the callback ref');
-    verifyCallbackRefValue(refValue);
+    verifyRefValue(refValue);
+  });
+
+  test('string refs are created with the correct value', () {
+    ReactComponent renderedInstance = _renderWithOwner(() => factory({
+      'ref': 'test'
+    }));
+
+    verifyRefValue(renderedInstance.dartComponent.ref('test'));
   });
 }
 
@@ -293,6 +301,13 @@ void _renderWithUniqueOwnerName(ReactElement render()) {
   _nextFactoryId++;
 
   rtu.renderIntoDocument(factory({'render': render}));
+}
+
+_renderWithOwner(ReactElement render()) {
+  final factory = react.registerComponent(() => new _OwnerHelperComponent())
+      as ReactDartComponentFactoryProxy;
+
+  return rtu.renderIntoDocument(factory({'render': render}));
 }
 
 class _OwnerHelperComponent extends react.Component {

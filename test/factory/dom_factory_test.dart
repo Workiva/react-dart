@@ -21,7 +21,7 @@ main() {
     });
 
     group('- refs -', () {
-      refTests(react.span, verifyCallbackRefValue: (ref) {
+      refTests(react.span, verifyRefValue: (ref) {
         expect(ref, TypeMatcher<SpanElement>());
       });
     });
