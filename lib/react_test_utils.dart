@@ -147,6 +147,14 @@ class Simulate {
 /// component.  All methods are used in the same way:
 ///
 ///   SimulateNative.{eventName}(/* [1] */ componentOrNode, [Map] eventData)
+///
+/// > __DEPRECATED.__
+/// >
+/// > Will be completely removed in the `5.0.0` release.
+/// >
+/// > The analogous JS bits for this were removed in ReactJS 16,
+///   which the `react` Dart package will be upgrading to in the `5.0.0` release.
+@Deprecated('5.0.0')
 class SimulateNative {
   static void blur(/* [1] */ componentOrNode, [Map eventData = const {}]) =>
       simulate_wrappers.SimulateNative.blur(componentOrNode, jsify(eventData));

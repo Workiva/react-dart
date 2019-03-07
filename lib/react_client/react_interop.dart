@@ -18,6 +18,7 @@ typedef ReactElement ReactJsComponentFactory(props, children);
 
 @JS()
 abstract class React {
+  @Deprecated('6.0.0')
   external static ReactClass createClass(ReactClassConfig reactClassConfig);
   external static ReactJsComponentFactory createFactory(type);
 
@@ -35,6 +36,10 @@ abstract class ReactDom {
       ReactDOM.unmountComponentAtNode(element);
 }
 
+/// __DEPRECATED.__
+///
+/// Server-side rendering support via APIs in the `react` package will not be maintained beyond the `5.0.0` release.
+@Deprecated('5.0.0')
 @JS('ReactDOMServer')
 abstract class ReactDomServer {
   external static String renderToString(ReactElement component);
@@ -72,6 +77,11 @@ class ReactClass {
 /// A JS interop class used as an argument to [React.createClass].
 ///
 /// See: <http://facebook.github.io/react/docs/top-level-api.html#react.createclass>.
+///
+/// > __DEPRECATED.__
+/// >
+/// > Will be removed alongside [React.createClass] in the `6.0.0` release.
+@Deprecated('6.0.0')
 @JS()
 @anonymous
 class ReactClassConfig {
@@ -154,6 +164,31 @@ class ReactComponent {
   external void setState(state, [callback]);
   external void forceUpdate([callback]);
 
+  /// __DEPRECATED.__
+  ///
+  /// Will be completely removed in the `5.0.0` release.
+  ///
+  /// The analogous JS bits for this were removed in ReactJS 16,
+  /// which the `react` Dart package will be upgrading to in the `5.0.0` release.
+  ///
+  /// Instead, set your own flag within a `Component` instance like so:
+  ///
+  ///     class _SomeComponent extends react.Component {
+  ///       bool _isMounted;
+  ///
+  ///       @override
+  ///       void componentDidMount() {
+  ///         _isMounted = true;
+  ///       }
+  ///
+  ///       @override
+  ///       void componentWillUnmount() {
+  ///         _isMounted = false;
+  ///       }
+  ///     }
+  ///
+  /// And then reference the private flag instead of calling `isMounted()`.
+  @Deprecated('5.0.0')
   external bool isMounted();
 }
 
@@ -167,6 +202,15 @@ class ReactComponent {
 /// in a way that's opaque to the JS, and avoids the need to use dart2js interceptors.
 ///
 /// __For internal/advanced use only.__
+///
+/// > __DEPRECATED - DO NOT USE__
+/// >
+/// > This API was never stable in any version of ReactJS, and was replaced with a new, incompatible context API
+/// > in ReactJS 16 that will be exposed in version `5.0.0` of the `react` Dart package via a
+/// > new version of `Component` called `Component2`.
+/// >
+/// > This will be completely removed when the JS side of it is slated for removal (ReactJS 17 / react.dart 6.0.0)
+@Deprecated('6.0.0')
 @JS()
 @anonymous
 class InteropContextValue {
@@ -210,6 +254,15 @@ class ReactDartComponentInternal {
 /// [Component] instances.
 ///
 /// __For internal/advanced use only.__
+///
+/// > __DEPRECATED - DO NOT USE__
+/// >
+/// > This API was never stable in any version of ReactJS, and was replaced with a new, incompatible context API
+/// > in ReactJS 16 that will be exposed in version `5.0.0` of the `react` Dart package via a
+/// > new version of `Component` called `Component2`.
+/// >
+/// > This will be completely removed when the JS side of it is slated for removal (ReactJS 17 / react.dart 6.0.0)
+@Deprecated('6.0.0')
 class ReactDartContextInternal {
   final dynamic value;
 
@@ -238,11 +291,28 @@ void markChildrenValidated(List<dynamic> children) {
 /// Returns a new JS [ReactClassConfig] for a component that uses
 /// [dartInteropStatics] and [componentStatics] internally to proxy between
 /// the JS and Dart component instances.
+///
+/// > __DEPRECATED.__
+/// >
+/// > Use [createReactDartComponentClass] instead.
+@Deprecated('5.0.0')
 @JS('_createReactDartComponentClassConfig')
 external ReactClassConfig createReactDartComponentClassConfig(
     ReactDartInteropStatics dartInteropStatics,
     ComponentStatics componentStatics,
     [JsComponentConfig jsConfig]);
+
+/// Returns a new JS [ReactClassConfig] for a component that uses
+/// [dartInteropStatics] and [componentStatics] internally to proxy between
+/// the JS and Dart component instances.
+ReactClass createReactDartComponentClass(
+    ReactDartInteropStatics dartInteropStatics,
+    ComponentStatics componentStatics,
+    [JsComponentConfig jsConfig]) {
+  // TODO: Change this impl to external in 5.0.0, and deprecate it as 6.0.0 removal
+  return React.createClass(createReactDartComponentClassConfig(
+      dartInteropStatics, componentStatics, jsConfig));
+}
 
 typedef Component _InitComponent(
     ReactComponent jsThis,
@@ -311,6 +381,17 @@ class ComponentStatics {
 
 /// Additional configuration passed to [createReactDartComponentClassConfig]
 /// that needs to be directly accessible by that JS code.
+///
+/// > __DEPRECATED - DO NOT USE__
+/// >
+/// > The `context` API that this supports was never stable in any version of ReactJS,
+/// > and was replaced with a new, incompatible context API in ReactJS 16 that will be
+/// > exposed in version `5.0.0` of the `react` Dart package via a new version of
+/// > `Component` called `Component2`.
+/// >
+/// > This will be completely removed when the JS side of `context` it is slated for
+/// > removal (ReactJS 17 / react.dart 6.0.0)
+@Deprecated('6.0.0')
 @JS()
 @anonymous
 class JsComponentConfig {
