@@ -255,12 +255,12 @@ void _childKeyWarningTests(Function factory) {
           contains('Each child in a list should have a unique "key" prop.'));
     });
 
-    test('does not warn when multiple children are passed as a list', () {
+    test('warns when multiple children are passed as a list', () {
       _renderWithUniqueOwnerName(
           () => factory({}, [react.span({}), react.span({}), react.span({})]));
 
-      expect(consoleErrorCalled, isFalse,
-          reason: 'should not have have outputted a warning');
+      expect(consoleErrorCalled, isTrue,
+          reason: 'should have outputted a warning');
     });
 
     test('does not warn when multiple children are passed as variadic args',

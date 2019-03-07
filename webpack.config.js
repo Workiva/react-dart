@@ -47,19 +47,23 @@ function createExports(exportMappings) {
       entryFilename = mapping[0];
       outputFilename = mapping[1] || mapping[0];
       isProduction = mapping[2] || outputFilename.includes('_prod');
-      exportObjects.push(
-        {
-          output: {
-            path: outputPath,
-            filename: outputFilename
-          },
-          entry: path.resolve(inputPath, entryFilename),
-          plugins: isProduction ? prodPlugins : devPlugins,
-          mode: isProduction ? "production" : "development",
-          externals: [{ window: "window" }],
-          devtool: "source-map",
-        }
-      );
+
+      exportObject = {
+        output: {
+          path: outputPath,
+          filename: outputFilename
+        },
+        entry: path.resolve(inputPath, entryFilename),
+        plugins: isProduction ? prodPlugins : devPlugins,
+        mode: isProduction ? "production" : "development",
+        externals: [{ window: "window" }],
+        devtool: "source-map",
+      };
+
+      if ( entryFilename != 'react.js' && !entryFilename.includes('react_with') ) {
+        exportObject.externals[0].react = "window.React";
+      }
+      exportObjects.push(exportObject);
     } else {
       exportObjects.push(mapping);
     }
