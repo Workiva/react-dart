@@ -457,7 +457,8 @@ abstract class Component {
 
 abstract class Component2Adapter {
   void setState(Map newState, SetStateCallback callback);
-  void setStateTransaction(TransactionalSetStateCallback stateUpdater, SetStateCallback callback);
+  void setStateTransaction(
+      TransactionalSetStateCallback stateUpdater, SetStateCallback callback);
   void forceUpdate(SetStateCallback callback);
 }
 
@@ -514,7 +515,8 @@ abstract class Component2 implements Component {
   /// Optionally accepts a [callback] that gets called after the component updates.
   ///
   /// See: <https://reactjs.org/docs/react-component.html#setstate>
-  void setStateTransaction(TransactionalSetStateCallback stateUpdater, [SetStateCallback callback]) {
+  void setStateTransaction(TransactionalSetStateCallback stateUpdater,
+      [SetStateCallback callback]) {
     adapter.setStateTransaction(stateUpdater, callback);
   }
 

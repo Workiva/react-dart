@@ -39,7 +39,8 @@ main() {
           'throws when setState is called with something other than a Map or Function that accepts two parameters',
           () {
         var mountNode = new DivElement();
-        var renderedInstance = react_dom.render(components.SetStateTest({}), mountNode);
+        var renderedInstance =
+            react_dom.render(components.SetStateTest({}), mountNode);
         LifecycleTestHelper component = getDartComponent(renderedInstance);
 
         expect(() => component.setState(new Map()), returnsNormally);
@@ -78,7 +79,8 @@ main() {
           expectedState1 = {}..addAll(initialState)..addAll(newState1);
           expectedState2 = {}..addAll(expectedState1)..addAll(newState2);
 
-          component = getDartComponent(render(components.LifecycleTest(initialProps)));
+          component =
+              getDartComponent(render(components.LifecycleTest(initialProps)));
           component.lifecycleCalls.clear();
         });
 
@@ -916,7 +918,9 @@ void sharedLifecycleTests<T extends react.Component>({
       });
     }
 
-    test('calling setState does not update the component when the value passed is null', () {
+    test(
+        'calling setState does not update the component when the value passed is null',
+        () {
       var mountNode = new DivElement();
       var renderedInstance = react_dom.render(SetStateTest({}), mountNode);
       LifecycleTestHelper component = getDartComponent(renderedInstance);
