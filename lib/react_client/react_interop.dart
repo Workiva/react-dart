@@ -384,11 +384,13 @@ class ComponentStatics {
 ///
 /// > __DEPRECATED - DO NOT USE__
 /// >
-/// > This API was never stable in any version of ReactJS, and was replaced with a new, incompatible context API
-/// > in ReactJS 16 that will be exposed in version `5.0.0` of the `react` Dart package via a
-/// > new version of `Component` called `Component2`.
+/// > The `context` API that this supports was never stable in any version of ReactJS,
+/// > and was replaced with a new, incompatible context API in ReactJS 16 that will be
+/// > exposed in version `5.0.0` of the `react` Dart package via a new version of
+/// > `Component` called `Component2`.
 /// >
-/// > This will be completely removed when the JS side of it is slated for removal (ReactJS 17 / react.dart 6.0.0)
+/// > This will be completely removed when the JS side of `context` it is slated for
+/// > removal (ReactJS 17 / react.dart 6.0.0)
 @Deprecated('6.0.0')
 @JS()
 @anonymous
