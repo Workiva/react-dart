@@ -222,9 +222,8 @@ void refTests(ReactComponentFactoryProxy factory,
   });
 
   test('string refs are created with the correct value', () {
-    ReactComponent renderedInstance = _renderWithOwner(() => factory({
-      'ref': 'test'
-    }));
+    ReactComponent renderedInstance =
+        _renderWithOwner(() => factory({'ref': 'test'}));
 
     verifyRefValue(renderedInstance.dartComponent.ref('test'));
   });
