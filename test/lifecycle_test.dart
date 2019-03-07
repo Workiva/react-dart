@@ -858,6 +858,17 @@ void sharedLifecycleTests<T extends react.Component>({
       });
     }
 
+    test('calling setState does not update the component when the value passed is null', () {
+      var mountNode = new DivElement();
+      var renderedInstance = react_dom.render(SetStateTest({}), mountNode);
+      LifecycleTestHelper component = getDartComponent(renderedInstance);
+      component.lifecycleCalls.clear();
+
+      component.callSetStateWithNullValue();
+
+      expect(component.lifecycleCalls, isEmpty);
+    });
+
     group(
         'calls the setState callback, and transactional setState callback in the correct order',
         () {

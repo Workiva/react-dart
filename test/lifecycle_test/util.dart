@@ -48,6 +48,10 @@ mixin LifecycleTestHelper on Component {
 
     return null;
   }
+
+  void callSetStateWithNullValue() {
+    setState(null);
+  }
 }
 
 abstract class DefaultPropsCachingTestHelper implements Component {

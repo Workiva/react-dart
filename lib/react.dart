@@ -258,6 +258,9 @@ abstract class Component {
     } else if (newState != null) {
       throw new ArgumentError(
           'setState expects its first parameter to either be a Map or a `TransactionalSetStateCallback`.');
+    } else {
+      // newState is null, so short-circuit to match the ReactJS 16 behavior of not re-rendering the component if newState is null.
+      return;
     }
 
     if (callback != null) _setStateCallbacks.add(callback);

@@ -452,6 +452,9 @@ class JsComponent2Adapter extends Component2Adapter {
 
   @override
   void setState(newState, SetStateCallback callback) {
+    // Short-circuit to match the ReactJS 16 behavior of not re-rendering the component if newState is null.
+    if (newState == null) return;
+
     dynamic firstArg;
 
     if (newState is Map) {
