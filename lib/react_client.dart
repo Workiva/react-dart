@@ -15,6 +15,7 @@ import "package:react/react.dart";
 import "package:react/react_client/js_interop_helpers.dart";
 import 'package:react/react_client/react_interop.dart';
 import "package:react/react_dom.dart";
+import 'package:react/react_dom_server.dart';
 import "package:react/src/react_client/event_prop_key_to_event_factory.dart";
 import 'package:react/src/react_client/js_backed_map.dart';
 import "package:react/src/react_client/synthetic_event_wrappers.dart" as events;
@@ -1099,4 +1100,9 @@ void setClientConfiguration() {
   setReactConfiguration(_reactDom, _registerComponent);
   setReactDOMConfiguration(
       ReactDom.render, ReactDom.unmountComponentAtNode, _findDomNode);
+  // Accessing ReactDomServer.renderToString when it's not available breaks in DDC.
+  if (context['ReactDOMServer'] != null) {
+    setReactDOMServerConfiguration(
+        ReactDomServer.renderToString, ReactDomServer.renderToStaticMarkup);
+  }
 }
