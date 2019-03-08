@@ -2,7 +2,8 @@
 
 - [#162]: **Important Deprecations**
     > These deprecations are being put in place to prepare consumers for the upcoming `5.0.0` release which will include support for React JS version 16.x
-    - **All aspects of server-side rendering**
+    - `react_server.dart` and Dart VM server-side rendering
+        - Server-side rendering via `react_dom_server.dart`, though untested, is still in place
     - Legacy `context` APIs
     - `isMounted`
     - `react_test_utils.SimulateNative`
