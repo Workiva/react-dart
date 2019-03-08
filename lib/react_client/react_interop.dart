@@ -40,6 +40,12 @@ abstract class ReactDom {
       ReactDOM.unmountComponentAtNode(element);
 }
 
+@JS('ReactDOMServer')
+abstract class ReactDomServer {
+  external static String renderToString(ReactElement component);
+  external static String renderToStaticMarkup(ReactElement component);
+}
+
 // ----------------------------------------------------------------------------
 //   Types and data structures
 // ----------------------------------------------------------------------------
