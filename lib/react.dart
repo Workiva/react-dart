@@ -53,18 +53,16 @@ abstract class Component {
   /// Only keys declared in this component's [contextKeys] will be present.
   ///
   /// > This API was never stable in any version of ReactJS, and was replaced with a new, incompatible context API
-  /// > in ReactJS 16 that will be exposed in version `5.0.0` of the `react` Dart package via a
-  /// > new version of `Component` called `Component2`.
+  /// > in ReactJS 16 that is exposed via the [Component2] class.
   /// >
-  /// > It is strongly recommended that you do not use this, and instead wait for `Component2.context`.
+  /// > It is strongly recommended that you migrate to [Component2] and use [Component2.context] instead.
   @experimental
   dynamic get context => _context;
 
   /// > This API was never stable in any version of ReactJS, and was replaced with a new, incompatible context API
-  /// > in ReactJS 16 that will be exposed in version `5.0.0` of the `react` Dart package via a
-  /// > new version of `Component` called `Component2`.
+  /// > in ReactJS 16 that is exposed via the [Component2] class.
   /// >
-  /// > It is strongly recommended that you do not use this, and instead wait for `Component2.context`.
+  /// > It is strongly recommended that you migrate to [Component2] and use [Component2.context] instead.
   @experimental
   set context(Map value) => _context = value;
 
@@ -84,8 +82,10 @@ abstract class Component {
   ///
   /// Support for String `ref`s will be removed in the `6.0.0` release when `Component` is removed.
   ///
-  /// There will be new and improved ways to use / set refs in the `5.0.0` release via APIs exposed in `Component2`.
+  /// There are new and improved ways to use / set refs within [Component2].
   /// Until then, use a callback ref instead.
+  ///
+  /// TODO: Add better description of how to utilize [Component2] refs.
   @Deprecated('6.0.0')
   Ref get ref => _ref;
 
@@ -93,8 +93,10 @@ abstract class Component {
   ///
   /// Support for String `ref`s will be removed in the `6.0.0` release when `Component` is removed.
   ///
-  /// There will be new and improved ways to use / set refs in the `5.0.0` release via APIs exposed in `Component2`.
+  /// There are new and improved ways to use / set refs within [Component2].
   /// Until then, use a callback ref instead.
+  ///
+  /// TODO: Add better description of how to utilize [Component2] refs.
   @Deprecated('6.0.0')
   set ref(Ref value) => _ref = value;
 
@@ -126,7 +128,7 @@ abstract class Component {
   ///
   /// This will be removed in the `6.0.0` release when `Component` is removed.
   ///
-  /// There is currently no planned support for it within `Component2` which will be released in `5.0.0`
+  /// There is currently no planned support for it within [Component2]
   /// since there was never a ReactJS analogue for this API.
   @Deprecated('6.0.0')
   bind(key) => [
@@ -167,8 +169,7 @@ abstract class Component {
   /// > __DEPRECATED - DO NOT USE__
   /// >
   /// > This API was never stable in any version of ReactJS, and was replaced with a new, incompatible context API
-  /// > in ReactJS 16 that will be exposed in version `5.0.0` of the `react` Dart package via a
-  /// > new version of `Component` called `Component2`.
+  /// > in ReactJS 16 that is exposed via the [Component2] class.
   /// >
   /// > This will be completely removed when the JS side of it is slated for removal (ReactJS 17 / react.dart 6.0.0)
   @Deprecated('6.0.0')
@@ -187,8 +188,7 @@ abstract class Component {
   /// > __DEPRECATED - DO NOT USE__
   /// >
   /// > This API was never stable in any version of ReactJS, and was replaced with a new, incompatible context API
-  /// > in ReactJS 16 that will be exposed in version `5.0.0` of the `react` Dart package via a
-  /// > new version of `Component` called `Component2`.
+  /// > in ReactJS 16 that is exposed via the [Component2] class.
   /// >
   /// > This will be completely removed when the JS side of it is slated for removal (ReactJS 17 / react.dart 6.0.0)
   @Deprecated('6.0.0')
@@ -235,9 +235,10 @@ abstract class Component {
   ///
   /// Optionally accepts a [callback] that gets called after the component updates.
   ///
-  /// [A.k.a "forceUpdate"](https://facebook.github.io/react/docs/react-component.html#forceupdate)
-  ///
-  /// TODO: Deprecate in 5.0.0-wip (use `Component2.forceUpdate` instead)
+  /// > __DEPRECATED.__
+  /// >
+  /// > There is no implementation of this within [Component2]. Use [Component2.forceUpdate] when migrating.
+  @Deprecated('6.0.0')
   void redraw([callback()]) {
     setState({}, callback);
   }
@@ -316,8 +317,7 @@ abstract class Component {
   /// > __DEPRECATED - DO NOT USE__
   /// >
   /// > This API was never stable in any version of ReactJS, and was replaced with a new, incompatible context API
-  /// > in ReactJS 16 that will be exposed in version `5.0.0` of the `react` Dart package via a
-  /// > new version of `Component` called `Component2`.
+  /// > in ReactJS 16 that is exposed via the [Component2] class.
   /// >
   /// > This will be completely removed when the JS side of it is slated for removal (ReactJS 17 / react.dart 6.0.0)
   @Deprecated('6.0.0')
@@ -334,8 +334,7 @@ abstract class Component {
   /// > __DEPRECATED - DO NOT USE__
   /// >
   /// > This API was never stable in any version of ReactJS, and was replaced with a new, incompatible context API
-  /// > in ReactJS 16 that will be exposed in version `5.0.0` of the `react` Dart package via a
-  /// > new version of `Component` called `Component2`.
+  /// > in ReactJS 16 that is exposed via the [Component2] class.
   /// >
   /// > This will be completely removed when the JS side of it is slated for removal (ReactJS 17 / react.dart 6.0.0)
   @Deprecated('6.0.0')
@@ -359,8 +358,7 @@ abstract class Component {
   /// > __DEPRECATED - DO NOT USE__
   /// >
   /// > This API was never stable in any version of ReactJS, and was replaced with a new, incompatible context API
-  /// > in ReactJS 16 that will be exposed in version `5.0.0` of the `react` Dart package via a
-  /// > new version of `Component` called `Component2`.
+  /// > in ReactJS 16 that is exposed via the [Component2] class.
   /// >
   /// > This will be completely removed when the JS side of it is slated for removal (ReactJS 17 / react.dart 6.0.0)
   @Deprecated('6.0.0')
@@ -392,8 +390,7 @@ abstract class Component {
   /// > __DEPRECATED - DO NOT USE__
   /// >
   /// > This API was never stable in any version of ReactJS, and was replaced with a new, incompatible context API
-  /// > in ReactJS 16 that will be exposed in version `5.0.0` of the `react` Dart package via a
-  /// > new version of `Component` called `Component2`.
+  /// > in ReactJS 16 that is exposed via the [Component2] class.
   /// >
   /// > This will be completely removed when the JS side of it is slated for removal (ReactJS 17 / react.dart 6.0.0)
   @Deprecated('6.0.0')
@@ -406,8 +403,7 @@ abstract class Component {
   /// > __DEPRECATED - DO NOT USE__
   /// >
   /// > This API was never stable in any version of ReactJS, and was replaced with a new, incompatible context API
-  /// > in ReactJS 16 that will be exposed in version `5.0.0` of the `react` Dart package via a
-  /// > new version of `Component` called `Component2`.
+  /// > in ReactJS 16 that is exposed via the [Component2] class.
   /// >
   /// > This will be completely removed when the JS side of it is slated for removal (ReactJS 17 / react.dart 6.0.0)
   @Deprecated('6.0.0')
@@ -420,8 +416,7 @@ abstract class Component {
   /// > __DEPRECATED - DO NOT USE__
   /// >
   /// > This API was never stable in any version of ReactJS, and was replaced with a new, incompatible context API
-  /// > in ReactJS 16 that will be exposed in version `5.0.0` of the `react` Dart package via a
-  /// > new version of `Component` called `Component2`.
+  /// > in ReactJS 16 that is exposed via the [Component2] class.
   /// >
   /// > This will be completely removed when the JS side of it is slated for removal (ReactJS 17 / react.dart 6.0.0)
   @Deprecated('6.0.0')

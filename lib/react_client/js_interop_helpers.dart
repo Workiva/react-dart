@@ -12,9 +12,6 @@ external dynamic _getProperty(jsObj, String key);
 @JS()
 external dynamic _setProperty(jsObj, String key, value);
 
-typedef dynamic _GetPropertyFn(jsObj, String key);
-typedef dynamic _SetPropertyFn(jsObj, String key, value);
-
 class _MissingJsMemberError extends Error {
   final String name;
   final String message;
@@ -34,7 +31,7 @@ class _MissingJsMemberError extends Error {
 /// (see: https://github.com/dart-lang/sdk/issues/25053).
 ///
 /// __Defined in this package's React JS files.__
-final _GetPropertyFn getProperty = (() {
+final dynamic Function(dynamic jsObj, String key) getProperty = (() {
   try {
     // If this throws, then the JS function isn't available.
     _getProperty(new EmptyObject(), null);
@@ -57,7 +54,7 @@ final _GetPropertyFn getProperty = (() {
 /// (see: https://github.com/dart-lang/sdk/issues/25053).
 ///
 /// __Defined in this package's React JS files.__
-final _SetPropertyFn setProperty = (() {
+final Function(dynamic jsObj, String key, dynamic value) setProperty = (() {
   try {
     // If this throws, then the JS function isn't available.
     _setProperty(new EmptyObject(), null, null);
