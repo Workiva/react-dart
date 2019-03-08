@@ -1,3 +1,14 @@
+## [4.6.1](https://github.com/cleandart/react-dart/compare/4.6.0...4.6.1)
+
+- [#159]: Update the type for [unconverted js `style` prop map][#153] to be `Map<String, dynamic>`.
+
+
+## [4.6.0](https://github.com/cleandart/react-dart/compare/4.5.0...4.6.0)
+
+- [#152]: Format all files using `dartfmt`.
+- [#153]: New `unconvertJsProps` utility function.
+
+
 ## [4.5.0](https://github.com/cleandart/react-dart/compare/4.4.2...4.5.0)
 
 - **Improvement:** Dart 2 compatible!
