@@ -47,7 +47,7 @@ function createExports(exportMappings) {
       entryFilename = mapping[0];
       outputFilename = mapping[1] || mapping[0];
       isProduction = mapping[2] || outputFilename.includes('_prod');
-
+      includeReact = entryFilename === 'react.js' || entryFilename.includes('react_with');
       exportObject = {
         output: {
           path: outputPath,
@@ -60,7 +60,9 @@ function createExports(exportMappings) {
         devtool: "source-map",
       };
 
-      if ( entryFilename != 'react.js' && !entryFilename.includes('react_with') ) {
+      if ( !includeReact ) {
+        // This forces any packages that require react as a dependacy to have the same instance of react that
+        // is provided by our react js bundles.
         exportObject.externals[0].react = "window.React";
       }
       exportObjects.push(exportObject);
