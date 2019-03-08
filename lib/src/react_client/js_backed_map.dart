@@ -130,8 +130,6 @@ abstract class _Reflect {
 }
 
 JsMap jsBackingMapOrJsCopy(Map other) {
-  other ??= const {};
-
   // todo is it faster to just always do .from?
   if (other is JsBackedMap) {
     return other.jsObject;
