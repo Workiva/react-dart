@@ -184,6 +184,31 @@ void domEventHandlerWrappingTests(ReactComponentFactoryProxy factory) {
   });
 }
 
+void refTests(ReactComponentFactoryProxy factory,
+    {void verifyRefValue(dynamic refValue)}) {
+  test('callback refs are called with the correct value', () {
+    var called = false;
+    var refValue;
+
+    rtu.renderIntoDocument(factory({
+      'ref': (ref) {
+        called = true;
+        refValue = ref;
+      }
+    }));
+
+    expect(called, isTrue, reason: 'should have called the callback ref');
+    verifyRefValue(refValue);
+  });
+
+  test('string refs are created with the correct value', () {
+    ReactComponent renderedInstance =
+        _renderWithOwner(() => factory({'ref': 'test'}));
+
+    verifyRefValue(renderedInstance.dartComponent.ref('test'));
+  });
+}
+
 void _childKeyWarningTests(Function factory) {
   group('key/children validation', () {
     bool consoleErrorCalled;
@@ -217,12 +242,12 @@ void _childKeyWarningTests(Function factory) {
           contains('Each child in a list should have a unique "key" prop.'));
     });
 
-    test('does not warn when multiple children are passed as a list', () {
+    test('warns when multiple children are passed as a list', () {
       _renderWithUniqueOwnerName(
           () => factory({}, [react.span({}), react.span({}), react.span({})]));
 
-      expect(consoleErrorCalled, isFalse,
-          reason: 'should not have have outputted a warning');
+      expect(consoleErrorCalled, isTrue,
+          reason: 'should have outputted a warning');
     });
 
     test('does not warn when multiple children are passed as variadic args',
@@ -255,6 +280,13 @@ void _renderWithUniqueOwnerName(ReactElement render()) {
   _nextFactoryId++;
 
   rtu.renderIntoDocument(factory({'render': render}));
+}
+
+_renderWithOwner(ReactElement render()) {
+  final factory = react.registerComponent(() => new _OwnerHelperComponent())
+      as ReactDartComponentFactoryProxy;
+
+  return rtu.renderIntoDocument(factory({'render': render}));
 }
 
 class _OwnerHelperComponent extends react.Component {

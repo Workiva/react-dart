@@ -18,6 +18,12 @@ main() {
       domEventHandlerWrappingTests(react.div);
     });
 
+    group('- refs -', () {
+      refTests(react.span, verifyRefValue: (ref) {
+        expect(ref, TypeMatcher<SpanElement>());
+      });
+    });
+
     test('has a type corresponding to the DOM tagName', () {
       expect((react.div as ReactDomComponentFactoryProxy).type, 'div');
       expect((react.span as ReactDomComponentFactoryProxy).type, 'span');

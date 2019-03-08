@@ -17,6 +17,12 @@ main() {
     group('- common factory behavior -', () {
       commonFactoryTests(Foo);
     });
+
+    group('- refs -', () {
+      refTests(Foo, verifyRefValue: (ref) {
+        expect(ref, TypeMatcher<_Foo>());
+      });
+    });
   });
 }
 
