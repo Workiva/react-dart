@@ -1,3 +1,19 @@
+## [4.6.2](https://github.com/cleandart/react-dart/compare/4.6.1...4.6.2)
+
+- [#162]: **Important Deprecations**
+    > These deprecations are being put in place to prepare consumers for the upcoming `5.0.0` release which will include support for React JS version 16.x
+    - **All aspects of server-side rendering**
+    - Legacy `context` APIs
+    - `isMounted`
+    - `react_test_utils.SimulateNative`
+    - String `Component.ref`s
+    - `Component.replaceState`s
+    - `Component.bind`
+    - `Component.transferComponentState`
+
+- [#155]: Clean the lint trap.
+
+
 ## [4.6.1](https://github.com/cleandart/react-dart/compare/4.6.0...4.6.1)
 
 - [#159]: Update the type for [unconverted js `style` prop map][#153] to be `Map<String, dynamic>`.
