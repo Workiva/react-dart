@@ -36,11 +36,6 @@ abstract class ReactDom {
       ReactDOM.unmountComponentAtNode(element);
 }
 
-/// __DEPRECATED.__
-///
-/// Server-side rendering support via APIs in the `react` package will not be maintained beyond the `5.0.0` release.
-@Deprecated('5.0.0')
-@JS('ReactDOMServer')
 abstract class ReactDomServer {
   external static String renderToString(ReactElement component);
   external static String renderToStaticMarkup(ReactElement component);
