@@ -297,44 +297,6 @@ external ReactClass createReactDartComponentClass2(
     ComponentStatics<Component2> componentStatics,
     [JsComponentConfig2 jsConfig]);
 
-typedef Component _InitComponent(
-    ReactComponent jsThis,
-    ReactDartComponentInternal internal,
-    InteropContextValue context,
-    ComponentStatics componentStatics);
-typedef InteropContextValue _HandleGetChildContext(Component component);
-typedef void _HandleComponentWillMount(Component component);
-typedef void _HandleComponentDidMount(Component component);
-typedef void _HandleComponentWillReceiveProps(Component component,
-    ReactDartComponentInternal nextInternal, InteropContextValue nextContext);
-typedef bool _HandleShouldComponentUpdate(
-    Component component, InteropContextValue nextContext);
-typedef void _HandleComponentWillUpdate(
-    Component component, InteropContextValue nextContext);
-// Ignore prevContext in componentDidUpdate, since it's not supported in React 16
-typedef void _HandleComponentDidUpdate(
-    Component component, ReactDartComponentInternal prevInternal);
-typedef void _HandleComponentWillUnmount(Component component);
-typedef dynamic _HandleRender(Component component);
-
-typedef Component _InitComponent2(
-    ReactComponent jsThis, ComponentStatics<Component2> componentStatics);
-typedef dynamic _HandleGetInitialState2(Component2 component);
-typedef void _HandleComponentWillMount2(
-    Component2 component, ReactComponent jsThis);
-typedef void _HandleComponentDidMount2(Component2 component);
-typedef void _HandleComponentWillReceiveProps2(
-    Component2 component, JsMap jsNextProps);
-typedef bool _HandleShouldComponentUpdate2(
-    Component2 component, JsMap jsNextProps, JsMap jsNextState);
-typedef void _HandleComponentWillUpdate2(
-    Component2 component, JsMap jsNextProps, JsMap jsNextState);
-// Ignore prevContext in componentDidUpdate, since it's not supported in React 16
-typedef void _HandleComponentDidUpdate2(Component2 component,
-    ReactComponent jsThis, JsMap jsPrevProps, JsMap jsPrevState);
-typedef void _HandleComponentWillUnmount2(Component2 component);
-typedef dynamic _HandleRender2(Component2 component);
-
 @JS('React.__isDevelopment')
 external bool get _inReactDevMode;
 
@@ -360,16 +322,39 @@ bool get inReactDevMode => _inReactDevMode;
 @Deprecated('6.0.0')
 class ReactDartInteropStatics {
   external factory ReactDartInteropStatics({
-    _InitComponent initComponent,
-    _HandleGetChildContext handleGetChildContext,
-    _HandleComponentWillMount handleComponentWillMount,
-    _HandleComponentDidMount handleComponentDidMount,
-    _HandleComponentWillReceiveProps handleComponentWillReceiveProps,
-    _HandleShouldComponentUpdate handleShouldComponentUpdate,
-    _HandleComponentWillUpdate handleComponentWillUpdate,
-    _HandleComponentDidUpdate handleComponentDidUpdate,
-    _HandleComponentWillUnmount handleComponentWillUnmount,
-    _HandleRender handleRender,
+    Component Function(
+      ReactComponent jsThis,
+      ReactDartComponentInternal internal,
+      InteropContextValue context,
+      ComponentStatics componentStatics,
+    )
+        initComponent,
+    InteropContextValue Function(Component component) handleGetChildContext,
+    void Function(Component component) handleComponentWillMount,
+    void Function(Component component) handleComponentDidMount,
+    void Function(
+      Component component,
+      ReactDartComponentInternal nextInternal,
+      InteropContextValue nextContext,
+    )
+        handleComponentWillReceiveProps,
+    bool Function(
+      Component component,
+      InteropContextValue nextContext,
+    )
+        handleShouldComponentUpdate,
+    void Function(
+      Component component,
+      InteropContextValue nextContext,
+    )
+        handleComponentWillUpdate,
+    void Function(
+      Component component,
+      ReactDartComponentInternal prevInternal,
+    )
+        handleComponentDidUpdate,
+    void Function(Component component) handleComponentWillUnmount,
+    dynamic Function(Component component) handleRender,
   });
 }
 
@@ -378,16 +363,47 @@ class ReactDartInteropStatics {
 @anonymous
 class ReactDartInteropStatics2 implements ReactDartInteropStatics {
   external factory ReactDartInteropStatics2({
-    _InitComponent2 initComponent,
-    _HandleGetInitialState2 handleGetInitialState,
-    _HandleComponentWillMount2 handleComponentWillMount,
-    _HandleComponentDidMount2 handleComponentDidMount,
-    _HandleComponentWillReceiveProps2 handleComponentWillReceiveProps,
-    _HandleShouldComponentUpdate2 handleShouldComponentUpdate,
-    _HandleComponentWillUpdate2 handleComponentWillUpdate,
-    _HandleComponentDidUpdate2 handleComponentDidUpdate,
-    _HandleComponentWillUnmount2 handleComponentWillUnmount,
-    _HandleRender2 handleRender,
+    Component2 Function(
+      ReactComponent jsThis,
+      ComponentStatics<Component2> componentStatics,
+    )
+        initComponent,
+    // TODO: Should this have a return signature of `Map`?
+    dynamic Function(Component2 component) handleGetInitialState,
+    void Function(
+      Component2 component,
+      ReactComponent jsThis,
+    )
+        handleComponentWillMount,
+    void Function(Component2 component) handleComponentDidMount,
+    // TODO: Should this be removed when we update Component2.componentWillReceiveProps to throw an UnsupportedError? (CPLAT-4765)
+    void Function(
+      Component2 component,
+      JsMap jsNextProps,
+    )
+        handleComponentWillReceiveProps,
+    bool Function(
+      Component2 component,
+      JsMap jsNextProps,
+      JsMap jsNextState,
+    )
+        handleShouldComponentUpdate,
+    // TODO: Should this be removed when we update Component2.componentWillUpdate to throw an UnsupportedError? (CPLAT-4766)
+    void Function(
+      Component2 component,
+      JsMap jsNextProps,
+      JsMap jsNextState,
+    )
+        handleComponentWillUpdate,
+    void Function(
+      Component2 component,
+      ReactComponent jsThis,
+      JsMap jsPrevProps,
+      JsMap jsPrevState,
+    )
+        handleComponentDidUpdate,
+    void Function(Component2 component) handleComponentWillUnmount,
+    dynamic Function(Component2 component) handleRender,
   });
 }
 
