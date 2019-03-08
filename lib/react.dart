@@ -106,7 +106,7 @@ abstract class Component {
 
   List<SetStateCallback> _setStateCallbacks = [];
 
-  List<TransactionalSetStateCallback> _transactionalSetStateCallbacks = [];
+  List<StateUpdaterCallback> _transactionalSetStateCallbacks = [];
 
   /// The List of callbacks to be called after the component has been updated from a call to [setState].
   List get setStateCallbacks => _setStateCallbacks;
@@ -254,12 +254,12 @@ abstract class Component {
   /// > __DEPRECATED.__
   /// >
   /// > Note that when migrating to [Component2], [Component2.setState] will only accept a `Map` for [newState].
-  /// > Transactional `setState` calls will have to be changed to utilize [Component2.setStateTransaction].
+  /// > Transactional `setState` calls will have to be changed to utilize [Component2.setStateWithUpdater].
   @Deprecated('6.0.0')
   void setState(covariant dynamic newState, [callback()]) {
     if (newState is Map) {
       _nextState.addAll(newState);
-    } else if (newState is TransactionalSetStateCallback) {
+    } else if (newState is StateUpdaterCallback) {
       _transactionalSetStateCallbacks.add(newState);
     } else if (newState != null) {
       throw new ArgumentError(
@@ -457,8 +457,8 @@ abstract class Component {
 
 abstract class Component2Adapter {
   void setState(Map newState, SetStateCallback callback);
-  void setStateTransaction(
-      TransactionalSetStateCallback stateUpdater, SetStateCallback callback);
+  void setStateWithUpdater(
+      StateUpdaterCallback stateUpdater, SetStateCallback callback);
   void forceUpdate(SetStateCallback callback);
 }
 
@@ -502,7 +502,7 @@ abstract class Component2 implements Component {
   ///
   /// Optionally accepts a [callback] that gets called after the component updates.
   ///
-  /// To use a transactional `setState` callback, check out [setStateTransaction].
+  /// To use a transactional `setState` callback, check out [setStateWithUpdater].
   ///
   /// See: <https://reactjs.org/docs/react-component.html#setstate>
   void setState(Map newState, [SetStateCallback callback]) {
@@ -510,14 +510,14 @@ abstract class Component2 implements Component {
   }
 
   /// Triggers a rerender with new state obtained by shallow-merging
-  /// the return value of [stateUpdater] into the current [state].
+  /// the return value of [updater] into the current [state].
   ///
   /// Optionally accepts a [callback] that gets called after the component updates.
   ///
   /// See: <https://reactjs.org/docs/react-component.html#setstate>
-  void setStateTransaction(TransactionalSetStateCallback stateUpdater,
+  void setStateWithUpdater(StateUpdaterCallback updater,
       [SetStateCallback callback]) {
-    adapter.setStateTransaction(stateUpdater, callback);
+    adapter.setStateWithUpdater(updater, callback);
   }
 
   void forceUpdate([SetStateCallback callback]) {
@@ -760,7 +760,7 @@ abstract class Component2 implements Component {
   Map _state;
 
   @override
-  List<TransactionalSetStateCallback> _transactionalSetStateCallbacks;
+  List<StateUpdaterCallback> _transactionalSetStateCallbacks;
 
   @override
   Map context;
@@ -783,7 +783,7 @@ abstract class Component2 implements Component {
       throw new UnimplementedError();
 
   @override
-  List<TransactionalSetStateCallback> get transactionalSetStateCallbacks =>
+  List<StateUpdaterCallback> get transactionalSetStateCallbacks =>
       throw new UnimplementedError();
 }
 

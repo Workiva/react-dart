@@ -467,8 +467,8 @@ class JsComponent2Adapter extends Component2Adapter {
   }
 
   @override
-  void setStateTransaction(
-      TransactionalSetStateCallback stateUpdater, SetStateCallback callback) {
+  void setStateWithUpdater(
+      StateUpdaterCallback stateUpdater, SetStateCallback callback) {
     final firstArg = allowInterop((jsPrevState, jsProps, [_]) {
       return jsBackingMapOrJsCopy(stateUpdater(
         new JsBackedMap.backedBy(jsPrevState),
