@@ -549,15 +549,18 @@ final ReactDartInteropStatics2 _dartInteropStatics2 = (() {
         return value;
       });
 
-  void handleComponentWillUpdate(
-          Component2 component, JsMap jsNextProps, JsMap jsNextState) =>
+  dynamic handleGetSnapshotBeforeUpdate(
+        Component2 component, JsMap jsNextProps, JsMap jsNextState) =>
       zone.run(() {
-        component.componentWillUpdate(
+
+        final TypedSnapshot snapshotValue = component.getSnapshotBeforeUpdate(
           new JsBackedMap.backedBy(jsNextProps),
           new JsBackedMap.backedBy(jsNextState),
         );
 
         _updatePropsAndStateWithJs(component, jsNextProps, jsNextState);
+
+        return snapshotValue;
       });
 
   void handleComponentDidUpdate(Component2 component, ReactComponent jsThis,
@@ -585,7 +588,7 @@ final ReactDartInteropStatics2 _dartInteropStatics2 = (() {
     handleComponentWillReceiveProps:
         allowInterop(handleComponentWillReceiveProps),
     handleShouldComponentUpdate: allowInterop(handleShouldComponentUpdate),
-    handleComponentWillUpdate: allowInterop(handleComponentWillUpdate),
+    handleGetSnapshotBeforeUpdate: allowInterop(handleGetSnapshotBeforeUpdate),
     handleComponentDidUpdate: allowInterop(handleComponentDidUpdate),
     handleComponentWillUnmount: allowInterop(handleComponentWillUnmount),
     handleRender: allowInterop(handleRender),

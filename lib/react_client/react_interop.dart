@@ -394,7 +394,7 @@ class ReactDartInteropStatics2 implements ReactDartInteropStatics {
       JsMap jsNextProps,
       JsMap jsNextState,
     )
-        handleComponentWillUpdate,
+        handleGetSnapshotBeforeUpdate,
     void Function(
       Component2 component,
       ReactComponent jsThis,

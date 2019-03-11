@@ -580,7 +580,26 @@ abstract class Component2 implements Component {
   /// using both provides no added benefit.
   ///
   /// See: <https://facebook.github.io/react/docs/react-component.html#updating-componentwillupdate>
+  ///
+  /// > __DEPRECATED - DO NOT USE__
+  /// >
+  /// > Due to the release of getSnapshotBeforeUpdate in ReactJS 16,
+  /// > componentWillUpdate is no longer the method used to check the state
+  /// > and props before an re-render. Use getSnapshotBeforeUpdate instead.
+  /// >
+  /// > This will be completely removed when the JS side of it is slated for removal (ReactJS 17 / react.dart 6.0.0)
+  @Deprecated('6.0.0')
   void componentWillUpdate(Map nextProps, Map nextState) {}
+
+  /// ReactJS lifecycle method that is invoked immediately before rendering when [nextProps] or [nextState] are being
+  /// received.
+  ///
+  /// This method is not called for the initial [render].
+  ///
+  /// Use this as an opportunity to perform preparation before an update occurs.
+  ///
+  /// See: <https://facebook.github.io/react/docs/react-component.html#getsnapshotbeforeupdate>
+  TypedSnapshot getSnapshotBeforeUpdate(Map nextProps, Map nextState) {}
 
   /// ReactJS lifecycle method that is invoked immediately after the `Component`'s updates are flushed to the DOM.
   ///
@@ -590,7 +609,8 @@ abstract class Component2 implements Component {
   /// of the values of [prevProps] / [prevState].
   ///
   /// See: <https://facebook.github.io/react/docs/react-component.html#updating-componentdidupdate>
-  void componentDidUpdate(Map prevProps, Map prevState) {}
+  void componentDidUpdate(Map prevProps, Map prevState, [TypedSnapshot
+  snapshot]) {}
 
   /// ReactJS lifecycle method that is invoked immediately before a `Component` is unmounted from the DOM.
   ///
@@ -2220,4 +2240,9 @@ setReactConfiguration(domCreator, customRegisterComponent) {
   registerComponent = customRegisterComponent;
   // HTML Elements
   _createDOMComponents(domCreator);
+}
+
+mixin TypedSnapshot<TSnapshot> on Component2 {
+  TSnapshot getSnapshotBeforeUpdate(Map prevProps, Map prevState);
+  void componentDidUpdate(Map prevProps, Map prevState, TSnapshot snapshot);
 }
