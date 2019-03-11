@@ -34,6 +34,95 @@ main() {
         LifecycleTestWithContext: components.LifecycleTestWithContext,
         LifecycleTest: components.LifecycleTest,
       );
+
+      test(
+          'throws when setState is called with something other than a Map or Function that accepts two parameters',
+          () {
+        var mountNode = new DivElement();
+        var renderedInstance =
+            react_dom.render(components.SetStateTest({}), mountNode);
+        LifecycleTestHelper component = getDartComponent(renderedInstance);
+
+        expect(() => component.setState(new Map()), returnsNormally);
+        expect(
+            () => component.setState((_, __) {
+                  return {};
+                }),
+            returnsNormally);
+        expect(() => component.setState(null), returnsNormally);
+
+        expect(() => component.setState('Not A Valid Parameter'),
+            throwsArgumentError);
+        expect(() => component.setState(5), throwsArgumentError);
+      });
+
+      group('prevents concurrent modification of `_setStateCallbacks`', () {
+        LifecycleTestHelper component;
+        const Map initialState = const {
+          'initialState': 'initial',
+        };
+        int firstStateUpdateCalls;
+        int secondStateUpdateCalls;
+        Map initialProps;
+        Map newState1;
+        Map expectedState1;
+        Map newState2;
+        Map expectedState2;
+
+        setUp(() {
+          firstStateUpdateCalls = 0;
+          secondStateUpdateCalls = 0;
+          initialProps =
+              unmodifiableMap({'getInitialState': (_) => initialState});
+          newState1 = {'foo': 'bar'};
+          newState2 = {'baz': 'foobar'};
+          expectedState1 = {}..addAll(initialState)..addAll(newState1);
+          expectedState2 = {}..addAll(expectedState1)..addAll(newState2);
+
+          component =
+              getDartComponent(render(components.LifecycleTest(initialProps)));
+          component.lifecycleCalls.clear();
+        });
+
+        tearDown(() {
+          component?.lifecycleCalls?.clear();
+          component = null;
+          initialProps = null;
+          newState1 = null;
+          expectedState1 = null;
+          newState2 = null;
+          expectedState2 = null;
+        });
+
+        test(
+            'when `replaceState` is called from within another `replaceState` callback',
+            () {
+          void handleSecondStateUpdate() {
+            secondStateUpdateCalls++;
+            expect(component.state, newState2);
+          }
+
+          void handleFirstStateUpdate() {
+            firstStateUpdateCalls++;
+            expect(component.state, newState1);
+            component.replaceState(
+                newState2, Zone.current.bindCallback(handleSecondStateUpdate));
+          }
+
+          component.replaceState(
+              newState1, Zone.current.bindCallback(handleFirstStateUpdate));
+
+          expect(firstStateUpdateCalls, 1);
+          expect(secondStateUpdateCalls, 1);
+
+          expect(
+              component.lifecycleCalls,
+              containsAllInOrder([
+                matchCall('componentWillUpdate', args: [anything, newState1]),
+                matchCall('componentWillUpdate', args: [anything, newState2]),
+              ]));
+        });
+      });
     });
 
     group('Component2', () {
@@ -553,35 +642,6 @@ void sharedLifecycleTests<T extends react.Component>({
                   args: [anything, expectedState2]),
             ]));
       });
-
-      test(
-          'when `replaceState` is called from within another `replaceState` callback',
-          () {
-        void handleSecondStateUpdate() {
-          secondStateUpdateCalls++;
-          expect(component.state, newState2);
-        }
-
-        void handleFirstStateUpdate() {
-          firstStateUpdateCalls++;
-          expect(component.state, newState1);
-          component.replaceState(
-              newState2, Zone.current.bindCallback(handleSecondStateUpdate));
-        }
-
-        component.replaceState(
-            newState1, Zone.current.bindCallback(handleFirstStateUpdate));
-
-        expect(firstStateUpdateCalls, 1);
-        expect(secondStateUpdateCalls, 1);
-
-        expect(
-            component.lifecycleCalls,
-            containsAllInOrder([
-              matchCall('componentWillUpdate', args: [anything, newState1]),
-              matchCall('componentWillUpdate', args: [anything, newState2]),
-            ]));
-      }, skip: 'replaceState is deprecated');
     });
 
     test('properly handles a call to setState within componentWillReceiveProps',
@@ -858,6 +918,19 @@ void sharedLifecycleTests<T extends react.Component>({
       });
     }
 
+    test(
+        'calling setState does not update the component when the value passed is null',
+        () {
+      var mountNode = new DivElement();
+      var renderedInstance = react_dom.render(SetStateTest({}), mountNode);
+      LifecycleTestHelper component = getDartComponent(renderedInstance);
+      component.lifecycleCalls.clear();
+
+      component.callSetStateWithNullValue();
+
+      expect(component.lifecycleCalls, isEmpty);
+    });
+
     group(
         'calls the setState callback, and transactional setState callback in the correct order',
         () {
@@ -898,26 +971,6 @@ void sharedLifecycleTests<T extends react.Component>({
         expect(renderedNode.children.first.text, '3');
         expect(renderedNode.children.first.text, getUpdatingRenderedCounter());
       });
-    });
-
-    test(
-        'throws when setState is called with something other than a Map or Function that accepts two parameters',
-        () {
-      var mountNode = new DivElement();
-      var renderedInstance = react_dom.render(SetStateTest({}), mountNode);
-      LifecycleTestHelper component = getDartComponent(renderedInstance);
-
-      expect(() => component.setState(new Map()), returnsNormally);
-      expect(
-          () => component.setState((_, __) {
-                return {};
-              }),
-          returnsNormally);
-      expect(() => component.setState(null), returnsNormally);
-
-      expect(() => component.setState('Not A Valid Parameter'),
-          throwsArgumentError);
-      expect(() => component.setState(5), throwsArgumentError);
     });
   });
 }
