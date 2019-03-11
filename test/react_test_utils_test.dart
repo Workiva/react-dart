@@ -29,8 +29,7 @@ void main() {
     ReactShallowRenderer shallowRenderer;
 
     setUp(() {
-      content =
-          sampleComponent({'className': 'test', 'id': 'createRendererTest'});
+      content = sampleComponent({'className': 'test', 'id': 'createRendererTest'});
 
       shallowRenderer = createRenderer();
     });
@@ -59,8 +58,7 @@ void main() {
       expect(domNode.text, equals(''));
     });
 
-    void testEvent(
-        void event(dynamic instanceOrNode, Map eventData), String eventName) {
+    void testEvent(void event(dynamic instanceOrNode, Map eventData), String eventName) {
       eventName = eventName.toLowerCase();
       Map eventData;
       int fakeTimeStamp;
@@ -91,8 +89,7 @@ void main() {
       group('click', () => testEvent(Simulate.click, 'click'));
       group('copy', () => testEvent(Simulate.copy, 'copy'));
       group('cut', () => testEvent(Simulate.cut, 'cut'));
-      group(
-          'doubleClick', () => testEvent(Simulate.doubleClick, 'doubleClick'));
+      group('doubleClick', () => testEvent(Simulate.doubleClick, 'doubleClick'));
       group('drag', () => testEvent(Simulate.drag, 'drag'));
       group('dragEnd', () => testEvent(Simulate.dragEnd, 'dragEnd'));
       group('dragEnter', () => testEvent(Simulate.dragEnter, 'dragEnter'));
@@ -102,38 +99,29 @@ void main() {
       group('dragStart', () => testEvent(Simulate.dragStart, 'dragStart'));
       group('drop', () => testEvent(Simulate.drop, 'drop'));
       group('focus', () => testEvent(Simulate.focus, 'focus'));
-      group('gotPointerCapture',
-          () => testEvent(Simulate.gotPointerCapture, 'gotPointerCapture'));
+      group('gotPointerCapture', () => testEvent(Simulate.gotPointerCapture, 'gotPointerCapture'));
       group('input', () => testEvent(Simulate.input, 'input'));
       group('keyDown', () => testEvent(Simulate.keyDown, 'keyDown'));
       group('keyPress', () => testEvent(Simulate.keyPress, 'keyPress'));
       group('keyUp', () => testEvent(Simulate.keyUp, 'keyUp'));
-      group('lostPointerCapture',
-          () => testEvent(Simulate.lostPointerCapture, 'lostPointerCapture'));
+      group('lostPointerCapture', () => testEvent(Simulate.lostPointerCapture, 'lostPointerCapture'));
       group('mouseDown', () => testEvent(Simulate.mouseDown, 'mouseDown'));
       group('mouseMove', () => testEvent(Simulate.mouseMove, 'mouseMove'));
       group('mouseOut', () => testEvent(Simulate.mouseOut, 'mouseOut'));
       group('mouseOver', () => testEvent(Simulate.mouseOver, 'mouseOver'));
       group('mouseUp', () => testEvent(Simulate.mouseUp, 'mouseUp'));
       group('paste', () => testEvent(Simulate.paste, 'paste'));
-      group('pointerCancel',
-          () => testEvent(Simulate.pointerCancel, 'pointerCancel'));
-      group(
-          'pointerDown', () => testEvent(Simulate.pointerDown, 'pointerDown'));
-      group('pointerEnter',
-          () => testEvent(Simulate.pointerEnter, 'pointerEnter'));
-      group('pointerLeave',
-          () => testEvent(Simulate.pointerLeave, 'pointerLeave'));
-      group(
-          'pointerMove', () => testEvent(Simulate.pointerMove, 'pointerMove'));
-      group(
-          'pointerOver', () => testEvent(Simulate.pointerOver, 'pointerOver'));
+      group('pointerCancel', () => testEvent(Simulate.pointerCancel, 'pointerCancel'));
+      group('pointerDown', () => testEvent(Simulate.pointerDown, 'pointerDown'));
+      group('pointerEnter', () => testEvent(Simulate.pointerEnter, 'pointerEnter'));
+      group('pointerLeave', () => testEvent(Simulate.pointerLeave, 'pointerLeave'));
+      group('pointerMove', () => testEvent(Simulate.pointerMove, 'pointerMove'));
+      group('pointerOver', () => testEvent(Simulate.pointerOver, 'pointerOver'));
       group('pointerOut', () => testEvent(Simulate.pointerOut, 'pointerOut'));
       group('pointerUp', () => testEvent(Simulate.pointerUp, 'pointerUp'));
       group('scroll', () => testEvent(Simulate.scroll, 'scroll'));
       group('submit', () => testEvent(Simulate.submit, 'submit'));
-      group(
-          'touchCancel', () => testEvent(Simulate.touchCancel, 'touchCancel'));
+      group('touchCancel', () => testEvent(Simulate.touchCancel, 'touchCancel'));
       group('touchEnd', () => testEvent(Simulate.touchEnd, 'touchEnd'));
       group('touchMove', () => testEvent(Simulate.touchMove, 'touchMove'));
       group('touchStart', () => testEvent(Simulate.touchStart, 'touchStart'));
@@ -162,17 +150,13 @@ void main() {
   });
 
   group('isCompositeComponent', () {
-    test(
-        'returns true when element is a composite component (created with React.createClass())',
-        () {
+    test('returns true when element is a composite component (created with React.createClass())', () {
       component = renderIntoDocument(eventComponent({}));
 
       expect(isCompositeComponent(component), isTrue);
     });
 
-    test(
-        'returns false when element is not a composite component (created with React.createClass())',
-        () {
+    test('returns false when element is not a composite component (created with React.createClass())', () {
       component = renderIntoDocument(div({}));
 
       expect(isCompositeComponent(component), isFalse);
@@ -182,18 +166,15 @@ void main() {
   group('isCompositeComponentWithTypeV2', () {
     var renderedInstance = renderIntoDocument(sampleComponent({}));
 
-    test(
-        'returns true when element is a composite component (created with React.createClass()) of the specified type',
+    test('returns true when element is a composite component (created with React.createClass()) of the specified type',
         () {
-      expect(isCompositeComponentWithTypeV2(renderedInstance, sampleComponent),
-          isTrue);
+      expect(isCompositeComponentWithTypeV2(renderedInstance, sampleComponent), isTrue);
     });
 
     test(
         'returns false when element is not a composite component (created with React.createClass()) of the specified type',
         () {
-      expect(isCompositeComponentWithTypeV2(renderedInstance, eventComponent),
-          isFalse);
+      expect(isCompositeComponentWithTypeV2(renderedInstance, eventComponent), isFalse);
     });
   });
 
@@ -231,8 +212,8 @@ void main() {
   });
 
   test('scryRenderedComponentsWithTypeV2', () {
-    component = renderIntoDocument(wrapperComponent(
-        {}, [sampleComponent({}), sampleComponent({}), eventComponent({})]));
+    component =
+        renderIntoDocument(wrapperComponent({}, [sampleComponent({}), sampleComponent({}), eventComponent({})]));
 
     var results = scryRenderedComponentsWithTypeV2(component, sampleComponent);
 
@@ -256,8 +237,7 @@ void main() {
   });
 
   test('scryRenderedDOMComponentsWithTag', () {
-    component =
-        renderIntoDocument(wrapperComponent({}, [div({}), div({}), span({})]));
+    component = renderIntoDocument(wrapperComponent({}, [div({}), div({}), span({})]));
 
     var results = scryRenderedDOMComponentsWithTag(component, 'div');
 
@@ -275,8 +255,7 @@ void main() {
 
     expect(divElements.length, equals(3));
     // First div should be the parent div created by renderIntoDocument()
-    expect(react_dom.findDOMNode(divElements[0]).text,
-        equals('A headerFirst divSecond div'));
+    expect(react_dom.findDOMNode(divElements[0]).text, equals('A headerFirst divSecond div'));
     expect(react_dom.findDOMNode(divElements[1]).text, equals('First div'));
     expect(react_dom.findDOMNode(divElements[2]).text, equals('Second div'));
     expect(h1Elements.length, equals(1));

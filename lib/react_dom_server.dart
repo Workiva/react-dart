@@ -23,8 +23,7 @@ var renderToStaticMarkup;
 /// Sets configuration based on passed functions.
 ///
 /// Passes arguments to global variables.
-setReactDOMServerConfiguration(
-    customRenderToString, customRenderToStaticMarkup) {
+setReactDOMServerConfiguration(customRenderToString, customRenderToStaticMarkup) {
   renderToString = customRenderToString;
   renderToStaticMarkup = customRenderToStaticMarkup;
 }
