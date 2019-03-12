@@ -79,16 +79,17 @@ class _GeocodesResultList extends react.Component {
           ]),
         ]),
         react.tbody(
-            {'key': 'tbody'},
-            // The second argument contains the body of the component (as you have already seen).
-            //
-            // It can be a String, a Component or an Iterable.
-            props['data'].map((item) => geocodesResultItem({
-                  'key': item['formatted_address'],
-                  'lat': item['geometry']['location']['lat'],
-                  'lng': item['geometry']['location']['lng'],
-                  'formatted': item['formatted_address']
-                })))
+          {'key': 'tbody'},
+          // The second argument contains the body of the component (as you have already seen).
+          //
+          // It can be a String, a Component or an Iterable.
+          props['data'].map((item) => geocodesResultItem({
+                'key': item['formatted_address'],
+                'lat': item['geometry']['location']['lat'],
+                'lng': item['geometry']['location']['lng'],
+                'formatted': item['formatted_address']
+              })),
+        )
       ])
     ]);
   }
@@ -177,8 +178,12 @@ class _GeocodesHistoryItem extends react.Component {
   @override
   render() {
     return react.li({}, [
-      react.button(
-          {'type': 'button', 'key': 'button', 'className': 'btn btn-sm btn-default', 'onClick': reload}, 'Reload'),
+      react.button({
+        'type': 'button',
+        'key': 'button',
+        'className': 'btn btn-sm btn-default',
+        'onClick': reload,
+      }, 'Reload'),
       ' (${props['status']}) ${props['query']}'
     ]);
   }
@@ -195,15 +200,16 @@ class _GeocodesHistoryList extends react.Component {
     return react.div({}, [
       react.h3({'key': '1'}, 'History:'),
       react.ul(
-          {
-            'key': 'list',
-          },
-          new List.from(props['data'].keys.map((key) => geocodesHistoryItem({
-                'key': key,
-                'query': props['data'][key]['query'],
-                'status': props['data'][key]['status'],
-                'reloader': props['reloader']
-              }))).reversed)
+        {
+          'key': 'list',
+        },
+        new List.from(props['data'].keys.map((key) => geocodesHistoryItem({
+              'key': key,
+              'query': props['data'][key]['query'],
+              'status': props['data'][key]['status'],
+              'reloader': props['reloader'],
+            }))).reversed,
+      )
     ]);
   }
 }
@@ -239,7 +245,7 @@ class _GeocodesApp extends react.Component {
   var last_id = 0;
 
   /// Sends the [addressQuery] to the API and processes the result
-  newQuery(String addressQuery) {
+  newQuery(String addressQuery) async {
     // Once the query is being sent, it appears in the history and is given an id.
     var id = addQueryToHistory(addressQuery);
 
@@ -247,10 +253,11 @@ class _GeocodesApp extends react.Component {
     addressQuery = Uri.encodeQueryComponent(addressQuery);
     var path = 'https://maps.googleapis.com/maps/api/geocode/json?address=$addressQuery';
 
-    // Send the request
-    HttpRequest.getString(path).then((String value) =>
-        // Delay the answer 2 more seconds, for test purposes
-        new Future.delayed(new Duration(seconds: 2), () => value)).then((String raw) {
+    try {
+      // Send the request
+      var raw = await HttpRequest.getString(path);
+      // Delay the answer 2 more seconds, for test purposes
+      await new Future.delayed(new Duration(seconds: 2));
       // Is this the answer to the last request?
       if (id == last_id) {
         // If yes, query was `OK` and `shown_addresses` are replaced
@@ -275,11 +282,11 @@ class _GeocodesApp extends react.Component {
 
         setState({'history': state['history']});
       }
-    }).catchError((Error error) {
+    } catch (error) {
       state['history'][id]['status'] = 'error';
 
       setState({'history': state['history']});
-    });
+    }
   }
 
   /// Add a new [addressQuery] to the `state.history` Map with its status set to 'pending', then return its `id`.

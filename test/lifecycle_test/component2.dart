@@ -61,20 +61,21 @@ class _SetStateTest extends react.Component2 with LifecycleTestHelper {
     recordLifecyleCall('render');
 
     return react.div(
-        {
-          'onClick': (_) {
-            setStateWithUpdater(outerTransactionalSetStateCallback, () {
-              recordLifecyleCall('outerSetStateCallback');
-            });
-          }
-        },
-        react.div({
-          'onClick': (_) {
-            setStateWithUpdater(innerTransactionalSetStateCallback, () {
-              recordLifecyleCall('innerSetStateCallback');
-            });
-          }
-        }, state['counter']));
+      {
+        'onClick': (_) {
+          setStateWithUpdater(outerTransactionalSetStateCallback, () {
+            recordLifecyleCall('outerSetStateCallback');
+          });
+        }
+      },
+      react.div({
+        'onClick': (_) {
+          setStateWithUpdater(innerTransactionalSetStateCallback, () {
+            recordLifecyleCall('innerSetStateCallback');
+          });
+        }
+      }, state['counter']),
+    );
   }
 }
 

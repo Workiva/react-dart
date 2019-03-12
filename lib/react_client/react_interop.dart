@@ -90,21 +90,22 @@ class ReactClass {
 @JS()
 @anonymous
 class ReactClassConfig {
-  external factory ReactClassConfig(
-      {String displayName,
-      List mixins,
-      Function componentWillMount,
-      Function componentDidMount,
-      Function componentWillReceiveProps,
-      Function shouldComponentUpdate,
-      Function componentWillUpdate,
-      Function componentDidUpdate,
-      Function componentWillUnmount,
-      Function getChildContext,
-      Map<String, dynamic> childContextTypes,
-      Function getDefaultProps,
-      Function getInitialState,
-      Function render});
+  external factory ReactClassConfig({
+    String displayName,
+    List mixins,
+    Function componentWillMount,
+    Function componentDidMount,
+    Function componentWillReceiveProps,
+    Function shouldComponentUpdate,
+    Function componentWillUpdate,
+    Function componentDidUpdate,
+    Function componentWillUnmount,
+    Function getChildContext,
+    Map<String, dynamic> childContextTypes,
+    Function getDefaultProps,
+    Function getInitialState,
+    Function render,
+  });
 
   /// The `displayName` string is used in debugging messages.
   ///
