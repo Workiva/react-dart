@@ -121,11 +121,15 @@ class _ListComponent extends react.Component {
   }
 
   void componentWillUpdate(nextProps, nextState) {
-    if (nextState["items"].length > state["items"].length) print("Adding " + nextState["items"].last.toString());
+    if (nextState["items"].length > state["items"].length) {
+      print("Adding " + nextState["items"].last.toString());
+    }
   }
 
   void componentDidUpdate(prevProps, prevState) {
-    if (prevState["items"].length > state["items"].length) print("Removed " + prevState["items"].first.toString());
+    if (prevState["items"].length > state["items"].length) {
+      print("Removed " + prevState["items"].first.toString());
+    }
   }
 
   int iterator = 3;
@@ -178,7 +182,11 @@ class _ContextComponent extends react.Component {
     return react.ul({
       'key': 'ul'
     }, [
-      react.button({'key': 'button', 'className': 'btn btn-primary', 'onClick': _onButtonClick}, 'Redraw'),
+      react.button({
+        'key': 'button',
+        'className': 'btn btn-primary',
+        'onClick': _onButtonClick,
+      }, 'Redraw'),
       react.br({'key': 'break1'}),
       'ContextComponent.getChildContext(): ',
       getChildContext().toString(),
