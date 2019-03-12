@@ -599,7 +599,7 @@ abstract class Component2 implements Component {
   /// Use this as an opportunity to perform preparation before an update occurs.
   ///
   /// See: <https://facebook.github.io/react/docs/react-component.html#getsnapshotbeforeupdate>
-  TypedSnapshot getSnapshotBeforeUpdate(Map nextProps, Map nextState) {}
+  dynamic getSnapshotBeforeUpdate(Map nextProps, Map nextState) {}
 
   /// ReactJS lifecycle method that is invoked immediately after the `Component`'s updates are flushed to the DOM.
   ///
@@ -609,7 +609,7 @@ abstract class Component2 implements Component {
   /// of the values of [prevProps] / [prevState].
   ///
   /// See: <https://facebook.github.io/react/docs/react-component.html#updating-componentdidupdate>
-  void componentDidUpdate(Map prevProps, Map prevState, [TypedSnapshot
+  void componentDidUpdate(Map prevProps, Map prevState, [dynamic
   snapshot]) {}
 
   /// ReactJS lifecycle method that is invoked immediately before a `Component` is unmounted from the DOM.
@@ -805,6 +805,16 @@ abstract class Component2 implements Component {
   @override
   List<StateUpdaterCallback> get transactionalSetStateCallbacks =>
       throw new UnimplementedError();
+}
+
+//TODO add explanation
+abstract class TypedSnapshot<TSnapshot> implements Component2 {
+  TSnapshot getSnapshotBeforeUpdate(Map prevProps, Map prevState) {
+    return null;
+  }
+
+  void componentDidUpdate(Map prevProps, Map prevState, [covariant TSnapshot
+  snapshot]){}
 }
 
 /// Creates a ReactJS virtual DOM instance (`ReactElement` on the client).
@@ -2242,7 +2252,3 @@ setReactConfiguration(domCreator, customRegisterComponent) {
   _createDOMComponents(domCreator);
 }
 
-mixin TypedSnapshot<TSnapshot> on Component2 {
-  TSnapshot getSnapshotBeforeUpdate(Map prevProps, Map prevState);
-  void componentDidUpdate(Map prevProps, Map prevState, TSnapshot snapshot);
-}

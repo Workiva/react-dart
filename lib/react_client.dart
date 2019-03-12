@@ -553,7 +553,7 @@ final ReactDartInteropStatics2 _dartInteropStatics2 = (() {
         Component2 component, JsMap jsNextProps, JsMap jsNextState) =>
       zone.run(() {
 
-        final TypedSnapshot snapshotValue = component.getSnapshotBeforeUpdate(
+        final snapshotValue = component.getSnapshotBeforeUpdate(
           new JsBackedMap.backedBy(jsNextProps),
           new JsBackedMap.backedBy(jsNextState),
         );

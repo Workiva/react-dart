@@ -99,6 +99,11 @@ function _createReactDartComponentClass2(dartInteropStatics, componentStatics) {
     shouldComponentUpdate(nextProps, nextState) {
       return dartInteropStatics.handleShouldComponentUpdate(this.dartComponent, nextProps, nextState);
     }
+
+    getSnapshotBeforeUpdate() {
+      return dartInteropStatics.handleGetSnapshotBeforeUpdate(this.props.internal, prevProps.internal);
+    }
+
     // FIXME remove unsafe members when implementing new React 16 lifecycle methods
     UNSAFE_componentWillUpdate(nextProps, nextState) {
       dartInteropStatics.handleComponentWillUpdate(this.dartComponent, nextProps, nextState);

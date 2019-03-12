@@ -18,7 +18,8 @@ class _ChildComponent extends react.Component {
 
 var ParentComponent = react.registerComponent(() => new _ParentComponent());
 
-class _ParentComponent extends react.Component {
+class _ParentComponent extends react.Component2 implements react
+    .TypedSnapshot<int> {
   // String refs
   showInputValue(_) {
     var input = react_dom.findDOMNode(ref('inputRef')) as InputElement;
@@ -31,6 +32,15 @@ class _ParentComponent extends react.Component {
 
   incrementChildValue(_) {
     ref("childRef").incrementValue();
+  }
+
+  int getSnapshotBeforeUpdate(Map previousProps, Map previousState){
+    return 3;
+  }
+
+  componentDidUpdate(Map previousProps, Map previousState, [int
+  snapshot]){
+
   }
 
   // Callback refs
