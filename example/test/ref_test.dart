@@ -111,10 +111,7 @@ class _ParentComponent extends react.Component {
           'key': 'childComponentForm',
           'className': 'form-inline'
         }, [
-          ChildComponent({
-            'key': 'callback-child',
-            "ref": (instance) => _childCallbackRef = instance
-          }),
+          ChildComponent({'key': 'callback-child', "ref": (instance) => _childCallbackRef = instance}),
           '\u00a0',
           react.button({
             'key': 'callback-show-button',

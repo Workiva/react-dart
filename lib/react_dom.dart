@@ -26,8 +26,7 @@ Function findDOMNode;
 /// Sets configuration based on passed functions.
 ///
 /// Passes arguments to global variables.
-setReactDOMConfiguration(Function customRender,
-    Function customUnmountComponentAtNode, Function customFindDOMNode) {
+setReactDOMConfiguration(Function customRender, Function customUnmountComponentAtNode, Function customFindDOMNode) {
   render = customRender;
   unmountComponentAtNode = customUnmountComponentAtNode;
   findDOMNode = customFindDOMNode;
