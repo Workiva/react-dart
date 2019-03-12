@@ -43,10 +43,8 @@ class SimpleComponent extends react.Component {
 
   componentDidMount() {
     customAssert("ref to span return span ", refToSpan.text == "Test");
-    customAssert(
-        "findDOMNode works on this", react_dom.findDOMNode(this) != null);
-    customAssert(
-        "random ref resolves to null", this.ref("someRandomRef") == null);
+    customAssert("findDOMNode works on this", react_dom.findDOMNode(this) != null);
+    customAssert("random ref resolves to null", this.ref("someRandomRef") == null);
   }
 
   var counter = 0;
@@ -63,10 +61,7 @@ class SimpleComponent extends react.Component {
           'type': 'button',
           'key': 'button1',
           'className': 'btn btn-primary',
-          'onClick': (_) => (react_dom.findDOMNode(this) as HtmlElement)
-              .children
-              .first
-              .text = (++counter).toString()
+          'onClick': (_) => (react_dom.findDOMNode(this) as HtmlElement).children.first.text = (++counter).toString()
         }, 'Increase counter'),
         react.br({'key': 'br'}),
         ChildComponent({

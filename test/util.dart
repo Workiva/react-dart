@@ -15,23 +15,19 @@ external List _objectKeys(obj);
 Map getProps(dynamic elementOrComponent) {
   var props = elementOrComponent.props;
 
-  return new Map.fromIterable(_objectKeys(props),
-      value: (key) => getProperty(props, key));
+  return new Map.fromIterable(_objectKeys(props), value: (key) => getProperty(props, key));
 }
 
 bool isDartComponent1(ReactElement element) {
-  return element.type is! String &&
-      (element.type as ReactClass).dartComponentVersion == '1';
+  return element.type is! String && (element.type as ReactClass).dartComponentVersion == '1';
 }
 
 bool isDartComponent2(ReactElement element) {
-  return element.type is! String &&
-      (element.type as ReactClass).dartComponentVersion == '2';
+  return element.type is! String && (element.type as ReactClass).dartComponentVersion == '2';
 }
 
 bool isDartComponent(ReactElement element) {
-  return element.type is! String &&
-      (element.type as ReactClass).dartComponentVersion != null;
+  return element.type is! String && (element.type as ReactClass).dartComponentVersion != null;
 }
 
 react.Component getDartComponent(ReactComponent dartComponent) {
@@ -43,9 +39,7 @@ Map getDartComponentProps(ReactComponent dartComponent) {
 }
 
 Map getDartElementProps(ReactElement dartElement) {
-  return isDartComponent2(dartElement)
-      ? new JsBackedMap.fromJs(dartElement.props)
-      : dartElement.props.internal.props;
+  return isDartComponent2(dartElement) ? new JsBackedMap.fromJs(dartElement.props) : dartElement.props.internal.props;
 }
 
 ReactComponent render(ReactElement reactElement) {

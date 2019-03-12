@@ -25,8 +25,7 @@ void main() {
         contextConsumerComponent({
           'key': 'consumerComponent'
         }, [
-          grandchildContextConsumerComponent(
-              {'key': 'consumerGrandchildComponent'})
+          grandchildContextConsumerComponent({'key': 'consumerGrandchildComponent'})
         ]),
       ]),
       querySelector('#content'));

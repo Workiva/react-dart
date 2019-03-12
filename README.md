@@ -403,6 +403,16 @@ void main() {
 
 ## Contributing
 
+Format using 
+```bash
+dartfmt -l 120 -w .
+```
+
+While we'd like to adhere to the recommended line length of 80, it's too too short for much of the code 
+repo written before a formatter was use, causing excessive wrapping and code that's hard to read.
+
+So, we us a line length of 120 instead. 
+
 ### Running Tests
 
 #### Dart 2: dart2js
