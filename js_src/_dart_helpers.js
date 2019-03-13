@@ -86,16 +86,16 @@ function _createReactDartComponentClass2(dartInteropStatics, componentStatics) {
       this.state = dartInteropStatics.handleGetInitialState(this.dartComponent);
     }
     // FIXME remove unsafe members when implementing new React 16 lifecycle methods
-    UNSAFE_componentWillMount() {
-      dartInteropStatics.handleComponentWillMount(this.dartComponent, this);
-    }
+    // UNSAFE_componentWillMount() {
+    //   dartInteropStatics.handleComponentWillMount(this.dartComponent, this);
+    // }
     componentDidMount() {
       dartInteropStatics.handleComponentDidMount(this.dartComponent);
     }
     // FIXME remove unsafe members when implementing new React 16 lifecycle methods
-    UNSAFE_componentWillReceiveProps(nextProps) {
-      dartInteropStatics.handleComponentWillReceiveProps(this.dartComponent, nextProps);
-    }
+    // UNSAFE_componentWillReceiveProps(nextProps) {
+    //   dartInteropStatics.handleComponentWillReceiveProps(this.dartComponent, nextProps);
+    // }
     shouldComponentUpdate(nextProps, nextState) {
       return dartInteropStatics.handleShouldComponentUpdate(this.dartComponent, nextProps, nextState);
     }
@@ -105,9 +105,9 @@ function _createReactDartComponentClass2(dartInteropStatics, componentStatics) {
     }
 
     // FIXME remove unsafe members when implementing new React 16 lifecycle methods
-    UNSAFE_componentWillUpdate(nextProps, nextState) {
-      dartInteropStatics.handleComponentWillUpdate(this.dartComponent, nextProps, nextState);
-    }
+    // UNSAFE_componentWillUpdate(nextProps, nextState) {
+    //   dartInteropStatics.handleComponentWillUpdate(this.dartComponent, nextProps, nextState);
+    // }
     componentDidUpdate(prevProps, prevState) {
       dartInteropStatics.handleComponentDidUpdate(this.dartComponent, this, prevProps, prevState);
     }

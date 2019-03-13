@@ -34,13 +34,14 @@ class _ParentComponent extends react.Component2 implements react
     ref("childRef").incrementValue();
   }
 
+
   int getSnapshotBeforeUpdate(Map previousProps, Map previousState){
     return 3;
   }
 
   componentDidUpdate(Map previousProps, Map previousState, [int
   snapshot]){
-
+    print(snapshot);
   }
 
   // Callback refs
