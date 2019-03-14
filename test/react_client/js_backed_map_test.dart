@@ -10,8 +10,7 @@ import 'package:test/test.dart';
 
 main() {
   group('JsBackedMap', () {
-    group('sets and retrieves values without JS interop interfering with them:',
-        () {
+    group('sets and retrieves values without JS interop interfering with them:', () {
       // These tests test assignments to the JS backed map when the values
       // - have a static type
       // - do not have a static type
@@ -109,20 +108,14 @@ main() {
         expect(jsBackedMap['functionTearOff'], same(functionTearOff));
         expect(jsBackedMap['functionAllowInterop'], same(functionAllowInterop));
 
-        dynamicJsBackedMap['functionLocalMethod'] =
-            functionLocalMethod as dynamic;
-        dynamicJsBackedMap['functionExpression'] =
-            functionExpression as dynamic;
+        dynamicJsBackedMap['functionLocalMethod'] = functionLocalMethod as dynamic;
+        dynamicJsBackedMap['functionExpression'] = functionExpression as dynamic;
         dynamicJsBackedMap['functionTearOff'] = functionTearOff as dynamic;
-        dynamicJsBackedMap['functionAllowInterop'] =
-            functionAllowInterop as dynamic;
-        expect(dynamicJsBackedMap['functionLocalMethod'],
-            same(functionLocalMethod));
-        expect(
-            dynamicJsBackedMap['functionExpression'], same(functionExpression));
+        dynamicJsBackedMap['functionAllowInterop'] = functionAllowInterop as dynamic;
+        expect(dynamicJsBackedMap['functionLocalMethod'], same(functionLocalMethod));
+        expect(dynamicJsBackedMap['functionExpression'], same(functionExpression));
         expect(dynamicJsBackedMap['functionTearOff'], same(functionTearOff));
-        expect(dynamicJsBackedMap['functionAllowInterop'],
-            same(functionAllowInterop));
+        expect(dynamicJsBackedMap['functionAllowInterop'], same(functionAllowInterop));
       });
 
       test('browser objects (which are usually auto-converted)', () {

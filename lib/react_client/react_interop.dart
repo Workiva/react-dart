@@ -26,18 +26,15 @@ abstract class React {
   external static ReactClass createClass(ReactClassConfig reactClassConfig);
   external static ReactJsComponentFactory createFactory(type);
 
-  external static ReactElement createElement(dynamic type, props,
-      [dynamic children]);
+  external static ReactElement createElement(dynamic type, props, [dynamic children]);
 
   external static bool isValidElement(dynamic object);
 }
 
 abstract class ReactDom {
   static Element findDOMNode(object) => ReactDOM.findDOMNode(object);
-  static ReactComponent render(ReactElement component, Element element) =>
-      ReactDOM.render(component, element);
-  static bool unmountComponentAtNode(Element element) =>
-      ReactDOM.unmountComponentAtNode(element);
+  static ReactComponent render(ReactElement component, Element element) => ReactDOM.render(component, element);
+  static bool unmountComponentAtNode(Element element) => ReactDOM.unmountComponentAtNode(element);
 }
 
 @JS('ReactDOMServer')
@@ -285,8 +282,7 @@ void markChildrenValidated(List<dynamic> children) {
 @JS('_createReactDartComponentClass')
 @Deprecated('6.0.0')
 external ReactClass createReactDartComponentClass(
-    ReactDartInteropStatics dartInteropStatics,
-    ComponentStatics componentStatics,
+    ReactDartInteropStatics dartInteropStatics, ComponentStatics componentStatics,
     [JsComponentConfig jsConfig]);
 
 /// Returns a new JS [ReactClass] for a component that uses
@@ -294,8 +290,7 @@ external ReactClass createReactDartComponentClass(
 /// the JS and Dart component instances.
 @JS('_createReactDartComponentClass2')
 external ReactClass createReactDartComponentClass2(
-    ReactDartInteropStatics2 dartInteropStatics,
-    ComponentStatics<Component2> componentStatics,
+    ReactDartInteropStatics2 dartInteropStatics, ComponentStatics<Component2> componentStatics,
     [JsComponentConfig2 jsConfig]);
 
 @JS('React.__isDevelopment')
@@ -339,12 +334,9 @@ class ReactDartInteropStatics {
       InteropContextValue nextContext,
     )
         handleComponentWillReceiveProps,
-    bool Function(Component component, InteropContextValue nextContext)
-        handleShouldComponentUpdate,
-    void Function(Component component, InteropContextValue nextContext)
-        handleComponentWillUpdate,
-    void Function(Component component, ReactDartComponentInternal prevInternal)
-        handleComponentDidUpdate,
+    bool Function(Component component, InteropContextValue nextContext) handleShouldComponentUpdate,
+    void Function(Component component, InteropContextValue nextContext) handleComponentWillUpdate,
+    void Function(Component component, ReactDartComponentInternal prevInternal) handleComponentDidUpdate,
     void Function(Component component) handleComponentWillUnmount,
     dynamic Function(Component component) handleRender,
   });
@@ -355,19 +347,14 @@ class ReactDartInteropStatics {
 @anonymous
 class ReactDartInteropStatics2 implements ReactDartInteropStatics {
   external factory ReactDartInteropStatics2({
-    Component2 Function(ReactComponent jsThis,
-            ComponentStatics<Component2> componentStatics)
-        initComponent,
+    Component2 Function(ReactComponent jsThis, ComponentStatics<Component2> componentStatics) initComponent,
     // TODO: Should this have a return signature of `Map`?
     dynamic Function(Component2 component) handleGetInitialState,
-    void Function(Component2 component, ReactComponent jsThis)
-        handleComponentWillMount,
+    void Function(Component2 component, ReactComponent jsThis) handleComponentWillMount,
     void Function(Component2 component) handleComponentDidMount,
     // TODO: Should this be removed when we update Component2.componentWillReceiveProps to throw an UnsupportedError? (CPLAT-4765)
-    void Function(Component2 component, JsMap jsNextProps)
-        handleComponentWillReceiveProps,
-    bool Function(Component2 component, JsMap jsNextProps, JsMap jsNextState)
-        handleShouldComponentUpdate,
+    void Function(Component2 component, JsMap jsNextProps) handleComponentWillReceiveProps,
+    bool Function(Component2 component, JsMap jsNextProps, JsMap jsNextState) handleShouldComponentUpdate,
     // TODO: Should this be removed when we update Component2.componentWillUpdate to throw an UnsupportedError? (CPLAT-4766)
     void Function(
       Component2 component,
