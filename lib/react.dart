@@ -362,6 +362,17 @@ abstract class Component {
   /// using both provides no added benefit.
   ///
   /// See: <https://facebook.github.io/react/docs/react-component.html#updating-componentwillupdate>
+  ///
+  /// > __DEPRECATED - DO NOT USE__
+  /// >
+  /// > Due to the release of getSnapshotBeforeUpdate in ReactJS 16,
+  /// > componentWillUpdate is no longer the method used to check the state
+  /// > and props before a re-render. Both the Component class and
+  /// > componentWillUpdate will be removed in the react.dart 6.0.0 release.
+  /// > Use Component2 and Component2.getSnapshotBeforeUpdate instead.
+  /// >
+  /// > This will be completely removed when the JS side of it is slated for removal (ReactJS 17 / react.dart 6.0.0)
+  @Deprecated('6.0.0')
   void componentWillUpdate(Map nextProps, Map nextState) {}
 
   /// > __DEPRECATED - DO NOT USE__
@@ -585,7 +596,9 @@ abstract class Component2 implements Component {
   /// >
   /// > Due to the release of getSnapshotBeforeUpdate in ReactJS 16,
   /// > componentWillUpdate is no longer the method used to check the state
-  /// > and props before an re-render. Use getSnapshotBeforeUpdate instead.
+  /// > and props before a re-render. Additionally, because of the presence
+  /// > of getSnapshotBeforeUpdate, componentWillUpdate will be ignored. Use
+  /// > getSnapshotBeforeUpdate instead.
   /// >
   /// > This will be completely removed when the JS side of it is slated for removal (ReactJS 17 / react.dart 6.0.0)
   @Deprecated('6.0.0')
@@ -598,6 +611,23 @@ abstract class Component2 implements Component {
   ///
   /// Use this as an opportunity to perform preparation before an update occurs.
   ///
+  /// __Example__:
+  ///
+  /// getSnapshotBeforeUpdate(prevProps, prevState) {
+  ///
+  ///   // Previous props / state can be analyzed and compared to this.props or
+  ///   // this.state, allowing the opportunity perform decision logic.
+  ///
+  ///   if (prevProps.list.length < this.props.list.length) {
+  ///
+  ///     // The return value from getSnapshotBeforeUpdate is passed into
+  ///     // componentDidUpdate's third parameter (which is new to React 16).
+  ///
+  ///     const list = _listRef;
+  ///     return list.scrollHeight - list.scrollTop;
+  ///   }
+  ///   return null;
+  /// }
   /// See: <https://facebook.github.io/react/docs/react-component.html#getsnapshotbeforeupdate>
   dynamic getSnapshotBeforeUpdate(Map prevProps, Map prevState) {}
 
@@ -607,6 +637,11 @@ abstract class Component2 implements Component {
   ///
   /// Use this as an opportunity to operate on the [rootNode] (DOM) when the `Component` has been updated as a result
   /// of the values of [prevProps] / [prevState].
+  ///
+  /// __Note__: React 16 added a third parameter to componentDidUpdate, which
+  /// is a custom value returned in getSnapshotBeforeUpdate. If a specified
+  /// value is not returned in getSnapshotBeforeUpdate, the `snapshot`
+  /// parameter in componentDidUpdate will be null.
   ///
   /// See: <https://facebook.github.io/react/docs/react-component.html#updating-componentdidupdate>
   void componentDidUpdate(Map prevProps, Map prevState, [dynamic
@@ -807,7 +842,36 @@ abstract class Component2 implements Component {
       throw new UnimplementedError();
 }
 
-//TODO add explanation
+/// Creates a mixin used to ensure consistent typing of the `snapshot`
+/// parameter involved in Component2.getSnapshotBeforeUpdate and
+/// Component2.componentWillUpdate.
+///
+/// __EXAMPLE__:
+///
+/// class _ParentComponent extends react.Component2 implements react
+///    .TypedSnapshot<int> {
+///
+///   // Note that the return value is specified as an int, matching the mixin
+///   // type.
+///   int getShapshotBeforeUpdate(prevProps, prevState) {
+///     if (prevProps["foo"]) {
+///       return true;
+///     }
+///     return null;
+///   }
+///
+///   // Note that the snapshot parameter is consistently typed with the return
+///   // value of getSnapshotBeforeUpdate.
+///   void componentDidUpdate(prevProps, prevState, [int snapshot]) {
+///     if (snapshot == true) {
+///       //Do something
+///     }
+///   }
+///
+///   /*Include other standard component logic*/
+///
+/// }
+
 abstract class TypedSnapshot<TSnapshot> implements Component2 {
   TSnapshot getSnapshotBeforeUpdate(Map prevProps, Map prevState) {
     return null;
@@ -2251,4 +2315,3 @@ setReactConfiguration(domCreator, customRegisterComponent) {
   // HTML Elements
   _createDOMComponents(domCreator);
 }
-

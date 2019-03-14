@@ -509,23 +509,23 @@ final ReactDartInteropStatics2 _dartInteropStatics2 = (() {
         return jsBackingMapOrJsCopy(component.getInitialState());
       });
 
-//  void handleComponentWillMount(Component2 component, ReactComponent jsThis) =>
-//      zone.run(() {
-//        component
-//          ..state = new JsBackedMap.backedBy(jsThis.state)
-//          ..componentWillMount();
-//      });
+  void handleComponentWillMount(Component2 component, ReactComponent jsThis) =>
+      zone.run(() {
+        component
+          ..state = new JsBackedMap.backedBy(jsThis.state)
+          ..componentWillMount();
+      });
 
   void handleComponentDidMount(Component2 component) => zone.run(() {
         component.componentDidMount();
       });
 
-//  void handleComponentWillReceiveProps(
-//          Component2 component, JsMap jsNextProps) =>
-//      zone.run(() {
-//        component
-//            .componentWillReceiveProps(new JsBackedMap.backedBy(jsNextProps));
-//      });
+  void handleComponentWillReceiveProps(
+          Component2 component, JsMap jsNextProps) =>
+      zone.run(() {
+        component
+            .componentWillReceiveProps(new JsBackedMap.backedBy(jsNextProps));
+      });
 
   void _updatePropsAndStateWithJs(
       Component2 component, JsMap props, JsMap state) {
@@ -561,7 +561,7 @@ final ReactDartInteropStatics2 _dartInteropStatics2 = (() {
       });
 
   void handleComponentDidUpdate(Component2 component, ReactComponent jsThis,
-          JsMap jsPrevProps, JsMap jsPrevState, [snapshot]) =>
+          JsMap jsPrevProps, JsMap jsPrevState, [dynamic snapshot]) =>
       zone.run(() {
         _updatePropsAndStateWithJs(component, component.jsThis.props,
         component.jsThis.state);
@@ -584,10 +584,10 @@ final ReactDartInteropStatics2 _dartInteropStatics2 = (() {
   return new ReactDartInteropStatics2(
     initComponent: allowInterop(initComponent),
     handleGetInitialState: allowInterop(handleGetInitialState),
-    //handleComponentWillMount: allowInterop(handleComponentWillMount),
+    handleComponentWillMount: allowInterop(handleComponentWillMount),
     handleComponentDidMount: allowInterop(handleComponentDidMount),
-    //handleComponentWillReceiveProps:
-     //   allowInterop(handleComponentWillReceiveProps),
+    handleComponentWillReceiveProps:
+        allowInterop(handleComponentWillReceiveProps),
     handleShouldComponentUpdate: allowInterop(handleShouldComponentUpdate),
     handleGetSnapshotBeforeUpdate: allowInterop(handleGetSnapshotBeforeUpdate),
     handleComponentDidUpdate: allowInterop(handleComponentDidUpdate),

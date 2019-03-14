@@ -26,10 +26,10 @@ class _SetStateTest extends react.Component2 with LifecycleTestHelper {
   componentWillReceivePropsWithContext(_, __) {
     recordLifecyleCall('componentWillReceivePropsWithContext');
   }
-
+  
   @override
-  componentWillUpdate(_, __) {
-    recordLifecyleCall('componentWillUpdate');
+  getSnapshotBeforeUpdate(_, __) {
+    recordLifecyleCall('getSnapshotBeforeUpdate');
   }
 
   @override
@@ -174,10 +174,6 @@ class _LifecycleTest extends react.Component2 with LifecycleTestHelper {
   void componentWillReceivePropsWithContext(newProps, newContext) =>
       lifecycleCall('componentWillReceivePropsWithContext',
           arguments: [new Map.from(newProps), new Map.from(newContext)]);
-
-//  void componentWillUpdate(nextProps, nextState) =>
-//      lifecycleCall('componentWillUpdate',
-//          arguments: [new Map.from(nextProps), new Map.from(nextState)]);
 
   void componentWillUpdateWithContext(nextProps, nextState, nextContext) =>
       lifecycleCall('componentWillUpdateWithContext', arguments: [
