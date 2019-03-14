@@ -10,7 +10,8 @@ import 'package:test/test.dart';
 
 void verifyJsFileLoaded(String filename) {
   var isLoaded = document.getElementsByTagName('script').any((script) {
-    return Uri.parse((script as ScriptElement).src).pathSegments.last == filename;
+    return Uri.parse((script as ScriptElement).src).pathSegments.last ==
+        filename;
   });
 
   if (!isLoaded) throw new Exception('$filename is not loaded');
@@ -55,7 +56,8 @@ void sharedJsFunctionTests() {
 
     group('createReactDartComponentClass', () {
       test('is function that does not throw when called', () {
-        expect(() => createReactDartComponentClass(null, null), returnsNormally);
+        expect(
+            () => createReactDartComponentClass(null, null), returnsNormally);
       });
     });
   });

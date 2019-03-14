@@ -21,7 +21,8 @@ void commonFactoryTests(ReactComponentFactoryProxy factory) {
     expect(instance.type, equals(factory.type));
   });
 
-  void sharedChildrenTests(dynamic getChildren(ReactElement instance), {@required bool shouldAlwaysBeList}) {
+  void sharedChildrenTests(dynamic getChildren(ReactElement instance),
+      {@required bool shouldAlwaysBeList}) {
     // There are different code paths for 0, 1, 2, 3, 4, 5, 6, and 6+ arguments.
     // Test all of them.
     group('a number of variadic children:', () {
@@ -37,11 +38,14 @@ void commonFactoryTests(ReactComponentFactoryProxy factory) {
 
       const firstGeneralCaseVariadicChildCount = 2;
       const maxSupportedVariadicChildCount = 40;
-      for (var i = firstGeneralCaseVariadicChildCount; i < maxSupportedVariadicChildCount; i++) {
+      for (var i = firstGeneralCaseVariadicChildCount;
+          i < maxSupportedVariadicChildCount;
+          i++) {
         final childrenCount = i;
 
         test('$childrenCount', () {
-          final expectedChildren = new List.generate(childrenCount, (i) => i + 1);
+          final expectedChildren =
+              new List.generate(childrenCount, (i) => i + 1);
           final arguments = <dynamic>[{}]..add(expectedChildren);
           final instance = Function.apply(factory, arguments);
           expect(getChildren(instance), expectedChildren);
@@ -49,10 +53,50 @@ void commonFactoryTests(ReactComponentFactoryProxy factory) {
       }
 
       test('$maxSupportedVariadicChildCount (and passes static analysis)', () {
-        final instance = factory({}, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23,
-            24, 25, 26, 27, 28, 29, 30, 31, 32, 33, 34, 35, 36, 37, 38, 39, 40);
+        final instance = factory({},
+            1,
+            2,
+            3,
+            4,
+            5,
+            6,
+            7,
+            8,
+            9,
+            10,
+            11,
+            12,
+            13,
+            14,
+            15,
+            16,
+            17,
+            18,
+            19,
+            20,
+            21,
+            22,
+            23,
+            24,
+            25,
+            26,
+            27,
+            28,
+            29,
+            30,
+            31,
+            32,
+            33,
+            34,
+            35,
+            36,
+            37,
+            38,
+            39,
+            40);
         // Generate these instead of hard coding them to ensure the arguments passed into this test match maxSupportedVariadicChildCount
-        final expectedChildren = new List.generate(maxSupportedVariadicChildCount, (i) => i + 1);
+        final expectedChildren =
+            new List.generate(maxSupportedVariadicChildCount, (i) => i + 1);
         expect(getChildren(instance), equals(expectedChildren));
       });
     });
@@ -82,7 +126,8 @@ void commonFactoryTests(ReactComponentFactoryProxy factory) {
   }
 
   group('passes children to the JS component when specified as', () {
-    dynamic getJsChildren(ReactElement instance) => getProperty(instance.props, 'children');
+    dynamic getJsChildren(ReactElement instance) =>
+        getProperty(instance.props, 'children');
 
     sharedChildrenTests(getJsChildren,
         // Only Component2 should always get lists.
@@ -121,7 +166,8 @@ void domEventHandlerWrappingTests(ReactDomComponentFactoryProxy factory) {
             'passes the click handler to the rendered DOM node');
   });
 
-  test('wraps the handler with a function that converts the synthetic event', () {
+  test('wraps the handler with a function that converts the synthetic event',
+      () {
     var actualEvent;
 
     var renderedInstance = rtu.renderIntoDocument(factory({
@@ -138,22 +184,28 @@ void domEventHandlerWrappingTests(ReactDomComponentFactoryProxy factory) {
   test('doesn\'t wrap the handler if it is null', () {
     var renderedInstance = rtu.renderIntoDocument(factory({'onClick': null}));
 
-    expect(() => rtu.Simulate.click(react_dom.findDOMNode(renderedInstance)), returnsNormally);
+    expect(() => rtu.Simulate.click(react_dom.findDOMNode(renderedInstance)),
+        returnsNormally);
   });
 
-  test('stores the original function in a way that it can be retrieved from unconvertJsEventHandler', () {
+  test(
+      'stores the original function in a way that it can be retrieved from unconvertJsEventHandler',
+      () {
     final originalHandler = (event) {};
 
     var instance = factory({'onClick': originalHandler});
     var instanceProps = getProps(instance);
 
     expect(instanceProps['onClick'], isNot(same(originalHandler)),
-        reason: 'test setup sanity check; should be different, converted function');
-    expect(unconvertJsEventHandler(instanceProps['onClick']), same(originalHandler));
+        reason:
+            'test setup sanity check; should be different, converted function');
+    expect(unconvertJsEventHandler(instanceProps['onClick']),
+        same(originalHandler));
   });
 }
 
-void refTests(ReactComponentFactoryProxy factory, {void verifyRefValue(dynamic refValue)}) {
+void refTests(ReactComponentFactoryProxy factory,
+    {void verifyRefValue(dynamic refValue)}) {
   test('callback refs are called with the correct value', () {
     var called = false;
     var refValue;
@@ -170,7 +222,8 @@ void refTests(ReactComponentFactoryProxy factory, {void verifyRefValue(dynamic r
   });
 
   test('string refs are created with the correct value', () {
-    ReactComponent renderedInstance = _renderWithOwner(() => factory({'ref': 'test'}));
+    ReactComponent renderedInstance =
+        _renderWithOwner(() => factory({'ref': 'test'}));
 
     verifyRefValue(renderedInstance.dartComponent.ref('test'));
   });
@@ -187,7 +240,8 @@ void _childKeyWarningTests(Function factory) {
       consoleErrorMessage = null;
 
       originalConsoleError = context['console']['error'];
-      context['console']['error'] = new JsFunction.withThis((self, message, arg1, arg2, arg3) {
+      context['console']['error'] =
+          new JsFunction.withThis((self, message, arg1, arg2, arg3) {
         consoleErrorCalled = true;
         consoleErrorMessage = message;
 
@@ -202,26 +256,34 @@ void _childKeyWarningTests(Function factory) {
     test('warns when a single child is passed as a list', () {
       _renderWithUniqueOwnerName(() => factory({}, [react.span({})]));
 
-      expect(consoleErrorCalled, isTrue, reason: 'should have outputted a warning');
-      expect(consoleErrorMessage, contains('Each child in a list should have a unique "key" prop.'));
+      expect(consoleErrorCalled, isTrue,
+          reason: 'should have outputted a warning');
+      expect(consoleErrorMessage,
+          contains('Each child in a list should have a unique "key" prop.'));
     });
 
     test('warns when multiple children are passed as a list', () {
-      _renderWithUniqueOwnerName(() => factory({}, [react.span({}), react.span({}), react.span({})]));
+      _renderWithUniqueOwnerName(
+          () => factory({}, [react.span({}), react.span({}), react.span({})]));
 
-      expect(consoleErrorCalled, isTrue, reason: 'should have outputted a warning');
+      expect(consoleErrorCalled, isTrue,
+          reason: 'should have outputted a warning');
     });
 
-    test('does not warn when multiple children are passed as variadic args', () {
-      _renderWithUniqueOwnerName(() => factory({}, react.span({}), react.span({}), react.span({})));
+    test('does not warn when multiple children are passed as variadic args',
+        () {
+      _renderWithUniqueOwnerName(
+          () => factory({}, react.span({}), react.span({}), react.span({})));
 
-      expect(consoleErrorCalled, isFalse, reason: 'should not have outputted a warning');
+      expect(consoleErrorCalled, isFalse,
+          reason: 'should not have outputted a warning');
     });
 
     test('when rendering custom Dart components', () {
       _renderWithUniqueOwnerName(() => factory({}, react.span({})));
 
-      expect(consoleErrorCalled, isFalse, reason: 'should not have outputted a warning');
+      expect(consoleErrorCalled, isFalse,
+          reason: 'should not have outputted a warning');
     });
   });
 }
@@ -232,7 +294,8 @@ int _nextFactoryId = 0;
 ///
 /// This prevents React JS from not printing key warnings it deems as "duplicates".
 void _renderWithUniqueOwnerName(ReactElement render()) {
-  final factory = react.registerComponent(() => new _OwnerHelperComponent()) as ReactDartComponentFactoryProxy;
+  final factory = react.registerComponent(() => new _OwnerHelperComponent())
+      as ReactDartComponentFactoryProxy;
   factory.reactClass.displayName = 'OwnerHelperComponent_$_nextFactoryId';
   _nextFactoryId++;
 
@@ -240,7 +303,8 @@ void _renderWithUniqueOwnerName(ReactElement render()) {
 }
 
 _renderWithOwner(ReactElement render()) {
-  final factory = react.registerComponent(() => new _OwnerHelperComponent()) as ReactDartComponentFactoryProxy;
+  final factory = react.registerComponent(() => new _OwnerHelperComponent())
+      as ReactDartComponentFactoryProxy;
 
   return rtu.renderIntoDocument(factory({'render': render}));
 }
