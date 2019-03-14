@@ -251,10 +251,6 @@ void sharedLifecycleTests<T extends react.Component>({
 
     test('receives correct lifecycle calls on component mount', () {
       LifecycleTestHelper component = getDartComponent(render(LifecycleTest({})));
-
-      //If this is Component2, componentWillMount will not run because it is
-      // considered unsafe and does not run when newer lifecycle methods are
-      // being called
       if (!isComponent2) {
         expect(
             component.lifecycleCalls,
@@ -409,7 +405,6 @@ void sharedLifecycleTests<T extends react.Component>({
       const Null snapshot = null;
 
       var mountNode = new DivElement();
-
       var instance = react_dom.render(LifecycleTest(initialProps), mountNode);
       LifecycleTestHelper component = getDartComponent(instance);
 
@@ -441,7 +436,6 @@ void sharedLifecycleTests<T extends react.Component>({
                 : matchCall('componentWillUpdateWithContext',
                     args: [newPropsWithDefaults, expectedState, expectedContext], props: initialPropsWithDefaults),
             matchCall('render', props: newPropsWithDefaults),
-            //TODO double check if args and props are correct
             isComponent2
                 ? matchCall('getSnapshotBeforeUpdate',
                     args: [initialPropsWithDefaults, expectedState], props: newPropsWithDefaults)
@@ -465,8 +459,6 @@ void sharedLifecycleTests<T extends react.Component>({
       const Map stateDelta = const {
         'newState': 'new',
       };
-
-      const snapshot = null;
 
       final Map initialProps = unmodifiableMap({'getInitialState': (_) => initialState});
 
@@ -499,7 +491,7 @@ void sharedLifecycleTests<T extends react.Component>({
                 ? matchCall('getSnapshotBeforeUpdate', args: [expectedProps, initialState], state: newState)
                 : null,
             isComponent2
-                ? matchCall('componentDidUpdate', args: [expectedProps, initialState, snapshot], state: newState)
+                ? matchCall('componentDidUpdate', args: [expectedProps, initialState, null], state: newState)
                 : matchCall('componentDidUpdate', args: [expectedProps, initialState], state: newState),
           ].where((matcher) => matcher != null)));
     });
@@ -885,7 +877,6 @@ void sharedLifecycleTests<T extends react.Component>({
         expect(component.state['counter'], 3);
         expect(component.state['counter'], getLatestJSCounter());
 
-        //TODO check to see if we need to mimic this test for Component2
         if (!isComponent2) {
           expect(component.lifecycleCalls, orderedEquals(getUpdatingSetStateLifeCycleCalls()));
         }
