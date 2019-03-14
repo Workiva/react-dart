@@ -4,8 +4,7 @@ import 'package:react/react.dart';
 const Map defaultProps = const {'defaultProp': 'default'};
 const Map emptyChildrenProps = const {'children': const []};
 
-Map matchCall(String memberName,
-    {args: anything, props: anything, state: anything, context: anything}) {
+Map matchCall(String memberName, {args: anything, props: anything, state: anything, context: anything}) {
   return {
     'memberName': memberName,
     'arguments': args,
@@ -23,8 +22,7 @@ mixin LifecycleTestHelper on Component {
 
   List lifecycleCalls = [];
 
-  dynamic lifecycleCall(String memberName,
-      {List arguments: const [], defaultReturnValue()}) {
+  dynamic lifecycleCall(String memberName, {List arguments: const [], defaultReturnValue()}) {
     lifecycleCalls.add({
       'memberName': memberName,
       'arguments': arguments,

@@ -63,8 +63,7 @@ class _CheckBoxComponent extends react.Component {
       react.label({
         'htmlFor': 'doTheDishes',
         'key': 'label',
-        'className': 'form-check-label ' +
-            (this.state['checked'] ? 'striked' : 'not-striked')
+        'className': 'form-check-label ' + (this.state['checked'] ? 'striked' : 'not-striked')
       }, 'do the dishes'),
     ]);
   }
@@ -80,8 +79,7 @@ class _ClockComponent extends react.Component {
   Map getDefaultProps() => {'refreshRate': 1000};
 
   void componentWillMount() {
-    timer = new Timer.periodic(
-        new Duration(milliseconds: this.props["refreshRate"]), this.tick);
+    timer = new Timer.periodic(new Duration(milliseconds: this.props["refreshRate"]), this.tick);
   }
 
   void componentWillUnmount() {
@@ -124,13 +122,15 @@ class _ListComponent extends react.Component {
   }
 
   void componentWillUpdate(nextProps, nextState) {
-    if (nextState["items"].length > state["items"].length)
+    if (nextState["items"].length > state["items"].length) {
       print("Adding " + nextState["items"].last.toString());
+    }
   }
 
   void componentDidUpdate(prevProps, prevState) {
-    if (prevState["items"].length > state["items"].length)
+    if (prevState["items"].length > state["items"].length) {
       print("Removed " + prevState["items"].first.toString());
+    }
   }
 
   int iterator = 3;
@@ -188,7 +188,7 @@ class _ContextComponent extends react.Component {
         'type': 'button',
         'key': 'button',
         'className': 'btn btn-primary',
-        'onClick': _onButtonClick
+        'onClick': _onButtonClick,
       }, 'Redraw'),
       react.br({'key': 'break1'}),
       'ContextComponent.getChildContext(): ',
@@ -223,8 +223,7 @@ class _ContextConsumerComponent extends react.Component {
   }
 }
 
-var contextConsumerComponent =
-    react.registerComponent(() => new _ContextConsumerComponent());
+var contextConsumerComponent = react.registerComponent(() => new _ContextConsumerComponent());
 
 class _GrandchildContextConsumerComponent extends react.Component {
   @override
@@ -240,5 +239,4 @@ class _GrandchildContextConsumerComponent extends react.Component {
   }
 }
 
-var grandchildContextConsumerComponent =
-    react.registerComponent(() => new _GrandchildContextConsumerComponent());
+var grandchildContextConsumerComponent = react.registerComponent(() => new _GrandchildContextConsumerComponent());

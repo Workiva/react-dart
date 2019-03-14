@@ -7,8 +7,7 @@ import 'package:react/react_client.dart';
 
 import 'util.dart';
 
-ReactDartComponentFactoryProxy2 SetStateTest =
-    react.registerComponent(() => new _SetStateTest());
+ReactDartComponentFactoryProxy2 SetStateTest = react.registerComponent(() => new _SetStateTest());
 
 class _SetStateTest extends react.Component2 with LifecycleTestHelper {
   @override
@@ -62,35 +61,33 @@ class _SetStateTest extends react.Component2 with LifecycleTestHelper {
     recordLifecyleCall('render');
 
     return react.div(
-        {
-          'onClick': (_) {
-            setStateWithUpdater(outerTransactionalSetStateCallback, () {
-              recordLifecyleCall('outerSetStateCallback');
-            });
-          }
-        },
-        react.div({
-          'onClick': (_) {
-            setStateWithUpdater(innerTransactionalSetStateCallback, () {
-              recordLifecyleCall('innerSetStateCallback');
-            });
-          }
-        }, state['counter']));
+      {
+        'onClick': (_) {
+          setStateWithUpdater(outerTransactionalSetStateCallback, () {
+            recordLifecyleCall('outerSetStateCallback');
+          });
+        }
+      },
+      react.div({
+        'onClick': (_) {
+          setStateWithUpdater(innerTransactionalSetStateCallback, () {
+            recordLifecyleCall('innerSetStateCallback');
+          });
+        }
+      }, state['counter']),
+    );
   }
 }
 
-_DefaultPropsCachingTest defaultPropsCachingTestComponentFactory() =>
-    new _DefaultPropsCachingTest();
+_DefaultPropsCachingTest defaultPropsCachingTestComponentFactory() => new _DefaultPropsCachingTest();
 
-class _DefaultPropsCachingTest extends react.Component2
-    implements DefaultPropsCachingTestHelper {
+class _DefaultPropsCachingTest extends react.Component2 implements DefaultPropsCachingTestHelper {
   static int getDefaultPropsCallCount = 0;
 
   int get staticGetDefaultPropsCallCount => getDefaultPropsCallCount;
 
   @override
-  set staticGetDefaultPropsCallCount(int value) =>
-      getDefaultPropsCallCount = value;
+  set staticGetDefaultPropsCallCount(int value) => getDefaultPropsCallCount = value;
 
   Map getDefaultProps() {
     getDefaultPropsCallCount++;
@@ -100,8 +97,7 @@ class _DefaultPropsCachingTest extends react.Component2
   render() => false;
 }
 
-ReactDartComponentFactoryProxy2 DefaultPropsTest =
-    react.registerComponent(() => new _DefaultPropsTest());
+ReactDartComponentFactoryProxy2 DefaultPropsTest = react.registerComponent(() => new _DefaultPropsTest());
 
 class _DefaultPropsTest extends react.Component2 {
   static int getDefaultPropsCallCount = 0;
@@ -114,8 +110,7 @@ class _DefaultPropsTest extends react.Component2 {
 ReactDartComponentFactoryProxy2 ContextWrapperWithoutKeys =
     react.registerComponent(() => new _ContextWrapperWithoutKeys());
 
-class _ContextWrapperWithoutKeys extends react.Component2
-    with LifecycleTestHelper {
+class _ContextWrapperWithoutKeys extends react.Component2 with LifecycleTestHelper {
   @override
   Iterable<String> get childContextKeys => const [];
 
@@ -131,8 +126,7 @@ class _ContextWrapperWithoutKeys extends react.Component2
   dynamic render() => react.div({}, props['children']);
 }
 
-ReactDartComponentFactoryProxy2 ContextWrapper =
-    react.registerComponent(() => new _ContextWrapper());
+ReactDartComponentFactoryProxy2 ContextWrapper = react.registerComponent(() => new _ContextWrapper());
 
 class _ContextWrapper extends react.Component2 with LifecycleTestHelper {
   @override
@@ -155,12 +149,10 @@ ReactDartComponentFactoryProxy2 LifecycleTestWithContext =
 
 class _LifecycleTestWithContext extends _LifecycleTest {
   @override
-  Iterable<String> get contextKeys =>
-      const ['foo']; // only listening to one context key
+  Iterable<String> get contextKeys => const ['foo']; // only listening to one context key
 }
 
-ReactDartComponentFactoryProxy2 LifecycleTest =
-    react.registerComponent(() => new _LifecycleTest());
+ReactDartComponentFactoryProxy2 LifecycleTest = react.registerComponent(() => new _LifecycleTest());
 
 class _LifecycleTest extends react.Component2 with LifecycleTestHelper {
   void componentWillMount() => lifecycleCall('componentWillMount');
@@ -168,47 +160,37 @@ class _LifecycleTest extends react.Component2 with LifecycleTestHelper {
   void componentWillUnmount() => lifecycleCall('componentWillUnmount');
 
   void componentWillReceiveProps(newProps) =>
-      lifecycleCall('componentWillReceiveProps',
-          arguments: [new Map.from(newProps)]);
+      lifecycleCall('componentWillReceiveProps', arguments: [new Map.from(newProps)]);
 
   void componentWillReceivePropsWithContext(newProps, newContext) =>
       lifecycleCall('componentWillReceivePropsWithContext',
           arguments: [new Map.from(newProps), new Map.from(newContext)]);
 
+  void componentWillUpdate(nextProps, nextState) =>
+      lifecycleCall('componentWillUpdate', arguments: [new Map.from(nextProps), new Map.from(nextState)]);
+
   void componentWillUpdateWithContext(nextProps, nextState, nextContext) =>
-      lifecycleCall('componentWillUpdateWithContext', arguments: [
-        new Map.from(nextProps),
-        new Map.from(nextState),
-        new Map.from(nextContext)
-      ]);
+      lifecycleCall('componentWillUpdateWithContext',
+          arguments: [new Map.from(nextProps), new Map.from(nextState), new Map.from(nextContext)]);
 
   dynamic getSnapshotBeforeUpdate(prevProps, prevState) =>
-      lifecycleCall('getSnapshotBeforeUpdate',
-          arguments: [new Map.from(prevProps), new Map.from(prevState)]);
+      lifecycleCall('getSnapshotBeforeUpdate', arguments: [new Map.from(prevProps), new Map.from(prevState)]);
 
   void componentDidUpdate(prevProps, prevState, [snapshot]) => lifecycleCall(
       'componentDidUpdate',
       arguments: [new Map.from(prevProps), new Map.from(prevState), snapshot]);
 
-  bool shouldComponentUpdate(nextProps, nextState) =>
-      lifecycleCall('shouldComponentUpdate',
-          arguments: [new Map.from(nextProps), new Map.from(nextState)],
-          defaultReturnValue: () => true);
+  bool shouldComponentUpdate(nextProps, nextState) => lifecycleCall('shouldComponentUpdate',
+      arguments: [new Map.from(nextProps), new Map.from(nextState)], defaultReturnValue: () => true);
 
   bool shouldComponentUpdateWithContext(nextProps, nextState, nextContext) =>
       lifecycleCall('shouldComponentUpdateWithContext',
-          arguments: [
-            new Map.from(nextProps),
-            new Map.from(nextState),
-            new Map.from(nextContext)
-          ],
+          arguments: [new Map.from(nextProps), new Map.from(nextState), new Map.from(nextContext)],
           defaultReturnValue: () => true);
 
-  dynamic render() =>
-      lifecycleCall('render', defaultReturnValue: () => react.div({}));
+  dynamic render() => lifecycleCall('render', defaultReturnValue: () => react.div({}));
 
-  Map getInitialState() =>
-      lifecycleCall('getInitialState', defaultReturnValue: () => {});
+  Map getInitialState() => lifecycleCall('getInitialState', defaultReturnValue: () => {});
 
   Map getDefaultProps() {
     lifecycleCall('getDefaultProps');
