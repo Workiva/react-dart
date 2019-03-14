@@ -17,13 +17,17 @@ class _HelloComponent extends react.Component {
 
 var helloComponent = react.registerComponent(() => new _HelloComponent());
 
-class _HelloGreeter extends react.Component {
+class _HelloGreeter extends react.Component2 {
   var myInput;
   getInitialState() => {"name": "World"};
 
   onInputChange(e) {
     var input = react_dom.findDOMNode(myInput);
     print(input.borderEdge);
+  }
+
+  getSnapshotBeforeUpdate(prevProps, prevState){
+    print('hello!');
   }
 
   render() {

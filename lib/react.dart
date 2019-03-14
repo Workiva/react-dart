@@ -599,7 +599,7 @@ abstract class Component2 implements Component {
   /// Use this as an opportunity to perform preparation before an update occurs.
   ///
   /// See: <https://facebook.github.io/react/docs/react-component.html#getsnapshotbeforeupdate>
-  dynamic getSnapshotBeforeUpdate(Map nextProps, Map nextState) {}
+  dynamic getSnapshotBeforeUpdate(Map prevProps, Map prevState) {}
 
   /// ReactJS lifecycle method that is invoked immediately after the `Component`'s updates are flushed to the DOM.
   ///

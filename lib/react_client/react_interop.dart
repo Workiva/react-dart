@@ -370,18 +370,18 @@ class ReactDartInteropStatics2 implements ReactDartInteropStatics {
         initComponent,
     // TODO: Should this have a return signature of `Map`?
     dynamic Function(Component2 component) handleGetInitialState,
-    void Function(
-      Component2 component,
-      ReactComponent jsThis,
-    )
-        handleComponentWillMount,
+//    void Function(
+//      Component2 component,
+//      ReactComponent jsThis,
+//    )
+//        handleComponentWillMount,
     void Function(Component2 component) handleComponentDidMount,
     // TODO: Should this be removed when we update Component2.componentWillReceiveProps to throw an UnsupportedError? (CPLAT-4765)
-    void Function(
-      Component2 component,
-      JsMap jsNextProps,
-    )
-        handleComponentWillReceiveProps,
+//    void Function(
+//      Component2 component,
+//      JsMap jsNextProps,
+//    )
+//        handleComponentWillReceiveProps,
     bool Function(
       Component2 component,
       JsMap jsNextProps,
@@ -391,8 +391,8 @@ class ReactDartInteropStatics2 implements ReactDartInteropStatics {
     // TODO: Should this be removed when we update Component2.componentWillUpdate to throw an UnsupportedError? (CPLAT-4766)
     void Function(
       Component2 component,
-      JsMap jsNextProps,
-      JsMap jsNextState,
+      JsMap jsPrevProps,
+      JsMap jsPrevState,
     )
         handleGetSnapshotBeforeUpdate,
     void Function(
@@ -400,6 +400,7 @@ class ReactDartInteropStatics2 implements ReactDartInteropStatics {
       ReactComponent jsThis,
       JsMap jsPrevProps,
       JsMap jsPrevState,
+      dynamic snapshot,
     )
         handleComponentDidUpdate,
     void Function(Component2 component) handleComponentWillUnmount,
