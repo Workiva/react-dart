@@ -85,19 +85,15 @@ function _createReactDartComponentClass2(dartInteropStatics, componentStatics) {
       this.dartComponent = dartInteropStatics.initComponent(this, componentStatics);
       this.state = dartInteropStatics.handleGetInitialState(this.dartComponent);
     }
-
     componentDidMount() {
       dartInteropStatics.handleComponentDidMount(this.dartComponent);
     }
-
     shouldComponentUpdate(nextProps, nextState) {
       return dartInteropStatics.handleShouldComponentUpdate(this.dartComponent, nextProps, nextState);
     }
-
     getSnapshotBeforeUpdate(prevProps, prevState) {
       return dartInteropStatics.handleGetSnapshotBeforeUpdate(this.dartComponent, prevProps, prevState);
     }
-
     componentDidUpdate(prevProps, prevState, snapshot) {
       dartInteropStatics.handleComponentDidUpdate(this.dartComponent, this, prevProps, prevState, snapshot);
     }

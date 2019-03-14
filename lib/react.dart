@@ -604,8 +604,8 @@ abstract class Component2 implements Component {
   @Deprecated('6.0.0')
   void componentWillUpdate(Map nextProps, Map nextState) {}
 
-  /// ReactJS lifecycle method that is invoked immediately before rendering when [nextProps] or [nextState] are being
-  /// received.
+  /// ReactJS lifecycle method that is invoked immediately after rendering
+  /// before [nextProps] and [nextState] are committed to the DOM.
   ///
   /// This method is not called for the initial [render].
   ///
@@ -843,7 +843,7 @@ abstract class Component2 implements Component {
 }
 
 /// Creates a mixin used to ensure consistent typing of the `snapshot`
-/// parameter involved in Component2.getSnapshotBeforeUpdate and
+/// parameter passed between Component2.getSnapshotBeforeUpdate and
 /// Component2.componentWillUpdate.
 ///
 /// __EXAMPLE__:

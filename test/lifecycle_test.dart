@@ -160,17 +160,16 @@ main() {
        (component as react.Component2).forceUpdate();
 
         expect(
-            component.lifecycleCalls,
-            equals([
-//              matchCall('componentWillUpdate',
-//                    args: [expectedProps, initialState], state: initialState)
-              matchCall('render', state: initialState),
-              matchCall('getSnapshotBeforeUpdate',
-                    args: [expectedProps, initialState], state: initialState),
-              matchCall('componentDidUpdate',
-                  args: [expectedProps, initialState, null], state:
-                  initialState),
-            ].where((matcher) => matcher != null).toList()));
+          component.lifecycleCalls,
+          equals([
+            matchCall('render', state: initialState),
+            matchCall('getSnapshotBeforeUpdate',
+                  args: [expectedProps, initialState], state: initialState),
+            matchCall('componentDidUpdate',
+                args: [expectedProps, initialState, null], state:
+                initialState),
+          ].where((matcher) => matcher != null).toList())
+        );
       });
 
       test('getSnapshotBeforeUpdate returns the same type being passed into '
@@ -182,18 +181,15 @@ main() {
 
         component.lifecycleCalls.clear();
         component.setState({});
-        //components2.LifecycleTest({});
-        //(component as react.Component2).forceUpdate();
-//        (component as react.Component2).LifecycleTest();
-//        component.lifecycleCall(memberName)
 
         expect(
-            component.lifecycleCalls,
-            containsAllInOrder([
-              matchCall('getSnapshotBeforeUpdate'),
-              matchCall('componentDidUpdate', args: [anything, anything, 'sna'
-                  'pshot']),
-            ]));
+          component.lifecycleCalls,
+          containsAllInOrder([
+            matchCall('getSnapshotBeforeUpdate'),
+            matchCall('componentDidUpdate', args: [anything, anything, 'sna'
+                'pshot']),
+          ])
+        );
       });
     });
   });

@@ -26,7 +26,7 @@ class _SetStateTest extends react.Component2 with LifecycleTestHelper {
   componentWillReceivePropsWithContext(_, __) {
     recordLifecyleCall('componentWillReceivePropsWithContext');
   }
-  
+
   @override
   getSnapshotBeforeUpdate(_, __) {
     recordLifecyleCall('getSnapshotBeforeUpdate');
