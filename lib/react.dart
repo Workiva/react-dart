@@ -644,8 +644,7 @@ abstract class Component2 implements Component {
   /// parameter in componentDidUpdate will be null.
   ///
   /// See: <https://facebook.github.io/react/docs/react-component.html#updating-componentdidupdate>
-  void componentDidUpdate(Map prevProps, Map prevState, [dynamic
-  snapshot]) {}
+  void componentDidUpdate(Map prevProps, Map prevState, [dynamic snapshot]) {}
 
   /// ReactJS lifecycle method that is invoked immediately before a `Component` is unmounted from the DOM.
   ///
@@ -877,8 +876,8 @@ abstract class TypedSnapshot<TSnapshot> implements Component2 {
     return null;
   }
 
-  void componentDidUpdate(Map prevProps, Map prevState, [covariant TSnapshot
-  snapshot]){}
+  void componentDidUpdate(Map prevProps, Map prevState,
+      [covariant TSnapshot snapshot]) {}
 }
 
 /// Creates a ReactJS virtual DOM instance (`ReactElement` on the client).

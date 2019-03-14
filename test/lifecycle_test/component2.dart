@@ -182,13 +182,13 @@ class _LifecycleTest extends react.Component2 with LifecycleTestHelper {
         new Map.from(nextContext)
       ]);
 
-  dynamic getSnapshotBeforeUpdate(prevProps, prevState) => lifecycleCall
-    ('getSnapshotBeforeUpdate', arguments: [new Map.from(prevProps), new Map
-      .from(prevState)]);
+  dynamic getSnapshotBeforeUpdate(prevProps, prevState) =>
+      lifecycleCall('getSnapshotBeforeUpdate',
+          arguments: [new Map.from(prevProps), new Map.from(prevState)]);
 
-  void componentDidUpdate(prevProps, prevState, [snapshot]) =>
-      lifecycleCall('componentDidUpdate',
-          arguments: [new Map.from(prevProps), new Map.from(prevState), snapshot]);
+  void componentDidUpdate(prevProps, prevState, [snapshot]) => lifecycleCall(
+      'componentDidUpdate',
+      arguments: [new Map.from(prevProps), new Map.from(prevState), snapshot]);
 
   bool shouldComponentUpdate(nextProps, nextState) =>
       lifecycleCall('shouldComponentUpdate',

@@ -550,7 +550,7 @@ final ReactDartInteropStatics2 _dartInteropStatics2 = (() {
       });
 
   dynamic handleGetSnapshotBeforeUpdate(
-        Component2 component, JsMap jsPrevProps, JsMap jsPrevState) =>
+          Component2 component, JsMap jsPrevProps, JsMap jsPrevState) =>
       zone.run(() {
         final snapshotValue = component.getSnapshotBeforeUpdate(
           new JsBackedMap.backedBy(jsPrevProps),
@@ -561,10 +561,11 @@ final ReactDartInteropStatics2 _dartInteropStatics2 = (() {
       });
 
   void handleComponentDidUpdate(Component2 component, ReactComponent jsThis,
-          JsMap jsPrevProps, JsMap jsPrevState, [dynamic snapshot]) =>
+          JsMap jsPrevProps, JsMap jsPrevState,
+          [dynamic snapshot]) =>
       zone.run(() {
-        _updatePropsAndStateWithJs(component, component.jsThis.props,
-        component.jsThis.state);
+        _updatePropsAndStateWithJs(
+            component, component.jsThis.props, component.jsThis.state);
         component.componentDidUpdate(
           new JsBackedMap.backedBy(jsPrevProps),
           new JsBackedMap.backedBy(jsPrevState),
@@ -577,7 +578,8 @@ final ReactDartInteropStatics2 _dartInteropStatics2 = (() {
       });
 
   dynamic handleRender(Component2 component) => zone.run(() {
-        _updatePropsAndStateWithJs(component, component.jsThis.props, component.jsThis.state);
+        _updatePropsAndStateWithJs(
+            component, component.jsThis.props, component.jsThis.state);
         return component.render();
       });
 
