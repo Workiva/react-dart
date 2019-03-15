@@ -647,8 +647,8 @@ abstract class Component2 implements Component {
   /// of the values of [prevProps] / [prevState].
   ///
   /// __Note__: React 16 added a third parameter to componentDidUpdate, which
-  /// is a custom value returned in getSnapshotBeforeUpdate. If a specified
-  /// value is not returned in getSnapshotBeforeUpdate, the `snapshot`
+  /// is a custom value returned in [getSnapshotBeforeUpdate]. If a specified
+  /// value is not returned in getSnapshotBeforeUpdate, the [snapshot]
   /// parameter in componentDidUpdate will be null.
   ///
   /// See: <https://facebook.github.io/react/docs/react-component.html#updating-componentdidupdate>
@@ -865,11 +865,11 @@ abstract class Component2 implements Component {
 ///   // value of getSnapshotBeforeUpdate.
 ///   void componentDidUpdate(prevProps, prevState, [bool snapshot]) {
 ///     if (snapshot == true) {
-///       //Do something
+///       // Do something
 ///     }
 ///   }
 ///
-///   /*Include other standard component logic*/
+///   /* Include other standard component logic */
 ///
 /// }
 abstract class TypedSnapshot<TSnapshot> implements Component2 {
