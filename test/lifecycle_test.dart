@@ -154,7 +154,7 @@ main() {
       });
 
       test(
-          'getSnapshotBeforeUpdate returns the same type being passed into '
+          'getSnapshotBeforeUpdate returns the same value being passed into '
           'componentDidUpdate', () {
         LifecycleTestHelper component = getDartComponent(
             render(components2.LifecycleTest({'getSnapshotBeforeUpdate': (_, __, ___) => 'snapshot'})));
@@ -531,7 +531,7 @@ void sharedLifecycleTests<T extends react.Component>({
                 ? matchCall('getSnapshotBeforeUpdate', args: [expectedProps, initialState], state: initialState)
                 : null,
             isComponent2
-                ? matchCall('componentDidUpdate', args: [expectedProps, initialState, null], state: initialState)
+                ? matchCall('componentDidUpdate', args: [expectedProps, initialState, snapshot], state: initialState)
                 : matchCall('componentDidUpdate', args: [expectedProps, initialState], state: initialState),
           ].where((matcher) => matcher != null).toList()));
     });
