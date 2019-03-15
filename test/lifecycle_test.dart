@@ -166,12 +166,29 @@ main() {
             component.lifecycleCalls,
             containsAllInOrder([
               matchCall('getSnapshotBeforeUpdate'),
-              matchCall('componentDidUpdate', args: [
-                anything,
-                anything,
-                'sna'
-                    'pshot'
-              ]),
+              matchCall('componentDidUpdate', args: [anything, anything, 'snapshot']),
+            ]));
+      });
+
+      test(
+          'Ensure getSnapshotBeforeId returned snapshot value is not '
+          'minified', () {
+        List<String> expectedSnapshot = ['List Item 1', 'List Item 2', 'List '
+            'Item 3'];
+
+        LifecycleTestHelper component =
+            getDartComponent(render(components2.LifecycleTest
+              ({'getSnapshotBeforeUpdate': (_, __, ___) => expectedSnapshot})));
+
+        component.lifecycleCalls.clear();
+        component.setState({});
+
+        expect(
+            component.lifecycleCalls,
+            containsAllInOrder([
+              matchCall('getSnapshotBeforeUpdate'),
+              matchCall('componentDidUpdate', args: [anything, anything, same
+                (expectedSnapshot)]),
             ]));
       });
     });
@@ -402,7 +419,7 @@ void sharedLifecycleTests<T extends react.Component>({
 
       const Map expectedState = const {};
       const Map expectedContext = const {};
-      const Null snapshot = null;
+      const Null expectedSnapshot = null;
 
       var mountNode = new DivElement();
       var instance = react_dom.render(LifecycleTest(initialProps), mountNode);
@@ -442,7 +459,8 @@ void sharedLifecycleTests<T extends react.Component>({
                 : null,
             isComponent2
                 ? matchCall('componentDidUpdate',
-                    args: [initialPropsWithDefaults, expectedState, snapshot], props: newPropsWithDefaults)
+                    args: [initialPropsWithDefaults, expectedState,
+                    expectedSnapshot], props: newPropsWithDefaults)
                 : matchCall('componentDidUpdate',
                     args: [initialPropsWithDefaults, expectedState], props: newPropsWithDefaults),
           ].where((matcher) => matcher != null).toList()));
@@ -465,6 +483,8 @@ void sharedLifecycleTests<T extends react.Component>({
       final Map newContext = const {};
 
       final Map expectedProps = unmodifiableMap(defaultProps, initialProps, emptyChildrenProps);
+
+      final Null expectedSnapshot = null;
 
       LifecycleTestHelper component = getDartComponent(render(LifecycleTest(initialProps)));
 
@@ -491,7 +511,7 @@ void sharedLifecycleTests<T extends react.Component>({
                 ? matchCall('getSnapshotBeforeUpdate', args: [expectedProps, initialState], state: newState)
                 : null,
             isComponent2
-                ? matchCall('componentDidUpdate', args: [expectedProps, initialState, null], state: newState)
+                ? matchCall('componentDidUpdate', args: [expectedProps, initialState, expectedSnapshot], state: newState)
                 : matchCall('componentDidUpdate', args: [expectedProps, initialState], state: newState),
           ].where((matcher) => matcher != null)));
     });
@@ -505,6 +525,8 @@ void sharedLifecycleTests<T extends react.Component>({
 
       final Map newContext = const {};
       final Map expectedProps = unmodifiableMap(defaultProps, initialProps, emptyChildrenProps);
+
+      final Null expectedSnapshot = null;
 
       LifecycleTestHelper component = getDartComponent(render(LifecycleTest(initialProps)));
 
@@ -531,7 +553,8 @@ void sharedLifecycleTests<T extends react.Component>({
                 ? matchCall('getSnapshotBeforeUpdate', args: [expectedProps, initialState], state: initialState)
                 : null,
             isComponent2
-                ? matchCall('componentDidUpdate', args: [expectedProps, initialState, null], state: initialState)
+                ? matchCall('componentDidUpdate', args: [expectedProps,
+            initialState, expectedSnapshot], state: initialState)
                 : matchCall('componentDidUpdate', args: [expectedProps, initialState], state: initialState),
           ].where((matcher) => matcher != null).toList()));
     });

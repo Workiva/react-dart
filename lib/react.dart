@@ -607,21 +607,35 @@ abstract class Component2 implements Component {
   ///
   /// __Example__:
   ///
-  /// getSnapshotBeforeUpdate(prevProps, prevState) {
+  ///     getSnapshotBeforeUpdate(prevProps, prevState) {
   ///
-  ///   // Previous props / state can be analyzed and compared to this.props or
-  ///   // this.state, allowing the opportunity perform decision logic.
+  ///       // Previous props / state can be analyzed and compared to this.props or
+  ///       // this.state, allowing the opportunity perform decision logic.
+  ///       // Are we adding new items to the list?
+  ///       // Capture the scroll position so we can adjust scroll later.
   ///
-  ///   if (prevProps.list.length < this.props.list.length) {
+  ///       if (prevProps.list.length < props.list.length) {
   ///
-  ///     // The return value from getSnapshotBeforeUpdate is passed into
-  ///     // componentDidUpdate's third parameter (which is new to React 16).
+  ///         // The return value from getSnapshotBeforeUpdate is passed into
+  ///         // componentDidUpdate's third parameter (which is new to React 16).
   ///
-  ///     const list = _listRef;
-  ///     return list.scrollHeight - list.scrollTop;
-  ///   }
-  ///   return null;
-  /// }
+  ///         final list = _listRef;
+  ///         return list.scrollHeight - list.scrollTop;
+  ///       }
+  ///       return null;
+  ///     }
+  ///
+  ///     componentDidUpdate(prevProps, prevState, snapshot) {
+  ///       // If we have a snapshot value, we've just added new items.
+  ///       // Adjust scroll so these new items don't push the old ones out of
+  ///       // view.
+  ///       // (snapshot here is the value returned from getSnapshotBeforeUpdate)
+  ///       if (snapshot !== null) {
+  ///         final list = _listRef;
+  ///         list.scrollTop = list.scrollHeight - snapshot;
+  ///       }
+  ///     }
+  ///
   /// See: <https://facebook.github.io/react/docs/react-component.html#getsnapshotbeforeupdate>
   dynamic getSnapshotBeforeUpdate(Map prevProps, Map prevState) {}
 
@@ -829,18 +843,18 @@ abstract class Component2 implements Component {
   List<StateUpdaterCallback> get transactionalSetStateCallbacks => throw new UnimplementedError();
 }
 
-/// Creates a mixin used to ensure consistent typing of the `snapshot`
-/// parameter passed between Component2.getSnapshotBeforeUpdate and
-/// Component2.componentWillUpdate.
+/// Mixin that enforces consistent typing of the `snapshot` parameter
+/// returned by [Component2.getSnapshotBeforeUpdate]
+/// and passed into [Component2.componentDidUpdate].
 ///
 /// __EXAMPLE__:
 ///
-/// class _ParentComponent extends react.Component2 implements react
-///    .TypedSnapshot<int> {
+/// class _ParentComponent extends react.Component2
+///     with react.TypedSnapshot<bool> {
 ///
-///   // Note that the return value is specified as an int, matching the mixin
+///   // Note that the return value is specified as an bool, matching the mixin
 ///   // type.
-///   int getShapshotBeforeUpdate(prevProps, prevState) {
+///   bool getShapshotBeforeUpdate(prevProps, prevState) {
 ///     if (prevProps["foo"]) {
 ///       return true;
 ///     }
@@ -849,7 +863,7 @@ abstract class Component2 implements Component {
 ///
 ///   // Note that the snapshot parameter is consistently typed with the return
 ///   // value of getSnapshotBeforeUpdate.
-///   void componentDidUpdate(prevProps, prevState, [int snapshot]) {
+///   void componentDidUpdate(prevProps, prevState, [bool snapshot]) {
 ///     if (snapshot == true) {
 ///       //Do something
 ///     }
@@ -858,7 +872,6 @@ abstract class Component2 implements Component {
 ///   /*Include other standard component logic*/
 ///
 /// }
-
 abstract class TypedSnapshot<TSnapshot> implements Component2 {
   TSnapshot getSnapshotBeforeUpdate(Map prevProps, Map prevState) {
     return null;
