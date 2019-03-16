@@ -39,11 +39,13 @@ main() {
         mountNode);
     if (typeToTest is JsMap) {
       // Context auto converts JsMaps to make consumption in dart better :)
-      expect(contextTypeRef.context, equals(JsBackedMap.copyToDart(typeToTest)));
-      expect(consumerRef.latestValue, equals(JsBackedMap.copyToDart(typeToTest)));
+      expect((contextTypeRef.context as Map).keys, JsBackedMap.copyToDart(typeToTest).keys);
+      expect((consumerRef.latestValue as Map).keys, JsBackedMap.copyToDart(typeToTest).keys);
+      expect((contextTypeRef.context as Map).values, JsBackedMap.copyToDart(typeToTest).values);
+      expect((consumerRef.latestValue as Map).values, JsBackedMap.copyToDart(typeToTest).values);
     } else {
-      expect(contextTypeRef.context, equals(typeToTest));
-      expect(consumerRef.latestValue, equals(typeToTest));
+      expect(contextTypeRef.context, same(typeToTest));
+      expect(consumerRef.latestValue, same(typeToTest));
     }
   }
 

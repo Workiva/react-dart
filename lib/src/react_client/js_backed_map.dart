@@ -6,15 +6,11 @@ import 'dart:core';
 
 import 'package:js/js.dart';
 import 'package:js/js_util.dart' as js_util;
-import 'package:react/react_client/js_interop_helpers.dart' as react_interop;
 
 class JsBackedMap<K, V> extends MapBase<K, V> implements Map<K, V> {
-  JsMap jsObject;
+  final JsMap jsObject;
 
-  JsBackedMap() {
-    this.jsObject = new JsMap();
-    react_interop.setProperty(jsObject, JsBackedMapSymbol, true);
-  }
+  JsBackedMap() : jsObject = new JsMap();
 
   JsBackedMap.backedBy(this.jsObject);
 
@@ -132,9 +128,6 @@ abstract class _Object {
 abstract class _Reflect {
   external static bool deleteProperty(JsMap target, dynamic propertyKey);
 }
-
-@JS()
-external get JsBackedMapSymbol;
 
 JsMap jsBackingMapOrJsCopy(Map other) {
   // todo is it faster to just always do .from?
