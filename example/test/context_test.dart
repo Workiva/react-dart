@@ -25,7 +25,7 @@ void main() {
         contextConsumerComponent({
           'key': 'consumerComponent'
         }, [
-          grandchildContextConsumerComponent(
+          contextTypeConsumerComponentComponent(
               {'key': 'consumerGrandchildComponent'})
         ]),
       ]),

@@ -1,3 +1,6 @@
+require('./polyfill/delete_property');
+require('./polyfill/object_assign');
+
 const React = require('react');
 const PropTypes = require('prop-types');
 const DartHelpers = require('./_dart_helpers');

@@ -2,7 +2,7 @@
 @JS()
 library react_test_utils_test;
 
-import 'dart:html';
+import 'dart:html' as html;
 
 import 'package:js/js.dart';
 import 'package:test/test.dart';
@@ -11,16 +11,19 @@ import 'package:react/react.dart' as react;
 import 'package:react/react_client.dart';
 import 'package:react/react_dom.dart' as react_dom;
 
+import 'shared_type_tester.dart';
+import 'package:react/src/react_client/js_backed_map.dart';
+
 main() {
   setClientConfiguration();
 
-  testContextValue(dynamic testValue) {
-    var mountNode = new DivElement();
+  testTypeValue(dynamic typeToTest) {
+    var mountNode = new html.DivElement();
     var contextTypeRef;
     var consumerRef;
     react_dom.render(
         ContextProviderWrapper({
-          'contextValue': testValue
+          'contextValue': typeToTest
         }, [
           ContextTypeComponent({
             'ref': (ref) {
@@ -34,37 +37,30 @@ main() {
           })
         ]),
         mountNode);
-    Element contextTypeNode = react_dom.findDOMNode(contextTypeRef);
-    Element consumerNode = react_dom.findDOMNode(consumerRef);
-    expect(contextTypeNode.firstChild.text, testValue.toString());
-    expect(consumerNode.firstChild.text, testValue.toString());
+    if (typeToTest is JsMap) {
+      // Context auto converts JsMaps to make consumption in dart better :)
+      expect(contextTypeRef.context, equals(JsBackedMap.copyToDart(typeToTest)));
+      expect(consumerRef.latestValue, equals(JsBackedMap.copyToDart(typeToTest)));
+    } else {
+      expect(contextTypeRef.context, equals(typeToTest));
+      expect(consumerRef.latestValue, equals(typeToTest));
+    }
   }
 
-  group('Context', () {
-    group('work with a value of type: ', () {
-      test('String', () {
-        testContextValue('test');
-      });
-      test('int', () {
-        testContextValue(1);
-      });
-      test('Map', () {
-        testContextValue({'key1': 'value1', 'key2': 'value2'});
-      });
-
-      test('bool', () {
-        testContextValue(true);
-      });
+  group('New Context API (Component2 only)', () {
+    group('sets and retrieves values correctly:',
+        () {
+          sharedTypeTests(testTypeValue);
     });
   });
 }
 
 var TestContext = createContext();
 
-ReactDartComponentFactoryProxy ContextProviderWrapper =
+ReactDartComponentFactoryProxy2 ContextProviderWrapper =
     react.registerComponent(() => new _ContextProviderWrapper());
 
-class _ContextProviderWrapper extends react.Component {
+class _ContextProviderWrapper extends react.Component2 {
   render() {
     return react.div({}, [
       TestContext.Provider({'value': props['contextValue']}, props['children'])
@@ -72,10 +68,10 @@ class _ContextProviderWrapper extends react.Component {
   }
 }
 
-ReactDartComponentFactoryProxy ContextTypeComponent =
+ReactDartComponentFactoryProxy2 ContextTypeComponent =
     react.registerComponent(() => new _ContextTypeComponent());
 
-class _ContextTypeComponent extends react.Component {
+class _ContextTypeComponent extends react.Component2 {
   var contextType = TestContext;
 
   render() {
@@ -83,12 +79,14 @@ class _ContextTypeComponent extends react.Component {
   }
 }
 
-ReactDartComponentFactoryProxy ContextConsumerComponent =
+ReactDartComponentFactoryProxy2 ContextConsumerComponent =
     react.registerComponent(() => new _ContextConsumerComponent());
 
-class _ContextConsumerComponent extends react.Component {
+class _ContextConsumerComponent extends react.Component2 {
+  dynamic latestValue;
   render() {
     return TestContext.Consumer({}, (value) {
+      latestValue = value;
       return react.div({}, '$value');
     });
   }

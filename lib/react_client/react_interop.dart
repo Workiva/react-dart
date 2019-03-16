@@ -8,6 +8,9 @@ import 'dart:html';
 
 import 'package:js/js.dart';
 import 'package:react/react.dart';
+import 'package:react/react_client.dart' show ComponentFactory;
+import 'package:react/react_client/js_interop_helpers.dart';
+import 'package:react/src/react_client/js_backed_map.dart';
 import 'package:react/src/react_client/dart2_interop_workaround_bindings.dart';
 
 typedef ReactElement ReactJsComponentFactory(props, children);
@@ -21,10 +24,13 @@ abstract class React {
   external static String get version;
   external static ReactContext createContext(
       [dynamic defaultValue, Function calculateChangedBits]);
+  @Deprecated('6.0.0')
   external static ReactClass createClass(ReactClassConfig reactClassConfig);
   external static ReactJsComponentFactory createFactory(type);
+
   external static ReactElement createElement(dynamic type, props,
       [dynamic children]);
+
   external static bool isValidElement(dynamic object);
 }
 
@@ -55,6 +61,9 @@ abstract class ReactDomServer {
 @JS()
 @anonymous
 class ReactClass {
+  external JsMap get defaultProps;
+  external set defaultProps(JsMap value);
+
   /// The `displayName` string is used in debugging messages.
   ///
   /// See: <http://facebook.github.io/react/docs/component-specs.html#displayname>
@@ -66,13 +75,23 @@ class ReactClass {
   ///
   /// For use in [ReactDartComponentFactoryProxy] when creating new [ReactElement]s,
   /// or for external use involving inspection of Dart prop defaults.
+  @Deprecated('6.0.0')
   external Map get dartDefaultProps;
+  @Deprecated('6.0.0')
   external set dartDefaultProps(Map value);
+
+  external String get dartComponentVersion;
+  external set dartComponentVersion(String value);
 }
 
 /// A JS interop class used as an argument to [React.createClass].
 ///
 /// See: <http://facebook.github.io/react/docs/top-level-api.html#react.createclass>.
+///
+/// > __DEPRECATED.__
+/// >
+/// > Will be removed alongside [React.createClass] in the `6.0.0` release.
+@Deprecated('6.0.0')
 @JS()
 @anonymous
 class ReactClassConfig {
@@ -86,6 +105,8 @@ class ReactClassConfig {
       Function componentWillUpdate,
       Function componentDidUpdate,
       Function componentWillUnmount,
+      Function getChildContext,
+      Map<String, dynamic> childContextTypes,
       Function getDefaultProps,
       Function getInitialState,
       Function render});
@@ -147,8 +168,11 @@ class ReactElement {
 @JS()
 @anonymous
 class ReactComponent {
+  // TODO: Cast as Component2 in 6.0.0
   external Component get dartComponent;
   external InteropProps get props;
+  external dynamic get context;
+  external JsMap get state;
   external get refs;
   external void setState(state, [callback]);
   external void forceUpdate([callback]);
@@ -164,6 +188,14 @@ class ReactComponent {
 /// in a way that's opaque to the JS, and avoids the need to use dart2js interceptors.
 ///
 /// __For internal/advanced use only.__
+///
+/// > __DEPRECATED - DO NOT USE__
+/// >
+/// > This API was never stable in any version of ReactJS, and was replaced with a new, incompatible context API
+/// > in ReactJS 16 that is exposed via the [Component2] class.
+/// >
+/// > This will be completely removed when the JS side of it is slated for removal (ReactJS 17 / react.dart 6.0.0)
+@Deprecated('6.0.0')
 @JS()
 @anonymous
 class InteropContextValue {
@@ -191,7 +223,8 @@ class ReactContext {
 /// __For internal/advanced use only.__
 @JS()
 @anonymous
-class InteropProps {
+class InteropProps implements JsMap {
+  @Deprecated('3.0.0')
   external ReactDartComponentInternal get internal;
   external dynamic get key;
   external dynamic get ref;
@@ -199,8 +232,12 @@ class InteropProps {
   external set key(dynamic value);
   external set ref(dynamic value);
 
-  external factory InteropProps(
-      {ReactDartComponentInternal internal, String key, dynamic ref});
+  @Deprecated('3.0.0')
+  external factory InteropProps({
+    ReactDartComponentInternal internal,
+    String key,
+    dynamic ref,
+  });
 }
 
 /// Internal react-dart information used to proxy React JS lifecycle to Dart
@@ -219,6 +256,14 @@ class ReactDartComponentInternal {
 /// [Component] instances.
 ///
 /// __For internal/advanced use only.__
+///
+/// > __DEPRECATED - DO NOT USE__
+/// >
+/// > This API was never stable in any version of ReactJS, and was replaced with a new, incompatible context API
+/// > in ReactJS 16 that is exposed via the [Component2] class.
+/// >
+/// > This will be completely removed when the JS side of it is slated for removal (ReactJS 17 / react.dart 6.0.0)
+@Deprecated('6.0.0')
 class ReactDartContextInternal {
   final dynamic value;
 
@@ -244,34 +289,28 @@ void markChildrenValidated(List<dynamic> children) {
   });
 }
 
-/// Returns a new JS [ReactClassConfig] for a component that uses
+/// Returns a new JS [ReactClass] for a component that uses
 /// [dartInteropStatics] and [componentStatics] internally to proxy between
 /// the JS and Dart component instances.
+///
+/// > __DEPRECATED.__
+/// >
+/// > Will be removed in `6.0.0` alongside [Component].
 @JS('_createReactDartComponentClass')
+@Deprecated('6.0.0')
 external ReactClass createReactDartComponentClass(
     ReactDartInteropStatics dartInteropStatics,
     ComponentStatics componentStatics,
     [JsComponentConfig jsConfig]);
 
-typedef Component _InitComponent(
-    ReactComponent jsThis,
-    ReactDartComponentInternal internal,
-    InteropContextValue context,
-    ComponentStatics componentStatics);
-typedef InteropContextValue _HandleGetChildContext(Component component);
-typedef void _HandleComponentWillMount(Component component);
-typedef void _HandleComponentDidMount(Component component);
-typedef void _HandleComponentWillReceiveProps(Component component,
-    ReactDartComponentInternal nextInternal, InteropContextValue nextContext);
-typedef bool _HandleShouldComponentUpdate(
-    Component component, InteropContextValue nextContext);
-typedef void _HandleComponentWillUpdate(
-    Component component, InteropContextValue nextContext);
-// Ignore prevContext in componentDidUpdate, since it's not supported in React 16
-typedef void _HandleComponentDidUpdate(
-    Component component, ReactDartComponentInternal prevInternal);
-typedef void _HandleComponentWillUnmount(Component component);
-typedef dynamic _HandleRender(Component component);
+/// Returns a new JS [ReactClass] for a component that uses
+/// [dartInteropStatics] and [componentStatics] internally to proxy between
+/// the JS and Dart component instances.
+@JS('_createReactDartComponentClass2')
+external ReactClass createReactDartComponentClass2(
+    ReactDartInteropStatics2 dartInteropStatics,
+    ComponentStatics<Component2> componentStatics,
+    [JsComponentConfig2 jsConfig]);
 
 @JS('React.__isDevelopment')
 external bool get _inReactDevMode;
@@ -289,19 +328,98 @@ external bool get _inReactDevMode;
 bool get inReactDevMode => _inReactDevMode;
 
 /// An object that stores static methods used by all Dart components.
+///
+/// __Deprecated.__ Use [ReactDartInteropStatics2] instead.
+///
+/// Will be removed when [Component] is removed in the `6.0.0` release.
 @JS()
 @anonymous
+@Deprecated('6.0.0')
 class ReactDartInteropStatics {
   external factory ReactDartInteropStatics({
-    _InitComponent initComponent,
-    _HandleComponentWillMount handleComponentWillMount,
-    _HandleComponentDidMount handleComponentDidMount,
-    _HandleComponentWillReceiveProps handleComponentWillReceiveProps,
-    _HandleShouldComponentUpdate handleShouldComponentUpdate,
-    _HandleComponentWillUpdate handleComponentWillUpdate,
-    _HandleComponentDidUpdate handleComponentDidUpdate,
-    _HandleComponentWillUnmount handleComponentWillUnmount,
-    _HandleRender handleRender,
+    Component Function(
+      ReactComponent jsThis,
+      ReactDartComponentInternal internal,
+      InteropContextValue context,
+      ComponentStatics componentStatics,
+    )
+        initComponent,
+    InteropContextValue Function(Component component) handleGetChildContext,
+    void Function(Component component) handleComponentWillMount,
+    void Function(Component component) handleComponentDidMount,
+    void Function(
+      Component component,
+      ReactDartComponentInternal nextInternal,
+      InteropContextValue nextContext,
+    )
+        handleComponentWillReceiveProps,
+    bool Function(
+      Component component,
+      InteropContextValue nextContext,
+    )
+        handleShouldComponentUpdate,
+    void Function(
+      Component component,
+      InteropContextValue nextContext,
+    )
+        handleComponentWillUpdate,
+    void Function(
+      Component component,
+      ReactDartComponentInternal prevInternal,
+    )
+        handleComponentDidUpdate,
+    void Function(Component component) handleComponentWillUnmount,
+    dynamic Function(Component component) handleRender,
+  });
+}
+
+/// An object that stores static methods used by all Dart components.
+@JS()
+@anonymous
+class ReactDartInteropStatics2 implements ReactDartInteropStatics {
+  external factory ReactDartInteropStatics2({
+    Component2 Function(
+      ReactComponent jsThis,
+      ComponentStatics<Component2> componentStatics,
+    )
+        initComponent,
+    // TODO: Should this have a return signature of `Map`?
+    dynamic Function(Component2 component) handleGetInitialState,
+    void Function(
+      Component2 component,
+      ReactComponent jsThis,
+    )
+        handleComponentWillMount,
+    void Function(Component2 component) handleComponentDidMount,
+    // TODO: Should this be removed when we update Component2.componentWillReceiveProps to throw an UnsupportedError? (CPLAT-4765)
+    void Function(
+      Component2 component,
+      JsMap jsNextProps,
+    )
+        handleComponentWillReceiveProps,
+    bool Function(
+      Component2 component,
+      JsMap jsNextProps,
+      JsMap jsNextState,
+      dynamic jsNextContext,
+    )
+        handleShouldComponentUpdate,
+    // TODO: Should this be removed when we update Component2.componentWillUpdate to throw an UnsupportedError? (CPLAT-4766)
+    void Function(
+      Component2 component,
+      JsMap jsNextProps,
+      JsMap jsNextState,
+    )
+        handleComponentWillUpdate,
+    void Function(
+      Component2 component,
+      ReactComponent jsThis,
+      JsMap jsPrevProps,
+      JsMap jsPrevState,
+    )
+        handleComponentDidUpdate,
+    void Function(Component2 component) handleComponentWillUnmount,
+    dynamic Function(Component2 component) handleRender,
   });
 }
 
@@ -311,18 +429,40 @@ class ReactDartInteropStatics {
 /// passes it to certain methods in [ReactDartInteropStatics].
 ///
 /// See [ReactDartInteropStatics], [createReactDartComponentClass].
-class ComponentStatics {
-  final ComponentFactory componentFactory;
+class ComponentStatics<T extends Component> {
+  final ComponentFactory<T> componentFactory;
 
   ComponentStatics(this.componentFactory);
 }
 
 /// Additional configuration passed to [createReactDartComponentClass]
 /// that needs to be directly accessible by that JS code.
+///
+/// > __DEPRECATED - DO NOT USE__
+/// >
+/// > The `context` API that this supports was never stable in any version of ReactJS,
+/// > and was replaced with a new, incompatible context API in ReactJS 16 that is exposed
+/// > via the [Component2] class and is supported by [JsComponentConfig2].
+/// >
+/// > This will be completely removed when the JS side of `context` it is slated for
+/// > removal (ReactJS 17 / react.dart 6.0.0)
+@Deprecated('6.0.0')
 @JS()
 @anonymous
 class JsComponentConfig {
   external factory JsComponentConfig({
-    contextType,
+    Iterable<String> childContextKeys,
+    Iterable<String> contextKeys,
+  });
+}
+
+/// Additional configuration passed to [createReactDartComponentClass2]
+/// that needs to be directly accessible by that JS code.
+@JS()
+@anonymous
+class JsComponentConfig2 {
+  external factory JsComponentConfig2({
+    dynamic contextType,
+    JsMap defaultProps,
   });
 }

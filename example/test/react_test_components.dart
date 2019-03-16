@@ -163,31 +163,53 @@ class _ListComponent extends react.Component {
 
 var listComponent = react.registerComponent(() => new _ListComponent());
 
-class _MainComponent extends react.Component {
+class _MainComponent extends react.Component2 {
   render() {
     return react.div({}, props['children']);
+  }
+  test() {
+    print('test');
   }
 }
 
 var mainComponent = react.registerComponent(() => new _MainComponent());
 
 var TestContext = createContext({
-  'dartClass': react.Component,
-  'map': {'test': true},
   'renderCount': 0
 });
 
-class _ContextComponent extends react.Component {
+class _ContextComponent extends react.Component2 {
+  _MainComponent componentRef;
+
   getInitialState() => {
-        'dartClass': react.Component,
-        'map': {'test': true},
         'renderCount': 0
       };
 
+  printMe() {
+    print('printMe!');
+  }
+
   render() {
+    Map provideMap = {
+      'callback': printMe,
+      'dartComponent': mainComponent,
+      'componentRef': componentRef,
+      'map': {
+        'bool': true,
+        'anotherDartComponent': mainComponent,
+      },
+      'renderCount': this.state['renderCount']
+    };
+
+    Map mainComponentProps = {
+        'ref':(ref){componentRef = ref;}
+      };
+    mainComponentProps.addAll(provideMap);
+
     return react.ul({
-      'key': 'ul'
+      'key': 'ul',
     }, [
+      mainComponent(mainComponentProps,''),
       react.button({
         'type': 'button',
         'key': 'button',
@@ -195,11 +217,11 @@ class _ContextComponent extends react.Component {
         'onClick': _onButtonClick
       }, 'Redraw'),
       react.br({'key': 'break1'}),
-      'TestContext.Provider props.value: $state',
+      'TestContext.Provider props.value: ${provideMap}',
       react.br({'key': 'break2'}),
       react.br({'key': 'break3'}),
       TestContext.Provider(
-        {'key': 'tcp', 'value': this.state},
+        {'key': 'tcp', 'value': provideMap},
         props['children'],
       ),
     ]);
@@ -207,12 +229,13 @@ class _ContextComponent extends react.Component {
 
   _onButtonClick(event) {
     this.setState({'renderCount': this.state['renderCount'] + 1});
+    componentRef.test();
   }
 }
 
 var contextComponent = react.registerComponent(() => new _ContextComponent());
 
-class _ContextConsumerComponent extends react.Component {
+class _ContextConsumerComponent extends react.Component2 {
   render() {
     return TestContext.Consumer({}, (value) {
       return react.ul({
@@ -230,17 +253,19 @@ class _ContextConsumerComponent extends react.Component {
 var contextConsumerComponent =
     react.registerComponent(() => new _ContextConsumerComponent());
 
-class _ContextTypeConsumerComponent extends react.Component {
+class _ContextTypeConsumerComponent extends react.Component2 {
   var contextType = TestContext;
 
   render() {
+    this.context['callback']();
     return react.ul({
       'key': 'ul'
     }, [
       'Using Component.contextType: this.context = ${this.context}',
     ]);
+
   }
 }
 
-var grandchildContextConsumerComponent =
+var contextTypeConsumerComponentComponent =
     react.registerComponent(() => new _ContextTypeConsumerComponent());
