@@ -699,10 +699,6 @@ class ReactJsContextComponentFactoryProxy extends ReactJsComponentFactoryProxy {
   generateExtendedJsProps(Map props) {
     JsBackedMap propsForJs = new JsBackedMap.from(props);
 
-    /*if (isProvider && props.containsKey('value')) {
-      propsForJs['value'] = props['value']);
-    }*/
-
     if (convertDomProps) {
       _convertEventHandlers(propsForJs);
     }
@@ -1241,7 +1237,7 @@ class ReactDartContext {
 
 ReactDartContext createContext<T>([
     T defaultValue,
-    int Function(T, T) calculateChangedBits,
+    int Function(T currentValue, T nextValue) calculateChangedBits,
 ]) {
   var JSContext = React.createContext(defaultValue, calculateChangedBits);
   return new ReactDartContext(

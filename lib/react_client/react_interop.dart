@@ -22,8 +22,10 @@ typedef ReactElement ReactJsComponentFactory(props, children);
 @JS()
 abstract class React {
   external static String get version;
-  external static ReactContext createContext(
-      [dynamic defaultValue, Function calculateChangedBits]);
+  external static ReactContext createContext<T>([
+    T defaultValue,
+    int Function(T currentValue, T nextValue) calculateChangedBits,
+  ]);
   @Deprecated('6.0.0')
   external static ReactClass createClass(ReactClassConfig reactClassConfig);
   external static ReactJsComponentFactory createFactory(type);
@@ -210,8 +212,8 @@ class InteropContextValue {
 @JS()
 @anonymous
 class ReactContext {
-  external get Provider;
-  external get Consumer;
+  external ReactClass get Provider;
+  external ReactClass get Consumer;
 }
 
 /// A JavaScript interop class representing a React JS `props` object.

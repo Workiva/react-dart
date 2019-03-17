@@ -59,6 +59,12 @@ abstract class Component {
   /// > It is strongly recommended that you migrate to [Component2] and use [Component2.context] instead.
   @experimental
   dynamic get context => _context;
+
+  /// > This API was never stable in any version of ReactJS, and was replaced with a new, incompatible context API
+  /// > in ReactJS 16 that is exposed via the [Component2] class.
+  /// >
+  /// > It is strongly recommended that you migrate to [Component2] and use [Component2.context] instead.
+  @experimental
   set context(dynamic value) => _context = value;
 
   /// ReactJS [Component] props.
