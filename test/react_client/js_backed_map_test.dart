@@ -11,8 +11,7 @@ import '../shared_type_tester.dart';
 
 main() {
   group('JsBackedMap', () {
-    group('sets and retrieves values without JS interop interfering with them:',
-        () {
+    group('sets and retrieves values without JS interop interfering with them:', () {
       // These tests test assignments to the JS backed map when the values
       // - have a static type
       // - do not have a static type
@@ -25,7 +24,7 @@ main() {
       JsBackedMap jsBackedMap;
       JsBackedMap dynamicJsBackedMap;
 
-      testTypeValue(testValue){
+      testTypeValue(testValue) {
         jsBackedMap = new JsBackedMap();
         dynamicJsBackedMap = new JsBackedMap();
 

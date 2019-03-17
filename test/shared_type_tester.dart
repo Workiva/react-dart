@@ -8,7 +8,18 @@ import 'dart:html' as html;
 import 'package:js/js.dart';
 import 'package:test/test.dart';
 
-sharedTypeTests(Function testTypeValue, { skipNormalDartObjects: false, skipDartMaps: false, skipPrimitives: false, skipNumTypes: false, skipFunctions: false, skipBrowserObjects: false, skipLists: false, skipDatetimes: false, skipFutures: false, skipJsAnonInteropTypes: false, skipJsInteropTypes: true}) {
+sharedTypeTests(Function testTypeValue,
+    {skipNormalDartObjects: false,
+    skipDartMaps: false,
+    skipPrimitives: false,
+    skipNumTypes: false,
+    skipFunctions: false,
+    skipBrowserObjects: false,
+    skipLists: false,
+    skipDatetimes: false,
+    skipFutures: false,
+    skipJsAnonInteropTypes: false,
+    skipJsInteropTypes: true}) {
   if (!skipNormalDartObjects) {
     test('normal Dart objects', () {
       final object = new Foo('f');
@@ -19,10 +30,10 @@ sharedTypeTests(Function testTypeValue, { skipNormalDartObjects: false, skipDart
   }
 
   if (!skipDartMaps) {
-  test('Dart maps', () {
-    final dartMap = {};
-    testTypeValue(dartMap);
-  });
+    test('Dart maps', () {
+      final dartMap = {};
+      testTypeValue(dartMap);
+    });
   }
 
   if (!skipPrimitives) {

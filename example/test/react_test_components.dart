@@ -65,8 +65,7 @@ class _CheckBoxComponent extends react.Component {
       react.label({
         'htmlFor': 'doTheDishes',
         'key': 'label',
-        'className': 'form-check-label ' +
-            (this.state['checked'] ? 'striked' : 'not-striked')
+        'className': 'form-check-label ' + (this.state['checked'] ? 'striked' : 'not-striked')
       }, 'do the dishes'),
     ]);
   }
@@ -82,8 +81,7 @@ class _ClockComponent extends react.Component {
   Map getDefaultProps() => {'refreshRate': 1000};
 
   void componentWillMount() {
-    timer = new Timer.periodic(
-        new Duration(milliseconds: this.props["refreshRate"]), this.tick);
+    timer = new Timer.periodic(new Duration(milliseconds: this.props["refreshRate"]), this.tick);
   }
 
   void componentWillUnmount() {
@@ -126,13 +124,11 @@ class _ListComponent extends react.Component {
   }
 
   void componentWillUpdate(nextProps, nextState) {
-    if (nextState["items"].length > state["items"].length)
-      print("Adding " + nextState["items"].last.toString());
+    if (nextState["items"].length > state["items"].length) print("Adding " + nextState["items"].last.toString());
   }
 
   void componentDidUpdate(prevProps, prevState) {
-    if (prevState["items"].length > state["items"].length)
-      print("Removed " + prevState["items"].first.toString());
+    if (prevState["items"].length > state["items"].length) print("Removed " + prevState["items"].first.toString());
   }
 
   int iterator = 3;
@@ -167,6 +163,7 @@ class _MainComponent extends react.Component2 {
   render() {
     return react.div({}, props['children']);
   }
+
   test() {
     print('test');
   }
@@ -174,16 +171,12 @@ class _MainComponent extends react.Component2 {
 
 var mainComponent = react.registerComponent(() => new _MainComponent());
 
-var TestContext = createContext({
-  'renderCount': 0
-});
+var TestContext = createContext({'renderCount': 0});
 
 class _ContextComponent extends react.Component2 {
   _MainComponent componentRef;
 
-  getInitialState() => {
-        'renderCount': 0
-      };
+  getInitialState() => {'renderCount': 0};
 
   printMe() {
     print('printMe!');
@@ -202,20 +195,18 @@ class _ContextComponent extends react.Component2 {
     };
 
     Map mainComponentProps = {
-        'ref':(ref){componentRef = ref;}
-      };
+      'ref': (ref) {
+        componentRef = ref;
+      }
+    };
     mainComponentProps.addAll(provideMap);
 
     return react.ul({
       'key': 'ul',
     }, [
-      mainComponent(mainComponentProps,''),
-      react.button({
-        'type': 'button',
-        'key': 'button',
-        'className': 'btn btn-primary',
-        'onClick': _onButtonClick
-      }, 'Redraw'),
+      mainComponent(mainComponentProps, ''),
+      react.button(
+          {'type': 'button', 'key': 'button', 'className': 'btn btn-primary', 'onClick': _onButtonClick}, 'Redraw'),
       react.br({'key': 'break1'}),
       'TestContext.Provider props.value: ${provideMap}',
       react.br({'key': 'break2'}),
@@ -250,8 +241,7 @@ class _ContextConsumerComponent extends react.Component2 {
   }
 }
 
-var contextConsumerComponent =
-    react.registerComponent(() => new _ContextConsumerComponent());
+var contextConsumerComponent = react.registerComponent(() => new _ContextConsumerComponent());
 
 class _ContextTypeConsumerComponent extends react.Component2 {
   var contextType = TestContext;
@@ -263,9 +253,7 @@ class _ContextTypeConsumerComponent extends react.Component2 {
     }, [
       'Using Component.contextType: this.context = ${this.context}',
     ]);
-
   }
 }
 
-var contextTypeConsumerComponentComponent =
-    react.registerComponent(() => new _ContextTypeConsumerComponent());
+var contextTypeConsumerComponentComponent = react.registerComponent(() => new _ContextTypeConsumerComponent());

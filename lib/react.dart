@@ -10,8 +10,7 @@ import 'package:react/src/typedefs.dart';
 import 'package:react/react_client.dart';
 
 typedef T ComponentFactory<T extends Component>();
-typedef ReactComponentFactoryProxy ComponentRegistrar(
-    ComponentFactory componentFactory,
+typedef ReactComponentFactoryProxy ComponentRegistrar(ComponentFactory componentFactory,
     [Iterable<String> skipMethods]);
 
 /// Top-level ReactJS [Component class](https://facebook.github.io/react/docs/react-component.html)
@@ -340,9 +339,7 @@ abstract class Component {
   /// >
   /// > This will be completely removed when the JS side of it is slated for removal (ReactJS 17 / react.dart 6.0.0)
   @Deprecated('6.0.0')
-  bool shouldComponentUpdateWithContext(
-          Map nextProps, Map nextState, dynamic nextContext) =>
-      null;
+  bool shouldComponentUpdateWithContext(Map nextProps, Map nextState, dynamic nextContext) => null;
 
   /// ReactJS lifecycle method that is invoked immediately before rendering when [nextProps] or [nextState] are being
   /// received.
@@ -364,8 +361,7 @@ abstract class Component {
   /// >
   /// > This will be completely removed when the JS side of it is slated for removal (ReactJS 17 / react.dart 6.0.0)
   @Deprecated('6.0.0')
-  void componentWillUpdateWithContext(
-      Map nextProps, Map nextState, Map nextContext) {}
+  void componentWillUpdateWithContext(Map nextProps, Map nextState, Map nextContext) {}
 
   /// ReactJS lifecycle method that is invoked immediately after the `Component`'s updates are flushed to the DOM.
   ///
@@ -450,8 +446,7 @@ abstract class Component {
 
 abstract class Component2Adapter {
   void setState(Map newState, SetStateCallback callback);
-  void setStateWithUpdater(
-      StateUpdaterCallback stateUpdater, SetStateCallback callback);
+  void setStateWithUpdater(StateUpdaterCallback stateUpdater, SetStateCallback callback);
   void forceUpdate(SetStateCallback callback);
 }
 
@@ -524,8 +519,7 @@ abstract class Component2 implements Component {
   /// Optionally accepts a [callback] that gets called after the component updates.
   ///
   /// See: <https://reactjs.org/docs/react-component.html#setstate>
-  void setStateWithUpdater(StateUpdaterCallback updater,
-      [SetStateCallback callback]) {
+  void setStateWithUpdater(StateUpdaterCallback updater, [SetStateCallback callback]) {
     adapter.setStateWithUpdater(updater, callback);
   }
 
@@ -588,9 +582,7 @@ abstract class Component2 implements Component {
   /// result of [shouldComponentUpdate], but [shouldComponentUpdate] is not called if a valid `bool` is returned.
   ///
   /// See: <https://facebook.github.io/react/docs/react-component.html#updating-shouldcomponentupdate>
-  bool shouldComponentUpdateWithContext(
-          Map nextProps, Map nextState, dynamic nextContext) =>
-      null;
+  bool shouldComponentUpdateWithContext(Map nextProps, Map nextState, dynamic nextContext) => null;
 
   /// ReactJS lifecycle method that is invoked immediately before rendering when [nextProps] or [nextState] are being
   /// received.
@@ -652,8 +644,7 @@ abstract class Component2 implements Component {
   ///
   /// Will be removed when [Component] is removed in the `6.0.0` release.
   @Deprecated('6.0.0')
-  void replaceState(Map newState, [SetStateCallback callback]) =>
-      throw new UnimplementedError();
+  void replaceState(Map newState, [SetStateCallback callback]) => throw new UnimplementedError();
 
   /// Do not use.
   ///
@@ -665,8 +656,7 @@ abstract class Component2 implements Component {
   ///
   /// Will be removed when [Component] is removed in the `6.0.0` release.
   @Deprecated('6.0.0')
-  void componentWillUpdateWithContext(
-      Map nextProps, Map nextState, Map nextContext) {}
+  void componentWillUpdateWithContext(Map nextProps, Map nextState, Map nextContext) {}
 
   /// Do not use.
   ///
@@ -791,12 +781,10 @@ abstract class Component2 implements Component {
   }
 
   @override
-  List<SetStateCallback> get setStateCallbacks =>
-      throw new UnimplementedError();
+  List<SetStateCallback> get setStateCallbacks => throw new UnimplementedError();
 
   @override
-  List<StateUpdaterCallback> get transactionalSetStateCallbacks =>
-      throw new UnimplementedError();
+  List<StateUpdaterCallback> get transactionalSetStateCallbacks => throw new UnimplementedError();
 }
 
 /// Creates a ReactJS virtual DOM instance (`ReactElement` on the client).
@@ -1054,19 +1042,8 @@ class SyntheticClipboardEvent extends SyntheticEvent {
     num timeStamp,
     String type,
     this.clipboardData,
-  ) : super(
-            bubbles,
-            cancelable,
-            currentTarget,
-            defaultPrevented,
-            preventDefault,
-            stopPropagation,
-            eventPhase,
-            isTrusted,
-            nativeEvent,
-            target,
-            timeStamp,
-            type) {}
+  ) : super(bubbles, cancelable, currentTarget, defaultPrevented, preventDefault, stopPropagation, eventPhase,
+            isTrusted, nativeEvent, target, timeStamp, type) {}
 }
 
 class SyntheticKeyboardEvent extends SyntheticEvent {
@@ -1106,19 +1083,8 @@ class SyntheticKeyboardEvent extends SyntheticEvent {
     this.metaKey,
     this.repeat,
     this.shiftKey,
-  ) : super(
-            bubbles,
-            cancelable,
-            currentTarget,
-            defaultPrevented,
-            preventDefault,
-            stopPropagation,
-            eventPhase,
-            isTrusted,
-            nativeEvent,
-            target,
-            timeStamp,
-            type) {}
+  ) : super(bubbles, cancelable, currentTarget, defaultPrevented, preventDefault, stopPropagation, eventPhase,
+            isTrusted, nativeEvent, target, timeStamp, type) {}
 }
 
 class SyntheticFocusEvent extends SyntheticEvent {
@@ -1138,19 +1104,8 @@ class SyntheticFocusEvent extends SyntheticEvent {
     num timeStamp,
     String type,
     this.relatedTarget,
-  ) : super(
-            bubbles,
-            cancelable,
-            currentTarget,
-            defaultPrevented,
-            preventDefault,
-            stopPropagation,
-            eventPhase,
-            isTrusted,
-            nativeEvent,
-            target,
-            timeStamp,
-            type) {}
+  ) : super(bubbles, cancelable, currentTarget, defaultPrevented, preventDefault, stopPropagation, eventPhase,
+            isTrusted, nativeEvent, target, timeStamp, type) {}
 }
 
 class SyntheticFormEvent extends SyntheticEvent {
@@ -1167,19 +1122,8 @@ class SyntheticFormEvent extends SyntheticEvent {
     dynamic target,
     num timeStamp,
     String type,
-  ) : super(
-            bubbles,
-            cancelable,
-            currentTarget,
-            defaultPrevented,
-            preventDefault,
-            stopPropagation,
-            eventPhase,
-            isTrusted,
-            nativeEvent,
-            target,
-            timeStamp,
-            type) {}
+  ) : super(bubbles, cancelable, currentTarget, defaultPrevented, preventDefault, stopPropagation, eventPhase,
+            isTrusted, nativeEvent, target, timeStamp, type) {}
 }
 
 class SyntheticDataTransfer {
@@ -1188,8 +1132,7 @@ class SyntheticDataTransfer {
   final List files;
   final List<String> types;
 
-  SyntheticDataTransfer(
-      this.dropEffect, this.effectAllowed, this.files, this.types);
+  SyntheticDataTransfer(this.dropEffect, this.effectAllowed, this.files, this.types);
 }
 
 class SyntheticMouseEvent extends SyntheticEvent {
@@ -1235,19 +1178,8 @@ class SyntheticMouseEvent extends SyntheticEvent {
     this.screenX,
     this.screenY,
     this.shiftKey,
-  ) : super(
-            bubbles,
-            cancelable,
-            currentTarget,
-            defaultPrevented,
-            preventDefault,
-            stopPropagation,
-            eventPhase,
-            isTrusted,
-            nativeEvent,
-            target,
-            timeStamp,
-            type) {}
+  ) : super(bubbles, cancelable, currentTarget, defaultPrevented, preventDefault, stopPropagation, eventPhase,
+            isTrusted, nativeEvent, target, timeStamp, type) {}
 }
 
 class SyntheticPointerEvent extends SyntheticEvent {
@@ -1285,19 +1217,8 @@ class SyntheticPointerEvent extends SyntheticEvent {
     this.twist,
     this.pointerType,
     this.isPrimary,
-  ) : super(
-            bubbles,
-            cancelable,
-            currentTarget,
-            defaultPrevented,
-            preventDefault,
-            stopPropagation,
-            eventPhase,
-            isTrusted,
-            nativeEvent,
-            target,
-            timeStamp,
-            type) {}
+  ) : super(bubbles, cancelable, currentTarget, defaultPrevented, preventDefault, stopPropagation, eventPhase,
+            isTrusted, nativeEvent, target, timeStamp, type) {}
 }
 
 class SyntheticTouchEvent extends SyntheticEvent {
@@ -1329,19 +1250,8 @@ class SyntheticTouchEvent extends SyntheticEvent {
     this.shiftKey,
     this.targetTouches,
     this.touches,
-  ) : super(
-            bubbles,
-            cancelable,
-            currentTarget,
-            defaultPrevented,
-            preventDefault,
-            stopPropagation,
-            eventPhase,
-            isTrusted,
-            nativeEvent,
-            target,
-            timeStamp,
-            type) {}
+  ) : super(bubbles, cancelable, currentTarget, defaultPrevented, preventDefault, stopPropagation, eventPhase,
+            isTrusted, nativeEvent, target, timeStamp, type) {}
 }
 
 class SyntheticUIEvent extends SyntheticEvent {
@@ -1363,19 +1273,8 @@ class SyntheticUIEvent extends SyntheticEvent {
     String type,
     this.detail,
     this.view,
-  ) : super(
-            bubbles,
-            cancelable,
-            currentTarget,
-            _defaultPrevented,
-            _preventDefault,
-            stopPropagation,
-            eventPhase,
-            isTrusted,
-            nativeEvent,
-            target,
-            timeStamp,
-            type) {}
+  ) : super(bubbles, cancelable, currentTarget, _defaultPrevented, _preventDefault, stopPropagation, eventPhase,
+            isTrusted, nativeEvent, target, timeStamp, type) {}
 }
 
 class SyntheticWheelEvent extends SyntheticEvent {
@@ -1401,27 +1300,14 @@ class SyntheticWheelEvent extends SyntheticEvent {
     this.deltaMode,
     this.deltaY,
     this.deltaZ,
-  ) : super(
-            bubbles,
-            cancelable,
-            currentTarget,
-            defaultPrevented,
-            preventDefault,
-            stopPropagation,
-            eventPhase,
-            isTrusted,
-            nativeEvent,
-            target,
-            timeStamp,
-            type) {}
+  ) : super(bubbles, cancelable, currentTarget, defaultPrevented, preventDefault, stopPropagation, eventPhase,
+            isTrusted, nativeEvent, target, timeStamp, type) {}
 }
 
 /// Registers [componentFactory] on both client and server.
 /*ComponentRegistrar*/ Function registerComponent =
-    (/*ComponentFactory*/ componentFactory,
-        [/*Iterable<String>*/ skipMethods]) {
-  throw new Exception(
-      'setClientConfiguration must be called before registerComponent.');
+    (/*ComponentFactory*/ componentFactory, [/*Iterable<String>*/ skipMethods]) {
+  throw new Exception('setClientConfiguration must be called before registerComponent.');
 };
 
 /// The HTML `<a>` [AnchorElement].

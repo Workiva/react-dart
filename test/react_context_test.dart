@@ -50,17 +50,15 @@ main() {
   }
 
   group('New Context API (Component2 only)', () {
-    group('sets and retrieves values correctly:',
-        () {
-          sharedTypeTests(testTypeValue);
+    group('sets and retrieves values correctly:', () {
+      sharedTypeTests(testTypeValue);
     });
   });
 }
 
 var TestContext = createContext();
 
-ReactDartComponentFactoryProxy2 ContextProviderWrapper =
-    react.registerComponent(() => new _ContextProviderWrapper());
+ReactDartComponentFactoryProxy2 ContextProviderWrapper = react.registerComponent(() => new _ContextProviderWrapper());
 
 class _ContextProviderWrapper extends react.Component2 {
   render() {
@@ -70,8 +68,7 @@ class _ContextProviderWrapper extends react.Component2 {
   }
 }
 
-ReactDartComponentFactoryProxy2 ContextTypeComponent =
-    react.registerComponent(() => new _ContextTypeComponent());
+ReactDartComponentFactoryProxy2 ContextTypeComponent = react.registerComponent(() => new _ContextTypeComponent());
 
 class _ContextTypeComponent extends react.Component2 {
   var contextType = TestContext;
