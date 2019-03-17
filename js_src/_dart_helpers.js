@@ -1,7 +1,6 @@
 /**
  * react-dart JS interop helpers (used by react_client.dart and react_client/js_interop_helpers.dart)
  */
-let JsBackedMapSymbol = Symbol.for("reactdart.JsBackedMap");
 function _getProperty(obj, key) { return obj[key]; }
 function _setProperty(obj, key, value) { return obj[key] = value; }
 
@@ -136,7 +135,6 @@ function _markChildValidated(child) {
 }
 
 module.exports = {
-  JsBackedMapSymbol,
   _getProperty,
   _setProperty,
   _createReactDartComponentClass,
