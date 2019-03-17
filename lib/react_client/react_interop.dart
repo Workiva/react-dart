@@ -94,21 +94,22 @@ class ReactClass {
 @JS()
 @anonymous
 class ReactClassConfig {
-  external factory ReactClassConfig(
-      {String displayName,
-      List mixins,
-      Function componentWillMount,
-      Function componentDidMount,
-      Function componentWillReceiveProps,
-      Function shouldComponentUpdate,
-      Function componentWillUpdate,
-      Function componentDidUpdate,
-      Function componentWillUnmount,
-      Function getChildContext,
-      Map<String, dynamic> childContextTypes,
-      Function getDefaultProps,
-      Function getInitialState,
-      Function render});
+  external factory ReactClassConfig({
+    String displayName,
+    List mixins,
+    Function componentWillMount,
+    Function componentDidMount,
+    Function componentWillReceiveProps,
+    Function shouldComponentUpdate,
+    Function componentWillUpdate,
+    Function componentDidUpdate,
+    Function componentWillUnmount,
+    Function getChildContext,
+    Map<String, dynamic> childContextTypes,
+    Function getDefaultProps,
+    Function getInitialState,
+    Function render,
+  });
 
   /// The `displayName` string is used in debugging messages.
   ///
@@ -350,21 +351,9 @@ class ReactDartInteropStatics {
       InteropContextValue nextContext,
     )
         handleComponentWillReceiveProps,
-    bool Function(
-      Component component,
-      InteropContextValue nextContext,
-    )
-        handleShouldComponentUpdate,
-    void Function(
-      Component component,
-      InteropContextValue nextContext,
-    )
-        handleComponentWillUpdate,
-    void Function(
-      Component component,
-      ReactDartComponentInternal prevInternal,
-    )
-        handleComponentDidUpdate,
+    bool Function(Component component, InteropContextValue nextContext) handleShouldComponentUpdate,
+    void Function(Component component, InteropContextValue nextContext) handleComponentWillUpdate,
+    void Function(Component component, ReactDartComponentInternal prevInternal) handleComponentDidUpdate,
     void Function(Component component) handleComponentWillUnmount,
     dynamic Function(Component component) handleRender,
   });
@@ -375,18 +364,10 @@ class ReactDartInteropStatics {
 @anonymous
 class ReactDartInteropStatics2 implements ReactDartInteropStatics {
   external factory ReactDartInteropStatics2({
-    Component2 Function(
-      ReactComponent jsThis,
-      ComponentStatics<Component2> componentStatics,
-    )
-        initComponent,
+    Component2 Function(ReactComponent jsThis, ComponentStatics<Component2> componentStatics) initComponent,
     // TODO: Should this have a return signature of `Map`?
     dynamic Function(Component2 component) handleGetInitialState,
-    void Function(
-      Component2 component,
-      ReactComponent jsThis,
-    )
-        handleComponentWillMount,
+    void Function(Component2 component, ReactComponent jsThis) handleComponentWillMount,
     void Function(Component2 component) handleComponentDidMount,
     // TODO: Should this be removed when we update Component2.componentWillReceiveProps to throw an UnsupportedError? (CPLAT-4765)
     void Function(
@@ -402,12 +383,7 @@ class ReactDartInteropStatics2 implements ReactDartInteropStatics {
     )
         handleShouldComponentUpdate,
     // TODO: Should this be removed when we update Component2.componentWillUpdate to throw an UnsupportedError? (CPLAT-4766)
-    void Function(
-      Component2 component,
-      JsMap jsNextProps,
-      JsMap jsNextState,
-    )
-        handleComponentWillUpdate,
+    void Function(Component2 component, JsMap jsNextProps, JsMap jsNextState) handleComponentWillUpdate,
     void Function(
       Component2 component,
       ReactComponent jsThis,

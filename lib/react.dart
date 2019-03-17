@@ -332,13 +332,6 @@ abstract class Component {
   /// See: <https://facebook.github.io/react/docs/react-component.html#updating-shouldcomponentupdate>
   bool shouldComponentUpdate(Map nextProps, Map nextState) => true;
 
-  /// > __DEPRECATED - DO NOT USE__
-  /// >
-  /// > This API was never stable in any version of ReactJS, and was replaced with a new, incompatible context API
-  /// > in ReactJS 16 that is exposed via the [Component2] class.
-  /// >
-  /// > This will be completely removed when the JS side of it is slated for removal (ReactJS 17 / react.dart 6.0.0)
-  @Deprecated('6.0.0')
   bool shouldComponentUpdateWithContext(Map nextProps, Map nextState, dynamic nextContext) => null;
 
   /// ReactJS lifecycle method that is invoked immediately before rendering when [nextProps] or [nextState] are being
