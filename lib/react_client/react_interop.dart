@@ -22,9 +22,9 @@ typedef ReactElement ReactJsComponentFactory(props, children);
 @JS()
 abstract class React {
   external static String get version;
-  external static ReactContext createContext<T>([
-    T defaultValue,
-    int Function(T currentValue, T nextValue) calculateChangedBits,
+  external static ReactContext createContext([
+    dynamic defaultValue,
+    int Function(dynamic currentValue, dynamic nextValue) calculateChangedBits,
   ]);
   @Deprecated('6.0.0')
   external static ReactClass createClass(ReactClassConfig reactClassConfig);
