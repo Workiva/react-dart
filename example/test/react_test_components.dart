@@ -208,7 +208,7 @@ class _ContextComponent extends react.Component2 {
     return react.ul({
       'key': 'ul',
     }, [
-      mainComponent(mainComponentProps,[]),
+      mainComponent(mainComponentProps, []),
       react.button({
         'type': 'button',
         'key': 'button',
