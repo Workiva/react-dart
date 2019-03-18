@@ -175,10 +175,22 @@ class _MainComponent extends react.Component2 {
 
 var mainComponent = react.registerComponent(() => new _MainComponent());
 
+class _ContextRefComponent extends react.Component2 {
+  render() {
+    return react.div({}, props['children']);
+  }
+
+  test() {
+    print('test');
+  }
+}
+
+var contextRefComponent = react.registerComponent(() => new _ContextRefComponent());
+
 var TestContext = createContext({'renderCount': 0});
 
 class _ContextComponent extends react.Component2 {
-  _MainComponent componentRef;
+  _ContextRefComponent componentRef;
 
   getInitialState() => {'renderCount': 0};
 
@@ -203,12 +215,11 @@ class _ContextComponent extends react.Component2 {
         componentRef = ref;
       }
     };
-    mainComponentProps.addAll(provideMap);
 
     return react.ul({
       'key': 'ul',
     }, [
-      mainComponent(mainComponentProps, []),
+      contextRefComponent(mainComponentProps, []),
       react.button({
         'type': 'button',
         'key': 'button',

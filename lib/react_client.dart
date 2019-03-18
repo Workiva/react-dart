@@ -230,8 +230,8 @@ Map<String, dynamic> _unjsifyContext(InteropContextValue interopContext) {
 }
 
 dynamic _jsifyNewContext(dynamic context) {
-  if (context is Map || context is JsBackedMap) {
-    return new JsBackedMap.from(context);
+  if (context is Map) {
+    return new JsBackedMap.from(context).jsObject;
   }
   return context;
 }
@@ -654,6 +654,10 @@ class ReactJsContextComponentFactoryProxy extends ReactJsComponentFactoryProxy {
   /// consumption by the [react] library internals.
   generateExtendedJsProps(Map props) {
     JsBackedMap propsForJs = new JsBackedMap.from(props);
+
+    if (isProvider) {
+      propsForJs['value'] = _jsifyNewContext(propsForJs['value']);
+    }
 
     if (convertDomProps) {
       _convertEventHandlers(propsForJs);
