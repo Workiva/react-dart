@@ -10,26 +10,26 @@ void main() {
   setClientConfiguration();
 
   react_dom.render(
-    react.div({},[
-      react.h1({},['React Legacy Context API']),
-      legacyContextComponent({}, [
-        legacyContextConsumerComponent({
-          'key': 'consumerComponent'
-        }, [
-          grandchildLegacyContextConsumerComponent({'key': 'legacyConsumerGrandchildComponent'})
+      react.div({}, [
+        react.h1({}, ['React Legacy Context API']),
+        legacyContextComponent({}, [
+          legacyContextConsumerComponent({
+            'key': 'consumerComponent'
+          }, [
+            grandchildLegacyContextConsumerComponent({'key': 'legacyConsumerGrandchildComponent'})
+          ]),
         ]),
+        react.h1({}, ['React New Context API']),
+        react.h6({}, ['Check out react dev tools of the ContextTypeConsumerComponent!']),
+        newContextProviderComponent({
+          'key': 'newProviderComponent'
+        }, [
+          newContextConsumerComponent({
+            'key': 'newConsumerComponent'
+          }, [
+            newContextTypeConsumerComponentComponent({'key': 'newContextTypeConsumerComponent'})
+          ]),
+        ])
       ]),
-      react.h1({},['React New Context API']),
-      react.h6({},['Check out react dev tools of the ContextTypeConsumerComponent!']),
-      newContextProviderComponent({
-        'key': 'newProviderComponent'
-      }, [
-        newContextConsumerComponent({
-          'key': 'newConsumerComponent'
-        }, [
-          newContextTypeConsumerComponentComponent({'key': 'newContextTypeConsumerComponent'})
-        ]),
-      ])
-    ]),
-  querySelector('#content'));
+      querySelector('#content'));
 }

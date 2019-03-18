@@ -189,11 +189,7 @@ class _LegacyContextComponent extends react.Component {
     return react.ul({
       'key': 'ul'
     }, [
-      react.button({
-        'key': 'button',
-        'className': 'btn btn-primary',
-        'onClick': _onButtonClick
-      }, 'Redraw'),
+      react.button({'key': 'button', 'className': 'btn btn-primary', 'onClick': _onButtonClick}, 'Redraw'),
       react.br({'key': 'break1'}),
       'LegacyContextComponent.getChildContext(): ',
       getChildContext().toString(),
@@ -227,8 +223,7 @@ class _LegacyContextConsumerComponent extends react.Component {
   }
 }
 
-var legacyContextConsumerComponent =
-    react.registerComponent(() => new _LegacyContextConsumerComponent());
+var legacyContextConsumerComponent = react.registerComponent(() => new _LegacyContextConsumerComponent());
 
 class _GrandchildLegacyContextConsumerComponent extends react.Component {
   @override
@@ -246,8 +241,6 @@ class _GrandchildLegacyContextConsumerComponent extends react.Component {
 
 var grandchildLegacyContextConsumerComponent =
     react.registerComponent(() => new _GrandchildLegacyContextConsumerComponent());
-
-
 
 ////
 // REACT NEW CONTEXT COMPONENTS

@@ -41,9 +41,7 @@ main() {
       // Context auto converts JsMaps/Maps to JsBackedMaps to make them work with React Dev Tools
       // and allow consumption in dart to be nicer.
 
-      Map expectedMap = typeToTest is JsMap ?
-          JsBackedMap.copyToDart(typeToTest)
-          : new JsBackedMap.from(typeToTest);
+      Map expectedMap = typeToTest is JsMap ? JsBackedMap.copyToDart(typeToTest) : new JsBackedMap.from(typeToTest);
 
       expect((contextTypeRef.context as Map).keys, expectedMap.keys);
       expect((consumerRef.latestValue as Map).keys, expectedMap.keys);
