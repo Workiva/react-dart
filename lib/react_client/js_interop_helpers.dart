@@ -21,8 +21,7 @@ class _MissingJsMemberError extends Error {
   _MissingJsMemberError(this.name, [this.message]);
 
   @override
-  String toString() =>
-      '_MissingJsMemberError: The JS member `$name` is missing and thus '
+  String toString() => '_MissingJsMemberError: The JS member `$name` is missing and thus '
       'cannot be used as expected. $message';
 }
 

@@ -8,8 +8,7 @@ import 'package:test/test.dart';
 
 import 'package:react/react.dart' as react show div;
 import 'package:react/react_client.dart';
-import 'package:react/react_client/react_interop.dart'
-    show React, ReactClassConfig, ReactComponent;
+import 'package:react/react_client/react_interop.dart' show React, ReactClassConfig, ReactComponent;
 import 'package:react/react_client/js_interop_helpers.dart';
 import 'package:react/react_dom.dart' as react_dom;
 import 'package:react/src/react_client/event_prop_key_to_event_factory.dart';
@@ -35,8 +34,7 @@ main() {
           'children': testChildren,
         }),
       );
-      expect(unconvertJsProps(instance)['style'],
-          new isInstanceOf<Map<String, dynamic>>());
+      expect(unconvertJsProps(instance)['style'], new isInstanceOf<Map<String, dynamic>>());
     });
 
     test('returns props for a composite JS ReactComponent', () {
@@ -58,9 +56,7 @@ main() {
       );
     });
 
-    test(
-        'returns props for a composite JS ReactComponent, even when the props change',
-        () {
+    test('returns props for a composite JS ReactComponent, even when the props change', () {
       var mountNode = new DivElement();
       ReactComponent renderedInstance = react_dom.render(
           testJsComponentFactory({
@@ -129,21 +125,16 @@ main() {
         var component = react.div(props);
         var jsProps = unconvertJsProps(component);
         for (final key in eventPropKeyToEventFactory.keys) {
-          expect(jsProps[key], isNotNull,
-              reason: 'JS event handler prop should not be null');
-          expect(jsProps[key], same(originalHandlers[key]),
-              reason: 'JS event handler prop was not unconverted');
+          expect(jsProps[key], isNotNull, reason: 'JS event handler prop should not be null');
+          expect(jsProps[key], same(originalHandlers[key]), reason: 'JS event handler prop was not unconverted');
         }
       });
 
-      test(
-          ', except for a JS composite component (handlers should already be unconverted)',
-          () {
+      test(', except for a JS composite component (handlers should already be unconverted)', () {
         var component = testJsComponentFactory(props);
         var jsProps = unconvertJsProps(component);
         for (final key in eventPropKeyToEventFactory.keys) {
-          expect(jsProps[key], isNotNull,
-              reason: 'JS event handler prop should not be null');
+          expect(jsProps[key], isNotNull, reason: 'JS event handler prop should not be null');
           expect(jsProps[key], same(allowInterop(originalHandlers[key])),
               reason: 'JS event handler prop was unexpectedly modified');
         }
@@ -166,8 +157,7 @@ main() {
 /// A factory for a JS composite component, for use in testing.
 final Function testJsComponentFactory = (() {
   var componentClass = React.createClass(new ReactClassConfig(
-      displayName: 'testJsComponent',
-      render: allowInterop(() => react.div({}, 'test js component'))));
+      displayName: 'testJsComponent', render: allowInterop(() => react.div({}, 'test js component'))));
 
   var reactFactory = React.createFactory(componentClass);
 

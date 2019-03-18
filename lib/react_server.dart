@@ -41,8 +41,7 @@ typedef Component ComponentFactory();
 
 /// Creates a method that creates a new [Component], runs lifecycle methods and returns the result of the
 /// [componentFactory] instance `render` method.
-ReactComponentFactory _registerComponent(ComponentFactory componentFactory,
-    [Iterable<String> skipMethods = const []]) {
+ReactComponentFactory _registerComponent(ComponentFactory componentFactory, [Iterable<String> skipMethods = const []]) {
   /// Cached default props.
   final Map defaultProps = componentFactory().getDefaultProps();
 
@@ -75,8 +74,7 @@ ReactComponentFactory _reactDom(String name) {
     // Pack component string creation into function to easily pass owner id, position and key
     // (from its custom component owner)
     return ([String ownerId, num position, String key]) {
-      if (_selfClosingElementTags.contains(name) &&
-          (children != null && children.length > 0)) {
+      if (_selfClosingElementTags.contains(name) && (children != null && children.length > 0)) {
         throw new Exception('$name element does not accept children.');
       }
 
@@ -92,12 +90,8 @@ ReactComponentFactory _reactDom(String name) {
         thisId = _createRootId();
       } else {
         // If ownerId is set, append adequate string to parent id based on position and key.
-        thisId = ownerId +
-            (key != null
-                ? '.\$$key'
-                : (position != null
-                    ? '.${position.toInt().toRadixString(36)}'
-                    : '.0'));
+        thisId =
+            ownerId + (key != null ? '.\$$key' : (position != null ? '.${position.toInt().toRadixString(36)}' : '.0'));
       }
 
       // Create StringBuffer to build result, append open tag to it
@@ -182,14 +176,7 @@ String _parseDomArgument(String key, dynamic value) {
   return ' ${key.toLowerCase()}="$value"';
 }
 
-var _ESCAPE_LOOKUP = {
-  '&': '&amp;',
-  '>': '&gt;',
-  '<': '&lt;',
-  '"': '&quot;',
-  '\'': '&#x27;',
-  '/': '&#x2f;'
-};
+var _ESCAPE_LOOKUP = {'&': '&amp;', '>': '&gt;', '<': '&lt;', '"': '&quot;', '\'': '&#x27;', '/': '&#x2f;'};
 
 var _ESCAPE_REGEX = new RegExp('[&><\\\'/]');
 
@@ -427,6 +414,5 @@ _adler32(String data) {
 @Deprecated('5.0.0')
 void setServerConfiguration() {
   setReactConfiguration(_reactDom, _registerComponent);
-  setReactDOMServerConfiguration(
-      _renderComponentToString, _renderToStaticMarkup);
+  setReactDOMServerConfiguration(_renderComponentToString, _renderToStaticMarkup);
 }
