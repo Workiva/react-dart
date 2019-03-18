@@ -6,3 +6,4 @@ pubspec.lock
 .pub/
 .packages
 .dart_tool
+/node_modules
