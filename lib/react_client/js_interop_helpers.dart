@@ -4,7 +4,6 @@
 library react_client.js_interop_helpers;
 
 import "package:js/js.dart";
-import 'package:react/src/react_client/js_backed_map.dart';
 
 @JS()
 external dynamic _getProperty(jsObj, String key);
@@ -30,7 +29,7 @@ class _MissingJsMemberError extends Error {
 /// (see: https://github.com/dart-lang/sdk/issues/25053).
 ///
 /// __Defined in this package's React JS files.__
-final dynamic Function(dynamic jsObj, dynamic key) getProperty = (() {
+final dynamic Function(dynamic jsObj, String key) getProperty = (() {
   try {
     // If this throws, then the JS function isn't available.
     _getProperty(new EmptyObject(), null);
@@ -53,7 +52,7 @@ final dynamic Function(dynamic jsObj, dynamic key) getProperty = (() {
 /// (see: https://github.com/dart-lang/sdk/issues/25053).
 ///
 /// __Defined in this package's React JS files.__
-final Function(dynamic jsObj, dynamic key, dynamic value) setProperty = (() {
+final Function(dynamic jsObj, String key, dynamic value) setProperty = (() {
   try {
     // If this throws, then the JS function isn't available.
     _setProperty(new EmptyObject(), null, null);
