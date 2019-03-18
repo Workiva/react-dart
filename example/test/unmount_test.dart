@@ -21,11 +21,7 @@ void main() {
   setClientConfiguration();
   var mountedNode = querySelector('#content');
 
-  querySelector('#mount')
-      .onClick
-      .listen((_) => react_dom.render(simpleComponent({}), mountedNode));
+  querySelector('#mount').onClick.listen((_) => react_dom.render(simpleComponent({}), mountedNode));
 
-  querySelector('#unmount')
-      .onClick
-      .listen((_) => react_dom.unmountComponentAtNode(mountedNode));
+  querySelector('#unmount').onClick.listen((_) => react_dom.unmountComponentAtNode(mountedNode));
 }

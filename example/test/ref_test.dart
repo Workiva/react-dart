@@ -113,7 +113,7 @@ class _ParentComponent extends react.Component {
         }, [
           ChildComponent({
             'key': 'callback-child',
-            "ref": (instance) => _childCallbackRef = instance
+            "ref": (instance) => _childCallbackRef = instance,
           }),
           '\u00a0',
           react.button({
