@@ -1,5 +1,6 @@
 import 'dart:html';
 
+import 'package:react/react.dart' as react;
 import 'package:react/react_dom.dart' as react_dom;
 import 'package:react/react_client.dart';
 
@@ -9,24 +10,26 @@ void main() {
   setClientConfiguration();
 
   react_dom.render(
-      contextComponent({}, [
-        contextConsumerComponent({'key': 'consumerComponent'}),
-      ]),
-      querySelector('#content'));
-
-  react_dom.render(
-      contextComponent({}, [
-        contextConsumerComponent({'key': 'consumerComponent'}),
-      ]),
-      querySelector('#content'));
-
-  react_dom.render(
-      contextComponent({}, [
-        contextConsumerComponent({
+    react.div({},[
+      react.h1({},['React Legacy Context API']),
+      legacyContextComponent({}, [
+        legacyContextConsumerComponent({
           'key': 'consumerComponent'
         }, [
-          contextTypeConsumerComponentComponent({'key': 'consumerGrandchildComponent'})
+          grandchildLegacyContextConsumerComponent({'key': 'legacyConsumerGrandchildComponent'})
         ]),
       ]),
-      querySelector('#content'));
+      react.h1({},['React New Context API']),
+      react.h6({},['Check out react dev tools of the ContextTypeConsumerComponent!']),
+      newContextProviderComponent({
+        'key': 'newProviderComponent'
+      }, [
+        newContextConsumerComponent({
+          'key': 'newConsumerComponent'
+        }, [
+          newContextTypeConsumerComponentComponent({'key': 'newContextTypeConsumerComponent'})
+        ]),
+      ])
+    ]),
+  querySelector('#content'));
 }

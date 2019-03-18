@@ -163,19 +163,96 @@ class _ListComponent extends react.Component {
 
 var listComponent = react.registerComponent(() => new _ListComponent());
 
-class _MainComponent extends react.Component2 {
+class _MainComponent extends react.Component {
   render() {
     return react.div({}, props['children']);
-  }
-
-  test() {
-    print('test');
   }
 }
 
 var mainComponent = react.registerComponent(() => new _MainComponent());
 
-class _ContextRefComponent extends react.Component2 {
+/////
+// REACT OLD CONTEXT COMPONENTS
+/////
+class _LegacyContextComponent extends react.Component {
+  @override
+  Iterable<String> get childContextKeys => const ['foo', 'bar', 'renderCount'];
+
+  @override
+  Map<String, dynamic> getChildContext() => {
+        'foo': {'object': 'with value'},
+        'bar': true,
+        'renderCount': this.state['renderCount']
+      };
+
+  render() {
+    return react.ul({
+      'key': 'ul'
+    }, [
+      react.button({
+        'key': 'button',
+        'className': 'btn btn-primary',
+        'onClick': _onButtonClick
+      }, 'Redraw'),
+      react.br({'key': 'break1'}),
+      'LegacyContextComponent.getChildContext(): ',
+      getChildContext().toString(),
+      react.br({'key': 'break2'}),
+      react.br({'key': 'break3'}),
+      props['children'],
+    ]);
+  }
+
+  _onButtonClick(event) {
+    this.setState({'renderCount': (this.state['renderCount'] ?? 0) + 1});
+  }
+}
+
+var legacyContextComponent = react.registerComponent(() => new _LegacyContextComponent());
+
+class _LegacyContextConsumerComponent extends react.Component {
+  @override
+  Iterable<String> get contextKeys => const ['foo'];
+
+  render() {
+    return react.ul({
+      'key': 'ul'
+    }, [
+      'LegacyContextConsumerComponent.context: ',
+      context.toString(),
+      react.br({'key': 'break1'}),
+      react.br({'key': 'break2'}),
+      props['children'],
+    ]);
+  }
+}
+
+var legacyContextConsumerComponent =
+    react.registerComponent(() => new _LegacyContextConsumerComponent());
+
+class _GrandchildLegacyContextConsumerComponent extends react.Component {
+  @override
+  Iterable<String> get contextKeys => const ['renderCount'];
+
+  render() {
+    return react.ul({
+      'key': 'ul'
+    }, [
+      'LegacyGrandchildContextConsumerComponent.context: ',
+      context.toString(),
+    ]);
+  }
+}
+
+var grandchildLegacyContextConsumerComponent =
+    react.registerComponent(() => new _GrandchildLegacyContextConsumerComponent());
+
+
+
+////
+// REACT NEW CONTEXT COMPONENTS
+////
+class _NewContextRefComponent extends react.Component2 {
   render() {
     return react.div({}, props['children']);
   }
@@ -185,12 +262,12 @@ class _ContextRefComponent extends react.Component2 {
   }
 }
 
-var contextRefComponent = react.registerComponent(() => new _ContextRefComponent());
+var newContextRefComponent = react.registerComponent(() => new _NewContextRefComponent());
 
-var TestContext = createContext({'renderCount': 0});
+var TestNewContext = createContext({'renderCount': 0});
 
-class _ContextComponent extends react.Component2 {
-  _ContextRefComponent componentRef;
+class _NewContextProviderComponent extends react.Component2 {
+  _NewContextRefComponent componentRef;
 
   getInitialState() => {'renderCount': 0};
 
@@ -201,16 +278,16 @@ class _ContextComponent extends react.Component2 {
   render() {
     Map provideMap = {
       'callback': printMe,
-      'dartComponent': mainComponent,
+      'dartComponent': newContextRefComponent,
       'componentRef': componentRef,
       'map': {
         'bool': true,
-        'anotherDartComponent': mainComponent,
+        'anotherDartComponent': newContextRefComponent,
       },
       'renderCount': this.state['renderCount']
     };
 
-    Map mainComponentProps = {
+    Map newContextRefComponentProps = {
       'ref': (ref) {
         componentRef = ref;
       }
@@ -219,7 +296,7 @@ class _ContextComponent extends react.Component2 {
     return react.ul({
       'key': 'ul',
     }, [
-      contextRefComponent(mainComponentProps, []),
+      newContextRefComponent(newContextRefComponentProps, []),
       react.button({
         'type': 'button',
         'key': 'button',
@@ -230,7 +307,7 @@ class _ContextComponent extends react.Component2 {
       'TestContext.Provider props.value: ${provideMap}',
       react.br({'key': 'break2'}),
       react.br({'key': 'break3'}),
-      TestContext.Provider(
+      TestNewContext.Provider(
         {'key': 'tcp', 'value': provideMap},
         props['children'],
       ),
@@ -243,11 +320,11 @@ class _ContextComponent extends react.Component2 {
   }
 }
 
-var contextComponent = react.registerComponent(() => new _ContextComponent());
+var newContextProviderComponent = react.registerComponent(() => new _NewContextProviderComponent());
 
-class _ContextConsumerComponent extends react.Component2 {
+class _NewContextConsumerComponent extends react.Component2 {
   render() {
-    return TestContext.Consumer({}, (value) {
+    return TestNewContext.Consumer({}, (value) {
       return react.ul({
         'key': 'ul'
       }, [
@@ -260,10 +337,10 @@ class _ContextConsumerComponent extends react.Component2 {
   }
 }
 
-var contextConsumerComponent = react.registerComponent(() => new _ContextConsumerComponent());
+var newContextConsumerComponent = react.registerComponent(() => new _NewContextConsumerComponent());
 
-class _ContextTypeConsumerComponent extends react.Component2 {
-  var contextType = TestContext;
+class _NewContextTypeConsumerComponent extends react.Component2 {
+  var contextType = TestNewContext;
 
   render() {
     this.context['callback']();
@@ -275,4 +352,4 @@ class _ContextTypeConsumerComponent extends react.Component2 {
   }
 }
 
-var contextTypeConsumerComponentComponent = react.registerComponent(() => new _ContextTypeConsumerComponent());
+var newContextTypeConsumerComponentComponent = react.registerComponent(() => new _NewContextTypeConsumerComponent());
