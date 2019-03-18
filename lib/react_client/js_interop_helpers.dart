@@ -22,7 +22,8 @@ class _MissingJsMemberError extends Error {
   _MissingJsMemberError(this.name, [this.message]);
 
   @override
-  String toString() => '_MissingJsMemberError: The JS member `$name` is missing and thus '
+  String toString() =>
+      '_MissingJsMemberError: The JS member `$name` is missing and thus '
       'cannot be used as expected. $message';
 }
 
@@ -116,7 +117,6 @@ EmptyObject jsify(Map map) {
 
   return jsMap;
 }
-
 
 // The following code is adapted from `package:js` in the dart-lang/sdk repo:
 // https://github.com/dart-lang/sdk/blob/2.2.0/sdk/lib/js_util/dart2js/js_util_dart2js.dart#L27
