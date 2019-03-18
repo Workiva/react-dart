@@ -1,6 +1,5 @@
 const webpack = require("webpack");
 const path = require("path");
-const UglifyJsPlugin = require("uglifyjs-webpack-plugin");
 
 const outputPath = path.resolve(__dirname, "lib/");
 const inputPath = path.resolve(__dirname, "js_src/");

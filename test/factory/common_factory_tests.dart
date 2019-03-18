@@ -1,4 +1,5 @@
 import 'dart:js';
+import 'dart:js_util';
 
 import 'package:meta/meta.dart';
 import 'package:test/test.dart';
@@ -7,7 +8,6 @@ import 'package:react/react_client.dart';
 import 'package:react/react_dom.dart' as react_dom;
 import 'package:react/react_test_utils.dart' as rtu;
 import 'package:react/react.dart' as react;
-import "package:react/react_client/js_interop_helpers.dart";
 import 'package:react/react_client/react_interop.dart';
 
 import '../util.dart';

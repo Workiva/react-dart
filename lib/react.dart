@@ -737,9 +737,6 @@ abstract class Component2 implements Component {
   }
 
   @override
-  dynamic _context;
-
-  @override
   var _jsRedraw;
 
   @override

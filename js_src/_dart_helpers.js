@@ -1,8 +1,6 @@
 /**
  * react-dart JS interop helpers (used by react_client.dart and react_client/js_interop_helpers.dart)
  */
-function _getProperty(obj, key) { return obj[key]; }
-function _setProperty(obj, key, value) { return obj[key] = value; }
 
 function _createReactDartComponentClass(dartInteropStatics, componentStatics, jsConfig) {
   class ReactDartComponent extends React.Component {
@@ -134,8 +132,6 @@ function _markChildValidated(child) {
 }
 
 module.exports = {
-  _getProperty,
-  _setProperty,
   _createReactDartComponentClass,
   _createReactDartComponentClass2,
   _markChildValidated,

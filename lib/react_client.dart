@@ -9,10 +9,11 @@ import "dart:async";
 import "dart:collection";
 import "dart:html";
 import 'dart:js';
+import 'dart:js_util';
 
 import "package:js/js.dart";
 import "package:react/react.dart";
-import "package:react/react_client/js_interop_helpers.dart";
+import 'package:react/react_client/js_interop_helpers.dart';
 import 'package:react/react_client/react_interop.dart';
 import "package:react/react_dom.dart";
 import 'package:react/react_dom_server.dart';
@@ -24,8 +25,6 @@ import 'package:react/src/ddc_emulated_function_name_bug.dart' as ddc_emulated_f
 
 export 'package:react/react_client/react_interop.dart' show ReactElement, ReactJsComponentFactory, inReactDevMode;
 export 'package:react/react.dart' show ReactComponentFactoryProxy, ComponentFactory;
-
-final EmptyObject emptyJsMap = new EmptyObject();
 
 /// The type of [Component.ref] specified as a callback.
 ///
@@ -257,7 +256,7 @@ final ReactDartInteropStatics _dartInteropStatics = (() {
           ComponentStatics componentStatics) =>
       zone.run(() {
         void jsRedraw() {
-          jsThis.setState(emptyJsMap);
+          jsThis.setState(newObject());
         }
 
         Ref getRef = (name) {
@@ -627,9 +626,9 @@ class ReactJsContextComponentFactoryProxy extends ReactJsComponentFactoryProxy {
 
   ReactJsContextComponentFactoryProxy(
     ReactClass jsClass, {
-    bool this.convertDomProps: true,
-    bool this.isConsumer: false,
-    bool this.isProvider: false,
+    this.convertDomProps: true,
+    this.isConsumer: false,
+    this.isProvider: false,
   })  : this.type = jsClass,
         this.factory = React.createFactory(jsClass),
         super(jsClass, convertDomProps: convertDomProps);
@@ -693,7 +692,7 @@ class ReactJsComponentFactoryProxy extends ReactComponentFactoryProxy {
   /// Disable for more custom handling of these props.
   final bool convertDomProps;
 
-  ReactJsComponentFactoryProxy(ReactClass jsClass, {bool this.convertDomProps: true})
+  ReactJsComponentFactoryProxy(ReactClass jsClass, {this.convertDomProps: true})
       : this.type = jsClass,
         this.factory = React.createFactory(jsClass) {
     if (jsClass == null) {
@@ -715,7 +714,7 @@ class ReactJsComponentFactoryProxy extends ReactComponentFactoryProxy {
     } else {
       potentiallyConvertedProps ??= props;
     }
-    return factory(jsify(potentiallyConvertedProps), children);
+    return factory(jsifyAndAllowInterop(potentiallyConvertedProps), children);
   }
 }
 
@@ -777,7 +776,7 @@ class ReactDomComponentFactoryProxy extends ReactComponentFactoryProxy {
     var convertibleProps = new Map.from(props);
     convertProps(convertibleProps);
 
-    return factory(jsify(convertibleProps), children);
+    return factory(jsifyAndAllowInterop(convertibleProps), children);
   }
 
   /// Prepares the bound values, event handlers, and style props for consumption by ReactJS DOM components.
