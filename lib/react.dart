@@ -336,9 +336,7 @@ abstract class Component {
   /// result of [shouldComponentUpdate], but [shouldComponentUpdate] is not called if a valid `bool` is returned.
   ///
   /// See: <https://facebook.github.io/react/docs/react-component.html#updating-shouldcomponentupdate>
-  bool shouldComponentUpdateWithContext(
-          Map nextProps, Map nextState, Map nextContext) =>
-      null;
+  bool shouldComponentUpdateWithContext(Map nextProps, Map nextState, Map nextContext) => null;
 
   /// ReactJS lifecycle method that is invoked immediately before rendering when [nextProps] or [nextState] are being
   /// received.
