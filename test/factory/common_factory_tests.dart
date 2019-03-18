@@ -1,4 +1,5 @@
 import 'dart:js';
+import 'dart:js_util';
 
 import 'dart:js_util';
 import 'package:test/test.dart';

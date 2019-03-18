@@ -5,7 +5,7 @@
 @JS()
 library react.test_utils;
 
-import 'dart:js_util';
+import 'dart:js_util' show jsify, getProperty;
 
 import 'package:js/js.dart';
 import 'package:react/react_client.dart';

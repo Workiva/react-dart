@@ -4,7 +4,7 @@
 library react_client.js_interop_helpers;
 
 import "package:js/js.dart";
-import "dart:js_util" as js_util;
+import "dart:js_util";
 
 // The following code is adapted from `package:js` in the dart-lang/sdk repo:
 // https://github.com/dart-lang/sdk/blob/2.2.0/sdk/lib/js_util/dart2js/js_util_dart2js.dart#L27
@@ -52,7 +52,8 @@ import "dart:js_util" as js_util;
 /// JavaScript type, and all other objects are proxied.
 dynamic jsifyAndAllowInterop(object) {
   if (object is! Map && object is! Iterable) {
-    throw new ArgumentError.value(object, 'object', 'must be a Map or Iterable');
+    throw new ArgumentError.value(
+        object, 'object', 'must be a Map or Iterable');
   }
   return _convertDataTree(object);
 }
@@ -60,15 +61,15 @@ dynamic jsifyAndAllowInterop(object) {
 _convertDataTree(data) {
   final _convertedObjects = new Map.identity();
 
-  _convert(o) {
+   _convert(o) {
     if (_convertedObjects.containsKey(o)) {
       return _convertedObjects[o];
     }
     if (o is Map) {
-      final convertedMap = js_util.newObject();
+      final convertedMap = newObject();
       _convertedObjects[o] = convertedMap;
       for (var key in o.keys) {
-        js_util.setProperty(convertedMap, key, _convert(o[key]));
+        setProperty(convertedMap, key, _convert(o[key]));
       }
       return convertedMap;
     } else if (o is Iterable) {

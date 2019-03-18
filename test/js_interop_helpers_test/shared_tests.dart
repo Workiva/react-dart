@@ -2,6 +2,7 @@
 library js_function_test;
 
 import 'dart:html';
+import 'dart:js_util';
 
 import 'package:js/js.dart';
 import 'dart:js_util' as js_util;
@@ -30,12 +31,4 @@ void sharedJsFunctionTests() {
       });
     });
   });
-}
-
-@JS()
-@anonymous
-class TestJsObject {
-  external factory TestJsObject({foo});
-
-  external get foo;
 }

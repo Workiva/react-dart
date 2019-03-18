@@ -13,6 +13,7 @@ import 'dart:js_util';
 
 import "package:js/js.dart";
 import "package:react/react.dart";
+import 'package:react/react_client/js_interop_helpers.dart';
 import 'package:react/react_client/react_interop.dart';
 import "package:react/react_dom.dart";
 import "package:react/react_dom_server.dart";
@@ -388,10 +389,10 @@ class ReactDomComponentFactoryProxy extends ReactComponentFactoryProxy {
 
     // We can't mutate the original since we can't be certain that the value of the
     // the converted event handler will be compatible with the Map's type parameters.
-    var convertibleProps = {}..addAll(props);
+    var convertibleProps = new Map.from(props);
     convertProps(convertibleProps);
 
-    return factory(jsify(convertibleProps), children);
+    return factory(jsifyAndAllowInterop(convertibleProps), children);
   }
 
   /// Prepares the bound values, event handlers, and style props for consumption by ReactJS DOM components.
