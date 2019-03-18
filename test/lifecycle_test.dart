@@ -171,13 +171,12 @@ main() {
       });
 
       test(
-          'Ensure getSnapshotBeforeId returned snapshot value is not '
-          'minified', () {
+          'does not jsify the return value of getSnapshotBeforeId, and '
+          'passes the same instance of that value to componentDidUpdate', () {
         List<String> expectedSnapshot = [
           'List Item 1',
           'List Item 2',
-          'List '
-              'Item 3'
+          'List Item 3',
         ];
 
         LifecycleTestHelper component = getDartComponent(
