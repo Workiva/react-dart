@@ -1,6 +1,6 @@
 import 'dart:js';
 
-import 'package:js/js_util.dart';
+import 'dart:js_util';
 import 'package:test/test.dart';
 
 import 'package:react/react_client.dart';

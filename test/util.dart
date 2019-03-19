@@ -2,7 +2,7 @@
 library react.test.util;
 
 import 'package:js/js.dart';
-import 'package:js/js_util.dart';
+import 'dart:js_util';
 
 @JS('Object.keys')
 external List _objectKeys(obj);

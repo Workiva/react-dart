@@ -220,6 +220,7 @@ void main() {
     });
 
     test('returns false argument is not an element', () {
+      expect(isElement(new EmptyObject()), isFalse);
       expect(isElement(newObject()), isFalse);
     });
   });
