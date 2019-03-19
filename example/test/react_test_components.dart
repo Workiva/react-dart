@@ -256,6 +256,7 @@ class _NewContextRefComponent extends react.Component2 {
 }
 
 var newContextRefComponent = react.registerComponent(() => new _NewContextRefComponent());
+
 int calculateChangedBits(currentValue, nextValue) {
   int result = 1 << 1;
   if (nextValue['renderCount'] % 2 == 0) {
@@ -338,11 +339,6 @@ class _NewContextProviderComponent extends react.Component2 {
 var newContextProviderComponent = react.registerComponent(() => new _NewContextProviderComponent());
 
 class _NewContextConsumerComponent extends react.Component2 {
-  @override
-  shouldComponentUpdateWithContext(nextProps, nextState, nextContext) {
-    return false;
-  }
-
   render() {
     return TestNewContext.Consumer({'unstable_observedBits': props['unstable_observedBits']}, (value) {
       return react.ul({
@@ -360,11 +356,6 @@ class _NewContextConsumerComponent extends react.Component2 {
 var newContextConsumerComponent = react.registerComponent(() => new _NewContextConsumerComponent());
 
 class _NewContextConsumerObservedBitsComponent extends react.Component2 {
-  @override
-  shouldComponentUpdateWithContext(nextProps, nextState, nextContext) {
-    return false;
-  }
-
   render() {
     return TestNewContext.Consumer({'unstable_observedBits': props['unstable_observedBits']}, (value) {
       return react.ul({
@@ -384,11 +375,6 @@ var newContextConsumerObservedBitsComponent =
 
 class _NewContextTypeConsumerComponent extends react.Component2 {
   var contextType = TestNewContext;
-
-  @override
-  shouldComponentUpdateWithContext(nextProps, nextState, nextContext) {
-    return false;
-  }
 
   render() {
     this.context['componentRef']?.test();

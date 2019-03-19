@@ -23,14 +23,16 @@ main() {
     var consumerRef;
     react_dom.render(
         ContextProviderWrapper({
-          'contextValue': typeToTest
+          'contextToUse': TestContext,
+          'value': typeToTest,
         }, [
           ContextTypeComponent({
             'ref': (ref) {
               contextTypeRef = ref;
             }
           }),
-          ContextConsumerComponent({
+          ContextConsumerWrapper({
+            'contextToUse': TestContext,
             'ref': (ref) {
               consumerRef = ref;
             }
@@ -57,17 +59,92 @@ main() {
     group('sets and retrieves values correctly:', () {
       sharedTypeTests(testTypeValue);
     });
+
+    group('calculateChangeBits argument functions correctly', () {
+      var mountNode = new html.DivElement();
+      _ContextProviderWrapper providerRef;
+      _ContextConsumerWrapper consumerEvenRef;
+      _ContextConsumerWrapper consumerOddRef;
+
+      setUp(() {
+        react_dom.render(
+            ContextProviderWrapper({
+              'contextToUse': TestCalculateChangedBitsContext,
+              'mode': 'increment',
+              'ref': (ref) {
+                providerRef = ref;
+              }
+            }, [
+              ContextConsumerWrapper({
+                'key': 'EvenContextConsumer',
+                'contextToUse': TestCalculateChangedBitsContext,
+                'unstable_observedBits': 1 << 2,
+                'ref': (ref) {
+                  consumerEvenRef = ref;
+                }
+              }),
+              ContextConsumerWrapper({
+                'key': 'OddContextConsumer',
+                'contextToUse': TestCalculateChangedBitsContext,
+                'unstable_observedBits': 1 << 3,
+                'ref': (ref) {
+                  consumerOddRef = ref;
+                }
+              })
+            ]),
+            mountNode);
+      });
+      test('on first render', () {
+        expect(consumerEvenRef.latestValue, 1);
+        expect(consumerOddRef.latestValue, 1);
+      });
+      test('on value updates', () {
+        providerRef.increment();
+        expect(consumerEvenRef.latestValue, 2);
+        expect(consumerOddRef.latestValue, 1);
+        providerRef.increment();
+        expect(consumerEvenRef.latestValue, 2);
+        expect(consumerOddRef.latestValue, 3);
+        providerRef.increment();
+        expect(consumerEvenRef.latestValue, 4);
+        expect(consumerOddRef.latestValue, 3);
+      });
+    });
   });
 }
+
+int calculateChangedBits(currentValue, nextValue) {
+  int result = 0;
+  if (nextValue % 2 == 0) {
+    // Bit for even values
+    result |= 1 << 2;
+  }
+  if (nextValue % 3 == 0) {
+    // Bit for odd values
+    result |= 1 << 3;
+  }
+  return result;
+}
+
+var TestCalculateChangedBitsContext = createContext(1, calculateChangedBits);
 
 var TestContext = createContext();
 
 ReactDartComponentFactoryProxy2 ContextProviderWrapper = react.registerComponent(() => new _ContextProviderWrapper());
 
 class _ContextProviderWrapper extends react.Component2 {
+  getInitialState() {
+    return {'counter': 1};
+  }
+
+  increment() {
+    this.setState({'counter': state['counter'] + 1});
+  }
+
   render() {
     return react.div({}, [
-      TestContext.Provider({'value': props['contextValue']}, props['children'])
+      props['contextToUse']
+          .Provider({'value': props['mode'] == 'increment' ? state['counter'] : props['value']}, props['children'])
     ]);
   }
 }
@@ -82,13 +159,12 @@ class _ContextTypeComponent extends react.Component2 {
   }
 }
 
-ReactDartComponentFactoryProxy2 ContextConsumerComponent =
-    react.registerComponent(() => new _ContextConsumerComponent());
+ReactDartComponentFactoryProxy2 ContextConsumerWrapper = react.registerComponent(() => new _ContextConsumerWrapper());
 
-class _ContextConsumerComponent extends react.Component2 {
+class _ContextConsumerWrapper extends react.Component2 {
   dynamic latestValue;
   render() {
-    return TestContext.Consumer({}, (value) {
+    return props['contextToUse'].Consumer({'unstable_observedBits': props['unstable_observedBits']}, (value) {
       latestValue = value;
       return react.div({}, '$value');
     });
