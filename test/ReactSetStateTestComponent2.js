@@ -11,7 +11,7 @@ function getComponent2NonUpdatingSetStateLifeCycleCalls() {
 var _component2NonUpdatingSetStateLifeCycleCalls = [];
 
 function getComponent2LatestJSCounter() {
-    return _Component2Counter;
+    return _component2Counter;
 }
 
 function getComponent2UpdatingRenderedCounter() {
@@ -24,10 +24,10 @@ function getComponent2NonUpdatingRenderedCounter() {
 
 var _component2Counter;
 
-class ReactSetStateTestComponent2 extends React.Component2 {
+class ReactSetStateTestComponent2 extends React.Component {
     constructor(props) {
         super(props);
-        _counter = 1;
+        _component2Counter = 1;
         this.state = {counter: _component2Counter};
     }
 

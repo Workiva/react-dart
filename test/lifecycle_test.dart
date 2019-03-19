@@ -882,10 +882,16 @@ void sharedLifecycleTests<T extends react.Component>({
 
         // Check against the JS component to ensure no regressions.
         expect(component.state['counter'], 3);
-        expect(component.state['counter'], getLatestJSCounter());
-        expect(component.lifecycleCalls, orderedEquals(getNonUpdatingSetStateLifeCycleCalls()));
+        if (isComponent2) {
+          expect(component.lifecycleCalls, orderedEquals(getComponent2NonUpdatingSetStateLifeCycleCalls()));
+          expect(component.state['counter'], getComponent2LatestJSCounter());
+          expect(renderedNode.children.first.text, getComponent2NonUpdatingRenderedCounter());
+        } else {
+          expect(component.lifecycleCalls, orderedEquals(getNonUpdatingSetStateLifeCycleCalls()));
+          expect(component.state['counter'], getLatestJSCounter());
+          expect(renderedNode.children.first.text, getNonUpdatingRenderedCounter());
+        }
         expect(renderedNode.children.first.text, '1');
-        expect(renderedNode.children.first.text, getNonUpdatingRenderedCounter());
       });
 
       test('when shouldComponentUpdate returns true', () {
@@ -899,15 +905,17 @@ void sharedLifecycleTests<T extends react.Component>({
 
         // Check against the JS component to ensure no regressions.
         expect(component.state['counter'], 3);
-        expect(component.state['counter'], getLatestJSCounter());
 
         if (isComponent2) {
-//          expect(component.lifecycleCalls, orderedEquals(getComponent2UpdatingSetStateLifeCycleCalls()));
+          expect(component.lifecycleCalls, orderedEquals(getComponent2UpdatingSetStateLifeCycleCalls()));
+          expect(component.state['counter'], getComponent2LatestJSCounter());
+          expect(renderedNode.children.first.text, getComponent2UpdatingRenderedCounter());
         } else {
           expect(component.lifecycleCalls, orderedEquals(getUpdatingSetStateLifeCycleCalls()));
+          expect(component.state['counter'], getLatestJSCounter());
+          expect(renderedNode.children.first.text, getUpdatingRenderedCounter());
         }
         expect(renderedNode.children.first.text, '3');
-        expect(renderedNode.children.first.text, getUpdatingRenderedCounter());
       });
     });
   });
@@ -923,10 +931,22 @@ external List getComponent2UpdatingSetStateLifeCycleCalls();
 external List getNonUpdatingSetStateLifeCycleCalls();
 
 @JS()
+external List getComponent2NonUpdatingSetStateLifeCycleCalls();
+
+@JS()
 external int getLatestJSCounter();
+
+@JS()
+external int getComponent2LatestJSCounter();
 
 @JS()
 external String getUpdatingRenderedCounter();
 
 @JS()
+external String getComponent2UpdatingRenderedCounter();
+
+@JS()
 external String getNonUpdatingRenderedCounter();
+
+@JS()
+external String getComponent2NonUpdatingRenderedCounter();
