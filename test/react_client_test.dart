@@ -34,7 +34,6 @@ main() {
           'children': testChildren,
         }),
       );
-      expect(unconvertJsProps(instance)['style'], new isInstanceOf<Map<String, dynamic>>());
     });
 
     test('returns props for a composite JS ReactComponent', () {
@@ -162,6 +161,6 @@ final Function testJsComponentFactory = (() {
   var reactFactory = React.createFactory(componentClass);
 
   return ([props = const {}, children]) {
-    return reactFactory(jsify(props), listifyChildren(children));
+    return reactFactory(jsifyAndAllowInterop(props), listifyChildren(children));
   };
 })();
