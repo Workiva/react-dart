@@ -901,7 +901,9 @@ void sharedLifecycleTests<T extends react.Component>({
         expect(component.state['counter'], 3);
         expect(component.state['counter'], getLatestJSCounter());
 
-        if (!isComponent2) {
+        if (isComponent2) {
+//          expect(component.lifecycleCalls, orderedEquals(getComponent2UpdatingSetStateLifeCycleCalls()));
+        } else {
           expect(component.lifecycleCalls, orderedEquals(getUpdatingSetStateLifeCycleCalls()));
         }
         expect(renderedNode.children.first.text, '3');
@@ -913,6 +915,9 @@ void sharedLifecycleTests<T extends react.Component>({
 
 @JS()
 external List getUpdatingSetStateLifeCycleCalls();
+
+@JS()
+external List getComponent2UpdatingSetStateLifeCycleCalls();
 
 @JS()
 external List getNonUpdatingSetStateLifeCycleCalls();
