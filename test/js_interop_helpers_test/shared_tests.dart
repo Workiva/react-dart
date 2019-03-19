@@ -4,7 +4,7 @@ library js_function_test;
 import 'dart:html';
 
 import 'package:js/js.dart';
-import 'dart:js_util';
+import 'dart:js_util' as js_util;
 // TODO: remove in 5.0.0
 import 'package:react/react_client/js_interop_helpers.dart';
 import 'package:react/react_client/react_interop.dart';
@@ -58,7 +58,7 @@ void sharedJsFunctionTests() {
     group('markChildValidated', () {
       test('is function that does not throw when called', () {
         expect(() => markChildValidated(new EmptyObject()), returnsNormally);
-        expect(() => markChildValidated(newObject()), returnsNormally);
+        expect(() => markChildValidated(js_util.newObject()), returnsNormally);
       });
     });
 
