@@ -149,16 +149,6 @@ class _ContextProviderWrapper extends react.Component2 {
   }
 }
 
-ReactDartComponentFactoryProxy2 ContextTypeComponent = react.registerComponent(() => new _ContextTypeComponent());
-
-class _ContextTypeComponent extends react.Component2 {
-  var contextType = TestContext;
-
-  render() {
-    return react.div({}, '${this.context}');
-  }
-}
-
 ReactDartComponentFactoryProxy2 ContextConsumerWrapper = react.registerComponent(() => new _ContextConsumerWrapper());
 
 class _ContextConsumerWrapper extends react.Component2 {
@@ -168,5 +158,15 @@ class _ContextConsumerWrapper extends react.Component2 {
       latestValue = value;
       return react.div({}, '$value');
     });
+  }
+}
+
+ReactDartComponentFactoryProxy2 ContextTypeComponent = react.registerComponent(() => new _ContextTypeComponent());
+
+class _ContextTypeComponent extends react.Component2 {
+  var contextType = TestContext;
+
+  render() {
+    return react.div({}, '${this.context}');
   }
 }
