@@ -1158,18 +1158,23 @@ dynamic _findDomNode(component) {
 }
 
 class ReactDartContext {
-  ReactContext _jsThis;
   ReactDartContext(this.Provider, this.Consumer, this._jsThis);
-  ReactJsContextComponentFactoryProxy Provider;
-  ReactJsContextComponentFactoryProxy Consumer;
+  final ReactContext _jsThis;
+  final ReactJsContextComponentFactoryProxy Provider;
+  final ReactJsContextComponentFactoryProxy Consumer;
   ReactContext get jsThis => _jsThis;
 }
 
-ReactDartContext createContext<T>([
-  T defaultValue,
-  int Function(T currentValue, T nextValue) calculateChangedBits,
+ReactDartContext createContext([
+  dynamic defaultValue,
+  int Function(dynamic currentValue, dynamic nextValue) calculateChangedBits,
 ]) {
-  var JSContext = React.createContext(defaultValue, calculateChangedBits);
+  var JSContext = React.createContext(
+    defaultValue,
+    (currentValue, nextValue) {
+      return calculateChangedBits(_unjsifyNewContext(currentValue), _unjsifyNewContext(nextValue));
+    }
+  );
   return new ReactDartContext(new ReactJsContextComponentFactoryProxy(JSContext.Provider, isProvider: true),
       new ReactJsContextComponentFactoryProxy(JSContext.Consumer, isConsumer: true), JSContext);
 }

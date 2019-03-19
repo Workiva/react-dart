@@ -19,7 +19,7 @@ typedef ReactComponentFactoryProxy ComponentRegistrar(ComponentFactory component
 /// __Deprecated. Use [Component2] instead.__
 @Deprecated('6.0.0')
 abstract class Component {
-  dynamic _context;
+  Map _context;
 
   /// A private field that backs [props], which is exposed via getter/setter so
   /// it can be overridden in strong mode.
@@ -449,9 +449,9 @@ abstract class Component2 implements Component {
   // TODO make private using expando?
   Component2Adapter adapter;
 
-  /// The contextType property on a class can be assigned a Context object created by createContext().
-  /// This lets you consume the nearest current value of that Context type using this.context.
-  /// You can reference this in any of the lifecycle methods including the render function.
+  /// Accessed once and cached when instance is created. The contextType property on a class can be assigned
+  /// a Context object created by createContext(). This lets you consume the nearest current value of that
+  /// Context type using [context].
   ReactDartContext contextType;
 
   /// The context value from the [contextType] assigned to this component.
@@ -735,6 +735,9 @@ abstract class Component2 implements Component {
   void redraw([SetStateCallback callback]) {
     setState({}, callback);
   }
+
+  @override
+  Map _context;
 
   @override
   var _jsRedraw;

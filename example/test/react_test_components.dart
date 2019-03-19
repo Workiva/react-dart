@@ -1,5 +1,5 @@
 import "dart:async";
-import 'dart:convert';
+import 'dart:math';
 
 import "package:react/react.dart" as react;
 import 'package:react/react_client.dart';
@@ -256,13 +256,20 @@ class _NewContextRefComponent extends react.Component2 {
 }
 
 var newContextRefComponent = react.registerComponent(() => new _NewContextRefComponent());
+int calculateChangedBits(currentValue, nextValue) {
+  int result = 1 << 1;
+  if ( nextValue['renderCount'] % 2 == 0) {
+    result |= 1 << 2;
+  }
+  return result;
+}
 
-var TestNewContext = createContext({'renderCount': 0});
+var TestNewContext = createContext({'renderCount': 0}, calculateChangedBits);
 
 class _NewContextProviderComponent extends react.Component2 {
   _NewContextRefComponent componentRef;
 
-  getInitialState() => {'renderCount': 0};
+  getInitialState() => {'renderCount': 0, 'complexMap': false};
 
   printMe() {
     print('printMe!');
@@ -270,24 +277,32 @@ class _NewContextProviderComponent extends react.Component2 {
 
   render() {
     Map provideMap = {
+      'renderCount': this.state['renderCount']
+    };
+
+    Map complexValues = {
       'callback': printMe,
       'dartComponent': newContextRefComponent,
-      'componentRef': componentRef,
       'map': {
         'bool': true,
         'anotherDartComponent': newContextRefComponent,
       },
-      'renderCount': this.state['renderCount']
+      'componentRef': componentRef,
     };
 
+    if (state['complexMap']) {
+      provideMap.addAll(complexValues);
+    }
+
     Map newContextRefComponentProps = {
+      'key':'ref2',
       'ref': (ref) {
         componentRef = ref;
       }
     };
 
     return react.ul({
-      'key': 'ul',
+      'key': 'ulasda',
     }, [
       newContextRefComponent(newContextRefComponentProps, []),
       react.button({
@@ -296,6 +311,12 @@ class _NewContextProviderComponent extends react.Component2 {
         'className': 'btn btn-primary',
         'onClick': _onButtonClick,
       }, 'Redraw'),
+      react.button({
+        'type': 'button',
+        'key': 'button_complex',
+        'className': 'btn btn-primary',
+        'onClick': _onComplexClick,
+      }, 'Redraw With Complex Value'),
       react.br({'key': 'break1'}),
       'TestContext.Provider props.value: ${provideMap}',
       react.br({'key': 'break2'}),
@@ -307,23 +328,30 @@ class _NewContextProviderComponent extends react.Component2 {
     ]);
   }
 
+  _onComplexClick(event) {
+    this.setState({'complexMap': true, 'renderCount': this.state['renderCount'] + 1});
+  }
+
   _onButtonClick(event) {
-    this.setState({'renderCount': this.state['renderCount'] + 1});
-    componentRef.test();
+    this.setState({'renderCount': this.state['renderCount'] + 1, 'complexMap': false });
   }
 }
 
 var newContextProviderComponent = react.registerComponent(() => new _NewContextProviderComponent());
 
 class _NewContextConsumerComponent extends react.Component2 {
+  @override
+  shouldComponentUpdateWithContext(nextProps, nextState, nextContext) {
+    return false;
+  }
   render() {
-    return TestNewContext.Consumer({}, (value) {
+    return TestNewContext.Consumer({'unstable_observedBits':props['unstable_observedBits']}, (value) {
       return react.ul({
-        'key': 'ul'
+        'key': 'ul1'
       }, [
         'TestContext.Consumer: value = ${value}',
-        react.br({'key': 'break1'}),
-        react.br({'key': 'break2'}),
+        react.br({'key': 'break12'}),
+        react.br({'key': 'break22'}),
         props['children'],
       ]);
     });
@@ -332,13 +360,38 @@ class _NewContextConsumerComponent extends react.Component2 {
 
 var newContextConsumerComponent = react.registerComponent(() => new _NewContextConsumerComponent());
 
+class _NewContextConsumerObservedBitsComponent extends react.Component2 {
+  @override
+  shouldComponentUpdateWithContext(nextProps, nextState, nextContext) {
+    return false;
+  }
+  render() {
+    return TestNewContext.Consumer({'unstable_observedBits':props['unstable_observedBits']}, (value) {
+      return react.ul({
+        'key': 'ul2'
+      }, [
+        'TestContext.Consumer (with unstable_observedBits set to trigger when `renderCount % 2 == 0`): value = ${value}',
+        react.br({'key': 'break13'}),
+        react.br({'key': 'break23'}),
+        props['children'],
+      ]);
+    });
+  }
+}
+
+var newContextConsumerObservedBitsComponent = react.registerComponent(() => new _NewContextConsumerObservedBitsComponent());
+
 class _NewContextTypeConsumerComponent extends react.Component2 {
   var contextType = TestNewContext;
 
+  @override
+  shouldComponentUpdateWithContext(nextProps, nextState, nextContext) {
+    return false;
+  }
   render() {
-    this.context['callback']();
+    this.context['componentRef']?.test();
     return react.ul({
-      'key': 'ul'
+      'key': 'ul3'
     }, [
       'Using Component.contextType: this.context = ${this.context}',
     ]);
