@@ -1169,12 +1169,9 @@ ReactDartContext createContext([
   dynamic defaultValue,
   int Function(dynamic currentValue, dynamic nextValue) calculateChangedBits,
 ]) {
-  var JSContext = React.createContext(
-    defaultValue,
-    (currentValue, nextValue) {
-      return calculateChangedBits(_unjsifyNewContext(currentValue), _unjsifyNewContext(nextValue));
-    }
-  );
+  var JSContext = React.createContext(defaultValue, (currentValue, nextValue) {
+    return calculateChangedBits(_unjsifyNewContext(currentValue), _unjsifyNewContext(nextValue));
+  });
   return new ReactDartContext(new ReactJsContextComponentFactoryProxy(JSContext.Provider, isProvider: true),
       new ReactJsContextComponentFactoryProxy(JSContext.Consumer, isConsumer: true), JSContext);
 }
