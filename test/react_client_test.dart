@@ -34,6 +34,7 @@ main() {
           'children': testChildren,
         }),
       );
+      expect(unconvertJsProps(instance)['style'], new isInstanceOf<Map<String, dynamic>>());
     });
 
     test('returns props for a composite JS ReactComponent', () {
