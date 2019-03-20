@@ -167,7 +167,7 @@ void sharedLifecycleTests<T extends react.Component>({
   @required ReactDartComponentFactoryProxy ContextWrapper,
   @required ReactDartComponentFactoryProxy LifecycleTestWithContext,
   @required ReactDartComponentFactoryProxy LifecycleTest,
-  isComponent2: false,
+  bool isComponent2: false,
 }) {
   group('(shared behavior)', () {
     group('default props', () {

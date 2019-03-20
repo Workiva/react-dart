@@ -456,9 +456,9 @@ abstract class Component2 implements Component {
   // TODO make private using expando?
   Component2Adapter adapter;
 
-  /// Accessed once and cached when instance is created. The contextType property on a class can be assigned
-  /// a Context object created by createContext(). This lets you consume the nearest current value of that
-  /// Context type using [context].
+  /// Accessed once and cached when instance is created. The [contextType] property on a class can be assigned
+  /// a [ReactDartContext] object created by [React.createContext]. This lets you consume the nearest current value of
+  /// that Context using [context].
   ReactDartContext contextType;
 
   /// The context value from the [contextType] assigned to this component.

@@ -636,12 +636,12 @@ class ReactJsContextComponentFactoryProxy extends ReactJsComponentFactoryProxy {
       }
     }
 
-    return factory(generateExtendedJsProps(new Map.from(props)), children);
+    return factory(generateExtendedJsProps(props), children);
   }
 
   /// Returns a JavaScript version of the specified [props], preprocessed for consumption by ReactJS and prepared for
   /// consumption by the [react] library internals.
-  generateExtendedJsProps(Map props) {
+  JsMap generateExtendedJsProps(Map props) {
     JsBackedMap propsForJs = new JsBackedMap.from(props);
 
     if (isProvider) {
@@ -1134,14 +1134,32 @@ dynamic _findDomNode(component) {
   return ReactDom.findDOMNode(component is Component ? component.jsThis : component);
 }
 
+/// Wraps [ReactContext] for use in Dart.
+///
+/// Learn more at: https://reactjs.org/docs/context.html
 class ReactDartContext {
   ReactDartContext(this.Provider, this.Consumer, this._jsThis);
   final ReactContext _jsThis;
+
+  /// Every [ReactDartContext] object comes with a Provider component that allows consuming components to subscribe
+  /// to context changes.
+  ///
+  /// Accepts a `value` prop to be passed to consuming components that are descendants of this [Provider].
   final ReactJsContextComponentFactoryProxy Provider;
+
+  /// A React component that subscribes to context changes.
+  /// Requires a function as a child. The function receives the current context value and returns a React node.
   final ReactJsContextComponentFactoryProxy Consumer;
   ReactContext get jsThis => _jsThis;
 }
 
+/// Creates a [ReactDartContext] object. When React renders a component that subscribes to this [ReactDartContext]
+/// object it will read the current context value from the closest matching Provider above it in the tree.
+///
+/// The `defaultValue` argument is only used when a component does not have a matching [ReactDartContext.Provider]
+/// above it in the tree. This can be helpful for testing components in isolation without wrapping them.
+///
+/// Learn more: https://reactjs.org/docs/context.html#reactcreatecontext
 ReactDartContext createContext([
   dynamic defaultValue,
   int Function(dynamic currentValue, dynamic nextValue) calculateChangedBits,
@@ -1150,9 +1168,12 @@ ReactDartContext createContext([
     return calculateChangedBits(_unjsifyNewContext(currentValue), _unjsifyNewContext(nextValue));
   }
 
-  var JSContext = React.createContext(defaultValue, allowInterop(jsifyCalculateChangedBitsArgs));
-  return new ReactDartContext(new ReactJsContextComponentFactoryProxy(JSContext.Provider, isProvider: true),
-      new ReactJsContextComponentFactoryProxy(JSContext.Consumer, isConsumer: true), JSContext);
+  var JSContext = React.createContext(_jsifyNewContext(defaultValue), allowInterop(jsifyCalculateChangedBitsArgs));
+  return new ReactDartContext(
+    new ReactJsContextComponentFactoryProxy(JSContext.Provider, isProvider: true),
+    new ReactJsContextComponentFactoryProxy(JSContext.Consumer, isConsumer: true),
+    JSContext,
+  );
 }
 
 void setClientConfiguration() {
