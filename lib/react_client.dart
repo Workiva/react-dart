@@ -238,7 +238,7 @@ dynamic _jsifyNewContext(dynamic context) {
 }
 
 dynamic _unjsifyNewContext(dynamic interopContext) {
-  if (interopContext != null){
+  if (interopContext != null) {
     return getProperty(interopContext, _reactDartContextSymbol);
   }
   return interopContext;
@@ -1149,6 +1149,7 @@ ReactDartContext createContext([
   int jsifyCalculateChangedBitsArgs(currentValue, nextValue) {
     return calculateChangedBits(_unjsifyNewContext(currentValue), _unjsifyNewContext(nextValue));
   }
+
   var JSContext = React.createContext(defaultValue, allowInterop(jsifyCalculateChangedBitsArgs));
   return new ReactDartContext(new ReactJsContextComponentFactoryProxy(JSContext.Provider, isProvider: true),
       new ReactJsContextComponentFactoryProxy(JSContext.Consumer, isConsumer: true), JSContext);
