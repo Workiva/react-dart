@@ -849,35 +849,35 @@ abstract class Component2 implements Component {
 ///
 /// __EXAMPLE__:
 ///
-/// class _ParentComponent extends react.Component2
-///     with react.TypedSnapshot<bool> {
+///     class _ParentComponent extends react.Component2
+///         with react.TypedSnapshot<bool> {
 ///
-///   // Note that the return value is specified as an bool, matching the mixin
-///   // type.
-///   bool getShapshotBeforeUpdate(prevProps, prevState) {
-///     if (prevProps["foo"]) {
-///       return true;
+///       // Note that the return value is specified as an bool, matching the mixin
+///       // type.
+///       bool getShapshotBeforeUpdate(prevProps, prevState) {
+///         if (prevProps["foo"]) {
+///           return true;
+///         }
+///         return null;
+///       }
+///
+///       // Note that the snapshot parameter is consistently typed with the return
+///       // value of getSnapshotBeforeUpdate.
+///       void componentDidUpdate(prevProps, prevState, [bool snapshot]) {
+///         if (snapshot == true) {
+///           // Do something
+///         }
+///       }
+///
+///       /* Include other standard component logic */
+///
 ///     }
-///     return null;
-///   }
-///
-///   // Note that the snapshot parameter is consistently typed with the return
-///   // value of getSnapshotBeforeUpdate.
-///   void componentDidUpdate(prevProps, prevState, [bool snapshot]) {
-///     if (snapshot == true) {
-///       // Do something
-///     }
-///   }
-///
-///   /* Include other standard component logic */
-///
-/// }
-abstract class TypedSnapshot<TSnapshot> implements Component2 {
-  TSnapshot getSnapshotBeforeUpdate(Map prevProps, Map prevState) {
-    return null;
-  }
+mixin TypedSnapshot<TSnapshot> on Component2 {
+  @override
+  TSnapshot getSnapshotBeforeUpdate(Map prevProps, Map prevState);
 
-  void componentDidUpdate(Map prevProps, Map prevState, [covariant TSnapshot snapshot]) {}
+  @override
+  void componentDidUpdate(Map prevProps, Map prevState, [covariant TSnapshot snapshot]);
 }
 
 /// Creates a ReactJS virtual DOM instance (`ReactElement` on the client).
