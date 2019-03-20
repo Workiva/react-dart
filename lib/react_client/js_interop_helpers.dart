@@ -4,7 +4,7 @@
 library react_client.js_interop_helpers;
 
 import "package:js/js.dart";
-import "package:js/js_util.dart" as js_util;
+import "dart:js_util" as js_util;
 
 @JS()
 external dynamic _getProperty(jsObj, String key);
