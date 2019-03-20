@@ -330,6 +330,7 @@ abstract class Component {
   /// > __DEPRECATED - DO NOT USE__
   /// >
   /// > This API was never stable in any version of ReactJS, and was replaced with a new, incompatible context API
+  /// > being received.
   /// > in ReactJS 16 that will be exposed in version `5.0.0` of the `react` Dart package via a
   /// > new version of `Component` called `Component2`.
   /// >
