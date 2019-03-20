@@ -356,12 +356,18 @@ class ReactDartInteropStatics2 implements ReactDartInteropStatics {
     void Function(Component2 component, JsMap jsNextProps) handleComponentWillReceiveProps,
     bool Function(Component2 component, JsMap jsNextProps, JsMap jsNextState) handleShouldComponentUpdate,
     // TODO: Should this be removed when we update Component2.componentWillUpdate to throw an UnsupportedError? (CPLAT-4766)
-    void Function(Component2 component, JsMap jsNextProps, JsMap jsNextState) handleComponentWillUpdate,
+    void Function(
+      Component2 component,
+      JsMap jsPrevProps,
+      JsMap jsPrevState,
+    )
+        handleGetSnapshotBeforeUpdate,
     void Function(
       Component2 component,
       ReactComponent jsThis,
       JsMap jsPrevProps,
       JsMap jsPrevState,
+      dynamic snapshot,
     )
         handleComponentDidUpdate,
     void Function(Component2 component) handleComponentWillUnmount,

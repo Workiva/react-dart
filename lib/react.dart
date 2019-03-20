@@ -359,6 +359,17 @@ abstract class Component {
   /// using both provides no added benefit.
   ///
   /// See: <https://facebook.github.io/react/docs/react-component.html#updating-componentwillupdate>
+  ///
+  /// > __DEPRECATED - DO NOT USE__
+  /// >
+  /// > Due to the release of getSnapshotBeforeUpdate in ReactJS 16,
+  /// > componentWillUpdate is no longer the method used to check the state
+  /// > and props before a re-render. Both the Component class and
+  /// > componentWillUpdate will be removed in the react.dart 6.0.0 release.
+  /// > Use Component2 and Component2.getSnapshotBeforeUpdate instead.
+  /// >
+  /// > This will be completely removed when the JS side of it is slated for removal (ReactJS 17 / react.dart 6.0.0)
+  @Deprecated('6.0.0')
   void componentWillUpdate(Map nextProps, Map nextState) {}
 
   /// > __DEPRECATED - DO NOT USE__
@@ -574,7 +585,59 @@ abstract class Component2 implements Component {
   /// using both provides no added benefit.
   ///
   /// See: <https://facebook.github.io/react/docs/react-component.html#updating-componentwillupdate>
+  ///
+  /// > __DEPRECATED - DO NOT USE__
+  /// >
+  /// > Due to the release of getSnapshotBeforeUpdate in ReactJS 16,
+  /// > componentWillUpdate is no longer the method used to check the state
+  /// > and props before a re-render. Additionally, because of the presence
+  /// > of getSnapshotBeforeUpdate, componentWillUpdate will be ignored. Use
+  /// > getSnapshotBeforeUpdate instead.
+  /// >
+  /// > This will be completely removed when the JS side of it is slated for removal (ReactJS 17 / react.dart 6.0.0)
+  @Deprecated('6.0.0')
   void componentWillUpdate(Map nextProps, Map nextState) {}
+
+  /// ReactJS lifecycle method that is invoked immediately after rendering
+  /// before [nextProps] and [nextState] are committed to the DOM.
+  ///
+  /// This method is not called for the initial [render].
+  ///
+  /// Use this as an opportunity to perform preparation before an update occurs.
+  ///
+  /// __Example__:
+  ///
+  ///     getSnapshotBeforeUpdate(prevProps, prevState) {
+  ///
+  ///       // Previous props / state can be analyzed and compared to this.props or
+  ///       // this.state, allowing the opportunity perform decision logic.
+  ///       // Are we adding new items to the list?
+  ///       // Capture the scroll position so we can adjust scroll later.
+  ///
+  ///       if (prevProps.list.length < props.list.length) {
+  ///
+  ///         // The return value from getSnapshotBeforeUpdate is passed into
+  ///         // componentDidUpdate's third parameter (which is new to React 16).
+  ///
+  ///         final list = _listRef;
+  ///         return list.scrollHeight - list.scrollTop;
+  ///       }
+  ///       return null;
+  ///     }
+  ///
+  ///     componentDidUpdate(prevProps, prevState, snapshot) {
+  ///       // If we have a snapshot value, we've just added new items.
+  ///       // Adjust scroll so these new items don't push the old ones out of
+  ///       // view.
+  ///       // (snapshot here is the value returned from getSnapshotBeforeUpdate)
+  ///       if (snapshot !== null) {
+  ///         final list = _listRef;
+  ///         list.scrollTop = list.scrollHeight - snapshot;
+  ///       }
+  ///     }
+  ///
+  /// See: <https://facebook.github.io/react/docs/react-component.html#getsnapshotbeforeupdate>
+  dynamic getSnapshotBeforeUpdate(Map prevProps, Map prevState) {}
 
   /// ReactJS lifecycle method that is invoked immediately after the `Component`'s updates are flushed to the DOM.
   ///
@@ -583,8 +646,13 @@ abstract class Component2 implements Component {
   /// Use this as an opportunity to operate on the [rootNode] (DOM) when the `Component` has been updated as a result
   /// of the values of [prevProps] / [prevState].
   ///
+  /// __Note__: React 16 added a third parameter to componentDidUpdate, which
+  /// is a custom value returned in [getSnapshotBeforeUpdate]. If a specified
+  /// value is not returned in getSnapshotBeforeUpdate, the [snapshot]
+  /// parameter in componentDidUpdate will be null.
+  ///
   /// See: <https://facebook.github.io/react/docs/react-component.html#updating-componentdidupdate>
-  void componentDidUpdate(Map prevProps, Map prevState) {}
+  void componentDidUpdate(Map prevProps, Map prevState, [dynamic snapshot]) {}
 
   /// ReactJS lifecycle method that is invoked immediately before a `Component` is unmounted from the DOM.
   ///
@@ -773,6 +841,43 @@ abstract class Component2 implements Component {
 
   @override
   List<StateUpdaterCallback> get transactionalSetStateCallbacks => throw new UnimplementedError();
+}
+
+/// Mixin that enforces consistent typing of the `snapshot` parameter
+/// returned by [Component2.getSnapshotBeforeUpdate]
+/// and passed into [Component2.componentDidUpdate].
+///
+/// __EXAMPLE__:
+///
+///     class _ParentComponent extends react.Component2
+///         with react.TypedSnapshot<bool> {
+///
+///       // Note that the return value is specified as an bool, matching the mixin
+///       // type.
+///       bool getShapshotBeforeUpdate(prevProps, prevState) {
+///         if (prevProps["foo"]) {
+///           return true;
+///         }
+///         return null;
+///       }
+///
+///       // Note that the snapshot parameter is consistently typed with the return
+///       // value of getSnapshotBeforeUpdate.
+///       void componentDidUpdate(prevProps, prevState, [bool snapshot]) {
+///         if (snapshot == true) {
+///           // Do something
+///         }
+///       }
+///
+///       /* Include other standard component logic */
+///
+///     }
+mixin TypedSnapshot<TSnapshot> on Component2 {
+  @override
+  TSnapshot getSnapshotBeforeUpdate(Map prevProps, Map prevState);
+
+  @override
+  void componentDidUpdate(Map prevProps, Map prevState, [covariant TSnapshot snapshot]);
 }
 
 /// Creates a ReactJS virtual DOM instance (`ReactElement` on the client).

@@ -512,20 +512,23 @@ final ReactDartInteropStatics2 _dartInteropStatics2 = (() {
         return value;
       });
 
-  void handleComponentWillUpdate(Component2 component, JsMap jsNextProps, JsMap jsNextState) => zone.run(() {
-        component.componentWillUpdate(
-          new JsBackedMap.backedBy(jsNextProps),
-          new JsBackedMap.backedBy(jsNextState),
+  dynamic handleGetSnapshotBeforeUpdate(Component2 component, JsMap jsPrevProps, JsMap jsPrevState) => zone.run(() {
+        final snapshotValue = component.getSnapshotBeforeUpdate(
+          new JsBackedMap.backedBy(jsPrevProps),
+          new JsBackedMap.backedBy(jsPrevState),
         );
 
-        _updatePropsAndStateWithJs(component, jsNextProps, jsNextState);
+        return snapshotValue;
       });
 
-  void handleComponentDidUpdate(Component2 component, ReactComponent jsThis, JsMap jsPrevProps, JsMap jsPrevState) =>
+  void handleComponentDidUpdate(Component2 component, ReactComponent jsThis, JsMap jsPrevProps, JsMap jsPrevState,
+          [dynamic snapshot]) =>
       zone.run(() {
+        _updatePropsAndStateWithJs(component, component.jsThis.props, component.jsThis.state);
         component.componentDidUpdate(
           new JsBackedMap.backedBy(jsPrevProps),
           new JsBackedMap.backedBy(jsPrevState),
+          snapshot,
         );
       });
 
@@ -534,6 +537,7 @@ final ReactDartInteropStatics2 _dartInteropStatics2 = (() {
       });
 
   dynamic handleRender(Component2 component) => zone.run(() {
+        _updatePropsAndStateWithJs(component, component.jsThis.props, component.jsThis.state);
         return component.render();
       });
 
@@ -544,7 +548,7 @@ final ReactDartInteropStatics2 _dartInteropStatics2 = (() {
     handleComponentDidMount: allowInterop(handleComponentDidMount),
     handleComponentWillReceiveProps: allowInterop(handleComponentWillReceiveProps),
     handleShouldComponentUpdate: allowInterop(handleShouldComponentUpdate),
-    handleComponentWillUpdate: allowInterop(handleComponentWillUpdate),
+    handleGetSnapshotBeforeUpdate: allowInterop(handleGetSnapshotBeforeUpdate),
     handleComponentDidUpdate: allowInterop(handleComponentDidUpdate),
     handleComponentWillUnmount: allowInterop(handleComponentWillUnmount),
     handleRender: allowInterop(handleRender),

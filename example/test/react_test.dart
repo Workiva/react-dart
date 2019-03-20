@@ -11,6 +11,7 @@ void main() {
       mainComponent({}, [
         helloGreeter({'key': 'hello'}, []),
         listComponent({'key': 'list'}, []),
+        component2TestComponent({'key': 'c2-list'}, []),
         //clockComponent({"name": 'my-clock'}, []),
         checkBoxComponent({'key': 'checkbox'}, [])
       ]),
