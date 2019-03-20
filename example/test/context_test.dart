@@ -20,7 +20,6 @@ void main() {
           ]),
         ]),
         react.h1({'key': 'h1'}, ['React New Context API']),
-        react.h6({'key': 'h6'}, ['Check out react dev tools of the ContextTypeConsumerComponent!']),
         newContextProviderComponent({
           'key': 'newProviderComponent'
         }, [

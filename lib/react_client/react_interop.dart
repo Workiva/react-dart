@@ -391,7 +391,7 @@ class ReactDartInteropStatics2 implements ReactDartInteropStatics {
     )
         handleComponentDidUpdate,
     void Function(Component2 component) handleComponentWillUnmount,
-    dynamic Function(Component2 component) handleRender,
+    dynamic Function(Component2 component, JsMap jsProps, JsMap jsState, dynamic jsContext) handleRender,
   });
 }
 

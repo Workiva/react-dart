@@ -147,7 +147,7 @@ abstract class Component {
   /// Initializes context
   _initContext(context) {
     this.context = new Map.from(context ?? const {});
-    this.nextContext = new Map.from(this.context ?? {});
+    this.nextContext = new Map.from(this.context ?? const {});
   }
 
   _initProps(props) {
@@ -332,7 +332,14 @@ abstract class Component {
   /// See: <https://facebook.github.io/react/docs/react-component.html#updating-shouldcomponentupdate>
   bool shouldComponentUpdate(Map nextProps, Map nextState) => true;
 
-  bool shouldComponentUpdateWithContext(Map nextProps, Map nextState, dynamic nextContext) => null;
+  /// > __DEPRECATED - DO NOT USE__
+  /// >
+  /// > This API was never stable in any version of ReactJS, and was replaced with a new, incompatible context API
+  /// > in ReactJS 16 that is exposed via the [Component2] class.
+  /// >
+  /// > This will be completely removed when the JS side of it is slated for removal (ReactJS 17 / react.dart 6.0.0)
+  @Deprecated('6.0.0')
+  bool shouldComponentUpdateWithContext(Map nextProps, Map nextState, Map nextContext) => null;
 
   /// ReactJS lifecycle method that is invoked immediately before rendering when [nextProps] or [nextState] are being
   /// received.
@@ -554,28 +561,14 @@ abstract class Component2 implements Component {
   /// See: <https://facebook.github.io/react/docs/react-component.html#updating-componentwillreceiveprops>
   void componentWillReceiveProps(Map newProps) {}
 
-  /// ReactJS lifecycle method that is invoked before rendering when [nextProps] or [nextState] are being received.
+  /// ReactJS lifecycle method that is invoked before rendering when [nextProps], [nextState], or [nextContext] are
+  /// being received.
   ///
   /// Use this as an opportunity to return `false` when you're certain that the transition to the new props and state
   /// will not require a component update.
   ///
-  /// __Note__: This method is called after [shouldComponentUpdateWithContext]. When it returns `null`, the result of
-  /// this method is used, but this is not called if a valid `bool` is returned from [shouldComponentUpdateWithContext].
-  ///
   /// See: <https://facebook.github.io/react/docs/react-component.html#updating-shouldcomponentupdate>
-  bool shouldComponentUpdate(Map nextProps, Map nextState) => true;
-
-  /// ReactJS lifecycle method that is invoked before rendering when [nextProps], [nextState], or [nextContext] are
-  /// being received.
-  ///
-  /// Use this as an opportunity to return `false` when you're certain that the transition to the new props, state, and
-  /// context will not require a component update.
-  ///
-  /// __Note__: This method is called before [shouldComponentUpdate]. Returning `null` will defer the update to the
-  /// result of [shouldComponentUpdate], but [shouldComponentUpdate] is not called if a valid `bool` is returned.
-  ///
-  /// See: <https://facebook.github.io/react/docs/react-component.html#updating-shouldcomponentupdate>
-  bool shouldComponentUpdateWithContext(Map nextProps, Map nextState, dynamic nextContext) => null;
+  bool shouldComponentUpdate(Map nextProps, Map nextState, [dynamic nextContext]) => true;
 
   /// ReactJS lifecycle method that is invoked immediately before rendering when [nextProps] or [nextState] are being
   /// received.
@@ -644,6 +637,12 @@ abstract class Component2 implements Component {
   /// Will be removed when [Component] is removed in the `6.0.0` release.
   @Deprecated('6.0.0')
   Map<String, dynamic> getChildContext() => const {};
+
+  /// Do not use. Use [shouldComponentUpdate] with an optional 3rd argument for context instead.
+  ///
+  /// Will be removed when [Component] is removed in the `6.0.0` release.
+  @Deprecated('6.0.0')
+  bool shouldComponentUpdateWithContext(Map nextProps, Map nextState, dynamic nextContext) => null;
 
   /// Do not use.
   ///

@@ -11,7 +11,7 @@ ReactDartComponentFactoryProxy2 SetStateTest = react.registerComponent(() => new
 
 class _SetStateTest extends react.Component2 with LifecycleTestHelper {
   @override
-  Map getDefaultProps() => {'shouldUpdate': true, 'comparingToJs': false};
+  Map getDefaultProps() => {'shouldUpdate': true};
 
   @override
   getInitialState() => {"counter": 1};
@@ -37,19 +37,8 @@ class _SetStateTest extends react.Component2 with LifecycleTestHelper {
   }
 
   @override
-  shouldComponentUpdate(_, __) {
+  shouldComponentUpdate(_, __, [___]) {
     recordLifecyleCall('shouldComponentUpdate');
-    return props['shouldUpdate'] as bool;
-  }
-
-  @override
-  shouldComponentUpdateWithContext(_, __, ___) {
-    if (props['comparingToJs']) {
-      recordLifecyleCall('shouldComponentUpdate');
-    } else {
-      recordLifecyleCall('shouldComponentUpdateWithContext');
-    }
-
     return props['shouldUpdate'] as bool;
   }
 
@@ -186,12 +175,8 @@ class _LifecycleTest extends react.Component2 with LifecycleTestHelper {
   void componentDidUpdate(prevProps, prevState) =>
       lifecycleCall('componentDidUpdate', arguments: [new Map.from(prevProps), new Map.from(prevState)]);
 
-  bool shouldComponentUpdate(nextProps, nextState) => lifecycleCall('shouldComponentUpdate',
-      arguments: [new Map.from(nextProps), new Map.from(nextState)], defaultReturnValue: () => true);
-
-  bool shouldComponentUpdateWithContext(nextProps, nextState, nextContext) =>
-      lifecycleCall('shouldComponentUpdateWithContext',
-          arguments: [new Map.from(nextProps), new Map.from(nextState), nextContext], defaultReturnValue: () => true);
+  bool shouldComponentUpdate(nextProps, nextState, [nextContext]) => lifecycleCall('shouldComponentUpdate',
+      arguments: [new Map.from(nextProps), new Map.from(nextState), nextContext], defaultReturnValue: () => true);
 
   dynamic render() => lifecycleCall('render', defaultReturnValue: () => react.div({}));
 

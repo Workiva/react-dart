@@ -228,21 +228,19 @@ Map<String, dynamic> _unjsifyContext(InteropContextValue interopContext) {
   });
 }
 
+@JS()
+external get _reactDartContextSymbol;
+
 dynamic _jsifyNewContext(dynamic context) {
-  if (context is Map) {
-    return new JsBackedMap.from(context).jsObject;
-  }
-  return context;
+  var jsContextHolder = newObject();
+  setProperty(jsContextHolder, _reactDartContextSymbol, context);
+  return jsContextHolder;
 }
 
-@JS()
-external get JsBackedMapSymbol;
-
 dynamic _unjsifyNewContext(dynamic interopContext) {
-  if (interopContext is JsMap) {
-    return JsBackedMap.copyToDart(interopContext);
+  if (interopContext != null){
+    return getProperty(interopContext, _reactDartContextSymbol);
   }
-
   return interopContext;
 }
 
@@ -514,27 +512,19 @@ final ReactDartInteropStatics2 _dartInteropStatics2 = (() {
   void _updatePropsAndStateWithJs(Component2 component, JsMap props, JsMap state, [dynamic context]) {
     component
       ..props = new JsBackedMap.backedBy(props)
-      ..state = new JsBackedMap.backedBy(state);
-    if (context != null) {
-      component..context = _unjsifyNewContext(context);
-    }
+      ..state = new JsBackedMap.backedBy(state)
+      ..context = _unjsifyNewContext(context);
   }
 
   bool handleShouldComponentUpdate(Component2 component, JsMap jsNextProps, JsMap jsNextState, dynamic jsNextContext) =>
       zone.run(() {
         bool value = true;
 
-        var shouldUpdate = component.shouldComponentUpdateWithContext(new JsBackedMap.backedBy(jsNextProps),
-            new JsBackedMap.backedBy(jsNextState), _unjsifyNewContext(jsNextContext));
-
-        if (shouldUpdate == null) {
-          value = component.shouldComponentUpdate(
-            new JsBackedMap.backedBy(jsNextProps),
-            new JsBackedMap.backedBy(jsNextState),
-          );
-        } else {
-          value = shouldUpdate;
-        }
+        value = component.shouldComponentUpdate(
+          new JsBackedMap.backedBy(jsNextProps),
+          new JsBackedMap.backedBy(jsNextState),
+          _unjsifyNewContext(jsNextContext),
+        );
 
         if (!value) {
           _updatePropsAndStateWithJs(component, jsNextProps, jsNextState, jsNextContext);
@@ -564,8 +554,8 @@ final ReactDartInteropStatics2 _dartInteropStatics2 = (() {
         component.componentWillUnmount();
       });
 
-  dynamic handleRender(Component2 component) => zone.run(() {
-        _updatePropsAndStateWithJs(component, component.jsThis.props, component.jsThis.state, component.jsThis.context);
+  dynamic handleRender(Component2 component, JsMap jsProps, JsMap jsState, dynamic jsContext) => zone.run(() {
+        _updatePropsAndStateWithJs(component, jsProps, jsState, jsContext);
         return component.render();
       });
 
@@ -656,19 +646,6 @@ class ReactJsContextComponentFactoryProxy extends ReactJsComponentFactoryProxy {
 
     if (isProvider) {
       propsForJs['value'] = _jsifyNewContext(propsForJs['value']);
-    }
-
-    if (convertDomProps) {
-      _convertEventHandlers(propsForJs);
-    }
-
-    final ref = propsForJs['ref'];
-    if (ref != null) {
-      // If the ref is a callback, pass ReactJS a function that will call it
-      // with the Dart Component instance, not the ReactComponent instance.
-      if (ref is _CallbackRef) {
-        propsForJs['ref'] = allowInterop((ReactComponent instance) => ref(instance?.dartComponent));
-      }
     }
 
     return propsForJs.jsObject;
@@ -1169,9 +1146,10 @@ ReactDartContext createContext([
   dynamic defaultValue,
   int Function(dynamic currentValue, dynamic nextValue) calculateChangedBits,
 ]) {
-  var JSContext = React.createContext(defaultValue, allowInterop((currentValue, nextValue) {
+  int jsifyCalculateChangedBitsArgs(currentValue, nextValue) {
     return calculateChangedBits(_unjsifyNewContext(currentValue), _unjsifyNewContext(nextValue));
-  }));
+  }
+  var JSContext = React.createContext(defaultValue, allowInterop(jsifyCalculateChangedBitsArgs));
   return new ReactDartContext(new ReactJsContextComponentFactoryProxy(JSContext.Provider, isProvider: true),
       new ReactJsContextComponentFactoryProxy(JSContext.Consumer, isConsumer: true), JSContext);
 }

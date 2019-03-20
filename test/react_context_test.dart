@@ -12,7 +12,6 @@ import 'package:react/react_client.dart';
 import 'package:react/react_dom.dart' as react_dom;
 
 import 'shared_type_tester.dart';
-import 'package:react/src/react_client/js_backed_map.dart';
 
 main() {
   setClientConfiguration();
@@ -39,20 +38,8 @@ main() {
           })
         ]),
         mountNode);
-    if (typeToTest is Map || typeToTest is JsMap) {
-      // Context auto converts JsMaps/Maps to JsBackedMaps to make them work with React Dev Tools
-      // and allow consumption in dart to be nicer.
-
-      Map expectedMap = typeToTest is JsMap ? JsBackedMap.copyToDart(typeToTest) : new JsBackedMap.from(typeToTest);
-
-      expect((contextTypeRef.context as Map).keys, expectedMap.keys);
-      expect((consumerRef.latestValue as Map).keys, expectedMap.keys);
-      expect((contextTypeRef.context as Map).values, expectedMap.values);
-      expect((consumerRef.latestValue as Map).values, expectedMap.values);
-    } else {
-      expect(contextTypeRef.context, same(typeToTest));
-      expect(consumerRef.latestValue, same(typeToTest));
-    }
+    expect(contextTypeRef.context, same(typeToTest));
+    expect(consumerRef.latestValue, same(typeToTest));
   }
 
   group('New Context API (Component2 only)', () {
