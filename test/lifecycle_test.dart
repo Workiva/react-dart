@@ -171,7 +171,7 @@ main() {
       });
 
       test(
-          'does not jsify the return value of getSnapshotBeforeId, and '
+          'does not jsify the return value of getSnapshotBeforeUpdate, and '
           'passes the same instance of that value to componentDidUpdate', () {
         List<String> expectedSnapshot = [
           'List Item 1',
