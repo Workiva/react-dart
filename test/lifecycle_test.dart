@@ -154,9 +154,7 @@ main() {
             ].where((matcher) => matcher != null).toList()));
       });
 
-      group(
-          'componentDidUpdate receives the same value created in getSnapshotBeforeUpdate when snapshot is',
-          () {
+      group('componentDidUpdate receives the same value created in getSnapshotBeforeUpdate when snapshot is', () {
         testSnapshotType(expectedSnapshot) {
           LifecycleTestHelper component = getDartComponent(
               render(components2.LifecycleTest({'getSnapshotBeforeUpdate': (_, __, ___) => expectedSnapshot})));
