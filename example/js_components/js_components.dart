@@ -15,8 +15,8 @@ var fooRef;
 main() {
   setClientConfiguration();
 
-  var content = Foo({
-    // Foo forwards its props to its DOM nodes, so you can set
+  var content = JsFoo({
+    // JsFoo forwards its props to its DOM nodes, so you can set
     // DOM props here and they'll work just how you'd expect them to.
     'title': 'Hey, quit hovering me!',
     'style': {
@@ -26,7 +26,7 @@ main() {
       print(e.runtimeType);
       print('Entered!');
     },
-
+    'onButtonClick': _handleButtonClick,
     // Refs work the same, only you get back the JS component instance.
     // See below for how you can use this.
     'ref': (ref) {
@@ -35,14 +35,16 @@ main() {
 
     // Props specific to the component can be specified as well!
     'foo': 'bar',
-  });
+  }, [
+    'This is a Dart Child'
+  ]);
 
   react_dom.render(content, querySelector('#content'));
 
   // If you need to access a component instance, say,
   // to call an API method, you can do so by writing
   // a JS interop wrapper class.
-  print((fooRef as FooComponent).getFoo());
+  print((fooRef as JsFooComponent).getFoo());
 }
 
 void _handleButtonClick(react.SyntheticMouseEvent event) {
@@ -51,27 +53,27 @@ void _handleButtonClick(react.SyntheticMouseEvent event) {
 
 /// The JS component class.
 ///
-/// Private since [Foo] will be used instead.
+/// Private since [JsFoo] will be used instead.
 ///
-/// Accessible via `Foo.type`.
-@JS('Foo')
-external ReactClass get _Foo;
+/// Accessible via `JsFoo.type`.
+@JS()
+external ReactClass get _JsFoo;
 
-/// A factory for the "Foo" JS components class that allows it
+/// A factory for the "JsFoo" JS components class that allows it
 /// to be used via Dart code.
 ///
 /// Use this to render instances of the component from within Dart code.
 ///
 /// This converts the Dart props [Map] passed into it in the
 /// the same way props are converted for DOM components.
-final Foo = new ReactJsComponentFactoryProxy(_Foo);
+final JsFoo = new ReactJsComponentFactoryProxy(_JsFoo);
 
 /// JS interop wrapper class for the component,
 /// allowing us to interact with component instances
 /// made available via refs or [react_dom.render] calls.
 ///
 /// This is optional, as you won't always need to access the component's API.
-@JS()
-class FooComponent {
+@JS('_JsFoo')
+class JsFooComponent {
   external String getFoo();
 }
