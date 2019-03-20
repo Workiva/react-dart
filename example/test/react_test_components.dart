@@ -386,4 +386,64 @@ class _NewContextTypeConsumerComponent extends react.Component2 {
   }
 }
 
+class _Component2TestComponent extends react.Component2 with react.TypedSnapshot<String> {
+  Map getInitialState() {
+    return {
+      "items": new List.from([0, 1, 2, 3])
+    };
+  }
+
+  String getSnapshotBeforeUpdate(nextProps, prevState) {
+    if (prevState["items"].length > state["items"].length) {
+      return "removed " + prevState["items"].last.toString();
+    } else {
+      return "added " + state["items"].last.toString();
+    }
+  }
+
+  void componentDidUpdate(prevProps, prevState, [String snapshot]) {
+    if (snapshot != null) {
+      print('Updated DOM and ' + snapshot);
+      return null;
+    }
+    print("No Snapshot");
+  }
+
+  void removeItem(event) {
+    List items = new List.from(state["items"]);
+    items.removeAt(items.length - 1);
+    setState({"items": items});
+  }
+
+  void addItem(event) {
+    List items = new List.from(state["items"]);
+    items.add(items.length);
+    setState({"items": items});
+  }
+
+  dynamic render() {
+    List<dynamic> items = [];
+    for (var item in state['items']) {
+      items.add(react.li({"key": "c2" + item.toString()}, "$item"));
+    }
+
+    return react.div({}, [
+      react.button({
+        'type': 'button',
+        'key': 'c2-r-button',
+        'className': 'btn btn-primary',
+        'onClick': removeItem,
+      }, 'Remove Item'),
+      react.button({
+        'type': 'button',
+        'key': 'c2-a-button',
+        'className': 'btn btn-primary',
+        'onClick': addItem,
+      }, 'Add Item'),
+      react.ul({'key': 'c2-list'}, items),
+    ]);
+  }
+}
+
 var newContextTypeConsumerComponentComponent = react.registerComponent(() => new _NewContextTypeConsumerComponent());
+var component2TestComponent = react.registerComponent(() => new _Component2TestComponent());

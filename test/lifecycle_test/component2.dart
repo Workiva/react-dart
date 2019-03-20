@@ -27,12 +27,12 @@ class _SetStateTest extends react.Component2 with LifecycleTestHelper {
   }
 
   @override
-  componentWillUpdate(_, __) {
-    recordLifecyleCall('componentWillUpdate');
+  getSnapshotBeforeUpdate(_, __) {
+    recordLifecyleCall('getSnapshotBeforeUpdate');
   }
 
   @override
-  componentDidUpdate(_, __) {
+  componentDidUpdate(_, __, [___]) {
     recordLifecyleCall('componentDidUpdate');
   }
 
@@ -172,8 +172,11 @@ class _LifecycleTest extends react.Component2 with LifecycleTestHelper {
       lifecycleCall('componentWillUpdateWithContext',
           arguments: [new Map.from(nextProps), new Map.from(nextState), nextContext]);
 
-  void componentDidUpdate(prevProps, prevState) =>
-      lifecycleCall('componentDidUpdate', arguments: [new Map.from(prevProps), new Map.from(prevState)]);
+  dynamic getSnapshotBeforeUpdate(prevProps, prevState) =>
+      lifecycleCall('getSnapshotBeforeUpdate', arguments: [new Map.from(prevProps), new Map.from(prevState)]);
+
+  void componentDidUpdate(prevProps, prevState, [snapshot]) =>
+      lifecycleCall('componentDidUpdate', arguments: [new Map.from(prevProps), new Map.from(prevState), snapshot]);
 
   bool shouldComponentUpdate(nextProps, nextState, [nextContext]) => lifecycleCall('shouldComponentUpdate',
       arguments: [new Map.from(nextProps), new Map.from(nextState), nextContext], defaultReturnValue: () => true);
