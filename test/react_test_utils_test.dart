@@ -2,8 +2,8 @@
 library react_test_utils_test;
 
 import 'dart:html';
+import 'dart:js_util';
 
-import 'package:js/js_util.dart';
 import 'package:react/react.dart';
 import 'package:react/react_dom.dart' as react_dom;
 import 'package:react/react_client.dart';
