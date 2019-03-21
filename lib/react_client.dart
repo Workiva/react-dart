@@ -24,7 +24,7 @@ import 'package:react/src/ddc_emulated_function_name_bug.dart' as ddc_emulated_f
 
 export 'package:react/react_client/react_interop.dart' show ReactElement, ReactJsComponentFactory, inReactDevMode;
 export 'package:react/react.dart' show ReactComponentFactoryProxy, ComponentFactory;
-export 'package:react/src/react_client/js_backed_map.dart' show JsBackedMap;
+export 'package:react/src/react_client/js_backed_map.dart' show JsBackedMap, JsMap, jsBackingMapOrJsCopy;
 
 final EmptyObject emptyJsMap = new EmptyObject();
 
