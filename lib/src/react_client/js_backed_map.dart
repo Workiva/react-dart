@@ -3,9 +3,9 @@ library js_map;
 
 import 'dart:collection';
 import 'dart:core';
+import 'dart:js_util' as js_util;
 
 import 'package:js/js.dart';
-import 'package:js/js_util.dart' as js_util;
 
 class JsBackedMap<K, V> extends MapBase<K, V> implements Map<K, V> {
   final JsMap jsObject;
