@@ -3,6 +3,7 @@ library react_test_utils_test;
 
 import 'dart:html';
 
+import 'dart:js_util' as js_util;
 import 'package:react/react.dart';
 import 'package:react/react_dom.dart' as react_dom;
 import 'package:react/react_client.dart';
@@ -198,6 +199,7 @@ void main() {
 
     test('returns false argument is not an element', () {
       expect(isElement(new EmptyObject()), isFalse);
+      expect(isElement(js_util.newObject()), isFalse);
     });
   });
 
