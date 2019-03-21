@@ -212,6 +212,7 @@ dynamic _convertArgsToChildren(List childrenArgs) {
 @JS('Object.keys')
 external List<String> _objectKeys(Object object);
 
+@Deprecated('6.0.0')
 InteropContextValue _jsifyContext(Map<String, dynamic> context) {
   var interopContext = new InteropContextValue();
   context.forEach((key, value) {
@@ -221,6 +222,7 @@ InteropContextValue _jsifyContext(Map<String, dynamic> context) {
   return interopContext;
 }
 
+@Deprecated('6.0.0')
 Map<String, dynamic> _unjsifyContext(InteropContextValue interopContext) {
   // TODO consider using `contextKeys` for this if perf of objectKeys is bad.
   return new Map.fromIterable(_objectKeys(interopContext), value: (key) {
@@ -230,7 +232,7 @@ Map<String, dynamic> _unjsifyContext(InteropContextValue interopContext) {
 }
 
 /// The static methods that proxy JS component lifecycle methods to Dart components.
-// TODO: Remove in the 6.0.0 release
+@Deprecated('6.0.0')
 final ReactDartInteropStatics _dartInteropStatics = (() {
   var zone = Zone.current;
 
@@ -557,7 +559,7 @@ final ReactDartInteropStatics2 _dartInteropStatics2 = (() {
 
 /// Creates and returns a new [ReactDartComponentFactoryProxy] from the provided [componentFactory]
 /// which produces a new JS [`ReactClass` component class](https://facebook.github.io/react/docs/top-level-api.html#react.createclass).
-// TODO: Remove in the 6.0.0 release
+@Deprecated('6.0.0')
 ReactDartComponentFactoryProxy _registerComponent(ComponentFactory componentFactory,
     [Iterable<String> skipMethods = const []]) {
   var componentInstance = componentFactory();
@@ -694,8 +696,7 @@ _setValueToProps(Map props, val) {
 }
 
 /// Convert bound values to pure value and packed onChange function
-///
-/// TODO: Remove in 6.0.0 when [Component.bind] is removed.
+@Deprecated('6.0.0')
 _convertBoundValues(Map args) {
   var boundValue = args['value'];
 
