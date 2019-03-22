@@ -516,7 +516,8 @@ final ReactDartInteropStatics2 _dartInteropStatics2 = (() {
       ..context = _unjsifyNewContext(context);
   }
 
-  bool handleShouldComponentUpdate(Component2 component, JsMap jsNextProps, JsMap jsNextState, dynamic jsNextContext) =>
+  bool handleShouldComponentUpdate(Component2 component, JsMap jsNextProps, JsMap jsNextState,
+          [dynamic jsNextContext]) =>
       zone.run(() {
         bool value = true;
 
@@ -615,16 +616,16 @@ class _ReactJsContextComponentFactoryProxy extends ReactJsComponentFactoryProxy 
   final bool isConsumer;
   final bool isProvider;
   final Function factory;
-  final bool convertDomProps;
+  final bool shouldConvertDomProps;
 
   _ReactJsContextComponentFactoryProxy(
     ReactClass jsClass, {
-    this.convertDomProps: true,
+    this.shouldConvertDomProps: true,
     this.isConsumer: false,
     this.isProvider: false,
   })  : this.type = jsClass,
         this.factory = React.createFactory(jsClass),
-        super(jsClass, convertDomProps: convertDomProps);
+        super(jsClass, shouldConvertDomProps: shouldConvertDomProps);
 
   @override
   ReactElement build(Map props, [List childrenArgs]) {
@@ -670,9 +671,9 @@ class ReactJsComponentFactoryProxy extends ReactComponentFactoryProxy {
   /// Useful when the JS component forwards DOM props to its rendered DOM components.
   ///
   /// Disable for more custom handling of these props.
-  final bool convertDomProps;
+  final bool shouldConvertDomProps;
 
-  ReactJsComponentFactoryProxy(ReactClass jsClass, {this.convertDomProps: true})
+  ReactJsComponentFactoryProxy(ReactClass jsClass, {this.shouldConvertDomProps: true})
       : this.type = jsClass,
         this.factory = React.createFactory(jsClass) {
     if (jsClass == null) {
@@ -686,7 +687,7 @@ class ReactJsComponentFactoryProxy extends ReactComponentFactoryProxy {
     dynamic children = _convertArgsToChildren(childrenArgs);
 
     var potentiallyConvertedProps;
-    if (convertDomProps) {
+    if (shouldConvertDomProps) {
       // We can't mutate the original since we can't be certain that the value of the
       // the converted event handler will be compatible with the Map's type parameters.
       potentiallyConvertedProps ??= new Map.from(props);

@@ -704,7 +704,7 @@ abstract class Component2 implements Component {
   ///
   /// Will be removed when [Component] is removed in the `6.0.0` release.
   @Deprecated('6.0.0')
-  Map<String, dynamic> getChildContext() => const {};
+  Map<String, dynamic> getChildContext() => throw new UnimplementedError();
 
   /// Do not use. Use [shouldComponentUpdate] with an optional 3rd argument for context instead.
   ///
@@ -716,25 +716,25 @@ abstract class Component2 implements Component {
   ///
   /// Will be removed when [Component] is removed in the `6.0.0` release.
   @Deprecated('6.0.0')
-  void componentWillUpdateWithContext(Map nextProps, Map nextState, Map nextContext) {}
+  void componentWillUpdateWithContext(Map nextProps, Map nextState, dynamic nextContext) {}
 
   /// Do not use.
   ///
   /// Will be removed when [Component] is removed in the `6.0.0` release.
   @Deprecated('6.0.0')
-  void componentWillReceivePropsWithContext(Map newProps, nextContext) {}
+  void componentWillReceivePropsWithContext(Map newProps, dynamic nextContext) {}
 
   /// Do not use.
   ///
   /// Will be removed when [Component] is removed in the `6.0.0` release.
   @Deprecated('6.0.0')
-  Iterable<String> get childContextKeys => const [];
+  Iterable<String> get childContextKeys => throw new UnimplementedError();
 
   /// Do not use.
   ///
   /// Will be removed when [Component] is removed in the `6.0.0` release.
   @Deprecated('6.0.0')
-  Iterable<String> get contextKeys => const [];
+  Iterable<String> get contextKeys => throw new UnimplementedError();
 
   /// Do not use.
   ///
@@ -763,13 +763,15 @@ abstract class Component2 implements Component {
   ///
   /// Will be removed when [Component] is removed in the `6.0.0` release.
   @Deprecated('6.0.0')
-  dynamic nextContext; // todo make throwing getters/setters
+  get nextContext => throw new UnimplementedError();
+  set nextContext(val) => throw new UnimplementedError();
 
   /// Do not use.
   ///
   /// Will be removed when [Component] is removed in the `6.0.0` release.
   @Deprecated('6.0.0')
-  Map prevContext; // todo make throwing getters/setters
+  get prevContext => throw new UnimplementedError();
+  set prevContext(val) => throw new UnimplementedError();
 
   /// Do not use.
   ///

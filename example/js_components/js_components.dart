@@ -19,13 +19,12 @@ main() {
   react_dom.render(content, querySelector('#content'));
 }
 
-var IndexComponent =
-    react.registerComponent(() => new _IndexComponent());
+var IndexComponent = react.registerComponent(() => new _IndexComponent());
 
 class _IndexComponent extends react.Component2 {
   getInitialState() => {
-    'open': false,
-  };
+        'open': false,
+      };
 
   handleClose(_) {
     this.setState({
@@ -43,36 +42,56 @@ class _IndexComponent extends react.Component2 {
   SimpleCustomComponent simpleRef;
 
   render() {
-    return MuiThemeProvider({ 'theme':theme },[
-        react.div({},[
-          SimpleCustom({
-            'foo': 'Foo FROM DART!',
-            'ref': (ref){ simpleRef = ref;}
-          }),
-          CssBaseline({}),
-          Dialog({'open':state['open'], 'onClose':handleClose},[
-            DialogTitle({},['Super Secret Password']),
-            DialogContent({},[
-              DialogContentText({},'1-2-3-4-5'),
+    return MuiThemeProvider({
+      'theme': theme
+    }, [
+      react.div({}, [
+        SimpleCustom({
+          'foo': 'Foo FROM DART!',
+          'ref': (ref) {
+            simpleRef = ref;
+          }
+        }),
+        CssBaseline({}),
+        Dialog({
+          'open': state['open'],
+          'onClose': handleClose
+        }, [
+          DialogTitle({}, ['Super Secret Password']),
+          DialogContent({}, [
+            DialogContentText({}, '1-2-3-4-5'),
+          ]),
+          DialogActions({}, [
+            Button({
+              'color': "primary",
+              'onClick': handleClose
+            }, [
+              'OK',
             ]),
-            DialogActions({},[
-              Button({'color':"primary", 'onClick':handleClose},[
-                'OK',
-              ]),
-            ])
-          ]),
-          Typography({'variant':"h4", 'gutterBottom':true },[
-            'Material-UI',
-          ]),
-          Typography({'variant':"subtitle1", 'gutterBottom':true },[
-            'example project',
-          ]),
-          Button({'variant':"contained", 'color':"secondary", 'onClick':handleClick},[
-            Icon({},['fingerprint']),
-            'Super Secret Password',
-          ]),
-        ])
-      ]);
+          ])
+        ]),
+        Typography({
+          'variant': "h4",
+          'gutterBottom': true
+        }, [
+          'Material-UI',
+        ]),
+        Typography({
+          'variant': "subtitle1",
+          'gutterBottom': true
+        }, [
+          'example project',
+        ]),
+        Button({
+          'variant': "contained",
+          'color': "secondary",
+          'onClick': handleClick
+        }, [
+          Icon({}, ['fingerprint']),
+          'Super Secret Password',
+        ]),
+      ])
+    ]);
   }
 }
 
