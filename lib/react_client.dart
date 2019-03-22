@@ -10,6 +10,7 @@ import "dart:collection";
 import "dart:html";
 import 'dart:js';
 
+import "package:dart2_constant/async.dart" as dart2_async;
 import "package:js/js.dart";
 import "package:react/react.dart";
 import "package:react/react_client/js_interop_helpers.dart";
@@ -178,7 +179,7 @@ Map<String, dynamic> _unjsifyContext(InteropContextValue interopContext) {
 
 /// The static methods that proxy JS component lifecycle methods to Dart components.
 final ReactDartInteropStatics _dartInteropStatics = (() {
-  var zone = Zone.current;
+  final zone = dart2_async.Zone.root;
 
   /// Wrapper for [Component.getInitialState].
   Component initComponent(ReactComponent jsThis, ReactDartComponentInternal internal, InteropContextValue context,
@@ -528,7 +529,7 @@ Function unconvertJsEventHandler(Function jsConvertedEventHandler) {
 /// Convert packed event handler into wrapper and pass it only the Dart [SyntheticEvent] object converted from the
 /// [events.SyntheticEvent] event.
 _convertEventHandlers(Map args) {
-  var zone = Zone.current;
+  final zone = dart2_async.Zone.root;
   args.forEach((propKey, value) {
     var eventFactory = eventPropKeyToEventFactory[propKey];
     if (eventFactory != null && value != null) {
