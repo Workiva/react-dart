@@ -538,6 +538,7 @@ abstract class Component2 implements Component {
   /// See: <https://facebook.github.io/react/docs/react-component.html#mounting-componentwillmount>
   void componentWillMount() {}
 
+
   /// ReactJS lifecycle method that is invoked once, only on the client _(not on the server)_, immediately after the
   /// initial rendering occurs.
   ///
@@ -661,6 +662,10 @@ abstract class Component2 implements Component {
   ///
   /// See: <https://facebook.github.io/react/docs/react-component.html#unmounting-componentwillunmount>
   void componentWillUnmount() {}
+
+  void componentDidCatch(){}
+
+  void getDerivedStateFromError(){}
 
   /// Invoked once before the `Component` is mounted. The return value will be used as the initial value of [state].
   ///
@@ -1403,6 +1408,13 @@ class SyntheticWheelEvent extends SyntheticEvent {
   throw new Exception('setClientConfiguration must be called before registerComponent.');
 };
 
+
+/// Registers [componentFactory] on both client and server.
+/*ComponentRegistrar*/ Function registerComponent2 =
+    (/*ComponentFactory*/ componentFactory, [/*Iterable<String>*/ skipMethods
+= const ["compnentDidCatch", "getDerivedStateFromError"]]) {
+  throw new Exception('setClientConfiguration must be called before registerComponent.');
+};
 /// The HTML `<a>` [AnchorElement].
 var a;
 
