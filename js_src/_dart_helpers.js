@@ -1,7 +1,10 @@
 /**
  * react-dart JS interop helpers (used by react_client.dart and react_client/js_interop_helpers.dart)
  */
+/// Prefix to namespace react-dart symbols
 var _reactDartSymbolPrefix = 'react-dart.';
+/// A global symbol to identify javascript objects owned by react-dart context,
+/// in order to jsify and unjsify context objects correctly.
 var _reactDartContextSymbol = Symbol.for(_reactDartSymbolPrefix+'context');
 function _createReactDartComponentClass(dartInteropStatics, componentStatics, jsConfig) {
   class ReactDartComponent extends React.Component {

@@ -146,7 +146,14 @@ abstract class Component {
 
   /// Initializes context
   _initContext(context) {
+    /// [context]s typing was loosened from Map to dynamic to support the new context API in [Component2]
+    /// which extends from [Component]. Only "legacy" context APIs are supported in [Component] - which means
+    /// it will still be expected to be a Map.
     this.context = new Map.from(context ?? const {});
+
+    /// [nextContext]s typing was loosened from Map to dynamic to support the new context API in [Component2]
+    /// which extends from [Component]. Only "legacy" context APIs are supported in [Component] - which means
+    /// it will still be expected to be a Map.
     this.nextContext = new Map.from(this.context ?? const {});
   }
 
@@ -470,6 +477,22 @@ abstract class Component2 implements Component {
   /// Accessed once and cached when instance is created. The [contextType] property on a class can be assigned
   /// a [ReactDartContext] object created by [React.createContext]. This lets you consume the nearest current value of
   /// that Context using [context].
+  ///
+  /// __Example__:
+  ///
+  ///     var MyContext = createContext('test');
+  ///
+  ///     class MyClass extends react.Component2 {
+  ///       var contextType = MyContext;
+  ///
+  ///       render() {
+  ///         return react.span({}, [
+  ///           '${this.context}', // Outputs: 'test'
+  ///         ]);
+  ///       }
+  ///     }
+  ///
+  /// See: <https://reactjs.org/docs/context.html#classcontexttype>
   ReactDartContext contextType;
 
   /// The context value from the [contextType] assigned to this component.
@@ -480,6 +503,22 @@ abstract class Component2 implements Component {
   /// Read more: https://reactjs.org/docs/context.html#consuming-multiple-contexts
   ///
   /// This only has a value when [contextType] is set.
+  ///
+  /// __Example__:
+  ///
+  ///     var MyContext = createContext('test');
+  ///
+  ///     class MyClass extends react.Component2 {
+  ///       var contextType = MyContext;
+  ///
+  ///       render() {
+  ///         return react.span({}, [
+  ///           '${this.context}', // Outputs: 'test'
+  ///         ]);
+  ///       }
+  ///     }
+  ///
+  /// See: <https://reactjs.org/docs/context.html#classcontexttype>
   @override
   dynamic context;
 
@@ -704,13 +743,16 @@ abstract class Component2 implements Component {
   ///
   /// Will be removed when [Component] is removed in the `6.0.0` release.
   @Deprecated('6.0.0')
-  Map<String, dynamic> getChildContext() => throw new UnimplementedError();
+  @mustCallSuper
+  Map<String, dynamic> getChildContext() =>
+      throw new UnsupportedError('"Legacy" Context [getChildContext] is not supported in Component2');
 
   /// Do not use. Use [shouldComponentUpdate] with an optional 3rd argument for context instead.
   ///
   /// Will be removed when [Component] is removed in the `6.0.0` release.
   @Deprecated('6.0.0')
-  bool shouldComponentUpdateWithContext(Map nextProps, Map nextState, dynamic nextContext) => null;
+  bool shouldComponentUpdateWithContext(Map nextProps, Map nextState, dynamic nextContext) =>
+      throw new UnsupportedError('"Legacy" Context [getChildContext] is not supported in Component2');
 
   /// Do not use.
   ///
@@ -728,13 +770,15 @@ abstract class Component2 implements Component {
   ///
   /// Will be removed when [Component] is removed in the `6.0.0` release.
   @Deprecated('6.0.0')
-  Iterable<String> get childContextKeys => throw new UnimplementedError();
+  Iterable<String> get childContextKeys =>
+      throw new UnsupportedError('"Legacy" Context [childContextKeys] is not supported in Component2');
 
   /// Do not use.
   ///
   /// Will be removed when [Component] is removed in the `6.0.0` release.
   @Deprecated('6.0.0')
-  Iterable<String> get contextKeys => throw new UnimplementedError();
+  Iterable<String> get contextKeys =>
+      throw new UnsupportedError('"Legacy" Context [contextKeys] is not supported in Component2');
 
   /// Do not use.
   ///
@@ -763,15 +807,15 @@ abstract class Component2 implements Component {
   ///
   /// Will be removed when [Component] is removed in the `6.0.0` release.
   @Deprecated('6.0.0')
-  get nextContext => throw new UnimplementedError();
-  set nextContext(val) => throw new UnimplementedError();
+  get nextContext => throw new UnsupportedError('"Legacy" Context [nextContext] is not supported in Component2');
+  set nextContext(val) => throw new UnsupportedError('"Legacy" Context is not supported in Component2');
 
   /// Do not use.
   ///
   /// Will be removed when [Component] is removed in the `6.0.0` release.
   @Deprecated('6.0.0')
-  get prevContext => throw new UnimplementedError();
-  set prevContext(val) => throw new UnimplementedError();
+  get prevContext => throw new UnsupportedError('"Legacy" Context [prevContext] is not supported in Component2');
+  set prevContext(val) => throw new UnsupportedError('"Legacy" Context [prevContext] is not supported in Component2');
 
   /// Do not use.
   ///

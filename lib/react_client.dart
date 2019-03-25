@@ -1138,7 +1138,40 @@ dynamic _findDomNode(component) {
   return ReactDom.findDOMNode(component is Component ? component.jsThis : component);
 }
 
-/// Wraps [ReactContext] for use in Dart.
+/// The return type of [createContext], Wraps [ReactContext] for use in Dart.
+/// Allows access to [Provider] and [Consumer] Components.
+///
+/// __Should not be instaniated without using [createContext]__
+///
+/// __Example__:
+///
+///     ReactDartContext MyContext = createContext('test');
+///
+///     class MyContextTypeClass extends react.Component2 {
+///       var contextType = MyContext;
+///
+///       render() {
+///         return react.span({}, [
+///           '${this.context}', // Outputs: 'test'
+///         ]);
+///       }
+///     }
+///
+/// // OR
+///
+///     ReactDartContext MyContext = createContext();
+///
+///     class MyClass extends react.Component2 {
+///       render() {
+///         return MyContext.Provider({'value': 'new context value'}, [
+///           MyContext.Consumer({}, (value) {
+///             return react.span({}, [
+///               '$value', // Outputs: 'new context value'
+///             ]),
+///           });
+///         ]);
+///       }
+///     }
 ///
 /// Learn more at: https://reactjs.org/docs/context.html
 class ReactDartContext {
@@ -1162,6 +1195,36 @@ class ReactDartContext {
 ///
 /// The `defaultValue` argument is only used when a component does not have a matching [ReactDartContext.Provider]
 /// above it in the tree. This can be helpful for testing components in isolation without wrapping them.
+///
+/// __Example__:
+///
+///     ReactDartContext MyContext = createContext('test');
+///
+///     class MyContextTypeClass extends react.Component2 {
+///       var contextType = MyContext;
+///
+///       render() {
+///         return react.span({}, [
+///           '${this.context}', // Outputs: 'test'
+///         ]);
+///       }
+///     }
+///
+/// ___ OR ___
+///
+///     ReactDartContext MyContext = createContext();
+///
+///     class MyClass extends react.Component2 {
+///       render() {
+///         return MyContext.Provider({'value': 'new context value'}, [
+///           MyContext.Consumer({}, (value) {
+///             return react.span({}, [
+///               '$value', // Outputs: 'new context value'
+///             ]),
+///           });
+///         ]);
+///       }
+///     }
 ///
 /// Learn more: https://reactjs.org/docs/context.html#reactcreatecontext
 ReactDartContext createContext([
