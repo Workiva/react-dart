@@ -47,7 +47,7 @@ class _IndexComponent extends react.Component2 {
     }, [
       react.div({}, [
         SimpleCustom({
-          'foo': 'Foo FROM DART!',
+          'foo': 'Foo Prop from dart... IN A JAVASCRIPT COMPONENT!',
           'ref': (ref) {
             simpleRef = ref;
           }
