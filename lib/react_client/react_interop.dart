@@ -368,12 +368,12 @@ class ReactDartInteropStatics2 implements ReactDartInteropStatics {
     dynamic Function(Component2 component) handleGetInitialState,
     void Function(Component2 component, ReactComponent jsThis) handleComponentWillMount,
     void Function(Component2 component) handleComponentDidMount,
-    // TODO: Should this be removed when we update Component2.componentWillReceiveProps to throw an UnsupportedError? (CPLAT-4765)
     void Function(
-      Component2 component,
+      ComponentStatics componentInstance,
       JsMap jsNextProps,
+      JsMap jsPrevState,
     )
-        handleComponentWillReceiveProps,
+        handleGetDerivedStateFromProps,
     bool Function(
       Component2 component,
       JsMap jsNextProps,
@@ -409,8 +409,8 @@ class ReactDartInteropStatics2 implements ReactDartInteropStatics {
 /// See [ReactDartInteropStatics], [createReactDartComponentClass].
 class ComponentStatics<T extends Component> {
   final ComponentFactory<T> componentFactory;
-
-  ComponentStatics(this.componentFactory);
+  final Component2 componentInstance;
+  ComponentStatics(this.componentFactory, {this.componentInstance});
 }
 
 /// Additional configuration passed to [createReactDartComponentClass]

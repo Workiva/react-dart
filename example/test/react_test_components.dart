@@ -393,6 +393,15 @@ class _Component2TestComponent extends react.Component2 with react.TypedSnapshot
     };
   }
 
+  Map getDerivedStateFromProps(nextProps, prevState) {
+    if (prevState[0] != 3) {
+      return ({
+        'items': new List.from([3, 1, 2, 0])
+      });
+    }
+    return null;
+  }
+
   String getSnapshotBeforeUpdate(nextProps, prevState) {
     if (prevState["items"].length > state["items"].length) {
       return "removed " + prevState["items"].last.toString();

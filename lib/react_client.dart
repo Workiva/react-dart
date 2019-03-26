@@ -505,10 +505,6 @@ final ReactDartInteropStatics2 _dartInteropStatics2 = (() {
         component.componentDidMount();
       });
 
-  void handleComponentWillReceiveProps(Component2 component, JsMap jsNextProps) => zone.run(() {
-        component.componentWillReceiveProps(new JsBackedMap.backedBy(jsNextProps));
-      });
-
   void _updatePropsAndStateWithJs(Component2 component, JsMap props, JsMap state, [dynamic context]) {
     component
       ..props = new JsBackedMap.backedBy(props)
@@ -531,6 +527,14 @@ final ReactDartInteropStatics2 _dartInteropStatics2 = (() {
         }
 
         return value;
+      });
+
+  JsMap handleGetDerivedStateFromProps(ComponentStatics componentStatics, JsMap jsNextProps, JsMap jsPrevState) => zone.run(() {
+        var tmep = componentStatics.componentInstance.getDerivedStateFromProps(new JsBackedMap.backedBy(jsNextProps), new JsBackedMap.backedBy(jsPrevState));
+        if(tmep != null) {
+          return jsBackingMapOrJsCopy(tmep);
+        }
+        return null;
       });
 
   dynamic handleGetSnapshotBeforeUpdate(Component2 component, JsMap jsPrevProps, JsMap jsPrevState) => zone.run(() {
@@ -567,7 +571,7 @@ final ReactDartInteropStatics2 _dartInteropStatics2 = (() {
     handleGetInitialState: allowInterop(handleGetInitialState),
     handleComponentWillMount: allowInterop(handleComponentWillMount),
     handleComponentDidMount: allowInterop(handleComponentDidMount),
-    handleComponentWillReceiveProps: allowInterop(handleComponentWillReceiveProps),
+    handleGetDerivedStateFromProps: allowInterop(handleGetDerivedStateFromProps),
     handleShouldComponentUpdate: allowInterop(handleShouldComponentUpdate),
     handleGetSnapshotBeforeUpdate: allowInterop(handleGetSnapshotBeforeUpdate),
     handleComponentDidUpdate: allowInterop(handleComponentDidUpdate),
@@ -703,7 +707,7 @@ class ReactJsComponentFactoryProxy extends ReactComponentFactoryProxy {
 ReactDartComponentFactoryProxy2 _registerComponent2(ComponentFactory<Component2> componentFactory,
     [Iterable<String> skipMethods = const []]) {
   final componentInstance = componentFactory();
-  final componentStatics = new ComponentStatics(componentFactory);
+  final componentStatics = new ComponentStatics(componentFactory, componentInstance: componentInstance);
 
   // Cache default props and store them on the ReactClass so they can be used
   // by ReactDartComponentFactoryProxy and externally.

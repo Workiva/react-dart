@@ -90,6 +90,11 @@ function _createReactDartComponentClass2(dartInteropStatics, componentStatics, j
     shouldComponentUpdate(nextProps, nextState, nextContext) {
       return dartInteropStatics.handleShouldComponentUpdate(this.dartComponent, nextProps, nextState, nextContext);
     }
+
+    static getDerivedStateFromProps(nextProps, prevState) {
+      return dartInteropStatics.handleGetDerivedStateFromProps(componentStatics, nextProps, prevState);
+    }
+
     getSnapshotBeforeUpdate(prevProps, prevState) {
       let snapshot = dartInteropStatics.handleGetSnapshotBeforeUpdate(this.dartComponent, prevProps, prevState);
       return typeof snapshot !== 'undefined' ? snapshot : null;
