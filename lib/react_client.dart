@@ -530,9 +530,9 @@ final ReactDartInteropStatics2 _dartInteropStatics2 = (() {
       });
 
   JsMap handleGetDerivedStateFromProps(ComponentStatics componentStatics, JsMap jsNextProps, JsMap jsPrevState) => zone.run(() {
-        var tmep = componentStatics.componentInstance.getDerivedStateFromProps(new JsBackedMap.backedBy(jsNextProps), new JsBackedMap.backedBy(jsPrevState));
-        if(tmep != null) {
-          return jsBackingMapOrJsCopy(tmep);
+        var derivedState = componentStatics.componentInstance.getDerivedStateFromProps(new JsBackedMap.backedBy(jsNextProps), new JsBackedMap.backedBy(jsPrevState));
+        if(derivedState != null) {
+          return jsBackingMapOrJsCopy(derivedState);
         }
         return null;
       });
