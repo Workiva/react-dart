@@ -574,7 +574,7 @@ abstract class Component2 implements Component {
   /// > __DEPRECATED - DO NOT USE__
   /// >
   /// > This will be removed once 6.0.0 releases, switching to [Component2.getDerivedStateFromProps] is the path forward
-  /// > 
+  /// >
   /// > React 16 has deprecated [componentWillReceiveProps] in favor of [getDerivedStateFromProps]
   /// >
   /// > This will be completely removed when the JS side of it is slated for removal (ReactJS 17 / react.dart 6.0.0)
@@ -586,13 +586,13 @@ abstract class Component2 implements Component {
   /// It should return an object to update the state, or null to update nothing (this is different from componentWillRecieveProps).
   ///
   /// [prevState] will be null when this lifcecyle method is called before first mount.
-  /// 
+  ///
   /// This method is also static, so features like [this] or [ref] cannot be used in this method
   ///
   /// See: <https://reactjs.org/docs/react-component.html#static-getderivedstatefromprops>
-  /// 
+  ///
   /// __Example__:
-  /// 
+  ///
   ///    getDerivedStateFromProps(nextProps, prevState) {
   ///      if (prevState.someMirroredValue != nextProps.someValue) {
   ///       return {
@@ -602,7 +602,7 @@ abstract class Component2 implements Component {
   ///      }
   ///      return null;
   ///    }
-  /// 
+  ///
   Map getDerivedStateFromProps(Map nextProps, Map prevState) {}
 
   /// ReactJS lifecycle method that is invoked before rendering when [nextProps], [nextState], or [nextContext] are
