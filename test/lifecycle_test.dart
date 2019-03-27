@@ -289,7 +289,7 @@ void sharedLifecycleTests<T extends react.Component>({
           ]));
     });
 
-    if (!skipLegacyContextTests) {
+    if (!skipLegacyContextTests && isComponent2) {
       test('does not call getChildContext when childContextKeys is empty', () {
         var mountNode = new DivElement();
         var instance =
