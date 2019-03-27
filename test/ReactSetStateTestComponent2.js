@@ -23,12 +23,14 @@ function getComponent2NonUpdatingRenderedCounter() {
 }
 
 var _component2Counter;
+var _shouldUpdate;
 
 class ReactSetStateTestComponent2 extends React.Component {
     constructor(props) {
         super(props);
         _component2Counter = 1;
         this.state = {counter: _component2Counter};
+        _shouldUpdate = this.props.shouldUpdate;
     }
 
     recordStateChange(newCount) {
@@ -40,12 +42,14 @@ class ReactSetStateTestComponent2 extends React.Component {
         this.recordStateChange(this.state.counter);
     }
 
-    getDerivedStateFromProps(_, __) {
-        this.recordLifecycleCall("getDerivedStateFromProps");
+    static getDerivedStateFromProps(_, __) {
+        _shouldUpdate ? _component2UpdatingSetStateLifeCycleCalls.push("getDerivedStateFromProps") : _component2NonUpdatingSetStateLifeCycleCalls.push("getDerivedStateFromProps");
+        return null;
     }
 
     shouldComponentUpdate(_, __) {
         this.recordLifecycleCall("shouldComponentUpdate");
+        _shouldUpdate = this.props.shouldUpdate;
         return this.props.shouldUpdate;
     }
 
