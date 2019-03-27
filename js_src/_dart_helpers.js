@@ -102,10 +102,12 @@ function _createReactDartComponentClass2(dartInteropStatics, componentStatics) {
       dartInteropStatics.handleComponentWillUnmount(this.dartComponent);
     }
     componentDidCatch(error, info) {
+      console.log("catch called");
       dartInteropStatics.handleComponentDidCatch(this.dartComponent, error, info);
     }
-    getDerivedStateFromError(error) {
-      dartInteropStatics.handleGetDerivedStateFromError(this.dartComponent, error);
+    static getDerivedStateFromError(error) {
+      console.log("derived called");
+      return dartInteropStatics.handleGetDerivedStateFromError(componentStatics, error);
     }
     render() {
       var result = dartInteropStatics.handleRender(this.dartComponent);

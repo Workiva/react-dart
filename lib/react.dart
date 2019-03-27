@@ -663,9 +663,9 @@ abstract class Component2 implements Component {
   /// See: <https://facebook.github.io/react/docs/react-component.html#unmounting-componentwillunmount>
   void componentWillUnmount() {}
 
-  void componentDidCatch(){}
+  void componentDidCatch(dynamic error, dynamic info){}
 
-  void getDerivedStateFromError(){}
+  Map getDerivedStateFromError(dynamic error){}
 
   /// Invoked once before the `Component` is mounted. The return value will be used as the initial value of [state].
   ///

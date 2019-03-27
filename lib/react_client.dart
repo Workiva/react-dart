@@ -539,6 +539,19 @@ final ReactDartInteropStatics2 _dartInteropStatics2 = (() {
         component.componentWillUnmount();
       });
 
+  void handleComponentDidCatch(Component2 component, dynamic error, Map info)
+  => zone.run(() {
+    component.componentDidCatch(error, info);
+  });
+
+  JsMap handleGetDerivedStateFromError(ComponentStatics componentStatics,
+      dynamic
+  error)
+  => zone.run(() {
+    return jsBackingMapOrJsCopy(componentStatics.componentInstance.getDerivedStateFromError(error));
+  });
+
+
   dynamic handleRender(Component2 component) => zone.run(() {
         _updatePropsAndStateWithJs(component, component.jsThis.props, component.jsThis.state);
         return component.render();
@@ -554,6 +567,8 @@ final ReactDartInteropStatics2 _dartInteropStatics2 = (() {
     handleGetSnapshotBeforeUpdate: allowInterop(handleGetSnapshotBeforeUpdate),
     handleComponentDidUpdate: allowInterop(handleComponentDidUpdate),
     handleComponentWillUnmount: allowInterop(handleComponentWillUnmount),
+    handleComponentDidCatch: allowInterop(handleComponentDidCatch),
+    handleGetDerivedStateFromError: allowInterop(handleGetDerivedStateFromError),
     handleRender: allowInterop(handleRender),
   );
 })();
@@ -595,7 +610,7 @@ ReactDartComponentFactoryProxy _registerComponent(ComponentFactory componentFact
 ReactDartComponentFactoryProxy2 _registerComponent2(ComponentFactory<Component2> componentFactory,
     [Iterable<String> skipMethods = const []]) {
   final componentInstance = componentFactory();
-  final componentStatics = new ComponentStatics(componentFactory);
+  final componentStatics = new ComponentStatics(componentFactory, componentInstance: componentInstance);
 
   // TODO: Instantiate a JsComponentConfig2 instance here
 

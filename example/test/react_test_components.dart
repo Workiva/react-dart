@@ -301,3 +301,160 @@ class _Component2TestComponent extends react.Component2 with react.TypedSnapshot
 }
 
 var component2TestComponent = react.registerComponent(() => new _Component2TestComponent());
+
+class _ErrorComponent extends react.Component2 {
+
+  void error(event) {
+
+  }
+
+  void componentDidMount(){
+    print('Error Component props');
+    print(props);
+    print("Error Component Mounted");
+    if (props["errored"]) {
+
+    } else {
+
+      print("Error Component throwing");
+      throw new _JoesException("Itsa Broken", 2);
+    }
+  }
+
+  dynamic render(){
+    return react.div({'key': 'c3-d1-e'}, [
+      react.button({
+        'type': 'button',
+        'key': 'c3-e-button',
+        'className': 'btn btn-primary',
+        'onClick': error,
+      }, 'Error')
+    ]);
+  }
+}
+
+class _JoesException implements Exception {
+  int code;
+  String message;
+  String randoMessage;
+
+  _JoesException(this.message, this.code) {
+    switch(code) {
+      case 1:
+        randoMessage = "The code is a 1";
+        break;
+      case 2:
+        randoMessage = "The Code is a 2";
+        break;
+      default:
+        randoMessage = "Whaaaaaa";
+    }
+  }
+
+}
+
+var ErrorComponent = react.registerComponent(() => new _ErrorComponent
+  ());
+
+class _Component2ErrorTestComponent extends react.Component2 with react
+    .TypedSnapshot<String> {
+  Map getInitialState() {
+    return {
+      "items": new List.from([0, 1, 2, 3]),
+      "errored": false,
+    };
+  }
+
+  String getSnapshotBeforeUpdate(nextProps, prevState) {
+
+
+    if (prevState["items"].length > state["items"].length) {
+      return "removed " + prevState["items"].last.toString();
+    } else if (prevState["items"].length < state["items"].length){
+      return "added " + state["items"].last.toString();
+    }
+
+    return null;
+  }
+
+  componentDidMount(){
+    print("Mounted!");
+  }
+
+
+  void componentDidCatch(error, info){
+
+  }
+
+  Map getDerivedStateFromError(error){
+//    _JoesException error1 = error;
+
+    print("error");
+    print(error.runtimeType);
+//    print(error1.runtimeType);
+//    print(error?.code);
+//    print(error?.randoMessage);
+
+//    print(error["Symbol(_thrownValue)"].message);
+    print(error.stack);
+    print(error);
+    print(error.toString());
+    return { "errored" : true };
+  }
+
+  void componentDidUpdate(prevProps, prevState, [String snapshot]) {
+    if (snapshot != null) {
+      print('Updated DOM and ' + snapshot);
+      return null;
+    }
+    print("last state");
+    print(prevState);
+    print("next state");
+    print(state);
+  }
+
+  void removeItem(event) {
+    List items = new List.from(state["items"]);
+    items.removeAt(items.length - 1);
+    setState({"items": items});
+  }
+
+  void addItem(event) {
+    List items = new List.from(state["items"]);
+    items.add(items.length);
+    setState({"items": items});
+  }
+
+
+
+  dynamic render() {
+    List<dynamic> items = [];
+    for (var item in state['items']) {
+      items.add(react.li({"key": "c4" + item.toString()}, "$item"));
+    }
+
+    print('state');
+    print(state);
+
+    return react.div({}, [
+      ErrorComponent({'key': 'ec-1', 'errored':
+      state['errored']}),
+      react.button({
+        'type': 'button',
+        'key': 'c3-r-button',
+        'className': 'btn btn-primary',
+        'onClick': removeItem,
+      }, 'Remove Item'),
+      react.button({
+        'type': 'button',
+        'key': 'c3-a-button',
+        'className': 'btn btn-primary',
+        'onClick': addItem,
+      }, 'Add Item'),
+      react.ul({'key': 'c3-list'}, items),
+    ]);
+  }
+}
+
+var component2ErrorTestComponent = react.registerComponent(() => new
+_Component2ErrorTestComponent());

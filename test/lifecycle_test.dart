@@ -192,6 +192,22 @@ main() {
               matchCall('componentDidUpdate', args: [anything, anything, same(expectedSnapshot)]),
             ]));
       });
+
+      test('throws error from componentDidCatch', () {
+
+        LifecycleTestHelper component = getDartComponent(
+            render(components2.LifecycleTest({'throwsAnError': true,})));
+
+
+        component.lifecycleCalls.clear();
+        component.setState({});
+
+        expect(
+            component.lifecycleCalls,
+            equals([
+              matchCall('componentDidCatch'),
+            ]));
+      });
     });
   });
 }

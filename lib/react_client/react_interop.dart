@@ -385,10 +385,10 @@ class ReactDartInteropStatics2 implements ReactDartInteropStatics {
     )
         handleComponentDidUpdate,
     void Function(Component2 component) handleComponentWillUnmount,
-    void Function(Component2 component, String error, JsBackedMap info)
+    void Function(Component2 component, dynamic error, Map info)
     handleComponentDidCatch,
-    void Function(Component2 component, String error)
-    handleGetReivedStateFromError,
+    void Function(ComponentStatics componentInstance, dynamic error)
+    handleGetDerivedStateFromError,
     dynamic Function(Component2 component) handleRender,
   });
 }
@@ -401,8 +401,8 @@ class ReactDartInteropStatics2 implements ReactDartInteropStatics {
 /// See [ReactDartInteropStatics], [createReactDartComponentClass].
 class ComponentStatics<T extends Component> {
   final ComponentFactory<T> componentFactory;
-
-  ComponentStatics(this.componentFactory);
+  final Component2 componentInstance;
+  ComponentStatics(this.componentFactory, {this.componentInstance});
 }
 
 /// Additional configuration passed to [createReactDartComponentClass]

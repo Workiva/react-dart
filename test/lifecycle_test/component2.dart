@@ -11,7 +11,7 @@ ReactDartComponentFactoryProxy2 SetStateTest = react.registerComponent(() => new
 
 class _SetStateTest extends react.Component2 with LifecycleTestHelper {
   @override
-  Map getDefaultProps() => {'shouldUpdate': true};
+  Map getDefaultProps() => {'shouldUpdate': true, 'throwAnError': false,};
 
   @override
   getInitialState() => {"counter": 1};
@@ -42,6 +42,16 @@ class _SetStateTest extends react.Component2 with LifecycleTestHelper {
     return props['shouldUpdate'] as bool;
   }
 
+  @override
+  componentDidCatch(_, __) {
+    recordLifecyleCall('componentDidCatch');
+  }
+
+  @override
+  Map getDerivedStateFromError(_) {
+    recordLifecyleCall('getDerivedStateFromError');
+  }
+
   Map outerTransactionalSetStateCallback(Map previousState, __) {
     recordLifecyleCall('outerTransactionalSetStateCallback');
     return {'counter': previousState['counter'] + 1};
@@ -60,22 +70,52 @@ class _SetStateTest extends react.Component2 with LifecycleTestHelper {
   render() {
     recordLifecyleCall('render');
 
-    return react.div(
-      {
-        'onClick': (_) {
-          setStateWithUpdater(outerTransactionalSetStateCallback, () {
-            recordLifecyleCall('outerSetStateCallback');
-          });
-        }
-      },
-      react.div({
-        'onClick': (_) {
-          setStateWithUpdater(innerTransactionalSetStateCallback, () {
-            recordLifecyleCall('innerSetStateCallback');
-          });
-        }
-      }, state['counter']),
-    );
+    if(!props['throwAnError']){
+      print("naahh");
+      return react.div(
+        {
+          'onClick': (_) {
+            setStateWithUpdater(outerTransactionalSetStateCallback, () {
+              recordLifecyleCall('outerSetStateCallback');
+            });
+          }
+        },
+        react.div({
+          'onClick': (_) {
+            setStateWithUpdater(innerTransactionalSetStateCallback, () {
+              recordLifecyleCall('innerSetStateCallback');
+            });
+          }
+        }, state['counter']),
+      );
+    } else {
+      print("hello");
+      return react.div(
+        {
+          'onClick': (_) {
+            setStateWithUpdater(outerTransactionalSetStateCallback, () {
+              recordLifecyleCall('outerSetStateCallback');
+            });
+          }
+        },
+        react.div(
+        {
+          'onClick': (_) {
+            setStateWithUpdater(innerTransactionalSetStateCallback, () {
+              recordLifecyleCall('innerSetStateCallback');
+            });
+          }
+        },
+        {
+          react.div(
+            {
+              'onClick': (_) {
+                throw new Error();
+              }
+            }, state['counter']),
+        }, state['counter']),
+      );
+    }
   }
 }
 
@@ -178,6 +218,13 @@ class _LifecycleTest extends react.Component2 with LifecycleTestHelper {
 
   void componentDidUpdate(prevProps, prevState, [snapshot]) =>
       lifecycleCall('componentDidUpdate', arguments: [new Map.from(prevProps), new Map.from(prevState), snapshot]);
+
+  void componentDidCatch(error, info) =>
+      lifecycleCall('componentDidCatch', arguments: [error,
+      new Map.from(info)]);
+
+  Map getDerivedStateFromError(error) =>
+      lifecycleCall('componentDidCatch', arguments: [error]);
 
   bool shouldComponentUpdate(nextProps, nextState) => lifecycleCall('shouldComponentUpdate',
       arguments: [new Map.from(nextProps), new Map.from(nextState)], defaultReturnValue: () => true);
