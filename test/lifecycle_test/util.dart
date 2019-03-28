@@ -24,7 +24,7 @@ mixin LifecycleTestHelper on Component {
 
   /// We needed to add [staticLifecycleCalls] to be able to test static lifecycle methods like [getDerivedStateFromProps],
   /// which don't get called on the same instance as other lifecycle methods.
-  /// 
+  ///
   /// This alllows static and instance lifecycle methods to add calls to the same list
   List get lifecycleCalls => staticLifecycleCalls;
 

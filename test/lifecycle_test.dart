@@ -419,9 +419,7 @@ void sharedLifecycleTests<T extends react.Component>({
       expect(
           component.lifecycleCalls,
           equals([
-            isComponent2
-                ? matchCall('getDerivedStateFromProps')
-                : null,
+            isComponent2 ? matchCall('getDerivedStateFromProps') : null,
             !isComponent2
                 ? matchCall('componentWillReceiveProps', args: [newPropsWithDefaults], props: initialPropsWithDefaults)
                 : null,
@@ -487,9 +485,7 @@ void sharedLifecycleTests<T extends react.Component>({
       expect(
           component.lifecycleCalls,
           equals([
-            isComponent2
-                ? matchCall('getDerivedStateFromProps')
-                : null,
+            isComponent2 ? matchCall('getDerivedStateFromProps') : null,
             skipLegacyContextTests
                 ? null
                 : matchCall('shouldComponentUpdateWithContext',
@@ -537,9 +533,7 @@ void sharedLifecycleTests<T extends react.Component>({
       expect(
           component.lifecycleCalls,
           equals([
-            isComponent2
-                ? matchCall('getDerivedStateFromProps')
-                : null,
+            isComponent2 ? matchCall('getDerivedStateFromProps') : null,
             skipLegacyContextTests
                 ? null
                 : matchCall('shouldComponentUpdateWithContext',
@@ -723,9 +717,7 @@ void sharedLifecycleTests<T extends react.Component>({
         react_dom.render(LifecycleTest(newProps), mountNode);
 
         List calls = [
-          isComponent2
-              ? matchCall('getDerivedStateFromProps')
-              : null,
+          isComponent2 ? matchCall('getDerivedStateFromProps') : null,
           isComponent2
               ? null
               : matchCall('componentWillReceiveProps', args: [newPropsWithDefaults], props: initialPropsWithDefaults),
@@ -778,14 +770,15 @@ void sharedLifecycleTests<T extends react.Component>({
 
         component.setState(stateDelta);
         List calls;
-        if(isComponent2) {
+        if (isComponent2) {
           calls = [
             matchCall('getDerivedStateFromProps'),
             matchCall('shouldComponentUpdate', args: [expectedProps, newState, expectedContext], state: initialState)
           ];
         } else {
           calls = [
-            matchCall('shouldComponentUpdateWithContext',args: [expectedProps, newState, expectedContext], state: initialState)
+            matchCall('shouldComponentUpdateWithContext',
+                args: [expectedProps, newState, expectedContext], state: initialState)
           ];
         }
 
