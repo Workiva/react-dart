@@ -487,12 +487,8 @@ final ReactDartInteropStatics2 _dartInteropStatics2 = (() {
           ..jsThis = jsThis
           ..props = new JsBackedMap.backedBy(jsThis.props)
           ..context = _unjsifyNewContext(jsThis.context);
-
-        return component;
-      });
-
-  void handleInit(Component2 component) => zone.run(() {
         component.init();
+        return component;
       });
 
   JsMap handleGetInitialState(Component2 component) => zone.run(() {
@@ -569,7 +565,6 @@ final ReactDartInteropStatics2 _dartInteropStatics2 = (() {
 
   return new ReactDartInteropStatics2(
     initComponent: allowInterop(initComponent),
-    handleInit:allowInterop(handleInit),
     handleGetInitialState: allowInterop(handleGetInitialState),
     handleComponentWillMount: allowInterop(handleComponentWillMount),
     handleComponentDidMount: allowInterop(handleComponentDidMount),

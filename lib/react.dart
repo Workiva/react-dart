@@ -732,7 +732,22 @@ abstract class Component2 implements Component {
 
   /// This is equivalent to `Constructor` in React 16, this is called before mounting
   /// See: <https://reactjs.org/docs/react-component.html#constructor>
+  /// 
+  /// __Example__:
+  /// 
+  ///    void initComponent(jsThis, componentStatics) {
+  ///      var dartComponent = componentStatics.componentFactory();
+  ///    
+  ///      // New lifecycle method baybeeee
+  ///      dartComponent.init();
   ///
+  ///      // Sync the JS component's state the component's state
+  ///      if (jsThis.dartComponent.state != null) {
+  ///        jsThis.state = new JsBackedMap.from(jsThis.dartComponent.state).jsMap;
+  ///      }
+  ///
+  ///      return dartComponent;
+  ///    }
   void init() {}
 
   /// Invoked once and cached when [reactComponentClass] is called. Values in the mapping will be set on [props]

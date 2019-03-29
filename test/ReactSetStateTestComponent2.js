@@ -29,6 +29,7 @@ class ReactSetStateTestComponent2 extends React.Component {
         super(props);
         _component2Counter = 1;
         this.state = {counter: _component2Counter};
+        this.recordLifecycleCall("init");
     }
 
     recordStateChange(newCount) {

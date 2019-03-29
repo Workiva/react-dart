@@ -366,7 +366,6 @@ class ReactDartInteropStatics2 implements ReactDartInteropStatics {
     Component2 Function(ReactComponent jsThis, ComponentStatics<Component2> componentStatics) initComponent,
     // TODO: Should this have a return signature of `Map`?
     dynamic Function(Component2 component) handleGetInitialState,
-    void Function(Component2) handleInit,
     void Function(Component2 component, ReactComponent jsThis) handleComponentWillMount,
     void Function(Component2 component) handleComponentDidMount,
     // TODO: Should this be removed when we update Component2.componentWillReceiveProps to throw an UnsupportedError? (CPLAT-4765)

@@ -263,6 +263,7 @@ void sharedLifecycleTests<T extends react.Component>({
         expect(
             component.lifecycleCalls,
             equals([
+              matchCall('init'),
               matchCall('getInitialState'),
               matchCall('render'),
               matchCall('componentDidMount'),

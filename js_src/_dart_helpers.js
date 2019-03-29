@@ -94,10 +94,6 @@ function _createReactDartComponentClass2(dartInteropStatics, componentStatics, j
       }
     }
 
-    init() {
-      dartInteropStatics.handleInit(this.dartComponent);
-    }
-
     componentDidMount() {
       dartInteropStatics.handleComponentDidMount(this.dartComponent);
     }

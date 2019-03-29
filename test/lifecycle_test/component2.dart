@@ -14,6 +14,9 @@ class _SetStateTest extends react.Component2 with LifecycleTestHelper {
   Map getDefaultProps() => {'shouldUpdate': true};
 
   @override
+  void init() => recordLifecyleCall('init');
+
+  @override
   getInitialState() => {"counter": 1};
 
   @override
