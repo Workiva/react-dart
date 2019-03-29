@@ -305,7 +305,7 @@ external ReactClass createReactDartComponentClass(
 @JS('_createReactDartComponentClass2')
 external ReactClass createReactDartComponentClass2(
     ReactDartInteropStatics2 dartInteropStatics, ComponentStatics<Component2> componentStatics,
-    {JsComponentConfig2 jsConfig, List<String> skipMethods});
+    [JsComponentConfig2 jsConfig, List<String> skipMethods]);
 
 @JS('React.__isDevelopment')
 external bool get _inReactDevMode;
