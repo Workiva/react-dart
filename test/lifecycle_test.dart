@@ -157,11 +157,10 @@ main() {
 
       group('componentDidUpdate receives the same value created in getSnapshotBeforeUpdate when snapshot is', () {
         testSnapshotType(expectedSnapshot) {
-
-        LifecycleTestHelper component = getDartComponent(
-            render(components2.LifecycleTest({'getSnapshotBeforeUpdate': (_, __, ___) => expectedSnapshot})));
-        component.lifecycleCalls.clear();
-        component.setState({});
+          LifecycleTestHelper component = getDartComponent(
+              render(components2.LifecycleTest({'getSnapshotBeforeUpdate': (_, __, ___) => expectedSnapshot})));
+          component.lifecycleCalls.clear();
+          component.setState({});
 
           expect(
             component.lifecycleCalls,
