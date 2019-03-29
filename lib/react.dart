@@ -298,6 +298,10 @@ abstract class Component {
   /// despite the [state] value change.
   ///
   /// See: <https://facebook.github.io/react/docs/react-component.html#mounting-componentwillmount>
+  /// > __DEPRECATED.__
+  /// >
+  /// > Use [init] instead
+  @Deprecated('6.0.0')
   void componentWillMount() {}
 
   /// ReactJS lifecycle method that is invoked once, only on the client _(not on the server)_, immediately after the
@@ -441,6 +445,11 @@ abstract class Component {
   /// Invoked once before the `Component` is mounted. The return value will be used as the initial value of [state].
   ///
   /// See: <https://facebook.github.io/react/docs/react-component.html#getinitialstate>
+  /// 
+  /// > __DEPRECATED - DO NOT USE__
+  /// >
+  /// > Use [init] or [getDerivedStateFromProps] to handle intialization instead
+  @Deprecated('6.0.0')
   Map getInitialState() => {};
 
   /// Invoked once and cached when [reactComponentClass] is called. Values in the mapping will be set on [props]
@@ -584,6 +593,10 @@ abstract class Component2 implements Component {
   /// despite the [state] value change.
   ///
   /// See: <https://facebook.github.io/react/docs/react-component.html#mounting-componentwillmount>
+  /// 
+  /// > __DEPRECATED.__
+  /// >
+  /// > Use [init] instead
   void componentWillMount() {}
 
   /// ReactJS lifecycle method that is invoked once, only on the client _(not on the server)_, immediately after the
@@ -711,7 +724,16 @@ abstract class Component2 implements Component {
   /// Invoked once before the `Component` is mounted. The return value will be used as the initial value of [state].
   ///
   /// See: <https://facebook.github.io/react/docs/react-component.html#getinitialstate>
+  /// 
+  /// > __DEPRECATED - DO NOT USE__
+  /// >
+  /// > Use [init] or [getDerivedStateFromProps] to handle intialization instead
   Map getInitialState() => const {};
+
+  /// This is equivalent to `Constructor` in React 16, this is called before mounting
+  /// See: <https://reactjs.org/docs/react-component.html#constructor>
+  ///
+  void init() {}
 
   /// Invoked once and cached when [reactComponentClass] is called. Values in the mapping will be set on [props]
   /// if that prop is not specified by the parent component.
