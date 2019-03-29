@@ -83,9 +83,15 @@ function _createReactDartComponentClass2(dartInteropStatics, componentStatics, j
   class ReactDartComponent2 extends React.Component {
     constructor(props, context) {
       super(props, context);
-      // TODO combine these two calls into one
+      this.state = null;
       this.dartComponent = dartInteropStatics.initComponent(this, componentStatics);
-      this.state = dartInteropStatics.handleGetInitialState(this.dartComponent);
+      const initialStateFromGetInitialState =
+      dartInteropStatics.handleGetInitialState(this.dartComponent);
+      if (this.state && initialStateFromGetInitialState) {
+        throw 'Error: Init and getInitialState cannot be used at the same time.';
+      } else {
+        this.state = initialStateFromGetInitialState;
+      }
     }
 
     init() {
