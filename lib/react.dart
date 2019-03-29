@@ -668,6 +668,12 @@ abstract class Component2 implements Component {
   /// Use this method primarily for logging errors, but because it takes
   /// place after the commit phase side-effects are permitted.
   ///
+  /// __Note__: This method, along with [getDerivedStateFromError] will only
+  /// be called if `skipMethods` in [_registerComponent] is overridden with
+  /// a list (which can be empty). Otherwise, in order to prevent every
+  /// component from being an error boundary, [componentDidCatch] and
+  /// [getDerivedStateFromError] will be ignored.
+  ///
   /// See: <https://facebook.github.io/react/docs/react-component.html#componentdidcatch>
   void componentDidCatch(dynamic error, dynamic info) {}
 
@@ -676,6 +682,12 @@ abstract class Component2 implements Component {
   ///
   /// Use this method to capture the error and update component state after an
   /// error is thrown.
+  ///
+  /// __Note__: This method, along with [componentDidCatch] will only
+  /// be called if `skipMethods` in [_registerComponent] is overridden with
+  /// a list (which can be empty). Otherwise, in order to prevent every
+  /// component from being an error boundary, [componentDidCatch] and
+  /// [getDerivedStateFromError] will be ignored.
   ///
   /// See: <https://facebook.github.io/react/docs/react-component.html#componentdidcatch>
   Map getDerivedStateFromError(dynamic error) {}
