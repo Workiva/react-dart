@@ -11,10 +11,17 @@ ReactDartComponentFactoryProxy2 SetStateTest = react.registerComponent(() => new
 
 class _SetStateTest extends react.Component2 with LifecycleTestHelper {
   @override
-  Map getDefaultProps() => {'shouldUpdate': true, 'throwAnError': false,};
+  Map getDefaultProps() => {
+        'shouldUpdate': true,
+      };
 
   @override
-  getInitialState() => {"counter": 1};
+  getInitialState() => {
+        'counter': 1,
+        'throw': true,
+        'throwsAnError': false,
+        'errorMessage': null,
+      };
 
   @override
   componentWillReceiveProps(_) {
@@ -45,11 +52,13 @@ class _SetStateTest extends react.Component2 with LifecycleTestHelper {
   @override
   componentDidCatch(_, __) {
     recordLifecyleCall('componentDidCatch');
+    this.setState({"errorMessage": "thrown"});
   }
 
   @override
   Map getDerivedStateFromError(_) {
     recordLifecyleCall('getDerivedStateFromError');
+    return {"throw": false};
   }
 
   Map outerTransactionalSetStateCallback(Map previousState, __) {
@@ -70,8 +79,9 @@ class _SetStateTest extends react.Component2 with LifecycleTestHelper {
   render() {
     recordLifecyleCall('render');
 
-    if(!props['throwAnError']){
-      print("naahh");
+    bool throwError = state['throwAnError'] == null || state['throwAnError'] == false ? false : true;
+
+    if (!throwError) {
       return react.div(
         {
           'onClick': (_) {
@@ -89,7 +99,6 @@ class _SetStateTest extends react.Component2 with LifecycleTestHelper {
         }, state['counter']),
       );
     } else {
-      print("hello");
       return react.div(
         {
           'onClick': (_) {
@@ -99,21 +108,17 @@ class _SetStateTest extends react.Component2 with LifecycleTestHelper {
           }
         },
         react.div(
-        {
-          'onClick': (_) {
-            setStateWithUpdater(innerTransactionalSetStateCallback, () {
-              recordLifecyleCall('innerSetStateCallback');
-            });
-          }
-        },
-        {
-          react.div(
             {
               'onClick': (_) {
-                throw new Error();
+                setStateWithUpdater(innerTransactionalSetStateCallback, () {
+                  recordLifecyleCall('innerSetStateCallback');
+                });
               }
-            }, state['counter']),
-        }, state['counter']),
+            },
+            {
+              state["throw"] ? ErrorComponent({"key": "errorComp"}) : null,
+            },
+            state['counter']),
       );
     }
   }
@@ -192,6 +197,19 @@ class _LifecycleTestWithContext extends _LifecycleTest {
   Iterable<String> get contextKeys => const ['foo']; // only listening to one context key
 }
 
+ReactDartComponentFactoryProxy2 ErrorComponent = react.registerComponent(() => new _ErrorComponent());
+
+class _ErrorComponent extends react.Component2 {
+  void _throwError() {
+    throw new Exception("It crashed!");
+  }
+
+  void render() {
+    _throwError();
+    return react.div({'key': 'defaultMessage'}, "Error");
+  }
+}
+
 ReactDartComponentFactoryProxy2 LifecycleTest = react.registerComponent(() => new _LifecycleTest());
 
 class _LifecycleTest extends react.Component2 with LifecycleTestHelper {
@@ -219,12 +237,9 @@ class _LifecycleTest extends react.Component2 with LifecycleTestHelper {
   void componentDidUpdate(prevProps, prevState, [snapshot]) =>
       lifecycleCall('componentDidUpdate', arguments: [new Map.from(prevProps), new Map.from(prevState), snapshot]);
 
-  void componentDidCatch(error, info) =>
-      lifecycleCall('componentDidCatch', arguments: [error,
-      new Map.from(info)]);
+  void componentDidCatch(error, info) => lifecycleCall('componentDidCatch', arguments: [error, new Map.from(info)]);
 
-  Map getDerivedStateFromError(error) =>
-      lifecycleCall('componentDidCatch', arguments: [error]);
+  Map getDerivedStateFromError(error) => lifecycleCall('getDerivedStateFromError', arguments: [error]);
 
   bool shouldComponentUpdate(nextProps, nextState) => lifecycleCall('shouldComponentUpdate',
       arguments: [new Map.from(nextProps), new Map.from(nextState)], defaultReturnValue: () => true);

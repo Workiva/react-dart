@@ -106,9 +106,16 @@ class _ClockComponent extends react.Component {
   }
 
   render() {
-    return react.span({'onClick': (event) => print("Hello World!")},
+    return react.span({
+      'onClick': (event) => print("Hello World!"),
+      "key": "c"
+          "locl-1"
+    },
 //        { 'onClick': (event, [domid = null]) => print("Hello World!") },
-        ["Seconds elapsed: ", "${state['secondsElapsed']}"]);
+        [
+          "Seconds elapsed: ",
+          "${state['secondsElapsed']}"
+        ]);
   }
 }
 
@@ -154,7 +161,7 @@ class _ListComponent extends react.Component {
         'className': 'btn btn-primary',
         'onClick': addItem,
       }, 'addItem'),
-      react.ul({'key': 'list'}, items),
+      react.ul({'key': 'list100'}, items),
     ]);
   }
 }
@@ -186,7 +193,7 @@ class _ContextComponent extends react.Component {
     }, [
       react.button({
         'type': 'button',
-        'key': 'button',
+        'key': 'cntxt-button',
         'className': 'btn btn-primary',
         'onClick': _onButtonClick,
       }, 'Redraw'),
@@ -303,35 +310,21 @@ class _Component2TestComponent extends react.Component2 with react.TypedSnapshot
 var component2TestComponent = react.registerComponent(() => new _Component2TestComponent());
 
 class _ErrorComponent extends react.Component2 {
-
-  void error(event) {
-
-  }
-
-  void componentDidMount(){
-    print('Error Component props');
-    print(props);
-    print("Error Component Mounted");
-    if (props["errored"]) {
-
-    } else {
-
-      print("Error Component throwing");
-      throw new _JoesException("Itsa Broken", 2);
+  void componentDidMount() {
+    if (!props["errored"]) {
+      throw new _JoesException("It broke!", 2);
     }
   }
 
-  dynamic render(){
-    return react.div({'key': 'c3-d1-e'}, [
-      react.button({
-        'type': 'button',
-        'key': 'c3-e-button',
-        'className': 'btn btn-primary',
-        'onClick': error,
-      }, 'Error')
-    ]);
+  dynamic render() {
+    return react.div(
+        {'key': 'eb-d1-e'},
+        "Oh no, I'm an error! Check your "
+        "console.");
   }
 }
+
+var ErrorComponent = react.registerComponent(() => new _ErrorComponent());
 
 class _JoesException implements Exception {
   int code;
@@ -339,7 +332,7 @@ class _JoesException implements Exception {
   String randoMessage;
 
   _JoesException(this.message, this.code) {
-    switch(code) {
+    switch (code) {
       case 1:
         randoMessage = "The code is a 1";
         break;
@@ -350,111 +343,64 @@ class _JoesException implements Exception {
         randoMessage = "Whaaaaaa";
     }
   }
-
 }
 
-var ErrorComponent = react.registerComponent(() => new _ErrorComponent
-  ());
-
-class _Component2ErrorTestComponent extends react.Component2 with react
-    .TypedSnapshot<String> {
+class _Component2ErrorTestComponent extends react.Component2 {
   Map getInitialState() {
     return {
-      "items": new List.from([0, 1, 2, 3]),
+      "clicked": false,
       "errored": false,
+      "error": null,
     };
   }
 
-  String getSnapshotBeforeUpdate(nextProps, prevState) {
-
-
-    if (prevState["items"].length > state["items"].length) {
-      return "removed " + prevState["items"].last.toString();
-    } else if (prevState["items"].length < state["items"].length){
-      return "added " + state["items"].last.toString();
-    }
-
-    return null;
+  void componentDidCatch(error, info) {
+    setState({
+      "error": "We can capture the error, store it in state and "
+          "display it here."
+    });
   }
 
-  componentDidMount(){
-    print("Mounted!");
+  Map getDerivedStateFromError(error) {
+    return {"errored": true};
   }
 
-
-  void componentDidCatch(error, info){
-
+  void error(event) {
+    setState({"clicked": true});
   }
 
-  Map getDerivedStateFromError(error){
-//    _JoesException error1 = error;
-
-    print("error");
-    print(error.runtimeType);
-//    print(error1.runtimeType);
-//    print(error?.code);
-//    print(error?.randoMessage);
-
-//    print(error["Symbol(_thrownValue)"].message);
-    print(error.stack);
-    print(error);
-    print(error.toString());
-    return { "errored" : true };
+  void clearError(event) {
+    setState({"clicked": false, "error": null, "errored": false});
   }
-
-  void componentDidUpdate(prevProps, prevState, [String snapshot]) {
-    if (snapshot != null) {
-      print('Updated DOM and ' + snapshot);
-      return null;
-    }
-    print("last state");
-    print(prevState);
-    print("next state");
-    print(state);
-  }
-
-  void removeItem(event) {
-    List items = new List.from(state["items"]);
-    items.removeAt(items.length - 1);
-    setState({"items": items});
-  }
-
-  void addItem(event) {
-    List items = new List.from(state["items"]);
-    items.add(items.length);
-    setState({"items": items});
-  }
-
-
 
   dynamic render() {
-    List<dynamic> items = [];
-    for (var item in state['items']) {
-      items.add(react.li({"key": "c4" + item.toString()}, "$item"));
-    }
+    dynamic errorMessage = state["error"] ?? "No error yet";
 
-    print('state');
-    print(state);
-
-    return react.div({}, [
-      ErrorComponent({'key': 'ec-1', 'errored':
-      state['errored']}),
-      react.button({
-        'type': 'button',
-        'key': 'c3-r-button',
-        'className': 'btn btn-primary',
-        'onClick': removeItem,
-      }, 'Remove Item'),
-      react.button({
-        'type': 'button',
-        'key': 'c3-a-button',
-        'className': 'btn btn-primary',
-        'onClick': addItem,
-      }, 'Add Item'),
-      react.ul({'key': 'c3-list'}, items),
+    return react.div({
+      "key": "e-cont"
+    }, [
+      react.h3({"key": "e-header"}, "Error Boundary Test"),
+      state["clicked"] ? ErrorComponent({'key': 'ec-1', 'errored': state['errored']}) : null,
+      errorMessage != null ? react.div({'key': 'ec-m-1'}, '$errorMessage') : null,
+      !state["errored"]
+          ? react.button({
+              'type': 'button',
+              'key': 'c3-r-button',
+              'className': 'btn btn-primary',
+              'onClick': error,
+            }, 'Trigger Error')
+          : null,
+      state["errored"]
+          ? react.button({
+              'type': 'button',
+              'key': 'c3-c-button',
+              'className': 'btn btn-primary',
+              'onClick': clearError,
+            }, 'Clear Error')
+          : null,
+      react.hr({"key": "e-hr"}),
     ]);
   }
 }
 
-var component2ErrorTestComponent = react.registerComponent(() => new
-_Component2ErrorTestComponent());
+var component2ErrorTestComponent = react.registerComponent(() => new _Component2ErrorTestComponent(), ['render']);

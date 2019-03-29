@@ -305,7 +305,7 @@ external ReactClass createReactDartComponentClass(
 @JS('_createReactDartComponentClass2')
 external ReactClass createReactDartComponentClass2(
     ReactDartInteropStatics2 dartInteropStatics, ComponentStatics<Component2> componentStatics,
-    [JsComponentConfig2 jsConfig]);
+    {JsComponentConfig2 jsConfig, List<String> skipMethods});
 
 @JS('React.__isDevelopment')
 external bool get _inReactDevMode;
@@ -385,10 +385,8 @@ class ReactDartInteropStatics2 implements ReactDartInteropStatics {
     )
         handleComponentDidUpdate,
     void Function(Component2 component) handleComponentWillUnmount,
-    void Function(Component2 component, dynamic error, Map info)
-    handleComponentDidCatch,
-    void Function(ComponentStatics componentInstance, dynamic error)
-    handleGetDerivedStateFromError,
+    void Function(Component2 component, dynamic error, dynamic info) handleComponentDidCatch,
+    void Function(ComponentStatics componentInstance, dynamic error) handleGetDerivedStateFromError,
     dynamic Function(Component2 component) handleRender,
   });
 }

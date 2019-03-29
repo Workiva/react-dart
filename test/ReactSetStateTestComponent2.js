@@ -79,6 +79,14 @@ class ReactSetStateTestComponent2 extends React.Component {
         this.setState(this.innerTransactionalSetStateCallback.bind(this), this.innerSetStateCallback.bind(this));
     }
 
+    componentDidCatch(_, __) {
+        this.recordLifecycleCall('componentDidCatch');
+    }
+
+    getDerivedStateFromError(_) {
+        this.recordLifecycleCall('getDerivedStateFromError');
+    }
+
     render() {
         this.recordLifecycleCall('render');
         return React.createElement("div", {onClick: this.handleOuterClick.bind(this)},

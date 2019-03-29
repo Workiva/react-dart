@@ -22,6 +22,7 @@ main() {
   setClientConfiguration();
 
   group('React component lifecycle:', () {
+    setUp(() => LifecycleTestHelper.staticLifecycleCalls = []);
     group('Component', () {
       sharedLifecycleTests(
         skipLegacyContextTests: false,
@@ -181,7 +182,6 @@ main() {
 
         LifecycleTestHelper component = getDartComponent(
             render(components2.LifecycleTest({'getSnapshotBeforeUpdate': (_, __, ___) => expectedSnapshot})));
-
         component.lifecycleCalls.clear();
         component.setState({});
 
@@ -193,20 +193,16 @@ main() {
             ]));
       });
 
-      test('throws error from componentDidCatch', () {
+      test('triggers error lifecycle events when an error is thrown', () {
+        var mountNode = new DivElement();
+        var renderedInstance = react_dom.render(components2.SetStateTest({}), mountNode);
+        LifecycleTestHelper component = getDartComponent(renderedInstance);
+        LifecycleTestHelper.staticLifecycleCalls.clear();
+        component.setState({"throwAnError": true});
 
-        LifecycleTestHelper component = getDartComponent(
-            render(components2.LifecycleTest({'throwsAnError': true,})));
-
-
-        component.lifecycleCalls.clear();
-        component.setState({});
-
-        expect(
-            component.lifecycleCalls,
-            equals([
-              matchCall('componentDidCatch'),
-            ]));
+        expect(component.lifecycleCalls, containsAllInOrder(['getDerivedStateFromError', 'componentDidCatch']));
+        expect(component.state["throw"], isFalse);
+        expect(component.state["errorMessage"], "thrown");
       });
     });
   });
@@ -321,7 +317,7 @@ void sharedLifecycleTests<T extends react.Component>({
           ]));
     });
 
-    if (!skipLegacyContextTests) {
+    if (!skipLegacyContextTests && isComponent2) {
       test('does not call getChildContext when childContextKeys is empty', () {
         var mountNode = new DivElement();
         var instance =
@@ -378,6 +374,7 @@ void sharedLifecycleTests<T extends react.Component>({
         expect(
             component.lifecycleCalls,
             equals([
+              matchCall('getChildContext'),
               matchCall('getInitialState', props: initialPropsWithDefaults, context: initialContext),
               matchCall('componentWillMount', props: initialPropsWithDefaults, context: initialContext),
               matchCall('render', props: initialPropsWithDefaults, context: initialContext),
@@ -394,6 +391,7 @@ void sharedLifecycleTests<T extends react.Component>({
         expect(
             component.lifecycleCalls,
             equals([
+              matchCall('getChildContext'),
               matchCall('componentWillReceiveProps',
                   args: [newPropsWithDefaults], props: initialPropsWithDefaults, context: initialContext),
               skipLegacyContextTests

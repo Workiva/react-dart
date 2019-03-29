@@ -538,7 +538,6 @@ abstract class Component2 implements Component {
   /// See: <https://facebook.github.io/react/docs/react-component.html#mounting-componentwillmount>
   void componentWillMount() {}
 
-
   /// ReactJS lifecycle method that is invoked once, only on the client _(not on the server)_, immediately after the
   /// initial rendering occurs.
   ///
@@ -663,9 +662,23 @@ abstract class Component2 implements Component {
   /// See: <https://facebook.github.io/react/docs/react-component.html#unmounting-componentwillunmount>
   void componentWillUnmount() {}
 
-  void componentDidCatch(dynamic error, dynamic info){}
+  /// ReactJS lifecycle method that is invoked after an error is thrown by a
+  /// descendant.
+  ///
+  /// Use this method primarily for logging errors, but because it takes
+  /// place after the commit phase side-effects are permitted.
+  ///
+  /// See: <https://facebook.github.io/react/docs/react-component.html#componentdidcatch>
+  void componentDidCatch(dynamic error, dynamic info) {}
 
-  Map getDerivedStateFromError(dynamic error){}
+  /// ReactJS lifecycle method that is invoked after an error is thrown by a
+  /// descendant.
+  ///
+  /// Use this method to capture the error and update component state after an
+  /// error is thrown.
+  ///
+  /// See: <https://facebook.github.io/react/docs/react-component.html#componentdidcatch>
+  Map getDerivedStateFromError(dynamic error) {}
 
   /// Invoked once before the `Component` is mounted. The return value will be used as the initial value of [state].
   ///
@@ -1408,13 +1421,16 @@ class SyntheticWheelEvent extends SyntheticEvent {
   throw new Exception('setClientConfiguration must be called before registerComponent.');
 };
 
-
 /// Registers [componentFactory] on both client and server.
-/*ComponentRegistrar*/ Function registerComponent2 =
-    (/*ComponentFactory*/ componentFactory, [/*Iterable<String>*/ skipMethods
-= const ["compnentDidCatch", "getDerivedStateFromError"]]) {
+/*ComponentRegistrar*/ Function registerComponent2 = (/*ComponentFactory*/ componentFactory,
+    [/*Iterable<String>*/ skipMethods = const [
+      'getDerivedStateFromError',
+      'compo'
+          'nentDidCatch'
+    ]]) {
   throw new Exception('setClientConfiguration must be called before registerComponent.');
 };
+
 /// The HTML `<a>` [AnchorElement].
 var a;
 
