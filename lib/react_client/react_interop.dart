@@ -9,7 +9,6 @@ import 'dart:html';
 import 'package:js/js.dart';
 import 'package:react/react.dart';
 import 'package:react/react_client.dart' show ComponentFactory;
-import 'package:react/react_client/js_interop_helpers.dart';
 import 'package:react/src/react_client/js_backed_map.dart';
 import 'package:react/src/react_client/dart2_interop_workaround_bindings.dart';
 
@@ -22,6 +21,10 @@ typedef ReactElement ReactJsComponentFactory(props, children);
 @JS()
 abstract class React {
   external static String get version;
+  external static ReactContext createContext([
+    dynamic defaultValue,
+    int Function(dynamic currentValue, dynamic nextValue) calculateChangedBits,
+  ]);
   @Deprecated('6.0.0')
   external static ReactClass createClass(ReactClassConfig reactClassConfig);
   external static ReactJsComponentFactory createFactory(type);
@@ -167,6 +170,7 @@ class ReactComponent {
   // TODO: Cast as Component2 in 6.0.0
   external Component get dartComponent;
   external InteropProps get props;
+  external dynamic get context;
   external JsMap get state;
   external get refs;
   external void setState(state, [callback]);
@@ -195,6 +199,18 @@ class ReactComponent {
 @anonymous
 class InteropContextValue {
   external factory InteropContextValue();
+}
+
+/// A JavaScript interop class representing the return value of `createContext`.
+///
+/// Used for accessing Dart [Context.Provider] & [Context.Consumer] components.
+///
+/// __For internal/advanced use only.__
+@JS()
+@anonymous
+class ReactContext {
+  external ReactClass get Provider;
+  external ReactClass get Consumer;
 }
 
 /// A JavaScript interop class representing a React JS `props` object.
@@ -367,8 +383,18 @@ class ReactDartInteropStatics2 implements ReactDartInteropStatics {
     void Function(Component2 component, ReactComponent jsThis) handleComponentWillMount,
     void Function(Component2 component) handleComponentDidMount,
     // TODO: Should this be removed when we update Component2.componentWillReceiveProps to throw an UnsupportedError? (CPLAT-4765)
-    void Function(Component2 component, JsMap jsNextProps) handleComponentWillReceiveProps,
-    bool Function(Component2 component, JsMap jsNextProps, JsMap jsNextState) handleShouldComponentUpdate,
+    void Function(
+      Component2 component,
+      JsMap jsNextProps,
+    )
+        handleComponentWillReceiveProps,
+    bool Function(
+      Component2 component,
+      JsMap jsNextProps,
+      JsMap jsNextState,
+      dynamic jsNextContext,
+    )
+        handleShouldComponentUpdate,
     // TODO: Should this be removed when we update Component2.componentWillUpdate to throw an UnsupportedError? (CPLAT-4766)
     void Function(
       Component2 component,
@@ -387,7 +413,7 @@ class ReactDartInteropStatics2 implements ReactDartInteropStatics {
     void Function(Component2 component) handleComponentWillUnmount,
     void Function(Component2 component, dynamic error, dynamic info) handleComponentDidCatch,
     void Function(ComponentStatics componentInstance, dynamic error) handleGetDerivedStateFromError,
-    dynamic Function(Component2 component) handleRender,
+    dynamic Function(Component2 component, JsMap jsProps, JsMap jsState, dynamic jsContext) handleRender,
   });
 }
 
@@ -431,6 +457,6 @@ class JsComponentConfig {
 class JsComponentConfig2 {
   external factory JsComponentConfig2({
     dynamic contextType,
-    EmptyObject defaultProps,
+    JsMap defaultProps,
   });
 }

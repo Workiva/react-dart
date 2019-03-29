@@ -1,6 +1,5 @@
 const webpack = require("webpack");
 const path = require("path");
-const UglifyJsPlugin = require("uglifyjs-webpack-plugin");
 
 const outputPath = path.resolve(__dirname, "lib/");
 const inputPath = path.resolve(__dirname, "js_src/");
@@ -17,16 +16,11 @@ var babelPlugin = new webpack.DefinePlugin({
 });
 
 var devPlugins = [
-  babelPlugin
+  babelPlugin,
 ];
 
 var prodPlugins = [
   babelPlugin,
-  new webpack.DefinePlugin({
-    optimization: {
-      minimizer: [new UglifyJsPlugin()]
-    },
-  })
 ];
 
 /// Helper function that generates the webpack export objects array

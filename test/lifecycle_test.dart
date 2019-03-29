@@ -16,6 +16,7 @@ import 'package:test/test.dart';
 import 'lifecycle_test/component.dart' as components;
 import 'lifecycle_test/component2.dart' as components2;
 import 'lifecycle_test/util.dart';
+import 'shared_type_tester.dart';
 import 'util.dart';
 
 main() {
@@ -154,43 +155,24 @@ main() {
             ].where((matcher) => matcher != null).toList()));
       });
 
-      test(
-          'getSnapshotBeforeUpdate returns the same value being passed into '
-          'componentDidUpdate', () {
-        LifecycleTestHelper component = getDartComponent(
-            render(components2.LifecycleTest({'getSnapshotBeforeUpdate': (_, __, ___) => 'snapshot'})));
-
-        component.lifecycleCalls.clear();
-        component.setState({});
-
-        expect(
-            component.lifecycleCalls,
-            containsAllInOrder([
-              matchCall('getSnapshotBeforeUpdate'),
-              matchCall('componentDidUpdate', args: [anything, anything, 'snapshot']),
-            ]));
-      });
-
-      test(
-          'does not jsify the return value of getSnapshotBeforeUpdate, and '
-          'passes the same instance of that value to componentDidUpdate', () {
-        List<String> expectedSnapshot = [
-          'List Item 1',
-          'List Item 2',
-          'List Item 3',
-        ];
+      group('componentDidUpdate receives the same value created in getSnapshotBeforeUpdate when snapshot is', () {
+        testSnapshotType(expectedSnapshot) {
 
         LifecycleTestHelper component = getDartComponent(
             render(components2.LifecycleTest({'getSnapshotBeforeUpdate': (_, __, ___) => expectedSnapshot})));
         component.lifecycleCalls.clear();
         component.setState({});
 
-        expect(
+          expect(
             component.lifecycleCalls,
             containsAllInOrder([
               matchCall('getSnapshotBeforeUpdate'),
-              matchCall('componentDidUpdate', args: [anything, anything, same(expectedSnapshot)]),
-            ]));
+              matchCall('componentDidUpdate', args: [anything, anything, same(expectedSnapshot)])
+            ]),
+          );
+        }
+
+        sharedTypeTests(testSnapshotType);
       });
 
       test('triggers error lifecycle events when an error is thrown', () {
@@ -433,7 +415,7 @@ void sharedLifecycleTests<T extends react.Component>({
       final Map newPropsWithDefaults = unmodifiableMap({}..addAll(defaultProps)..addAll(newProps));
 
       const Map expectedState = const {};
-      const Map expectedContext = const {};
+      dynamic expectedContext = isComponent2 ? null : {};
       const Null expectedSnapshot = null;
 
       var mountNode = new DivElement();
@@ -455,9 +437,12 @@ void sharedLifecycleTests<T extends react.Component>({
                 : matchCall('componentWillReceivePropsWithContext',
                     args: [newPropsWithDefaults, expectedContext], props: initialPropsWithDefaults),
             skipLegacyContextTests
-                ? matchCall('shouldComponentUpdate',
-                    args: [newPropsWithDefaults, expectedState], props: initialPropsWithDefaults)
+                ? null
                 : matchCall('shouldComponentUpdateWithContext',
+                    args: [newPropsWithDefaults, expectedState, expectedContext], props: initialPropsWithDefaults),
+            !skipLegacyContextTests
+                ? null
+                : matchCall('shouldComponentUpdate',
                     args: [newPropsWithDefaults, expectedState, expectedContext], props: initialPropsWithDefaults),
             !isComponent2
                 ? matchCall('componentWillUpdate',
@@ -494,7 +479,7 @@ void sharedLifecycleTests<T extends react.Component>({
 
       final Map initialProps = unmodifiableMap({'getInitialState': (_) => initialState});
 
-      final Map newContext = const {};
+      final dynamic newContext = isComponent2 ? null : {};
 
       final Map expectedProps = unmodifiableMap(defaultProps, initialProps, emptyChildrenProps);
 
@@ -510,9 +495,12 @@ void sharedLifecycleTests<T extends react.Component>({
           component.lifecycleCalls,
           equals([
             skipLegacyContextTests
-                ? matchCall('shouldComponentUpdate', args: [expectedProps, newState], state: initialState)
+                ? null
                 : matchCall('shouldComponentUpdateWithContext',
                     args: [expectedProps, newState, newContext], state: initialState),
+            !skipLegacyContextTests
+                ? null
+                : matchCall('shouldComponentUpdate', args: [expectedProps, newState, newContext], state: initialState),
             !isComponent2
                 ? matchCall('componentWillUpdate', args: [expectedProps, newState], state: initialState)
                 : null,
@@ -538,7 +526,8 @@ void sharedLifecycleTests<T extends react.Component>({
 
       final Map initialProps = unmodifiableMap({'getInitialState': (_) => initialState});
 
-      final Map newContext = const {};
+      final dynamic newContext = isComponent2 ? null : {};
+
       final Map expectedProps = unmodifiableMap(defaultProps, initialProps, emptyChildrenProps);
 
       final Null expectedSnapshot = null;
@@ -553,8 +542,12 @@ void sharedLifecycleTests<T extends react.Component>({
           component.lifecycleCalls,
           equals([
             skipLegacyContextTests
-                ? matchCall('shouldComponentUpdate', args: [expectedProps, initialState], state: initialState)
+                ? null
                 : matchCall('shouldComponentUpdateWithContext',
+                    args: [expectedProps, initialState, newContext], state: initialState),
+            !skipLegacyContextTests
+                ? null
+                : matchCall('shouldComponentUpdate',
                     args: [expectedProps, initialState, newContext], state: initialState),
             !isComponent2
                 ? matchCall('componentWillUpdate', args: [expectedProps, initialState], state: initialState)
@@ -707,9 +700,10 @@ void sharedLifecycleTests<T extends react.Component>({
 
     void testShouldUpdates({bool shouldComponentUpdateWithContext, bool shouldComponentUpdate}) {
       test('receives updated props with correct lifecycle calls and does not rerender', () {
-        final Map expectedContext = const {};
+        final dynamic expectedContext = isComponent2 ? null : {};
         final Map initialProps = unmodifiableMap({
-          'shouldComponentUpdate': (_, __, ___) => shouldComponentUpdate,
+          'shouldComponentUpdate':
+              isComponent2 ? (_, __, ___, ____) => shouldComponentUpdate : (_, __, ___) => shouldComponentUpdate,
           'shouldComponentUpdateWithContext': (_, __, ___, ____) => shouldComponentUpdateWithContext,
           'initialProp': 'initial',
           'children': const []
@@ -737,13 +731,14 @@ void sharedLifecycleTests<T extends react.Component>({
               ? null
               : matchCall('componentWillReceivePropsWithContext',
                   args: [newPropsWithDefaults, expectedContext], props: initialPropsWithDefaults),
-          skipLegacyContextTests
-              ? null
+          isComponent2
+              ? matchCall('shouldComponentUpdate',
+                  args: [newPropsWithDefaults, expectedState, expectedContext], props: initialPropsWithDefaults)
               : matchCall('shouldComponentUpdateWithContext',
                   args: [newPropsWithDefaults, expectedState, expectedContext], props: initialPropsWithDefaults),
         ].where((matcher) => matcher != null).toList();
 
-        if (shouldComponentUpdateWithContext == null) {
+        if (shouldComponentUpdateWithContext == null && !skipLegacyContextTests) {
           calls.add(
             matchCall('shouldComponentUpdate',
                 args: [newPropsWithDefaults, expectedState], props: initialPropsWithDefaults),
@@ -755,7 +750,7 @@ void sharedLifecycleTests<T extends react.Component>({
       });
 
       test('updates state with correct lifecycle calls and does not rerender', () {
-        const Map expectedContext = const {};
+        dynamic expectedContext = isComponent2 ? null : {};
         const Map initialState = const {
           'initialState': 'initial',
         };
@@ -769,7 +764,8 @@ void sharedLifecycleTests<T extends react.Component>({
 
         final Map initialProps = unmodifiableMap({
           'getInitialState': (_) => initialState,
-          'shouldComponentUpdate': (_, __, ___) => shouldComponentUpdate,
+          'shouldComponentUpdate':
+              isComponent2 ? (_, __, ___, ____) => shouldComponentUpdate : (_, __, ___) => shouldComponentUpdate,
           'shouldComponentUpdateWithContext': (_, __, ___, ____) => shouldComponentUpdateWithContext,
         });
 
@@ -781,13 +777,14 @@ void sharedLifecycleTests<T extends react.Component>({
         component.setState(stateDelta);
 
         List calls = [
-          skipLegacyContextTests
-              ? null
+          isComponent2
+              ? matchCall('shouldComponentUpdate',
+                  args: [expectedProps, newState, expectedContext], state: initialState)
               : matchCall('shouldComponentUpdateWithContext',
                   args: [expectedProps, newState, expectedContext], state: initialState),
-        ].where((matcher) => matcher != null).toList();
+        ];
 
-        if (shouldComponentUpdateWithContext == null) {
+        if (shouldComponentUpdateWithContext == null && !skipLegacyContextTests) {
           calls.add(
             matchCall('shouldComponentUpdate', args: [expectedProps, newState], state: initialState),
           );

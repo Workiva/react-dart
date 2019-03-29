@@ -44,7 +44,7 @@ class _SetStateTest extends react.Component2 with LifecycleTestHelper {
   }
 
   @override
-  shouldComponentUpdate(_, __) {
+  shouldComponentUpdate(_, __, [___]) {
     recordLifecyleCall('shouldComponentUpdate');
     return props['shouldUpdate'] as bool;
   }
@@ -218,15 +218,14 @@ class _LifecycleTest extends react.Component2 with LifecycleTestHelper {
       lifecycleCall('componentWillReceiveProps', arguments: [new Map.from(newProps)]);
 
   void componentWillReceivePropsWithContext(newProps, newContext) =>
-      lifecycleCall('componentWillReceivePropsWithContext',
-          arguments: [new Map.from(newProps), new Map.from(newContext)]);
+      lifecycleCall('componentWillReceivePropsWithContext', arguments: [new Map.from(newProps), newContext]);
 
   void componentWillUpdate(nextProps, nextState) =>
       lifecycleCall('componentWillUpdate', arguments: [new Map.from(nextProps), new Map.from(nextState)]);
 
   void componentWillUpdateWithContext(nextProps, nextState, nextContext) =>
       lifecycleCall('componentWillUpdateWithContext',
-          arguments: [new Map.from(nextProps), new Map.from(nextState), new Map.from(nextContext)]);
+          arguments: [new Map.from(nextProps), new Map.from(nextState), nextContext]);
 
   dynamic getSnapshotBeforeUpdate(prevProps, prevState) =>
       lifecycleCall('getSnapshotBeforeUpdate', arguments: [new Map.from(prevProps), new Map.from(prevState)]);
@@ -238,13 +237,8 @@ class _LifecycleTest extends react.Component2 with LifecycleTestHelper {
 
   Map getDerivedStateFromError(error) => lifecycleCall('getDerivedStateFromError', arguments: [error]);
 
-  bool shouldComponentUpdate(nextProps, nextState) => lifecycleCall('shouldComponentUpdate',
-      arguments: [new Map.from(nextProps), new Map.from(nextState)], defaultReturnValue: () => true);
-
-  bool shouldComponentUpdateWithContext(nextProps, nextState, nextContext) =>
-      lifecycleCall('shouldComponentUpdateWithContext',
-          arguments: [new Map.from(nextProps), new Map.from(nextState), new Map.from(nextContext)],
-          defaultReturnValue: () => true);
+  bool shouldComponentUpdate(nextProps, nextState, [nextContext]) => lifecycleCall('shouldComponentUpdate',
+      arguments: [new Map.from(nextProps), new Map.from(nextState), nextContext], defaultReturnValue: () => true);
 
   dynamic render() => lifecycleCall('render', defaultReturnValue: () => react.div({}));
 

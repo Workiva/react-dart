@@ -16,7 +16,7 @@ Map matchCall(String memberName, {args: anything, props: anything, state: anythi
 
 /// A test helper to record lifecycle calls
 mixin LifecycleTestHelper on Component {
-  Map context;
+  dynamic context;
   Map props;
   Map state;
 
@@ -36,7 +36,7 @@ mixin LifecycleTestHelper on Component {
       'arguments': arguments,
       'props': props == null ? null : new Map.from(props),
       'state': state == null ? null : new Map.from(state),
-      'context': new Map.from(context ?? const {}),
+      'context': context,
     });
 
     var lifecycleCallback = props == null ? null : props[memberName];

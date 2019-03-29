@@ -1,7 +1,7 @@
 @JS()
 library react.test.util;
 
-import 'dart:js_util';
+import 'dart:js_util' show getProperty;
 
 import 'package:js/js.dart';
 import 'package:react/react_client/react_interop.dart';
