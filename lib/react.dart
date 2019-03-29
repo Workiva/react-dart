@@ -445,7 +445,7 @@ abstract class Component {
   /// Invoked once before the `Component` is mounted. The return value will be used as the initial value of [state].
   ///
   /// See: <https://facebook.github.io/react/docs/react-component.html#getinitialstate>
-  /// 
+  ///
   /// > __DEPRECATED - DO NOT USE__
   /// >
   /// > Use [init] or [getDerivedStateFromProps] to handle intialization instead
@@ -593,7 +593,7 @@ abstract class Component2 implements Component {
   /// despite the [state] value change.
   ///
   /// See: <https://facebook.github.io/react/docs/react-component.html#mounting-componentwillmount>
-  /// 
+  ///
   /// > __DEPRECATED.__
   /// >
   /// > Use [init] instead
@@ -724,7 +724,7 @@ abstract class Component2 implements Component {
   /// Invoked once before the `Component` is mounted. The return value will be used as the initial value of [state].
   ///
   /// See: <https://facebook.github.io/react/docs/react-component.html#getinitialstate>
-  /// 
+  ///
   /// > __DEPRECATED - DO NOT USE__
   /// >
   /// > Use [init] or [getDerivedStateFromProps] to handle intialization instead
@@ -732,12 +732,12 @@ abstract class Component2 implements Component {
 
   /// This is equivalent to `Constructor` in React 16, this is called before mounting
   /// See: <https://reactjs.org/docs/react-component.html#constructor>
-  /// 
+  ///
   /// __Example__:
-  /// 
+  ///
   ///    void initComponent(jsThis, componentStatics) {
   ///      var dartComponent = componentStatics.componentFactory();
-  ///    
+  ///
   ///      // New lifecycle method baybeeee
   ///      dartComponent.init();
   ///
