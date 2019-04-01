@@ -1,3 +1,4 @@
+@TestOn('browser')
 @JS()
 library react.js_backed_map_test.dart;
 

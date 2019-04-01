@@ -228,15 +228,21 @@ Map<String, dynamic> _unjsifyContext(InteropContextValue interopContext) {
   });
 }
 
+// A JavaScript symbol that we use as the key in a JS Object to wrap the dart.
 @JS()
 external get _reactDartContextSymbol;
 
+// Wraps context value in a JS Object for use on the JS side.
+// It is wrapped so that the same dart value can be retrieved from dart with [_unjsifyNewContext].
 dynamic _jsifyNewContext(dynamic context) {
   var jsContextHolder = newObject();
   setProperty(jsContextHolder, _reactDartContextSymbol, context);
   return jsContextHolder;
 }
 
+// Unwraps context value from a JS Object for use on the Dart side.
+// The value is unwrapped so that the same dart value can be passed through js and retrived by dart
+// when used with [_jsifyNewContext].
 dynamic _unjsifyNewContext(dynamic interopContext) {
   if (interopContext != null) {
     return getProperty(interopContext, _reactDartContextSymbol);
@@ -519,9 +525,7 @@ final ReactDartInteropStatics2 _dartInteropStatics2 = (() {
   bool handleShouldComponentUpdate(Component2 component, JsMap jsNextProps, JsMap jsNextState,
           [dynamic jsNextContext]) =>
       zone.run(() {
-        bool value = true;
-
-        value = component.shouldComponentUpdate(
+        final value = component.shouldComponentUpdate(
           new JsBackedMap.backedBy(jsNextProps),
           new JsBackedMap.backedBy(jsNextState),
           _unjsifyNewContext(jsNextContext),
@@ -686,14 +690,14 @@ class ReactJsComponentFactoryProxy extends ReactComponentFactoryProxy {
   ReactElement build(Map props, [List childrenArgs]) {
     dynamic children = _convertArgsToChildren(childrenArgs);
 
-    var potentiallyConvertedProps;
+    Map potentiallyConvertedProps;
     if (shouldConvertDomProps) {
       // We can't mutate the original since we can't be certain that the value of the
       // the converted event handler will be compatible with the Map's type parameters.
-      potentiallyConvertedProps ??= new Map.from(props);
+      potentiallyConvertedProps = new Map.from(props);
       _convertEventHandlers(potentiallyConvertedProps);
     } else {
-      potentiallyConvertedProps ??= props;
+      potentiallyConvertedProps = props;
     }
     return factory(jsifyAndAllowInterop(potentiallyConvertedProps), children);
   }
@@ -1141,14 +1145,15 @@ dynamic _findDomNode(component) {
 /// The return type of [createContext], Wraps [ReactContext] for use in Dart.
 /// Allows access to [Provider] and [Consumer] Components.
 ///
-/// __Should not be instaniated without using [createContext]__
+/// __Should not be instantiated without using [createContext]__
 ///
 /// __Example__:
 ///
 ///     ReactDartContext MyContext = createContext('test');
 ///
 ///     class MyContextTypeClass extends react.Component2 {
-///       var contextType = MyContext;
+///       @override
+///       final contextType = MyContext;
 ///
 ///       render() {
 ///         return react.span({}, [
@@ -1201,7 +1206,8 @@ class ReactDartContext {
 ///     ReactDartContext MyContext = createContext('test');
 ///
 ///     class MyContextTypeClass extends react.Component2 {
-///       var contextType = MyContext;
+///       @override
+///       final contextType = MyContext;
 ///
 ///       render() {
 ///         return react.span({}, [

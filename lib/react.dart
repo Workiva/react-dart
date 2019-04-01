@@ -172,6 +172,7 @@ abstract class Component {
   /// Private reference to the value of [context] for the upcoming render cycle.
   ///
   /// Useful for ReactJS lifecycle methods [shouldComponentUpdateWithContext].
+  @Deprecated('6.0.0')
   dynamic nextContext;
 
   /// Private reference to the value of [state] for the upcoming render cycle.
@@ -483,7 +484,8 @@ abstract class Component2 implements Component {
   ///     var MyContext = createContext('test');
   ///
   ///     class MyClass extends react.Component2 {
-  ///       var contextType = MyContext;
+  ///       @override
+  ///       final contextType = MyContext;
   ///
   ///       render() {
   ///         return react.span({}, [
@@ -493,7 +495,7 @@ abstract class Component2 implements Component {
   ///     }
   ///
   /// See: <https://reactjs.org/docs/context.html#classcontexttype>
-  ReactDartContext contextType;
+  ReactDartContext get contextType => null;
 
   /// The context value from the [contextType] assigned to this component.
   /// The value is passed down from the provider of the same [contextType].
@@ -509,7 +511,8 @@ abstract class Component2 implements Component {
   ///     var MyContext = createContext('test');
   ///
   ///     class MyClass extends react.Component2 {
-  ///       var contextType = MyContext;
+  ///       @override
+  ///       final contextType = MyContext;
   ///
   ///       render() {
   ///         return react.span({}, [
@@ -808,13 +811,15 @@ abstract class Component2 implements Component {
   /// Will be removed when [Component] is removed in the `6.0.0` release.
   @Deprecated('6.0.0')
   get nextContext => throw new UnsupportedError('"Legacy" Context [nextContext] is not supported in Component2');
-  set nextContext(val) => throw new UnsupportedError('"Legacy" Context is not supported in Component2');
+  @Deprecated('6.0.0')
+  set nextContext(val) => throw new UnsupportedError('"Legacy" Context [nextContext] is not supported in Component2');
 
   /// Do not use.
   ///
   /// Will be removed when [Component] is removed in the `6.0.0` release.
   @Deprecated('6.0.0')
   get prevContext => throw new UnsupportedError('"Legacy" Context [prevContext] is not supported in Component2');
+  @Deprecated('6.0.0')
   set prevContext(val) => throw new UnsupportedError('"Legacy" Context [prevContext] is not supported in Component2');
 
   /// Do not use.

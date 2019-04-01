@@ -22,11 +22,6 @@ class _SetStateTest extends react.Component2 with LifecycleTestHelper {
   }
 
   @override
-  componentWillReceivePropsWithContext(_, __) {
-    recordLifecyleCall('componentWillReceivePropsWithContext');
-  }
-
-  @override
   getSnapshotBeforeUpdate(_, __) {
     recordLifecyleCall('getSnapshotBeforeUpdate');
   }
@@ -162,15 +157,8 @@ class _LifecycleTest extends react.Component2 with LifecycleTestHelper {
   void componentWillReceiveProps(newProps) =>
       lifecycleCall('componentWillReceiveProps', arguments: [new Map.from(newProps)]);
 
-  void componentWillReceivePropsWithContext(newProps, newContext) =>
-      lifecycleCall('componentWillReceivePropsWithContext', arguments: [new Map.from(newProps), newContext]);
-
   void componentWillUpdate(nextProps, nextState) =>
       lifecycleCall('componentWillUpdate', arguments: [new Map.from(nextProps), new Map.from(nextState)]);
-
-  void componentWillUpdateWithContext(nextProps, nextState, nextContext) =>
-      lifecycleCall('componentWillUpdateWithContext',
-          arguments: [new Map.from(nextProps), new Map.from(nextState), nextContext]);
 
   dynamic getSnapshotBeforeUpdate(prevProps, prevState) =>
       lifecycleCall('getSnapshotBeforeUpdate', arguments: [new Map.from(prevProps), new Map.from(prevState)]);
