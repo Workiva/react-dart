@@ -108,16 +108,9 @@ class _ClockComponent extends react.Component {
   }
 
   render() {
-    return react.span({
-      'onClick': (event) => print("Hello World!"),
-      "key": "c"
-          "locl-1"
-    },
+    return react.span({'onClick': (event) => print("Hello World!")},
 //        { 'onClick': (event, [domid = null]) => print("Hello World!") },
-        [
-          "Seconds elapsed: ",
-          "${state['secondsElapsed']}"
-        ]);
+        ["Seconds elapsed: ", "${state['secondsElapsed']}"]);
   }
 }
 
@@ -163,7 +156,7 @@ class _ListComponent extends react.Component {
         'className': 'btn btn-primary',
         'onClick': addItem,
       }, 'addItem'),
-      react.ul({'key': 'list100'}, items),
+      react.ul({'key': 'list'}, items),
     ]);
   }
 }
