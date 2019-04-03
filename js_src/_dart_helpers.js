@@ -115,7 +115,7 @@ function _createReactDartComponentClass2(dartInteropStatics, componentStatics, j
       return result;
     }
   }
-  console.log(skipMethods);
+
   // Delete methods that the user does not want to include (such as error boundary event).
   skipMethods.forEach((method) => {
       if (ReactDartComponent2[method] !== undefined) {
