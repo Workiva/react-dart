@@ -5,7 +5,7 @@
 var _reactDartSymbolPrefix = 'react-dart.';
 /// A global symbol to identify javascript objects owned by react-dart context,
 /// in order to jsify and unjsify context objects correctly.
-var _reactDartContextSymbol = Symbol.for(_reactDartSymbolPrefix+'context');
+var _reactDartContextSymbol = Symbol(_reactDartSymbolPrefix+'context');
 function _createReactDartComponentClass(dartInteropStatics, componentStatics, jsConfig) {
   class ReactDartComponent extends React.Component {
     constructor(props, context) {

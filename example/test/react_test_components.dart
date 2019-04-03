@@ -381,7 +381,8 @@ var newContextConsumerObservedBitsComponent =
     react.registerComponent(() => new _NewContextConsumerObservedBitsComponent());
 
 class _NewContextTypeConsumerComponent extends react.Component2 {
-  var contextType = TestNewContext;
+  @override
+  final contextType = TestNewContext;
 
   render() {
     this.context['componentRef']?.test();
