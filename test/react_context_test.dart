@@ -16,7 +16,7 @@ import 'shared_type_tester.dart';
 main() {
   setClientConfiguration();
 
-  testTypeValue(typeToTest) {
+  void testTypeValue(dynamic typeToTest) {
     var mountNode = new html.DivElement();
     var contextTypeRef;
     var consumerRef;

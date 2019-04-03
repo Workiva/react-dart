@@ -8,10 +8,8 @@ import 'dart:html' as html;
 import 'package:js/js.dart';
 import 'package:test/test.dart';
 
-typedef void TestTypeValue<T>(T value);
-
 void sharedTypeTests(
-  TestTypeValue testTypeValue, {
+  void Function(dynamic value) testTypeValue, {
   bool skipNormalDartObjects: false,
   bool skipDartMaps: false,
   bool skipPrimitives: false,
