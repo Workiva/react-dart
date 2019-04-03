@@ -7,6 +7,7 @@ library react;
 
 import 'package:meta/meta.dart';
 import 'package:react/src/typedefs.dart';
+import 'package:react/react_client.dart';
 
 typedef T ComponentFactory<T extends Component>();
 typedef ReactComponentFactoryProxy ComponentRegistrar(ComponentFactory componentFactory,
@@ -63,7 +64,7 @@ abstract class Component {
   /// >
   /// > It is strongly recommended that you migrate to [Component2] and use [Component2.context] instead.
   @experimental
-  set context(Map value) => _context = value;
+  set context(dynamic value) => _context = value;
 
   /// ReactJS [Component] props.
   ///
@@ -145,8 +146,15 @@ abstract class Component {
 
   /// Initializes context
   _initContext(context) {
+    /// [context]s typing was loosened from Map to dynamic to support the new context API in [Component2]
+    /// which extends from [Component]. Only "legacy" context APIs are supported in [Component] - which means
+    /// it will still be expected to be a Map.
     this.context = new Map.from(context ?? const {});
-    this.nextContext = this.context;
+
+    /// [nextContext]s typing was loosened from Map to dynamic to support the new context API in [Component2]
+    /// which extends from [Component]. Only "legacy" context APIs are supported in [Component] - which means
+    /// it will still be expected to be a Map.
+    this.nextContext = new Map.from(this.context ?? const {});
   }
 
   _initProps(props) {
@@ -329,7 +337,7 @@ abstract class Component {
   /// >
   /// > This will be completely removed when the JS side of it is slated for removal (ReactJS 17 / react.dart 6.0.0)
   @Deprecated('6.0.0')
-  void componentWillReceivePropsWithContext(Map newProps, nextContext) {}
+  void componentWillReceivePropsWithContext(Map newProps, Map nextContext) {}
 
   /// ReactJS lifecycle method that is invoked before rendering when [nextProps] or [nextState] are being received.
   ///
@@ -474,6 +482,56 @@ abstract class Component2 implements Component {
   // TODO make private using expando?
   Component2Adapter adapter;
 
+  /// Accessed once and cached when instance is created. The [contextType] property on a class can be assigned
+  /// a [ReactDartContext] object created by [React.createContext]. This lets you consume the nearest current value of
+  /// that Context using [context].
+  ///
+  /// __Example__:
+  ///
+  ///     var MyContext = createContext('test');
+  ///
+  ///     class MyClass extends react.Component2 {
+  ///       @override
+  ///       final contextType = MyContext;
+  ///
+  ///       render() {
+  ///         return react.span({}, [
+  ///           '${this.context}', // Outputs: 'test'
+  ///         ]);
+  ///       }
+  ///     }
+  ///
+  /// See: <https://reactjs.org/docs/context.html#classcontexttype>
+  ReactDartContext get contextType => null;
+
+  /// The context value from the [contextType] assigned to this component.
+  /// The value is passed down from the provider of the same [contextType].
+  /// You can reference [context] in any of the lifecycle methods including the render function.
+  ///
+  /// If you need multiple context values, consider using multiple consumers instead.
+  /// Read more: https://reactjs.org/docs/context.html#consuming-multiple-contexts
+  ///
+  /// This only has a value when [contextType] is set.
+  ///
+  /// __Example__:
+  ///
+  ///     var MyContext = createContext('test');
+  ///
+  ///     class MyClass extends react.Component2 {
+  ///       @override
+  ///       final contextType = MyContext;
+  ///
+  ///       render() {
+  ///         return react.span({}, [
+  ///           '${this.context}', // Outputs: 'test'
+  ///         ]);
+  ///       }
+  ///     }
+  ///
+  /// See: <https://reactjs.org/docs/context.html#classcontexttype>
+  @override
+  dynamic context;
+
   @override
   Map props;
 
@@ -557,22 +615,16 @@ abstract class Component2 implements Component {
   ///
   /// Calling [setState] within this function will not trigger an additional [render].
   ///
-  /// __Note__: Choose either this method or [componentWillReceivePropsWithContext]. They are both called at the same
-  /// time so using both provides no added benefit.
-  ///
   /// See: <https://facebook.github.io/react/docs/react-component.html#updating-componentwillreceiveprops>
   void componentWillReceiveProps(Map newProps) {}
 
-  /// ReactJS lifecycle method that is invoked before rendering when [nextProps] or [nextState] are being received.
+  /// ReactJS lifecycle method that is invoked before rendering when [nextProps], [nextState] are being received.
   ///
   /// Use this as an opportunity to return `false` when you're certain that the transition to the new props and state
   /// will not require a component update.
   ///
-  /// __Note__: This method is called after [shouldComponentUpdateWithContext]. When it returns `null`, the result of
-  /// this method is used, but this is not called if a valid `bool` is returned from [shouldComponentUpdateWithContext].
-  ///
   /// See: <https://facebook.github.io/react/docs/react-component.html#updating-shouldcomponentupdate>
-  bool shouldComponentUpdate(Map nextProps, Map nextState) => true;
+  bool shouldComponentUpdate(Map nextProps, Map nextState, [dynamic nextContext]) => true;
 
   /// ReactJS lifecycle method that is invoked immediately before rendering when [nextProps] or [nextState] are being
   /// received.
@@ -697,37 +749,42 @@ abstract class Component2 implements Component {
   ///
   /// Will be removed when [Component] is removed in the `6.0.0` release.
   @Deprecated('6.0.0')
-  Map<String, dynamic> getChildContext() => const {};
+  @mustCallSuper
+  Map<String, dynamic> getChildContext() =>
+      throw new UnsupportedError('"Legacy" Context [getChildContext] is not supported in Component2');
+
+  /// Do not use. Use [shouldComponentUpdate] with an optional 3rd argument for context instead.
+  ///
+  /// Will be removed when [Component] is removed in the `6.0.0` release.
+  @Deprecated('6.0.0')
+  bool shouldComponentUpdateWithContext(Map nextProps, Map nextState, dynamic nextContext) =>
+      throw new UnsupportedError('"Legacy" Context [getChildContext] is not supported in Component2');
 
   /// Do not use.
   ///
   /// Will be removed when [Component] is removed in the `6.0.0` release.
   @Deprecated('6.0.0')
-  void componentWillUpdateWithContext(Map nextProps, Map nextState, Map nextContext) {}
+  void componentWillUpdateWithContext(Map nextProps, Map nextState, dynamic nextContext) {}
 
   /// Do not use.
   ///
   /// Will be removed when [Component] is removed in the `6.0.0` release.
   @Deprecated('6.0.0')
-  void componentWillReceivePropsWithContext(Map newProps, nextContext) {}
+  void componentWillReceivePropsWithContext(Map newProps, dynamic nextContext) {}
 
   /// Do not use.
   ///
   /// Will be removed when [Component] is removed in the `6.0.0` release.
   @Deprecated('6.0.0')
-  bool shouldComponentUpdateWithContext(Map nextProps, Map nextState, Map nextContext) => null;
+  Iterable<String> get childContextKeys =>
+      throw new UnsupportedError('"Legacy" Context [childContextKeys] is not supported in Component2');
 
   /// Do not use.
   ///
   /// Will be removed when [Component] is removed in the `6.0.0` release.
   @Deprecated('6.0.0')
-  Iterable<String> get childContextKeys => const [];
-
-  /// Do not use.
-  ///
-  /// Will be removed when [Component] is removed in the `6.0.0` release.
-  @Deprecated('6.0.0')
-  Iterable<String> get contextKeys => const [];
+  Iterable<String> get contextKeys =>
+      throw new UnsupportedError('"Legacy" Context [contextKeys] is not supported in Component2');
 
   /// Do not use.
   ///
@@ -756,13 +813,17 @@ abstract class Component2 implements Component {
   ///
   /// Will be removed when [Component] is removed in the `6.0.0` release.
   @Deprecated('6.0.0')
-  Map nextContext; // todo make throwing getters/setters
+  get nextContext => throw new UnsupportedError('"Legacy" Context [nextContext] is not supported in Component2');
+  @Deprecated('6.0.0')
+  set nextContext(val) => throw new UnsupportedError('"Legacy" Context [nextContext] is not supported in Component2');
 
   /// Do not use.
   ///
   /// Will be removed when [Component] is removed in the `6.0.0` release.
   @Deprecated('6.0.0')
-  Map prevContext; // todo make throwing getters/setters
+  get prevContext => throw new UnsupportedError('"Legacy" Context [prevContext] is not supported in Component2');
+  @Deprecated('6.0.0')
+  set prevContext(val) => throw new UnsupportedError('"Legacy" Context [prevContext] is not supported in Component2');
 
   /// Do not use.
   ///
@@ -819,9 +880,6 @@ abstract class Component2 implements Component {
 
   @override
   List<StateUpdaterCallback> _transactionalSetStateCallbacks;
-
-  @override
-  Map context;
 
   @override
   Ref ref;

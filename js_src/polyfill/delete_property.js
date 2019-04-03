@@ -9,3 +9,4 @@ if (typeof Reflect.deleteProperty !== 'function') {
     }
   });
 }
+

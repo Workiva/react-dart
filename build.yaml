@@ -1,0 +1,18 @@
+targets:
+  $default:
+    builders:
+      build_web_compilers|entrypoint:
+        # These are globs for the entrypoints you want to compile.
+        generate_for:
+          - test/**.browser_test.dart
+          - example/**.dart
+        options:
+          # List any dart2js specific args here, or omit it.
+          dart2js_args:
+            # Omit type checks TODO change to -O4 at some point (e.g., --trust-primitives)
+            - -O3
+            # Generate CSP-compliant code since it will be used most often in prod
+            - --csp
+            # Disable minification for easier test/example debugging
+            - --no-minify
+

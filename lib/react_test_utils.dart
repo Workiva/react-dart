@@ -5,9 +5,10 @@
 @JS()
 library react.test_utils;
 
+import 'dart:js_util' show jsify, getProperty;
+
 import 'package:js/js.dart';
 import 'package:react/react_client.dart';
-import 'package:react/react_client/js_interop_helpers.dart';
 import 'package:react/react_client/react_interop.dart';
 import 'package:react/src/react_test_utils/simulate_wrappers.dart' as simulate_wrappers;
 

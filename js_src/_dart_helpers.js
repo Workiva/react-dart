@@ -1,9 +1,11 @@
 /**
  * react-dart JS interop helpers (used by react_client.dart and react_client/js_interop_helpers.dart)
  */
-function _getProperty(obj, key) { return obj[key]; }
-function _setProperty(obj, key, value) { return obj[key] = value; }
-
+/// Prefix to namespace react-dart symbols
+var _reactDartSymbolPrefix = 'react-dart.';
+/// A global symbol to identify javascript objects owned by react-dart context,
+/// in order to jsify and unjsify context objects correctly.
+var _reactDartContextSymbol = Symbol(_reactDartSymbolPrefix+'context');
 function _createReactDartComponentClass(dartInteropStatics, componentStatics, jsConfig) {
   class ReactDartComponent extends React.Component {
     constructor(props, context) {
@@ -50,37 +52,37 @@ function _createReactDartComponentClass(dartInteropStatics, componentStatics, js
     }
   }
 
-      // React limits the accessible context entries
-      // to the keys specified in childContextTypes/contextTypes.
-      var childContextKeys = jsConfig && jsConfig.childContextKeys;
-      var contextKeys = jsConfig && jsConfig.contextKeys;
+  // React limits the accessible context entries
+  // to the keys specified in childContextTypes/contextTypes.
+  var childContextKeys = jsConfig && jsConfig.childContextKeys;
+  var contextKeys = jsConfig && jsConfig.contextKeys;
 
-      if (childContextKeys && childContextKeys.length !== 0) {
-        ReactDartComponent.childContextTypes = {};
-        for (var i = 0; i < childContextKeys.length; i++) {
-          ReactDartComponent.childContextTypes[childContextKeys[i]] = React.PropTypes.object;
-        }
-        // Only declare this when `childContextKeys` is non-empty to avoid unnecessarily
-        // creating interop context objects for components that won't use it.
-        ReactDartComponent.prototype['getChildContext'] = function() {
-          return dartInteropStatics.handleGetChildContext(this.dartComponent);
-        };
-      }
+  if (childContextKeys && childContextKeys.length !== 0) {
+    ReactDartComponent.childContextTypes = {};
+    for (var i = 0; i < childContextKeys.length; i++) {
+      ReactDartComponent.childContextTypes[childContextKeys[i]] = React.PropTypes.object;
+    }
+    // Only declare this when `childContextKeys` is non-empty to avoid unnecessarily
+    // creating interop context objects for components that won't use it.
+    ReactDartComponent.prototype['getChildContext'] = function() {
+      return dartInteropStatics.handleGetChildContext(this.dartComponent);
+    };
+  }
 
-      if (contextKeys && contextKeys.length !== 0) {
-        ReactDartComponent.contextTypes = {};
-        for (var i = 0; i < contextKeys.length; i++) {
-          ReactDartComponent.contextTypes[contextKeys[i]] = React.PropTypes.object;
-        }
-      }
+  if (contextKeys && contextKeys.length !== 0) {
+    ReactDartComponent.contextTypes = {};
+    for (var i = 0; i < contextKeys.length; i++) {
+      ReactDartComponent.contextTypes[contextKeys[i]] = React.PropTypes.object;
+    }
+  }
 
   return ReactDartComponent;
 }
 
-function _createReactDartComponentClass2(dartInteropStatics, componentStatics) {
+function _createReactDartComponentClass2(dartInteropStatics, componentStatics, jsConfig) {
   class ReactDartComponent2 extends React.Component {
-    constructor(props) {
-      super(props);
+    constructor(props, context) {
+      super(props, context);
       // TODO combine these two calls into one
       this.dartComponent = dartInteropStatics.initComponent(this, componentStatics);
       this.state = dartInteropStatics.handleGetInitialState(this.dartComponent);
@@ -88,8 +90,8 @@ function _createReactDartComponentClass2(dartInteropStatics, componentStatics) {
     componentDidMount() {
       dartInteropStatics.handleComponentDidMount(this.dartComponent);
     }
-    shouldComponentUpdate(nextProps, nextState) {
-      return dartInteropStatics.handleShouldComponentUpdate(this.dartComponent, nextProps, nextState);
+    shouldComponentUpdate(nextProps, nextState, nextContext) {
+      return dartInteropStatics.handleShouldComponentUpdate(this.dartComponent, nextProps, nextState, nextContext);
     }
     getSnapshotBeforeUpdate(prevProps, prevState) {
       let snapshot = dartInteropStatics.handleGetSnapshotBeforeUpdate(this.dartComponent, prevProps, prevState);
@@ -102,9 +104,18 @@ function _createReactDartComponentClass2(dartInteropStatics, componentStatics) {
       dartInteropStatics.handleComponentWillUnmount(this.dartComponent);
     }
     render() {
-      var result = dartInteropStatics.handleRender(this.dartComponent);
+      var result = dartInteropStatics.handleRender(this.dartComponent, this.props, this.state, this.context);
       if (typeof result === 'undefined') result = null;
       return result;
+    }
+  }
+
+  if (jsConfig) {
+    if (jsConfig.contextType) {
+      ReactDartComponent2.contextType = jsConfig.contextType;
+    }
+    if (jsConfig.defaultProps) {
+      ReactDartComponent2.defaultProps = jsConfig.defaultProps;
     }
   }
 
@@ -117,8 +128,7 @@ function _markChildValidated(child) {
 }
 
 module.exports = {
-  _getProperty,
-  _setProperty,
+  _reactDartContextSymbol,
   _createReactDartComponentClass,
   _createReactDartComponentClass2,
   _markChildValidated,

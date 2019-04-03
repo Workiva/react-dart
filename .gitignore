@@ -7,3 +7,4 @@ pubspec.lock
 .packages
 node_modules/
 .dart_tool
+.vscode
