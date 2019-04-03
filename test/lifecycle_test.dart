@@ -476,8 +476,8 @@ void sharedLifecycleTests<T extends react.Component>({
             ContextWrapper(
               initialContext,
               [
-                ContextConsumerWrapper({},[
-                  (value){
+                ContextConsumerWrapper({}, [
+                  (value) {
                     return LifecycleTest(initialPropsWithRef..addAll(value));
                   }
                 ]),
@@ -502,8 +502,8 @@ void sharedLifecycleTests<T extends react.Component>({
             ContextWrapper(
               expectedContext,
               [
-                ContextConsumerWrapper({},[
-                  (value){
+                ContextConsumerWrapper({}, [
+                  (value) {
                     return LifecycleTest(initialPropsWithRef..addAll(value));
                   }
                 ]),
@@ -515,13 +515,10 @@ void sharedLifecycleTests<T extends react.Component>({
         expect(
             component.lifecycleCalls,
             equals([
-              matchCall('shouldComponentUpdate',
-                  args: [expectedProps, expectedState, null], props: initialProps),
+              matchCall('shouldComponentUpdate', args: [expectedProps, expectedState, null], props: initialProps),
               matchCall('render', props: expectedProps),
-              matchCall('getSnapshotBeforeUpdate',
-                  args: [initialProps, expectedState], props: expectedProps),
-              matchCall('componentDidUpdate',
-                  args: [initialProps, expectedState, null], props: expectedProps),
+              matchCall('getSnapshotBeforeUpdate', args: [initialProps, expectedState], props: expectedProps),
+              matchCall('componentDidUpdate', args: [initialProps, expectedState, null], props: expectedProps),
             ]));
       });
     }

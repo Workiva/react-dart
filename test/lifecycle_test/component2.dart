@@ -104,25 +104,22 @@ class _DefaultPropsTest extends react.Component2 {
 
 ReactDartContext LifecycleTestContext = createContext();
 
-ReactDartComponentFactoryProxy2 ContextConsumerWrapper =
-    react.registerComponent(() => new _ContextConsumerWrapper());
+ReactDartComponentFactoryProxy2 ContextConsumerWrapper = react.registerComponent(() => new _ContextConsumerWrapper());
 
 class _ContextConsumerWrapper extends react.Component2 with LifecycleTestHelper {
   dynamic render() {
-    return LifecycleTestContext.Consumer(
-      {},
-      props['children'].first
-    );
+    return LifecycleTestContext.Consumer({}, props['children'].first);
   }
 }
-
 
 ReactDartComponentFactoryProxy2 ContextWrapper = react.registerComponent(() => new _ContextWrapper());
 
 class _ContextWrapper extends react.Component2 with LifecycleTestHelper {
   dynamic render() {
     return LifecycleTestContext.Provider(
-      {'value': {'foo': props['foo']}},
+      {
+        'value': {'foo': props['foo']}
+      },
       props['children'],
     );
   }
