@@ -29,6 +29,7 @@ main() {
         defaultPropsCachingTestComponentFactory: components.defaultPropsCachingTestComponentFactory,
         SetStateTest: components.SetStateTest,
         DefaultPropsTest: components.DefaultPropsTest,
+        ContextConsumerWrapper: null,
         ContextWrapperWithoutKeys: components.ContextWrapperWithoutKeys,
         ContextWrapper: components.ContextWrapper,
         LifecycleTestWithContext: components.LifecycleTestWithContext,
@@ -123,7 +124,8 @@ main() {
         defaultPropsCachingTestComponentFactory: components2.defaultPropsCachingTestComponentFactory,
         SetStateTest: components2.SetStateTest,
         DefaultPropsTest: components2.DefaultPropsTest,
-        ContextWrapperWithoutKeys: components2.ContextWrapperWithoutKeys,
+        ContextWrapperWithoutKeys: null,
+        ContextConsumerWrapper: components2.ContextConsumerWrapper,
         ContextWrapper: components2.ContextWrapper,
         LifecycleTestWithContext: components2.LifecycleTestWithContext,
         LifecycleTest: components2.LifecycleTest,
@@ -186,6 +188,7 @@ void sharedLifecycleTests<T extends react.Component>({
   @required ReactDartComponentFactoryProxy SetStateTest,
   @required ReactDartComponentFactoryProxy DefaultPropsTest,
   @required ReactDartComponentFactoryProxy ContextWrapperWithoutKeys,
+  @required ReactDartComponentFactoryProxy ContextConsumerWrapper,
   @required ReactDartComponentFactoryProxy ContextWrapper,
   @required ReactDartComponentFactoryProxy LifecycleTestWithContext,
   @required ReactDartComponentFactoryProxy LifecycleTest,
@@ -446,6 +449,79 @@ void sharedLifecycleTests<T extends react.Component>({
                   args: [initialProps, expectedState], props: initialProps, context: expectedContext),
               matchCall('componentDidUpdate',
                   args: [initialProps, expectedState, null], props: initialProps, context: expectedContext),
+            ]));
+      });
+
+      test('receives updated context with correct lifecycle calls when wrapped with a consumer', () {
+        LifecycleTestHelper component;
+
+        const Map expectedState = const {};
+
+        Map initialContext = {'foo': false};
+
+        Map expectedContext = {'foo': true};
+
+        Map refMap = {
+          'ref': ((ref) => component = ref),
+        };
+
+        var initialProps = new Map.from(defaultProps)..addAll(initialContext)..addAll({'children': const []});
+        // Add the 'ref' prop separately so it isn't an expected prop since React removes it internally
+        var initialPropsWithRef = new Map.from(initialProps)..addAll(refMap);
+
+        var expectedProps = new Map.from(initialProps)..addAll(expectedContext);
+        // Render the initial instance
+        var mountNode = new DivElement();
+        react_dom.render(
+            ContextWrapper(
+              initialContext,
+              [
+                ContextConsumerWrapper({},[
+                  (value){
+                    return LifecycleTest(initialPropsWithRef..addAll(value));
+                  }
+                ]),
+              ],
+            ),
+            mountNode);
+
+        // Verify initial context/setup
+        expect(
+            component.lifecycleCalls,
+            equals([
+              matchCall('getInitialState', props: initialProps),
+              matchCall('render', props: initialProps),
+              matchCall('componentDidMount', props: initialProps),
+            ]));
+
+        // Clear the lifecycle calls for to not duplicate the initial calls below
+        component.lifecycleCalls.clear();
+
+        // Trigger a re-render with new content3
+        react_dom.render(
+            ContextWrapper(
+              expectedContext,
+              [
+                ContextConsumerWrapper({},[
+                  (value){
+                    return LifecycleTest(initialPropsWithRef..addAll(value));
+                  }
+                ]),
+              ],
+            ),
+            mountNode);
+
+        // Verify updated context/setup
+        expect(
+            component.lifecycleCalls,
+            equals([
+              matchCall('shouldComponentUpdate',
+                  args: [expectedProps, expectedState, null], props: initialProps),
+              matchCall('render', props: expectedProps),
+              matchCall('getSnapshotBeforeUpdate',
+                  args: [initialProps, expectedState], props: expectedProps),
+              matchCall('componentDidUpdate',
+                  args: [initialProps, expectedState, null], props: expectedProps),
             ]));
       });
     }

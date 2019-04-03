@@ -102,33 +102,29 @@ class _DefaultPropsTest extends react.Component2 {
   render() => false;
 }
 
-ReactDartComponentFactoryProxy2 ContextWrapperWithoutKeys =
-    react.registerComponent(() => new _ContextWrapperWithoutKeys());
+ReactDartContext LifecycleTestContext = createContext();
 
-class _ContextWrapperWithoutKeys extends react.Component2 with LifecycleTestHelper {
-  @override
-  Iterable<String> get childContextKeys => const [];
+ReactDartComponentFactoryProxy2 ContextConsumerWrapper =
+    react.registerComponent(() => new _ContextConsumerWrapper());
 
-  @override
-  Map<String, dynamic> getChildContext() {
-    lifecycleCall('getChildContext');
-    return {
-      'foo': props['foo'],
-      'extraContext': props['extraContext'],
-    };
+class _ContextConsumerWrapper extends react.Component2 with LifecycleTestHelper {
+  dynamic render() {
+    return LifecycleTestContext.Consumer(
+      {},
+      props['children'].first
+    );
   }
-
-  dynamic render() => react.div({}, props['children']);
 }
 
-ReactDartContext LifecycleTestContext = createContext();
+
 ReactDartComponentFactoryProxy2 ContextWrapper = react.registerComponent(() => new _ContextWrapper());
 
 class _ContextWrapper extends react.Component2 with LifecycleTestHelper {
   dynamic render() {
-    return LifecycleTestContext.Provider({
-      'value': {'foo': props['foo']}
-    }, props['children']);
+    return LifecycleTestContext.Provider(
+      {'value': {'foo': props['foo']}},
+      props['children'],
+    );
   }
 }
 
