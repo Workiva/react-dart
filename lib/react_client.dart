@@ -515,7 +515,7 @@ final ReactDartInteropStatics2 _dartInteropStatics2 = (() {
         component.componentWillReceiveProps(new JsBackedMap.backedBy(jsNextProps));
       });
 
-  void _updatePropsAndStateWithJs(Component2 component, JsMap props, JsMap state, [dynamic context]) {
+  void _updatePropsAndStateWithJs(Component2 component, JsMap props, JsMap state, dynamic context) {
     component
       ..props = new JsBackedMap.backedBy(props)
       ..state = new JsBackedMap.backedBy(state)
@@ -550,7 +550,6 @@ final ReactDartInteropStatics2 _dartInteropStatics2 = (() {
   void handleComponentDidUpdate(Component2 component, ReactComponent jsThis, JsMap jsPrevProps, JsMap jsPrevState,
           [dynamic snapshot]) =>
       zone.run(() {
-        _updatePropsAndStateWithJs(component, component.jsThis.props, component.jsThis.state);
         component.componentDidUpdate(
           new JsBackedMap.backedBy(jsPrevProps),
           new JsBackedMap.backedBy(jsPrevState),
@@ -1241,7 +1240,8 @@ ReactDartContext createContext([
     return calculateChangedBits(_unjsifyNewContext(currentValue), _unjsifyNewContext(nextValue));
   }
 
-  var JSContext = React.createContext(_jsifyNewContext(defaultValue), allowInterop(jsifyCalculateChangedBitsArgs));
+  var JSContext = React.createContext(_jsifyNewContext(defaultValue),
+      calculateChangedBits != null ? allowInterop(jsifyCalculateChangedBitsArgs) : null);
   return new ReactDartContext(
     new _ReactJsContextComponentFactoryProxy(JSContext.Provider, isProvider: true),
     new _ReactJsContextComponentFactoryProxy(JSContext.Consumer, isConsumer: true),

@@ -8,18 +8,22 @@ import 'dart:html' as html;
 import 'package:js/js.dart';
 import 'package:test/test.dart';
 
-sharedTypeTests(Function testTypeValue,
-    {skipNormalDartObjects: false,
-    skipDartMaps: false,
-    skipPrimitives: false,
-    skipNumTypes: false,
-    skipFunctions: false,
-    skipBrowserObjects: false,
-    skipLists: false,
-    skipDatetimes: false,
-    skipFutures: false,
-    skipJsAnonInteropTypes: false,
-    skipJsInteropTypes: true}) {
+typedef void TestTypeValue<T>(T value);
+
+void sharedTypeTests(
+  TestTypeValue testTypeValue, {
+  bool skipNormalDartObjects: false,
+  bool skipDartMaps: false,
+  bool skipPrimitives: false,
+  bool skipNumTypes: false,
+  bool skipFunctions: false,
+  bool skipBrowserObjects: false,
+  bool skipLists: false,
+  bool skipDatetimes: false,
+  bool skipFutures: false,
+  bool skipJsAnonInteropTypes: false,
+  bool skipJsInteropTypes: true,
+}) {
   if (!skipNormalDartObjects) {
     test('normal Dart objects', () {
       final object = new Foo('f');
