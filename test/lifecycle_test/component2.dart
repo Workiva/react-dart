@@ -25,11 +25,6 @@ class _SetStateTest extends react.Component2 with LifecycleTestHelper {
   }
 
   @override
-  componentWillReceivePropsWithContext(_, __) {
-    recordLifecyleCall('componentWillReceivePropsWithContext');
-  }
-
-  @override
   getSnapshotBeforeUpdate(_, __) {
     recordLifecyleCall('getSnapshotBeforeUpdate');
   }
@@ -110,41 +105,27 @@ class _DefaultPropsTest extends react.Component2 {
   render() => false;
 }
 
-ReactDartComponentFactoryProxy2 ContextWrapperWithoutKeys =
-    react.registerComponent(() => new _ContextWrapperWithoutKeys());
+ReactDartContext LifecycleTestContext = createContext();
 
-class _ContextWrapperWithoutKeys extends react.Component2 with LifecycleTestHelper {
-  @override
-  Iterable<String> get childContextKeys => const [];
+ReactDartComponentFactoryProxy2 ContextConsumerWrapper = react.registerComponent(() => new _ContextConsumerWrapper());
 
-  @override
-  Map<String, dynamic> getChildContext() {
-    lifecycleCall('getChildContext');
-    return {
-      'foo': props['foo'],
-      'extraContext': props['extraContext'],
-    };
+class _ContextConsumerWrapper extends react.Component2 with LifecycleTestHelper {
+  dynamic render() {
+    return LifecycleTestContext.Consumer({}, props['children'].first);
   }
-
-  dynamic render() => react.div({}, props['children']);
 }
 
 ReactDartComponentFactoryProxy2 ContextWrapper = react.registerComponent(() => new _ContextWrapper());
 
 class _ContextWrapper extends react.Component2 with LifecycleTestHelper {
-  @override
-  Iterable<String> get childContextKeys => const ['foo', 'extraContext'];
-
-  @override
-  Map<String, dynamic> getChildContext() {
-    lifecycleCall('getChildContext');
-    return {
-      'foo': props['foo'],
-      'extraContext': props['extraContext'],
-    };
+  dynamic render() {
+    return LifecycleTestContext.Provider(
+      {
+        'value': {'foo': props['foo']}
+      },
+      props['children'],
+    );
   }
-
-  dynamic render() => react.div({}, props['children']);
 }
 
 ReactDartComponentFactoryProxy2 LifecycleTestWithContext =
@@ -152,7 +133,7 @@ ReactDartComponentFactoryProxy2 LifecycleTestWithContext =
 
 class _LifecycleTestWithContext extends _LifecycleTest {
   @override
-  Iterable<String> get contextKeys => const ['foo']; // only listening to one context key
+  get contextType => LifecycleTestContext;
 }
 
 ReactDartComponentFactoryProxy2 LifecycleTest = react.registerComponent(() => new _LifecycleTest());
@@ -165,15 +146,8 @@ class _LifecycleTest extends react.Component2 with LifecycleTestHelper {
   void componentWillReceiveProps(newProps) =>
       lifecycleCall('componentWillReceiveProps', arguments: [new Map.from(newProps)]);
 
-  void componentWillReceivePropsWithContext(newProps, newContext) =>
-      lifecycleCall('componentWillReceivePropsWithContext', arguments: [new Map.from(newProps), newContext]);
-
   void componentWillUpdate(nextProps, nextState) =>
       lifecycleCall('componentWillUpdate', arguments: [new Map.from(nextProps), new Map.from(nextState)]);
-
-  void componentWillUpdateWithContext(nextProps, nextState, nextContext) =>
-      lifecycleCall('componentWillUpdateWithContext',
-          arguments: [new Map.from(nextProps), new Map.from(nextState), nextContext]);
 
   dynamic getSnapshotBeforeUpdate(prevProps, prevState) =>
       lifecycleCall('getSnapshotBeforeUpdate', arguments: [new Map.from(prevProps), new Map.from(prevState)]);

@@ -171,8 +171,16 @@ abstract class Component {
 
   /// Private reference to the value of [context] for the upcoming render cycle.
   ///
-  /// Useful for ReactJS lifecycle methods [shouldComponentUpdateWithContext].
-  dynamic nextContext;
+  /// Useful for ReactJS lifecycle methods [shouldComponentUpdateWithContext] and [componentWillUpdateWithContext].
+  ///
+  /// > __DEPRECATED - DO NOT USE__
+  /// >
+  /// > This API was never stable in any version of ReactJS, and was replaced with a new, incompatible context API
+  /// > in ReactJS 16 that is exposed via the [Component2] class.
+  /// >
+  /// > This will be completely removed when the JS side of it is slated for removal (ReactJS 17 / react.dart 6.0.0)
+  @Deprecated('6.0.0')
+  Map nextContext;
 
   /// Private reference to the value of [state] for the upcoming render cycle.
   ///
@@ -492,7 +500,8 @@ abstract class Component2 implements Component {
   ///     var MyContext = createContext('test');
   ///
   ///     class MyClass extends react.Component2 {
-  ///       var contextType = MyContext;
+  ///       @override
+  ///       final contextType = MyContext;
   ///
   ///       render() {
   ///         return react.span({}, [
@@ -502,7 +511,7 @@ abstract class Component2 implements Component {
   ///     }
   ///
   /// See: <https://reactjs.org/docs/context.html#classcontexttype>
-  ReactDartContext contextType;
+  ReactDartContext get contextType => null;
 
   /// The context value from the [contextType] assigned to this component.
   /// The value is passed down from the provider of the same [contextType].
@@ -518,7 +527,8 @@ abstract class Component2 implements Component {
   ///     var MyContext = createContext('test');
   ///
   ///     class MyClass extends react.Component2 {
-  ///       var contextType = MyContext;
+  ///       @override
+  ///       final contextType = MyContext;
   ///
   ///       render() {
   ///         return react.span({}, [
@@ -618,14 +628,10 @@ abstract class Component2 implements Component {
   ///
   /// Calling [setState] within this function will not trigger an additional [render].
   ///
-  /// __Note__: Choose either this method or [componentWillReceivePropsWithContext]. They are both called at the same
-  /// time so using both provides no added benefit.
-  ///
   /// See: <https://facebook.github.io/react/docs/react-component.html#updating-componentwillreceiveprops>
   void componentWillReceiveProps(Map newProps) {}
 
-  /// ReactJS lifecycle method that is invoked before rendering when [nextProps], [nextState], or [nextContext] are
-  /// being received.
+  /// ReactJS lifecycle method that is invoked before rendering when [nextProps], [nextState] are being received.
   ///
   /// Use this as an opportunity to return `false` when you're certain that the transition to the new props and state
   /// will not require a component update.
@@ -845,13 +851,15 @@ abstract class Component2 implements Component {
   /// Will be removed when [Component] is removed in the `6.0.0` release.
   @Deprecated('6.0.0')
   get nextContext => throw new UnsupportedError('"Legacy" Context [nextContext] is not supported in Component2');
-  set nextContext(val) => throw new UnsupportedError('"Legacy" Context is not supported in Component2');
+  @Deprecated('6.0.0')
+  set nextContext(val) => throw new UnsupportedError('"Legacy" Context [nextContext] is not supported in Component2');
 
   /// Do not use.
   ///
   /// Will be removed when [Component] is removed in the `6.0.0` release.
   @Deprecated('6.0.0')
   get prevContext => throw new UnsupportedError('"Legacy" Context [prevContext] is not supported in Component2');
+  @Deprecated('6.0.0')
   set prevContext(val) => throw new UnsupportedError('"Legacy" Context [prevContext] is not supported in Component2');
 
   /// Do not use.
