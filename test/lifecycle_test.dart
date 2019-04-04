@@ -177,6 +177,37 @@ main() {
 
         sharedTypeTests(testSnapshotType);
       });
+
+      // group('getDerivedStateFromProps returns', () {
+      //   test('the returned state updates properly', () {
+      //     const Map initialState = const {
+      //       'initialState': 'initial',
+      //     };
+
+      //     final Map initialProps = unmodifiableMap({'getInitialState': (_) => initialState});
+
+      //     final Map expectedProps = unmodifiableMap(defaultProps, initialProps, emptyChildrenProps);
+
+      //     LifecycleTestHelper component = getDartComponent(render(components2.LifecycleTest(initialProps)));
+
+      //     component.lifecycleCalls.clear();
+
+      //     (component as react.Component2).forceUpdate();
+
+      //     expect(
+      //         component.lifecycleCalls,
+      //         equals([
+      //           matchCall('getDerivedStateFromProps'),
+      //           matchCall('render', state: initialState),
+      //           matchCall('getSnapshotBeforeUpdate', args: [expectedProps, initialState], state: initialState),
+      //           matchCall('componentDidUpdate', args: [expectedProps, initialState, null], state: initialState),
+      //         ].where((matcher) => matcher != null).toList()));
+      //   });
+
+      //   test('null properly', () {
+
+      //   });
+      // });
     });
   });
 }
