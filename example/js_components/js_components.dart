@@ -9,8 +9,6 @@ import 'package:react/react_client.dart';
 import 'package:react/react_client/react_interop.dart';
 import 'package:react/react_dom.dart' as react_dom;
 
-var fooRef;
-
 main() {
   setClientConfiguration();
 
@@ -22,6 +20,8 @@ main() {
 var IndexComponent = react.registerComponent(() => new _IndexComponent());
 
 class _IndexComponent extends react.Component2 {
+  SimpleCustomComponent simpleRef;
+
   getInitialState() => {
         'open': false,
       };
@@ -36,62 +36,52 @@ class _IndexComponent extends react.Component2 {
     this.setState({
       'open': true,
     });
-    print((simpleRef as SimpleCustomComponent).getFoo());
+    print(simpleRef.getFoo());
   }
 
-  SimpleCustomComponent simpleRef;
-
   render() {
-    return MuiThemeProvider({
-      'theme': theme
-    }, [
-      react.div({}, [
-        SimpleCustom({
-          'foo': 'Foo Prop from dart... IN A JAVASCRIPT COMPONENT!',
-          'ref': (ref) {
-            simpleRef = ref;
-          }
-        }),
-        CssBaseline({}),
-        Dialog({
-          'open': state['open'],
-          'onClose': handleClose
-        }, [
-          DialogTitle({}, ['Super Secret Password']),
-          DialogContent({}, [
+    return MuiThemeProvider(
+      {
+        'theme': theme,
+      },
+      SimpleCustom({
+        'foo': 'Foo Prop from dart... IN A JAVASCRIPT COMPONENT!',
+        'ref': (ref) {
+          simpleRef = ref;
+        }
+      }),
+      CssBaseline({}),
+      Dialog(
+          {
+            'open': state['open'],
+            'onClose': handleClose,
+          },
+          DialogTitle({}, 'Super Secret Password'),
+          DialogContent(
+            {},
             DialogContentText({}, '1-2-3-4-5'),
-          ]),
-          DialogActions({}, [
+          ),
+          DialogActions(
+            {},
             Button({
               'color': "primary",
-              'onClick': handleClose
-            }, [
-              'OK',
-            ]),
-          ])
-        ]),
-        Typography({
-          'variant': "h4",
-          'gutterBottom': true
-        }, [
-          'Material-UI',
-        ]),
-        Typography({
-          'variant': "subtitle1",
-          'gutterBottom': true
-        }, [
-          'example project',
-        ]),
-        Button({
-          'variant': "contained",
-          'color': "secondary",
-          'onClick': handleClick
-        }, [
-          Icon({}, ['fingerprint']),
-          'Super Secret Password',
-        ]),
-      ])
-    ]);
+              'onClick': handleClose,
+            }, 'OK'),
+          )),
+      Typography({
+        'variant': "h4",
+        'gutterBottom': true,
+      }, 'Material-UI'),
+      Typography({
+        'variant': "subtitle1",
+        'gutterBottom': true,
+      }, 'example project'),
+      Button({
+        'variant': "contained",
+        'color': "secondary",
+        'onClick': handleClick,
+      }, Icon({}, 'fingerprint'), 'Super Secret Password'),
+    );
   }
 }
 
@@ -124,7 +114,7 @@ class SimpleCustomComponent {
 
 /// JS interop wrapper class for Material UI
 /// getting us access to the react classes
-@JS('material-ui')
+@JS()
 class MaterialUI {
   external static ReactClass get Button;
   external static ReactClass get CssBaseline;
