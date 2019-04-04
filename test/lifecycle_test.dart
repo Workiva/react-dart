@@ -184,7 +184,7 @@ main() {
             'initialState': 'initial',
           };
 
-          final Map initialProps = unmodifiableMap({'getDerivedStateFromProps': (_,__,___) => initialState});
+          final Map initialProps = unmodifiableMap({'getDerivedStateFromProps': (_, __, ___) => initialState});
           final Map expectedProps = unmodifiableMap(defaultProps, initialProps, emptyChildrenProps);
 
           LifecycleTestHelper component = getDartComponent(render(components2.LifecycleTest(initialProps)));
@@ -204,7 +204,7 @@ main() {
         });
 
         test('null properly', () {
-          final Map initialProps = unmodifiableMap({'getDerivedStateFromProps': (_,__,___) => null});
+          final Map initialProps = unmodifiableMap({'getDerivedStateFromProps': (_, __, ___) => null});
           final Map expectedProps = unmodifiableMap(defaultProps, initialProps, emptyChildrenProps);
 
           LifecycleTestHelper component = getDartComponent(render(components2.LifecycleTest(initialProps)));
