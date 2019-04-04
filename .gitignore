@@ -2,6 +2,7 @@ packages
 .buildlog
 lib/docs/
 pubspec.lock
+package-lock.json
 .idea
 .pub/
 .packages
