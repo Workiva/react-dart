@@ -210,36 +210,35 @@ dynamic _convertArgsToChildren(List childrenArgs) {
 }
 
 /// Util used with [_registerComponent2] to ensure no imporant lifecycle
-/// methods are skipped. This includes [shouldComponentUpdate],
+/// events are skipped. This includes [shouldComponentUpdate],
 /// [componentDidUpdate], and [render] because they utilize
 /// [_updatePropsAndStateWithJs].
 ///
-/// Returns the life of lifecycle methods to skip, having removed the
+/// Returns the list of lifecycle events to skip, having removed the
 /// important ones. If an important lifecycle event was set for skipping, a
 /// warning is issued.
-
 List<String> _filterSkipMethods(List<String> methods) {
   List<String> finalList = List.from(methods);
-  bool warn = false;
+  bool shouldWarn = false;
 
   if (finalList.contains('shouldComponentUpdate')) {
     finalList.remove('shouldComponentUpdate');
-    warn = true;
+    shouldWarn = true;
   }
 
   if (finalList.contains('componentDidUpdate')) {
     finalList.remove('componentDidUpdate');
-    warn = true;
+    shouldWarn = true;
   }
 
   if (finalList.contains('render')) {
     finalList.remove('render');
-    warn = true;
+    shouldWarn = true;
   }
 
-  if (warn) {
+  if (shouldWarn) {
     window.console.warn("WARNING: Crucial lifecycle methods passed into "
-        "skipMethod. shouldComponentUpdate, componentDidUpdate, and render "
+        "skipMethods. shouldComponentUpdate, componentDidUpdate, and render "
         "cannot be skipped and will still be added to the new component. Please "
         "remove them from skipMethods.");
   }
@@ -756,11 +755,7 @@ class ReactJsComponentFactoryProxy extends ReactComponentFactoryProxy {
 /// Creates and returns a new [ReactDartComponentFactoryProxy] from the provided [componentFactory]
 /// which produces a new JS [`ReactClass` component class](https://facebook.github.io/react/docs/top-level-api.html#react.createclass).
 ReactDartComponentFactoryProxy2 _registerComponent2(ComponentFactory<Component2> componentFactory,
-    [Iterable<String> skipMethods = const [
-      'getDerivedStateFromError',
-      'compo'
-          'nentDidCatch'
-    ]]) {
+    [Iterable<String> skipMethods = const ['getDerivedStateFromError', 'componentDidCatch']]) {
   final componentInstance = componentFactory();
   final componentStatics = new ComponentStatics(componentFactory, componentInstance: componentInstance);
   final filteredSkipMethods = _filterSkipMethods(skipMethods);
