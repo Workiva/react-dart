@@ -28,7 +28,7 @@ mixin LifecycleTestHelper on Component {
   /// This alllows static and instance lifecycle methods to add calls to the same list
   List get lifecycleCalls => staticLifecycleCalls;
 
-  dynamic lifecycleCall(String memberName, {List arguments: const [], defaultReturnValue()}) {
+  dynamic lifecycleCall(String memberName, {List arguments: const [], defaultReturnValue(), Map staticProps}) {
     lifecycleCalls.add({
       'memberName': memberName,
       'arguments': arguments,
@@ -37,7 +37,7 @@ mixin LifecycleTestHelper on Component {
       'context': context,
     });
 
-    var lifecycleCallback = props == null ? null : props[memberName];
+    var lifecycleCallback = props == null ? staticProps == null ? null : staticProps[memberName] : props[memberName];
     if (lifecycleCallback != null) {
       return Function.apply(
           lifecycleCallback,
