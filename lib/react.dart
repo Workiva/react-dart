@@ -636,12 +636,14 @@ abstract class Component2 implements Component {
   ///
   /// [prevState] will be null when this lifcecyle method is called before first mount.
   ///
-  /// This method is also static, so features like [this] or [ref] cannot be used in this method
+  /// This method is also effectively static, so using instance members like [props] or ref variables will not work.
+  ///
+  /// Advance Use: Deriving state leads to verbose code and makes your components difficult to think about.
   ///
   /// See: <https://reactjs.org/docs/react-component.html#static-getderivedstatefromprops>
   ///
   /// __Example__:
-  ///
+  ///    @override
   ///    getDerivedStateFromProps(nextProps, prevState) {
   ///      if (prevState.someMirroredValue != nextProps.someValue) {
   ///       return {

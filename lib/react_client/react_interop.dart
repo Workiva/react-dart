@@ -383,7 +383,7 @@ class ReactDartInteropStatics2 implements ReactDartInteropStatics {
     void Function(Component2 component, ReactComponent jsThis) handleComponentWillMount,
     void Function(Component2 component) handleComponentDidMount,
     void Function(
-      ComponentStatics componentInstance,
+      ComponentStatics<Component2> componentStatics,
       JsMap jsNextProps,
       JsMap jsPrevState,
     )

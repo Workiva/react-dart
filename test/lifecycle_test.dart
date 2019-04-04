@@ -351,6 +351,7 @@ void sharedLifecycleTests<T extends react.Component>({
             equals([
               matchCall('getChildContext'),
               matchCall('getInitialState', props: initialPropsWithDefaults, context: initialContext),
+              matchCall('getDerivedStateFromProps'),
               matchCall('componentWillMount', props: initialPropsWithDefaults, context: initialContext),
               matchCall('render', props: initialPropsWithDefaults, context: initialContext),
               matchCall('componentDidMount', props: initialPropsWithDefaults, context: initialContext),
@@ -428,6 +429,7 @@ void sharedLifecycleTests<T extends react.Component>({
             component.lifecycleCalls,
             equals([
               matchCall('getInitialState', props: initialProps, context: initialContext),
+              matchCall('getDerivedStateFromProps'),
               matchCall('render', props: initialProps, context: initialContext),
               matchCall('componentDidMount', props: initialProps, context: initialContext),
             ]));
@@ -449,6 +451,7 @@ void sharedLifecycleTests<T extends react.Component>({
         expect(
             component.lifecycleCalls,
             equals([
+              matchCall('getDerivedStateFromProps', args: [initialProps, expectedState]),
               matchCall('render', props: initialProps, context: expectedContext),
               matchCall('getSnapshotBeforeUpdate',
                   args: [initialProps, expectedState], props: initialProps, context: expectedContext),
@@ -495,6 +498,7 @@ void sharedLifecycleTests<T extends react.Component>({
             component.lifecycleCalls,
             equals([
               matchCall('getInitialState', props: initialProps),
+              matchCall('getDerivedStateFromProps'),
               matchCall('render', props: initialProps),
               matchCall('componentDidMount', props: initialProps),
             ]));
@@ -520,6 +524,7 @@ void sharedLifecycleTests<T extends react.Component>({
         expect(
             component.lifecycleCalls,
             equals([
+              matchCall('getDerivedStateFromProps', args: [expectedProps, expectedState]),
               matchCall('shouldComponentUpdate', args: [expectedProps, expectedState, null], props: initialProps),
               matchCall('render', props: expectedProps),
               matchCall('getSnapshotBeforeUpdate', args: [initialProps, expectedState], props: expectedProps),
@@ -894,7 +899,7 @@ void sharedLifecycleTests<T extends react.Component>({
         List calls;
         if (isComponent2) {
           calls = [
-            matchCall('getDerivedStateFromProps'),
+            matchCall('getDerivedStateFromProps', args: [expectedProps, newState]),
             matchCall('shouldComponentUpdate', args: [expectedProps, newState, expectedContext], state: initialState)
           ];
         } else {
