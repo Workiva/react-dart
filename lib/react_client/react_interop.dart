@@ -223,7 +223,14 @@ class ReactContext {
 @JS()
 @anonymous
 class InteropProps implements JsMap {
-  @Deprecated('3.0.0')
+  /// __Deprecated.__
+  ///
+  /// This has been deprecated along with `Component` since its
+  /// replacement - `Component2` utilizes JS Maps for props,
+  /// making `internal` obsolete.
+  ///
+  /// Will be removed alongside `Component` in the `6.0.0` release.
+  @Deprecated('6.0.0')
   external ReactDartComponentInternal get internal;
   external dynamic get key;
   external dynamic get ref;
@@ -231,7 +238,14 @@ class InteropProps implements JsMap {
   external set key(dynamic value);
   external set ref(dynamic value);
 
-  @Deprecated('3.0.0')
+  /// __Deprecated.__
+  ///
+  /// This has been deprecated along with `Component` since its
+  /// replacement - `Component2` utilizes JS Maps for props,
+  /// making `InteropProps` obsolete.
+  ///
+  /// Will be removed alongside `Component` in the `6.0.0` release.
+  @Deprecated('6.0.0')
   external factory InteropProps({
     ReactDartComponentInternal internal,
     String key,

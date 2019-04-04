@@ -3,6 +3,13 @@
 <head lang="en">
     <meta charset="UTF-8">
     <title>JS Components - react-dart Examples</title>
+    <style>
+        #content {
+            width: 100%;
+            height: 100%;
+            text-align: center;
+        }
+    </style>
 </head>
 <body>
     <em>See Dart source for more info</em>
@@ -11,10 +18,16 @@
 
     <script src="packages/react/react.js"></script>
     <script src="packages/react/react_dom.js"></script>
+    <script src="https://unpkg.com/@material-ui/core/umd/material-ui.development.js" crossorigin="anonymous"></script>
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto:300,400,500" />
+    <link rel="stylesheet" href="https://fonts.googleapis.com/icon?family=Material+Icons">
+
+    <!-- This Babel script could be replaced with a webpack or some other build process -->
+    <script src="https://unpkg.com/babel-standalone@latest/babel.min.js" crossorigin="anonymous"></script>
 
     <!-- Where the JS React components are declared. -->
-    <script src="js_components.js"></script>
-
+    <script type="text/babel" src="js_components.js"></script>
     <script defer src="js_components.dart.js"></script>
+
 </body>
 </html>

@@ -1,20 +1,33 @@
-window._JsFoo = class JsFooComponent extends React.Component {
-  render() {
-    var foo = this.props.foo;
-    var style = this.props.style;
-    var onButtonClick = this.props.onButtonClick;
-    var rest = Object.assign({}, this.props);
-    delete rest.foo;
-    delete rest.onButtonClick;
+const {createMuiTheme, colors} = window['material-ui'];
 
-    return React.createElement("div", rest, [
-      React.createElement("h4", {}, 'Foo component'),
-      React.createElement("p", {}, 'value of props.foo: ', foo),
-      React.createElement("button", {onClick: onButtonClick}, 'button'),
-      rest.children,
-    ]);
+const theme = createMuiTheme({
+  palette: {
+    primary: {
+      light: colors.purple[300],
+      main: colors.purple[500],
+      dark: colors.purple[700],
+    },
+    secondary: {
+      light: colors.green[300],
+      main: colors.green[500],
+      dark: colors.green[700],
+    },
+  },
+  typography: {
+    useNextVariants: true,
+  },
+});
+
+class _SimpleCustomComponent extends React.Component {
+  render() {
+    return (
+      [
+        'This is some content to show that custom JS components also work!',
+      ]
+    );
   }
+
   getFoo() {
     return this.props.foo;
   }
-};
+}

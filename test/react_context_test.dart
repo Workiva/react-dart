@@ -16,7 +16,7 @@ import 'shared_type_tester.dart';
 main() {
   setClientConfiguration();
 
-  testTypeValue(dynamic typeToTest) {
+  void testTypeValue(dynamic typeToTest) {
     var mountNode = new html.DivElement();
     var contextTypeRef;
     var consumerRef;
@@ -81,10 +81,12 @@ main() {
             ]),
             mountNode);
       });
+
       test('on first render', () {
         expect(consumerEvenRef.latestValue, 1);
         expect(consumerOddRef.latestValue, 1);
       });
+
       test('on value updates', () {
         providerRef.increment();
         expect(consumerEvenRef.latestValue, 2);

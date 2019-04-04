@@ -2,7 +2,6 @@
 library js_components;
 
 import 'dart:html';
-import 'dart:math';
 
 import 'package:js/js.dart';
 import 'package:react/react.dart' as react;
@@ -15,65 +14,142 @@ var fooRef;
 main() {
   setClientConfiguration();
 
-  var content = JsFoo({
-    // JsFoo forwards its props to its DOM nodes, so you can set
-    // DOM props here and they'll work just how you'd expect them to.
-    'title': 'Hey, quit hovering me!',
-    'style': {
-      'color': ['#f00', '#0f0', '#00f'][new Random().nextInt(3)]
-    },
-    'onMouseEnter': (react.SyntheticMouseEvent e) {
-      print(e.runtimeType);
-      print('Entered!');
-    },
-    'onButtonClick': _handleButtonClick,
-    // Refs work the same, only you get back the JS component instance.
-    // See below for how you can use this.
-    'ref': (ref) {
-      fooRef = ref;
-    },
-
-    // Props specific to the component can be specified as well!
-    'foo': 'bar',
-  }, [
-    'This is a Dart Child'
-  ]);
+  var content = IndexComponent({});
 
   react_dom.render(content, querySelector('#content'));
-
-  // If you need to access a component instance, say,
-  // to call an API method, you can do so by writing
-  // a JS interop wrapper class.
-  print((fooRef as JsFooComponent).getFoo());
 }
 
-void _handleButtonClick(react.SyntheticMouseEvent event) {
-  print('Clicked!');
+var IndexComponent = react.registerComponent(() => new _IndexComponent());
+
+class _IndexComponent extends react.Component2 {
+  getInitialState() => {
+        'open': false,
+      };
+
+  handleClose(_) {
+    this.setState({
+      'open': false,
+    });
+  }
+
+  handleClick(_) {
+    this.setState({
+      'open': true,
+    });
+    print((simpleRef as SimpleCustomComponent).getFoo());
+  }
+
+  SimpleCustomComponent simpleRef;
+
+  render() {
+    return MuiThemeProvider({
+      'theme': theme
+    }, [
+      react.div({}, [
+        SimpleCustom({
+          'foo': 'Foo Prop from dart... IN A JAVASCRIPT COMPONENT!',
+          'ref': (ref) {
+            simpleRef = ref;
+          }
+        }),
+        CssBaseline({}),
+        Dialog({
+          'open': state['open'],
+          'onClose': handleClose
+        }, [
+          DialogTitle({}, ['Super Secret Password']),
+          DialogContent({}, [
+            DialogContentText({}, '1-2-3-4-5'),
+          ]),
+          DialogActions({}, [
+            Button({
+              'color': "primary",
+              'onClick': handleClose
+            }, [
+              'OK',
+            ]),
+          ])
+        ]),
+        Typography({
+          'variant': "h4",
+          'gutterBottom': true
+        }, [
+          'Material-UI',
+        ]),
+        Typography({
+          'variant': "subtitle1",
+          'gutterBottom': true
+        }, [
+          'example project',
+        ]),
+        Button({
+          'variant': "contained",
+          'color': "secondary",
+          'onClick': handleClick
+        }, [
+          Icon({}, ['fingerprint']),
+          'Super Secret Password',
+        ]),
+      ])
+    ]);
+  }
 }
 
 /// The JS component class.
 ///
-/// Private since [JsFoo] will be used instead.
+/// Private since [SimpleCustomComponent] will be used instead.
 ///
-/// Accessible via `JsFoo.type`.
+/// Accessible via `SimpleCustomComponent.type`.
 @JS()
-external ReactClass get _JsFoo;
+external ReactClass get _SimpleCustomComponent;
 
-/// A factory for the "JsFoo" JS components class that allows it
+/// A factory for the "_SimpleJsModalContent" JS components class that allows it
 /// to be used via Dart code.
 ///
 /// Use this to render instances of the component from within Dart code.
 ///
 /// This converts the Dart props [Map] passed into it in the
 /// the same way props are converted for DOM components.
-final JsFoo = new ReactJsComponentFactoryProxy(_JsFoo);
+final SimpleCustom = new ReactJsComponentFactoryProxy(_SimpleCustomComponent);
 
 /// JS interop wrapper class for the component,
 /// allowing us to interact with component instances
 /// made available via refs or [react_dom.render] calls.
 ///
 /// This is optional, as you won't always need to access the component's API.
-@JS('_JsFoo')
-class JsFooComponent {
+@JS('_SimpleCustomComponent')
+class SimpleCustomComponent {
   external String getFoo();
 }
+
+/// JS interop wrapper class for Material UI
+/// getting us access to the react classes
+@JS('material-ui')
+class MaterialUI {
+  external static ReactClass get Button;
+  external static ReactClass get CssBaseline;
+  external static ReactClass get Dialog;
+  external static ReactClass get DialogActions;
+  external static ReactClass get DialogContent;
+  external static ReactClass get DialogContentText;
+  external static ReactClass get DialogTitle;
+  external static ReactClass get Icon;
+  external static ReactClass get MuiThemeProvider;
+  external static ReactClass get Typography;
+}
+
+/// JS Interop to get theme config we setup in JS
+@JS()
+external Map get theme;
+
+// All the Material UI components converted to dart Components
+final Button = new ReactJsComponentFactoryProxy(MaterialUI.Button);
+final CssBaseline = new ReactJsComponentFactoryProxy(MaterialUI.CssBaseline);
+final Dialog = new ReactJsComponentFactoryProxy(MaterialUI.Dialog);
+final DialogActions = new ReactJsComponentFactoryProxy(MaterialUI.DialogActions);
+final DialogContent = new ReactJsComponentFactoryProxy(MaterialUI.DialogContent);
+final DialogContentText = new ReactJsComponentFactoryProxy(MaterialUI.DialogContentText);
+final DialogTitle = new ReactJsComponentFactoryProxy(MaterialUI.DialogTitle);
+final Icon = new ReactJsComponentFactoryProxy(MaterialUI.Icon);
+final MuiThemeProvider = new ReactJsComponentFactoryProxy(MaterialUI.MuiThemeProvider);
+final Typography = new ReactJsComponentFactoryProxy(MaterialUI.Typography);
