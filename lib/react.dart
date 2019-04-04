@@ -721,7 +721,7 @@ abstract class Component2 implements Component {
   /// place after the commit phase side-effects are permitted.
   ///
   /// __Note__: This method, along with [getDerivedStateFromError] will only
-  /// be called if `skipMethods` in [_registerComponent] is overridden with
+  /// be called if `skipMethods` in [registerComponent2] is overridden with
   /// a list (which can be empty). Otherwise, in order to prevent every
   /// component from being an error boundary, [componentDidCatch] and
   /// [getDerivedStateFromError] will be ignored.
@@ -736,12 +736,12 @@ abstract class Component2 implements Component {
   /// error is thrown.
   ///
   /// __Note__: This method, along with [componentDidCatch] will only
-  /// be called if `skipMethods` in [_registerComponent] is overridden with
+  /// be called if `skipMethods` in [registerComponent2] is overridden with
   /// a list (which can be empty). Otherwise, in order to prevent every
   /// component from being an error boundary, [componentDidCatch] and
   /// [getDerivedStateFromError] will be ignored.
   ///
-  /// See: <https://facebook.github.io/react/docs/react-component.html#componentdidcatch>
+  /// See: <https://reactjs.org/docs/react-component.html#static-getderivedstatefromerror>
   Map getDerivedStateFromError(dynamic error) {}
 
   /// Invoked once before the `Component` is mounted. The return value will be used as the initial value of [state].
@@ -1493,11 +1493,7 @@ class SyntheticWheelEvent extends SyntheticEvent {
 
 /// Registers [componentFactory] on both client and server.
 /*ComponentRegistrar*/ Function registerComponent2 = (/*ComponentFactory*/ componentFactory,
-    [/*Iterable<String>*/ skipMethods = const [
-      'getDerivedStateFromError',
-      'compo'
-          'nentDidCatch'
-    ]]) {
+    [/*Iterable<String>*/ skipMethods = const ['getDerivedStateFromError', 'componentDidCatch']]) {
   throw new Exception('setClientConfiguration must be called before registerComponent.');
 };
 
