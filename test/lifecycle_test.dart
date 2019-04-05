@@ -179,7 +179,7 @@ main() {
       });
 
       group('getDerivedStateFromProps returns', () {
-        test('the returned state updates properly', () {
+        test('derived state, resulting in an updated instance state value', () {
           const Map initialState = const {
             'initialState': 'initial',
           };
@@ -203,8 +203,13 @@ main() {
               ].where((matcher) => matcher != null).toList()));
         });
 
-        test('null properly', () {
-          final Map initialProps = unmodifiableMap({'getDerivedStateFromProps': (_, __, ___) => null});
+        test('null, leaving the existing instance state value intact', () {
+          const Map initialState = const {
+            'foo': 'sudo',
+          };
+          final Map initialProps = unmodifiableMap(
+              {'getDerivedStateFromProps': (_, __, ___) => null, 'getInitialState': (_) => initialState});
+
           final Map expectedProps = unmodifiableMap(defaultProps, initialProps, emptyChildrenProps);
 
           LifecycleTestHelper component = getDartComponent(render(components2.LifecycleTest(initialProps)));
@@ -217,9 +222,9 @@ main() {
               component.lifecycleCalls,
               equals([
                 matchCall('getDerivedStateFromProps'),
-                matchCall('render', state: {}),
-                matchCall('getSnapshotBeforeUpdate', args: [expectedProps, {}], state: {}),
-                matchCall('componentDidUpdate', args: [expectedProps, {}, null], state: {}),
+                matchCall('render', state: initialState),
+                matchCall('getSnapshotBeforeUpdate', args: [expectedProps, initialState], state: initialState),
+                matchCall('componentDidUpdate', args: [expectedProps, initialState, null], state: initialState),
               ].where((matcher) => matcher != null).toList()));
         });
       });

@@ -631,14 +631,15 @@ abstract class Component2 implements Component {
   @Deprecated('6.0.0')
   void componentWillReceiveProps(Map newProps) {}
 
-  /// ReactJS lifecycle method that is invoked before rendering on the intial mount and on subsequent updates
+  /// ReactJS lifecycle method that is invoked before rendering on initial mount and on subsequent updates when [nextProps] is received.
+  ///
   /// It should return an object to update the state, or null to update nothing (this is different from componentWillRecieveProps).
   ///
   /// [prevState] will be null when this lifcecyle method is called before first mount.
   ///
-  /// This method is also effectively static, so using instance members like [props] or ref variables will not work.
+  /// This method is also effectively static, so using instance members like [props] or `ref` will not work.
   ///
-  /// Advance Use: Deriving state leads to verbose code and makes your components difficult to think about.
+  /// Deriving state from props should be used with caution since it can lead to more verbose implementations and less approachable by others.
   ///
   /// See: <https://reactjs.org/docs/react-component.html#static-getderivedstatefromprops>
   ///

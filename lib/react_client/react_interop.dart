@@ -424,6 +424,8 @@ class ReactDartInteropStatics2 implements ReactDartInteropStatics {
 class ComponentStatics<T extends Component> {
   final ComponentFactory<T> componentFactory;
   final Component2 componentInstance;
+
+  /// Required for use by [ReactDartInteropStatics2].
   ComponentStatics(this.componentFactory, {this.componentInstance});
 }
 
