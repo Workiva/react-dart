@@ -181,11 +181,22 @@ main() {
         var renderedInstance = react_dom.render(components2.SetStateTest({}), mountNode);
         LifecycleTestHelper component = getDartComponent(renderedInstance);
         LifecycleTestHelper.staticLifecycleCalls.clear();
-        component.setState({"throwAnError": true});
+        component.setState({"shouldThrow": true});
 
         expect(component.lifecycleCalls, containsAllInOrder(['getDerivedStateFromError', 'componentDidCatch']));
-        expect(component.state["throw"], isFalse);
-        expect(component.state["errorMessage"], "thrown");
+        expect(component.state["shouldThrow"], isFalse);
+      });
+
+      test('shows the correct error and info when an error is thrown', () {
+        var mountNode = new DivElement();
+        var renderedInstance = react_dom.render(components2.SetStateTest({}), mountNode);
+        LifecycleTestHelper component = getDartComponent(renderedInstance);
+        Element renderedNode = react_dom.findDOMNode(renderedInstance);
+        LifecycleTestHelper.staticLifecycleCalls.clear();
+        component.setState({"shouldThrow": true});
+
+        expect(renderedNode.children[1].text, getComponent2ErrorMessage());
+        expect(renderedNode.children[2].text, getComponent2ErrorInfo());
       });
     });
   });
@@ -301,14 +312,21 @@ void sharedLifecycleTests<T extends react.Component>({
           ]));
     });
 
-    if (!skipLegacyContextTests && isComponent2) {
+    if (!isComponent2) {
       test('does not call getChildContext when childContextKeys is empty', () {
         var mountNode = new DivElement();
         var instance =
             react_dom.render(ContextWrapperWithoutKeys({'foo': false}, LifecycleTestWithContext({})), mountNode);
         LifecycleTestHelper component = getDartComponent(instance);
 
-        expect(component.lifecycleCalls, isEmpty);
+        expect(
+            component.lifecycleCalls,
+            equals([
+              matchCall('getInitialState'),
+              matchCall('componentWillMount'),
+              matchCall('render'),
+              matchCall('componentDidMount'),
+            ]));
       });
 
       test('calls getChildContext when childContextKeys exist', () {
@@ -318,7 +336,7 @@ void sharedLifecycleTests<T extends react.Component>({
 
         expect(
             component.lifecycleCalls,
-            equals([
+            containsAll([
               matchCall('getChildContext'),
             ]));
       });
@@ -358,7 +376,7 @@ void sharedLifecycleTests<T extends react.Component>({
         expect(
             component.lifecycleCalls,
             equals([
-              matchCall('getChildContext'),
+              matchCall('getChildContext', props: anything, context: anything),
               matchCall('getInitialState', props: initialPropsWithDefaults, context: initialContext),
               matchCall('componentWillMount', props: initialPropsWithDefaults, context: initialContext),
               matchCall('render', props: initialPropsWithDefaults, context: initialContext),
@@ -375,7 +393,7 @@ void sharedLifecycleTests<T extends react.Component>({
         expect(
             component.lifecycleCalls,
             equals([
-              matchCall('getChildContext'),
+              matchCall('getChildContext', props: anything, context: anything),
               matchCall('componentWillReceiveProps',
                   args: [newPropsWithDefaults], props: initialPropsWithDefaults, context: initialContext),
               matchCall('componentWillReceivePropsWithContext',
@@ -1082,3 +1100,9 @@ external String getNonUpdatingRenderedCounter();
 
 @JS()
 external String getComponent2NonUpdatingRenderedCounter();
+
+@JS()
+external String getComponent2ErrorMessage();
+
+@JS()
+external String getComponent2ErrorInfo();

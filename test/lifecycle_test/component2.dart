@@ -18,9 +18,9 @@ class _SetStateTest extends react.Component2 with LifecycleTestHelper {
   @override
   getInitialState() => {
         'counter': 1,
-        'throw': true,
-        'throwsAnError': false,
-        'errorMessage': null,
+        'shouldThrow': true,
+        'error': '',
+        'info': '',
       };
 
   @override
@@ -45,15 +45,15 @@ class _SetStateTest extends react.Component2 with LifecycleTestHelper {
   }
 
   @override
-  componentDidCatch(_, __) {
+  componentDidCatch(error, info) {
     recordLifecyleCall('componentDidCatch');
-    this.setState({"errorMessage": "thrown"});
+    this.setState({'error': error, 'info': info});
   }
 
   @override
   Map getDerivedStateFromError(_) {
     recordLifecyleCall('getDerivedStateFromError');
-    return {"throw": false};
+    return {"shouldThrow": false};
   }
 
   Map outerTransactionalSetStateCallback(Map previousState, __) {
@@ -74,25 +74,25 @@ class _SetStateTest extends react.Component2 with LifecycleTestHelper {
   render() {
     recordLifecyleCall('render');
 
-    bool throwError = state['throwAnError'] == null || state['throwAnError'] == false ? false : true;
-
-    if (!throwError) {
-      return react.div(
-        {
-          'onClick': (_) {
-            setStateWithUpdater(outerTransactionalSetStateCallback, () {
-              recordLifecyleCall('outerSetStateCallback');
-            });
-          }
-        },
+    if (!state['shouldThrow']) {
+      return react.div({
+        'onClick': (_) {
+          setStateWithUpdater(outerTransactionalSetStateCallback, () {
+            recordLifecyleCall('outerSetStateCallback');
+          });
+        }
+      }, [
         react.div({
           'onClick': (_) {
             setStateWithUpdater(innerTransactionalSetStateCallback, () {
               recordLifecyleCall('innerSetStateCallback');
             });
-          }
+          },
+          'key': 'c1',
         }, state['counter']),
-      );
+        react.div({'key': 'c2'}, state['error'].toString()),
+        react.div({'key': 'c3'}, state['info'].toString()),
+      ]);
     } else {
       return react.div(
           {
@@ -109,7 +109,7 @@ class _SetStateTest extends react.Component2 with LifecycleTestHelper {
               });
             }
           }, [
-            state["throw"] ? ErrorComponent({"key": "errorComp"}) : null,
+            state["shouldThrow"] ? ErrorComponent({"key": "errorComp"}) : null,
             state['counter']
           ]));
     }
@@ -179,7 +179,7 @@ ReactDartComponentFactoryProxy2 ErrorComponent = react.registerComponent(() => n
 
 class _ErrorComponent extends react.Component2 {
   void _throwError() {
-    throw new Exception("It crashed!");
+    throw "It crashed!";
   }
 
   void render() {

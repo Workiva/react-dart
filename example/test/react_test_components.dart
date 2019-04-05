@@ -544,3 +544,71 @@ class _Component2ErrorTestComponent extends react.Component2 {
 }
 
 var component2ErrorTestComponent = react.registerComponent(() => new _Component2ErrorTestComponent(), ['render']);
+
+ReactDartComponentFactoryProxy2 SetStateTest = react.registerComponent(() => new _SetStateTest(), [null]);
+
+class _SetStateTest extends react.Component2 {
+  @override
+  Map getDefaultProps() => {
+        'shouldUpdate': true,
+      };
+
+  @override
+  getInitialState() => {
+        'counter': 1,
+        'shouldThrow': true,
+        'error': '',
+        'info': '',
+      };
+
+  @override
+  componentDidCatch(error, info) {
+    this.setState({'error': error, 'info': info});
+  }
+
+  @override
+  Map getDerivedStateFromError(_) {
+    return {"shouldThrow": false};
+  }
+
+  render() {
+    print(state['shouldThrow']);
+    if (!state['shouldThrow']) {
+      return react.div({
+        'onClick': (_) {
+          print('yo');
+        }
+      }, [
+        react.div({
+          'onClick': (_) {
+            print('yo2');
+          },
+          'key': 'c1',
+        }, state['counter']),
+        react.div({'key': 'c2'}, state['error'].toString()),
+        react.div({'key': 'c3'}, state['info'].toString()),
+      ]);
+    } else {
+      return react.div(
+          {
+            'onClick': (_) {
+              print('yo');
+            }
+          },
+          react.div({
+            'onClick': (_) {
+              print('yo2');
+            }
+          }, [
+            state['shouldThrow']
+                ? ErrorComponent({
+                    "key": "errorComp",
+                    "e"
+                        "rrored": !state['shouldThrow']
+                  })
+                : null,
+            state['counter']
+          ]));
+    }
+  }
+}

@@ -297,7 +297,7 @@ final ReactDartInteropStatics _dartInteropStatics = (() {
 
   /// Wrapper for [Component.getInitialState].
   Component initComponent(ReactComponent jsThis, ReactDartComponentInternal internal, InteropContextValue context,
-          ComponentStatics componentStatics) =>
+          ComponentStatics<Component> componentStatics) =>
       zone.run(() {
         void jsRedraw() {
           jsThis.setState(newObject());
@@ -523,7 +523,7 @@ final ReactDartInteropStatics2 _dartInteropStatics2 = (() {
   final zone = Zone.current;
 
   /// Wrapper for [Component.getInitialState].
-  Component2 initComponent(ReactComponent jsThis, ComponentStatics<Component2> componentStatics) => zone.run(() {
+  Component2 initComponent(ReactComponent jsThis, ComponentStatics2<Component2> componentStatics) => zone.run(() {
         final component = componentStatics.componentFactory();
         component.adapter = new JsComponent2Adapter(jsThis: jsThis);
         // Return the component so that the JS proxying component can store it,
@@ -605,7 +605,7 @@ final ReactDartInteropStatics2 _dartInteropStatics2 = (() {
         component.componentDidCatch(error, info);
       });
 
-  JsMap handleGetDerivedStateFromError(ComponentStatics componentStatics, dynamic error) => zone.run(() {
+  JsMap handleGetDerivedStateFromError(ComponentStatics2 componentStatics, dynamic error) => zone.run(() {
         return jsBackingMapOrJsCopy(componentStatics.componentInstance.getDerivedStateFromError(error));
       });
 
@@ -757,7 +757,7 @@ class ReactJsComponentFactoryProxy extends ReactComponentFactoryProxy {
 ReactDartComponentFactoryProxy2 _registerComponent2(ComponentFactory<Component2> componentFactory,
     [Iterable<String> skipMethods = const ['getDerivedStateFromError', 'componentDidCatch']]) {
   final componentInstance = componentFactory();
-  final componentStatics = new ComponentStatics(componentFactory, componentInstance: componentInstance);
+  final componentStatics = new ComponentStatics2(componentFactory, componentInstance: componentInstance);
   final filteredSkipMethods = _filterSkipMethods(skipMethods);
 
   // Cache default props and store them on the ReactClass so they can be used

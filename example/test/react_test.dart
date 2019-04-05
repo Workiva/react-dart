@@ -14,7 +14,8 @@ void main() {
         component2TestComponent({'key': 'c2-list'}, []),
         component2ErrorTestComponent({'key': 'error-boundary'}, []),
         //clockComponent({"name": 'my-clock'}, []),
-        checkBoxComponent({'key': 'checkbox'}, [])
+        checkBoxComponent({'key': 'checkbox'}, []),
+        SetStateTest({'key': 'sst'}, [])
       ]),
       querySelector('#content'));
 }

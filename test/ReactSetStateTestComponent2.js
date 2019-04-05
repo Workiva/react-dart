@@ -22,13 +22,39 @@ function getComponent2NonUpdatingRenderedCounter() {
     return ReactDOM.findDOMNode(nonUpdatingInstance).textContent;
 }
 
+function getComponent2UpdatingErrorMessage() {
+    return ReactDOM.findDOMNode(updatingInstance).textContent;
+}
+
+function getComponent2NonUpdatingErrorMessage() {
+    return ReactDOM.findDOMNode(nonUpdatingInstance).textContent;
+}
+
+function staticLifecycleCallProxy(name, shouldUpdate){
+    shouldUpdate ? _component2UpdatingSetStateLifeCycleCalls.push(name) : _component2NonUpdatingSetStateLifeCycleCalls.push(name);
+}
+
+function getComponent2ErrorMessage(){
+    return _error.toString();
+}
+
+function getComponent2ErrorInfo(){
+    return _info.toString();
+}
+
 var _component2Counter;
+var _shouldThrow;
+var _shouldUpdate;
+var _error;
+var _info;
 
 class ReactSetStateTestComponent2 extends React.Component {
     constructor(props) {
         super(props);
         _component2Counter = 1;
-        this.state = {counter: _component2Counter};
+        _shouldThrow = true;
+        _shouldUpdate = props.shouldUpdate;
+        this.state = {counter: _component2Counter, shouldThrow: _shouldThrow, error: '', info: ''};
     }
 
     recordStateChange(newCount) {
@@ -47,6 +73,7 @@ class ReactSetStateTestComponent2 extends React.Component {
 
     getSnapshotBeforeUpdate(_, __) {
         this.recordLifecycleCall("getSnapshotBeforeUpdate");
+        return null;
     }
 
     componentDidUpdate(_, __, ___) {
@@ -79,19 +106,48 @@ class ReactSetStateTestComponent2 extends React.Component {
         this.setState(this.innerTransactionalSetStateCallback.bind(this), this.innerSetStateCallback.bind(this));
     }
 
-    componentDidCatch(_, __) {
+    componentDidCatch(error, info) {
         this.recordLifecycleCall('componentDidCatch');
+        _error = error;
+        _info = info;
+        this.setState({error, info});
     }
 
-    getDerivedStateFromError(_) {
-        this.recordLifecycleCall('getDerivedStateFromError');
+    static getDerivedStateFromError(_) {
+        staticLifecycleCallProxy('getDerivedStateFromError', _shouldUpdate);
+        return {shouldThrow: false};
     }
 
     render() {
         this.recordLifecycleCall('render');
-        return React.createElement("div", {onClick: this.handleOuterClick.bind(this)},
-            React.createElement("div", {onClick: this.handleInnerClick.bind(this)}, this.state.counter)
-        );
+        if (!this.state.shouldThrow) {
+            return React.createElement("div", {onClick: this.handleOuterClick.bind(this)},
+                [
+                    React.createElement("div", {onClick: this.handleInnerClick.bind(this), key: 'c1'}, this.state.counter),
+                    React.createElement("div", {onClick: this.handleInnerClick.bind(this), key: 'c2'}, this.state.error.toString()),
+                    React.createElement("div", {onClick: this.handleInnerClick.bind(this), key: 'c3'}, this.state.info.toString()),
+                ]
+            );
+        } else {
+            return React.createElement("div", {onClick: this.handleOuterClick.bind(this)},
+                [
+                    React.createElement("div", {onClick: this.handleInnerClick.bind(this), key: 'c1'}, this.state.counter),
+                    React.createElement(ErrorComponent, {key: 'c2'}, null)
+                ]
+            );
+        }
+    }
+}
+
+
+class ErrorComponent extends React.Component {
+    throwError() {
+        throw "Error: It crashed!";
+    }
+
+    render() {
+        this.throwError();
+        return React.createElement("div", {}, "Error");
     }
 }
 
