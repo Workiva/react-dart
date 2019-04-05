@@ -195,7 +195,7 @@ main() {
         LifecycleTestHelper.staticLifecycleCalls.clear();
         component.setState({"shouldThrow": true});
 
-        expect(renderedNode.children[1].text, getComponent2ErrorMessage());
+        expect(renderedNode.children[1].text.contains(getComponent2ErrorMessage()), isTrue);
         expect(renderedNode.children[2].text, getComponent2ErrorInfo());
       });
     });

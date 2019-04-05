@@ -142,7 +142,7 @@ class ReactSetStateTestComponent2 extends React.Component {
 
 class ErrorComponent extends React.Component {
     throwError() {
-        throw "Error: It crashed!";
+        throw "It crashed!";
     }
 
     render() {
