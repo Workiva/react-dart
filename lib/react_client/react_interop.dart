@@ -320,7 +320,7 @@ external ReactClass createReactDartComponentClass(
 /// the JS and Dart component instances.
 @JS('_createReactDartComponentClass2')
 external ReactClass createReactDartComponentClass2(
-    ReactDartInteropStatics2 dartInteropStatics, ComponentStatics2<Component2> componentStatics,
+    ReactDartInteropStatics2 dartInteropStatics, ComponentStatics2 componentStatics,
     [JsComponentConfig2 jsConfig, List<String> skipMethods]);
 
 @JS('React.__isDevelopment')
@@ -377,7 +377,7 @@ class ReactDartInteropStatics {
 @anonymous
 class ReactDartInteropStatics2 implements ReactDartInteropStatics {
   external factory ReactDartInteropStatics2({
-    Component2 Function(ReactComponent jsThis, ComponentStatics2<Component2> componentStatics) initComponent,
+    Component2 Function(ReactComponent jsThis, ComponentStatics2 componentStatics) initComponent,
     // TODO: Should this have a return signature of `Map`?
     dynamic Function(Component2 component) handleGetInitialState,
     void Function(Component2 component, ReactComponent jsThis) handleComponentWillMount,
@@ -441,8 +441,8 @@ class ComponentStatics<T extends Component> {
 /// See [ReactDartInteropStatics2], [createReactDartComponentClass2].
 class ComponentStatics2<T extends Component2> {
   final ComponentFactory<T> componentFactory;
-  final T componentInstance;
-  ComponentStatics2(this.componentFactory, {this.componentInstance});
+  final T instanceForStaticMethods;
+  ComponentStatics2(this.componentFactory, {this.instanceForStaticMethods});
 }
 
 /// Additional configuration passed to [createReactDartComponentClass]

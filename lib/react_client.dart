@@ -606,7 +606,7 @@ final ReactDartInteropStatics2 _dartInteropStatics2 = (() {
       });
 
   JsMap handleGetDerivedStateFromError(ComponentStatics2 componentStatics, dynamic error) => zone.run(() {
-        return jsBackingMapOrJsCopy(componentStatics.componentInstance.getDerivedStateFromError(error));
+        return jsBackingMapOrJsCopy(componentStatics.instanceForStaticMethods.getDerivedStateFromError(error));
       });
 
   dynamic handleRender(Component2 component, JsMap jsProps, JsMap jsState, dynamic jsContext) => zone.run(() {
@@ -757,7 +757,7 @@ class ReactJsComponentFactoryProxy extends ReactComponentFactoryProxy {
 ReactDartComponentFactoryProxy2 _registerComponent2(ComponentFactory<Component2> componentFactory,
     [Iterable<String> skipMethods = const ['getDerivedStateFromError', 'componentDidCatch']]) {
   final componentInstance = componentFactory();
-  final componentStatics = new ComponentStatics2(componentFactory, componentInstance: componentInstance);
+  final componentStatics = new ComponentStatics2(componentFactory, instanceForStaticMethods: componentInstance);
   final filteredSkipMethods = _filterSkipMethods(skipMethods);
 
   // Cache default props and store them on the ReactClass so they can be used
