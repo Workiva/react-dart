@@ -492,6 +492,11 @@ final ReactDartInteropStatics2 _dartInteropStatics2 = (() {
         // Return the component so that the JS proxying component can store it,
         // avoiding an interceptor lookup.
 
+        // component.init();
+        // if (jsThis.dartComponent != null && jsThis.dartComponent.state != null) {
+        //   jsThis.setState(new JsBackedMap.from(jsThis.dartComponent.state));
+        // }
+
         component
           ..jsThis = jsThis
           ..props = new JsBackedMap.backedBy(jsThis.props)

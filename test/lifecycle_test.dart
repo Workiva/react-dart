@@ -423,6 +423,7 @@ void sharedLifecycleTests<T extends react.Component>({
         expect(
             component.lifecycleCalls,
             equals([
+              matchCall('init', props: initialProps, context: initialContext),
               matchCall('getInitialState', props: initialProps, context: initialContext),
               matchCall('render', props: initialProps, context: initialContext),
               matchCall('componentDidMount', props: initialProps, context: initialContext),
@@ -490,6 +491,7 @@ void sharedLifecycleTests<T extends react.Component>({
         expect(
             component.lifecycleCalls,
             equals([
+              matchCall('init', props: initialProps),
               matchCall('getInitialState', props: initialProps),
               matchCall('render', props: initialProps),
               matchCall('componentDidMount', props: initialProps),
