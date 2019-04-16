@@ -22,6 +22,7 @@ class _SetStateTest extends react.Component2 with LifecycleTestHelper {
   getInitialState() => {
         'counter': 1,
         'shouldThrow': true,
+        'errorFromGetDerivedState': '',
         'error': '',
         'info': '',
       };
@@ -54,9 +55,9 @@ class _SetStateTest extends react.Component2 with LifecycleTestHelper {
   }
 
   @override
-  Map getDerivedStateFromError(_) {
+  Map getDerivedStateFromError(error) {
     recordLifecyleCall('getDerivedStateFromError');
-    return {"shouldThrow": false};
+    return {"shouldThrow": false, "errorFromGetDerivedState": error};
   }
 
   Map outerTransactionalSetStateCallback(Map previousState, __) {
@@ -95,6 +96,7 @@ class _SetStateTest extends react.Component2 with LifecycleTestHelper {
         }, state['counter']),
         react.div({'key': 'c2'}, state['error'].toString()),
         react.div({'key': 'c3'}, state['info'].toString()),
+        react.div({'key': 'c4'}, state['errorFromGetDerivedState'].toString()),
       ]);
     } else {
       return react.div(

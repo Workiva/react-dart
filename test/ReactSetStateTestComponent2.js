@@ -42,11 +42,16 @@ function getComponent2ErrorInfo(){
     return Object.keys(_info)[0];
 }
 
+function getComponent2ErrorFromDerivedState(){
+    return _errorFromGetDerivedState.toString();
+}
+
 var _component2Counter;
 var _shouldThrow;
 var _shouldUpdate;
 var _error;
 var _info;
+var _errorFromGetDerivedState;
 
 class ReactSetStateTestComponent2 extends React.Component {
     constructor(props) {
@@ -54,7 +59,7 @@ class ReactSetStateTestComponent2 extends React.Component {
         _component2Counter = 1;
         _shouldThrow = true;
         _shouldUpdate = props.shouldUpdate;
-        this.state = {counter: _component2Counter, shouldThrow: _shouldThrow, error: '', info: ''};
+        this.state = {counter: _component2Counter, shouldThrow: _shouldThrow, error: '', info: '', errorFromGetDerivedState: ''};
     }
 
     recordStateChange(newCount) {
@@ -113,9 +118,10 @@ class ReactSetStateTestComponent2 extends React.Component {
         this.setState({error, info});
     }
 
-    static getDerivedStateFromError(_) {
+    static getDerivedStateFromError(error) {
         staticLifecycleCallProxy('getDerivedStateFromError', _shouldUpdate);
-        return {shouldThrow: false};
+        _errorFromGetDerivedState = error;
+        return {shouldThrow: false, errorFromGetDerivedState: error};
     }
 
     render() {
@@ -126,6 +132,7 @@ class ReactSetStateTestComponent2 extends React.Component {
                     React.createElement("div", {onClick: this.handleInnerClick.bind(this), key: 'c1'}, this.state.counter),
                     React.createElement("div", {onClick: this.handleInnerClick.bind(this), key: 'c2'}, this.state.error.toString()),
                     React.createElement("div", {onClick: this.handleInnerClick.bind(this), key: 'c3'}, this.state.info.toString()),
+                    React.createElement("div", {onClick: this.handleInnerClick.bind(this), key: 'c4'}, this.state.errorFromGetDerivedState.toString()),
                 ]
             );
         } else {

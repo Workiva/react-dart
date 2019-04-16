@@ -241,6 +241,7 @@ main() {
 
         expect(renderedNode.children[1].text.contains(getComponent2ErrorMessage()), isTrue);
         expect(renderedNode.children[2].text.substring(1, lengthOfKey), getComponent2ErrorInfo());
+        expect(renderedNode.children[3].text.contains(getComponent2ErrorFromDerivedState()), isTrue);
       });
 
       test('defaults toward not being an error boundary', () {
@@ -1162,3 +1163,6 @@ external String getComponent2ErrorMessage();
 
 @JS()
 external dynamic getComponent2ErrorInfo();
+
+@JS()
+external String getComponent2ErrorFromDerivedState();
