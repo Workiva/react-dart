@@ -523,7 +523,7 @@ final ReactDartInteropStatics2 _dartInteropStatics2 = (() {
   final zone = Zone.current;
 
   /// Wrapper for [Component.getInitialState].
-  Component2 initComponent(ReactComponent jsThis, ComponentStatics2<Component2> componentStatics) => zone.run(() {
+  Component2 initComponent(ReactComponent jsThis, ComponentStatics2 componentStatics) => zone.run(() {
         final component = componentStatics.componentFactory();
         component.adapter = new JsComponent2Adapter(jsThis: jsThis);
         // Return the component so that the JS proxying component can store it,

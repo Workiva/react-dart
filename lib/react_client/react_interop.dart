@@ -439,9 +439,9 @@ class ComponentStatics<T extends Component> {
 /// static lifecycle methods from, it made sense to create [ComponentStatics2].
 ///
 /// See [ReactDartInteropStatics2], [createReactDartComponentClass2].
-class ComponentStatics2<T extends Component2> {
-  final ComponentFactory<T> componentFactory;
-  final T instanceForStaticMethods;
+class ComponentStatics2 {
+  final ComponentFactory<Component2> componentFactory;
+  final Component2 instanceForStaticMethods;
   ComponentStatics2(this.componentFactory, {this.instanceForStaticMethods});
 }
 
