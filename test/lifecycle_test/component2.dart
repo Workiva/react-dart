@@ -9,6 +9,8 @@ import 'util.dart';
 
 ReactDartComponentFactoryProxy2 SetStateTest = react.registerComponent(() => new _SetStateTest(), [null]);
 ReactDartComponentFactoryProxy2 DefaultSkipMethodsTest = react.registerComponent(() => new _SetStateTest());
+ReactDartComponentFactoryProxy2 SkipMethodsTest =
+    react.registerComponent(() => new _SetStateTest(), ['getSnapshotBeforeUpdate']);
 
 class _SetStateTest extends react.Component2 with LifecycleTestHelper {
   @override

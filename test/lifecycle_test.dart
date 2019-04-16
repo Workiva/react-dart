@@ -207,6 +207,29 @@ main() {
             reason: 'applies the state returned by `getDerivedStateFromError`');
       });
 
+      test('can skip methods passed into _registerComponent2', () {
+        var mountNode = new DivElement();
+        var renderedInstance = react_dom.render(components2.SkipMethodsTest({}), mountNode);
+        LifecycleTestHelper component = getDartComponent(renderedInstance);
+        LifecycleTestHelper.staticLifecycleCalls.clear();
+        component.setState({"shouldThrow": true});
+
+        expect(
+            component.lifecycleCalls,
+            equals([
+              'shouldComponentUpdate',
+              'render',
+              'getDerivedStateFromError',
+              'shouldComponentUpdate',
+              'render',
+              'componentDidUpdate',
+              'componentDidCatch',
+              'shouldComponentUpdate',
+              'render',
+              'componentDidUpdate'
+            ]));
+      });
+
       test('passes the correct error/info to lifecycle methods when an error is thrown', () {
         int lengthOfKey = 15;
         var mountNode = new DivElement();
@@ -225,6 +248,10 @@ main() {
 
         expect(() {
           var renderedInstance = react_dom.render(components2.DefaultSkipMethodsTest({}), mountNode);
+          LifecycleTestHelper component = getDartComponent(renderedInstance);
+          Element renderedNode = react_dom.findDOMNode(renderedInstance);
+          LifecycleTestHelper.staticLifecycleCalls.clear();
+          component.setState({"shouldThrow": true});
         }, throwsA(anything));
       });
     });
