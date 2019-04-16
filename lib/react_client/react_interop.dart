@@ -321,7 +321,7 @@ external ReactClass createReactDartComponentClass(
 @JS('_createReactDartComponentClass2')
 external ReactClass createReactDartComponentClass2(
     ReactDartInteropStatics2 dartInteropStatics, ComponentStatics2 componentStatics,
-    [JsComponentConfig2 jsConfig, List<String> skipMethods]);
+    [JsComponentConfig2 jsConfig]);
 
 @JS('React.__isDevelopment')
 external bool get _inReactDevMode;
@@ -412,7 +412,7 @@ class ReactDartInteropStatics2 implements ReactDartInteropStatics {
         handleComponentDidUpdate,
     void Function(Component2 component) handleComponentWillUnmount,
     void Function(Component2 component, dynamic error, dynamic info) handleComponentDidCatch,
-    JsMap Function(ComponentStatics2 componentInstance, dynamic error) handleGetDerivedStateFromError,
+    JsMap Function(ComponentStatics2 instanceForStaticMethods, dynamic error) handleGetDerivedStateFromError,
     dynamic Function(Component2 component, JsMap jsProps, JsMap jsState, dynamic jsContext) handleRender,
   });
 }
@@ -423,8 +423,8 @@ class ReactDartInteropStatics2 implements ReactDartInteropStatics {
 /// passes it to certain methods in [ReactDartInteropStatics].
 ///
 /// See [ReactDartInteropStatics], [createReactDartComponentClass].
-class ComponentStatics<T extends Component> {
-  final ComponentFactory<T> componentFactory;
+class ComponentStatics {
+  final ComponentFactory<Component> componentFactory;
   ComponentStatics(this.componentFactory);
 }
 
@@ -432,11 +432,6 @@ class ComponentStatics<T extends Component> {
 ///
 /// This object is made accessible to a component's JS ReactClass config, which
 /// passes it to certain methods in [ReactDartInteropStatics2].
-///
-/// [ComponentStatics2] exists in addition to [ComponentStatics] because
-/// [Component2] brings new static lifecycle methods that are exposted via
-/// `componentInstace`. Because [Component] does not need an instance to pull
-/// static lifecycle methods from, it made sense to create [ComponentStatics2].
 ///
 /// See [ReactDartInteropStatics2], [createReactDartComponentClass2].
 class ComponentStatics2 {
@@ -474,5 +469,6 @@ class JsComponentConfig2 {
   external factory JsComponentConfig2({
     dynamic contextType,
     JsMap defaultProps,
+    List<String> skipMethods,
   });
 }

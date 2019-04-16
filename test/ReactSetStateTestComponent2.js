@@ -39,7 +39,7 @@ function getComponent2ErrorMessage(){
 }
 
 function getComponent2ErrorInfo(){
-    return _info.toString();
+    return Object.keys(_info)[0];
 }
 
 var _component2Counter;

@@ -297,7 +297,7 @@ final ReactDartInteropStatics _dartInteropStatics = (() {
 
   /// Wrapper for [Component.getInitialState].
   Component initComponent(ReactComponent jsThis, ReactDartComponentInternal internal, InteropContextValue context,
-          ComponentStatics<Component> componentStatics) =>
+          ComponentStatics componentStatics) =>
       zone.run(() {
         void jsRedraw() {
           jsThis.setState(newObject());
@@ -602,7 +602,7 @@ final ReactDartInteropStatics2 _dartInteropStatics2 = (() {
       });
 
   void handleComponentDidCatch(Component2 component, dynamic error, dynamic info) => zone.run(() {
-        component.componentDidCatch(error, info);
+        component.componentDidCatch(error, JsBackedMap.copyToDart(info));
       });
 
   JsMap handleGetDerivedStateFromError(ComponentStatics2 componentStatics, dynamic error) => zone.run(() {
@@ -767,13 +767,13 @@ ReactDartComponentFactoryProxy2 _registerComponent2(ComponentFactory<Component2>
   var jsConfig2 = new JsComponentConfig2(
     defaultProps: defaultProps.jsObject,
     contextType: componentInstance.contextType?.jsThis,
+    skipMethods: filteredSkipMethods,
   );
 
   /// Create the JS [`ReactClass` component class](https://facebook.github.io/react/docs/top-level-api.html#react.createclass)
   /// with custom JS lifecycle methods.
-  var reactComponentClass =
-      createReactDartComponentClass2(_dartInteropStatics2, componentStatics, jsConfig2, filteredSkipMethods)
-        ..displayName = componentInstance.displayName;
+  var reactComponentClass = createReactDartComponentClass2(_dartInteropStatics2, componentStatics, jsConfig2)
+    ..displayName = componentInstance.displayName;
 
   reactComponentClass.dartComponentVersion = '2';
 

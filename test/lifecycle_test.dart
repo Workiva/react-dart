@@ -183,11 +183,32 @@ main() {
         LifecycleTestHelper.staticLifecycleCalls.clear();
         component.setState({"shouldThrow": true});
 
-        expect(component.lifecycleCalls, containsAllInOrder(['getDerivedStateFromError', 'componentDidCatch']));
-        expect(component.state["shouldThrow"], isFalse);
+        // First render throws an error, caught by `getDerivedStateFromError`.
+        // `getDerivedStateFromError` sets state, starting the update cycle
+        // again. `componentDidCatch` also sets the state (storing error
+        // information), starting the update cycle again.
+        expect(
+            component.lifecycleCalls,
+            equals([
+              'shouldComponentUpdate',
+              'render',
+              'getDerivedStateFromError',
+              'shouldComponentUpdate',
+              'render',
+              'getSnapshotBeforeUpdate',
+              'componentDidUpdate',
+              'componentDidCatch',
+              'shouldComponentUpdate',
+              'render',
+              'getSnapshotBeforeUpdate',
+              'componentDidUpdate'
+            ]));
+        expect(component.state["shouldThrow"], isFalse,
+            reason: 'applies the state returned by `getDerivedStateFromError`');
       });
 
-      test('shows the correct error and info when an error is thrown', () {
+      test('passes the correct error/info to lifecycle methods when an error is thrown', () {
+        int lengthOfKey = 15;
         var mountNode = new DivElement();
         var renderedInstance = react_dom.render(components2.SetStateTest({}), mountNode);
         LifecycleTestHelper component = getDartComponent(renderedInstance);
@@ -196,7 +217,15 @@ main() {
         component.setState({"shouldThrow": true});
 
         expect(renderedNode.children[1].text.contains(getComponent2ErrorMessage()), isTrue);
-        expect(renderedNode.children[2].text, getComponent2ErrorInfo());
+        expect(renderedNode.children[2].text.substring(1, lengthOfKey), getComponent2ErrorInfo());
+      });
+
+      test('defaults toward not being an error boundary', () {
+        var mountNode = new DivElement();
+
+        expect(() {
+          var renderedInstance = react_dom.render(components2.DefaultSkipMethodsTest({}), mountNode);
+        }, throwsA(anything));
       });
     });
   });
@@ -1105,4 +1134,4 @@ external String getComponent2NonUpdatingRenderedCounter();
 external String getComponent2ErrorMessage();
 
 @JS()
-external String getComponent2ErrorInfo();
+external dynamic getComponent2ErrorInfo();

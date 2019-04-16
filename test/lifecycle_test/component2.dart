@@ -8,6 +8,7 @@ import 'package:react/react_client.dart';
 import 'util.dart';
 
 ReactDartComponentFactoryProxy2 SetStateTest = react.registerComponent(() => new _SetStateTest(), [null]);
+ReactDartComponentFactoryProxy2 DefaultSkipMethodsTest = react.registerComponent(() => new _SetStateTest());
 
 class _SetStateTest extends react.Component2 with LifecycleTestHelper {
   @override
@@ -207,7 +208,7 @@ class _LifecycleTest extends react.Component2 with LifecycleTestHelper {
   void componentDidUpdate(prevProps, prevState, [snapshot]) =>
       lifecycleCall('componentDidUpdate', arguments: [new Map.from(prevProps), new Map.from(prevState), snapshot]);
 
-  void componentDidCatch(error, info) => lifecycleCall('componentDidCatch', arguments: [error, new Map.from(info)]);
+  void componentDidCatch(error, info) => lifecycleCall('componentDidCatch', arguments: [error, info]);
 
   Map getDerivedStateFromError(error) => lifecycleCall('getDerivedStateFromError', arguments: [error]);
 

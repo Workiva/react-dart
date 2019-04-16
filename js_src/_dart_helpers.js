@@ -79,7 +79,7 @@ function _createReactDartComponentClass(dartInteropStatics, componentStatics, js
   return ReactDartComponent;
 }
 
-function _createReactDartComponentClass2(dartInteropStatics, componentStatics, jsConfig, skipMethods) {
+function _createReactDartComponentClass2(dartInteropStatics, componentStatics, jsConfig) {
   class ReactDartComponent2 extends React.Component {
     constructor(props, context) {
       super(props, context);
@@ -117,11 +117,7 @@ function _createReactDartComponentClass2(dartInteropStatics, componentStatics, j
   }
 
   // Delete methods that the user does not want to include (such as error boundary event).
-  skipMethods.forEach((method) => {
-    if (ReactDartComponent2[method] !== undefined) {
-      delete ReactDartComponent2[method];
-    }
-  });
+  jsConfig.skipMethods.forEach((method) => delete ReactDartComponent2.prototype[method]);
 
   if (jsConfig) {
     if (jsConfig.contextType) {

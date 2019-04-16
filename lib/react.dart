@@ -727,7 +727,7 @@ abstract class Component2 implements Component {
   /// [getDerivedStateFromError] will be ignored.
   ///
   /// See: <https://facebook.github.io/react/docs/react-component.html#componentdidcatch>
-  void componentDidCatch(dynamic error, dynamic info) {}
+  void componentDidCatch(dynamic error, Map info) {}
 
   /// ReactJS lifecycle method that is invoked after an error is thrown by a
   /// descendant.
