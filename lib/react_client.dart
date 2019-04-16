@@ -501,7 +501,7 @@ final ReactDartInteropStatics2 _dartInteropStatics2 = (() {
         if (component.state != null) {
           jsThis.state = new JsBackedMap.from(jsThis.dartComponent.state).jsObject;
         }
-        
+
         return component;
       });
 
