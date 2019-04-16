@@ -180,26 +180,21 @@ main() {
 
       group('getDerivedStateFromProps returns', () {
         test('derived state, resulting in an updated instance state value', () {
-          const Map initialState = const {
-            'initialState': 'initial',
+          const Map initialDerivedState = const {
+            'initialDerivedState': 'initial',
           };
 
-          final Map initialProps = unmodifiableMap({'getDerivedStateFromProps': (_, __, ___) => initialState});
-          final Map expectedProps = unmodifiableMap(defaultProps, initialProps, emptyChildrenProps);
+          final Map initialProps = unmodifiableMap({'getDerivedStateFromProps': (_, __, ___) => initialDerivedState});
 
           LifecycleTestHelper component = getDartComponent(render(components2.LifecycleTest(initialProps)));
-
-          component.lifecycleCalls.clear();
-
-          (component as react.Component2).forceUpdate();
 
           expect(
               component.lifecycleCalls,
               equals([
+                matchCall('getInitialState'),
                 matchCall('getDerivedStateFromProps'),
-                matchCall('render', state: initialState),
-                matchCall('getSnapshotBeforeUpdate', args: [expectedProps, initialState], state: initialState),
-                matchCall('componentDidUpdate', args: [expectedProps, initialState, null], state: initialState),
+                matchCall('render', state: initialDerivedState),
+                matchCall('componentDidMount', state: initialDerivedState),
               ].where((matcher) => matcher != null).toList()));
         });
 
@@ -606,7 +601,7 @@ void sharedLifecycleTests<T extends react.Component>({
       expect(
           component.lifecycleCalls,
           equals([
-            isComponent2 ? matchCall('getDerivedStateFromProps') : null,
+            isComponent2 ? matchCall('getDerivedStateFromProps', args: [newPropsWithDefaults, expectedState]) : null,
             !isComponent2
                 ? matchCall('componentWillReceiveProps', args: [newPropsWithDefaults], props: initialPropsWithDefaults)
                 : null,
@@ -669,7 +664,7 @@ void sharedLifecycleTests<T extends react.Component>({
       expect(
           component.lifecycleCalls,
           equals([
-            isComponent2 ? matchCall('getDerivedStateFromProps') : null,
+            isComponent2 ? matchCall('getDerivedStateFromProps', args: [expectedProps, newState]) : null,
             skipLegacyContextTests
                 ? matchCall('shouldComponentUpdate', args: [expectedProps, newState, newContext], state: initialState)
                 : matchCall('shouldComponentUpdateWithContext',
@@ -714,7 +709,7 @@ void sharedLifecycleTests<T extends react.Component>({
       expect(
           component.lifecycleCalls,
           equals([
-            isComponent2 ? matchCall('getDerivedStateFromProps') : null,
+            isComponent2 ? matchCall('getDerivedStateFromProps', args: [expectedProps, initialState]) : null,
             skipLegacyContextTests
                 ? matchCall('shouldComponentUpdate',
                     args: [expectedProps, initialState, newContext], state: initialState)
@@ -895,7 +890,7 @@ void sharedLifecycleTests<T extends react.Component>({
         react_dom.render(LifecycleTest(newProps), mountNode);
 
         List calls = [
-          isComponent2 ? matchCall('getDerivedStateFromProps') : null,
+          isComponent2 ? matchCall('getDerivedStateFromProps', args: [newPropsWithDefaults, expectedState]) : null,
           isComponent2
               ? null
               : matchCall('componentWillReceiveProps', args: [newPropsWithDefaults], props: initialPropsWithDefaults),
