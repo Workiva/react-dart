@@ -4,17 +4,29 @@ library react.lifecycle_test.component2;
 import "package:js/js.dart";
 import 'package:react/react.dart' as react;
 import 'package:react/react_client.dart';
+import 'package:react/react_client/react_interop.dart';
 
 import 'util.dart';
 
-ReactDartComponentFactoryProxy2 SetStateTest = react.registerComponent(() => new _SetStateTest());
+ReactDartComponentFactoryProxy2 SetStateTest = react.registerComponent(() => new _SetStateTest(), [null]);
+ReactDartComponentFactoryProxy2 DefaultSkipMethodsTest = react.registerComponent(() => new _SetStateTest());
+ReactDartComponentFactoryProxy2 SkipMethodsTest =
+    react.registerComponent(() => new _SetStateTest(), ['getSnapshotBeforeUpdate']);
 
 class _SetStateTest extends react.Component2 with LifecycleTestHelper {
   @override
-  Map getDefaultProps() => {'shouldUpdate': true};
+  Map getDefaultProps() => {
+        'shouldUpdate': true,
+      };
 
   @override
-  getInitialState() => {"counter": 1};
+  getInitialState() => {
+        'counter': 1,
+        'shouldThrow': true,
+        'errorFromGetDerivedState': '',
+        'error': '',
+        'info': '',
+      };
 
   @override
   Map getDerivedStateFromProps(_, __) {
@@ -38,6 +50,18 @@ class _SetStateTest extends react.Component2 with LifecycleTestHelper {
     return props['shouldUpdate'] as bool;
   }
 
+  @override
+  componentDidCatch(dynamic error, ReactErrorInfo info) {
+    recordLifecyleCall('componentDidCatch');
+    this.setState({'error': error, 'info': info.componentStack});
+  }
+
+  @override
+  Map getDerivedStateFromError(error) {
+    recordLifecyleCall('getDerivedStateFromError');
+    return {"shouldThrow": false, "errorFromGetDerivedState": error};
+  }
+
   Map outerTransactionalSetStateCallback(Map previousState, __) {
     recordLifecyleCall('outerTransactionalSetStateCallback');
     return {'counter': previousState['counter'] + 1};
@@ -56,22 +80,46 @@ class _SetStateTest extends react.Component2 with LifecycleTestHelper {
   render() {
     recordLifecyleCall('render');
 
-    return react.div(
-      {
+    if (!state['shouldThrow']) {
+      return react.div({
         'onClick': (_) {
           setStateWithUpdater(outerTransactionalSetStateCallback, () {
             recordLifecyleCall('outerSetStateCallback');
           });
         }
-      },
-      react.div({
-        'onClick': (_) {
-          setStateWithUpdater(innerTransactionalSetStateCallback, () {
-            recordLifecyleCall('innerSetStateCallback');
-          });
-        }
-      }, state['counter']),
-    );
+      }, [
+        react.div({
+          'onClick': (_) {
+            setStateWithUpdater(innerTransactionalSetStateCallback, () {
+              recordLifecyleCall('innerSetStateCallback');
+            });
+          },
+          'key': 'c1',
+        }, state['counter']),
+        react.div({'key': 'c2'}, state['error'].toString()),
+        react.div({'key': 'c3'}, state['info'].toString()),
+        react.div({'key': 'c4'}, state['errorFromGetDerivedState'].toString()),
+      ]);
+    } else {
+      return react.div(
+          {
+            'onClick': (_) {
+              setStateWithUpdater(outerTransactionalSetStateCallback, () {
+                recordLifecyleCall('outerSetStateCallback');
+              });
+            }
+          },
+          react.div({
+            'onClick': (_) {
+              setStateWithUpdater(innerTransactionalSetStateCallback, () {
+                recordLifecyleCall('innerSetStateCallback');
+              });
+            }
+          }, [
+            state["shouldThrow"] ? ErrorComponent({"key": "errorComp"}) : null,
+            state['counter']
+          ]));
+    }
   }
 }
 
@@ -134,6 +182,19 @@ class _LifecycleTestWithContext extends _LifecycleTest {
   get contextType => LifecycleTestContext;
 }
 
+ReactDartComponentFactoryProxy2 ErrorComponent = react.registerComponent(() => new _ErrorComponent());
+
+class _ErrorComponent extends react.Component2 {
+  void _throwError() {
+    throw "It crashed!";
+  }
+
+  void render() {
+    _throwError();
+    return react.div({'key': 'defaultMessage'}, "Error");
+  }
+}
+
 ReactDartComponentFactoryProxy2 LifecycleTest = react.registerComponent(() => new _LifecycleTest());
 
 class _LifecycleTest extends react.Component2 with LifecycleTestHelper {
@@ -152,6 +213,10 @@ class _LifecycleTest extends react.Component2 with LifecycleTestHelper {
 
   void componentDidUpdate(prevProps, prevState, [snapshot]) =>
       lifecycleCall('componentDidUpdate', arguments: [new Map.from(prevProps), new Map.from(prevState), snapshot]);
+
+  void componentDidCatch(error, info) => lifecycleCall('componentDidCatch', arguments: [error, info]);
+
+  Map getDerivedStateFromError(error) => lifecycleCall('getDerivedStateFromError', arguments: [error]);
 
   bool shouldComponentUpdate(nextProps, nextState, [nextContext]) => lifecycleCall('shouldComponentUpdate',
       arguments: [new Map.from(nextProps), new Map.from(nextState), nextContext], defaultReturnValue: () => true);
