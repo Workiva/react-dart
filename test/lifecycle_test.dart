@@ -227,7 +227,7 @@ main() {
               'shouldComponentUpdate',
               'render',
               'componentDidUpdate'
-            ]));
+            ]), reason: 'should have skipped getSnapshotBeforeUpdate');
       });
 
       test('passes the correct error/info to lifecycle methods when an error is thrown', () {
@@ -239,9 +239,9 @@ main() {
         LifecycleTestHelper.staticLifecycleCalls.clear();
         component.setState({"shouldThrow": true});
 
-        expect(renderedNode.children[1].text.contains(getComponent2ErrorMessage()), isTrue);
+        expect(renderedNode.children[1].text, contains(getComponent2ErrorMessage()));
         expect(renderedNode.children[2].text.substring(1, lengthOfKey), getComponent2ErrorInfo());
-        expect(renderedNode.children[3].text.contains(getComponent2ErrorFromDerivedState()), isTrue);
+        expect(renderedNode.children[3].text, contains(getComponent2ErrorFromDerivedState()));
       });
 
       test('defaults toward not being an error boundary', () {

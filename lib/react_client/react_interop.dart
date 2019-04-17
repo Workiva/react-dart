@@ -437,7 +437,7 @@ class ComponentStatics {
 class ComponentStatics2 {
   final ComponentFactory<Component2> componentFactory;
   final Component2 instanceForStaticMethods;
-  ComponentStatics2(this.componentFactory, {this.instanceForStaticMethods});
+  ComponentStatics2(this.componentFactory, {@required this.instanceForStaticMethods});
 }
 
 /// Additional configuration passed to [createReactDartComponentClass]
@@ -469,6 +469,6 @@ class JsComponentConfig2 {
   external factory JsComponentConfig2({
     dynamic contextType,
     JsMap defaultProps,
-    List<String> skipMethods,
+    @required skipMethods: filteredSkipMethods,
   });
 }
