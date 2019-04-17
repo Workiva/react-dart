@@ -768,7 +768,7 @@ abstract class Component2 implements Component {
   ///    class MyClass extends react.Component2 {
   ///      @override
   ///      void init() {
-  ///        this.state = { 'foo': 0, 'bar': 1};
+  ///        this.state = {'foo': 0, 'bar': 1};
   ///      }
   ///    }
   void init() {}

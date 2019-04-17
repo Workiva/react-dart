@@ -677,7 +677,7 @@ void sharedLifecycleTests<T extends react.Component>({
     });
 
     if (isComponent2) {
-      test('init testing', () {
+      test('initializes state with the value set in `init`', () {
         const Map initialState = const {
           'initialState': 'initial',
         };
@@ -690,16 +690,16 @@ void sharedLifecycleTests<T extends react.Component>({
         expect(
             component.lifecycleCalls,
             equals([
-              matchCall('init', props: expectedProps),
-              matchCall('getInitialState', props: expectedProps),
-              matchCall('render', props: expectedProps),
-              matchCall('componentDidMount', props: expectedProps)
+              matchCall('init', props: expectedProps, state: null),
+              matchCall('getInitialState', props: expectedProps, state: initialState),
+              matchCall('render', props: expectedProps, state: {}),
+              matchCall('componentDidMount', props: expectedProps, state: {})
             ].where((matcher) => matcher != null)));
       });
     }
 
     if (isComponent2) {
-      test('init testing throw :)', () {
+      test('throws when state is initialized in both init and getInitialState', () {
         const Map initialState = const {
           'initialState': 'initial',
         };
