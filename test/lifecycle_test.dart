@@ -338,14 +338,21 @@ void sharedLifecycleTests<T extends react.Component>({
           ]));
     });
 
-    if (!skipLegacyContextTests && isComponent2) {
+    if (!isComponent2) {
       test('does not call getChildContext when childContextKeys is empty', () {
         var mountNode = new DivElement();
         var instance =
             react_dom.render(ContextWrapperWithoutKeys({'foo': false}, LifecycleTestWithContext({})), mountNode);
         LifecycleTestHelper component = getDartComponent(instance);
 
-        expect(component.lifecycleCalls, isEmpty);
+        expect(
+            component.lifecycleCalls,
+            equals([
+              matchCall('getInitialState'),
+              matchCall('componentWillMount'),
+              matchCall('render'),
+              matchCall('componentDidMount'),
+            ]));
       });
 
       test('calls getChildContext when childContextKeys exist', () {
@@ -357,6 +364,10 @@ void sharedLifecycleTests<T extends react.Component>({
             component.lifecycleCalls,
             equals([
               matchCall('getChildContext'),
+              matchCall('getInitialState'),
+              matchCall('componentWillMount'),
+              matchCall('render'),
+              matchCall('componentDidMount'),
             ]));
       });
 
@@ -397,7 +408,6 @@ void sharedLifecycleTests<T extends react.Component>({
             equals([
               matchCall('getChildContext'),
               matchCall('getInitialState', props: initialPropsWithDefaults, context: initialContext),
-              matchCall('getDerivedStateFromProps'),
               matchCall('componentWillMount', props: initialPropsWithDefaults, context: initialContext),
               matchCall('render', props: initialPropsWithDefaults, context: initialContext),
               matchCall('componentDidMount', props: initialPropsWithDefaults, context: initialContext),
@@ -475,7 +485,7 @@ void sharedLifecycleTests<T extends react.Component>({
             component.lifecycleCalls,
             equals([
               matchCall('getInitialState', props: initialProps, context: initialContext),
-              matchCall('getDerivedStateFromProps'),
+              matchCall('getDerivedStateFromProps', args: [initialProps, expectedState]),
               matchCall('render', props: initialProps, context: initialContext),
               matchCall('componentDidMount', props: initialProps, context: initialContext),
             ]));
