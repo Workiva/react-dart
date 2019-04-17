@@ -452,7 +452,7 @@ var component2TestComponent = react.registerComponent(() => new _Component2TestC
 class _ErrorComponent extends react.Component2 {
   void componentDidMount() {
     if (!props["errored"]) {
-      throw new _JoesException("It broke!", 2);
+      throw new _CustomException("It broke!", 2);
     }
   }
 
@@ -466,21 +466,21 @@ class _ErrorComponent extends react.Component2 {
 
 var ErrorComponent = react.registerComponent(() => new _ErrorComponent());
 
-class _JoesException implements Exception {
+class _CustomException implements Exception {
   int code;
   String message;
-  String randoMessage;
+  String randomMessage;
 
-  _JoesException(this.message, this.code) {
+  _CustomException(this.message, this.code) {
     switch (code) {
       case 1:
-        randoMessage = "The code is a 1";
+        randomMessage = "The code is a 1";
         break;
       case 2:
-        randoMessage = "The Code is a 2";
+        randomMessage = "The Code is a 2";
         break;
       default:
-        randoMessage = "Whaaaaaa";
+        randomMessage = "Default Error Code";
     }
   }
 }
