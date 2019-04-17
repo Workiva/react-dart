@@ -187,9 +187,9 @@ main() {
             'initialDerivedState': 'updated',
           };
 
-          final Map initialProps = {'getDerivedStateFromProps': (_, __, ___) => initialDerivedState};
+          final Map initialProps = unmodifiableMap({'getDerivedStateFromProps': (_, __, ___) => initialDerivedState, 'defaultProp': 'default', 'children': []});
 
-          final Map updatedProps = {'getDerivedStateFromProps': (_, __, ___) => updatedDerivedState};
+          final Map updatedProps = unmodifiableMap({'getDerivedStateFromProps': (_, __, ___) => updatedDerivedState, 'defaultProp': 'default', 'children': []});
 
           var mountNode = new DivElement();
           var instance = react_dom.render(components2.LifecycleTest(initialProps), mountNode);
@@ -200,10 +200,7 @@ main() {
               component.lifecycleCalls,
               equals([
                 matchCall('getInitialState'),
-                matchCall('getDerivedStateFromProps', args: [
-                  initialProps..addAll({'defaultProp': 'default', 'children': []}),
-                  {}
-                ]),
+                matchCall('getDerivedStateFromProps', args: [initialProps, {}]),
                 matchCall('render', state: initialDerivedState),
                 matchCall('componentDidMount', state: initialDerivedState),
               ].where((matcher) => matcher != null).toList()));
@@ -216,10 +213,7 @@ main() {
           expect(
               component.lifecycleCalls,
               equals([
-                matchCall('getDerivedStateFromProps', args: [
-                  updatedProps..addAll({'defaultProp': 'default', 'children': []}),
-                  initialDerivedState
-                ]),
+                matchCall('getDerivedStateFromProps', args: [updatedProps, initialDerivedState]),
                 matchCall('shouldComponentUpdate'),
                 matchCall('render', state: updatedDerivedState),
                 matchCall('getSnapshotBeforeUpdate'),
@@ -232,7 +226,7 @@ main() {
             'foo': 'sudo',
           };
           final Map initialProps = unmodifiableMap(
-              {'getDerivedStateFromProps': (_, __, ___) => null, 'getInitialState': (_) => initialState});
+              {'getDerivedStateFromProps': (_, __, ___) => null, 'getInitialState': (_) => initialState,});
 
           final Map expectedProps = unmodifiableMap(defaultProps, initialProps, emptyChildrenProps);
 

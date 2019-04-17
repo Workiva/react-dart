@@ -31,7 +31,7 @@ class _SetStateTest extends react.Component2 with LifecycleTestHelper {
   @override
   Map getDerivedStateFromProps(_, __) {
     recordLifecyleCall('getDerivedStateFromProps');
-    return new Map();
+    return {};
   }
 
   @override
