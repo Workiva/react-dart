@@ -110,12 +110,27 @@ function _createReactDartComponentClass2(dartInteropStatics, componentStatics, j
     componentWillUnmount() {
       dartInteropStatics.handleComponentWillUnmount(this.dartComponent);
     }
+    componentDidCatch(error, info) {
+      dartInteropStatics.handleComponentDidCatch(this.dartComponent, error, info);
+    }
+    static getDerivedStateFromError(error) {
+      return dartInteropStatics.handleGetDerivedStateFromError(componentStatics, error);
+    }
     render() {
       var result = dartInteropStatics.handleRender(this.dartComponent, this.props, this.state, this.context);
       if (typeof result === 'undefined') result = null;
       return result;
     }
   }
+
+  // Delete methods that the user does not want to include (such as error boundary event).
+  jsConfig.skipMethods.forEach((method) => {
+    if (ReactDartComponent2[method]) {
+      delete ReactDartComponent2[method];
+    } else {
+      delete ReactDartComponent2.prototype[method];
+    }
+  });
 
   if (jsConfig) {
     if (jsConfig.contextType) {

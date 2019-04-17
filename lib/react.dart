@@ -8,6 +8,7 @@ library react;
 import 'package:meta/meta.dart';
 import 'package:react/src/typedefs.dart';
 import 'package:react/react_client.dart';
+import 'package:react/react_client/react_interop.dart' show ReactErrorInfo;
 
 typedef T ComponentFactory<T extends Component>();
 typedef ReactComponentFactoryProxy ComponentRegistrar(ComponentFactory componentFactory,
@@ -719,6 +720,36 @@ abstract class Component2 implements Component {
   ///
   /// See: <https://facebook.github.io/react/docs/react-component.html#unmounting-componentwillunmount>
   void componentWillUnmount() {}
+
+  /// ReactJS lifecycle method that is invoked after an error is thrown by a
+  /// descendant.
+  ///
+  /// Use this method primarily for logging errors, but because it takes
+  /// place after the commit phase side-effects are permitted.
+  ///
+  /// __Note__: This method, along with [getDerivedStateFromError] will only
+  /// be called if `skipMethods` in [registerComponent2] is overridden with
+  /// a list (which can be empty). Otherwise, in order to prevent every
+  /// component from being an error boundary, [componentDidCatch] and
+  /// [getDerivedStateFromError] will be ignored.
+  ///
+  /// See: <https://facebook.github.io/react/docs/react-component.html#componentdidcatch>
+  void componentDidCatch(dynamic error, ReactErrorInfo info) {}
+
+  /// ReactJS lifecycle method that is invoked after an error is thrown by a
+  /// descendant.
+  ///
+  /// Use this method to capture the error and update component state after an
+  /// error is thrown.
+  ///
+  /// __Note__: This method, along with [componentDidCatch] will only
+  /// be called if `skipMethods` in [registerComponent2] is overridden with
+  /// a list (which can be empty). Otherwise, in order to prevent every
+  /// component from being an error boundary, [componentDidCatch] and
+  /// [getDerivedStateFromError] will be ignored.
+  ///
+  /// See: <https://reactjs.org/docs/react-component.html#static-getderivedstatefromerror>
+  Map getDerivedStateFromError(dynamic error) {}
 
   /// Invoked once before the `Component` is mounted. The return value will be used as the initial value of [state].
   ///
@@ -1489,6 +1520,12 @@ class SyntheticWheelEvent extends SyntheticEvent {
 /// Registers [componentFactory] on both client and server.
 /*ComponentRegistrar*/ Function registerComponent =
     (/*ComponentFactory*/ componentFactory, [/*Iterable<String>*/ skipMethods]) {
+  throw new Exception('setClientConfiguration must be called before registerComponent.');
+};
+
+/// Registers [componentFactory] on both client and server.
+/*ComponentRegistrar*/ Function registerComponent2 = (/*ComponentFactory*/ componentFactory,
+    [/*Iterable<String>*/ skipMethods = const ['getDerivedStateFromError', 'componentDidCatch']]) {
   throw new Exception('setClientConfiguration must be called before registerComponent.');
 };
 
