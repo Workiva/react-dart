@@ -766,18 +766,12 @@ abstract class Component2 implements Component {
   ///
   /// __Example__:
   ///
-  ///    void initComponent(jsThis, componentStatics) {
-  ///      var dartComponent = componentStatics.componentFactory();
+  ///    class MyClass extends react.Component2 {
+  ///      Map initialState = { foo: 0, bar: 1};
   ///
-  ///      // New lifecycle method baybeeee
-  ///      dartComponent.init();
-  ///
-  ///      // Sync the JS component's state the component's state
-  ///      if (jsThis.dartComponent.state != null) {
-  ///        jsThis.state = new JsBackedMap.from(jsThis.dartComponent.state).jsMap;
+  ///      void init() {
+  ///        this.state = initialState;
   ///      }
-  ///
-  ///      return dartComponent;
   ///    }
   void init() {}
 
