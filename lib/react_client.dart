@@ -601,8 +601,8 @@ final ReactDartInteropStatics2 _dartInteropStatics2 = (() {
         component.componentWillUnmount();
       });
 
-  void handleComponentDidCatch(Component2 component, dynamic error, dynamic info) => zone.run(() {
-        component.componentDidCatch(error, JsBackedMap.copyToDart(info));
+  void handleComponentDidCatch(Component2 component, dynamic error, ReactErrorInfo info) => zone.run(() {
+        component.componentDidCatch(error, info);
       });
 
   JsMap handleGetDerivedStateFromError(ComponentStatics2 componentStatics, dynamic error) => zone.run(() {

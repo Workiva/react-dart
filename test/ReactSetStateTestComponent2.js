@@ -39,7 +39,7 @@ function getComponent2ErrorMessage(){
 }
 
 function getComponent2ErrorInfo(){
-    return Object.keys(_info)[0];
+    return _info.componentStack;
 }
 
 function getComponent2ErrorFromDerivedState(){

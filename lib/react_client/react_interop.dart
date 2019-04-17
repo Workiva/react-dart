@@ -6,6 +6,7 @@ library react_client.react_interop;
 
 import 'dart:html';
 
+import 'package:meta/meta.dart';
 import 'package:js/js.dart';
 import 'package:react/react.dart';
 import 'package:react/react_client.dart' show ComponentFactory;
@@ -411,7 +412,7 @@ class ReactDartInteropStatics2 implements ReactDartInteropStatics {
     )
         handleComponentDidUpdate,
     void Function(Component2 component) handleComponentWillUnmount,
-    void Function(Component2 component, dynamic error, dynamic info) handleComponentDidCatch,
+    void Function(Component2 component, dynamic error, ReactErrorInfo info) handleComponentDidCatch,
     JsMap Function(ComponentStatics2 instanceForStaticMethods, dynamic error) handleGetDerivedStateFromError,
     dynamic Function(Component2 component, JsMap jsProps, JsMap jsState, dynamic jsContext) handleRender,
   });
@@ -469,6 +470,16 @@ class JsComponentConfig2 {
   external factory JsComponentConfig2({
     dynamic contextType,
     JsMap defaultProps,
-    @required skipMethods: filteredSkipMethods,
+    @required List<String> skipMethods,
   });
+}
+
+/// Information on an error caught by `componentDidCatch`.
+@JS()
+@anonymous
+class ReactErrorInfo {
+  /// The component stack trace associated with this error.
+  ///
+  /// See: https://reactjs.org/docs/error-boundaries.html#component-stack-traces
+  String componentStack;
 }

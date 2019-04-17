@@ -4,6 +4,7 @@ library react.lifecycle_test.component2;
 import "package:js/js.dart";
 import 'package:react/react.dart' as react;
 import 'package:react/react_client.dart';
+import 'package:react/react_client/react_interop.dart';
 
 import 'util.dart';
 
@@ -49,9 +50,10 @@ class _SetStateTest extends react.Component2 with LifecycleTestHelper {
   }
 
   @override
-  componentDidCatch(error, info) {
+  componentDidCatch(dynamic error, ReactErrorInfo info) {
     recordLifecyleCall('componentDidCatch');
-    this.setState({'error': error, 'info': info});
+    print(info.componentStack);
+    this.setState({'error': error, 'info': info.componentStack});
   }
 
   @override

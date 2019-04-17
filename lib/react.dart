@@ -8,6 +8,7 @@ library react;
 import 'package:meta/meta.dart';
 import 'package:react/src/typedefs.dart';
 import 'package:react/react_client.dart';
+import 'package:react/react_client/react_interop.dart' show ReactErrorInfo;
 
 typedef T ComponentFactory<T extends Component>();
 typedef ReactComponentFactoryProxy ComponentRegistrar(ComponentFactory componentFactory,
@@ -727,7 +728,7 @@ abstract class Component2 implements Component {
   /// [getDerivedStateFromError] will be ignored.
   ///
   /// See: <https://facebook.github.io/react/docs/react-component.html#componentdidcatch>
-  void componentDidCatch(dynamic error, Map info) {}
+  void componentDidCatch(dynamic error, ReactErrorInfo info) {}
 
   /// ReactJS lifecycle method that is invoked after an error is thrown by a
   /// descendant.

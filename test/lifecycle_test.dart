@@ -227,11 +227,11 @@ main() {
               'shouldComponentUpdate',
               'render',
               'componentDidUpdate'
-            ]), reason: 'should have skipped getSnapshotBeforeUpdate');
+            ]),
+            reason: 'should have skipped getSnapshotBeforeUpdate');
       });
 
       test('passes the correct error/info to lifecycle methods when an error is thrown', () {
-        int lengthOfKey = 15;
         var mountNode = new DivElement();
         var renderedInstance = react_dom.render(components2.SetStateTest({}), mountNode);
         LifecycleTestHelper component = getDartComponent(renderedInstance);
@@ -240,7 +240,8 @@ main() {
         component.setState({"shouldThrow": true});
 
         expect(renderedNode.children[1].text, contains(getComponent2ErrorMessage()));
-        expect(renderedNode.children[2].text.substring(1, lengthOfKey), getComponent2ErrorInfo());
+        expect(renderedNode.children[2].text.contains('ErrorComponent'),
+            getComponent2ErrorInfo().contains('ErrorComponent'));
         expect(renderedNode.children[3].text, contains(getComponent2ErrorFromDerivedState()));
       });
 
