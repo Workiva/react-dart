@@ -240,8 +240,13 @@ main() {
         component.setState({"shouldThrow": true});
 
         expect(renderedNode.children[1].text, contains(getComponent2ErrorMessage()));
-        expect(renderedNode.children[2].text.contains('ErrorComponent'),
-            getComponent2ErrorInfo().contains('ErrorComponent'));
+        // Because the stacktrace will be different between JS and Dart, in
+        // addition to DDC vs dart2js, the string 'created by' is checked
+        // for. It is a commonality indicating that the stacktrace is
+        // produced correctly.
+        expect(renderedNode.children[2].text.contains('Created By'), getComponent2ErrorInfo().contains('Created By'),
+            reason: 'Check '
+                'to make sure callstack is accessible');
         expect(renderedNode.children[3].text, contains(getComponent2ErrorFromDerivedState()));
       });
 
