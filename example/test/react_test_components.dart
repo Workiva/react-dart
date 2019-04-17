@@ -394,6 +394,16 @@ class _Component2TestComponent extends react.Component2 with react.TypedSnapshot
     };
   }
 
+  Map getDerivedStateFromProps(nextProps, prevState) {
+    final prevItems = prevState['items'];
+    if (prevItems.isEmpty || prevItems[0] != 3) {
+      return ({
+        'items': new List.from([3, 1, 2, 0])
+      });
+    }
+    return null;
+  }
+
   String getSnapshotBeforeUpdate(nextProps, prevState) {
     if (prevState["items"].length > state["items"].length) {
       return "removed " + prevState["items"].last.toString();
@@ -423,9 +433,12 @@ class _Component2TestComponent extends react.Component2 with react.TypedSnapshot
   }
 
   dynamic render() {
-    List<dynamic> items = [];
+    // Used to generate unique keys even when the list contains duplicate items
+    final itemCounts = <dynamic, int>{};
+    final items = [];
     for (var item in state['items']) {
-      items.add(react.li({"key": "c2" + item.toString()}, "$item"));
+      final count = itemCounts[item] = (itemCounts[item] ?? 0) + 1;
+      items.add(react.li({'key': 'c2-$item-$count'}, "$item"));
     }
 
     return react.div({}, [

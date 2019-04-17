@@ -541,6 +541,7 @@ final ReactDartInteropStatics2 _dartInteropStatics2 = (() {
         return jsBackingMapOrJsCopy(component.getInitialState());
       });
 
+  // TODO: we should review if we need to support the deprecated will methods in component2
   void handleComponentWillMount(Component2 component, ReactComponent jsThis) => zone.run(() {
         component
           ..state = new JsBackedMap.backedBy(jsThis.state)
@@ -549,10 +550,6 @@ final ReactDartInteropStatics2 _dartInteropStatics2 = (() {
 
   void handleComponentDidMount(Component2 component) => zone.run(() {
         component.componentDidMount();
-      });
-
-  void handleComponentWillReceiveProps(Component2 component, JsMap jsNextProps) => zone.run(() {
-        component.componentWillReceiveProps(new JsBackedMap.backedBy(jsNextProps));
       });
 
   void _updatePropsAndStateWithJs(Component2 component, JsMap props, JsMap state, dynamic context) {
@@ -576,6 +573,16 @@ final ReactDartInteropStatics2 _dartInteropStatics2 = (() {
         }
 
         return value;
+      });
+
+  JsMap handleGetDerivedStateFromProps(ComponentStatics2 componentStatics, JsMap jsNextProps, JsMap jsPrevState) =>
+      zone.run(() {
+        var derivedState = componentStatics.instanceForStaticMethods
+            .getDerivedStateFromProps(new JsBackedMap.backedBy(jsNextProps), new JsBackedMap.backedBy(jsPrevState));
+        if (derivedState != null) {
+          return jsBackingMapOrJsCopy(derivedState);
+        }
+        return null;
       });
 
   dynamic handleGetSnapshotBeforeUpdate(Component2 component, JsMap jsPrevProps, JsMap jsPrevState) => zone.run(() {
@@ -617,9 +624,10 @@ final ReactDartInteropStatics2 _dartInteropStatics2 = (() {
   return new ReactDartInteropStatics2(
     initComponent: allowInterop(initComponent),
     handleGetInitialState: allowInterop(handleGetInitialState),
+    // TODO: we should review if we need to support the deprecated will methods in component2
     handleComponentWillMount: allowInterop(handleComponentWillMount),
     handleComponentDidMount: allowInterop(handleComponentDidMount),
-    handleComponentWillReceiveProps: allowInterop(handleComponentWillReceiveProps),
+    handleGetDerivedStateFromProps: allowInterop(handleGetDerivedStateFromProps),
     handleShouldComponentUpdate: allowInterop(handleShouldComponentUpdate),
     handleGetSnapshotBeforeUpdate: allowInterop(handleGetSnapshotBeforeUpdate),
     handleComponentDidUpdate: allowInterop(handleComponentDidUpdate),
