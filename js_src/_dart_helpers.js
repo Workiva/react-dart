@@ -87,8 +87,8 @@ function _createReactDartComponentClass2(dartInteropStatics, componentStatics, j
       this.dartComponent = dartInteropStatics.initComponent(this, componentStatics);
       const initialStateFromGetInitialState =
       dartInteropStatics.handleGetInitialState(this.dartComponent);
-      if (this.state && initialStateFromGetInitialState) {
-        throw 'Error: Init and getInitialState cannot be used at the same time.';
+      if (this.state && Object.keys(initialStateFromGetInitialState).length != 0) {
+        throw 'Error: State cannot be initialized in both init and getInitialState';
       } else {
         this.state = initialStateFromGetInitialState;
       }
