@@ -187,9 +187,17 @@ main() {
             'initialDerivedState': 'updated',
           };
 
-          final Map initialProps = unmodifiableMap({'getDerivedStateFromProps': (_, __, ___) => initialDerivedState, 'defaultProp': 'default', 'children': []});
+          final Map initialProps = unmodifiableMap({
+            'getDerivedStateFromProps': (_, __, ___) => initialDerivedState,
+            'defaultProp': 'default',
+            'children': []
+          });
 
-          final Map updatedProps = unmodifiableMap({'getDerivedStateFromProps': (_, __, ___) => updatedDerivedState, 'defaultProp': 'default', 'children': []});
+          final Map updatedProps = unmodifiableMap({
+            'getDerivedStateFromProps': (_, __, ___) => updatedDerivedState,
+            'defaultProp': 'default',
+            'children': []
+          });
 
           var mountNode = new DivElement();
           var instance = react_dom.render(components2.LifecycleTest(initialProps), mountNode);
@@ -225,8 +233,10 @@ main() {
           const Map initialState = const {
             'foo': 'sudo',
           };
-          final Map initialProps = unmodifiableMap(
-              {'getDerivedStateFromProps': (_, __, ___) => null, 'getInitialState': (_) => initialState,});
+          final Map initialProps = unmodifiableMap({
+            'getDerivedStateFromProps': (_, __, ___) => null,
+            'getInitialState': (_) => initialState,
+          });
 
           final Map expectedProps = unmodifiableMap(defaultProps, initialProps, emptyChildrenProps);
 
