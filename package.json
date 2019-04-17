@@ -1,7 +1,7 @@
 {
   "name": "react-dart",
   "scripts": {
-    "build": "./node_modules/.bin/webpack"
+    "build": "npm install && ./node_modules/.bin/webpack"
   },
   "devDependencies": {
     "@babel/core": "^7.3.4",
