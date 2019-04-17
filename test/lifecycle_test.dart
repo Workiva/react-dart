@@ -184,17 +184,47 @@ main() {
             'initialDerivedState': 'initial',
           };
 
-          final Map initialProps = unmodifiableMap({'getDerivedStateFromProps': (_, __, ___) => initialDerivedState});
+          const Map updatedDerivedState = const {
+            'initialDerivedState': 'updated',
+          };
 
-          LifecycleTestHelper component = getDartComponent(render(components2.LifecycleTest(initialProps)));
+          final Map initialProps = {'getDerivedStateFromProps': (_, __, ___) => initialDerivedState};
+
+          final Map updatedProps = {'getDerivedStateFromProps': (_, __, ___) => updatedDerivedState};
+
+          var mountNode = new DivElement();
+          var instance = react_dom.render(components2.LifecycleTest(initialProps), mountNode);
+
+          LifecycleTestHelper component = getDartComponent(instance);
 
           expect(
               component.lifecycleCalls,
               equals([
                 matchCall('getInitialState'),
-                matchCall('getDerivedStateFromProps'),
+                matchCall('getDerivedStateFromProps', args: [
+                  initialProps..addAll({'defaultProp': 'default', 'children': []}),
+                  {}
+                ]),
                 matchCall('render', state: initialDerivedState),
                 matchCall('componentDidMount', state: initialDerivedState),
+              ].where((matcher) => matcher != null).toList()));
+
+          component.lifecycleCalls.clear();
+
+          instance = react_dom.render(components2.LifecycleTest(updatedProps), mountNode);
+          component = getDartComponent(instance);
+
+          expect(
+              component.lifecycleCalls,
+              equals([
+                matchCall('getDerivedStateFromProps', args: [
+                  updatedProps..addAll({'defaultProp': 'default', 'children': []}),
+                  initialDerivedState
+                ]),
+                matchCall('shouldComponentUpdate'),
+                matchCall('render', state: updatedDerivedState),
+                matchCall('getSnapshotBeforeUpdate'),
+                matchCall('componentDidUpdate', state: updatedDerivedState),
               ].where((matcher) => matcher != null).toList()));
         });
 
@@ -207,7 +237,10 @@ main() {
 
           final Map expectedProps = unmodifiableMap(defaultProps, initialProps, emptyChildrenProps);
 
-          LifecycleTestHelper component = getDartComponent(render(components2.LifecycleTest(initialProps)));
+          var mountNode = new DivElement();
+          var instance = react_dom.render(components2.LifecycleTest(initialProps), mountNode);
+
+          LifecycleTestHelper component = getDartComponent(instance);
 
           component.lifecycleCalls.clear();
 
