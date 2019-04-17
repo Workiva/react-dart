@@ -706,7 +706,7 @@ void sharedLifecycleTests<T extends react.Component>({
 
         final Map initialProps = unmodifiableMap({
           'init': (react.Component2 component) => component.state = initialState,
-          "getInitialState": (_) => initialState
+          'getInitialState': (_) => initialState
         });
         expect(() {
           render(LifecycleTest(initialProps));

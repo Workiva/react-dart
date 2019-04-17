@@ -450,7 +450,6 @@ abstract class Component {
   /// Invoked once before the `Component` is mounted. The return value will be used as the initial value of [state].
   ///
   /// See: <https://facebook.github.io/react/docs/react-component.html#getinitialstate>
-  ///
   Map getInitialState() => {};
 
   /// Invoked once and cached when [reactComponentClass] is called. Values in the mapping will be set on [props]
@@ -767,10 +766,9 @@ abstract class Component2 implements Component {
   /// __Example__:
   ///
   ///    class MyClass extends react.Component2 {
-  ///      Map initialState = { foo: 0, bar: 1};
-  ///
+  ///      @override
   ///      void init() {
-  ///        this.state = initialState;
+  ///        this.state = { 'foo': 0, 'bar': 1};
   ///      }
   ///    }
   void init() {}
