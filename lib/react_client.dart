@@ -209,6 +209,43 @@ dynamic _convertArgsToChildren(List childrenArgs) {
   }
 }
 
+/// Util used with [_registerComponent2] to ensure no imporant lifecycle
+/// events are skipped. This includes [shouldComponentUpdate],
+/// [componentDidUpdate], and [render] because they utilize
+/// [_updatePropsAndStateWithJs].
+///
+/// Returns the list of lifecycle events to skip, having removed the
+/// important ones. If an important lifecycle event was set for skipping, a
+/// warning is issued.
+List<String> _filterSkipMethods(List<String> methods) {
+  List<String> finalList = List.from(methods);
+  bool shouldWarn = false;
+
+  if (finalList.contains('shouldComponentUpdate')) {
+    finalList.remove('shouldComponentUpdate');
+    shouldWarn = true;
+  }
+
+  if (finalList.contains('componentDidUpdate')) {
+    finalList.remove('componentDidUpdate');
+    shouldWarn = true;
+  }
+
+  if (finalList.contains('render')) {
+    finalList.remove('render');
+    shouldWarn = true;
+  }
+
+  if (shouldWarn) {
+    window.console.warn("WARNING: Crucial lifecycle methods passed into "
+        "skipMethods. shouldComponentUpdate, componentDidUpdate, and render "
+        "cannot be skipped and will still be added to the new component. Please "
+        "remove them from skipMethods.");
+  }
+
+  return finalList;
+}
+
 @JS('Object.keys')
 external List<String> _objectKeys(Object object);
 
@@ -486,7 +523,7 @@ final ReactDartInteropStatics2 _dartInteropStatics2 = (() {
   final zone = Zone.current;
 
   /// Wrapper for [Component.getInitialState].
-  Component2 initComponent(ReactComponent jsThis, ComponentStatics<Component2> componentStatics) => zone.run(() {
+  Component2 initComponent(ReactComponent jsThis, ComponentStatics2 componentStatics) => zone.run(() {
         final component = componentStatics.componentFactory();
         component.adapter = new JsComponent2Adapter(jsThis: jsThis);
         // Return the component so that the JS proxying component can store it,
@@ -564,6 +601,14 @@ final ReactDartInteropStatics2 _dartInteropStatics2 = (() {
         component.componentWillUnmount();
       });
 
+  void handleComponentDidCatch(Component2 component, dynamic error, ReactErrorInfo info) => zone.run(() {
+        component.componentDidCatch(error, info);
+      });
+
+  JsMap handleGetDerivedStateFromError(ComponentStatics2 componentStatics, dynamic error) => zone.run(() {
+        return jsBackingMapOrJsCopy(componentStatics.instanceForStaticMethods.getDerivedStateFromError(error));
+      });
+
   dynamic handleRender(Component2 component, JsMap jsProps, JsMap jsState, dynamic jsContext) => zone.run(() {
         _updatePropsAndStateWithJs(component, jsProps, jsState, jsContext);
         return component.render();
@@ -579,6 +624,8 @@ final ReactDartInteropStatics2 _dartInteropStatics2 = (() {
     handleGetSnapshotBeforeUpdate: allowInterop(handleGetSnapshotBeforeUpdate),
     handleComponentDidUpdate: allowInterop(handleComponentDidUpdate),
     handleComponentWillUnmount: allowInterop(handleComponentWillUnmount),
+    handleComponentDidCatch: allowInterop(handleComponentDidCatch),
+    handleGetDerivedStateFromError: allowInterop(handleGetDerivedStateFromError),
     handleRender: allowInterop(handleRender),
   );
 })();
@@ -587,7 +634,7 @@ final ReactDartInteropStatics2 _dartInteropStatics2 = (() {
 /// which produces a new JS [`ReactClass` component class](https://facebook.github.io/react/docs/top-level-api.html#react.createclass).
 @Deprecated('6.0.0')
 ReactDartComponentFactoryProxy _registerComponent(ComponentFactory componentFactory,
-    [Iterable<String> skipMethods = const []]) {
+    [Iterable<String> skipMethods = const ['getDerivedStateFromError', 'componentDidCatch']]) {
   var componentInstance = componentFactory();
 
   if (componentInstance is Component2) {
@@ -708,9 +755,10 @@ class ReactJsComponentFactoryProxy extends ReactComponentFactoryProxy {
 /// Creates and returns a new [ReactDartComponentFactoryProxy] from the provided [componentFactory]
 /// which produces a new JS [`ReactClass` component class](https://facebook.github.io/react/docs/top-level-api.html#react.createclass).
 ReactDartComponentFactoryProxy2 _registerComponent2(ComponentFactory<Component2> componentFactory,
-    [Iterable<String> skipMethods = const []]) {
+    [Iterable<String> skipMethods = const ['getDerivedStateFromError', 'componentDidCatch']]) {
   final componentInstance = componentFactory();
-  final componentStatics = new ComponentStatics(componentFactory);
+  final componentStatics = new ComponentStatics2(componentFactory, instanceForStaticMethods: componentInstance);
+  final filteredSkipMethods = _filterSkipMethods(skipMethods);
 
   // Cache default props and store them on the ReactClass so they can be used
   // by ReactDartComponentFactoryProxy and externally.
@@ -719,6 +767,7 @@ ReactDartComponentFactoryProxy2 _registerComponent2(ComponentFactory<Component2>
   var jsConfig2 = new JsComponentConfig2(
     defaultProps: defaultProps.jsObject,
     contextType: componentInstance.contextType?.jsThis,
+    skipMethods: filteredSkipMethods,
   );
 
   /// Create the JS [`ReactClass` component class](https://facebook.github.io/react/docs/top-level-api.html#react.createclass)

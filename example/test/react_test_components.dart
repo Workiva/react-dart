@@ -448,3 +448,99 @@ class _Component2TestComponent extends react.Component2 with react.TypedSnapshot
 
 var newContextTypeConsumerComponentComponent = react.registerComponent(() => new _NewContextTypeConsumerComponent());
 var component2TestComponent = react.registerComponent(() => new _Component2TestComponent());
+
+class _ErrorComponent extends react.Component2 {
+  void componentDidMount() {
+    if (!props["errored"]) {
+      throw new _CustomException("It broke!", 2);
+    }
+  }
+
+  dynamic render() {
+    return react.div(
+        {'key': 'eb-d1-e'},
+        "Oh no, I'm an error! Check your "
+        "console.");
+  }
+}
+
+var ErrorComponent = react.registerComponent(() => new _ErrorComponent());
+
+class _CustomException implements Exception {
+  int code;
+  String message;
+  String randomMessage;
+
+  _CustomException(this.message, this.code) {
+    switch (code) {
+      case 1:
+        randomMessage = "The code is a 1";
+        break;
+      case 2:
+        randomMessage = "The Code is a 2";
+        break;
+      default:
+        randomMessage = "Default Error Code";
+    }
+  }
+}
+
+class _Component2ErrorTestComponent extends react.Component2 {
+  Map getInitialState() {
+    return {
+      "clicked": false,
+      "errored": false,
+      "error": null,
+    };
+  }
+
+  void componentDidCatch(error, info) {
+    setState({
+      "error": "We can capture the error, store it in state and "
+          "display it here."
+    });
+  }
+
+  Map getDerivedStateFromError(error) {
+    return {"errored": true};
+  }
+
+  void error(event) {
+    setState({"clicked": true});
+  }
+
+  void clearError(event) {
+    setState({"clicked": false, "error": null, "errored": false});
+  }
+
+  dynamic render() {
+    dynamic errorMessage = state["error"] ?? "No error yet";
+
+    return react.div({
+      "key": "e-cont"
+    }, [
+      react.h3({"key": "e-header"}, "Error Boundary Test"),
+      state["clicked"] ? ErrorComponent({'key': 'ec-1', 'errored': state['errored']}) : null,
+      errorMessage != null ? react.div({'key': 'ec-m-1'}, '$errorMessage') : null,
+      !state["errored"]
+          ? react.button({
+              'type': 'button',
+              'key': 'c3-r-button',
+              'className': 'btn btn-primary',
+              'onClick': error,
+            }, 'Trigger Error')
+          : null,
+      state["errored"]
+          ? react.button({
+              'type': 'button',
+              'key': 'c3-c-button',
+              'className': 'btn btn-primary',
+              'onClick': clearError,
+            }, 'Clear Error')
+          : null,
+      react.hr({"key": "e-hr"}),
+    ]);
+  }
+}
+
+var component2ErrorTestComponent = react.registerComponent(() => new _Component2ErrorTestComponent(), ['render']);

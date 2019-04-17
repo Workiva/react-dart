@@ -23,6 +23,7 @@ main() {
   setClientConfiguration();
 
   group('React component lifecycle:', () {
+    setUp(() => LifecycleTestHelper.staticLifecycleCalls = []);
     group('Component', () {
       sharedLifecycleTests(
         skipLegacyContextTests: false,
@@ -160,7 +161,6 @@ main() {
         void testSnapshotType(dynamic expectedSnapshot) {
           LifecycleTestHelper component = getDartComponent(
               render(components2.LifecycleTest({'getSnapshotBeforeUpdate': (_, __, ___) => expectedSnapshot})));
-
           component.lifecycleCalls.clear();
           component.setState({});
 
@@ -174,6 +174,92 @@ main() {
         }
 
         sharedTypeTests(testSnapshotType);
+      });
+
+      test('triggers error lifecycle events when an error is thrown', () {
+        var mountNode = new DivElement();
+        var renderedInstance = react_dom.render(components2.SetStateTest({}), mountNode);
+        LifecycleTestHelper component = getDartComponent(renderedInstance);
+        LifecycleTestHelper.staticLifecycleCalls.clear();
+        component.setState({"shouldThrow": true});
+
+        // First render throws an error, caught by `getDerivedStateFromError`.
+        // `getDerivedStateFromError` sets state, starting the update cycle
+        // again. `componentDidCatch` also sets the state (storing error
+        // information), starting the update cycle again.
+        expect(
+            component.lifecycleCalls,
+            equals([
+              'shouldComponentUpdate',
+              'render',
+              'getDerivedStateFromError',
+              'shouldComponentUpdate',
+              'render',
+              'getSnapshotBeforeUpdate',
+              'componentDidUpdate',
+              'componentDidCatch',
+              'shouldComponentUpdate',
+              'render',
+              'getSnapshotBeforeUpdate',
+              'componentDidUpdate'
+            ]));
+        expect(component.state["shouldThrow"], isFalse,
+            reason: 'applies the state returned by `getDerivedStateFromError`');
+      });
+
+      test('can skip methods passed into _registerComponent2', () {
+        var mountNode = new DivElement();
+        var renderedInstance = react_dom.render(components2.SkipMethodsTest({}), mountNode);
+        LifecycleTestHelper component = getDartComponent(renderedInstance);
+        LifecycleTestHelper.staticLifecycleCalls.clear();
+        component.setState({"shouldThrow": true});
+
+        expect(
+            component.lifecycleCalls,
+            equals([
+              'shouldComponentUpdate',
+              'render',
+              'getDerivedStateFromError',
+              'shouldComponentUpdate',
+              'render',
+              'componentDidUpdate',
+              'componentDidCatch',
+              'shouldComponentUpdate',
+              'render',
+              'componentDidUpdate'
+            ]),
+            reason: 'should have skipped getSnapshotBeforeUpdate');
+      });
+
+      test('passes the correct error/info to lifecycle methods when an error is thrown', () {
+        var mountNode = new DivElement();
+        var renderedInstance = react_dom.render(components2.SetStateTest({}), mountNode);
+        LifecycleTestHelper component = getDartComponent(renderedInstance);
+        Element renderedNode = react_dom.findDOMNode(renderedInstance);
+        LifecycleTestHelper.staticLifecycleCalls.clear();
+        component.setState({"shouldThrow": true});
+
+        expect(renderedNode.children[1].text, contains(getComponent2ErrorMessage()));
+        // Because the stacktrace will be different between JS and Dart, in
+        // addition to DDC vs dart2js, the string 'created by' is checked
+        // for. It is a commonality indicating that the stacktrace is
+        // produced correctly.
+        expect(renderedNode.children[2].text.contains('Created By'), getComponent2ErrorInfo().contains('Created By'),
+            reason: 'Check '
+                'to make sure callstack is accessible');
+        expect(renderedNode.children[3].text, contains(getComponent2ErrorFromDerivedState()));
+      });
+
+      test('defaults toward not being an error boundary', () {
+        var mountNode = new DivElement();
+
+        expect(() {
+          var renderedInstance = react_dom.render(components2.DefaultSkipMethodsTest({}), mountNode);
+          LifecycleTestHelper component = getDartComponent(renderedInstance);
+          Element renderedNode = react_dom.findDOMNode(renderedInstance);
+          LifecycleTestHelper.staticLifecycleCalls.clear();
+          component.setState({"shouldThrow": true});
+        }, throwsA(anything));
       });
     });
   });
@@ -289,14 +375,21 @@ void sharedLifecycleTests<T extends react.Component>({
           ]));
     });
 
-    if (!skipLegacyContextTests) {
+    if (!isComponent2) {
       test('does not call getChildContext when childContextKeys is empty', () {
         var mountNode = new DivElement();
         var instance =
             react_dom.render(ContextWrapperWithoutKeys({'foo': false}, LifecycleTestWithContext({})), mountNode);
         LifecycleTestHelper component = getDartComponent(instance);
 
-        expect(component.lifecycleCalls, isEmpty);
+        expect(
+            component.lifecycleCalls,
+            equals([
+              matchCall('getInitialState'),
+              matchCall('componentWillMount'),
+              matchCall('render'),
+              matchCall('componentDidMount'),
+            ]));
       });
 
       test('calls getChildContext when childContextKeys exist', () {
@@ -306,7 +399,7 @@ void sharedLifecycleTests<T extends react.Component>({
 
         expect(
             component.lifecycleCalls,
-            equals([
+            containsAll([
               matchCall('getChildContext'),
             ]));
       });
@@ -346,6 +439,7 @@ void sharedLifecycleTests<T extends react.Component>({
         expect(
             component.lifecycleCalls,
             equals([
+              matchCall('getChildContext', props: anything, context: anything),
               matchCall('getInitialState', props: initialPropsWithDefaults, context: initialContext),
               matchCall('componentWillMount', props: initialPropsWithDefaults, context: initialContext),
               matchCall('render', props: initialPropsWithDefaults, context: initialContext),
@@ -362,6 +456,7 @@ void sharedLifecycleTests<T extends react.Component>({
         expect(
             component.lifecycleCalls,
             equals([
+              matchCall('getChildContext', props: anything, context: anything),
               matchCall('componentWillReceiveProps',
                   args: [newPropsWithDefaults], props: initialPropsWithDefaults, context: initialContext),
               matchCall('componentWillReceivePropsWithContext',
@@ -1068,3 +1163,12 @@ external String getNonUpdatingRenderedCounter();
 
 @JS()
 external String getComponent2NonUpdatingRenderedCounter();
+
+@JS()
+external String getComponent2ErrorMessage();
+
+@JS()
+external dynamic getComponent2ErrorInfo();
+
+@JS()
+external String getComponent2ErrorFromDerivedState();

@@ -6,6 +6,7 @@ library react_client.react_interop;
 
 import 'dart:html';
 
+import 'package:meta/meta.dart';
 import 'package:js/js.dart';
 import 'package:react/react.dart';
 import 'package:react/react_client.dart' show ComponentFactory;
@@ -320,7 +321,7 @@ external ReactClass createReactDartComponentClass(
 /// the JS and Dart component instances.
 @JS('_createReactDartComponentClass2')
 external ReactClass createReactDartComponentClass2(
-    ReactDartInteropStatics2 dartInteropStatics, ComponentStatics<Component2> componentStatics,
+    ReactDartInteropStatics2 dartInteropStatics, ComponentStatics2 componentStatics,
     [JsComponentConfig2 jsConfig]);
 
 @JS('React.__isDevelopment')
@@ -377,7 +378,7 @@ class ReactDartInteropStatics {
 @anonymous
 class ReactDartInteropStatics2 implements ReactDartInteropStatics {
   external factory ReactDartInteropStatics2({
-    Component2 Function(ReactComponent jsThis, ComponentStatics<Component2> componentStatics) initComponent,
+    Component2 Function(ReactComponent jsThis, ComponentStatics2 componentStatics) initComponent,
     // TODO: Should this have a return signature of `Map`?
     dynamic Function(Component2 component) handleGetInitialState,
     void Function(Component2 component, ReactComponent jsThis) handleComponentWillMount,
@@ -411,6 +412,8 @@ class ReactDartInteropStatics2 implements ReactDartInteropStatics {
     )
         handleComponentDidUpdate,
     void Function(Component2 component) handleComponentWillUnmount,
+    void Function(Component2 component, dynamic error, ReactErrorInfo info) handleComponentDidCatch,
+    JsMap Function(ComponentStatics2 instanceForStaticMethods, dynamic error) handleGetDerivedStateFromError,
     dynamic Function(Component2 component, JsMap jsProps, JsMap jsState, dynamic jsContext) handleRender,
   });
 }
@@ -421,10 +424,21 @@ class ReactDartInteropStatics2 implements ReactDartInteropStatics {
 /// passes it to certain methods in [ReactDartInteropStatics].
 ///
 /// See [ReactDartInteropStatics], [createReactDartComponentClass].
-class ComponentStatics<T extends Component> {
-  final ComponentFactory<T> componentFactory;
-
+class ComponentStatics {
+  final ComponentFactory<Component> componentFactory;
   ComponentStatics(this.componentFactory);
+}
+
+/// An object that stores static methods and information for a specific component class.
+///
+/// This object is made accessible to a component's JS ReactClass config, which
+/// passes it to certain methods in [ReactDartInteropStatics2].
+///
+/// See [ReactDartInteropStatics2], [createReactDartComponentClass2].
+class ComponentStatics2 {
+  final ComponentFactory<Component2> componentFactory;
+  final Component2 instanceForStaticMethods;
+  ComponentStatics2(this.componentFactory, {@required this.instanceForStaticMethods});
 }
 
 /// Additional configuration passed to [createReactDartComponentClass]
@@ -456,5 +470,16 @@ class JsComponentConfig2 {
   external factory JsComponentConfig2({
     dynamic contextType,
     JsMap defaultProps,
+    @required List<String> skipMethods,
   });
+}
+
+/// Information on an error caught by `componentDidCatch`.
+@JS()
+@anonymous
+class ReactErrorInfo {
+  /// The component stack trace associated with this error.
+  ///
+  /// See: https://reactjs.org/docs/error-boundaries.html#component-stack-traces
+  String componentStack;
 }
