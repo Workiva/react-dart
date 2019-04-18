@@ -692,7 +692,7 @@ void sharedLifecycleTests<T extends react.Component>({
             equals([
               matchCall('init', props: expectedProps, state: null),
               matchCall('getInitialState', props: expectedProps, state: initialState),
-              matchCall('render', props: expectedProps, state: {initialState}),
+              matchCall('render', props: expectedProps, state: initialState),
               matchCall('componentDidMount', props: expectedProps, state: initialState)
             ].where((matcher) => matcher != null)));
       });
