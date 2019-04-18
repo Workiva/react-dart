@@ -32,8 +32,9 @@ class _SetStateTest extends react.Component2 with LifecycleTestHelper {
       };
 
   @override
-  componentWillReceiveProps(_) {
-    recordLifecyleCall('componentWillReceiveProps');
+  Map getDerivedStateFromProps(_, __) {
+    recordLifecyleCall('getDerivedStateFromProps');
+    return {};
   }
 
   @override
@@ -204,8 +205,8 @@ class _LifecycleTest extends react.Component2 with LifecycleTestHelper {
   void componentDidMount() => lifecycleCall('componentDidMount');
   void componentWillUnmount() => lifecycleCall('componentWillUnmount');
 
-  void componentWillReceiveProps(newProps) =>
-      lifecycleCall('componentWillReceiveProps', arguments: [new Map.from(newProps)]);
+  Map getDerivedStateFromProps(nextProps, prevState) => lifecycleCall('getDerivedStateFromProps',
+      arguments: [new Map.from(nextProps), new Map.from(prevState)], staticProps: nextProps);
 
   void componentWillUpdate(nextProps, nextState) =>
       lifecycleCall('componentWillUpdate', arguments: [new Map.from(nextProps), new Map.from(nextState)]);

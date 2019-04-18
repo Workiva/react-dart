@@ -72,8 +72,17 @@ class ReactSetStateTestComponent2 extends React.Component {
         this.recordStateChange(this.state.counter);
     }
 
+    static getDerivedStateFromProps(nextProps, __) {
+        _shouldUpdate = nextProps.shouldUpdate;
+        _shouldUpdate 
+            ? _component2UpdatingSetStateLifeCycleCalls.push("getDerivedStateFromProps") 
+            : _component2NonUpdatingSetStateLifeCycleCalls.push("getDerivedStateFromProps");
+        return null;
+    }
+
     shouldComponentUpdate(_, __) {
         this.recordLifecycleCall("shouldComponentUpdate");
+        _shouldUpdate = this.props.shouldUpdate;
         return this.props.shouldUpdate;
     }
 
