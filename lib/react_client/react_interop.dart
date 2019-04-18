@@ -382,14 +382,15 @@ class ReactDartInteropStatics2 implements ReactDartInteropStatics {
     Component2 Function(ReactComponent jsThis, ComponentStatics2 componentStatics) initComponent,
     // TODO: Should this have a return signature of `Map`?
     dynamic Function(Component2 component) handleGetInitialState,
+    // TODO: we should review if we need to support the deprecated will methods in component2
     void Function(Component2 component, ReactComponent jsThis) handleComponentWillMount,
     void Function(Component2 component) handleComponentDidMount,
-    // TODO: Should this be removed when we update Component2.componentWillReceiveProps to throw an UnsupportedError? (CPLAT-4765)
     void Function(
-      Component2 component,
+      ComponentStatics2 componentStatics,
       JsMap jsNextProps,
+      JsMap jsPrevState,
     )
-        handleComponentWillReceiveProps,
+        handleGetDerivedStateFromProps,
     bool Function(
       Component2 component,
       JsMap jsNextProps,

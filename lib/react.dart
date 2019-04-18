@@ -329,6 +329,12 @@ abstract class Component {
   /// Calling [setState] within this function will not trigger an additional [render].
   ///
   /// See: <https://facebook.github.io/react/docs/react-component.html#updating-componentwillreceiveprops>
+  /// > __DEPRECATED - DO NOT USE__
+  /// >
+  /// > This will be removed once 6.0.0 releases, switching to [Component2.getDerivedStateFromProps] is the path forward
+  /// >
+  /// > This will be completely removed when the JS side of it is slated for removal (ReactJS 17 / react.dart 6.0.0)
+  @Deprecated('6.0.0')
   void componentWillReceiveProps(Map newProps) {}
 
   /// > __DEPRECATED - DO NOT USE__
@@ -620,11 +626,45 @@ abstract class Component2 implements Component {
   /// [setState]. The old props can be accessed via [props].
   ///
   /// Calling [setState] within this function will not trigger an additional [render].
-  ///
-  /// See: <https://facebook.github.io/react/docs/react-component.html#updating-componentwillreceiveprops>
+  /// > __DEPRECATED - DO NOT USE__
+  /// >
+  /// > This will be removed once 6.0.0 releases, switching to [Component2.getDerivedStateFromProps] is the path forward
+  /// >
+  /// > React 16 has deprecated [componentWillReceiveProps] in favor of [getDerivedStateFromProps]
+  /// >
+  /// > This will be completely removed when the JS side of it is slated for removal (ReactJS 17 / react.dart 6.0.0)
+  @mustCallSuper
+  @Deprecated('6.0.0')
   void componentWillReceiveProps(Map newProps) {}
 
-  /// ReactJS lifecycle method that is invoked before rendering when [nextProps], [nextState] are being received.
+  /// ReactJS lifecycle method that is invoked before rendering on initial mount and on subsequent updates when [nextProps] is received.
+  ///
+  /// It should return an object to update the state, or null to update nothing (this is different from componentWillRecieveProps).
+  ///
+  /// [prevState] will be null when this lifcecyle method is called before first mount.
+  ///
+  /// This method is also effectively static, so using instance members like [props] or `ref` will not work.
+  ///
+  /// Deriving state from props should be used with caution since it can lead to more verbose implementations and less approachable by others.
+  ///
+  /// See: <https://reactjs.org/docs/react-component.html#static-getderivedstatefromprops>
+  ///
+  /// __Example__:
+  ///    @override
+  ///    getDerivedStateFromProps(nextProps, prevState) {
+  ///      if (prevState.someMirroredValue != nextProps.someValue) {
+  ///       return {
+  ///         derivedData: computeDerivedState(nextProps),
+  ///         someMirroredValue: nextProps.someValue
+  ///       };
+  ///      }
+  ///      return null;
+  ///    }
+  ///
+  Map getDerivedStateFromProps(Map nextProps, Map prevState) {}
+
+  /// ReactJS lifecycle method that is invoked before rendering when [nextProps], [nextState], or [nextContext] are
+  /// being received.
   ///
   /// Use this as an opportunity to return `false` when you're certain that the transition to the new props and state
   /// will not require a component update.
