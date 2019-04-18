@@ -92,7 +92,7 @@ function _createReactDartComponentClass2(dartInteropStatics, componentStatics, j
       // This is done to avoid changing the default getInitialState implementation to null, which would cause breakages.
       if (this.state && Object.keys(initialStateFromGetInitialState).length != 0) {
         throw 'Error: State cannot be initialized in both init and getInitialState';
-      } else {
+      } else if (!this.state) {
         this.state = initialStateFromGetInitialState;
       }
     }
