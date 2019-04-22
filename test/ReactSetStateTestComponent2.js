@@ -60,6 +60,7 @@ class ReactSetStateTestComponent2 extends React.Component {
         _shouldThrow = true;
         _shouldUpdate = props.shouldUpdate;
         this.state = {counter: _component2Counter, shouldThrow: _shouldThrow, error: '', info: '', errorFromGetDerivedState: ''};
+        this.recordLifecycleCall("init");
     }
 
     recordStateChange(newCount) {

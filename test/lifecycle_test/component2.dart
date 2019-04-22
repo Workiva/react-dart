@@ -20,6 +20,9 @@ class _SetStateTest extends react.Component2 with LifecycleTestHelper {
       };
 
   @override
+  void init() => recordLifecyleCall('init');
+
+  @override
   getInitialState() => {
         'counter': 1,
         'shouldThrow': true,
@@ -224,6 +227,8 @@ class _LifecycleTest extends react.Component2 with LifecycleTestHelper {
   dynamic render() => lifecycleCall('render', defaultReturnValue: () => react.div({}));
 
   Map getInitialState() => lifecycleCall('getInitialState', defaultReturnValue: () => {});
+
+  void init() => lifecycleCall('init', defaultReturnValue: () => {});
 
   Map getDefaultProps() {
     lifecycleCall('getDefaultProps');

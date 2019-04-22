@@ -534,6 +534,11 @@ final ReactDartInteropStatics2 _dartInteropStatics2 = (() {
           ..props = new JsBackedMap.backedBy(jsThis.props)
           ..context = _unjsifyNewContext(jsThis.context);
 
+        component.init();
+        if (component.state != null) {
+          jsThis.state = new JsBackedMap.from(component.state).jsObject;
+        }
+
         return component;
       });
 

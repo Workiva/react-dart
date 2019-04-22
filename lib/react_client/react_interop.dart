@@ -173,6 +173,7 @@ class ReactComponent {
   external InteropProps get props;
   external dynamic get context;
   external JsMap get state;
+  external set state(JsMap value);
   external get refs;
   external void setState(state, [callback]);
   external void forceUpdate([callback]);

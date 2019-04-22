@@ -207,6 +207,7 @@ main() {
           expect(
               component.lifecycleCalls,
               equals([
+                matchCall('init'),
                 matchCall('getInitialState'),
                 matchCall('getDerivedStateFromProps', args: [initialProps, {}]),
                 matchCall('render', state: initialDerivedState),
@@ -442,6 +443,7 @@ void sharedLifecycleTests<T extends react.Component>({
         expect(
             component.lifecycleCalls,
             equals([
+              matchCall('init'),
               matchCall('getInitialState'),
               matchCall('getDerivedStateFromProps'),
               matchCall('render'),
@@ -612,6 +614,7 @@ void sharedLifecycleTests<T extends react.Component>({
         expect(
             component.lifecycleCalls,
             equals([
+              matchCall('init', props: initialProps, context: initialContext),
               matchCall('getInitialState', props: initialProps, context: initialContext),
               matchCall('getDerivedStateFromProps', args: [initialProps, expectedState]),
               matchCall('render', props: initialProps, context: initialContext),
@@ -681,6 +684,7 @@ void sharedLifecycleTests<T extends react.Component>({
         expect(
             component.lifecycleCalls,
             equals([
+              matchCall('init', props: initialProps),
               matchCall('getInitialState', props: initialProps),
               matchCall('getDerivedStateFromProps'),
               matchCall('render', props: initialProps),
@@ -772,6 +776,47 @@ void sharedLifecycleTests<T extends react.Component>({
                     args: [initialPropsWithDefaults, expectedState], props: newPropsWithDefaults),
           ].where((matcher) => matcher != null).toList()));
     });
+
+    if (isComponent2) {
+      test('initializes state with the value set in `init`', () {
+        const Map initialState = const {
+          'initialState': 'initial',
+        };
+
+        final Map initialProps =
+            unmodifiableMap({'init': (react.Component2 component) => component.state = initialState});
+        final Map expectedProps = unmodifiableMap(defaultProps, initialProps, emptyChildrenProps);
+        LifecycleTestHelper component = getDartComponent(render(LifecycleTest(initialProps)));
+
+        expect(
+            component.lifecycleCalls,
+            equals([
+              matchCall('init', props: expectedProps, state: null),
+              matchCall('getInitialState', props: expectedProps, state: initialState),
+              matchCall('getDerivedStateFromProps', args: {expectedProps, initialState}),
+              matchCall('render', props: expectedProps, state: initialState),
+              matchCall('componentDidMount', props: expectedProps, state: initialState)
+            ].where((matcher) => matcher != null)));
+      });
+    }
+
+    if (isComponent2) {
+      test('throws when state is initialized in both init and getInitialState', () {
+        const Map initialState = const {
+          'initialState': 'initial',
+        };
+
+        final Map initialProps = unmodifiableMap({
+          'init': (react.Component2 component) => component.state = initialState,
+          'getInitialState': (_) => initialState
+        });
+        expect(() {
+          render(LifecycleTest(initialProps));
+        },
+            throwsA(predicate((error) =>
+                error.toString().contains("Error: State cannot be initialized in both init and getInitialState"))));
+      });
+    }
 
     test('updates state with correct lifecycle calls', () {
       const Map initialState = const {
