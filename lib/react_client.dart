@@ -619,8 +619,8 @@ final ReactDartInteropStatics2 _dartInteropStatics2 = (() {
         try {
           throwErrorFromJS(error);
         } catch (e, stack) {
-          // The Dart stack track gets lost so we manually add it to the info object for reference.
           info.dartStackTrace = stack;
+          // The Dart stack track gets lost so we manually add it to the info object for reference.
           component.componentDidCatch(e, info);
         }
       });

@@ -9,6 +9,7 @@ import "package:js/js.dart";
 import 'package:meta/meta.dart';
 import 'package:react/react.dart' as react;
 import 'package:react/react_client.dart';
+import 'package:react/react_client/react_interop.dart' as react_interop;
 import 'package:react/react_dom.dart' as react_dom;
 import 'package:react/react_test_utils.dart' as react_test_utils;
 import 'package:test/test.dart';
@@ -273,7 +274,7 @@ main() {
         // again. `componentDidCatch` also sets the state (storing error
         // information), starting the update cycle again.
         expect(
-            component.lifecycleCalls,
+            component.lifecycleCallMemberNames,
             equals([
               'getDerivedStateFromProps',
               'shouldComponentUpdate',
@@ -295,6 +296,23 @@ main() {
             reason: 'applies the state returned by `getDerivedStateFromError`');
       });
 
+      test('error lifecycle methods get passed Dartified Error/Exception when an error is thrown', () {
+        var mountNode = new DivElement();
+        var renderedInstance = react_dom.render(components2.SetStateTest({}), mountNode);
+        LifecycleTestHelper component = getDartComponent(renderedInstance);
+        LifecycleTestHelper.staticLifecycleCalls.clear();
+        component.setState({"shouldThrow": true});
+
+        expect(
+            component.lifecycleCalls,
+            containsAll([
+              matchCall('componentDidCatch', args: [isA<components2.TestDartException>(), isA<react_interop.ReactErrorInfo>()]),
+              matchCall('getDerivedStateFromError', args: [isA<components2.TestDartException>()]),
+            ]));
+        expect(component.state["shouldThrow"], isFalse,
+            reason: 'applies the state returned by `getDerivedStateFromError`');
+      });
+
       test('can skip methods passed into _registerComponent2', () {
         var mountNode = new DivElement();
         var renderedInstance = react_dom.render(components2.SkipMethodsTest({}), mountNode);
@@ -303,7 +321,7 @@ main() {
         component.setState({"shouldThrow": true});
 
         expect(
-            component.lifecycleCalls,
+            component.lifecycleCallMemberNames,
             equals([
               'getDerivedStateFromProps',
               'shouldComponentUpdate',
@@ -1248,7 +1266,7 @@ void sharedLifecycleTests<T extends react.Component>({
         // Check against the JS component to ensure no regressions.
         expect(component.state['counter'], 3);
         if (isComponent2) {
-          expect(component.lifecycleCalls, orderedEquals(getComponent2NonUpdatingSetStateLifeCycleCalls()));
+          expect(component.lifecycleCallMemberNames, orderedEquals(getComponent2NonUpdatingSetStateLifeCycleCalls()));
           expect(component.state['counter'], getComponent2LatestJSCounter());
           expect(renderedNode.children.first.text, getComponent2NonUpdatingRenderedCounter());
         } else {
@@ -1272,7 +1290,7 @@ void sharedLifecycleTests<T extends react.Component>({
         expect(component.state['counter'], 3);
 
         if (isComponent2) {
-          expect(component.lifecycleCalls, orderedEquals(getComponent2UpdatingSetStateLifeCycleCalls()));
+          expect(component.lifecycleCallMemberNames, orderedEquals(getComponent2UpdatingSetStateLifeCycleCalls()));
           expect(component.state['counter'], getComponent2LatestJSCounter());
           expect(renderedNode.children.first.text, getComponent2UpdatingRenderedCounter());
         } else {
