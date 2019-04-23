@@ -285,8 +285,10 @@ class ReactDartContextInternal {
   ReactDartContextInternal(this.value);
 }
 
-@JS('_rethrowError')
-external void rethrowError(error);
+/// Throws the error passed to it from Javascript.
+/// This allows us to catch the error in dart which re-dartifies the js errors/exceptions.
+@JS('_throwErrorFromJS')
+external void throwErrorFromJS(error);
 
 /// Marks [child] as validated, as if it were passed into [React.createElement]
 /// as a variadic child.
@@ -486,5 +488,10 @@ class ReactErrorInfo {
   /// The component stack trace associated with this error.
   ///
   /// See: https://reactjs.org/docs/error-boundaries.html#component-stack-traces
-  String componentStack;
+  external String get componentStack;
+  external set componentStack(String value);
+
+  /// The dart stack trace associated with this error.
+  external StackTrace get dartStackTrace;
+  external set dartStackTrace(StackTrace);
 }

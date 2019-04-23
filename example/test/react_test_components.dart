@@ -509,6 +509,7 @@ class _Component2ErrorTestComponent extends react.Component2 {
 
   void componentDidCatch(error, info) {
     if (error is _CustomException) {
+      print(info.dartStackTrace);
       setState({"error": error.randomMessage});
     } else {
       setState({

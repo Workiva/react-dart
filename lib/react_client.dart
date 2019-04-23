@@ -614,16 +614,22 @@ final ReactDartInteropStatics2 _dartInteropStatics2 = (() {
       });
 
   void handleComponentDidCatch(Component2 component, dynamic error, ReactErrorInfo info) => zone.run(() {
+        // Due to the error object being passed in from ReactJS it is a javascript object that does not get dartified.
+        // To fix this we throw the error again from dart to the JS side and catch it dart side which re-dartifies it.
         try {
-          rethrowError(error);
-        } catch (e) {
+          throwErrorFromJS(error);
+        } catch (e, stack) {
+          // The dart stack track gets lost so we manually add it to the info object for referance.
+          info.dartStackTrace = stack;
           component.componentDidCatch(e, info);
         }
       });
 
   JsMap handleGetDerivedStateFromError(ComponentStatics2 componentStatics, dynamic error) => zone.run(() {
+        // Due to the error object being passed in from ReactJS it is a javascript object that does not get dartified.
+        // To fix this we throw the error again from dart to the JS side and catch it dart side which re-dartifies it.
         try {
-          rethrowError(error);
+          throwErrorFromJS(error);
         } catch (e) {
           return jsBackingMapOrJsCopy(componentStatics.instanceForStaticMethods.getDerivedStateFromError(e));
         }

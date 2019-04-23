@@ -7,7 +7,9 @@ var _reactDartSymbolPrefix = 'react-dart.';
 /// in order to jsify and unjsify context objects correctly.
 var _reactDartContextSymbol = Symbol(_reactDartSymbolPrefix+'context');
 
-function _rethrowError(error){
+/// A JS side function to allow dart to throw an error from JS in order to catch it Dart side.
+/// Used within Component2 error boundry methods to dartify the error argument.
+function _throwErrorFromJS(error){
   throw error;
 }
 
@@ -168,5 +170,5 @@ module.exports = {
   _createReactDartComponentClass,
   _createReactDartComponentClass2,
   _markChildValidated,
-  _rethrowError,
+  _throwErrorFromJS,
 };
