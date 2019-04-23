@@ -30,7 +30,9 @@ mixin LifecycleTestHelper on Component {
   /// This alllows static and instance lifecycle methods to add calls to the same list
   List get lifecycleCalls => staticLifecycleCalls;
 
-  List get lifecycleCallMemberNames => staticLifecycleCalls.map((call){ return call['memberName']; }).toList();
+  List get lifecycleCallMemberNames => staticLifecycleCalls.map((call) {
+        return call['memberName'];
+      }).toList();
 
   dynamic lifecycleCall(String memberName, {List arguments: const [], defaultReturnValue(), Map staticProps}) {
     lifecycleCalls.add({

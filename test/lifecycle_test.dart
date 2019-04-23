@@ -306,7 +306,8 @@ main() {
         expect(
             component.lifecycleCalls,
             containsAll([
-              matchCall('componentDidCatch', args: [isA<components2.TestDartException>(), isA<react_interop.ReactErrorInfo>()]),
+              matchCall('componentDidCatch',
+                  args: [isA<components2.TestDartException>(), isA<react_interop.ReactErrorInfo>()]),
               matchCall('getDerivedStateFromError', args: [isA<components2.TestDartException>()]),
             ]));
         expect(component.state["shouldThrow"], isFalse,
