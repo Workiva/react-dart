@@ -614,11 +614,19 @@ final ReactDartInteropStatics2 _dartInteropStatics2 = (() {
       });
 
   void handleComponentDidCatch(Component2 component, dynamic error, ReactErrorInfo info) => zone.run(() {
-        component.componentDidCatch(error, info);
+          try {
+            rethrowError(error);
+          } catch(e) {
+            component.componentDidCatch(e, info);
+          }
       });
 
   JsMap handleGetDerivedStateFromError(ComponentStatics2 componentStatics, dynamic error) => zone.run(() {
-        return jsBackingMapOrJsCopy(componentStatics.instanceForStaticMethods.getDerivedStateFromError(error));
+          try {
+            rethrowError(error);
+          } catch(e) {
+            return jsBackingMapOrJsCopy(componentStatics.instanceForStaticMethods.getDerivedStateFromError(e));
+          }
       });
 
   dynamic handleRender(Component2 component, JsMap jsProps, JsMap jsState, dynamic jsContext) => zone.run(() {

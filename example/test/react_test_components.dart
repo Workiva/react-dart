@@ -508,10 +508,16 @@ class _Component2ErrorTestComponent extends react.Component2 {
   }
 
   void componentDidCatch(error, info) {
-    setState({
-      "error": "We can capture the error, store it in state and "
-          "display it here."
-    });
+    if (error is _CustomException) {
+      setState({
+        "error": error.randomMessage
+      });
+    } else {
+      setState({
+        "error": "We can capture the error, store it in state and "
+            "display it here."
+      });
+    }
   }
 
   Map getDerivedStateFromError(error) {

@@ -285,6 +285,9 @@ class ReactDartContextInternal {
   ReactDartContextInternal(this.value);
 }
 
+@JS('_rethrowError')
+external void rethrowError(error);
+
 /// Marks [child] as validated, as if it were passed into [React.createElement]
 /// as a variadic child.
 ///
