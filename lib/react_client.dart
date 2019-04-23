@@ -268,12 +268,12 @@ Map<String, dynamic> _unjsifyContext(InteropContextValue interopContext) {
   });
 }
 
-// A JavaScript symbol that we use as the key in a JS Object to wrap the dart.
+// A JavaScript symbol that we use as the key in a JS Object to wrap the Dart.
 @JS()
 external get _reactDartContextSymbol;
 
 // Wraps context value in a JS Object for use on the JS side.
-// It is wrapped so that the same dart value can be retrieved from dart with [_unjsifyNewContext].
+// It is wrapped so that the same Dart value can be retrieved from Dart with [_unjsifyNewContext].
 dynamic _jsifyNewContext(dynamic context) {
   var jsContextHolder = newObject();
   setProperty(jsContextHolder, _reactDartContextSymbol, context);
@@ -281,7 +281,7 @@ dynamic _jsifyNewContext(dynamic context) {
 }
 
 // Unwraps context value from a JS Object for use on the Dart side.
-// The value is unwrapped so that the same dart value can be passed through js and retrived by dart
+// The value is unwrapped so that the same Dart value can be passed through js and retrived by Dart
 // when used with [_jsifyNewContext].
 dynamic _unjsifyNewContext(dynamic interopContext) {
   if (interopContext != null) {
@@ -615,11 +615,11 @@ final ReactDartInteropStatics2 _dartInteropStatics2 = (() {
 
   void handleComponentDidCatch(Component2 component, dynamic error, ReactErrorInfo info) => zone.run(() {
         // Due to the error object being passed in from ReactJS it is a javascript object that does not get dartified.
-        // To fix this we throw the error again from dart to the JS side and catch it dart side which re-dartifies it.
+        // To fix this we throw the error again from Dart to the JS side and catch it Dart side which re-dartifies it.
         try {
           throwErrorFromJS(error);
         } catch (e, stack) {
-          // The dart stack track gets lost so we manually add it to the info object for referance.
+          // The Dart stack track gets lost so we manually add it to the info object for reference.
           info.dartStackTrace = stack;
           component.componentDidCatch(e, info);
         }
@@ -627,7 +627,7 @@ final ReactDartInteropStatics2 _dartInteropStatics2 = (() {
 
   JsMap handleGetDerivedStateFromError(ComponentStatics2 componentStatics, dynamic error) => zone.run(() {
         // Due to the error object being passed in from ReactJS it is a javascript object that does not get dartified.
-        // To fix this we throw the error again from dart to the JS side and catch it dart side which re-dartifies it.
+        // To fix this we throw the error again from Dart to the JS side and catch it Dart side which re-dartifies it.
         try {
           throwErrorFromJS(error);
         } catch (e) {
