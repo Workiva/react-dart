@@ -20,7 +20,7 @@ class _SetStateTest extends react.Component2 with LifecycleTestHelper {
       };
 
   @override
-  void init() => recordLifecyleCall('init');
+  void init() => lifecycleCall('init');
 
   @override
   getInitialState() => {
@@ -33,68 +33,63 @@ class _SetStateTest extends react.Component2 with LifecycleTestHelper {
 
   @override
   Map getDerivedStateFromProps(_, __) {
-    recordLifecyleCall('getDerivedStateFromProps');
+    lifecycleCall('getDerivedStateFromProps');
     return {};
   }
 
   @override
   getSnapshotBeforeUpdate(_, __) {
-    recordLifecyleCall('getSnapshotBeforeUpdate');
+    lifecycleCall('getSnapshotBeforeUpdate');
   }
 
   @override
   componentDidUpdate(_, __, [___]) {
-    recordLifecyleCall('componentDidUpdate');
+    lifecycleCall('componentDidUpdate');
   }
 
   @override
   shouldComponentUpdate(_, __, [___]) {
-    recordLifecyleCall('shouldComponentUpdate');
+    lifecycleCall('shouldComponentUpdate');
     return props['shouldUpdate'] as bool;
   }
 
   @override
   componentDidCatch(dynamic error, ReactErrorInfo info) {
-    recordLifecyleCall('componentDidCatch');
+    lifecycleCall('componentDidCatch', arguments: [error, info]);
     this.setState({'error': error, 'info': info.componentStack});
   }
 
   @override
   Map getDerivedStateFromError(error) {
-    recordLifecyleCall('getDerivedStateFromError');
+    lifecycleCall('getDerivedStateFromError', arguments: [error]);
     return {"shouldThrow": false, "errorFromGetDerivedState": error};
   }
 
   Map outerTransactionalSetStateCallback(Map previousState, __) {
-    recordLifecyleCall('outerTransactionalSetStateCallback');
+    lifecycleCall('outerTransactionalSetStateCallback');
     return {'counter': previousState['counter'] + 1};
   }
 
   Map innerTransactionalSetStateCallback(Map previousState, __) {
-    recordLifecyleCall('innerTransactionalSetStateCallback');
+    lifecycleCall('innerTransactionalSetStateCallback');
     return {'counter': previousState['counter'] + 1};
   }
 
-  void recordLifecyleCall(String name) {
-    // TODO update this class to use lifecycleCall instead
-    lifecycleCalls.add(name);
-  }
-
   render() {
-    recordLifecyleCall('render');
+    lifecycleCall('render');
 
     if (!state['shouldThrow']) {
       return react.div({
         'onClick': (_) {
           setStateWithUpdater(outerTransactionalSetStateCallback, () {
-            recordLifecyleCall('outerSetStateCallback');
+            lifecycleCall('outerSetStateCallback');
           });
         }
       }, [
         react.div({
           'onClick': (_) {
             setStateWithUpdater(innerTransactionalSetStateCallback, () {
-              recordLifecyleCall('innerSetStateCallback');
+              lifecycleCall('innerSetStateCallback');
             });
           },
           'key': 'c1',
@@ -108,14 +103,14 @@ class _SetStateTest extends react.Component2 with LifecycleTestHelper {
           {
             'onClick': (_) {
               setStateWithUpdater(outerTransactionalSetStateCallback, () {
-                recordLifecyleCall('outerSetStateCallback');
+                lifecycleCall('outerSetStateCallback');
               });
             }
           },
           react.div({
             'onClick': (_) {
               setStateWithUpdater(innerTransactionalSetStateCallback, () {
-                recordLifecyleCall('innerSetStateCallback');
+                lifecycleCall('innerSetStateCallback');
               });
             }
           }, [
@@ -187,9 +182,20 @@ class _LifecycleTestWithContext extends _LifecycleTest {
 
 ReactDartComponentFactoryProxy2 ErrorComponent = react.registerComponent(() => new _ErrorComponent());
 
+class TestDartException implements Exception {
+  int code;
+  String message;
+
+  TestDartException(this.message, this.code);
+
+  toString() {
+    return message;
+  }
+}
+
 class _ErrorComponent extends react.Component2 {
   void _throwError() {
-    throw "It crashed!";
+    throw TestDartException("It crashed!", 100);
   }
 
   void render() {
