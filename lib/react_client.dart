@@ -528,7 +528,6 @@ Function unconvertJsEventHandler(Function jsConvertedEventHandler) {
 /// Convert packed event handler into wrapper and pass it only the Dart [SyntheticEvent] object converted from the
 /// [events.SyntheticEvent] event.
 _convertEventHandlers(Map args) {
-  var zone = Zone.current;
   args.forEach((propKey, value) {
     var eventFactory = eventPropKeyToEventFactory[propKey];
     if (eventFactory != null && value != null) {

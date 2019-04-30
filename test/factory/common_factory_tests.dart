@@ -137,25 +137,37 @@ void domEventHandlerWrappingTests(ReactComponentFactoryProxy factory) {
 
   group('calls the handler in the zone the event was dispatched from', () {
     test('(simulated event)', () {
-      final zone = Zone.current;
+      final testZone = Zone.current;
 
-      var renderedInstance = rtu.renderIntoDocument(factory({
-        'onClick': (event) {
-          expect(Zone.current, same(zone));
-        }
-      }));
+      var renderedInstance;
+      // Run the ReactElement creation and rendering in a separate zone to
+      // ensure the component lifecycle isn't run in the testZone, which could
+      // create false positives in the `expect`.
+      runZoned(() {
+        renderedInstance = rtu.renderIntoDocument(factory({
+          'onClick': (event) {
+            expect(Zone.current, same(testZone));
+          }
+        }));
+      });
 
       rtu.Simulate.click(react_dom.findDOMNode(renderedInstance));
     });
 
     test('(native event)', () {
-      final zone = Zone.current;
+      final testZone = Zone.current;
 
-      var renderedInstance = rtu.renderIntoDocument(factory({
-        'onClick': (event) {
-          expect(Zone.current, same(zone));
-        }
-      }));
+      var renderedInstance;
+      // Run the ReactElement creation and rendering in a separate zone to
+      // ensure the component lifecycle isn't run in the testZone, which could
+      // create false positives in the `expect`.
+      runZoned(() {
+        renderedInstance = rtu.renderIntoDocument(factory({
+          'onClick': (event) {
+            expect(Zone.current, same(testZone));
+          }
+        }));
+      });
 
       (react_dom.findDOMNode(renderedInstance) as Element).dispatchEvent(new MouseEvent('click'));
     });
