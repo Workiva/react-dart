@@ -1,3 +1,5 @@
+import 'dart:async';
+import 'dart:html';
 import 'dart:js';
 
 import 'dart:js_util';
@@ -131,6 +133,32 @@ void domEventHandlerWrappingTests(ReactComponentFactoryProxy factory) {
     expect(instanceProps['onClick'], isNot(same(originalHandler)),
         reason: 'test setup sanity check; should be different, converted function');
     expect(unconvertJsEventHandler(instanceProps['onClick']), same(originalHandler));
+  });
+
+  group('calls the handler in the zone the event was dispatched from', () {
+    test('(simulated event)', () {
+      final zone = Zone.current;
+
+      var renderedInstance = rtu.renderIntoDocument(factory({
+        'onClick': (event) {
+          expect(Zone.current, same(zone));
+        }
+      }));
+
+      rtu.Simulate.click(react_dom.findDOMNode(renderedInstance));
+    });
+
+    test('(native event)', () {
+      final zone = Zone.current;
+
+      var renderedInstance = rtu.renderIntoDocument(factory({
+        'onClick': (event) {
+          expect(Zone.current, same(zone));
+        }
+      }));
+
+      (react_dom.findDOMNode(renderedInstance) as Element).dispatchEvent(new MouseEvent('click'));
+    });
   });
 }
 
