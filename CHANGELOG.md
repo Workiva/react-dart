@@ -1,3 +1,11 @@
+## [4.7.0](https://github.com/cleandart/react-dart/compare/4.6.2...4.7.0)
+
+- [#162]: Add `jsifyAndAllowInterop`, deprecate some obsolete JS utils:
+    - Deprecate `jsify`, `setProperty`, and `getProperty`; use versions from `dart:js_util` instead
+    - Deprecate `EmptyObject`; use `newObject` from `dart:js_util` instead
+- [#170]: Reformat with line length of 120 for better readability
+
+
 ## [4.6.2](https://github.com/cleandart/react-dart/compare/4.6.1...4.6.2)
 
 - [#162]: **Important Deprecations**
