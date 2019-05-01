@@ -1,4 +1,6 @@
 @TestOn('browser')
+import 'dart:html';
+
 import 'package:test/test.dart';
 
 import 'package:react/react.dart' as react;
@@ -20,7 +22,7 @@ main() {
 
     group('- refs -', () {
       refTests(react.span, verifyRefValue: (ref) {
-        expect(ref, TypeMatcher<SpanElement>());
+        expect(ref, const isInstanceOf<SpanElement>());
       });
     });
 

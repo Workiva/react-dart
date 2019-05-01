@@ -20,7 +20,7 @@ main() {
 
     group('- refs -', () {
       refTests(Foo, verifyRefValue: (ref) {
-        expect(ref, TypeMatcher<_Foo>());
+        expect(ref, const isInstanceOf<_Foo>());
       });
     });
   });
