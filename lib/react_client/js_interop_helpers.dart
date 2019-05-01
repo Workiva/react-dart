@@ -52,8 +52,7 @@ import "dart:js_util";
 /// JavaScript type, and all other objects are proxied.
 dynamic jsifyAndAllowInterop(object) {
   if (object is! Map && object is! Iterable) {
-    throw new ArgumentError.value(
-        object, 'object', 'must be a Map or Iterable');
+    throw new ArgumentError.value(object, 'object', 'must be a Map or Iterable');
   }
   return _convertDataTree(object);
 }
@@ -61,7 +60,7 @@ dynamic jsifyAndAllowInterop(object) {
 _convertDataTree(data) {
   final _convertedObjects = new Map.identity();
 
-   _convert(o) {
+  _convert(o) {
     if (_convertedObjects.containsKey(o)) {
       return _convertedObjects[o];
     }
