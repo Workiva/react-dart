@@ -9,10 +9,10 @@ import "dart:async";
 import "dart:collection";
 import "dart:html";
 import 'dart:js';
+import 'dart:js_util';
 
 import "package:js/js.dart";
 import "package:react/react.dart";
-import "package:react/react_client/js_interop_helpers.dart";
 import 'package:react/react_client/react_interop.dart';
 import "package:react/react_dom.dart";
 import "package:react/react_dom_server.dart";
@@ -26,22 +26,6 @@ export 'package:react/react_client/react_interop.dart'
     show ReactElement, ReactJsComponentFactory, inReactDevMode;
 export 'package:react/react.dart'
     show ReactComponentFactoryProxy, ComponentFactory;
-
-final EmptyObject emptyJsMap = new EmptyObject();
-
-/// __Deprecated. Will be removed in the `5.0.0` release.__ Use [ReactComponentFactoryProxy] instead.
-///
-/// __You should discontinue use of this, and all typedefs for the return value of [registerComponent].__
-///
-///     // Don't do this
-///     ReactComponentFactory customComponent = registerComponent(() => new CustomComponent());
-///
-///     // Do this.
-///     var customComponent = registerComponent(() => new CustomComponent());
-///
-/// > Type of [children] must be child or list of children, when child is [ReactElement] or [String]
-@Deprecated('5.0.0')
-typedef ReactElement ReactComponentFactory(Map props, [dynamic children]);
 
 /// The type of [Component.ref] specified as a callback.
 ///
@@ -196,7 +180,7 @@ final ReactDartInteropStatics _dartInteropStatics = (() {
           ComponentStatics componentStatics) =>
       zone.run(() {
         void jsRedraw() {
-          jsThis.setState(emptyJsMap);
+          jsThis.setState(newObject());
         }
 
         Ref getRef = (name) {

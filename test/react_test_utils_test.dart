@@ -7,7 +7,6 @@ import 'dart:js_util' as js_util;
 import 'package:react/react.dart';
 import 'package:react/react_dom.dart' as react_dom;
 import 'package:react/react_client.dart';
-import 'package:react/react_client/js_interop_helpers.dart';
 import 'package:react/react_test_utils.dart';
 import 'package:test/test.dart';
 
@@ -146,14 +145,14 @@ void main() {
     component = renderIntoDocument(sampleComponent({}));
     var spanComponent = findRenderedDOMComponentWithClass(component, 'span1');
 
-    expect(getProperty(spanComponent, 'tagName'), equals('SPAN'));
+    expect(js_util.getProperty(spanComponent, 'tagName'), equals('SPAN'));
   });
 
   test('findRenderedDOMComponentWithTag', () {
     component = renderIntoDocument(sampleComponent({}));
     var h1Component = findRenderedDOMComponentWithTag(component, 'h1');
 
-    expect(getProperty(h1Component, 'tagName'), equals('H1'));
+    expect(js_util.getProperty(h1Component, 'tagName'), equals('H1'));
   });
 
   test('findRenderedComponentWithTypeV2', () {
@@ -217,7 +216,6 @@ void main() {
     });
 
     test('returns false argument is not an element', () {
-      expect(isElement(new EmptyObject()), isFalse);
       expect(isElement(js_util.newObject()), isFalse);
     });
   });
@@ -253,8 +251,8 @@ void main() {
     var results = scryRenderedDOMComponentsWithClass(component, 'divClass');
 
     expect(results.length, 2);
-    expect(getProperty(results[0], 'tagName'), equals('DIV'));
-    expect(getProperty(results[1], 'tagName'), equals('DIV'));
+    expect(js_util.getProperty(results[0], 'tagName'), equals('DIV'));
+    expect(js_util.getProperty(results[1], 'tagName'), equals('DIV'));
   });
 
   test('scryRenderedDOMComponentsWithTag', () {
@@ -264,9 +262,9 @@ void main() {
     var results = scryRenderedDOMComponentsWithTag(component, 'div');
 
     expect(results.length, 3);
-    expect(getProperty(results[0], 'tagName'), equals('DIV'));
-    expect(getProperty(results[1], 'tagName'), equals('DIV'));
-    expect(getProperty(results[2], 'tagName'), equals('DIV'));
+    expect(js_util.getProperty(results[0], 'tagName'), equals('DIV'));
+    expect(js_util.getProperty(results[1], 'tagName'), equals('DIV'));
+    expect(js_util.getProperty(results[2], 'tagName'), equals('DIV'));
   });
 
   test('renderIntoDocument', () {
