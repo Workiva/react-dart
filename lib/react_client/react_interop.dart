@@ -258,6 +258,7 @@ void markChildrenValidated(List<dynamic> children) {
 /// Returns a new JS [ReactClass] for a component that uses
 /// [dartInteropStatics] and [componentStatics] internally to proxy between
 /// the JS and Dart component instances.
+@JS('_createReactDartComponentClass')
 external ReactClass createReactDartComponentClass(
     ReactDartInteropStatics dartInteropStatics, ComponentStatics componentStatics,
     [JsComponentConfig jsConfig]);
