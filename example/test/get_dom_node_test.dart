@@ -38,9 +38,14 @@ class SimpleComponent extends react.Component {
   componentWillUnmount() => print("unmount");
 
   componentDidMount() {
-    customAssert("ref to span return span ", (react_dom.findDOMNode(ref("refToSpan")) as SpanElement).text == "Test");
-    customAssert("findDOMNode works on this", react_dom.findDOMNode(this) != null);
-    customAssert("random ref resolves to null", react_dom.findDOMNode(ref("someRandomRef")) == null);
+    customAssert(
+        "ref to span return span ",
+        (react_dom.findDOMNode(ref("refToSpan")) as SpanElement).text ==
+            "Test");
+    customAssert(
+        "findDOMNode works on this", react_dom.findDOMNode(this) != null);
+    customAssert("random ref resolves to null",
+        react_dom.findDOMNode(ref("someRandomRef")) == null);
   }
 
   var counter = 0;
@@ -51,14 +56,18 @@ class SimpleComponent extends react.Component {
         react.button({
           'key': 'button1',
           'className': 'btn btn-primary',
-          'onClick': (_) => (react_dom.findDOMNode(this) as HtmlElement).children.first.text = (++counter).toString()
+          'onClick': (_) => (react_dom.findDOMNode(this) as HtmlElement)
+              .children
+              .first
+              .text = (++counter).toString()
         }, 'Increase counter'),
         react.br({'key': 'br'}),
         ChildComponent({'key': 'child', "ref": "refToElement"}),
         react.button({
           'key': 'button2',
           'className': 'btn btn-primary',
-          'onClick': (_) => window.alert((this.ref('refToElement') as _ChildComponent).counter.toString())
+          'onClick': (_) => window.alert(
+              (this.ref('refToElement') as _ChildComponent).counter.toString())
         }, 'Show value of child element'),
       ]);
 }

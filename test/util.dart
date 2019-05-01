@@ -10,5 +10,6 @@ external List _objectKeys(obj);
 Map getProps(elementOrComponent) {
   var props = elementOrComponent.props;
 
-  return new Map.fromIterable(_objectKeys(props), value: (key) => getProperty(props, key));
+  return new Map.fromIterable(_objectKeys(props),
+      value: (key) => getProperty(props, key));
 }

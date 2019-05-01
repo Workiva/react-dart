@@ -60,7 +60,8 @@ final Map<String, Function> eventPropKeyToEventFactory = (() {
 
   // Add support for capturing variants; e.g., onClick/onClickCapture
   for (var key in _eventPropKeyToEventFactory.keys.toList()) {
-    _eventPropKeyToEventFactory[key + 'Capture'] = _eventPropKeyToEventFactory[key];
+    _eventPropKeyToEventFactory[key + 'Capture'] =
+        _eventPropKeyToEventFactory[key];
   }
 
   return _eventPropKeyToEventFactory;

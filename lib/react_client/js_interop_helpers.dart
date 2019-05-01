@@ -22,7 +22,8 @@ class _MissingJsMemberError extends Error {
   _MissingJsMemberError(this.name, [this.message]);
 
   @override
-  String toString() => '_MissingJsMemberError: The JS member `$name` is missing and thus '
+  String toString() =>
+      '_MissingJsMemberError: The JS member `$name` is missing and thus '
       'cannot be used as expected. $message';
 }
 
@@ -163,7 +164,8 @@ EmptyObject jsify(Map map) {
 /// JavaScript type, and all other objects are proxied.
 dynamic jsifyAndAllowInterop(object) {
   if (object is! Map && object is! Iterable) {
-    throw new ArgumentError.value(object, 'object', 'must be a Map or Iterable');
+    throw new ArgumentError.value(
+        object, 'object', 'must be a Map or Iterable');
   }
   return _convertDataTree(object);
 }
