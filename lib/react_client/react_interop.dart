@@ -236,6 +236,11 @@ class ReactDartContextInternal {
   ReactDartContextInternal(this.value);
 }
 
+/// Throws the error passed to it from Javascript.
+/// This allows us to catch the error in dart which re-dartifies the js errors/exceptions.
+@JS('_throwErrorFromJS')
+external void throwErrorFromJS(error);
+
 /// Marks [child] as validated, as if it were passed into [React.createElement]
 /// as a variadic child.
 ///

@@ -2,6 +2,13 @@
  * react-dart JS interop helpers (used by react_client.dart and react_client/js_interop_helpers.dart)
  */
 
+/// A JS side function to allow Dart to throw an error from JS in order to catch it Dart side.
+/// Used within Component2 error boundry methods to dartify the error argument.
+/// See: https://github.com/dart-lang/sdk/issues/36363
+function _throwErrorFromJS(error){
+  throw error;
+}
+
 function _createReactDartComponentClass(dartInteropStatics, componentStatics, jsConfig) {
   class ReactDartComponent extends React.Component {
     constructor(props, context) {
@@ -83,4 +90,5 @@ function _markChildValidated(child) {
 module.exports = {
   _createReactDartComponentClass,
   _markChildValidated,
+  _throwErrorFromJS,
 };
