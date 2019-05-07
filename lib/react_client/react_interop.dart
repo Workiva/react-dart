@@ -32,6 +32,15 @@ abstract class ReactDom {
   static Element findDOMNode(object) => ReactDOM.findDOMNode(object);
   static ReactComponent render(ReactElement component, Element element) => ReactDOM.render(component, element);
   static bool unmountComponentAtNode(Element element) => ReactDOM.unmountComponentAtNode(element);
+
+  /// Returns a a portal that renders [children] into a [container].
+  ///
+  /// Portals provide a first-class way to render children into a DOM node that exists outside the DOM hierarchy of the parent component.
+  ///
+  /// [children] can be any renderable React child, such as a [ReactElement], [String], or fragment.
+  ///
+  /// See: <https://reactjs.org/docs/portals.html>
+  static ReactPortal createPortal(dynamic children, Element container) => ReactDOM.createPortal(children, container);
 }
 
 @JS('ReactDOMServer')
@@ -145,6 +154,22 @@ class ReactElement {
   ///
   /// See: <http://facebook.github.io/react/docs/more-about-refs.html>.
   external dynamic get ref;
+}
+
+/// A virtual DOM node representing a React Portal, returned by [ReactDom.createPortal].
+///
+/// Portals provide a first-class way to render children into a DOM node that exists outside the DOM hierarchy of the parent component.
+///
+/// Children can be any renderable React child, such as an element, string, or fragment.
+///
+/// While closely related, portals are not [ReactElement]s.
+///
+/// See: <https://reactjs.org/docs/portals.html>
+@JS()
+@anonymous
+class ReactPortal {
+  external dynamic /* ReactNodeList */ get children;
+  external dynamic get containerInfo;
 }
 
 /// The JavaScript component instance, which backs each react-dart [Component].
