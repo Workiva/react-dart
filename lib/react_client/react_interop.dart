@@ -32,6 +32,15 @@ abstract class ReactDom {
   static Element findDOMNode(object) => ReactDOM.findDOMNode(object);
   static ReactComponent render(ReactElement component, Element element) => ReactDOM.render(component, element);
   static bool unmountComponentAtNode(Element element) => ReactDOM.unmountComponentAtNode(element);
+
+  /// Returns a a portal that renders [children] into a [container].
+  ///
+  /// Portals provide a first-class way to render children into a DOM node that exists outside the DOM hierarchy of the parent component.
+  ///
+  /// [children] can be any renderable React child, such as a [ReactElement], [String], or fragment.
+  ///
+  /// See: <https://reactjs.org/docs/portals.html>
+  static ReactPortal createPortal(dynamic children, Element container) => ReactDOM.createPortal(children, container);
 }
 
 @JS('ReactDOMServer')
@@ -113,11 +122,23 @@ class ReactElementStore {
   external set validated(bool value);
 }
 
-/// A virtual instance of a React component that is returned by component
-/// factories and `Component.render` methods, and passed into [react.render].
+/// A virtual DOM element representing an instance of a DOM element,
+/// React component, or fragment.
 ///
-/// See <http://facebook.github.io/react/docs/glossary.html#react-elements>
-/// and <http://facebook.github.io/react/docs/glossary.html#react-components>.
+/// React elements are the building blocks of React applications.
+/// One might confuse elements with a more widely known concept of "components".
+/// An element describes what you want to see on the screen. React elements are immutable.
+///
+/// Typically, elements are not used directly, but get returned from components.
+///
+/// These can be created directly by [React.createElement], or by invoking
+/// React element DOM/component factories.
+///
+///     react.h1({}, 'Content here');
+///     MaterialButton({}, 'Click me');
+///
+/// See <https://reactjs.org/docs/glossary.html#elements>
+/// and <https://reactjs.org/docs/glossary.html#components>.
 @JS()
 @anonymous
 class ReactElement {
@@ -135,16 +156,33 @@ class ReactElement {
 
   /// This element's `key`, which is used to uniquely identify it among its siblings.
   ///
-  /// Not needed when children are passed variadically.
+  /// Not needed when children are passed variadically
+  /// (as arguments to a factory, as opposed to items within a list/iterable).
   ///
-  /// See: <http://facebook.github.io/react/docs/reconciliation.html#keys>.
+  /// See: <https://reactjs.org/docs/reconciliation.html#keys>.
   external String get key;
 
   /// This element's `ref`, which can be used to access the associated
   /// [Component]/[ReactComponent]/[Element] after it has been rendered.
   ///
-  /// See: <http://facebook.github.io/react/docs/more-about-refs.html>.
+  /// See: <https://reactjs.org/docs/refs-and-the-dom.html>.
   external dynamic get ref;
+}
+
+/// A virtual DOM node representing a React Portal, returned by [ReactDom.createPortal].
+///
+/// Portals provide a first-class way to render children into a DOM node that exists outside the DOM hierarchy of the parent component.
+///
+/// Children can be any renderable React child, such as an element, string, or fragment.
+///
+/// While closely related, portals are not [ReactElement]s.
+///
+/// See: <https://reactjs.org/docs/portals.html>
+@JS()
+@anonymous
+class ReactPortal {
+  external dynamic /* ReactNodeList */ get children;
+  external dynamic get containerInfo;
 }
 
 /// The JavaScript component instance, which backs each react-dart [Component].
