@@ -147,6 +147,7 @@ external List<String> _objectKeys(Object object);
 InteropContextValue _jsifyContext(Map<String, dynamic> context) {
   var interopContext = new InteropContextValue();
   context.forEach((key, value) {
+    // ignore: argument_type_not_assignable
     setProperty(interopContext, key, new ReactDartContextInternal(value));
   });
 
@@ -156,6 +157,7 @@ InteropContextValue _jsifyContext(Map<String, dynamic> context) {
 Map<String, dynamic> _unjsifyContext(InteropContextValue interopContext) {
   // TODO consider using `contextKeys` for this if perf of objectKeys is bad.
   return new Map.fromIterable(_objectKeys(interopContext), value: (key) {
+    // ignore: argument_type_not_assignable
     ReactDartContextInternal internal = getProperty(interopContext, key);
     return internal?.value;
   });
