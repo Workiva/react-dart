@@ -1,3 +1,9 @@
+## [4.7.1](https://github.com/cleandart/react-dart/compare/4.7.0...4.7.1)
+
+- [#182]: Deprecate `emptyJsMap`:
+    - Use `newObject()` from `dart:js_util` instead
+
+
 ## [4.7.0](https://github.com/cleandart/react-dart/compare/4.6.2...4.7.0)
 
 - [#162]: Add `jsifyAndAllowInterop`, deprecate some obsolete JS utils:
