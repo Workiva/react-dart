@@ -1,0 +1,9 @@
+# top-most EditorConfig file
+root = true
+
+[*.dart]
+max_line_length = 120
+
+[*.js]
+indent_size = 2
+max_line_length = 120
