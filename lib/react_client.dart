@@ -24,6 +24,10 @@ import 'package:react/src/ddc_emulated_function_name_bug.dart' as ddc_emulated_f
 export 'package:react/react_client/react_interop.dart' show ReactElement, ReactJsComponentFactory, inReactDevMode;
 export 'package:react/react.dart' show ReactComponentFactoryProxy, ComponentFactory;
 
+/// __Deprecated. Will be removed in the `5.0.0` release.__
+///
+/// Use `newObject()` from the `dart:js_util` library instead.
+@Deprecated('5.0.0')
 final EmptyObject emptyJsMap = new EmptyObject();
 
 /// __Deprecated. Will be removed in the `5.0.0` release.__ Use [ReactComponentFactoryProxy] instead.
