@@ -130,11 +130,11 @@ void main() {
       const testKeyCode = 42;
 
       String callInfo;
-      bool wasStopPropagationCalled;
+      bool wasStopPropagationCalled = false;
 
       final renderedNode = renderIntoDocument(div({
         'onKeyDown': (event) {
-          event.stopPropagation;
+          event.stopPropagation();
           callInfo = 'onKeyDown ${event.keyCode}';
         }
       }));
