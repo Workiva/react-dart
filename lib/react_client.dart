@@ -960,15 +960,14 @@ Function unconvertJsEventHandler(Function jsConvertedEventHandler) {
 /// Convert packed event handler into wrapper and pass it only the Dart [SyntheticEvent] object converted from the
 /// [events.SyntheticEvent] event.
 _convertEventHandlers(Map args) {
-  var zone = Zone.current;
   args.forEach((propKey, value) {
     var eventFactory = eventPropKeyToEventFactory[propKey];
     if (eventFactory != null && value != null) {
       // Apply allowInterop here so that the function we store in [_originalEventHandlers]
       // is the same one we'll retrieve from the JS props.
-      var reactDartConvertedEventHandler = allowInterop((events.SyntheticEvent e, [_, __]) => zone.run(() {
-            value(eventFactory(e));
-          }));
+      var reactDartConvertedEventHandler = allowInterop((events.SyntheticEvent e, [_, __]) {
+        value(eventFactory(e));
+      });
 
       args[propKey] = reactDartConvertedEventHandler;
       _originalEventHandlers[reactDartConvertedEventHandler] = value;

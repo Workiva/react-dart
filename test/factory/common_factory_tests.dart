@@ -1,3 +1,5 @@
+import 'dart:async';
+import 'dart:html';
 import 'dart:js';
 import 'dart:js_util';
 
@@ -150,6 +152,44 @@ void domEventHandlerWrappingTests(ReactComponentFactoryProxy factory) {
     expect(instanceProps['onClick'], isNot(same(originalHandler)),
         reason: 'test setup sanity check; should be different, converted function');
     expect(unconvertJsEventHandler(instanceProps['onClick']), same(originalHandler));
+  });
+
+  group('calls the handler in the zone the event was dispatched from', () {
+    test('(simulated event)', () {
+      final testZone = Zone.current;
+
+      var renderedInstance;
+      // Run the ReactElement creation and rendering in a separate zone to
+      // ensure the component lifecycle isn't run in the testZone, which could
+      // create false positives in the `expect`.
+      runZoned(() {
+        renderedInstance = rtu.renderIntoDocument(factory({
+          'onClick': (event) {
+            expect(Zone.current, same(testZone));
+          }
+        }));
+      });
+
+      rtu.Simulate.click(react_dom.findDOMNode(renderedInstance));
+    });
+
+    test('(native event)', () {
+      final testZone = Zone.current;
+
+      var renderedInstance;
+      // Run the ReactElement creation and rendering in a separate zone to
+      // ensure the component lifecycle isn't run in the testZone, which could
+      // create false positives in the `expect`.
+      runZoned(() {
+        renderedInstance = rtu.renderIntoDocument(factory({
+          'onClick': (event) {
+            expect(Zone.current, same(testZone));
+          }
+        }));
+      });
+
+      (react_dom.findDOMNode(renderedInstance) as Element).dispatchEvent(new MouseEvent('click'));
+    });
   });
 }
 
