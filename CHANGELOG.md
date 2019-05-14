@@ -1,3 +1,43 @@
+## [4.8.0](https://github.com/cleandart/react-dart/compare/4.7.1...4.8.0)
+
+- [#181]: Remove unnecessary zoning on event handlers that interferes with testing
+    - Handlers triggered by real events will now always be called in the root zone.
+    
+      In most cases, handlers were already running in the root zone, so this should not affect behavior. See [#179] for more details.
+    - When testing, you previous had to bind event handlers or callbacks triggered by event handlers to zones when using `expect` or `expectAsync`.
+        ```dart
+        var renderedInstance = renderIntoDocument(
+          Button({}, {
+            'onButtonPress': Zone.current.bindUnaryCallback(expectAsync((e) {
+              // ...
+            }, reason: 'onButtonPress not called')),
+            'onClick': Zone.current.bindUnaryCallback((e) {
+              expect(e.defaultPrevented, isTrue);
+            }),
+          }),
+        );
+
+        // ...
+        Simulate.click(buttonNode);
+        ```
+        Now, handlers will be called in the zone they're triggered from, which makes testing events easier and more predictable:
+        ```dart
+        var renderedInstance = renderIntoDocument(
+          Button({}, {
+            'onButtonPress': expectAsync((e) {
+              // ...
+            }, reason: 'onButtonPress not called'),
+            'onClick': (e) {
+              expect(e.defaultPrevented, isTrue);
+            },
+          }),
+        );
+
+        // ...
+        Simulate.click(buttonNode);
+        ```
+
+
 ## [4.7.1](https://github.com/cleandart/react-dart/compare/4.7.0...4.7.1)
 
 - [#182]: Deprecate `emptyJsMap`:
