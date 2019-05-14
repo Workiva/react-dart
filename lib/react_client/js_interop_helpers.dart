@@ -44,9 +44,9 @@ final _GetPropertyFn getProperty = (() {
     throw new _MissingJsMemberError(
         '_getProperty',
         'Be sure to include React JS files included in this package '
-        '(which has this and other JS interop helper functions included) '
-        'or, alternatively, define the function yourself:\n'
-        '    function _getProperty(obj, key) { return obj[key]; }');
+            '(which has this and other JS interop helper functions included) '
+            'or, alternatively, define the function yourself:\n'
+            '    function _getProperty(obj, key) { return obj[key]; }');
   }
 
   return _getProperty;
@@ -70,9 +70,9 @@ final _SetPropertyFn setProperty = (() {
     throw new _MissingJsMemberError(
         '_setProperty',
         'Be sure to include React JS files included in this package '
-        '(which has this and other JS interop helper functions included) '
-        'or, alternatively, define the function yourself:\n'
-        '    function _setProperty(obj, key, value) { return obj[key] = value; }');
+            '(which has this and other JS interop helper functions included) '
+            'or, alternatively, define the function yourself:\n'
+            '    function _setProperty(obj, key, value) { return obj[key] = value; }');
   }
 
   return _setProperty;
