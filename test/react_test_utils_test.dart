@@ -81,8 +81,6 @@ void main() {
       });
     }
 
-    ;
-
     group('event', () {
       group('blur', () => testEvent(Simulate.blur, 'blur'));
       group('change', () => testEvent(Simulate.change, 'change'));
@@ -126,6 +124,30 @@ void main() {
       group('touchMove', () => testEvent(Simulate.touchMove, 'touchMove'));
       group('touchStart', () => testEvent(Simulate.touchStart, 'touchStart'));
       group('wheel', () => testEvent(Simulate.wheel, 'wheel'));
+    });
+
+    test('passes in and jsifies eventData properly', () {
+      const testKeyCode = 42;
+
+      String callInfo;
+      bool wasStopPropagationCalled = false;
+
+      final renderedNode = renderIntoDocument(div({
+        'onKeyDown': (event) {
+          event.stopPropagation();
+          callInfo = 'onKeyDown ${event.keyCode}';
+        }
+      }));
+
+      Simulate.keyDown(renderedNode, {
+        'keyCode': testKeyCode,
+        'stopPropagation': () {
+          wasStopPropagationCalled = true;
+        }
+      });
+
+      expect(callInfo, 'onKeyDown $testKeyCode');
+      expect(wasStopPropagationCalled, isTrue, reason: 'should have successfully called Dart function passed in');
     });
   });
 
