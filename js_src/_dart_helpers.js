@@ -87,8 +87,8 @@ function _markChildValidated(child) {
   if (store) store.validated = true;
 }
 
-module.exports = {
+export default {
   _createReactDartComponentClass,
   _markChildValidated,
   _throwErrorFromJS,
-};
+}

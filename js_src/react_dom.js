@@ -1,4 +1,3 @@
-require('@babel/polyfill');
 const ReactDOM = require('react-dom');
 
 window.ReactDOM = ReactDOM;

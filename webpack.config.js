@@ -8,18 +8,20 @@ var babelRules = [{
   use: {
     loader: "babel-loader",
     options: {
+      exclude: [
+        /node_modules/
+      ],
       presets: [
         [
           "@babel/preset-env",
           {
-            corejs: 2,
-            useBuiltIns: "entry",
+            corejs: 3,
+            useBuiltIns: "usage",
             targets: {
                 browsers: 'last 2 chrome versions, last 2 edge versions, ie 11'
             }
           }
-        ],
-        "@babel/preset-react"
+        ]
       ],
     }
   }
