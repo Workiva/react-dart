@@ -1,27 +1,32 @@
 const webpack = require("webpack");
 const path = require("path");
-
 const outputPath = path.resolve(__dirname, "lib/");
 const inputPath = path.resolve(__dirname, "js_src/");
 
-
-var babelPlugin = new webpack.DefinePlugin({
-  test: /\.jsx?$/,
+var babelRules = [{
+  test: /\.js?$/,
   use: {
     loader: "babel-loader",
     options: {
-      presets: ["@babel/preset-env", "@babel/preset-react"]
+      exclude: [
+        /node_modules/
+      ],
+      presets: [
+        [
+          "@babel/preset-env",
+          {
+            corejs: 3,
+            useBuiltIns: "usage",
+            targets: {
+                browsers: 'last 2 chrome versions, last 2 edge versions, ie 11'
+            }
+          }
+        ]
+      ],
     }
   }
-});
+}];
 
-var devPlugins = [
-  babelPlugin,
-];
-
-var prodPlugins = [
-  babelPlugin,
-];
 
 /// Helper function that generates the webpack export objects array
 ///
@@ -47,8 +52,10 @@ function createExports(exportMappings) {
           path: outputPath,
           filename: outputFilename
         },
+        module: {
+          rules: babelRules,
+        },
         entry: path.resolve(inputPath, entryFilename),
-        plugins: isProduction ? prodPlugins : devPlugins,
         mode: isProduction ? "production" : "development",
         externals: [{ window: "window" }],
         devtool: "source-map",
