@@ -1,9 +1,18 @@
-require('./polyfill/delete_property');
-require('./polyfill/object_assign');
+// React 16 Polyfill requirements: https://reactjs.org/docs/javascript-environment-requirements.html
+import 'core-js/es/map';
+import 'core-js/es/set';
+
+// Know required Polyfill's for dart side usage
+import 'core-js/stable/reflect/delete-property';
+import 'core-js/stable/object/assign';
+
+// Additional polyfills are included by core-js based on 'usage' and browser requirements
+
+// Custom dart side methods
+import DartHelpers from './_dart_helpers';
 
 const React = require('react');
 const PropTypes = require('prop-types');
-const DartHelpers = require('./_dart_helpers');
 const CreateReactClass = require('create-react-class');
 
 window.React = React;

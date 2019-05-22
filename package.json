@@ -1,21 +1,23 @@
 {
   "name": "react-dart",
   "scripts": {
-    "build": "npm install && ./node_modules/.bin/webpack"
+    "prebuild": "npm install",
+    "build": "./node_modules/.bin/webpack"
   },
-  "devDependencies": {
-    "@babel/core": "^7.3.4",
-    "@babel/preset-env": "^7.3.4",
-    "@babel/preset-react": "^7.0.0",
-    "babel-loader": "^8.0.4",
+  "dependencies": {
+    "@babel/cli": "^7.4.4",
+    "@babel/core": "^7.4.5",
+    "@babel/preset-env": "^7.4.5",
+    "babel-loader": "^8.0.6",
+    "core-js": "^3.1.1",
     "create-react-class": "^15.6.3",
-    "object-assign": "^4.1.1",
     "prop-types": "^15.7.2",
     "react": "^16.8.6",
     "react-dom": "^16.8.6",
     "react-dom-factories": "^1.0.2",
     "react-test-renderer": "^16.8.3",
-    "webpack": "^4.29.6",
-    "webpack-cli": "^3.2.3"
+    "regenerator-runtime": "^0.13.2",
+    "webpack": "^4.32.0",
+    "webpack-cli": "^3.3.2"
   }
 }
