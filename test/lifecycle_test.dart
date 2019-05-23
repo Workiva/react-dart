@@ -134,6 +134,15 @@ main() {
         isComponent2: true,
       );
 
+      test('initializes correctly using initializeState', () {
+        var mountNode = new DivElement();
+        var renderedInstance = react_dom.render(components2.SetStateTest({}), mountNode);
+        LifecycleTestHelper component = getDartComponent(renderedInstance);
+
+        expect(component.state["initializedCorrectly"], isTrue);
+        expect(component.state, isA<JsBackedMap>());
+      });
+
       test('updates with correct lifecycle calls when `forceUpdate` is called', () {
         const Map initialState = const {
           'initialState': 'initial',
