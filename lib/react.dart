@@ -481,6 +481,7 @@ abstract class Component2Adapter {
   void setState(Map newState, SetStateCallback callback);
   void setStateWithUpdater(StateUpdaterCallback stateUpdater, SetStateCallback callback);
   void forceUpdate(SetStateCallback callback);
+  void initializeState(Map state);
 }
 
 /// Top-level ReactJS [Component class](https://facebook.github.io/react/docs/react-component.html)
@@ -588,6 +589,14 @@ abstract class Component2 implements Component {
   /// See: <https://reactjs.org/docs/react-component.html#setstate>
   void setStateWithUpdater(StateUpdaterCallback updater, [SetStateCallback callback]) {
     adapter.setStateWithUpdater(updater, callback);
+  }
+
+  /// Method used to initialize the [state] of a component.
+  ///
+  /// To avoid unnecessary Map copies and setter calls, the [init] method should use [initializeState] (instead of
+  /// this.state) to directly set the state on the JavaScript side.
+  void initializeState(Map value) {
+    adapter.initializeState(value);
   }
 
   void forceUpdate([SetStateCallback callback]) {
