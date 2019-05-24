@@ -593,7 +593,7 @@ abstract class Component2 implements Component {
 
   /// Initializes this component's [state] to [value].
   ///
-  /// Whereas `this.state` can be set directly in JavaScript components during initialization, 
+  /// Whereas `this.state` can be set directly in JavaScript components during initialization,
   /// supporting that is difficult in the Dart implementation, so this method must be used instead.
   ///
   /// __Example__:
@@ -610,7 +610,6 @@ abstract class Component2 implements Component {
   ///       initializeState({'count': 0});
   ///     }
   void initializeState(Map value) {
-    print('setting state');
     adapter.initializeState(value);
   }
 
