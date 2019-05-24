@@ -134,15 +134,6 @@ main() {
         isComponent2: true,
       );
 
-      test('initializes correctly using initializeState', () {
-        var mountNode = new DivElement();
-        var renderedInstance = react_dom.render(components2.SetStateTest({}), mountNode);
-        LifecycleTestHelper component = getDartComponent(renderedInstance);
-
-        expect(component.state["initializedCorrectly"], isTrue);
-        expect(component.state, isA<JsBackedMap>());
-      });
-
       test('updates with correct lifecycle calls when `forceUpdate` is called', () {
         const Map initialState = const {
           'initialState': 'initial',
@@ -812,7 +803,7 @@ void sharedLifecycleTests<T extends react.Component>({
         };
 
         final Map initialProps =
-            unmodifiableMap({'init': (react.Component2 component) => component.state = initialState});
+            unmodifiableMap({'init': (react.Component2 component) => component.initializeState(initialState)});
         final Map expectedProps = unmodifiableMap(defaultProps, initialProps, emptyChildrenProps);
         LifecycleTestHelper component = getDartComponent(render(LifecycleTest(initialProps)));
 
@@ -820,11 +811,12 @@ void sharedLifecycleTests<T extends react.Component>({
             component.lifecycleCalls,
             equals([
               matchCall('init', props: expectedProps, state: null),
-              matchCall('getInitialState', props: expectedProps, state: initialState),
+              matchCall('getInitialState', props: expectedProps),
               matchCall('getDerivedStateFromProps', args: {expectedProps, initialState}),
               matchCall('render', props: expectedProps, state: initialState),
               matchCall('componentDidMount', props: expectedProps, state: initialState)
             ].where((matcher) => matcher != null)));
+        expect(component.state, isA<JsBackedMap>());
       });
     }
 
@@ -835,7 +827,7 @@ void sharedLifecycleTests<T extends react.Component>({
         };
 
         final Map initialProps = unmodifiableMap({
-          'init': (react.Component2 component) => component.state = initialState,
+          'init': (react.Component2 component) => component.initializeState(initialState),
           'getInitialState': (_) => initialState
         });
         expect(() {

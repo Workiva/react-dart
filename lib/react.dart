@@ -591,11 +591,26 @@ abstract class Component2 implements Component {
     adapter.setStateWithUpdater(updater, callback);
   }
 
-  /// Method used to initialize the [state] of a component.
+  /// Initializes this component's [state] to [value].
   ///
-  /// To avoid unnecessary Map copies and setter calls, the [init] method should use [initializeState] (instead of
-  /// this.state) to directly set the state on the JavaScript side.
+  /// Whereas `this.state` can be set directly in JavaScript components during initialization, 
+  /// supporting that is difficult in the Dart implementation, so this method must be used instead.
+  ///
+  /// __Example__:
+  ///     ```js
+  ///     // JavaScript
+  ///     constructor() {
+  ///       this.state = {count: 0};
+  ///     }
+  ///     ```
+  ///
+  ///     ```dart
+  ///     // Dart
+  ///     init() {
+  ///       initializeState({'count': 0});
+  ///     }
   void initializeState(Map value) {
+    print('setting state');
     adapter.initializeState(value);
   }
 
