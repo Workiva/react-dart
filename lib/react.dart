@@ -597,14 +597,12 @@ abstract class Component2 implements Component {
   /// supporting that is difficult in the Dart implementation, so this method must be used instead.
   ///
   /// __Example__:
-  ///     ```js
+  ///
   ///     // JavaScript
   ///     constructor() {
   ///       this.state = {count: 0};
   ///     }
-  ///     ```
   ///
-  ///     ```dart
   ///     // Dart
   ///     init() {
   ///       initializeState({'count': 0});
