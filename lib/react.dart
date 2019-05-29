@@ -824,12 +824,15 @@ abstract class Component2 implements Component {
   /// This is equivalent to `Constructor` in React 16, this is called before mounting
   /// See: <https://reactjs.org/docs/react-component.html#constructor>
   ///
+  /// __NOTE__: In contrast to `Constructor`, state should be initialized via [initializeState]
+  /// rather than `this.state = {}`.
+  ///
   /// __Example__:
   ///
   ///    class MyClass extends react.Component2 {
   ///      @override
   ///      void init() {
-  ///        this.state = {'foo': 0, 'bar': 1};
+  ///        initializeState({'foo': 0, 'bar': 1});
   ///      }
   ///    }
   void init() {}
