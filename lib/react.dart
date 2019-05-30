@@ -481,6 +481,7 @@ abstract class Component2Adapter {
   void setState(Map newState, SetStateCallback callback);
   void setStateWithUpdater(StateUpdaterCallback stateUpdater, SetStateCallback callback);
   void forceUpdate(SetStateCallback callback);
+  void initializeState(Map state);
 }
 
 /// Top-level ReactJS [Component class](https://facebook.github.io/react/docs/react-component.html)
@@ -588,6 +589,26 @@ abstract class Component2 implements Component {
   /// See: <https://reactjs.org/docs/react-component.html#setstate>
   void setStateWithUpdater(StateUpdaterCallback updater, [SetStateCallback callback]) {
     adapter.setStateWithUpdater(updater, callback);
+  }
+
+  /// Initializes this component's [state] to [value].
+  ///
+  /// Whereas `this.state` can be set directly in JavaScript components during initialization,
+  /// supporting that is difficult in the Dart implementation, so this method must be used instead.
+  ///
+  /// __Example__:
+  ///
+  ///     // JavaScript
+  ///     constructor() {
+  ///       this.state = {count: 0};
+  ///     }
+  ///
+  ///     // Dart
+  ///     init() {
+  ///       initializeState({'count': 0});
+  ///     }
+  void initializeState(Map value) {
+    adapter.initializeState(value);
   }
 
   void forceUpdate([SetStateCallback callback]) {
@@ -803,12 +824,15 @@ abstract class Component2 implements Component {
   /// This is equivalent to `Constructor` in React 16, this is called before mounting
   /// See: <https://reactjs.org/docs/react-component.html#constructor>
   ///
+  /// __NOTE__: In contrast to `Constructor`, state should be initialized via [initializeState]
+  /// rather than `this.state = {}`.
+  ///
   /// __Example__:
   ///
   ///    class MyClass extends react.Component2 {
   ///      @override
   ///      void init() {
-  ///        this.state = {'foo': 0, 'bar': 1};
+  ///        initializeState({'foo': 0, 'bar': 1});
   ///      }
   ///    }
   void init() {}
