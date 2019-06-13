@@ -8,11 +8,17 @@ library react;
 import 'package:meta/meta.dart';
 import 'package:react/src/typedefs.dart';
 import 'package:react/react_client.dart';
-import 'package:react/react_client/react_interop.dart' show ReactErrorInfo;
+import 'package:react/react_client/react_interop.dart' show ReactErrorInfo, React;
 
 typedef T ComponentFactory<T extends Component>();
 typedef ReactComponentFactoryProxy ComponentRegistrar(ComponentFactory componentFactory,
     [Iterable<String> skipMethods]);
+
+/// Fragment component that allows the wrapping of children without the necessitiy of using
+/// an element that adds an additional layer to the DOM (div, span, etc).
+///
+/// See: <https://reactjs.org/docs/fragments.html>
+var Fragment = ReactJsComponentFactoryProxy(React.Fragment);
 
 /// Top-level ReactJS [Component class](https://facebook.github.io/react/docs/react-component.html)
 /// which provides the [ReactJS Component API](https://facebook.github.io/react/docs/react-component.html#reference)
