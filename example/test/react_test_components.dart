@@ -165,7 +165,7 @@ var listComponent = react.registerComponent(() => new _ListComponent());
 
 class _MainComponent extends react.Component {
   render() {
-    return react.div({}, props['children']);
+    return react.Fragment({}, props['children']);
   }
 }
 
