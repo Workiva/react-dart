@@ -18,14 +18,20 @@ main() {
       var wrappingDivRef;
 
       react_dom.render(
-          react.div({
-            'ref': (ref) {
-              wrappingDivRef = ref;
-            }
-          }, [
-            react.Fragment({}, [react.div({}), react.div({}), react.div({}), react.div({})])
-          ]),
-          new Element.div());
+        react.div({
+          'ref': (ref) {
+            wrappingDivRef = ref;
+          }
+        }, [
+          react.Fragment({}, [
+            react.div({}),
+            react.div({}),
+            react.div({}),
+            react.div({}),
+          ])
+        ]),
+        new Element.div(),
+      );
 
       expect(wrappingDivRef.children, hasLength(4));
     });
