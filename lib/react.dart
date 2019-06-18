@@ -14,7 +14,7 @@ typedef T ComponentFactory<T extends Component>();
 typedef ReactComponentFactoryProxy ComponentRegistrar(ComponentFactory componentFactory,
     [Iterable<String> skipMethods]);
 
-/// Fragment component that allows the wrapping of children without the necessitiy of using
+/// Fragment component that allows the wrapping of children without the necessity of using
 /// an element that adds an additional layer to the DOM (div, span, etc).
 ///
 /// See: <https://reactjs.org/docs/fragments.html>

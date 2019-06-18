@@ -13,8 +13,8 @@ import 'package:react/react_client.dart';
 main() {
   setClientConfiguration();
 
-  group('FragmentComponent', () {
-    test('does not render in dom', () {
+  group('Fragment', () {
+    test('renders nothing but its children', () {
       var wrappingDivRef;
 
       react_dom.render(
