@@ -58,8 +58,7 @@ void main() {
       expect(domNode.text, equals(''));
     });
 
-    void testEvent(
-        void event(dynamic instanceOrNode, Map eventData), String eventName) {
+    void testEvent(void event(dynamic instanceOrNode, Map eventData), String eventName) {
       Map eventData;
       int fakeTimeStamp;
 
