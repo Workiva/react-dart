@@ -45,18 +45,6 @@ final Map<String, Function> eventPropKeyToEventFactory = (() {
     'onMouseOver': syntheticMouseEventFactory,
     'onMouseUp': syntheticMouseEventFactory,
 
-    // SyntheticPointerEvent
-    'onGotPointerCapture': syntheticPointerEventFactory,
-    'onLostPointerCapture': syntheticPointerEventFactory,
-    'onPointerCancel': syntheticPointerEventFactory,
-    'onPointerDown': syntheticPointerEventFactory,
-    'onPointerEnter': syntheticPointerEventFactory,
-    'onPointerLeave': syntheticPointerEventFactory,
-    'onPointerMove': syntheticPointerEventFactory,
-    'onPointerOver': syntheticPointerEventFactory,
-    'onPointerOut': syntheticPointerEventFactory,
-    'onPointerUp': syntheticPointerEventFactory,
-
     // SyntheticTouchEvent
     'onTouchCancel': syntheticTouchEventFactory,
     'onTouchEnd': syntheticTouchEventFactory,
