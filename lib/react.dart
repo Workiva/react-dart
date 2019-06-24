@@ -896,57 +896,6 @@ class SyntheticMouseEvent extends SyntheticEvent {
         ) {}
 }
 
-class SyntheticPointerEvent extends SyntheticEvent {
-  final num pointerId;
-  final num width;
-  final num height;
-  final num pressure;
-  final num tangentialPressure;
-  final num tiltX;
-  final num tiltY;
-  final num twist;
-  final String pointerType;
-  final bool isPrimary;
-
-  SyntheticPointerEvent(
-    bool bubbles,
-    bool cancelable,
-    dynamic currentTarget,
-    bool defaultPrevented,
-    dynamic preventDefault,
-    dynamic stopPropagation,
-    num eventPhase,
-    bool isTrusted,
-    dynamic nativeEvent,
-    dynamic target,
-    num timeStamp,
-    String type,
-    this.pointerId,
-    this.width,
-    this.height,
-    this.pressure,
-    this.tangentialPressure,
-    this.tiltX,
-    this.tiltY,
-    this.twist,
-    this.pointerType,
-    this.isPrimary,
-  ) /* Prevent formatting differences between Dart 1 and Dart 2 */ : super(
-          bubbles,
-          cancelable,
-          currentTarget,
-          defaultPrevented,
-          preventDefault,
-          stopPropagation,
-          eventPhase,
-          isTrusted,
-          nativeEvent,
-          target,
-          timeStamp,
-          type,
-        ) {}
-}
-
 class SyntheticTouchEvent extends SyntheticEvent {
   final bool altKey;
   final /*DOMTouchList*/ changedTouches;
