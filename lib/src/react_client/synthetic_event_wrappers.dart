@@ -89,6 +89,21 @@ class SyntheticMouseEvent extends SyntheticEvent {
 
 @JS()
 @anonymous
+class SyntheticPointerEvent extends SyntheticEvent {
+  external num get pointerId;
+  external num get width;
+  external num get height;
+  external num get pressure;
+  external num get tangentialPressure;
+  external num get tiltX;
+  external num get tiltY;
+  external num get twist;
+  external String get pointerType;
+  external bool get isPrimary;
+}
+
+@JS()
+@anonymous
 class SyntheticTouchEvent extends SyntheticEvent {
   external bool get altKey;
   external TouchList get changedTouches;

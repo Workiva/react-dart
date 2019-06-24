@@ -1094,6 +1094,34 @@ SyntheticDataTransfer syntheticDataTransferFactory(events.SyntheticDataTransfer 
   return new SyntheticDataTransfer(dropEffect, effectAllowed, files, types);
 }
 
+/// Wrapper for [SyntheticPointerEvent].
+SyntheticPointerEvent syntheticPointerEventFactory(events.SyntheticPointerEvent e) {
+  return new SyntheticPointerEvent(
+    e.bubbles,
+    e.cancelable,
+    e.currentTarget,
+    e.defaultPrevented,
+    () => e.preventDefault(),
+    () => e.stopPropagation(),
+    e.eventPhase,
+    e.isTrusted,
+    e.nativeEvent,
+    e.target,
+    e.timeStamp,
+    e.type,
+    e.pointerId,
+    e.width,
+    e.height,
+    e.pressure,
+    e.tangentialPressure,
+    e.tiltX,
+    e.tiltY,
+    e.twist,
+    e.pointerType,
+    e.isPrimary,
+  );
+}
+
 /// Wrapper for [SyntheticMouseEvent].
 SyntheticMouseEvent syntheticMouseEventFactory(events.SyntheticMouseEvent e) {
   SyntheticDataTransfer dt = syntheticDataTransferFactory(e.dataTransfer);
