@@ -511,12 +511,13 @@ class JsComponent2Adapter extends Component2Adapter {
   @override
   void setStateWithUpdater(StateUpdaterCallback stateUpdater, SetStateCallback callback) {
     final firstArg = allowInterop((jsPrevState, jsProps, [_]) {
-      return jsBackingMapOrJsCopy(stateUpdater(
+      dynamic value = stateUpdater(
         new JsBackedMap.backedBy(jsPrevState),
         new JsBackedMap.backedBy(jsProps),
-      ));
+      );
+      if (value == null) return null;
+      return jsBackingMapOrJsCopy(value);
     });
-
     if (callback == null) {
       jsThis.setState(firstArg);
     } else {
