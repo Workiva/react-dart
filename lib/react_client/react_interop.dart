@@ -49,6 +49,24 @@ class RefObject<CurrentType> {
   external CurrentType get current;
 }
 
+forwardRef(Function(Map props, Ref ref) wrapperFunction){
+  var hoc = _jsForwardRef(
+      allowInterop(
+              (JsMap props, Ref ref) {
+            var dartProps = new JsBackedMap.backedBy(props);
+            return wrapperFunction(dartProps, ref);
+          }
+      )
+  );
+
+  return new ReactJsComponentFactoryProxy(hoc, shouldConvertDomProps: false);
+}
+
+@JS('React.forwardRef')
+external ReactClass _jsForwardRef(
+    JsMap Function(JsMap props, Ref ref) wrapperFunction
+);
+
 abstract class ReactDom {
   static Element findDOMNode(object) => ReactDOM.findDOMNode(object);
   static ReactComponent render(ReactElement component, Element element) => ReactDOM.render(component, element);
