@@ -9,9 +9,10 @@ import 'dart:html';
 import 'package:meta/meta.dart';
 import 'package:js/js.dart';
 import 'package:react/react.dart';
-import 'package:react/react_client.dart' show ComponentFactory;
+import 'package:react/react_client.dart' show ComponentFactory, ReactJsComponentFactoryProxy;
 import 'package:react/src/react_client/js_backed_map.dart';
 import 'package:react/src/react_client/dart2_interop_workaround_bindings.dart';
+import 'package:react/src/typedefs.dart';
 
 typedef ReactElement ReactJsComponentFactory(props, children);
 
@@ -33,6 +34,19 @@ abstract class React {
   external static ReactElement createElement(dynamic type, props, [dynamic children]);
 
   external static bool isValidElement(dynamic object);
+  external static ReactClass get Fragment;
+
+  external static RefObject createRef();
+}
+
+createRef() {
+  return React.createRef();
+}
+
+@JS()
+@anonymous
+class RefObject<CurrentType> {
+  external CurrentType get current;
 }
 
 abstract class ReactDom {
