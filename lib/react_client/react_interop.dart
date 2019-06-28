@@ -33,6 +33,7 @@ abstract class React {
   external static ReactElement createElement(dynamic type, props, [dynamic children]);
 
   external static bool isValidElement(dynamic object);
+  external static ReactClass get Fragment;
 }
 
 abstract class ReactDom {
