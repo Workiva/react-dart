@@ -40,14 +40,14 @@ abstract class React {
   external static createRef();
 }
 
-class createRef {
+class createRef<CurrentType> {
   var jsCreateRef;
 
   createRef() {
     jsCreateRef = React.createRef();
   }
 
-  get current {
+  CurrentType get current {
     if (jsCreateRef.current != null) {
       if (hasProperty(jsCreateRef.current, 'dartComponent')) {
         return jsCreateRef.current.dartComponent;
@@ -56,7 +56,7 @@ class createRef {
     return jsCreateRef.current;
   }
 
-  set current(v) {
+  set current(CurrentType v) {
     jsCreateRef.current = v;
   }
 }

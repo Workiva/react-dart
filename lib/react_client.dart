@@ -120,11 +120,9 @@ class ReactDartComponentFactoryProxy<TComponent extends Component> extends React
       // with the Dart Component instance, not the ReactComponent instance.
       if (ref is _CallbackRef) {
         interopProps.ref = allowInterop((ReactComponent instance) => ref(instance?.dartComponent));
-      }
-      else if (ref is createRef) {
+      } else if (ref is createRef) {
         interopProps.ref = ref.jsCreateRef;
-      }
-      else {
+      } else {
         interopProps.ref = ref;
       }
     }
