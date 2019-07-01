@@ -120,7 +120,11 @@ class ReactDartComponentFactoryProxy<TComponent extends Component> extends React
       // with the Dart Component instance, not the ReactComponent instance.
       if (ref is _CallbackRef) {
         interopProps.ref = allowInterop((ReactComponent instance) => ref(instance?.dartComponent));
-      } else {
+      }
+      else if (ref is createRef) {
+        interopProps.ref = ref.jsCreateRef;
+      }
+      else {
         interopProps.ref = ref;
       }
     }
@@ -185,6 +189,10 @@ class ReactDartComponentFactoryProxy2<TComponent extends Component2> extends Rea
       // with the Dart Component instance, not the ReactComponent instance.
       if (ref is _CallbackRef) {
         propsForJs['ref'] = allowInterop((ReactComponent instance) => ref(instance?.dartComponent));
+      }
+
+      if (ref is createRef) {
+        propsForJs['ref'] = ref.jsCreateRef;
       }
     }
 
@@ -855,6 +863,7 @@ class ReactDomComponentFactoryProxy extends ReactComponentFactoryProxy {
   static void convertProps(Map props) {
     _convertBoundValues(props);
     _convertEventHandlers(props);
+    _convertRefValue(props);
   }
 }
 
@@ -917,6 +926,16 @@ _convertBoundValues(Map args) {
         return onChange(event);
       }
     };
+  }
+}
+
+_convertRefValue(Map args) {
+  if (args.containsKey('ref')) {
+    var ref = args['ref'];
+
+    if (ref is createRef) {
+      args['ref'] = ref.jsCreateRef;
+    }
   }
 }
 

@@ -5,6 +5,7 @@
 library react_client.react_interop;
 
 import 'dart:html';
+import 'dart:js_util';
 
 import 'package:meta/meta.dart';
 import 'package:js/js.dart';
@@ -36,17 +37,28 @@ abstract class React {
   external static bool isValidElement(dynamic object);
   external static ReactClass get Fragment;
 
-  external static RefObject createRef();
+  external static createRef();
 }
 
-createRef() {
-  return React.createRef();
-}
+class createRef {
+  var jsCreateRef;
 
-@JS()
-@anonymous
-class RefObject<CurrentType> {
-  external CurrentType get current;
+  createRef() {
+    jsCreateRef = React.createRef();
+  }
+
+  get current {
+    if (jsCreateRef.current != null) {
+      if (hasProperty(jsCreateRef.current, 'dartComponent')) {
+        return jsCreateRef.current.dartComponent;
+      }
+    }
+    return jsCreateRef.current;
+  }
+
+  set current(v) {
+    jsCreateRef.current = v;
+  }
 }
 
 forwardRef(Function(Map props, Ref ref) wrapperFunction) {
