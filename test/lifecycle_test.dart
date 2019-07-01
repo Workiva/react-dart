@@ -1264,11 +1264,10 @@ void sharedLifecycleTests<T extends react.Component>({
 
         component.callSetStateWithNullValue();
 
-        expect(component.lifecycleCalls, ['shouldComponentUpdate', 'componentWillUpdate', 'render', 'componentDidUpdate']);
+        expect(
+            component.lifecycleCalls, ['shouldComponentUpdate', 'componentWillUpdate', 'render', 'componentDidUpdate']);
       });
     }
-
-
 
     group('calls the setState callback, and transactional setState callback in the correct order', () {
       test('when shouldComponentUpdate returns false', () {
