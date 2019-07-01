@@ -214,6 +214,16 @@ void refTests(ReactComponentFactoryProxy factory, {void verifyRefValue(dynamic r
 
     verifyRefValue(renderedInstance.dartComponent.ref('test'));
   });
+
+  test('createRef function creates refs with correct value', () {
+    var refValue = createRef();
+
+    rtu.renderIntoDocument(factory({
+      'ref': refValue,
+    }));
+
+    verifyRefValue(refValue.current);
+  });
 }
 
 void _childKeyWarningTests(Function factory) {
