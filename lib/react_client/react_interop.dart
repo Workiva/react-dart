@@ -37,6 +37,12 @@ abstract class React {
   external static bool isValidElement(dynamic object);
   external static ReactClass get Fragment;
 
+  /// Returns a ref that can be attached to an element via the ref attribute.
+  ///
+  /// When a ref is passed to an element in render, a reference to the node becomes
+  /// accessible at the 'current' attribute of the ref.
+  ///
+  /// See: <https://reactjs.org/docs/refs-and-the-dom.html#creating-refs>.
   external static createRef();
 }
 
@@ -61,6 +67,9 @@ class createRef<CurrentType> {
   }
 }
 
+/// A technique for automatically passing a ref through a component to one of its children.
+///
+/// See: <https://reactjs.org/docs/forwarding-refs.html>.
 forwardRef(Function(Map props, Ref ref) wrapperFunction) {
   var hoc = _jsForwardRef(allowInterop((JsMap props, Ref ref) {
     var dartProps = new JsBackedMap.backedBy(props);

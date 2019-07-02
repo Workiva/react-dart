@@ -1,6 +1,7 @@
 import "dart:html";
 
 import "package:react/react.dart" as react;
+import 'package:react/react.dart';
 import "package:react/react_dom.dart" as react_dom;
 import "package:react/react_client.dart";
 
@@ -37,7 +38,7 @@ var InputComponentForm = forwardRef((props, ref) {
 });
 
 var ChildComponentForm = forwardRef((props, ref) {
-  return react.div({}, [
+  return Fragment({}, [
     react.h4({'key': 'create-child-h4'}, "ChildComponent"),
     react.form({
       'key': 'childComponentForm',
@@ -230,7 +231,7 @@ class _ParentComponent extends react.Component {
       }),
     ]);
 
-    return react.div({}, [
+    return Fragment({}, [
       react.h1({'key': 'h1'}, 'Refs'),
       stringRefs,
       callbackRefs,
