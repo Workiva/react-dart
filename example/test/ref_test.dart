@@ -16,6 +16,55 @@ class _ChildComponent extends react.Component {
   render() => react.span({}, "Child element with value ${somevalue}");
 }
 
+var InputComponentForm = forwardRef((props, ref) {
+  return react.form({
+    'key': 'inputForm',
+    'className': 'form-inline'
+  }, [
+    react.input({
+      'key': 'create-input',
+      'className': 'form-control',
+      'ref': ref,
+    }),
+    '\u00a0',
+    react.button({
+      'type': 'button',
+      'key': 'create-show-input',
+      'className': 'btn btn-primary',
+      'onClick': props['showInputForwardRefValue'],
+    }, 'Print input element value'),
+  ]);
+});
+
+var ChildComponentForm = forwardRef((props, ref) {
+  return react.div({}, [
+    react.h4({'key': 'create-child-h4'}, "ChildComponent"),
+    react.form({
+      'key': 'childComponentForm',
+      'className': 'form-inline'
+    }, [
+      ChildComponent({
+        'key': 'create-child',
+        "ref": ref,
+      }),
+      '\u00a0',
+      react.button({
+        'type': 'button',
+        'key': 'create-show-button',
+        'className': 'btn btn-primary',
+        'onClick': props['showChildForwardRefValue'],
+      }, 'Print child value'),
+      '\u00a0',
+      react.button({
+        'type': 'button',
+        'key': 'create-increment-button',
+        'className': 'btn btn-primary',
+        'onClick': props['incrementChildForwardRefValue'],
+      }, 'Increment child value'),
+    ])
+  ]);
+});
+
 var ParentComponent = react.registerComponent(() => new _ParentComponent());
 
 class _ParentComponent extends react.Component {
@@ -163,59 +212,29 @@ class _ParentComponent extends react.Component {
       ]),
     ]);
 
-    var createRefs = react.div({
-      'key': 'create-refs'
+    var forwardRefs = react.div({
+      'key': 'forward-refs'
     }, [
-      react.h2({'key': 'h2-create'}, "Create refs"),
-      react.h4({'key': 'h4-create-input'}, "<input>"),
-      react.form({
-        'key': 'inputForm',
-        'className': 'form-inline'
-      }, [
-        react.input({
-          'key': 'create-input',
-          'className': 'form-control',
-          'ref': _inputCreateRef,
-        }),
-        '\u00a0',
-        react.button({
-          'type': 'button',
-          'key': 'create-show-input',
-          'className': 'btn btn-primary',
-          'onClick': showInputCreateRefValue,
-        }, 'Print input element value'),
-      ]),
-      react.h4({'key': 'create-child-h4'}, "ChildComponent"),
-      react.form({
-        'key': 'childComponentForm',
-        'className': 'form-inline'
-      }, [
-        ChildComponent({
-          'key': 'create-child',
-          "ref": _childCreateRef,
-        }),
-        '\u00a0',
-        react.button({
-          'type': 'button',
-          'key': 'create-show-button',
-          'className': 'btn btn-primary',
-          'onClick': showChildCreateRefValue,
-        }, 'Print child value'),
-        '\u00a0',
-        react.button({
-          'type': 'button',
-          'key': 'create-increment-button',
-          'className': 'btn btn-primary',
-          'onClick': incrementChildCreateRefValue,
-        }, 'Increment child value'),
-      ]),
+      react.h2({'key': 'h2-forward'}, "Create / Forward refs"),
+      react.h4({'key': 'h4-forward-input'}, "<input>"),
+      InputComponentForm({
+        'ref': _inputCreateRef,
+        'showInputForwardRefValue': showInputCreateRefValue,
+        'key': 'input-component-form',
+      }),
+      ChildComponentForm({
+        'ref': _childCreateRef,
+        'showChildForwardRefValue': showChildCreateRefValue,
+        'incrementChildForwardRefValue': incrementChildCreateRefValue,
+        'key': 'child-component-form',
+      }),
     ]);
 
     return react.div({}, [
       react.h1({'key': 'h1'}, 'Refs'),
       stringRefs,
       callbackRefs,
-      createRefs,
+      forwardRefs,
     ]);
   }
 }
