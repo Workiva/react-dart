@@ -1244,30 +1244,36 @@ void sharedLifecycleTests<T extends react.Component>({
       });
     }
 
-    if (isComponent2) {
-      test('calling setState does not update the component when the value passed is null', () {
+    group('calling setState', () {
+      LifecycleTestHelper component;
+
+      setUp(() {
         var mountNode = new DivElement();
         var renderedInstance = react_dom.render(SetStateTest({}), mountNode);
-        LifecycleTestHelper component = getDartComponent(renderedInstance);
+        component = getDartComponent(renderedInstance);
         component.lifecycleCalls.clear();
-
-        component.callSetStateWithNullValue();
-
-        expect(component.lifecycleCalls, isEmpty);
       });
-    } else {
-      test('calling setState does update the component when the value passed is null', () {
-        var mountNode = new DivElement();
-        var renderedInstance = react_dom.render(SetStateTest({}), mountNode);
-        LifecycleTestHelper component = getDartComponent(renderedInstance);
-        component.lifecycleCalls.clear();
 
-        component.callSetStateWithNullValue();
-
-        expect(
-            component.lifecycleCalls, ['shouldComponentUpdate', 'componentWillUpdate', 'render', 'componentDidUpdate']);
+      tearDown(() {
+        component?.lifecycleCalls?.clear();
+        component = null;
       });
-    }
+
+      if (isComponent2) {
+        test('does not update the component when the value passed is null', () {
+          component.callSetStateWithNullValue();
+
+          expect(component.lifecycleCalls, isEmpty);
+        });
+      } else {
+        test('does update the component when the value passed is null', () {
+          component.callSetStateWithNullValue();
+
+          expect(component.lifecycleCalls,
+              ['shouldComponentUpdate', 'componentWillUpdate', 'render', 'componentDidUpdate']);
+        });
+      }
+    });
 
     group('calls the setState callback, and transactional setState callback in the correct order', () {
       test('when shouldComponentUpdate returns false', () {
