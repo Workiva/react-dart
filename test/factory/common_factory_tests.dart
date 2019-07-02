@@ -224,6 +224,32 @@ void refTests(ReactComponentFactoryProxy factory, {void verifyRefValue(dynamic r
 
     verifyRefValue(refValue.current);
   });
+
+  test('forwardRef function passes a ref through a component to one of its children', () {
+    var ForwardRefTestComponent = forwardRef((props, ref) {
+      return factory({
+        'ref': ref,
+        'id': props['childId'],
+      });
+    });
+
+    var refValue = createRef();
+
+    rtu.renderIntoDocument(ForwardRefTestComponent({
+      'ref': refValue,
+      'childId': 'test',
+    }));
+
+    var idValue;
+    if (hasProperty(refValue.current, 'id')) {
+      idValue = getProperty(refValue.current, 'id');
+    } else {
+      idValue = refValue.current.props['id'];
+    }
+
+    expect(idValue, equals('test'), reason: 'child component should have access to parent props');
+    verifyRefValue(refValue.current);
+  });
 }
 
 void _childKeyWarningTests(Function factory) {
