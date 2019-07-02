@@ -1256,7 +1256,7 @@ void sharedLifecycleTests<T extends react.Component>({
         expect(component.lifecycleCalls, isEmpty);
       });
     } else {
-      test('calling setState does not update the component when the value passed is null', () {
+      test('calling setState does update the component when the value passed is null', () {
         var mountNode = new DivElement();
         var renderedInstance = react_dom.render(SetStateTest({}), mountNode);
         LifecycleTestHelper component = getDartComponent(renderedInstance);
