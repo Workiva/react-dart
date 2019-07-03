@@ -242,7 +242,7 @@ void refTests(ReactComponentFactoryProxy factory, {void verifyRefValue(dynamic r
 
     var idValue;
     if (hasProperty(refValue.current, 'id')) {
-      idValue = getProperty(refValue.current, 'id');
+      idValue = refValue.current.id;
     } else {
       idValue = refValue.current.props['id'];
     }

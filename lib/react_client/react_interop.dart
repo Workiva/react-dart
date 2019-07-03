@@ -54,16 +54,17 @@ class createRef<CurrentType> {
   }
 
   CurrentType get current {
-    if (jsCreateRef.current != null) {
-      if (hasProperty(jsCreateRef.current, 'dartComponent')) {
-        return jsCreateRef.current.dartComponent;
+    var jsCurrent = getProperty(jsCreateRef, 'current');
+    if (jsCurrent != null) {
+      if (hasProperty(jsCurrent, 'dartComponent')) {
+        return getProperty(jsCurrent, 'dartComponent');
       }
     }
-    return jsCreateRef.current;
+    return jsCurrent;
   }
 
   set current(CurrentType v) {
-    jsCreateRef.current = v;
+    setProperty(jsCreateRef, 'current', v);
   }
 }
 
