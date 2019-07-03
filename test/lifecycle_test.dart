@@ -3,9 +3,7 @@
 library lifecycle_test;
 
 import 'dart:async';
-import 'dart:developer';
 import 'dart:html';
-import 'dart:math';
 
 import "package:js/js.dart";
 import 'package:meta/meta.dart';
@@ -15,7 +13,6 @@ import 'package:react/react_client/react_interop.dart' as react_interop;
 import 'package:react/react_dom.dart' as react_dom;
 import 'package:react/react_test_utils.dart' as react_test_utils;
 import 'package:test/test.dart';
-import 'package:test/test.dart' as prefix0;
 
 import 'lifecycle_test/component.dart' as components;
 import 'lifecycle_test/component2.dart' as components2;
