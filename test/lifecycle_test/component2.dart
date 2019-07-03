@@ -151,27 +151,25 @@ class _DefaultPropsTest extends react.Component2 {
 
 ReactDartComponentFactoryProxy2 PropTypesTest = react.registerComponent(() => new PropTypesTestComponent());
 
-
 class PropTypesTestComponent extends react.Component2 {
   static int getPropTypePassCount = 0;
-   static int getPropTypeFailCount = 0;
+  static int getPropTypeFailCount = 0;
 
   int get staticGetPropTypePassCount => getPropTypePassCount;
   set staticGetPropTypePassCount(int value) => getPropTypePassCount = value;
 
-    int get staticGetPropTypeFailCount => getPropTypeFailCount;
+  int get staticGetPropTypeFailCount => getPropTypeFailCount;
   set staticGetPropTypeFailCount(int value) => getPropTypeFailCount = value;
 
-
   get propTypes => {
-    'intProp': (props, propName, componentName, location, propFullName) {
-      if (props[propName] is! int) {
-        staticGetPropTypeFailCount++;
-        return ArgumentError('intProp should be int');
-      }
-      staticGetPropTypePassCount++;
-    }
-  };
+        'intProp': (props, propName, componentName, location, propFullName) {
+          if (props[propName] is! int) {
+            staticGetPropTypeFailCount++;
+            return ArgumentError('intProp should be int');
+          }
+          staticGetPropTypePassCount++;
+        }
+      };
 
   render() => '';
 }

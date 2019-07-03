@@ -53,7 +53,8 @@ abstract class ReactDom {
 }
 
 typedef Error PropValidator(Map props, String propName, String componentName, String location, String propFullName);
-typedef Error TypedPropValidator<TProps>(TProps props, String propName, String componentName, String location, String propFullName);
+typedef Error TypedPropValidator<TProps>(
+    TProps props, String propName, String componentName, String location, String propFullName);
 
 // Do we want to expose these?
 // typedef CheckPropType ArrayOfTypeChecker(Type type);

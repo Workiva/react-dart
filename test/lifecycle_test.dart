@@ -141,7 +141,7 @@ main() {
         var mountNode = new DivElement();
         components2.PropTypesTestComponent component;
 
-        tearDown((){
+        tearDown(() {
           component.staticGetPropTypeFailCount = 0;
         });
 
