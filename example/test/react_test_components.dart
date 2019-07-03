@@ -8,7 +8,6 @@ class _HelloComponent extends react.Component2 {
   @override
   get propTypes => {
     'name': (JsBackedMap props, propName, componentName, location, propFullName) {
-      List<Type> acceptedTypes = [String];
       if (props[propName].length > 20) {
         return ArgumentError(
             '(${props[propName]}) is too long. $propName has a max length of 20 characters.');

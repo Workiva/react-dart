@@ -15,6 +15,7 @@ import 'package:react/react_client/react_interop.dart' as react_interop;
 import 'package:react/react_dom.dart' as react_dom;
 import 'package:react/react_test_utils.dart' as react_test_utils;
 import 'package:test/test.dart';
+import 'package:test/test.dart' as prefix0;
 
 import 'lifecycle_test/component.dart' as components;
 import 'lifecycle_test/component2.dart' as components2;
@@ -138,19 +139,22 @@ main() {
 
       group('propTypes', () {
         var mountNode = new DivElement();
+        components2.PropTypesTestComponent component;
+
+        tearDown((){
+          component.staticGetPropTypeFailCount = 0;
+        });
+
         test('fails validation with incorrect prop type', () {
-          components2.PropTypesTestComponent component = getDartComponent(react_dom.render(components2.PropTypesTest({'intProp': 'hi'}), mountNode));
+          component = getDartComponent(react_dom.render(components2.PropTypesTest({'intProp': 'test'}), mountNode));
           expect(component.staticGetPropTypeFailCount, 1);
           expect(component.staticGetPropTypePassCount, 0);
         });
 
         test('passes validation with correct prop type', () {
-          expect(() {
-
-            react_dom.render(components2.PropTypesTest({'intProp': 1}), mountNode);
-
-           // debugger();
-          }, isNot(prints('intProp should be int')));
+          component = getDartComponent(react_dom.render(components2.PropTypesTest({'intProp': 1}), mountNode));
+          expect(component.staticGetPropTypeFailCount, 0);
+          expect(component.staticGetPropTypePassCount, 1);
         });
       });
 
