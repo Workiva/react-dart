@@ -827,6 +827,16 @@ abstract class Component2 implements Component {
   @Deprecated('6.0.0')
   Map getInitialState() => const {};
 
+  /// Allows usage of PropValidator functions to check the validity of a prop passed to it.
+  /// When an invalid value is provided for a prop, a warning will be shown in the JavaScript console.
+  /// For performance reasons, propTypes is only checked in development mode.
+  ///
+  /// See: <https://reactjs.org/docs/typechecking-with-proptypes.html#proptypes>
+  Map<String, dynamic> get propTypes => {};
+
+  /// > No.
+  Map<String, dynamic> get jsPropTypesMap => {};
+
   /// This is equivalent to `Constructor` in React 16, this is called before mounting
   /// See: <https://reactjs.org/docs/react-component.html#constructor>
   ///

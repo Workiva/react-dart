@@ -4,6 +4,7 @@
 @JS()
 library react_client.react_interop;
 
+import 'dart:collection';
 import 'dart:html';
 
 import 'package:meta/meta.dart';
@@ -50,6 +51,60 @@ abstract class ReactDom {
   /// See: <https://reactjs.org/docs/portals.html>
   static ReactPortal createPortal(dynamic children, Element container) => ReactDOM.createPortal(children, container);
 }
+
+typedef Error PropValidator(Map props, String propName, String componentName, String location, String propFullName);
+typedef Error TypedPropValidator<TProps>(TProps props, String propName, String componentName, String location, String propFullName);
+
+// Do we want to expose these?
+// typedef CheckPropType ArrayOfTypeChecker(Type type);
+// typedef CheckPropType StrictShapeTypeChecker(Map shape);
+// typedef CheckPropType InstanceOfTypeChecker(Type type);
+// typedef CheckPropType ObjectOfTypeChecker(Type type);
+// typedef CheckPropType EnumTypeChecker(Type type);
+// typedef CheckPropType UnionTypeChecker(List<CheckPropType> type);
+
+// @JS()
+// @anonymous
+// abstract class CheckPropType {
+//   external CheckPropType call(props, propName, componentName, location, propFullName);
+//   external CheckPropType get isRequired;
+// }
+
+// @JS('React.PropTypes')
+// class PropTypes {
+//   external static CheckPropType get array;
+//   external static CheckPropType get isRequired;
+//   external static CheckPropType get bool;
+//   external static CheckPropType get func;
+//   external static CheckPropType get number;
+//   external static CheckPropType get object;
+//   external static CheckPropType get string;
+//   external static CheckPropType get symbol;
+//   external static CheckPropType get any;
+//   external static ArrayOfTypeChecker get arrayOf;
+//   external static CheckPropType get element;
+//   external static CheckPropType get elementType;
+//   external static InstanceOfTypeChecker get instanceOf;
+//   external static CheckPropType get node;
+
+//   // An object with property values of a certain type
+//   external static ObjectOfTypeChecker get objectOf;
+//   external static EnumTypeChecker get oneOf;
+//   external static UnionTypeChecker get oneOfType;
+
+//   /// An object taking on a particular shape
+//   /// ```
+//   ///     optionalObjectWithShape: PropTypes.shape({
+//   ///       'optionalProperty': PropTypes.string,
+//   ///       'requiredProperty': PropTypes.number.isRequired
+//   ///     })
+//   /// ```
+//   external static StrictShapeTypeChecker get shape;
+//   /// An object with warnings on extra properties
+//   external static CheckPropType get exact;
+//   external static CheckPropType get checkPropTypes;
+//   external static CheckPropType get resetWarningCache;
+// }
 
 @JS('ReactDOMServer')
 abstract class ReactDomServer {
@@ -324,6 +379,11 @@ class ReactDartContextInternal {
   ReactDartContextInternal(this.value);
 }
 
+@JS('Error')
+class JsError {
+  external JsError(message);
+}
+
 /// Throws the error passed to it from Javascript.
 /// This allows us to catch the error in dart which re-dartifies the js errors/exceptions.
 @JS('_throwErrorFromJS')
@@ -516,6 +576,7 @@ class JsComponentConfig2 {
   external factory JsComponentConfig2({
     dynamic contextType,
     JsMap defaultProps,
+    JsMap propTypes,
     @required List<String> skipMethods,
   });
 }

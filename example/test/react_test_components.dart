@@ -5,6 +5,43 @@ import "package:react/react.dart" as react;
 import 'package:react/react_client.dart';
 import "package:react/react_dom.dart" as react_dom;
 
+class _PropTypesComponent extends react.Component2 {
+  @override
+  get propTypes => {
+        'boolOrStringProp': (JsBackedMap props, propName, componentName, location, propFullName) {
+          List<Type> acceptedTypes = [bool, String];
+          if (!acceptedTypes.contains(props[propName].runtimeType)) {
+            return ArgumentError(
+                '(${props[propName].runtimeType}) is not valid type for ($propName): Accepted types are ${acceptedTypes.toString()}');
+          }
+        },
+      };
+
+  render() {
+    return 'whatever';
+  }
+}
+
+var propTypesComponent = react.registerComponent(() => new _PropTypesComponent());
+
+class _StackTheLayersComponent extends react.Component2 {
+  render() {
+    return theLayersComponent({});
+  }
+}
+
+var stackTheLayersComponent = react.registerComponent(() => new _StackTheLayersComponent());
+
+class _TheLayersComponent extends react.Component2 {
+  render() {
+    return propTypesComponent({
+      'boolOrStringProp': 1,
+    });
+  }
+}
+
+var theLayersComponent = react.registerComponent(() => new _TheLayersComponent());
+
 class _HelloComponent extends react.Component {
   void componentWillReceiveProps(nextProps) {
     if (nextProps["name"].length > 20) {
@@ -15,6 +52,21 @@ class _HelloComponent extends react.Component {
   render() {
     return react.span({}, ["Hello ${props['name']}!"]);
   }
+}
+
+ReactDartComponentFactoryProxy2 PropTypesTest = react.registerComponent(() => new PropTypesTestComponent());
+
+
+class PropTypesTestComponent extends react.Component2 {
+  get propTypes => {
+    'intProp': (props, propName, componentName, location, propFullName) {
+      if (props[propName] is! int) {
+        return ArgumentError('intProp should be int');
+      }
+    }
+  };
+
+  render() => '';
 }
 
 var helloComponent = react.registerComponent(() => new _HelloComponent());

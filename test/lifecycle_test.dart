@@ -3,7 +3,9 @@
 library lifecycle_test;
 
 import 'dart:async';
+import 'dart:developer';
 import 'dart:html';
+import 'dart:math';
 
 import "package:js/js.dart";
 import 'package:meta/meta.dart';
@@ -133,6 +135,24 @@ main() {
         LifecycleTest: components2.LifecycleTest,
         isComponent2: true,
       );
+
+      group('propTypes', () {
+        var mountNode = new DivElement();
+        test('fails validation with incorrect prop type', () {
+          components2.PropTypesTestComponent component = getDartComponent(react_dom.render(components2.PropTypesTest({'intProp': 'hi'}), mountNode));
+          expect(component.staticGetPropTypeFailCount, 1);
+          expect(component.staticGetPropTypePassCount, 0);
+        });
+
+        test('passes validation with correct prop type', () {
+          expect(() {
+
+            react_dom.render(components2.PropTypesTest({'intProp': 1}), mountNode);
+
+           // debugger();
+          }, isNot(prints('intProp should be int')));
+        });
+      });
 
       test('updates with correct lifecycle calls when `forceUpdate` is called', () {
         const Map initialState = const {
