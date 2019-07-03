@@ -8,6 +8,13 @@ import "react_test_components.dart";
 void main() {
   setClientConfiguration();
   react_dom.render(
-      PropTypesTest({'intProp': 'hey'}),
+      mainComponent({}, [
+        helloGreeter({'key': 'hello'}, []),
+        listComponent({'key': 'list'}, []),
+        component2TestComponent({'key': 'c2-list'}, []),
+        component2ErrorTestComponent({'key': 'error-boundary'}, []),
+        //clockComponent({"name": 'my-clock'}, []),
+        checkBoxComponent({'key': 'checkbox'}, [])
+      ]),
       querySelector('#content'));
 }
