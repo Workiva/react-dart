@@ -11,9 +11,9 @@ import 'package:meta/meta.dart';
 import 'package:js/js.dart';
 import 'package:react/react.dart';
 import 'package:react/react_client.dart' show ComponentFactory, ReactJsComponentFactoryProxy;
+import 'package:react/react_client.dart';
 import 'package:react/src/react_client/js_backed_map.dart';
 import 'package:react/src/react_client/dart2_interop_workaround_bindings.dart';
-import 'package:react/src/typedefs.dart';
 
 typedef ReactElement ReactJsComponentFactory(props, children);
 
@@ -71,8 +71,8 @@ class createRef<CurrentType> {
 /// A technique for automatically passing a ref through a component to one of its children.
 ///
 /// See: <https://reactjs.org/docs/forwarding-refs.html>.
-forwardRef(Function(Map props, Ref ref) wrapperFunction) {
-  var hoc = _jsForwardRef(allowInterop((JsMap props, Ref ref) {
+forwardRef(Function(Map props, dynamic ref) wrapperFunction) {
+  var hoc = _jsForwardRef(allowInterop((JsMap props, dynamic ref) {
     var dartProps = new JsBackedMap.backedBy(props);
 
     return wrapperFunction(dartProps, ref);
@@ -82,7 +82,7 @@ forwardRef(Function(Map props, Ref ref) wrapperFunction) {
 }
 
 @JS('React.forwardRef')
-external ReactClass _jsForwardRef(JsMap Function(JsMap props, Ref ref) wrapperFunction);
+external ReactClass _jsForwardRef(Function(JsMap props, dynamic ref) wrapperFunction);
 
 abstract class ReactDom {
   static Element findDOMNode(object) => ReactDOM.findDOMNode(object);
