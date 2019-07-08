@@ -115,128 +115,119 @@ class _ParentComponent extends react.Component {
     _childCreateRef.current.incrementValue();
   }
 
-  render() {
-    var stringRefs = react.div({
-      'key': 'string-refs'
-    }, [
-      react.h2({'key': 'string-h2'}, "String refs"),
-      react.h4({'key': 'string-h4'}, "<input>"),
-      react.form({
-        'key': 'stringRefInputForm',
-        'className': 'form-inline',
-      }, [
-        react.input({
-          'key': 'string-input',
-          'className': 'form-control',
-          'ref': 'inputRef',
-        }),
-        '\u00a0',
-        react.button({
-          'type': 'button',
-          'key': 'string-show-input',
-          'className': 'btn btn-primary',
-          'onClick': showInputValue,
-        }, 'Print input element value'),
-      ]),
-      react.h4({'key': 'string-h4-child'}, "ChildComponent"),
-      react.form({
-        'key': 'stringRefChildComponentForm',
-        'className': 'form-inline',
-      }, [
-        ChildComponent({
-          'key': 'string-child',
-          "ref": "childRef",
-        }),
-        '\u00a0',
-        react.button({
-          'type': 'button',
-          'key': 'string-show-button',
-          'className': 'btn btn-primary',
-          'onClick': showChildValue,
-        }, 'Print child value'),
-        '\u00a0',
-        react.button({
-          'type': 'button',
-          'key': 'string-increment-button',
-          'className': 'btn btn-primary',
-          'onClick': incrementChildValue,
-        }, 'Increment child value'),
-      ]),
-    ]);
-
-    var callbackRefs = react.div({
-      'key': 'callback-refs'
-    }, [
-      react.h2({'key': 'h2-callback'}, "Callback refs"),
-      react.h4({'key': 'h4-callback-input'}, "<input>"),
-      react.form({
-        'key': 'inputForm',
-        'className': 'form-inline'
-      }, [
-        react.input({
-          'key': 'callback-input',
-          'className': 'form-control',
-          'ref': (instance) => _inputCallbackRef = instance,
-        }),
-        '\u00a0',
-        react.button({
-          'type': 'button',
-          'key': 'callback-show-input',
-          'className': 'btn btn-primary',
-          'onClick': showInputCallbackRefValue,
-        }, 'Print input element value'),
-      ]),
-      react.h4({'key': 'callback-child-h4'}, "ChildComponent"),
-      react.form({
-        'key': 'childComponentForm',
-        'className': 'form-inline'
-      }, [
-        ChildComponent({
-          'key': 'callback-child',
-          "ref": (instance) => _childCallbackRef = instance,
-        }),
-        '\u00a0',
-        react.button({
-          'type': 'button',
-          'key': 'callback-show-button',
-          'className': 'btn btn-primary',
-          'onClick': showChildCallbackRefValue,
-        }, 'Print child value'),
-        '\u00a0',
-        react.button({
-          'type': 'button',
-          'key': 'callback-increment-button',
-          'className': 'btn btn-primary',
-          'onClick': incrementChildCallbackRefValue,
-        }, 'Increment child value'),
-      ]),
-    ]);
-
-    var forwardRefs = react.div({
-      'key': 'forward-refs'
-    }, [
-      react.h2({'key': 'h2-forward'}, "Create / Forward refs"),
-      react.h4({'key': 'h4-forward-input'}, "<input>"),
-      InputComponentForm({
-        'ref': _inputCreateRef,
-        'showInputForwardRefValue': showInputCreateRefValue,
-        'key': 'input-component-form',
-      }),
-      ChildComponentForm({
-        'ref': _childCreateRef,
-        'showChildForwardRefValue': showChildCreateRefValue,
-        'incrementChildForwardRefValue': incrementChildCreateRefValue,
-        'key': 'child-component-form',
-      }),
-    ]);
-
-    return react.Fragment({}, [
-      react.h1({'key': 'h1'}, 'Refs'),
-      stringRefs,
-      callbackRefs,
-      forwardRefs,
-    ]);
-  }
+  render() => react.div({}, [
+        react.div({
+          'key': 'string-refs'
+        }, [
+          react.h2({'key': 'string-h2'}, "String refs"),
+          react.h4({'key': 'string-h4'}, "<input>"),
+          react.form({
+            'key': 'stringRefInputForm',
+            'className': 'form-inline',
+          }, [
+            react.input({
+              'key': 'string-input',
+              'className': 'form-control',
+              'ref': 'inputRef',
+            }),
+            '\u00a0',
+            react.button({
+              'type': 'button',
+              'key': 'string-show-input',
+              'className': 'btn btn-primary',
+              'onClick': showInputValue,
+            }, 'Print input element value'),
+          ]),
+          react.h4({'key': 'string-h4-child'}, "ChildComponent"),
+          react.form({
+            'key': 'stringRefChildComponentForm',
+            'className': 'form-inline',
+          }, [
+            ChildComponent({
+              'key': 'string-child',
+              "ref": "childRef",
+            }),
+            '\u00a0',
+            react.button({
+              'type': 'button',
+              'key': 'string-show-button',
+              'className': 'btn btn-primary',
+              'onClick': showChildValue,
+            }, 'Print child value'),
+            '\u00a0',
+            react.button({
+              'type': 'button',
+              'key': 'string-increment-button',
+              'className': 'btn btn-primary',
+              'onClick': incrementChildValue,
+            }, 'Increment child value'),
+          ]),
+        ]),
+        react.div({
+          'key': 'callback-refs'
+        }, [
+          react.h2({'key': 'h2-callback'}, "Callback refs"),
+          react.h4({'key': 'h4-callback-input'}, "<input>"),
+          react.form({
+            'key': 'inputForm',
+            'className': 'form-inline'
+          }, [
+            react.input({
+              'key': 'callback-input',
+              'className': 'form-control',
+              'ref': (instance) => _inputCallbackRef = instance,
+            }),
+            '\u00a0',
+            react.button({
+              'type': 'button',
+              'key': 'callback-show-input',
+              'className': 'btn btn-primary',
+              'onClick': showInputCallbackRefValue,
+            }, 'Print input element value'),
+          ]),
+          react.h4({'key': 'callback-child-h4'}, "ChildComponent"),
+          react.form({
+            'key': 'childComponentForm',
+            'className': 'form-inline'
+          }, [
+            ChildComponent({
+              'key': 'callback-child',
+              "ref": (instance) => _childCallbackRef = instance,
+            }),
+            '\u00a0',
+            react.button({
+              'type': 'button',
+              'key': 'callback-show-button',
+              'className': 'btn btn-primary',
+              'onClick': showChildCallbackRefValue,
+            }, 'Print child value'),
+            '\u00a0',
+            react.button({
+              'type': 'button',
+              'key': 'callback-increment-button',
+              'className': 'btn btn-primary',
+              'onClick': incrementChildCallbackRefValue,
+            }, 'Increment child value'),
+          ]),
+        ]),
+        react.div({
+          'key': 'forward-refs'
+        }, [
+          react.h2({'key': 'h2-forward'}, "Create / Forward refs"),
+          react.h4({'key': 'h4-forward-input'}, "<input>"),
+          InputComponentForm({
+            'ref': _inputCreateRef,
+            'showInputForwardRefValue': showInputCreateRefValue,
+            'key': 'input-component-form',
+          }),
+          ChildComponentForm({
+            'ref': _childCreateRef,
+            'showChildForwardRefValue': showChildCreateRefValue,
+            'incrementChildForwardRefValue': incrementChildCreateRefValue,
+            'key': 'child-component-form',
+          }),
+        ]),
+      ]);
 }
 
 var mountedNode = querySelector('#content');
