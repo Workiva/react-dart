@@ -116,14 +116,13 @@ class _ParentComponent extends react.Component {
   }
 
   render() => react.div({}, [
-        react.div({
-          'key': 'string-refs'
-        }, [
+        react.h1({'key': 'h1'}, 'Refs'),
+        react.div({'key': 'string-refs'}, [
           react.h2({'key': 'string-h2'}, "String refs"),
           react.h4({'key': 'string-h4'}, "<input>"),
           react.form({
             'key': 'stringRefInputForm',
-            'className': 'form-inline',
+            'className': 'form-inline'
           }, [
             react.input({
               'key': 'string-input',
@@ -141,12 +140,9 @@ class _ParentComponent extends react.Component {
           react.h4({'key': 'string-h4-child'}, "ChildComponent"),
           react.form({
             'key': 'stringRefChildComponentForm',
-            'className': 'form-inline',
+            'className': 'form-inline'
           }, [
-            ChildComponent({
-              'key': 'string-child',
-              "ref": "childRef",
-            }),
+            ChildComponent({'key': 'string-child', "ref": "childRef"}),
             '\u00a0',
             react.button({
               'type': 'button',
@@ -163,9 +159,7 @@ class _ParentComponent extends react.Component {
             }, 'Increment child value'),
           ]),
         ]),
-        react.div({
-          'key': 'callback-refs'
-        }, [
+        react.div({'key': 'callback-refs'}, [
           react.h2({'key': 'h2-callback'}, "Callback refs"),
           react.h4({'key': 'h4-callback-input'}, "<input>"),
           react.form({
@@ -210,9 +204,7 @@ class _ParentComponent extends react.Component {
             }, 'Increment child value'),
           ]),
         ]),
-        react.div({
-          'key': 'forward-refs'
-        }, [
+        react.div({'key': 'forward-refs'}, [
           react.h2({'key': 'h2-forward'}, "Create / Forward refs"),
           react.h4({'key': 'h4-forward-input'}, "<input>"),
           InputComponentForm({
