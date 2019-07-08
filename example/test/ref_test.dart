@@ -117,7 +117,9 @@ class _ParentComponent extends react.Component {
 
   render() => react.div({}, [
         react.h1({'key': 'h1'}, 'Refs'),
-        react.div({'key': 'string-refs'}, [
+        react.div({
+          'key': 'string-refs'
+        }, [
           react.h2({'key': 'string-h2'}, "String refs"),
           react.h4({'key': 'string-h4'}, "<input>"),
           react.form({
@@ -159,7 +161,9 @@ class _ParentComponent extends react.Component {
             }, 'Increment child value'),
           ]),
         ]),
-        react.div({'key': 'callback-refs'}, [
+        react.div({
+          'key': 'callback-refs'
+        }, [
           react.h2({'key': 'h2-callback'}, "Callback refs"),
           react.h4({'key': 'h4-callback-input'}, "<input>"),
           react.form({
@@ -204,7 +208,9 @@ class _ParentComponent extends react.Component {
             }, 'Increment child value'),
           ]),
         ]),
-        react.div({'key': 'forward-refs'}, [
+        react.div({
+          'key': 'forward-refs'
+        }, [
           react.h2({'key': 'h2-forward'}, "Create / Forward refs"),
           react.h4({'key': 'h4-forward-input'}, "<input>"),
           InputComponentForm({
