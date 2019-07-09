@@ -162,7 +162,7 @@ class PropTypesTestComponent extends react.Component2 {
   set staticGetPropTypeFailCount(int value) => getPropTypeFailCount = value;
 
   get propTypes => {
-        'intProp': (props, propName, componentName, location, propFullName) {
+        'intProp': (Map props, propName, componentName, location, propFullName) {
           if (props[propName] is! int) {
             staticGetPropTypeFailCount++;
             return ArgumentError('intProp should be int');

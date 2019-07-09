@@ -52,10 +52,6 @@ abstract class ReactDom {
   static ReactPortal createPortal(dynamic children, Element container) => ReactDOM.createPortal(children, container);
 }
 
-typedef Error PropValidator(Map props, String propName, String componentName, String location, String propFullName);
-typedef Error TypedPropValidator<TProps>(
-    TProps props, String propName, String componentName, String location, String propFullName);
-
 // Do we want to expose these?
 // typedef CheckPropType ArrayOfTypeChecker(Type type);
 // typedef CheckPropType StrictShapeTypeChecker(Map shape);

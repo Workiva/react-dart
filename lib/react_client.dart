@@ -803,7 +803,9 @@ ReactDartComponentFactoryProxy2 _registerComponent2(ComponentFactory<Component2>
       (componentInstance.jsPropTypesMap.isNotEmpty ? componentInstance.jsPropTypesMap : componentInstance.propTypes)
           .map((propKey, validator) {
     dynamic handlePropValidator(props, propName, componentName, location, propFullName, secret) {
-      var error = validator(JsBackedMap.backedBy(props), propName, componentName, location, propFullName);
+      // Cast from TypedPropValidator<Null> in the case of `propTypes`.
+      final typedValidator = validator as TypedPropValidator<Map>;
+      var error = typedValidator(JsBackedMap.backedBy(props), propName, componentName, location, propFullName);
       if (error != null) {
         return JsError(error.toString());
       }

@@ -10,6 +10,10 @@ import 'package:react/src/typedefs.dart';
 import 'package:react/react_client.dart';
 import 'package:react/react_client/react_interop.dart' show ReactErrorInfo, React;
 
+typedef Error PropValidator(Map props, String propName, String componentName, String location, String propFullName);
+typedef Error TypedPropValidator<TProps>(
+    TProps props, String propName, String componentName, String location, String propFullName);
+
 typedef T ComponentFactory<T extends Component>();
 typedef ReactComponentFactoryProxy ComponentRegistrar(ComponentFactory componentFactory,
     [Iterable<String> skipMethods]);
@@ -832,7 +836,7 @@ abstract class Component2 implements Component {
   /// For performance reasons, propTypes is only checked in development mode.
   ///
   /// See: <https://reactjs.org/docs/typechecking-with-proptypes.html#proptypes>
-  Map<String, dynamic> get propTypes => {};
+  Map<String, TypedPropValidator<Null>> get propTypes => {};
 
   /// > No.
   Map<String, dynamic> get jsPropTypesMap => {};
