@@ -10,8 +10,7 @@ import 'package:react/src/typedefs.dart';
 import 'package:react/react_client.dart';
 import 'package:react/react_client/react_interop.dart' show ReactErrorInfo, React;
 
-typedef Error PropValidator(Map props, String propName, String componentName, String location, String propFullName);
-typedef Error TypedPropValidator<TProps>(
+typedef Error PropValidator<TProps>(
     TProps props, String propName, String componentName, String location, String propFullName);
 
 typedef T ComponentFactory<T extends Component>();
@@ -836,10 +835,13 @@ abstract class Component2 implements Component {
   /// For performance reasons, propTypes is only checked in development mode.
   ///
   /// See: <https://reactjs.org/docs/typechecking-with-proptypes.html#proptypes>
-  Map<String, TypedPropValidator<Null>> get propTypes => {};
+  Map<String, PropValidator<Null>> get propTypes => {};
 
-  /// > No.
-  Map<String, dynamic> get jsPropTypesMap => {};
+  /// __Expert use only is advised.__
+  ///
+  /// Exposes a way to wrap and handle conversion of [propTypes] [PropValidatior] arguments typing.
+  /// Main use case is to tighten the typing from a JsBackedMap to another typed Props class/map.
+  Map<String, PropValidator<Null>> get wrappedPropTypesMap => {};
 
   /// This is equivalent to `Constructor` in React 16, this is called before mounting
   /// See: <https://reactjs.org/docs/react-component.html#constructor>
