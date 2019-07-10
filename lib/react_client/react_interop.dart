@@ -52,57 +52,6 @@ abstract class ReactDom {
   static ReactPortal createPortal(dynamic children, Element container) => ReactDOM.createPortal(children, container);
 }
 
-// Do we want to expose these?
-// typedef CheckPropType ArrayOfTypeChecker(Type type);
-// typedef CheckPropType StrictShapeTypeChecker(Map shape);
-// typedef CheckPropType InstanceOfTypeChecker(Type type);
-// typedef CheckPropType ObjectOfTypeChecker(Type type);
-// typedef CheckPropType EnumTypeChecker(Type type);
-// typedef CheckPropType UnionTypeChecker(List<CheckPropType> type);
-
-// @JS()
-// @anonymous
-// abstract class CheckPropType {
-//   external CheckPropType call(props, propName, componentName, location, propFullName);
-//   external CheckPropType get isRequired;
-// }
-
-// @JS('React.PropTypes')
-// class PropTypes {
-//   external static CheckPropType get array;
-//   external static CheckPropType get isRequired;
-//   external static CheckPropType get bool;
-//   external static CheckPropType get func;
-//   external static CheckPropType get number;
-//   external static CheckPropType get object;
-//   external static CheckPropType get string;
-//   external static CheckPropType get symbol;
-//   external static CheckPropType get any;
-//   external static ArrayOfTypeChecker get arrayOf;
-//   external static CheckPropType get element;
-//   external static CheckPropType get elementType;
-//   external static InstanceOfTypeChecker get instanceOf;
-//   external static CheckPropType get node;
-
-//   // An object with property values of a certain type
-//   external static ObjectOfTypeChecker get objectOf;
-//   external static EnumTypeChecker get oneOf;
-//   external static UnionTypeChecker get oneOfType;
-
-//   /// An object taking on a particular shape
-//   /// ```
-//   ///     optionalObjectWithShape: PropTypes.shape({
-//   ///       'optionalProperty': PropTypes.string,
-//   ///       'requiredProperty': PropTypes.number.isRequired
-//   ///     })
-//   /// ```
-//   external static StrictShapeTypeChecker get shape;
-//   /// An object with warnings on extra properties
-//   external static CheckPropType get exact;
-//   external static CheckPropType get checkPropTypes;
-//   external static CheckPropType get resetWarningCache;
-// }
-
 @JS('ReactDOMServer')
 abstract class ReactDomServer {
   external static String renderToString(ReactElement component);
@@ -376,6 +325,7 @@ class ReactDartContextInternal {
   ReactDartContextInternal(this.value);
 }
 
+/// Creates a new JS Error object with the provided message.
 @JS('Error')
 class JsError {
   external JsError(message);

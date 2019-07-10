@@ -3,8 +3,11 @@
 @JS()
 library react_client.js_interop_helpers;
 
-import "package:js/js.dart";
 import "dart:js_util";
+
+import "package:js/js.dart";
+import 'package:react/react.dart' show JsPropValidator, PropValidator;
+import 'package:react/react_client/react_interop.dart' show JsError;
 
 // The following code is adapted from `package:js` in the dart-lang/sdk repo:
 // https://github.com/dart-lang/sdk/blob/2.2.0/sdk/lib/js_util/dart2js/js_util_dart2js.dart#L27
@@ -87,3 +90,26 @@ _convertDataTree(data) {
 
   return _convert(data);
 }
+
+Map<String, JsPropValidator> jsifyPropTypes<T>(Map<String, PropValidator<Null>> propTypes, Function propsConverter) =>
+    propTypes.map((propKey, validator) {
+      dynamic handlePropValidator(
+        dynamic props,
+        dynamic propName,
+        dynamic componentName,
+        dynamic location,
+        dynamic propFullName,
+        dynamic secret,
+      ) {
+        // Cast from TypedPropValidator<Null> in the case of `propTypes`.
+        Function typedValidator = validator;
+        var convertedProps = propsConverter(props);
+        var error = typedValidator(convertedProps, propName, componentName, location, propFullName);
+        if (error != null) {
+          return JsError(error.toString());
+        }
+        return error;
+      }
+
+      return MapEntry(propKey, allowInterop(handlePropValidator));
+    });

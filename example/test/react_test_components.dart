@@ -11,6 +11,7 @@ class _HelloComponent extends react.Component2 {
           if (props[propName].length > 20) {
             return ArgumentError('(${props[propName]}) is too long. $propName has a max length of 20 characters.');
           }
+          return null;
         },
       };
 
