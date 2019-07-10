@@ -846,7 +846,7 @@ abstract class Component2 implements Component {
   /// Exposes a way to wrap and handle conversion of [propTypes] [PropValidatior] arguments typing.
   /// Main use case is to tighten the typing from a JsBackedMap to another typed Props class/map.
   Map<String, JsPropValidator> get jsPropTypesMap =>
-      jsifyPropTypes<Map>(propTypes, (jsMap) => JsBackedMap.fromJs(jsMap));
+      jsifyPropTypes<JsBackedMap>(propTypes, (jsMap) => JsBackedMap.fromJs(jsMap));
 
   /// This is equivalent to `Constructor` in React 16, this is called before mounting
   /// See: <https://reactjs.org/docs/react-component.html#constructor>

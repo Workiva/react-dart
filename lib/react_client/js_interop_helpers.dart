@@ -7,6 +7,7 @@ import "dart:js_util";
 
 import "package:js/js.dart";
 import 'package:react/react.dart' show JsPropValidator, PropValidator;
+import 'package:react/react_client.dart';
 import 'package:react/react_client/react_interop.dart' show JsError;
 
 // The following code is adapted from `package:js` in the dart-lang/sdk repo:
@@ -91,7 +92,8 @@ _convertDataTree(data) {
   return _convert(data);
 }
 
-Map<String, JsPropValidator> jsifyPropTypes<T>(Map<String, PropValidator<Null>> propTypes, Function propsConverter) =>
+Map<String, JsPropValidator> jsifyPropTypes<T extends Map>(
+        Map<String, PropValidator<Null>> propTypes, T Function(JsMap) propsConverter) =>
     propTypes.map((propKey, validator) {
       dynamic handlePropValidator(
         dynamic props,
@@ -101,8 +103,7 @@ Map<String, JsPropValidator> jsifyPropTypes<T>(Map<String, PropValidator<Null>> 
         dynamic propFullName,
         dynamic secret,
       ) {
-        // Cast from TypedPropValidator<Null> in the case of `propTypes`.
-        Function typedValidator = validator;
+        PropValidator<T> typedValidator = validator;
         var convertedProps = propsConverter(props);
         var error = typedValidator(convertedProps, propName, componentName, location, propFullName);
         if (error != null) {
