@@ -799,9 +799,10 @@ ReactDartComponentFactoryProxy2 _registerComponent2(ComponentFactory<Component2>
   // by ReactDartComponentFactoryProxy and externally.
   final JsBackedMap defaultProps = new JsBackedMap.from(componentInstance.getDefaultProps());
 
-  final jsPropTypesMap =
-      (componentInstance.wrappedPropTypesMap.isNotEmpty ? componentInstance.wrappedPropTypesMap : componentInstance.propTypes)
-          .map((propKey, validator) {
+  final jsPropTypesMap = (componentInstance.wrappedPropTypesMap.isNotEmpty
+          ? componentInstance.wrappedPropTypesMap
+          : componentInstance.propTypes)
+      .map((propKey, validator) {
     dynamic handlePropValidator(props, propName, componentName, location, propFullName, secret) {
       // Cast from TypedPropValidator<Null> in the case of `propTypes`.
       final typedValidator = validator as PropValidator<Map>;
