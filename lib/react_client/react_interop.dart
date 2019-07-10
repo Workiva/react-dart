@@ -37,42 +37,51 @@ abstract class React {
   external static bool isValidElement(dynamic object);
   external static ReactClass get Fragment;
 
-  /// Returns a ref that can be attached to an element via the ref attribute.
-  ///
-  /// When a ref is passed to an element in render, a reference to the node becomes
-  /// accessible at the 'current' attribute of the ref.
-  ///
-  /// See: <https://reactjs.org/docs/refs-and-the-dom.html#creating-refs>.
-  external static createRef();
+  external static JsRef createRef();
 }
 
-class createRef<CurrentType> {
-  var jsCreateRef;
+/// Returns a Ref that can be attached to an element via the ref attribute.
+///
+/// When a ref is passed to an element in render, a reference to the node becomes
+/// accessible at the 'current' attribute of the ref.
+///
+/// See: <https://reactjs.org/docs/refs-and-the-dom.html#creating-refs>.
+Ref<CurrentType> createRef<CurrentType>() {
+  return new Ref<CurrentType>();
+}
 
-  createRef() {
-    jsCreateRef = React.createRef();
+class Ref<CurrentType> {
+  JsRef jsRef;
+
+  Ref() {
+    jsRef = React.createRef();
   }
 
   CurrentType get current {
-    var jsCurrent = getProperty(jsCreateRef, 'current');
-    if (jsCurrent != null) {
-      if (hasProperty(jsCurrent, 'dartComponent')) {
-        return getProperty(jsCurrent, 'dartComponent');
+    final jsCurrent = jsRef.current;
+
+    if (jsCurrent is! Element) {
+      final dartCurrent = jsCurrent?.dartComponent;
+
+      if (dartCurrent != null) {
+        return dartCurrent;
       }
     }
     return jsCurrent;
   }
+}
 
-  set current(CurrentType v) {
-    setProperty(jsCreateRef, 'current', v);
-  }
+@JS()
+@anonymous
+class JsRef {
+  external dynamic get current;
 }
 
 /// A technique for automatically passing a ref through a component to one of its children.
 ///
 /// See: <https://reactjs.org/docs/forwarding-refs.html>.
-forwardRef(Function(Map props, dynamic ref) wrapperFunction) {
-  var hoc = _jsForwardRef(allowInterop((JsMap props, dynamic ref) {
+ReactJsComponentFactoryProxy forwardRef(Function(Map props, Ref ref) wrapperFunction) {
+  var hoc = _jsForwardRef(allowInterop((JsMap props, Ref ref) {
     var dartProps = new JsBackedMap.backedBy(props);
 
     return wrapperFunction(dartProps, ref);
@@ -82,7 +91,7 @@ forwardRef(Function(Map props, dynamic ref) wrapperFunction) {
 }
 
 @JS('React.forwardRef')
-external ReactClass _jsForwardRef(Function(JsMap props, dynamic ref) wrapperFunction);
+external ReactClass _jsForwardRef(Function(JsMap props, Ref ref) wrapperFunction);
 
 abstract class ReactDom {
   static Element findDOMNode(object) => ReactDOM.findDOMNode(object);

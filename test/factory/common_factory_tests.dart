@@ -216,13 +216,13 @@ void refTests(ReactComponentFactoryProxy factory, {void verifyRefValue(dynamic r
   });
 
   test('createRef function creates ref with correct value', () {
-    var refValue = createRef();
+    final Ref ref = createRef();
 
     rtu.renderIntoDocument(factory({
-      'ref': refValue,
+      'ref': ref,
     }));
 
-    verifyRefValue(refValue.current);
+    verifyRefValue(ref.current);
   });
 
   test('forwardRef function passes a ref through a component to one of its children', () {
@@ -233,22 +233,22 @@ void refTests(ReactComponentFactoryProxy factory, {void verifyRefValue(dynamic r
       });
     });
 
-    var refValue = createRef();
+    final Ref refObject = createRef();
 
     rtu.renderIntoDocument(ForwardRefTestComponent({
-      'ref': refValue,
+      'ref': refObject,
       'childId': 'test',
     }));
 
     var idValue;
-    if (hasProperty(refValue.current, 'id')) {
-      idValue = refValue.current.id;
+    if (hasProperty(refObject.current, 'id')) {
+      idValue = refObject.current.id;
     } else {
-      idValue = refValue.current.props['id'];
+      idValue = refObject.current.props['id'];
     }
 
     expect(idValue, equals('test'), reason: 'child component should have access to parent props');
-    verifyRefValue(refValue.current);
+    verifyRefValue(refObject.current);
   });
 }
 
