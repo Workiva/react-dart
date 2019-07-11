@@ -240,8 +240,10 @@ void refTests(ReactComponentFactoryProxy factory, {void verifyRefValue(dynamic r
       'childId': 'test',
     }));
 
+    // component props are accessed differently depending on if it is a dom component
+    // or a dart component
     var idValue;
-    if (hasProperty(refObject.current, 'id')) {
+    if (refObject.current is Element) {
       idValue = refObject.current.id;
     } else {
       idValue = refObject.current.props['id'];
