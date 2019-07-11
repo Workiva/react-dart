@@ -40,16 +40,44 @@ abstract class React {
   external static JsRef createRef();
 }
 
-/// Returns a Ref that can be attached to an element via the ref attribute.
+/// Creates a [Ref] object that can be attached to an element via the ref attribute.
 ///
-/// When a ref is passed to an element in render, a reference to the node becomes
-/// accessible at the 'current' attribute of the ref.
+/// __Example__:
 ///
-/// See: <https://reactjs.org/docs/refs-and-the-dom.html#creating-refs>.
+///     class FooComponent extends react.Component2 {
+///       final Ref<BarComponent> barRef = createRef();
+///       final Ref<InputElement> inputRef = createRef();
+///
+///       render() => react.div({}, [
+///         Bar({'ref': barRef}),
+///         react.input({'ref': inputRef}),
+///       ]);
+///     }
+///
+/// Learn more: <https://reactjs.org/docs/refs-and-the-dom.html#creating-refs>.
 Ref<CurrentType> createRef<CurrentType>() {
   return new Ref<CurrentType>();
 }
 
+/// The return type of [createRef], the constructor wraps [React.createRef] for use in
+/// Dart.
+///
+/// A [Ref] can be attached to an element via the ref attribute. When the element renders,
+/// a reference to that node becomes accessible at the [current] attribute of the [Ref].
+///
+/// __Example__:
+///
+///     class FooComponent extends react.Component2 {
+///       final Ref<BarComponent> barRef = createRef();
+///       final Ref<InputElement> inputRef = createRef();
+///
+///       render() => react.div({}, [
+///         Bar({'ref': barRef}),
+///         react.input({'ref': inputRef}),
+///       ]);
+///     }
+///
+/// Learn more: <https://reactjs.org/docs/refs-and-the-dom.html#creating-refs>.
 class Ref<CurrentType> {
   JsRef jsRef;
 
