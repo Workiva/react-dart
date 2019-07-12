@@ -565,24 +565,24 @@ final ReactDartInteropStatics2 _dartInteropStatics2 = (() {
         component.componentDidMount();
       });
 
-  void _updatePropsAndStateWithJs(Component2 component, JsMap props, JsMap state, dynamic context) {
+  void _updatePropsAndStateWithJs(Component2 component, JsMap props, JsMap state) {
     component
       ..props = new JsBackedMap.backedBy(props)
-      ..state = new JsBackedMap.backedBy(state)
-      ..context = _unjsifyNewContext(context);
+      ..state = new JsBackedMap.backedBy(state);
   }
 
-  bool handleShouldComponentUpdate(Component2 component, JsMap jsNextProps, JsMap jsNextState,
-          [dynamic jsNextContext]) =>
-      zone.run(() {
+  void _updateContextWithJs(Component2 component, dynamic jsContext) {
+    component.context = _unjsifyNewContext(jsContext);
+  }
+
+  bool handleShouldComponentUpdate(Component2 component, JsMap jsNextProps, JsMap jsNextState) => zone.run(() {
         final value = component.shouldComponentUpdate(
           new JsBackedMap.backedBy(jsNextProps),
           new JsBackedMap.backedBy(jsNextState),
-          _unjsifyNewContext(jsNextContext),
         );
 
         if (!value) {
-          _updatePropsAndStateWithJs(component, jsNextProps, jsNextState, jsNextContext);
+          _updatePropsAndStateWithJs(component, jsNextProps, jsNextState);
         }
 
         return value;
@@ -644,7 +644,8 @@ final ReactDartInteropStatics2 _dartInteropStatics2 = (() {
       });
 
   dynamic handleRender(Component2 component, JsMap jsProps, JsMap jsState, dynamic jsContext) => zone.run(() {
-        _updatePropsAndStateWithJs(component, jsProps, jsState, jsContext);
+        _updatePropsAndStateWithJs(component, jsProps, jsState);
+        _updateContextWithJs(component, jsContext);
         return component.render();
       });
 

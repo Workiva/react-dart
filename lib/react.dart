@@ -673,14 +673,13 @@ abstract class Component2 implements Component {
   ///
   Map getDerivedStateFromProps(Map nextProps, Map prevState) {}
 
-  /// ReactJS lifecycle method that is invoked before rendering when [nextProps], [nextState], or [nextContext] are
-  /// being received.
+  /// ReactJS lifecycle method that is invoked before rendering when [nextProps] or [nextState] are being received.
   ///
   /// Use this as an opportunity to return `false` when you're certain that the transition to the new props and state
   /// will not require a component update.
   ///
   /// See: <https://facebook.github.io/react/docs/react-component.html#updating-shouldcomponentupdate>
-  bool shouldComponentUpdate(Map nextProps, Map nextState, [dynamic nextContext]) => true;
+  bool shouldComponentUpdate(Map nextProps, Map nextState) => true;
 
   /// ReactJS lifecycle method that is invoked immediately before rendering when [nextProps] or [nextState] are being
   /// received.
