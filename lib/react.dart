@@ -858,168 +858,209 @@ abstract class Component2 implements Component {
   /// See: <https://facebook.github.io/react/docs/react-component.html#render>
   dynamic render();
 
-  // Unsupported things
+  // Deprecated members
+
+  /// Deprecated. will be removed when [Component] is removed in the `6.0.0` release.
+  ///
+  /// Replace calls to this method with either:
+  ///
+  /// - [forceUpdate] (preferred) - forces rerender and bypasses [shouldComponentUpdate]
+  /// - `setState({})` - same behavior as this method: causes rerender but goes through [shouldComponentUpdate]
+  @override
+  @Deprecated('6.0.0')
+  void redraw([SetStateCallback callback]) {
+    setState({}, callback);
+  }
+
+  // Deprecated and unsupported members
+
+  UnsupportedError _unsupportedError(String memberName) =>
+      new UnsupportedError('Component2 drops support for $memberName');
 
   /// Do not use.
   ///
   /// Will be removed when [Component] is removed in the `6.0.0` release.
+  @override
   @Deprecated('6.0.0')
-  void replaceState(Map newState, [SetStateCallback callback]) => throw new UnimplementedError();
+  void replaceState(Map newState, [SetStateCallback callback]) => throw _unsupportedError('replaceState');
 
   /// Do not use.
   ///
   /// Will be removed when [Component] is removed in the `6.0.0` release.
-  @Deprecated('6.0.0')
+  @override
   @mustCallSuper
-  Map<String, dynamic> getChildContext() =>
-      throw new UnsupportedError('"Legacy" Context [getChildContext] is not supported in Component2');
+  @Deprecated('6.0.0')
+  Map<String, dynamic> getChildContext() => throw _unsupportedError('"Legacy" Context [getChildContext]');
 
   /// Do not use. Use [shouldComponentUpdate] with an optional 3rd argument for context instead.
   ///
   /// Will be removed when [Component] is removed in the `6.0.0` release.
+  @override
   @Deprecated('6.0.0')
   bool shouldComponentUpdateWithContext(Map nextProps, Map nextState, dynamic nextContext) =>
-      throw new UnsupportedError('"Legacy" Context [getChildContext] is not supported in Component2');
+      throw _unsupportedError('"Legacy" Context [getChildContext]');
 
   /// Do not use.
   ///
   /// Will be removed when [Component] is removed in the `6.0.0` release.
+  @override
   @Deprecated('6.0.0')
   void componentWillUpdateWithContext(Map nextProps, Map nextState, dynamic nextContext) {}
 
   /// Do not use.
   ///
   /// Will be removed when [Component] is removed in the `6.0.0` release.
+  @override
   @Deprecated('6.0.0')
   void componentWillReceivePropsWithContext(Map newProps, dynamic nextContext) {}
 
   /// Do not use.
   ///
   /// Will be removed when [Component] is removed in the `6.0.0` release.
+  @override
   @Deprecated('6.0.0')
-  Iterable<String> get childContextKeys =>
-      throw new UnsupportedError('"Legacy" Context [childContextKeys] is not supported in Component2');
+  Iterable<String> get childContextKeys => throw _unsupportedError('"Legacy" Context [childContextKeys]');
 
   /// Do not use.
   ///
   /// Will be removed when [Component] is removed in the `6.0.0` release.
+  @override
   @Deprecated('6.0.0')
-  Iterable<String> get contextKeys =>
-      throw new UnsupportedError('"Legacy" Context [contextKeys] is not supported in Component2');
+  Iterable<String> get contextKeys => throw _unsupportedError('"Legacy" Context [contextKeys]');
 
   /// Do not use.
   ///
   /// Will be removed when [Component] is removed in the `6.0.0` release.
+  @override
   @Deprecated('6.0.0')
-  bind(key) => [
-        state[key],
-        (value) => setState({key: value})
-      ];
+  bind(key) => throw _unsupportedError('bind');
 
   /// Do not use.
   ///
   /// Will be removed when [Component] is removed in the `6.0.0` release.
+  @override
   @Deprecated('6.0.0')
-  initComponentInternal(props, _jsRedraw, [Ref ref, _jsThis, context]) {
-    throw new UnimplementedError();
-  }
+  initComponentInternal(props, _jsRedraw, [Ref ref, _jsThis, context]) =>
+      throw _unsupportedError('initComponentInternal');
 
   /// Do not use.
   ///
   /// Will be removed when [Component] is removed in the `6.0.0` release.
+  @override
   @Deprecated('6.0.0')
-  initStateInternal() => throw new UnimplementedError();
+  initStateInternal() => throw _unsupportedError('initStateInternal');
 
   /// Do not use.
   ///
   /// Will be removed when [Component] is removed in the `6.0.0` release.
+  @override
   @Deprecated('6.0.0')
-  get nextContext => throw new UnsupportedError('"Legacy" Context [nextContext] is not supported in Component2');
+  get nextContext => throw _unsupportedError('"Legacy" Context [nextContext]');
+  @override
   @Deprecated('6.0.0')
-  set nextContext(val) => throw new UnsupportedError('"Legacy" Context [nextContext] is not supported in Component2');
+  set nextContext(_) => throw _unsupportedError('"Legacy" Context [nextContext]');
 
   /// Do not use.
   ///
   /// Will be removed when [Component] is removed in the `6.0.0` release.
+  @override
   @Deprecated('6.0.0')
-  get prevContext => throw new UnsupportedError('"Legacy" Context [prevContext] is not supported in Component2');
+  get prevContext => throw _unsupportedError('"Legacy" Context [prevContext]');
+  @override
   @Deprecated('6.0.0')
-  set prevContext(val) => throw new UnsupportedError('"Legacy" Context [prevContext] is not supported in Component2');
+  set prevContext(_) => throw _unsupportedError('"Legacy" Context [prevContext]');
 
   /// Do not use.
   ///
   /// Will be removed when [Component] is removed in the `6.0.0` release.
+  @override
   @Deprecated('6.0.0')
-  Map prevState; // todo make throwing getters/setters
+  Map get prevState => throw _unsupportedError('"Legacy" Context [prevContext]');
+  set prevState(_) => throw _unsupportedError('"Legacy" Context [prevContext]');
 
   /// Do not use.
   ///
   /// Will be removed when [Component] is removed in the `6.0.0` release.
+  @override
   @Deprecated('6.0.0')
-  Map get nextState => throw new UnimplementedError();
+  Map get nextState => throw _unsupportedError('nextState');
 
   /// Do not use.
   ///
   /// Will be removed when [Component] is removed in the `6.0.0` release.
+  @override
   @Deprecated('6.0.0')
-  Map nextProps; // todo make throwing getters/setters
+  Map get nextProps => throw _unsupportedError('nextProps');
+  set nextProps(_) => throw _unsupportedError('nextProps');
 
   /// Do not use.
   ///
   /// Will be removed when [Component] is removed in the `6.0.0` release.
+  @override
   @Deprecated('6.0.0')
-  void transferComponentState() => throw new UnimplementedError();
+  void transferComponentState() => throw _unsupportedError('transferComponentState');
 
   /// Do not use.
   ///
   /// Will be removed when [Component] is removed in the `6.0.0` release.
+  @override
   @Deprecated('6.0.0')
-  void redraw([SetStateCallback callback]) {
-    setState({}, callback);
-  }
+  Ref get ref => throw _unsupportedError('ref');
+  set ref(_) => throw _unsupportedError('ref');
+
+  /// Do not use.
+  ///
+  /// Will be removed when [Component] is removed in the `6.0.0` release.
+  @override
+  @Deprecated('6.0.0')
+  List<SetStateCallback> get setStateCallbacks => throw _unsupportedError('setStateCallbacks');
 
   @override
+  @Deprecated('6.0.0')
+  List<StateUpdaterCallback> get transactionalSetStateCallbacks =>
+      throw _unsupportedError('transactionalSetStateCallbacks');
+
+  // Private unsupported things (no need to throw since they're internal)
+
+  @override
+  @Deprecated('6.0.0')
   Map _context;
 
   @override
+  @Deprecated('6.0.0')
   var _jsRedraw;
 
   @override
+  @Deprecated('6.0.0')
   Map _nextState;
 
   @override
+  @Deprecated('6.0.0')
   Map _props;
 
   @override
+  @Deprecated('6.0.0')
   Ref _ref;
 
   @override
+  @Deprecated('6.0.0')
   List<SetStateCallback> _setStateCallbacks;
 
   @override
+  @Deprecated('6.0.0')
   Map _state;
 
   @override
+  @Deprecated('6.0.0')
   List<StateUpdaterCallback> _transactionalSetStateCallbacks;
 
   @override
-  Ref ref;
+  @Deprecated('6.0.0')
+  _initContext(context) {}
 
   @override
-  _initContext(context) {
-    throw new UnimplementedError();
-  }
-
-  @override
-  _initProps(props) {
-    throw new UnimplementedError();
-  }
-
-  @override
-  List<SetStateCallback> get setStateCallbacks => throw new UnimplementedError();
-
-  @override
-  List<StateUpdaterCallback> get transactionalSetStateCallbacks => throw new UnimplementedError();
+  @Deprecated('6.0.0')
+  _initProps(props) {}
 }
 
 /// Mixin that enforces consistent typing of the `snapshot` parameter
