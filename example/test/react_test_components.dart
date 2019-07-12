@@ -26,6 +26,7 @@ class _HelloGreeter extends react.Component {
   onInputChange(e) {
     var input = react_dom.findDOMNode(myInput);
     print(input.borderEdge);
+    setState({'name': e.target.value});
   }
 
   render() {
@@ -34,7 +35,7 @@ class _HelloGreeter extends react.Component {
         'key': 'input',
         'className': 'form-control',
         'ref': (ref) => myInput = ref,
-        'value': bind('name'),
+        'value': state['name'],
         'onChange': onInputChange,
       }),
       helloComponent({'key': 'hello', 'name': state['name']})
@@ -47,7 +48,7 @@ var helloGreeter = react.registerComponent(() => new _HelloGreeter());
 class _CheckBoxComponent extends react.Component {
   getInitialState() => {"checked": false};
 
-  change(e) {
+  _handleChange(e) {
     this.setState({'checked': e.target.checked});
   }
 
@@ -60,7 +61,8 @@ class _CheckBoxComponent extends react.Component {
         'key': 'input',
         'className': 'form-check-input',
         'type': 'checkbox',
-        'value': bind('checked'),
+        'checked': state['checked'],
+        'onChange': _handleChange,
       }),
       react.label({
         'htmlFor': 'doTheDishes',
