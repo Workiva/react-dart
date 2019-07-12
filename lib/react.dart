@@ -788,11 +788,6 @@ abstract class Component2 implements Component {
   /// Invoked once before the `Component` is mounted. The return value will be used as the initial value of [state].
   ///
   /// See: <https://facebook.github.io/react/docs/react-component.html#getinitialstate>
-  ///
-  /// > __DEPRECATED - DO NOT USE__
-  /// >
-  /// > Use [init] or [getDerivedStateFromProps] to handle intialization instead
-  @Deprecated('6.0.0')
   Map getInitialState() => const {};
 
   /// This is equivalent to `Constructor` in React 16, this is called before mounting
