@@ -930,10 +930,8 @@ _convertBoundValues(Map args) {
 
 void _convertRefValue(Map args) {
   var ref = args['ref'];
-  if (ref != null) {
-    if (ref is react_interop.Ref) {
-      args['ref'] = ref.jsRef;
-    }
+  if (ref is react_interop.Ref) {
+    args['ref'] = ref.jsRef;
   }
 }
 
