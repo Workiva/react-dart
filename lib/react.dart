@@ -234,11 +234,6 @@ abstract class Component {
   /// Force a call to [render] by calling [setState], which effectively "redraws" the `Component`.
   ///
   /// Optionally accepts a [callback] that gets called after the component updates.
-  ///
-  /// > __DEPRECATED.__
-  /// >
-  /// > There is no implementation of this within [Component2]. Use [Component2.forceUpdate] when migrating.
-  @Deprecated('6.0.0')
   void redraw([callback()]) {
     setState({}, callback);
   }
@@ -250,12 +245,6 @@ abstract class Component {
   /// Also allows [newState] to be used as a transactional `setState` callback.
   ///
   /// See: <https://facebook.github.io/react/docs/react-component.html#setstate>
-  ///
-  /// > __DEPRECATED.__
-  /// >
-  /// > Note that when migrating to [Component2], [Component2.setState] will only accept a `Map` for [newState].
-  /// > Transactional `setState` calls will have to be changed to utilize [Component2.setStateWithUpdater].
-  @Deprecated('6.0.0')
   void setState(covariant dynamic newState, [callback()]) {
     if (newState is Map) {
       _nextState.addAll(newState);
@@ -318,21 +307,19 @@ abstract class Component {
   /// Calling [setState] within this function will not trigger an additional [render].
   ///
   /// See: <https://facebook.github.io/react/docs/react-component.html#updating-componentwillreceiveprops>
-  /// > __DEPRECATED - DO NOT USE__
+  /// > __UNSUPPORTED IN COMPONENT2__
   /// >
-  /// > This will be removed once 6.0.0 releases, switching to [Component2.getDerivedStateFromProps] is the path forward
+  /// > This will be removed once 6.0.0 releases; switching to [Component2.getDerivedStateFromProps] is the path forward.
   /// >
   /// > This will be completely removed when the JS side of it is slated for removal (ReactJS 17 / react.dart 6.0.0)
-  @Deprecated('6.0.0')
   void componentWillReceiveProps(Map newProps) {}
 
-  /// > __DEPRECATED - DO NOT USE__
+  /// > __UNSUPPORTED IN COMPONENT2__
   /// >
   /// > This API was never stable in any version of ReactJS, and was replaced with a new, incompatible context API
   /// > in ReactJS 16 that is exposed via the [Component2] class.
   /// >
   /// > This will be completely removed when the JS side of it is slated for removal (ReactJS 17 / react.dart 6.0.0)
-  @Deprecated('6.0.0')
   void componentWillReceivePropsWithContext(Map newProps, Map nextContext) {}
 
   /// ReactJS lifecycle method that is invoked before rendering when [nextProps] or [nextState] are being received.
@@ -364,7 +351,7 @@ abstract class Component {
   ///
   /// See: <https://facebook.github.io/react/docs/react-component.html#updating-componentwillupdate>
   ///
-  /// > __DEPRECATED - DO NOT USE__
+  /// > __UNSUPPORTED IN COMPONENT2__
   /// >
   /// > Due to the release of getSnapshotBeforeUpdate in ReactJS 16,
   /// > componentWillUpdate is no longer the method used to check the state
@@ -373,7 +360,6 @@ abstract class Component {
   /// > Use Component2 and Component2.getSnapshotBeforeUpdate instead.
   /// >
   /// > This will be completely removed when the JS side of it is slated for removal (ReactJS 17 / react.dart 6.0.0)
-  @Deprecated('6.0.0')
   void componentWillUpdate(Map nextProps, Map nextState) {}
 
   /// > __DEPRECATED - DO NOT USE__
