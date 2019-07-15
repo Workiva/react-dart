@@ -14,7 +14,8 @@ import 'dart:js_util';
 import "package:js/js.dart";
 import "package:react/react.dart";
 import 'package:react/react_client/js_interop_helpers.dart';
-import 'package:react/react_client/react_interop.dart';
+import 'package:react/react_client/react_interop.dart' hide Ref;
+import 'package:react/react_client/react_interop.dart' as react_interop show Ref;
 import "package:react/react_dom.dart";
 import 'package:react/react_dom_server.dart';
 import "package:react/src/react_client/event_prop_key_to_event_factory.dart";
@@ -23,7 +24,8 @@ import "package:react/src/react_client/synthetic_event_wrappers.dart" as events;
 import 'package:react/src/typedefs.dart';
 import 'package:react/src/ddc_emulated_function_name_bug.dart' as ddc_emulated_function_name_bug;
 
-export 'package:react/react_client/react_interop.dart' show ReactElement, ReactJsComponentFactory, inReactDevMode;
+export 'package:react/react_client/react_interop.dart'
+    show ReactElement, ReactJsComponentFactory, inReactDevMode, Ref, forwardRef, createRef;
 export 'package:react/react.dart' show ReactComponentFactoryProxy, ComponentFactory;
 export 'package:react/src/react_client/js_backed_map.dart' show JsBackedMap, JsMap, jsBackingMapOrJsCopy;
 
@@ -119,6 +121,8 @@ class ReactDartComponentFactoryProxy<TComponent extends Component> extends React
       // with the Dart Component instance, not the ReactComponent instance.
       if (ref is _CallbackRef) {
         interopProps.ref = allowInterop((ReactComponent instance) => ref(instance?.dartComponent));
+      } else if (ref is react_interop.Ref) {
+        interopProps.ref = ref.jsRef;
       } else {
         interopProps.ref = ref;
       }
@@ -184,6 +188,10 @@ class ReactDartComponentFactoryProxy2<TComponent extends Component2> extends Rea
       // with the Dart Component instance, not the ReactComponent instance.
       if (ref is _CallbackRef) {
         propsForJs['ref'] = allowInterop((ReactComponent instance) => ref(instance?.dartComponent));
+      }
+
+      if (ref is react_interop.Ref) {
+        propsForJs['ref'] = ref.jsRef;
       }
     }
 
@@ -854,6 +862,7 @@ class ReactDomComponentFactoryProxy extends ReactComponentFactoryProxy {
   static void convertProps(Map props) {
     _convertBoundValues(props);
     _convertEventHandlers(props);
+    _convertRefValue(props);
   }
 }
 
@@ -916,6 +925,13 @@ _convertBoundValues(Map args) {
         return onChange(event);
       }
     };
+  }
+}
+
+void _convertRefValue(Map args) {
+  var ref = args['ref'];
+  if (ref is react_interop.Ref) {
+    args['ref'] = ref.jsRef;
   }
 }
 
