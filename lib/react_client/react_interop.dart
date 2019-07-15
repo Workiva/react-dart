@@ -212,6 +212,7 @@ class ReactPortal {
 class ReactComponent {
   // TODO: Cast as Component2 in 6.0.0
   external Component get dartComponent;
+  // TODO how to make this JsMap without breaking stuff?
   external InteropProps get props;
   external dynamic get context;
   external JsMap get state;
@@ -329,6 +330,7 @@ class ReactDartContextInternal {
 
 /// Throws the error passed to it from Javascript.
 /// This allows us to catch the error in dart which re-dartifies the js errors/exceptions.
+@alwaysThrows
 @JS('_throwErrorFromJS')
 external void throwErrorFromJS(error);
 
