@@ -12,8 +12,11 @@ import 'package:react/react.dart';
 import 'package:react/react_client.dart' show ComponentFactory;
 import 'package:react/src/react_client/js_backed_map.dart';
 import 'package:react/src/react_client/dart2_interop_workaround_bindings.dart';
+import 'package:react/src/typedefs.dart';
 
 typedef ReactElement ReactJsComponentFactory(props, children);
+
+typedef Component2BridgeFactory = Component2Bridge Function(Component2);
 
 // ----------------------------------------------------------------------------
 //   Top-level API
@@ -533,4 +536,14 @@ class ReactErrorInfo {
   /// The dart stack trace associated with this error.
   external StackTrace get dartStackTrace;
   external set dartStackTrace(StackTrace);
+}
+
+final Expando<Component2Bridge> bridgeForComponent = new Expando();
+
+abstract class Component2Bridge {
+  void setState(Map newState, SetStateCallback callback);
+  void setStateWithUpdater(StateUpdaterCallback stateUpdater, SetStateCallback callback);
+  void forceUpdate(SetStateCallback callback);
+  void initializeState(Map state);
+  JsMap jsifyPropTypes(Map propTypes);
 }

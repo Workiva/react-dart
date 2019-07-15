@@ -8,7 +8,7 @@ library react;
 import 'package:meta/meta.dart';
 import 'package:react/src/typedefs.dart';
 import 'package:react/react_client.dart';
-import 'package:react/react_client/react_interop.dart' show React, ReactComponent, ReactErrorInfo;
+import 'package:react/react_client/react_interop.dart';
 
 typedef T ComponentFactory<T extends Component>();
 typedef ReactComponentFactoryProxy ComponentRegistrar(ComponentFactory componentFactory,
@@ -19,8 +19,6 @@ typedef ReactDartComponentFactoryProxy2 ComponentRegistrar2(
   Iterable<String> skipMethods,
   Component2BridgeFactory bridgeFactory,
 });
-
-typedef Component2BridgeFactory = Component2Bridge Function(Component2);
 
 /// Fragment component that allows the wrapping of children without the necessity of using
 /// an element that adds an additional layer to the DOM (div, span, etc).
@@ -460,16 +458,6 @@ abstract class Component {
   dynamic render();
 }
 
-final Expando<Component2Bridge> bridgeForComponent = new Expando();
-
-abstract class Component2Bridge {
-  void setState(Map newState, SetStateCallback callback);
-  void setStateWithUpdater(StateUpdaterCallback stateUpdater, SetStateCallback callback);
-  void forceUpdate(SetStateCallback callback);
-  void initializeState(Map state);
-  JsMap jsifyPropTypes(Map propTypes);
-}
-
 /// Top-level ReactJS [Component class](https://facebook.github.io/react/docs/react-component.html)
 /// which provides the [ReactJS Component API](https://facebook.github.io/react/docs/react-component.html#reference)
 abstract class Component2 implements Component {
@@ -534,7 +522,8 @@ abstract class Component2 implements Component {
 
   /// The JavaScript [`ReactComponent`](https://facebook.github.io/react/docs/top-level-api.html#reactdom.render)
   /// instance of this `Component` returned by [render].
-  dynamic jsThis;
+  @override
+  ReactComponent jsThis;
 
   /// Allows the [ReactJS `displayName` property](https://facebook.github.io/react/docs/react-component.html#displayname)
   /// to be set for debugging purposes.
