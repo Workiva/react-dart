@@ -12,6 +12,7 @@ import 'dart:js';
 import 'dart:js_util';
 
 import "package:js/js.dart";
+import 'package:meta/meta.dart';
 import "package:react/react.dart";
 import 'package:react/react_client/js_interop_helpers.dart';
 import 'package:react/react_client/react_interop.dart';
@@ -469,13 +470,15 @@ final ReactDartInteropStatics _dartInteropStatics = (() {
 })();
 
 // TODO custom adapter for over_react to avoid typedPropsFactory usages?
-class JsComponent2Adapter extends Component2Adapter {
+class Component2BridgeImpl extends Component2Bridge {
   // TODO find a way to inject this better
-  final ReactComponent jsThis;
+  final Component2 component;
 
-  JsComponent2Adapter({
-    this.jsThis,
-  });
+  ReactComponent get jsThis => component.jsThis;
+
+  Component2BridgeImpl(this.component);
+
+  static Component2BridgeImpl bridgeFactory(Component2 component) => Component2BridgeImpl(component);
 
   @override
   void forceUpdate(SetStateCallback callback) {
@@ -525,6 +528,12 @@ class JsComponent2Adapter extends Component2Adapter {
       }));
     }
   }
+
+  @override
+  JsMap jsifyPropTypes(Map propTypes) {
+    // TODO: implement jsifyPropTypes
+    return null;
+  }
 }
 
 final ReactDartInteropStatics2 _dartInteropStatics2 = (() {
@@ -533,7 +542,6 @@ final ReactDartInteropStatics2 _dartInteropStatics2 = (() {
   /// Wrapper for [Component.getInitialState].
   Component2 initComponent(ReactComponent jsThis, ComponentStatics2 componentStatics) => zone.run(() {
         final component = componentStatics.componentFactory();
-        component.adapter = new JsComponent2Adapter(jsThis: jsThis);
         // Return the component so that the JS proxying component can store it,
         // avoiding an interceptor lookup.
 
@@ -541,6 +549,8 @@ final ReactDartInteropStatics2 _dartInteropStatics2 = (() {
           ..jsThis = jsThis
           ..props = new JsBackedMap.backedBy(jsThis.props)
           ..context = _unjsifyNewContext(jsThis.context);
+
+        bridgeForComponent[component] = componentStatics.bridgeFactory(component);
 
         component.init();
         if (component.state != null) {
@@ -669,12 +679,14 @@ final ReactDartInteropStatics2 _dartInteropStatics2 = (() {
 /// Creates and returns a new [ReactDartComponentFactoryProxy] from the provided [componentFactory]
 /// which produces a new JS [`ReactClass` component class](https://facebook.github.io/react/docs/top-level-api.html#react.createclass).
 @Deprecated('6.0.0')
-ReactDartComponentFactoryProxy _registerComponent(ComponentFactory componentFactory,
-    [Iterable<String> skipMethods = const ['getDerivedStateFromError', 'componentDidCatch']]) {
+ReactDartComponentFactoryProxy _registerComponent(
+  ComponentFactory componentFactory, [
+  Iterable<String> skipMethods = const ['getDerivedStateFromError', 'componentDidCatch'],
+]) {
   var componentInstance = componentFactory();
 
   if (componentInstance is Component2) {
-    return _registerComponent2(componentFactory, skipMethods);
+    return _registerComponent2(componentFactory, skipMethods: skipMethods);
   }
 
   var componentStatics = new ComponentStatics(componentFactory);
@@ -790,10 +802,19 @@ class ReactJsComponentFactoryProxy extends ReactComponentFactoryProxy {
 
 /// Creates and returns a new [ReactDartComponentFactoryProxy] from the provided [componentFactory]
 /// which produces a new JS [`ReactClass` component class](https://facebook.github.io/react/docs/top-level-api.html#react.createclass).
-ReactDartComponentFactoryProxy2 _registerComponent2(ComponentFactory<Component2> componentFactory,
-    [Iterable<String> skipMethods = const ['getDerivedStateFromError', 'componentDidCatch']]) {
+ReactDartComponentFactoryProxy2 _registerComponent2(
+  ComponentFactory<Component2> componentFactory, {
+  Iterable<String> skipMethods = const ['getDerivedStateFromError', 'componentDidCatch'],
+  Component2BridgeFactory bridgeFactory,
+}) {
+  bridgeFactory ??= Component2BridgeImpl.bridgeFactory;
+
   final componentInstance = componentFactory();
-  final componentStatics = new ComponentStatics2(componentFactory, instanceForStaticMethods: componentInstance);
+  final componentStatics = new ComponentStatics2(
+    componentFactory: componentFactory,
+    instanceForStaticMethods: componentInstance,
+    bridgeFactory: bridgeFactory,
+  );
   final filteredSkipMethods = _filterSkipMethods(skipMethods);
 
   // Cache default props and store them on the ReactClass so they can be used
@@ -1325,7 +1346,7 @@ void setClientConfiguration() {
     throw new Exception('Loaded react.js must include react-dart JS interop helpers.');
   }
 
-  setReactConfiguration(_reactDom, _registerComponent);
+  setReactConfiguration(_reactDom, _registerComponent, customRegisterComponent2: _registerComponent2);
   setReactDOMConfiguration(ReactDom.render, ReactDom.unmountComponentAtNode, _findDomNode);
   // Accessing ReactDomServer.renderToString when it's not available breaks in DDC.
   if (context['ReactDOMServer'] != null) {

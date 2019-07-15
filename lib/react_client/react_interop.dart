@@ -478,7 +478,13 @@ class ComponentStatics {
 class ComponentStatics2 {
   final ComponentFactory<Component2> componentFactory;
   final Component2 instanceForStaticMethods;
-  ComponentStatics2(this.componentFactory, {@required this.instanceForStaticMethods});
+  final Component2Bridge Function(Component2) bridgeFactory;
+
+  ComponentStatics2({
+    @required this.componentFactory,
+    @required this.instanceForStaticMethods,
+    @required this.bridgeFactory,
+  });
 }
 
 /// Additional configuration passed to [createReactDartComponentClass]

@@ -8,11 +8,19 @@ library react;
 import 'package:meta/meta.dart';
 import 'package:react/src/typedefs.dart';
 import 'package:react/react_client.dart';
-import 'package:react/react_client/react_interop.dart' show ReactErrorInfo, React;
+import 'package:react/react_client/react_interop.dart' show React, ReactComponent, ReactErrorInfo;
 
 typedef T ComponentFactory<T extends Component>();
 typedef ReactComponentFactoryProxy ComponentRegistrar(ComponentFactory componentFactory,
     [Iterable<String> skipMethods]);
+
+typedef ReactDartComponentFactoryProxy2 ComponentRegistrar2(
+  ComponentFactory<Component2> componentFactory, {
+  Iterable<String> skipMethods,
+  Component2BridgeFactory bridgeFactory,
+});
+
+typedef Component2BridgeFactory = Component2Bridge Function(Component2);
 
 /// Fragment component that allows the wrapping of children without the necessity of using
 /// an element that adds an additional layer to the DOM (div, span, etc).
@@ -452,19 +460,19 @@ abstract class Component {
   dynamic render();
 }
 
-abstract class Component2Adapter {
+final Expando<Component2Bridge> bridgeForComponent = new Expando();
+
+abstract class Component2Bridge {
   void setState(Map newState, SetStateCallback callback);
   void setStateWithUpdater(StateUpdaterCallback stateUpdater, SetStateCallback callback);
   void forceUpdate(SetStateCallback callback);
   void initializeState(Map state);
+  JsMap jsifyPropTypes(Map propTypes);
 }
 
 /// Top-level ReactJS [Component class](https://facebook.github.io/react/docs/react-component.html)
 /// which provides the [ReactJS Component API](https://facebook.github.io/react/docs/react-component.html#reference)
 abstract class Component2 implements Component {
-  // TODO make private using expando?
-  Component2Adapter adapter;
-
   /// Accessed once and cached when instance is created. The [contextType] property on a class can be assigned
   /// a [ReactDartContext] object created by [React.createContext]. This lets you consume the nearest current value of
   /// that Context using [context].
@@ -553,7 +561,7 @@ abstract class Component2 implements Component {
   ///
   /// See: <https://reactjs.org/docs/react-component.html#setstate>
   void setState(Map newState, [SetStateCallback callback]) {
-    adapter.setState(newState, callback);
+    bridgeForComponent[this].setState(newState, callback);
   }
 
   /// Triggers a rerender with new state obtained by shallow-merging
@@ -563,7 +571,7 @@ abstract class Component2 implements Component {
   ///
   /// See: <https://reactjs.org/docs/react-component.html#setstate>
   void setStateWithUpdater(StateUpdaterCallback updater, [SetStateCallback callback]) {
-    adapter.setStateWithUpdater(updater, callback);
+    bridgeForComponent[this].setStateWithUpdater(updater, callback);
   }
 
   /// Initializes this component's [state] to [value].
@@ -583,11 +591,11 @@ abstract class Component2 implements Component {
   ///       initializeState({'count': 0});
   ///     }
   void initializeState(Map value) {
-    adapter.initializeState(value);
+    bridgeForComponent[this].initializeState(value);
   }
 
   void forceUpdate([SetStateCallback callback]) {
-    adapter.forceUpdate(callback);
+    bridgeForComponent[this].forceUpdate(callback);
   }
 
   /// ReactJS lifecycle method that is invoked once, only on the client _(not on the server)_, immediately after the
@@ -1618,8 +1626,11 @@ class SyntheticWheelEvent extends SyntheticEvent {
 };
 
 /// Registers [componentFactory] on both client and server.
-/*ComponentRegistrar*/ Function registerComponent2 = (/*ComponentFactory*/ componentFactory,
-    [/*Iterable<String>*/ skipMethods = const ['getDerivedStateFromError', 'componentDidCatch']]) {
+ComponentRegistrar2 registerComponent2 = (
+  ComponentFactory<Component2> componentFactory, {
+  Iterable<String> skipMethods,
+  Component2BridgeFactory bridgeFactory,
+}) {
   throw new Exception('setClientConfiguration must be called before registerComponent.');
 };
 
@@ -2427,8 +2438,9 @@ _createDOMComponents(creator) {
 ///
 /// The arguments are assigned to global variables, and React DOM `Component`s are created by calling
 /// [_createDOMComponents] with [domCreator].
-setReactConfiguration(domCreator, customRegisterComponent) {
+void setReactConfiguration(domCreator, customRegisterComponent, {ComponentRegistrar2 customRegisterComponent2}) {
   registerComponent = customRegisterComponent;
+  registerComponent2 = customRegisterComponent2;
   // HTML Elements
   _createDOMComponents(domCreator);
 }
