@@ -1,3 +1,4 @@
+// ignore_for_file: deprecated_member_use_from_same_package
 @TestOn('browser')
 @JS()
 library react_test_utils_test;

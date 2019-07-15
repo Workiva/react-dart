@@ -1,3 +1,4 @@
+// ignore_for_file: deprecated_member_use_from_same_package
 /// JS interop classes for main React JS APIs and react-dart internals.
 ///
 /// For use in `react_client.dart` and by advanced react-dart users.
