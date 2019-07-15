@@ -424,42 +424,7 @@ class ReactDartInteropStatics {
 /// An object that stores static methods used by all Dart components.
 @JS()
 @anonymous
-class ReactDartInteropStatics2 implements ReactDartInteropStatics {
-  external factory ReactDartInteropStatics2({
-    Component2 Function(ReactComponent jsThis, ComponentStatics2 componentStatics) initComponent,
-    // TODO: Should this have a return signature of `Map`?
-    dynamic Function(Component2 component) handleGetInitialState,
-    // TODO: we should review if we need to support the deprecated will methods in component2
-    void Function(Component2 component, ReactComponent jsThis) handleComponentWillMount,
-    void Function(Component2 component) handleComponentDidMount,
-    void Function(
-      ComponentStatics2 componentStatics,
-      JsMap jsNextProps,
-      JsMap jsPrevState,
-    )
-        handleGetDerivedStateFromProps,
-    bool Function(Component2 component, JsMap jsNextProps, JsMap jsNextState) handleShouldComponentUpdate,
-    // TODO: Should this be removed when we update Component2.componentWillUpdate to throw an UnsupportedError? (CPLAT-4766)
-    void Function(
-      Component2 component,
-      JsMap jsPrevProps,
-      JsMap jsPrevState,
-    )
-        handleGetSnapshotBeforeUpdate,
-    void Function(
-      Component2 component,
-      ReactComponent jsThis,
-      JsMap jsPrevProps,
-      JsMap jsPrevState,
-      dynamic snapshot,
-    )
-        handleComponentDidUpdate,
-    void Function(Component2 component) handleComponentWillUnmount,
-    void Function(Component2 component, dynamic error, ReactErrorInfo info) handleComponentDidCatch,
-    JsMap Function(ComponentStatics2 instanceForStaticMethods, dynamic error) handleGetDerivedStateFromError,
-    dynamic Function(Component2 component, JsMap jsProps, JsMap jsState, dynamic jsContext) handleRender,
-  });
-}
+class ReactDartInteropStatics2 {}
 
 /// An object that stores static methods and information for a specific component class.
 ///
