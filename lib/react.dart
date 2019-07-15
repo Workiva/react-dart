@@ -623,7 +623,7 @@ abstract class Component2 implements Component {
   ///      return null;
   ///    }
   ///
-  Map getDerivedStateFromProps(Map nextProps, Map prevState) {}
+  Map getDerivedStateFromProps(Map nextProps, Map prevState) => null;
 
   /// ReactJS lifecycle method that is invoked before rendering when [nextProps] or [nextState] are being received.
   ///
@@ -725,7 +725,7 @@ abstract class Component2 implements Component {
   /// [getDerivedStateFromError] will be ignored.
   ///
   /// See: <https://reactjs.org/docs/react-component.html#static-getderivedstatefromerror>
-  Map getDerivedStateFromError(dynamic error) {}
+  Map getDerivedStateFromError(dynamic error) => null;
 
   /// Invoked once before the `Component` is mounted. The return value will be used as the initial value of [state].
   ///

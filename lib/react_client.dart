@@ -13,7 +13,6 @@ import 'dart:js';
 import 'dart:js_util';
 
 import "package:js/js.dart";
-import 'package:meta/meta.dart';
 import "package:react/react.dart";
 import 'package:react/react_client/js_interop_helpers.dart';
 import 'package:react/react_client/react_interop.dart';
@@ -884,41 +883,6 @@ class ReactDomComponentFactoryProxy extends ReactComponentFactoryProxy {
 /// Create react-dart registered component for the HTML [Element].
 _reactDom(String name) {
   return new ReactDomComponentFactoryProxy(name);
-}
-
-/// Returns whether an [InputElement] is a [CheckboxInputElement] based the value of the `type` key in [props].
-_isCheckbox(props) {
-  return props['type'] == 'checkbox';
-}
-
-/// Get value from the provided [domElem].
-///
-/// If the [domElem] is a [CheckboxInputElement], return [bool], else return [String] value.
-_getValueFromDom(domElem) {
-  var props = domElem.attributes;
-
-  if (_isCheckbox(props)) {
-    return domElem.checked;
-  } else {
-    return domElem.value;
-  }
-}
-
-/// Set value to props based on type of input.
-///
-/// _Note: Processing checkbox `checked` value is handled as a special case._
-_setValueToProps(Map props, val) {
-  if (_isCheckbox(props)) {
-    if (val) {
-      props['checked'] = true;
-    } else {
-      if (props.containsKey('checked')) {
-        props.remove('checked');
-      }
-    }
-  } else {
-    props['value'] = val;
-  }
 }
 
 /// A mapping from converted/wrapped JS handler functions (the result of [_convertEventHandlers])

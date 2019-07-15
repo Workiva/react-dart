@@ -67,9 +67,7 @@ main() {
         int secondStateUpdateCalls;
         Map initialProps;
         Map newState1;
-        Map expectedState1;
         Map newState2;
-        Map expectedState2;
 
         setUp(() {
           firstStateUpdateCalls = 0;
@@ -77,8 +75,6 @@ main() {
           initialProps = unmodifiableMap({'getInitialState': (_) => initialState});
           newState1 = {'foo': 'bar'};
           newState2 = {'baz': 'foobar'};
-          expectedState1 = {}..addAll(initialState)..addAll(newState1);
-          expectedState2 = {}..addAll(expectedState1)..addAll(newState2);
 
           component = getDartComponent(render(components.LifecycleTest(initialProps)));
           component.lifecycleCalls.clear();
@@ -89,9 +85,7 @@ main() {
           component = null;
           initialProps = null;
           newState1 = null;
-          expectedState1 = null;
           newState2 = null;
-          expectedState2 = null;
         });
 
         test('when `replaceState` is called from within another `replaceState` callback', () {
@@ -367,7 +361,6 @@ main() {
         expect(() {
           var renderedInstance = react_dom.render(components2.DefaultSkipMethodsTest({}), mountNode);
           LifecycleTestHelper component = getDartComponent(renderedInstance);
-          Element renderedNode = react_dom.findDOMNode(renderedInstance);
           LifecycleTestHelper.staticLifecycleCalls.clear();
           component.setState({"shouldThrow": true});
         }, throwsA(anything));

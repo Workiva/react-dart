@@ -10,7 +10,7 @@ import 'package:test/test.dart';
 
 import 'package:react/react.dart' as react;
 import 'package:react/react_client.dart';
-import 'package:react/react_client/react_interop.dart' show React, ReactClass, ReactComponent;
+import 'package:react/react_client/react_interop.dart' show React, ReactComponent;
 import 'package:react/react_client/js_interop_helpers.dart';
 import 'package:react/react_dom.dart' as react_dom;
 import 'package:react/src/react_client/event_prop_key_to_event_factory.dart';
@@ -36,7 +36,7 @@ main() {
           'children': testChildren,
         }),
       );
-      expect(unconvertJsProps(instance)['style'], new isInstanceOf<Map<String, dynamic>>());
+      expect(unconvertJsProps(instance)['style'], isA<Map<String, dynamic>>());
     });
 
     test('returns props for a composite JS ReactComponent', () {
