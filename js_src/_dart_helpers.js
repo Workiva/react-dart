@@ -108,8 +108,8 @@ function _createReactDartComponentClass2(dartInteropStatics, componentStatics, j
     componentDidMount() {
       dartInteropStatics.handleComponentDidMount(this.dartComponent);
     }
-    shouldComponentUpdate(nextProps, nextState, nextContext) {
-      return dartInteropStatics.handleShouldComponentUpdate(this.dartComponent, nextProps, nextState, nextContext);
+    shouldComponentUpdate(nextProps, nextState) {
+      return dartInteropStatics.handleShouldComponentUpdate(this.dartComponent, nextProps, nextState);
     }
 
     static getDerivedStateFromProps(nextProps, prevState) {

@@ -91,26 +91,3 @@ _convertDataTree(data) {
 
   return _convert(data);
 }
-
-Map<String, JsPropValidator> jsifyPropTypes<T extends Map>(
-        Map<String, PropValidator<Null>> propTypes, T Function(JsMap) propsConverter) =>
-    propTypes.map((propKey, validator) {
-      dynamic handlePropValidator(
-        dynamic props,
-        dynamic propName,
-        dynamic componentName,
-        dynamic location,
-        dynamic propFullName,
-        dynamic secret,
-      ) {
-        PropValidator<T> typedValidator = validator;
-        var convertedProps = propsConverter(props);
-        var error = typedValidator(convertedProps, propName, componentName, location, propFullName);
-        if (error != null) {
-          return JsError(error.toString());
-        }
-        return error;
-      }
-
-      return MapEntry(propKey, allowInterop(handlePropValidator));
-    });

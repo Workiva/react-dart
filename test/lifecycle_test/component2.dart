@@ -48,7 +48,7 @@ class _SetStateTest extends react.Component2 with LifecycleTestHelper {
   }
 
   @override
-  shouldComponentUpdate(_, __, [___]) {
+  shouldComponentUpdate(_, __) {
     lifecycleCall('shouldComponentUpdate');
     return props['shouldUpdate'] as bool;
   }
@@ -152,22 +152,11 @@ class _DefaultPropsTest extends react.Component2 {
 ReactDartComponentFactoryProxy2 PropTypesTest = react.registerComponent(() => new PropTypesTestComponent());
 
 class PropTypesTestComponent extends react.Component2 {
-  static int getPropTypePassCount = 0;
-  static int getPropTypeFailCount = 0;
-
-  int get staticGetPropTypePassCount => getPropTypePassCount;
-  set staticGetPropTypePassCount(int value) => getPropTypePassCount = value;
-
-  int get staticGetPropTypeFailCount => getPropTypeFailCount;
-  set staticGetPropTypeFailCount(int value) => getPropTypeFailCount = value;
-
   get propTypes => {
         'intProp': (Map props, propName, componentName, location, propFullName) {
           if (props[propName] is! int) {
-            staticGetPropTypeFailCount++;
-            return ArgumentError('intProp should be int');
+            throw ArgumentError('intProp should be int');
           }
-          staticGetPropTypePassCount++;
         }
       };
 
@@ -252,8 +241,8 @@ class _LifecycleTest extends react.Component2 with LifecycleTestHelper {
 
   Map getDerivedStateFromError(error) => lifecycleCall('getDerivedStateFromError', arguments: [error]);
 
-  bool shouldComponentUpdate(nextProps, nextState, [nextContext]) => lifecycleCall('shouldComponentUpdate',
-      arguments: [new Map.from(nextProps), new Map.from(nextState), nextContext], defaultReturnValue: () => true);
+  bool shouldComponentUpdate(nextProps, nextState) => lifecycleCall('shouldComponentUpdate',
+      arguments: [new Map.from(nextProps), new Map.from(nextState)], defaultReturnValue: () => true);
 
   dynamic render() => lifecycleCall('render', defaultReturnValue: () => react.div({}));
 
