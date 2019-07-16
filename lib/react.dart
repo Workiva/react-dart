@@ -9,8 +9,8 @@ library react;
 
 import 'package:meta/meta.dart';
 import 'package:react/src/typedefs.dart';
-import 'package:react/react_client.dart' hide Ref;
-import 'package:react/react_client/react_interop.dart' hide Ref;
+import 'package:react/react_client.dart';
+import 'package:react/react_client/react_interop.dart';
 
 typedef T ComponentFactory<T extends Component>();
 typedef ReactComponentFactoryProxy ComponentRegistrar(ComponentFactory componentFactory,
@@ -61,7 +61,7 @@ abstract class Component {
   /// [doesn't work for overriding fields](https://github.com/dart-lang/sdk/issues/27452).
   ///
   /// TODO: Switch back to a plain field once this issue is fixed.
-  Ref _ref;
+  RefMethod _ref;
 
   /// The React context map of this component, passed down from its ancestors' [getChildContext] value.
   ///
@@ -102,7 +102,7 @@ abstract class Component {
   ///
   /// TODO: Add better description of how to utilize [Component2] refs.
   @Deprecated('6.0.0')
-  Ref get ref => _ref;
+  RefMethod get ref => _ref;
 
   /// __DEPRECATED.__
   ///
@@ -113,7 +113,7 @@ abstract class Component {
   ///
   /// TODO: Add better description of how to utilize [Component2] refs.
   @Deprecated('6.0.0')
-  set ref(Ref value) => _ref = value;
+  set ref(RefMethod value) => _ref = value;
 
   dynamic _jsRedraw;
 
@@ -137,7 +137,7 @@ abstract class Component {
   /// to be set for debugging purposes.
   String get displayName => runtimeType.toString();
 
-  initComponentInternal(props, _jsRedraw, [Ref ref, _jsThis, context]) {
+  initComponentInternal(props, _jsRedraw, [RefMethod ref, _jsThis, context]) {
     this._jsRedraw = _jsRedraw;
     this.ref = ref;
     this._jsThis = _jsThis;
@@ -931,7 +931,7 @@ abstract class Component2 implements Component {
   /// Will be removed when [Component] is removed in the `6.0.0` release.
   @override
   @Deprecated('6.0.0')
-  initComponentInternal(props, _jsRedraw, [Ref ref, _jsThis, context]) =>
+  initComponentInternal(props, _jsRedraw, [RefMethod ref, _jsThis, context]) =>
       throw _unsupportedError('initComponentInternal');
 
   /// Do not use.
@@ -996,7 +996,7 @@ abstract class Component2 implements Component {
   /// Will be removed when [Component] is removed in the `6.0.0` release.
   @override
   @Deprecated('6.0.0')
-  Ref get ref => throw _unsupportedError('ref');
+  RefMethod get ref => throw _unsupportedError('ref');
   set ref(_) => throw _unsupportedError('ref');
 
   /// Do not use.
@@ -1033,7 +1033,7 @@ abstract class Component2 implements Component {
 
   @override
   @Deprecated('6.0.0')
-  Ref _ref;
+  RefMethod _ref;
 
   @override
   @Deprecated('6.0.0')

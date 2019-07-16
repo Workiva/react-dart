@@ -15,8 +15,7 @@ import 'dart:js_util';
 import "package:js/js.dart";
 import "package:react/react.dart";
 import 'package:react/react_client/js_interop_helpers.dart';
-import 'package:react/react_client/react_interop.dart' hide Ref;
-import 'package:react/react_client/react_interop.dart' as react_interop show Ref;
+import 'package:react/react_client/react_interop.dart';
 import "package:react/react_dom.dart";
 import 'package:react/react_dom_server.dart';
 import "package:react/src/react_client/event_prop_key_to_event_factory.dart";
@@ -122,7 +121,7 @@ class ReactDartComponentFactoryProxy<TComponent extends Component> extends React
       // with the Dart Component instance, not the ReactComponent instance.
       if (ref is _CallbackRef) {
         interopProps.ref = allowInterop((ReactComponent instance) => ref(instance?.dartComponent));
-      } else if (ref is react_interop.Ref) {
+      } else if (ref is Ref) {
         interopProps.ref = ref.jsRef;
       } else {
         interopProps.ref = ref;
@@ -191,7 +190,7 @@ class ReactDartComponentFactoryProxy2<TComponent extends Component2> extends Rea
         propsForJs['ref'] = allowInterop((ReactComponent instance) => ref(instance?.dartComponent));
       }
 
-      if (ref is react_interop.Ref) {
+      if (ref is Ref) {
         propsForJs['ref'] = ref.jsRef;
       }
     }
@@ -314,7 +313,7 @@ final ReactDartInteropStatics _dartInteropStatics = (() {
           jsThis.setState(newObject());
         }
 
-        Ref getRef = (name) {
+        RefMethod getRef = (name) {
           var ref = getProperty(jsThis.refs, name);
           if (ref == null) return null;
           if (ref is Element) return ref;
@@ -899,7 +898,7 @@ _reactDom(String name) {
 
 void _convertRefValue(Map args) {
   var ref = args['ref'];
-  if (ref is react_interop.Ref) {
+  if (ref is Ref) {
     args['ref'] = ref.jsRef;
   }
 }
