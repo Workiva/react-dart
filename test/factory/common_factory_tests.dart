@@ -214,6 +214,44 @@ void refTests(ReactComponentFactoryProxy factory, {void verifyRefValue(dynamic r
 
     verifyRefValue(renderedInstance.dartComponent.ref('test'));
   });
+
+  test('createRef function creates ref with correct value', () {
+    final Ref ref = createRef();
+
+    rtu.renderIntoDocument(factory({
+      'ref': ref,
+    }));
+
+    verifyRefValue(ref.current);
+  });
+
+  test('forwardRef function passes a ref through a component to one of its children', () {
+    var ForwardRefTestComponent = forwardRef((props, ref) {
+      return factory({
+        'ref': ref,
+        'id': props['childId'],
+      });
+    });
+
+    final Ref refObject = createRef();
+
+    rtu.renderIntoDocument(ForwardRefTestComponent({
+      'ref': refObject,
+      'childId': 'test',
+    }));
+
+    // Component props are accessed differently depending on if it is a dom component
+    // or a dart component.
+    var idValue;
+    if (refObject.current is Element) {
+      idValue = refObject.current.id;
+    } else {
+      idValue = refObject.current.props['id'];
+    }
+
+    expect(idValue, equals('test'), reason: 'child component should have access to parent props');
+    verifyRefValue(refObject.current);
+  });
 }
 
 void _childKeyWarningTests(Function factory) {
