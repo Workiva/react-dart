@@ -562,35 +562,28 @@ final ReactDartInteropStatics2 _dartInteropStatics2 = (() {
         return jsBackingMapOrJsCopy(component.getInitialState());
       });
 
-  // TODO: we should review if we need to support the deprecated will methods in component2
-  void handleComponentWillMount(Component2 component, ReactComponent jsThis) => zone.run(() {
-        component
-          ..state = new JsBackedMap.backedBy(jsThis.state)
-          ..componentWillMount();
-      });
-
   void handleComponentDidMount(Component2 component) => zone.run(() {
         component.componentDidMount();
       });
 
-  void _updatePropsAndStateWithJs(Component2 component, JsMap props, JsMap state, dynamic context) {
+  void _updatePropsAndStateWithJs(Component2 component, JsMap props, JsMap state) {
     component
       ..props = new JsBackedMap.backedBy(props)
-      ..state = new JsBackedMap.backedBy(state)
-      ..context = _unjsifyNewContext(context);
+      ..state = new JsBackedMap.backedBy(state);
   }
 
-  bool handleShouldComponentUpdate(Component2 component, JsMap jsNextProps, JsMap jsNextState,
-          [dynamic jsNextContext]) =>
-      zone.run(() {
+  void _updateContextWithJs(Component2 component, dynamic jsContext) {
+    component.context = _unjsifyNewContext(jsContext);
+  }
+
+  bool handleShouldComponentUpdate(Component2 component, JsMap jsNextProps, JsMap jsNextState) => zone.run(() {
         final value = component.shouldComponentUpdate(
           new JsBackedMap.backedBy(jsNextProps),
           new JsBackedMap.backedBy(jsNextState),
-          _unjsifyNewContext(jsNextContext),
         );
 
         if (!value) {
-          _updatePropsAndStateWithJs(component, jsNextProps, jsNextState, jsNextContext);
+          _updatePropsAndStateWithJs(component, jsNextProps, jsNextState);
         }
 
         return value;
@@ -652,15 +645,14 @@ final ReactDartInteropStatics2 _dartInteropStatics2 = (() {
       });
 
   dynamic handleRender(Component2 component, JsMap jsProps, JsMap jsState, dynamic jsContext) => zone.run(() {
-        _updatePropsAndStateWithJs(component, jsProps, jsState, jsContext);
+        _updatePropsAndStateWithJs(component, jsProps, jsState);
+        _updateContextWithJs(component, jsContext);
         return component.render();
       });
 
   return new ReactDartInteropStatics2(
     initComponent: allowInterop(initComponent),
     handleGetInitialState: allowInterop(handleGetInitialState),
-    // TODO: we should review if we need to support the deprecated will methods in component2
-    handleComponentWillMount: allowInterop(handleComponentWillMount),
     handleComponentDidMount: allowInterop(handleComponentDidMount),
     handleGetDerivedStateFromProps: allowInterop(handleGetDerivedStateFromProps),
     handleShouldComponentUpdate: allowInterop(handleShouldComponentUpdate),
@@ -791,6 +783,8 @@ class ReactJsComponentFactoryProxy extends ReactComponentFactoryProxy {
     } else {
       potentiallyConvertedProps = props;
     }
+
+    // jsifyAndAllowInterop also handles converting props with nested Map/List structures, like `style`
     return factory(jsifyAndAllowInterop(potentiallyConvertedProps), children);
   }
 }
@@ -855,12 +849,12 @@ class ReactDomComponentFactoryProxy extends ReactComponentFactoryProxy {
     var convertibleProps = new Map.from(props);
     convertProps(convertibleProps);
 
+    // jsifyAndAllowInterop also handles converting props with nested Map/List structures, like `style`
     return factory(jsifyAndAllowInterop(convertibleProps), children);
   }
 
-  /// Prepares the bound values, event handlers, and style props for consumption by ReactJS DOM components.
+  /// Performs special handling of certain props for consumption by ReactJS DOM components.
   static void convertProps(Map props) {
-    _convertBoundValues(props);
     _convertEventHandlers(props);
     _convertRefValue(props);
   }
@@ -903,28 +897,6 @@ _setValueToProps(Map props, val) {
     }
   } else {
     props['value'] = val;
-  }
-}
-
-/// Convert bound values to pure value and packed onChange function
-@Deprecated('6.0.0')
-_convertBoundValues(Map args) {
-  var boundValue = args['value'];
-
-  if (boundValue is List) {
-    _setValueToProps(args, boundValue[0]);
-    args['value'] = boundValue[0];
-    var onChange = args['onChange'];
-
-    // Put new function into onChange event handler.
-    // If there was something listening for that event, trigger it and return its return value.
-    args['onChange'] = (event) {
-      boundValue[1](_getValueFromDom(event.target));
-
-      if (onChange != null) {
-        return onChange(event);
-      }
-    };
   }
 }
 

@@ -48,7 +48,7 @@ class _SetStateTest extends react.Component2 with LifecycleTestHelper {
   }
 
   @override
-  shouldComponentUpdate(_, __, [___]) {
+  shouldComponentUpdate(_, __) {
     lifecycleCall('shouldComponentUpdate');
     return props['shouldUpdate'] as bool;
   }
@@ -227,8 +227,8 @@ class _LifecycleTest extends react.Component2 with LifecycleTestHelper {
 
   Map getDerivedStateFromError(error) => lifecycleCall('getDerivedStateFromError', arguments: [error]);
 
-  bool shouldComponentUpdate(nextProps, nextState, [nextContext]) => lifecycleCall('shouldComponentUpdate',
-      arguments: [new Map.from(nextProps), new Map.from(nextState), nextContext], defaultReturnValue: () => true);
+  bool shouldComponentUpdate(nextProps, nextState) => lifecycleCall('shouldComponentUpdate',
+      arguments: [new Map.from(nextProps), new Map.from(nextState)], defaultReturnValue: () => true);
 
   dynamic render() => lifecycleCall('render', defaultReturnValue: () => react.div({}));
 

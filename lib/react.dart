@@ -129,20 +129,6 @@ abstract class Component {
   /// to be set for debugging purposes.
   String get displayName => runtimeType.toString();
 
-  /// Bind the value of input to [state[key]].
-  ///
-  /// __DEPRECATED.__
-  ///
-  /// This will be removed in the `6.0.0` release when `Component` is removed.
-  ///
-  /// There is currently no planned support for it within [Component2]
-  /// since there was never a ReactJS analogue for this API.
-  @Deprecated('6.0.0')
-  bind(key) => [
-        state[key],
-        (value) => setState({key: value})
-      ];
-
   initComponentInternal(props, _jsRedraw, [Ref ref, _jsThis, context]) {
     this._jsRedraw = _jsRedraw;
     this.ref = ref;
@@ -248,11 +234,6 @@ abstract class Component {
   /// Force a call to [render] by calling [setState], which effectively "redraws" the `Component`.
   ///
   /// Optionally accepts a [callback] that gets called after the component updates.
-  ///
-  /// > __DEPRECATED.__
-  /// >
-  /// > There is no implementation of this within [Component2]. Use [Component2.forceUpdate] when migrating.
-  @Deprecated('6.0.0')
   void redraw([callback()]) {
     setState({}, callback);
   }
@@ -264,12 +245,6 @@ abstract class Component {
   /// Also allows [newState] to be used as a transactional `setState` callback.
   ///
   /// See: <https://facebook.github.io/react/docs/react-component.html#setstate>
-  ///
-  /// > __DEPRECATED.__
-  /// >
-  /// > Note that when migrating to [Component2], [Component2.setState] will only accept a `Map` for [newState].
-  /// > Transactional `setState` calls will have to be changed to utilize [Component2.setStateWithUpdater].
-  @Deprecated('6.0.0')
   void setState(covariant dynamic newState, [callback()]) {
     if (newState is Map) {
       _nextState.addAll(newState);
@@ -332,21 +307,19 @@ abstract class Component {
   /// Calling [setState] within this function will not trigger an additional [render].
   ///
   /// See: <https://facebook.github.io/react/docs/react-component.html#updating-componentwillreceiveprops>
-  /// > __DEPRECATED - DO NOT USE__
+  /// > __UNSUPPORTED IN COMPONENT2__
   /// >
-  /// > This will be removed once 6.0.0 releases, switching to [Component2.getDerivedStateFromProps] is the path forward
+  /// > This will be removed once 6.0.0 releases; switching to [Component2.getDerivedStateFromProps] is the path forward.
   /// >
   /// > This will be completely removed when the JS side of it is slated for removal (ReactJS 17 / react.dart 6.0.0)
-  @Deprecated('6.0.0')
   void componentWillReceiveProps(Map newProps) {}
 
-  /// > __DEPRECATED - DO NOT USE__
+  /// > __UNSUPPORTED IN COMPONENT2__
   /// >
   /// > This API was never stable in any version of ReactJS, and was replaced with a new, incompatible context API
   /// > in ReactJS 16 that is exposed via the [Component2] class.
   /// >
   /// > This will be completely removed when the JS side of it is slated for removal (ReactJS 17 / react.dart 6.0.0)
-  @Deprecated('6.0.0')
   void componentWillReceivePropsWithContext(Map newProps, Map nextContext) {}
 
   /// ReactJS lifecycle method that is invoked before rendering when [nextProps] or [nextState] are being received.
@@ -378,7 +351,7 @@ abstract class Component {
   ///
   /// See: <https://facebook.github.io/react/docs/react-component.html#updating-componentwillupdate>
   ///
-  /// > __DEPRECATED - DO NOT USE__
+  /// > __UNSUPPORTED IN COMPONENT2__
   /// >
   /// > Due to the release of getSnapshotBeforeUpdate in ReactJS 16,
   /// > componentWillUpdate is no longer the method used to check the state
@@ -387,7 +360,6 @@ abstract class Component {
   /// > Use Component2 and Component2.getSnapshotBeforeUpdate instead.
   /// >
   /// > This will be completely removed when the JS side of it is slated for removal (ReactJS 17 / react.dart 6.0.0)
-  @Deprecated('6.0.0')
   void componentWillUpdate(Map nextProps, Map nextState) {}
 
   /// > __DEPRECATED - DO NOT USE__
@@ -618,20 +590,6 @@ abstract class Component2 implements Component {
     adapter.forceUpdate(callback);
   }
 
-  /// ReactJS lifecycle method that is invoked once, both on the client and server, immediately before the initial
-  /// rendering occurs.
-  ///
-  /// If you call [setState] within this method, [render] will see the updated state and will be executed only once
-  /// despite the [state] value change.
-  ///
-  /// See: <https://facebook.github.io/react/docs/react-component.html#mounting-componentwillmount>
-  ///
-  /// > __DEPRECATED.__
-  /// >
-  /// > Use [init] instead
-  @Deprecated('6.0.0')
-  void componentWillMount() {}
-
   /// ReactJS lifecycle method that is invoked once, only on the client _(not on the server)_, immediately after the
   /// initial rendering occurs.
   ///
@@ -641,25 +599,6 @@ abstract class Component2 implements Component {
   ///
   /// See: <https://facebook.github.io/react/docs/react-component.html#mounting-componentdidmount>
   void componentDidMount() {}
-
-  /// ReactJS lifecycle method that is invoked when a `Component` is receiving [newProps].
-  ///
-  /// This method is not called for the initial [render].
-  ///
-  /// Use this as an opportunity to react to a prop transition before [render] is called by updating the [state] using
-  /// [setState]. The old props can be accessed via [props].
-  ///
-  /// Calling [setState] within this function will not trigger an additional [render].
-  /// > __DEPRECATED - DO NOT USE__
-  /// >
-  /// > This will be removed once 6.0.0 releases, switching to [Component2.getDerivedStateFromProps] is the path forward
-  /// >
-  /// > React 16 has deprecated [componentWillReceiveProps] in favor of [getDerivedStateFromProps]
-  /// >
-  /// > This will be completely removed when the JS side of it is slated for removal (ReactJS 17 / react.dart 6.0.0)
-  @mustCallSuper
-  @Deprecated('6.0.0')
-  void componentWillReceiveProps(Map newProps) {}
 
   /// ReactJS lifecycle method that is invoked before rendering on initial mount and on subsequent updates when [nextProps] is received.
   ///
@@ -687,38 +626,13 @@ abstract class Component2 implements Component {
   ///
   Map getDerivedStateFromProps(Map nextProps, Map prevState) {}
 
-  /// ReactJS lifecycle method that is invoked before rendering when [nextProps], [nextState], or [nextContext] are
-  /// being received.
+  /// ReactJS lifecycle method that is invoked before rendering when [nextProps] or [nextState] are being received.
   ///
   /// Use this as an opportunity to return `false` when you're certain that the transition to the new props and state
   /// will not require a component update.
   ///
   /// See: <https://facebook.github.io/react/docs/react-component.html#updating-shouldcomponentupdate>
-  bool shouldComponentUpdate(Map nextProps, Map nextState, [dynamic nextContext]) => true;
-
-  /// ReactJS lifecycle method that is invoked immediately before rendering when [nextProps] or [nextState] are being
-  /// received.
-  ///
-  /// This method is not called for the initial [render].
-  ///
-  /// Use this as an opportunity to perform preparation before an update occurs.
-  ///
-  /// __Note__: Choose either this method or [componentWillUpdateWithContext]. They are both called at the same time so
-  /// using both provides no added benefit.
-  ///
-  /// See: <https://facebook.github.io/react/docs/react-component.html#updating-componentwillupdate>
-  ///
-  /// > __DEPRECATED - DO NOT USE__
-  /// >
-  /// > Due to the release of getSnapshotBeforeUpdate in ReactJS 16,
-  /// > componentWillUpdate is no longer the method used to check the state
-  /// > and props before a re-render. Additionally, because of the presence
-  /// > of getSnapshotBeforeUpdate, componentWillUpdate will be ignored. Use
-  /// > getSnapshotBeforeUpdate instead.
-  /// >
-  /// > This will be completely removed when the JS side of it is slated for removal (ReactJS 17 / react.dart 6.0.0)
-  @Deprecated('6.0.0')
-  void componentWillUpdate(Map nextProps, Map nextState) {}
+  bool shouldComponentUpdate(Map nextProps, Map nextState) => true;
 
   /// ReactJS lifecycle method that is invoked immediately after rendering
   /// before [nextProps] and [nextState] are committed to the DOM.
@@ -817,11 +731,6 @@ abstract class Component2 implements Component {
   /// Invoked once before the `Component` is mounted. The return value will be used as the initial value of [state].
   ///
   /// See: <https://facebook.github.io/react/docs/react-component.html#getinitialstate>
-  ///
-  /// > __DEPRECATED - DO NOT USE__
-  /// >
-  /// > Use [init] or [getDerivedStateFromProps] to handle intialization instead
-  @Deprecated('6.0.0')
   Map getInitialState() => const {};
 
   /// This is equivalent to `Constructor` in React 16, this is called before mounting
@@ -858,168 +767,294 @@ abstract class Component2 implements Component {
   /// See: <https://facebook.github.io/react/docs/react-component.html#render>
   dynamic render();
 
-  // Unsupported things
+  // ******************************************************************************************************************
+  //
+  // Deprecated members
+  //
+  // ******************************************************************************************************************
 
-  /// Do not use.
+  /// Deprecated. will be removed when [Component] is removed in the `6.0.0` release.
   ///
-  /// Will be removed when [Component] is removed in the `6.0.0` release.
-  @Deprecated('6.0.0')
-  void replaceState(Map newState, [SetStateCallback callback]) => throw new UnimplementedError();
-
-  /// Do not use.
+  /// Replace calls to this method with either:
   ///
-  /// Will be removed when [Component] is removed in the `6.0.0` release.
-  @Deprecated('6.0.0')
-  @mustCallSuper
-  Map<String, dynamic> getChildContext() =>
-      throw new UnsupportedError('"Legacy" Context [getChildContext] is not supported in Component2');
-
-  /// Do not use. Use [shouldComponentUpdate] with an optional 3rd argument for context instead.
-  ///
-  /// Will be removed when [Component] is removed in the `6.0.0` release.
-  @Deprecated('6.0.0')
-  bool shouldComponentUpdateWithContext(Map nextProps, Map nextState, dynamic nextContext) =>
-      throw new UnsupportedError('"Legacy" Context [getChildContext] is not supported in Component2');
-
-  /// Do not use.
-  ///
-  /// Will be removed when [Component] is removed in the `6.0.0` release.
-  @Deprecated('6.0.0')
-  void componentWillUpdateWithContext(Map nextProps, Map nextState, dynamic nextContext) {}
-
-  /// Do not use.
-  ///
-  /// Will be removed when [Component] is removed in the `6.0.0` release.
-  @Deprecated('6.0.0')
-  void componentWillReceivePropsWithContext(Map newProps, dynamic nextContext) {}
-
-  /// Do not use.
-  ///
-  /// Will be removed when [Component] is removed in the `6.0.0` release.
-  @Deprecated('6.0.0')
-  Iterable<String> get childContextKeys =>
-      throw new UnsupportedError('"Legacy" Context [childContextKeys] is not supported in Component2');
-
-  /// Do not use.
-  ///
-  /// Will be removed when [Component] is removed in the `6.0.0` release.
-  @Deprecated('6.0.0')
-  Iterable<String> get contextKeys =>
-      throw new UnsupportedError('"Legacy" Context [contextKeys] is not supported in Component2');
-
-  /// Do not use.
-  ///
-  /// Will be removed when [Component] is removed in the `6.0.0` release.
-  @Deprecated('6.0.0')
-  bind(key) => [
-        state[key],
-        (value) => setState({key: value})
-      ];
-
-  /// Do not use.
-  ///
-  /// Will be removed when [Component] is removed in the `6.0.0` release.
-  @Deprecated('6.0.0')
-  initComponentInternal(props, _jsRedraw, [Ref ref, _jsThis, context]) {
-    throw new UnimplementedError();
-  }
-
-  /// Do not use.
-  ///
-  /// Will be removed when [Component] is removed in the `6.0.0` release.
-  @Deprecated('6.0.0')
-  initStateInternal() => throw new UnimplementedError();
-
-  /// Do not use.
-  ///
-  /// Will be removed when [Component] is removed in the `6.0.0` release.
-  @Deprecated('6.0.0')
-  get nextContext => throw new UnsupportedError('"Legacy" Context [nextContext] is not supported in Component2');
-  @Deprecated('6.0.0')
-  set nextContext(val) => throw new UnsupportedError('"Legacy" Context [nextContext] is not supported in Component2');
-
-  /// Do not use.
-  ///
-  /// Will be removed when [Component] is removed in the `6.0.0` release.
-  @Deprecated('6.0.0')
-  get prevContext => throw new UnsupportedError('"Legacy" Context [prevContext] is not supported in Component2');
-  @Deprecated('6.0.0')
-  set prevContext(val) => throw new UnsupportedError('"Legacy" Context [prevContext] is not supported in Component2');
-
-  /// Do not use.
-  ///
-  /// Will be removed when [Component] is removed in the `6.0.0` release.
-  @Deprecated('6.0.0')
-  Map prevState; // todo make throwing getters/setters
-
-  /// Do not use.
-  ///
-  /// Will be removed when [Component] is removed in the `6.0.0` release.
-  @Deprecated('6.0.0')
-  Map get nextState => throw new UnimplementedError();
-
-  /// Do not use.
-  ///
-  /// Will be removed when [Component] is removed in the `6.0.0` release.
-  @Deprecated('6.0.0')
-  Map nextProps; // todo make throwing getters/setters
-
-  /// Do not use.
-  ///
-  /// Will be removed when [Component] is removed in the `6.0.0` release.
-  @Deprecated('6.0.0')
-  void transferComponentState() => throw new UnimplementedError();
-
-  /// Do not use.
-  ///
-  /// Will be removed when [Component] is removed in the `6.0.0` release.
+  /// - [forceUpdate] (preferred) - forces rerender and bypasses [shouldComponentUpdate]
+  /// - `setState({})` - same behavior as this method: causes rerender but goes through [shouldComponentUpdate]
+  @override
   @Deprecated('6.0.0')
   void redraw([SetStateCallback callback]) {
     setState({}, callback);
   }
 
+  // ******************************************************************************************************************
+  //
+  // Deprecated and unsupported lifecycle methods
+  //
+  //   These should all throw and be annotated with @mustCallSuper so that any consumer overrides don't silently fail.
+  //
+  // ******************************************************************************************************************
+
+  UnsupportedError _unsupportedLifecycleError(String memberName) =>
+      new UnsupportedError('Component2 drops support for the lifecycle method $memberName.'
+          ' See doc comment on Component2.$memberName for migration instructions.');
+
+  /// ReactJS lifecycle method that is invoked once, both on the client and server, immediately before the initial
+  /// rendering occurs.
+  ///
+  /// If you call [setState] within this method, [render] will see the updated state and will be executed only once
+  /// despite the [state] value change.
+  ///
+  /// See: <https://facebook.github.io/react/docs/react-component.html#mounting-componentwillmount>
+  ///
+  /// > __DEPRECATED - DO NOT USE__
+  /// >
+  /// > Use [init] instead
+  @mustCallSuper
+  @Deprecated('6.0.0')
+  void componentWillMount() => _unsupportedLifecycleError('componentWillMount');
+
+  /// ReactJS lifecycle method that is invoked when a `Component` is receiving [newProps].
+  ///
+  /// This method is not called for the initial [render].
+  ///
+  /// Use this as an opportunity to react to a prop transition before [render] is called by updating the [state] using
+  /// [setState]. The old props can be accessed via [props].
+  ///
+  /// Calling [setState] within this function will not trigger an additional [render].
+  /// > __DEPRECATED - DO NOT USE__
+  /// >
+  /// > This will be removed once 6.0.0 releases, switching to [Component2.getDerivedStateFromProps] is the path forward
+  /// >
+  /// > React 16 has deprecated [componentWillReceiveProps] in favor of [getDerivedStateFromProps]
+  /// >
+  /// > This will be completely removed when the JS side of it is slated for removal (ReactJS 17 / react.dart 6.0.0)
+  @mustCallSuper
+  @Deprecated('6.0.0')
+  void componentWillReceiveProps(Map newProps) => _unsupportedLifecycleError('componentWillReceiveProps');
+
+  /// ReactJS lifecycle method that is invoked immediately before rendering when [nextProps] or [nextState] are being
+  /// received.
+  ///
+  /// This method is not called for the initial [render].
+  ///
+  /// Use this as an opportunity to perform preparation before an update occurs.
+  ///
+  /// __Note__: Choose either this method or [componentWillUpdateWithContext]. They are both called at the same time so
+  /// using both provides no added benefit.
+  ///
+  /// See: <https://facebook.github.io/react/docs/react-component.html#updating-componentwillupdate>
+  ///
+  /// > __DEPRECATED - DO NOT USE__
+  /// >
+  /// > Due to the release of getSnapshotBeforeUpdate in ReactJS 16,
+  /// > componentWillUpdate is no longer the method used to check the state
+  /// > and props before a re-render. Additionally, because of the presence
+  /// > of getSnapshotBeforeUpdate, componentWillUpdate will be ignored. Use
+  /// > getSnapshotBeforeUpdate instead.
+  /// >
+  /// > This will be completely removed when the JS side of it is slated for removal (ReactJS 17 / react.dart 6.0.0)
+  @mustCallSuper
+  @Deprecated('6.0.0')
+  void componentWillUpdate(Map nextProps, Map nextState) => _unsupportedLifecycleError('componentWillUpdate');
+
+  /// Do not use; this is part of the legacy context API.
+  ///
+  /// See [createContext] for instructions on using the new context API.
+  ///
+  /// Will be removed when [Component] is removed in the `6.0.0` release.
   @override
+  @mustCallSuper
+  @Deprecated('6.0.0')
+  Map<String, dynamic> getChildContext() => throw _unsupportedLifecycleError('getChildContext');
+
+  /// Do not use; this is part of the legacy context API.
+  ///
+  /// See [createContext] for instructions on using the new context API.
+  ///
+  /// Will be removed when [Component] is removed in the `6.0.0` release.
+  @override
+  @mustCallSuper
+  @Deprecated('6.0.0')
+  bool shouldComponentUpdateWithContext(Map nextProps, Map nextState, dynamic nextContext) =>
+      throw _unsupportedLifecycleError('shouldComponentUpdateWithContext');
+
+  /// Do not use; this is part of the legacy context API.
+  ///
+  /// See [createContext] for instructions on using the new context API.
+  ///
+  /// Will be removed when [Component] is removed in the `6.0.0` release.
+  @override
+  @mustCallSuper
+  @Deprecated('6.0.0')
+  void componentWillUpdateWithContext(Map nextProps, Map nextState, dynamic nextContext) =>
+      throw _unsupportedLifecycleError('componentWillUpdateWithContext');
+
+  /// Do not use; this is part of the legacy context API.
+  ///
+  /// See [createContext] for instructions on using the new context API.
+  ///
+  /// Will be removed when [Component] is removed in the `6.0.0` release.
+  @override
+  @mustCallSuper
+  @Deprecated('6.0.0')
+  void componentWillReceivePropsWithContext(Map newProps, dynamic nextContext) =>
+      throw _unsupportedLifecycleError('componentWillReceivePropsWithContext');
+
+  // ******************************************************************************************************************
+  // Other deprecated and unsupported members
+  // ******************************************************************************************************************
+
+  UnsupportedError _unsupportedError(String memberName) =>
+      new UnsupportedError('Component2 drops support for $memberName');
+
+  /// Do not use.
+  ///
+  /// Will be removed when [Component] is removed in the `6.0.0` release.
+  @override
+  @Deprecated('6.0.0')
+  void replaceState(Map newState, [SetStateCallback callback]) => throw _unsupportedError('replaceState');
+
+  /// Do not use.
+  ///
+  /// Will be removed when [Component] is removed in the `6.0.0` release.
+  @override
+  @Deprecated('6.0.0')
+  Iterable<String> get childContextKeys => throw _unsupportedError('"Legacy" Context [childContextKeys]');
+
+  /// Do not use.
+  ///
+  /// Will be removed when [Component] is removed in the `6.0.0` release.
+  @override
+  @Deprecated('6.0.0')
+  Iterable<String> get contextKeys => throw _unsupportedError('"Legacy" Context [contextKeys]');
+
+  /// Do not use.
+  ///
+  /// Will be removed when [Component] is removed in the `6.0.0` release.
+  @override
+  @Deprecated('6.0.0')
+  initComponentInternal(props, _jsRedraw, [Ref ref, _jsThis, context]) =>
+      throw _unsupportedError('initComponentInternal');
+
+  /// Do not use.
+  ///
+  /// Will be removed when [Component] is removed in the `6.0.0` release.
+  @override
+  @Deprecated('6.0.0')
+  initStateInternal() => throw _unsupportedError('initStateInternal');
+
+  /// Do not use.
+  ///
+  /// Will be removed when [Component] is removed in the `6.0.0` release.
+  @override
+  @Deprecated('6.0.0')
+  get nextContext => throw _unsupportedError('"Legacy" Context [nextContext]');
+  @override
+  @Deprecated('6.0.0')
+  set nextContext(_) => throw _unsupportedError('"Legacy" Context [nextContext]');
+
+  /// Do not use.
+  ///
+  /// Will be removed when [Component] is removed in the `6.0.0` release.
+  @override
+  @Deprecated('6.0.0')
+  get prevContext => throw _unsupportedError('"Legacy" Context [prevContext]');
+  @override
+  @Deprecated('6.0.0')
+  set prevContext(_) => throw _unsupportedError('"Legacy" Context [prevContext]');
+
+  /// Do not use.
+  ///
+  /// Will be removed when [Component] is removed in the `6.0.0` release.
+  @override
+  @Deprecated('6.0.0')
+  Map get prevState => throw _unsupportedError('"Legacy" Context [prevContext]');
+  set prevState(_) => throw _unsupportedError('"Legacy" Context [prevContext]');
+
+  /// Do not use.
+  ///
+  /// Will be removed when [Component] is removed in the `6.0.0` release.
+  @override
+  @Deprecated('6.0.0')
+  Map get nextState => throw _unsupportedError('nextState');
+
+  /// Do not use.
+  ///
+  /// Will be removed when [Component] is removed in the `6.0.0` release.
+  @override
+  @Deprecated('6.0.0')
+  Map get nextProps => throw _unsupportedError('nextProps');
+  set nextProps(_) => throw _unsupportedError('nextProps');
+
+  /// Do not use.
+  ///
+  /// Will be removed when [Component] is removed in the `6.0.0` release.
+  @override
+  @Deprecated('6.0.0')
+  void transferComponentState() => throw _unsupportedError('transferComponentState');
+
+  /// Do not use.
+  ///
+  /// Will be removed when [Component] is removed in the `6.0.0` release.
+  @override
+  @Deprecated('6.0.0')
+  Ref get ref => throw _unsupportedError('ref');
+  set ref(_) => throw _unsupportedError('ref');
+
+  /// Do not use.
+  ///
+  /// Will be removed when [Component] is removed in the `6.0.0` release.
+  @override
+  @Deprecated('6.0.0')
+  List<SetStateCallback> get setStateCallbacks => throw _unsupportedError('setStateCallbacks');
+
+  @override
+  @Deprecated('6.0.0')
+  List<StateUpdaterCallback> get transactionalSetStateCallbacks =>
+      throw _unsupportedError('transactionalSetStateCallbacks');
+
+  // ******************************************************************************************************************
+  // Private unsupported members (no need to throw since they're internal)
+  // ******************************************************************************************************************
+
+  @override
+  @Deprecated('6.0.0')
   Map _context;
 
   @override
+  @Deprecated('6.0.0')
   var _jsRedraw;
 
   @override
+  @Deprecated('6.0.0')
   Map _nextState;
 
   @override
+  @Deprecated('6.0.0')
   Map _props;
 
   @override
+  @Deprecated('6.0.0')
   Ref _ref;
 
   @override
+  @Deprecated('6.0.0')
   List<SetStateCallback> _setStateCallbacks;
 
   @override
+  @Deprecated('6.0.0')
   Map _state;
 
   @override
+  @Deprecated('6.0.0')
   List<StateUpdaterCallback> _transactionalSetStateCallbacks;
 
   @override
-  Ref ref;
+  @Deprecated('6.0.0')
+  _initContext(context) {}
 
   @override
-  _initContext(context) {
-    throw new UnimplementedError();
-  }
-
-  @override
-  _initProps(props) {
-    throw new UnimplementedError();
-  }
-
-  @override
-  List<SetStateCallback> get setStateCallbacks => throw new UnimplementedError();
-
-  @override
-  List<StateUpdaterCallback> get transactionalSetStateCallbacks => throw new UnimplementedError();
+  @Deprecated('6.0.0')
+  _initProps(props) {}
 }
 
 /// Mixin that enforces consistent typing of the `snapshot` parameter
