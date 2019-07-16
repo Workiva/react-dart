@@ -562,13 +562,6 @@ final ReactDartInteropStatics2 _dartInteropStatics2 = (() {
         return jsBackingMapOrJsCopy(component.getInitialState());
       });
 
-  // TODO: we should review if we need to support the deprecated will methods in component2
-  void handleComponentWillMount(Component2 component, ReactComponent jsThis) => zone.run(() {
-        component
-          ..state = new JsBackedMap.backedBy(jsThis.state)
-          ..componentWillMount();
-      });
-
   void handleComponentDidMount(Component2 component) => zone.run(() {
         component.componentDidMount();
       });
@@ -660,8 +653,6 @@ final ReactDartInteropStatics2 _dartInteropStatics2 = (() {
   return new ReactDartInteropStatics2(
     initComponent: allowInterop(initComponent),
     handleGetInitialState: allowInterop(handleGetInitialState),
-    // TODO: we should review if we need to support the deprecated will methods in component2
-    handleComponentWillMount: allowInterop(handleComponentWillMount),
     handleComponentDidMount: allowInterop(handleComponentDidMount),
     handleGetDerivedStateFromProps: allowInterop(handleGetDerivedStateFromProps),
     handleShouldComponentUpdate: allowInterop(handleShouldComponentUpdate),
