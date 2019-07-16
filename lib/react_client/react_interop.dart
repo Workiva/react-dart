@@ -61,6 +61,11 @@ abstract class ReactDomServer {
   external static String renderToStaticMarkup(ReactElement component);
 }
 
+@JS('React.PropTypes')
+abstract class PropTypes {
+  external static resetWarningCache();
+}
+
 // ----------------------------------------------------------------------------
 //   Types and data structures
 // ----------------------------------------------------------------------------
