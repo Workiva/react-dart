@@ -783,6 +783,8 @@ class ReactJsComponentFactoryProxy extends ReactComponentFactoryProxy {
     } else {
       potentiallyConvertedProps = props;
     }
+
+    // jsifyAndAllowInterop also handles converting props with nested Map/List structures, like `style`
     return factory(jsifyAndAllowInterop(potentiallyConvertedProps), children);
   }
 }
@@ -847,10 +849,11 @@ class ReactDomComponentFactoryProxy extends ReactComponentFactoryProxy {
     var convertibleProps = new Map.from(props);
     convertProps(convertibleProps);
 
+    // jsifyAndAllowInterop also handles converting props with nested Map/List structures, like `style`
     return factory(jsifyAndAllowInterop(convertibleProps), children);
   }
 
-  /// Prepares the bound values, event handlers, and style props for consumption by ReactJS DOM components.
+  /// Performs special handling of certain props for consumption by ReactJS DOM components.
   static void convertProps(Map props) {
     _convertEventHandlers(props);
     _convertRefValue(props);

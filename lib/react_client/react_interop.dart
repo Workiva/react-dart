@@ -496,8 +496,7 @@ class ReactDartInteropStatics {
 class ReactDartInteropStatics2 implements ReactDartInteropStatics {
   external factory ReactDartInteropStatics2({
     Component2 Function(ReactComponent jsThis, ComponentStatics2 componentStatics) initComponent,
-    // TODO: Should this have a return signature of `Map`?
-    dynamic Function(Component2 component) handleGetInitialState,
+    JsMap Function(Component2 component) handleGetInitialState,
     void Function(Component2 component) handleComponentDidMount,
     void Function(
       ComponentStatics2 componentStatics,
