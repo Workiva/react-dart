@@ -10,7 +10,7 @@ import 'dart:html';
 import 'package:meta/meta.dart';
 import 'package:js/js.dart';
 import 'package:react/react.dart';
-import 'package:react/react_client.dart' show ComponentFactory;
+import 'package:react/react_client.dart' show ComponentFactory, ReactJsComponentFactoryProxy;
 import 'package:react/src/react_client/js_backed_map.dart';
 import 'package:react/src/react_client/dart2_interop_workaround_bindings.dart';
 import 'package:react/src/typedefs.dart';
@@ -38,7 +38,79 @@ abstract class React {
 
   external static bool isValidElement(dynamic object);
   external static ReactClass get Fragment;
+
+  external static JsRef createRef();
 }
+
+/// Creates a [Ref] object that can be attached to a [ReactElement] via the ref prop.
+///
+/// __Example__:
+///
+///     class FooComponent extends react.Component2 {
+///       final Ref<BarComponent> barRef = createRef();
+///       final Ref<InputElement> inputRef = createRef();
+///
+///       render() => react.div({}, [
+///         Bar({'ref': barRef}),
+///         react.input({'ref': inputRef}),
+///       ]);
+///     }
+///
+/// Learn more: <https://reactjs.org/docs/refs-and-the-dom.html#creating-refs>.
+Ref<CurrentType> createRef<CurrentType>() {
+  return new Ref<CurrentType>();
+}
+
+/// When this is provided as the ref prop, a reference to the rendered component
+/// will be available via [current].
+///
+/// See: <https://reactjs.org/docs/refs-and-the-dom.html#creating-refs>.
+class Ref<CurrentType> {
+  /// A JavaScript ref object returned by [React.createRef].
+  JsRef jsRef;
+
+  Ref() {
+    jsRef = React.createRef();
+  }
+
+  /// A reference to the latest instance of the rendered component.
+  ///
+  /// See: <https://reactjs.org/docs/refs-and-the-dom.html#creating-refs>.
+  CurrentType get current {
+    final jsCurrent = jsRef.current;
+
+    if (jsCurrent is! Element) {
+      final dartCurrent = (jsCurrent as ReactComponent)?.dartComponent;
+
+      if (dartCurrent != null) {
+        return dartCurrent as CurrentType;
+      }
+    }
+    return jsCurrent;
+  }
+}
+
+@JS()
+@anonymous
+class JsRef {
+  external dynamic get current;
+}
+
+/// Automatically passes a [Ref] through a component to one of its children.
+///
+/// See: <https://reactjs.org/docs/forwarding-refs.html>.
+ReactJsComponentFactoryProxy forwardRef(Function(Map props, Ref ref) wrapperFunction) {
+  var hoc = _jsForwardRef(allowInterop((JsMap props, Ref ref) {
+    var dartProps = new JsBackedMap.backedBy(props);
+
+    return wrapperFunction(dartProps, ref);
+  }));
+
+  return new ReactJsComponentFactoryProxy(hoc, shouldConvertDomProps: false);
+}
+
+@JS('React.forwardRef')
+external ReactClass _jsForwardRef(Function(JsMap props, Ref ref) wrapperFunction);
 
 abstract class ReactDom {
   static Element findDOMNode(object) => ReactDOM.findDOMNode(object);

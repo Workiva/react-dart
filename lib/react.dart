@@ -9,8 +9,8 @@ library react;
 
 import 'package:meta/meta.dart';
 import 'package:react/src/typedefs.dart';
-import 'package:react/react_client.dart';
-import 'package:react/react_client/react_interop.dart';
+import 'package:react/react_client.dart' hide Ref;
+import 'package:react/react_client/react_interop.dart' hide Ref;
 
 typedef T ComponentFactory<T extends Component>();
 typedef ReactComponentFactoryProxy ComponentRegistrar(ComponentFactory componentFactory,
