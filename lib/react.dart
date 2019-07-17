@@ -101,7 +101,7 @@ abstract class Component {
   /// There are new and improved ways to use / set refs within [Component2].
   /// Until then, use a callback ref instead.
   ///
-  /// TODO: Add better description of how to utilize [Component2] refs.
+  /// FIXME 3.1.0-wip: Add better description of how to utilize [Component2] refs.
   @Deprecated('6.0.0')
   RefMethod get ref => _ref;
 
@@ -112,7 +112,7 @@ abstract class Component {
   /// There are new and improved ways to use / set refs within [Component2].
   /// Until then, use a callback ref instead.
   ///
-  /// TODO: Add better description of how to utilize [Component2] refs.
+  /// FIXME 3.1.0-wip: Add better description of how to utilize [Component2] refs.
   @Deprecated('6.0.0')
   set ref(RefMethod value) => _ref = value;
 

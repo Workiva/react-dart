@@ -107,7 +107,7 @@ class JsBackedMap extends MapBase<dynamic, dynamic> {
   @override
   bool operator ==(other) => other is JsBackedMap && other.jsObject == jsObject;
 
-  // todo add workaround for DDC hashcode bug
+  // FIXME 3.1.0-wip add workaround for DDC hashcode bug
   @override
   int get hashCode => jsObject.hashCode;
 }

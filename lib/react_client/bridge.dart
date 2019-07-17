@@ -41,7 +41,7 @@ abstract class Component2Bridge {
   JsMap jsifyPropTypes(Map propTypes);
 }
 
-// TODO custom adapter for over_react to avoid typedPropsFactory usages?
+// TODO 3.1.0-wip custom adapter for over_react to avoid typedPropsFactory usages?
 
 /// A basic bridge implementation compatible with [Component2].
 ///

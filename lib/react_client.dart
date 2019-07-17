@@ -152,7 +152,7 @@ class ReactDartComponentFactoryProxy2<TComponent extends Component2> extends Rea
   ReactClass get type => reactClass;
 
   ReactElement build(Map props, [List childrenArgs = const []]) {
-    // TODO if we don't pass in a list into React, we don't get a list back in Dart...
+    // TODO 3.1.0-wip if we don't pass in a list into React, we don't get a list back in Dart...
 
     List children;
     if (childrenArgs.isEmpty) {
@@ -165,8 +165,8 @@ class ReactDartComponentFactoryProxy2<TComponent extends Component2> extends Rea
     }
 
     if (children == null) {
-      // FIXME are we cool to modify this list?
-      // FIXME why are there unmodifiable lists here?
+      // FIXME 3.1.0-wip are we cool to modify this list?
+      // FIXME 3.1.0-wip why are there unmodifiable lists here?
       children = childrenArgs.map(listifyChildren).toList();
       markChildrenValidated(children);
     }
@@ -477,7 +477,7 @@ final ReactDartInteropStatics _dartInteropStatics = (() {
 })();
 
 abstract class _ReactDartInteropStatics2 {
-  // TODO expose for testing?
+  // TODO 3.1.0-wip expose for testing?
   static final zone = Zone.root;
 
   static void _updatePropsAndStateWithJs(Component2 component, JsMap props, JsMap state) {
