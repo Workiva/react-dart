@@ -8,6 +8,7 @@
 library react;
 
 import 'package:meta/meta.dart';
+import 'package:react/src/react_client/bridge.dart';
 import 'package:react/src/typedefs.dart';
 import 'package:react/react_client.dart';
 import 'package:react/react_client/react_interop.dart';
@@ -552,7 +553,7 @@ abstract class Component2 implements Component {
   ///
   /// See: <https://reactjs.org/docs/react-component.html#setstate>
   void setState(Map newState, [SetStateCallback callback]) {
-    bridgeForComponent[this].setState(newState, callback);
+    Component2Bridge.forComponent(this).setState(newState, callback);
   }
 
   /// Triggers a rerender with new state obtained by shallow-merging
@@ -562,7 +563,7 @@ abstract class Component2 implements Component {
   ///
   /// See: <https://reactjs.org/docs/react-component.html#setstate>
   void setStateWithUpdater(StateUpdaterCallback updater, [SetStateCallback callback]) {
-    bridgeForComponent[this].setStateWithUpdater(updater, callback);
+    Component2Bridge.forComponent(this).setStateWithUpdater(updater, callback);
   }
 
   /// Initializes this component's [state] to [value].
@@ -582,11 +583,11 @@ abstract class Component2 implements Component {
   ///       initializeState({'count': 0});
   ///     }
   void initializeState(Map value) {
-    bridgeForComponent[this].initializeState(value);
+    Component2Bridge.forComponent(this).initializeState(value);
   }
 
   void forceUpdate([SetStateCallback callback]) {
-    bridgeForComponent[this].forceUpdate(callback);
+    Component2Bridge.forComponent(this).forceUpdate(callback);
   }
 
   /// ReactJS lifecycle method that is invoked once, only on the client _(not on the server)_, immediately after the

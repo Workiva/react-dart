@@ -18,6 +18,7 @@ import 'package:react/react_client/js_interop_helpers.dart';
 import 'package:react/react_client/react_interop.dart';
 import "package:react/react_dom.dart";
 import 'package:react/react_dom_server.dart';
+import 'package:react/src/react_client/bridge.dart';
 import "package:react/src/react_client/event_prop_key_to_event_factory.dart";
 import 'package:react/src/react_client/js_backed_map.dart';
 import "package:react/src/react_client/synthetic_event_wrappers.dart" as events;
@@ -476,73 +477,6 @@ final ReactDartInteropStatics _dartInteropStatics = (() {
       handleRender: allowInterop(handleRender));
 })();
 
-// TODO custom adapter for over_react to avoid typedPropsFactory usages?
-class Component2BridgeImpl extends Component2Bridge {
-  // TODO find a way to inject this better
-  final Component2 component;
-
-  ReactComponent get jsThis => component.jsThis;
-
-  Component2BridgeImpl(this.component);
-
-  static Component2BridgeImpl bridgeFactory(Component2 component) => Component2BridgeImpl(component);
-
-  @override
-  void forceUpdate(SetStateCallback callback) {
-    if (callback == null) {
-      jsThis.forceUpdate();
-    } else {
-      jsThis.forceUpdate(allowInterop(callback));
-    }
-  }
-
-  @override
-  void setState(Map newState, SetStateCallback callback) {
-    // Short-circuit to match the ReactJS 16 behavior of not re-rendering the component if newState is null.
-    if (newState == null) return;
-
-    dynamic firstArg = jsBackingMapOrJsCopy(newState);
-
-    if (callback == null) {
-      jsThis.setState(firstArg);
-    } else {
-      jsThis.setState(firstArg, allowInterop(([_]) {
-        callback();
-      }));
-    }
-  }
-
-  @override
-  void initializeState(Map state) {
-    dynamic jsState = jsBackingMapOrJsCopy(state);
-    jsThis.state = jsState;
-  }
-
-  @override
-  void setStateWithUpdater(StateUpdaterCallback stateUpdater, SetStateCallback callback) {
-    final firstArg = allowInterop((JsMap jsPrevState, JsMap jsProps, [_]) {
-      return jsBackingMapOrJsCopy(stateUpdater(
-        new JsBackedMap.backedBy(jsPrevState),
-        new JsBackedMap.backedBy(jsProps),
-      ));
-    });
-
-    if (callback == null) {
-      jsThis.setState(firstArg);
-    } else {
-      jsThis.setState(firstArg, allowInterop(([_]) {
-        callback();
-      }));
-    }
-  }
-
-  @override
-  JsMap jsifyPropTypes(Map propTypes) {
-    // TODO: implement jsifyPropTypes
-    return null;
-  }
-}
-
 class InteropStatics2 {
   static final zone = Zone.root;
 
@@ -568,7 +502,7 @@ class InteropStatics2 {
           ..props = new JsBackedMap.backedBy(jsThis.props)
           ..context = _unjsifyNewContext(jsThis.context);
 
-        bridgeForComponent[component] = componentStatics.bridgeFactory(component);
+        Component2Bridge.bridgeForComponent[component] = componentStatics.bridgeFactory(component);
 
         component.init();
         if (component.state != null) {
