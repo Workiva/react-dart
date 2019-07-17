@@ -8,7 +8,7 @@
 library react;
 
 import 'package:meta/meta.dart';
-import 'package:react/src/react_client/bridge.dart';
+import 'package:react/react_client/bridge.dart';
 import 'package:react/src/typedefs.dart';
 import 'package:react/react_client.dart';
 import 'package:react/react_client/react_interop.dart';

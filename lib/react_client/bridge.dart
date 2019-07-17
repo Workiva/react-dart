@@ -3,8 +3,8 @@ import 'package:meta/meta.dart';
 import 'package:react/react.dart';
 import 'package:react/react_client/react_interop.dart';
 
-import '../typedefs.dart';
-import 'js_backed_map.dart';
+import 'package:react/src/typedefs.dart';
+import 'package:react/src/react_client/js_backed_map.dart';
 
 /// A function that creates a bridge for a component.
 typedef Component2BridgeFactory = Component2Bridge Function(Component2);
@@ -43,6 +43,9 @@ abstract class Component2Bridge {
 
 // TODO custom adapter for over_react to avoid typedPropsFactory usages?
 
+/// A basic bridge implementation compatible with [Component2].
+///
+/// See [Component2Bridge] for more info.
 class Component2BridgeImpl extends Component2Bridge {
   /// The Dart component instance associated with this bridge.
   final Component2 component;
