@@ -2,10 +2,13 @@
 // for details. All rights reserved. Use of this source code is governed by a
 // BSD-style license that can be found in the LICENSE file.
 
+// ignore_for_file: deprecated_member_use_from_same_package
+
 /// A Dart library for building UI using ReactJS.
 library react;
 
 import 'package:meta/meta.dart';
+import 'package:react/react_client/bridge.dart';
 import 'package:react/react_client/js_interop_helpers.dart' show jsifyPropTypes;
 import 'package:react/src/typedefs.dart';
 import 'package:react/react_client.dart';
@@ -65,7 +68,7 @@ abstract class Component {
   /// [doesn't work for overriding fields](https://github.com/dart-lang/sdk/issues/27452).
   ///
   /// TODO: Switch back to a plain field once this issue is fixed.
-  Ref _ref;
+  RefMethod _ref;
 
   /// The React context map of this component, passed down from its ancestors' [getChildContext] value.
   ///
@@ -104,9 +107,9 @@ abstract class Component {
   /// There are new and improved ways to use / set refs within [Component2].
   /// Until then, use a callback ref instead.
   ///
-  /// TODO: Add better description of how to utilize [Component2] refs.
+  /// FIXME 3.1.0-wip: Add better description of how to utilize [Component2] refs.
   @Deprecated('6.0.0')
-  Ref get ref => _ref;
+  RefMethod get ref => _ref;
 
   /// __DEPRECATED.__
   ///
@@ -115,9 +118,9 @@ abstract class Component {
   /// There are new and improved ways to use / set refs within [Component2].
   /// Until then, use a callback ref instead.
   ///
-  /// TODO: Add better description of how to utilize [Component2] refs.
+  /// FIXME 3.1.0-wip: Add better description of how to utilize [Component2] refs.
   @Deprecated('6.0.0')
-  set ref(Ref value) => _ref = value;
+  set ref(RefMethod value) => _ref = value;
 
   dynamic _jsRedraw;
 
@@ -141,7 +144,7 @@ abstract class Component {
   /// to be set for debugging purposes.
   String get displayName => runtimeType.toString();
 
-  initComponentInternal(props, _jsRedraw, [Ref ref, _jsThis, context]) {
+  initComponentInternal(props, _jsRedraw, [RefMethod ref, _jsThis, context]) {
     this._jsRedraw = _jsRedraw;
     this.ref = ref;
     this._jsThis = _jsThis;
@@ -464,8 +467,32 @@ abstract class Component {
   dynamic render();
 }
 
-/// Top-level ReactJS [Component class](https://facebook.github.io/react/docs/react-component.html)
-/// which provides the [ReactJS Component API](https://facebook.github.io/react/docs/react-component.html#reference)
+/// Top-level ReactJS [Component class](https://reactjs.org/docs/react-component.html)
+/// which provides the [ReactJS Component API](https://reactjs.org/docs/react-component.html#reference).
+///
+/// Differences from the deprecated [Component]:
+///
+/// 1. "JS-backed maps" - uses the JS React component's props / state objects maps under the hood
+///    instead of copying them into Dart Maps. Benefits:
+///     - Improved performance
+///     - Props/state key-value pairs are visible to React, and show up in the Dev Tools
+///     - Easier to maintain the JS-Dart interop and add new features
+///     - Easier to interop with JS libraries like react-redux
+///
+/// 2. Supports the new lifecycle methods introduced in React 16
+///    (See method doc comments for more info)
+///     - [getDerivedStateFromProps]
+///     - [getSnapshotBeforeUpdate]
+///     - [componentDidCatch]
+///     - [getDerivedStateFromError]
+///
+/// 3. Drops support for "unsafe" lifecycle methods deprecated in React 16
+///    (See method doc comments for migration instructions)
+///     - [componentWillMount]
+///     - [componentWillReceiveProps]
+///     - [componentWillUpdate]
+///
+/// 4. Supports React 16 [context]
 abstract class Component2 implements Component {
   /// Accessed once and cached when instance is created. The [contextType] property on a class can be assigned
   /// a [ReactDartContext] object created by [React.createContext]. This lets you consume the nearest current value of
@@ -556,7 +583,7 @@ abstract class Component2 implements Component {
   ///
   /// See: <https://reactjs.org/docs/react-component.html#setstate>
   void setState(Map newState, [SetStateCallback callback]) {
-    bridgeForComponent[this].setState(newState, callback);
+    Component2Bridge.forComponent(this).setState(newState, callback);
   }
 
   /// Triggers a rerender with new state obtained by shallow-merging
@@ -566,7 +593,7 @@ abstract class Component2 implements Component {
   ///
   /// See: <https://reactjs.org/docs/react-component.html#setstate>
   void setStateWithUpdater(StateUpdaterCallback updater, [SetStateCallback callback]) {
-    bridgeForComponent[this].setStateWithUpdater(updater, callback);
+    Component2Bridge.forComponent(this).setStateWithUpdater(updater, callback);
   }
 
   /// Initializes this component's [state] to [value].
@@ -586,11 +613,11 @@ abstract class Component2 implements Component {
   ///       initializeState({'count': 0});
   ///     }
   void initializeState(Map value) {
-    bridgeForComponent[this].initializeState(value);
+    Component2Bridge.forComponent(this).initializeState(value);
   }
 
   void forceUpdate([SetStateCallback callback]) {
-    bridgeForComponent[this].forceUpdate(callback);
+    Component2Bridge.forComponent(this).forceUpdate(callback);
   }
 
   /// ReactJS lifecycle method that is invoked once, only on the client _(not on the server)_, immediately after the
@@ -627,7 +654,7 @@ abstract class Component2 implements Component {
   ///      return null;
   ///    }
   ///
-  Map getDerivedStateFromProps(Map nextProps, Map prevState) {}
+  Map getDerivedStateFromProps(Map nextProps, Map prevState) => null;
 
   /// ReactJS lifecycle method that is invoked before rendering when [nextProps] or [nextState] are being received.
   ///
@@ -729,7 +756,7 @@ abstract class Component2 implements Component {
   /// [getDerivedStateFromError] will be ignored.
   ///
   /// See: <https://reactjs.org/docs/react-component.html#static-getderivedstatefromerror>
-  Map getDerivedStateFromError(dynamic error) {}
+  Map getDerivedStateFromError(dynamic error) => null;
 
   /// Invoked once before the `Component` is mounted. The return value will be used as the initial value of [state].
   ///
@@ -942,7 +969,7 @@ abstract class Component2 implements Component {
   /// Will be removed when [Component] is removed in the `6.0.0` release.
   @override
   @Deprecated('6.0.0')
-  initComponentInternal(props, _jsRedraw, [Ref ref, _jsThis, context]) =>
+  initComponentInternal(props, _jsRedraw, [RefMethod ref, _jsThis, context]) =>
       throw _unsupportedError('initComponentInternal');
 
   /// Do not use.
@@ -1007,7 +1034,7 @@ abstract class Component2 implements Component {
   /// Will be removed when [Component] is removed in the `6.0.0` release.
   @override
   @Deprecated('6.0.0')
-  Ref get ref => throw _unsupportedError('ref');
+  RefMethod get ref => throw _unsupportedError('ref');
   set ref(_) => throw _unsupportedError('ref');
 
   /// Do not use.
@@ -1044,7 +1071,7 @@ abstract class Component2 implements Component {
 
   @override
   @Deprecated('6.0.0')
-  Ref _ref;
+  RefMethod _ref;
 
   @override
   @Deprecated('6.0.0')

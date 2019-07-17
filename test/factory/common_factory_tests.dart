@@ -1,3 +1,4 @@
+// ignore_for_file: deprecated_member_use_from_same_package
 import 'dart:async';
 import 'dart:html';
 import 'dart:js';
@@ -134,7 +135,7 @@ void domEventHandlerWrappingTests(ReactComponentFactoryProxy factory) {
 
     rtu.Simulate.click(react_dom.findDOMNode(renderedInstance));
 
-    expect(actualEvent, const isInstanceOf<react.SyntheticEvent>());
+    expect(actualEvent, isA<react.SyntheticEvent>());
   });
 
   test('doesn\'t wrap the handler if it is null', () {
@@ -213,6 +214,44 @@ void refTests(ReactComponentFactoryProxy factory, {void verifyRefValue(dynamic r
     ReactComponent renderedInstance = _renderWithOwner(() => factory({'ref': 'test'}));
 
     verifyRefValue(renderedInstance.dartComponent.ref('test'));
+  });
+
+  test('createRef function creates ref with correct value', () {
+    final Ref ref = createRef();
+
+    rtu.renderIntoDocument(factory({
+      'ref': ref,
+    }));
+
+    verifyRefValue(ref.current);
+  });
+
+  test('forwardRef function passes a ref through a component to one of its children', () {
+    var ForwardRefTestComponent = forwardRef((props, ref) {
+      return factory({
+        'ref': ref,
+        'id': props['childId'],
+      });
+    });
+
+    final Ref refObject = createRef();
+
+    rtu.renderIntoDocument(ForwardRefTestComponent({
+      'ref': refObject,
+      'childId': 'test',
+    }));
+
+    // Component props are accessed differently depending on if it is a dom component
+    // or a dart component.
+    var idValue;
+    if (refObject.current is Element) {
+      idValue = refObject.current.id;
+    } else {
+      idValue = refObject.current.props['id'];
+    }
+
+    expect(idValue, equals('test'), reason: 'child component should have access to parent props');
+    verifyRefValue(refObject.current);
   });
 }
 

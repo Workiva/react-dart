@@ -1,3 +1,4 @@
+// ignore_for_file: deprecated_member_use_from_same_package
 /// JS interop classes for main React JS APIs and react-dart internals.
 ///
 /// For use in `react_client.dart` and by advanced react-dart users.
@@ -10,14 +11,12 @@ import 'dart:html';
 import 'package:meta/meta.dart';
 import 'package:js/js.dart';
 import 'package:react/react.dart';
-import 'package:react/react_client.dart' show ComponentFactory;
-import 'package:react/src/react_client/js_backed_map.dart';
+import 'package:react/react_client.dart' show ComponentFactory, ReactJsComponentFactoryProxy;
+import 'package:react/react_client/bridge.dart';
+import 'package:react/react_client/js_backed_map.dart';
 import 'package:react/src/react_client/dart2_interop_workaround_bindings.dart';
-import 'package:react/src/typedefs.dart';
 
 typedef ReactElement ReactJsComponentFactory(props, children);
-
-typedef Component2BridgeFactory = Component2Bridge Function(Component2);
 
 // ----------------------------------------------------------------------------
 //   Top-level API
@@ -38,7 +37,79 @@ abstract class React {
 
   external static bool isValidElement(dynamic object);
   external static ReactClass get Fragment;
+
+  external static JsRef createRef();
 }
+
+/// Creates a [Ref] object that can be attached to a [ReactElement] via the ref prop.
+///
+/// __Example__:
+///
+///     class FooComponent extends react.Component2 {
+///       final Ref<BarComponent> barRef = createRef();
+///       final Ref<InputElement> inputRef = createRef();
+///
+///       render() => react.div({}, [
+///         Bar({'ref': barRef}),
+///         react.input({'ref': inputRef}),
+///       ]);
+///     }
+///
+/// Learn more: <https://reactjs.org/docs/refs-and-the-dom.html#creating-refs>.
+Ref<CurrentType> createRef<CurrentType>() {
+  return new Ref<CurrentType>();
+}
+
+/// When this is provided as the ref prop, a reference to the rendered component
+/// will be available via [current].
+///
+/// See: <https://reactjs.org/docs/refs-and-the-dom.html#creating-refs>.
+class Ref<CurrentType> {
+  /// A JavaScript ref object returned by [React.createRef].
+  JsRef jsRef;
+
+  Ref() {
+    jsRef = React.createRef();
+  }
+
+  /// A reference to the latest instance of the rendered component.
+  ///
+  /// See: <https://reactjs.org/docs/refs-and-the-dom.html#creating-refs>.
+  CurrentType get current {
+    final jsCurrent = jsRef.current;
+
+    if (jsCurrent is! Element) {
+      final dartCurrent = (jsCurrent as ReactComponent)?.dartComponent;
+
+      if (dartCurrent != null) {
+        return dartCurrent as CurrentType;
+      }
+    }
+    return jsCurrent;
+  }
+}
+
+@JS()
+@anonymous
+class JsRef {
+  external dynamic get current;
+}
+
+/// Automatically passes a [Ref] through a component to one of its children.
+///
+/// See: <https://reactjs.org/docs/forwarding-refs.html>.
+ReactJsComponentFactoryProxy forwardRef(Function(Map props, Ref ref) wrapperFunction) {
+  var hoc = _jsForwardRef(allowInterop((JsMap props, Ref ref) {
+    var dartProps = new JsBackedMap.backedBy(props);
+
+    return wrapperFunction(dartProps, ref);
+  }));
+
+  return new ReactJsComponentFactoryProxy(hoc, shouldConvertDomProps: false);
+}
+
+@JS('React.forwardRef')
+external ReactClass _jsForwardRef(Function(JsMap props, Ref ref) wrapperFunction);
 
 abstract class ReactDom {
   static Element findDOMNode(object) => ReactDOM.findDOMNode(object);
@@ -304,10 +375,19 @@ class InteropProps implements JsMap {
   });
 }
 
-/// Internal react-dart information used to proxy React JS lifecycle to Dart
-/// [Component] instances.
+/// __Deprecated.__
 ///
-/// __For internal/advanced use only.__
+/// This has been deprecated along with `Component` since its
+/// replacement - `Component2` utilizes JS Maps for props,
+/// making `InteropProps` obsolete.
+///
+/// Will be removed alongside `Component` in the `6.0.0` release.
+///
+/// > Internal react-dart information used to proxy React JS lifecycle to Dart
+/// > [Component] instances.
+/// >
+/// > __For internal/advanced use only.__
+@Deprecated('6.0.0')
 class ReactDartComponentInternal {
   /// For a `ReactElement`, this is the initial props with defaults merged.
   ///
@@ -381,9 +461,10 @@ external ReactClass createReactDartComponentClass(
 /// Returns a new JS [ReactClass] for a component that uses
 /// [dartInteropStatics] and [componentStatics] internally to proxy between
 /// the JS and Dart component instances.
+///
+/// See `_ReactDartInteropStatics2.staticsForJs`]` for an example implementation.
 @JS('_createReactDartComponentClass2')
-external ReactClass createReactDartComponentClass2(
-    ReactDartInteropStatics2 dartInteropStatics, ComponentStatics2 componentStatics,
+external ReactClass createReactDartComponentClass2(JsMap dartInteropStatics, ComponentStatics2 componentStatics,
     [JsComponentConfig2 jsConfig]);
 
 @JS('React.__isDevelopment')
@@ -403,7 +484,7 @@ bool get inReactDevMode => _inReactDevMode;
 
 /// An object that stores static methods used by all Dart components.
 ///
-/// __Deprecated.__ Use [ReactDartInteropStatics2] instead.
+/// __Deprecated.__
 ///
 /// Will be removed when [Component] is removed in the `6.0.0` release.
 @JS()
@@ -434,11 +515,6 @@ class ReactDartInteropStatics {
     dynamic Function(Component component) handleRender,
   });
 }
-
-/// An object that stores static methods used by all Dart components.
-@JS()
-@anonymous
-class ReactDartInteropStatics2 {}
 
 /// An object that stores static methods and information for a specific component class.
 ///
@@ -516,14 +592,4 @@ class ReactErrorInfo {
   /// The dart stack trace associated with this error.
   external StackTrace get dartStackTrace;
   external set dartStackTrace(StackTrace);
-}
-
-final Expando<Component2Bridge> bridgeForComponent = new Expando();
-
-abstract class Component2Bridge {
-  void setState(Map newState, SetStateCallback callback);
-  void setStateWithUpdater(StateUpdaterCallback stateUpdater, SetStateCallback callback);
-  void forceUpdate(SetStateCallback callback);
-  void initializeState(Map state);
-  JsMap jsifyPropTypes(Map propTypes);
 }

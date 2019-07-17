@@ -2,6 +2,7 @@
 // for details. All rights reserved. Use of this source code is governed by a
 // BSD-style license that can be found in the LICENSE file.
 
+// ignore_for_file: deprecated_member_use_from_same_package
 @JS()
 library react_client;
 
@@ -18,15 +19,16 @@ import 'package:react/react_client/js_interop_helpers.dart';
 import 'package:react/react_client/react_interop.dart';
 import "package:react/react_dom.dart";
 import 'package:react/react_dom_server.dart';
+import 'package:react/react_client/bridge.dart';
 import "package:react/src/react_client/event_prop_key_to_event_factory.dart";
-import 'package:react/src/react_client/js_backed_map.dart';
+import 'package:react/react_client/js_backed_map.dart';
 import "package:react/src/react_client/synthetic_event_wrappers.dart" as events;
 import 'package:react/src/typedefs.dart';
 import 'package:react/src/ddc_emulated_function_name_bug.dart' as ddc_emulated_function_name_bug;
 
-export 'package:react/react_client/react_interop.dart' show ReactElement, ReactJsComponentFactory, inReactDevMode;
+export 'package:react/react_client/react_interop.dart'
+    show ReactElement, ReactJsComponentFactory, inReactDevMode, Ref, forwardRef, createRef;
 export 'package:react/react.dart' show ReactComponentFactoryProxy, ComponentFactory;
-export 'package:react/src/react_client/js_backed_map.dart' show JsBackedMap, JsMap, jsBackingMapOrJsCopy;
 
 /// The type of [Component.ref] specified as a callback.
 ///
@@ -120,6 +122,8 @@ class ReactDartComponentFactoryProxy<TComponent extends Component> extends React
       // with the Dart Component instance, not the ReactComponent instance.
       if (ref is _CallbackRef) {
         interopProps.ref = allowInterop((ReactComponent instance) => ref(instance?.dartComponent));
+      } else if (ref is Ref) {
+        interopProps.ref = ref.jsRef;
       } else {
         interopProps.ref = ref;
       }
@@ -149,7 +153,7 @@ class ReactDartComponentFactoryProxy2<TComponent extends Component2> extends Rea
   ReactClass get type => reactClass;
 
   ReactElement build(Map props, [List childrenArgs = const []]) {
-    // TODO if we don't pass in a list into React, we don't get a list back in Dart...
+    // TODO 3.1.0-wip if we don't pass in a list into React, we don't get a list back in Dart...
 
     List children;
     if (childrenArgs.isEmpty) {
@@ -162,8 +166,8 @@ class ReactDartComponentFactoryProxy2<TComponent extends Component2> extends Rea
     }
 
     if (children == null) {
-      // FIXME are we cool to modify this list?
-      // FIXME why are there unmodifiable lists here?
+      // FIXME 3.1.0-wip are we cool to modify this list?
+      // FIXME 3.1.0-wip why are there unmodifiable lists here?
       children = childrenArgs.map(listifyChildren).toList();
       markChildrenValidated(children);
     }
@@ -185,6 +189,10 @@ class ReactDartComponentFactoryProxy2<TComponent extends Component2> extends Rea
       // with the Dart Component instance, not the ReactComponent instance.
       if (ref is _CallbackRef) {
         propsForJs['ref'] = allowInterop((ReactComponent instance) => ref(instance?.dartComponent));
+      }
+
+      if (ref is Ref) {
+        propsForJs['ref'] = ref.jsRef;
       }
     }
 
@@ -306,7 +314,7 @@ final ReactDartInteropStatics _dartInteropStatics = (() {
           jsThis.setState(newObject());
         }
 
-        Ref getRef = (name) {
+        RefMethod getRef = (name) {
           var ref = getProperty(jsThis.refs, name);
           if (ref == null) return null;
           if (ref is Element) return ref;
@@ -469,89 +477,8 @@ final ReactDartInteropStatics _dartInteropStatics = (() {
       handleRender: allowInterop(handleRender));
 })();
 
-// TODO custom adapter for over_react to avoid typedPropsFactory usages?
-class Component2BridgeImpl extends Component2Bridge {
-  // TODO find a way to inject this better
-  final Component2 component;
-
-  ReactComponent get jsThis => component.jsThis;
-
-  Component2BridgeImpl(this.component);
-
-  static Component2BridgeImpl bridgeFactory(Component2 component) => Component2BridgeImpl(component);
-
-  @override
-  void forceUpdate(SetStateCallback callback) {
-    if (callback == null) {
-      jsThis.forceUpdate();
-    } else {
-      jsThis.forceUpdate(allowInterop(callback));
-    }
-  }
-
-  @override
-  void setState(Map newState, SetStateCallback callback) {
-    // Short-circuit to match the ReactJS 16 behavior of not re-rendering the component if newState is null.
-    if (newState == null) return;
-
-    dynamic firstArg = jsBackingMapOrJsCopy(newState);
-
-    if (callback == null) {
-      jsThis.setState(firstArg);
-    } else {
-      jsThis.setState(firstArg, allowInterop(([_]) {
-        callback();
-      }));
-    }
-  }
-
-  @override
-  void initializeState(Map state) {
-    dynamic jsState = jsBackingMapOrJsCopy(state);
-    jsThis.state = jsState;
-  }
-
-  @override
-  void setStateWithUpdater(StateUpdaterCallback stateUpdater, SetStateCallback callback) {
-    final firstArg = allowInterop((JsMap jsPrevState, JsMap jsProps, [_]) {
-      return jsBackingMapOrJsCopy(stateUpdater(
-        new JsBackedMap.backedBy(jsPrevState),
-        new JsBackedMap.backedBy(jsProps),
-      ));
-    });
-
-    if (callback == null) {
-      jsThis.setState(firstArg);
-    } else {
-      jsThis.setState(firstArg, allowInterop(([_]) {
-        callback();
-      }));
-    }
-  }
-
-  @override
-  JsMap jsifyPropTypes(Map propTypes) => JsBackedMap.from(propTypes.map((propKey, validator) {
-        dynamic handlePropValidator(
-          dynamic props,
-          dynamic propName,
-          dynamic componentName,
-          dynamic location,
-          dynamic propFullName,
-          dynamic secret,
-        ) {
-          var convertedProps = JsBackedMap.fromJs(props);
-          var error = validator(convertedProps, propName, componentName, location, propFullName);
-          if (error != null) {
-            return JsError(error.toString());
-          }
-          return error;
-        }
-
-        return MapEntry(propKey, allowInterop(handlePropValidator));
-      })).jsObject;
-}
-
-class InteropStatics2 {
+abstract class _ReactDartInteropStatics2 {
+  // TODO 3.1.0-wip expose for testing?
   static final zone = Zone.root;
 
   static void _updatePropsAndStateWithJs(Component2 component, JsMap props, JsMap state) {
@@ -576,7 +503,7 @@ class InteropStatics2 {
           ..props = new JsBackedMap.backedBy(jsThis.props)
           ..context = _unjsifyNewContext(jsThis.context);
 
-        bridgeForComponent[component] = componentStatics.bridgeFactory(component);
+        Component2Bridge.bridgeForComponent[component] = componentStatics.bridgeFactory(component);
 
         component.init();
         if (component.state != null) {
@@ -678,7 +605,7 @@ class InteropStatics2 {
         return component.render();
       });
 
-  static final ReactDartInteropStatics2 jsStatics = jsifyAndAllowInterop({
+  static final JsMap staticsForJs = jsifyAndAllowInterop({
     'initComponent': initComponent,
     'handleGetInitialState': handleGetInitialState,
     'handleComponentDidMount': handleComponentDidMount,
@@ -813,6 +740,8 @@ class ReactJsComponentFactoryProxy extends ReactComponentFactoryProxy {
     } else {
       potentiallyConvertedProps = props;
     }
+
+    // jsifyAndAllowInterop also handles converting props with nested Map/List structures, like `style`
     return factory(jsifyAndAllowInterop(potentiallyConvertedProps), children);
   }
 }
@@ -848,8 +777,9 @@ ReactDartComponentFactoryProxy2 _registerComponent2(
 
   /// Create the JS [`ReactClass` component class](https://facebook.github.io/react/docs/top-level-api.html#react.createclass)
   /// with custom JS lifecycle methods.
-  var reactComponentClass = createReactDartComponentClass2(InteropStatics2.jsStatics, componentStatics, jsConfig2)
-    ..displayName = componentInstance.displayName;
+  var reactComponentClass =
+      createReactDartComponentClass2(_ReactDartInteropStatics2.staticsForJs, componentStatics, jsConfig2)
+        ..displayName = componentInstance.displayName;
 
   reactComponentClass.dartComponentVersion = '2';
 
@@ -888,12 +818,14 @@ class ReactDomComponentFactoryProxy extends ReactComponentFactoryProxy {
     var convertibleProps = new Map.from(props);
     convertProps(convertibleProps);
 
+    // jsifyAndAllowInterop also handles converting props with nested Map/List structures, like `style`
     return factory(jsifyAndAllowInterop(convertibleProps), children);
   }
 
-  /// Prepares the bound values, event handlers, and style props for consumption by ReactJS DOM components.
+  /// Performs special handling of certain props for consumption by ReactJS DOM components.
   static void convertProps(Map props) {
     _convertEventHandlers(props);
+    _convertRefValue(props);
   }
 }
 
@@ -902,38 +834,10 @@ _reactDom(String name) {
   return new ReactDomComponentFactoryProxy(name);
 }
 
-/// Returns whether an [InputElement] is a [CheckboxInputElement] based the value of the `type` key in [props].
-_isCheckbox(props) {
-  return props['type'] == 'checkbox';
-}
-
-/// Get value from the provided [domElem].
-///
-/// If the [domElem] is a [CheckboxInputElement], return [bool], else return [String] value.
-_getValueFromDom(domElem) {
-  var props = domElem.attributes;
-
-  if (_isCheckbox(props)) {
-    return domElem.checked;
-  } else {
-    return domElem.value;
-  }
-}
-
-/// Set value to props based on type of input.
-///
-/// _Note: Processing checkbox `checked` value is handled as a special case._
-_setValueToProps(Map props, val) {
-  if (_isCheckbox(props)) {
-    if (val) {
-      props['checked'] = true;
-    } else {
-      if (props.containsKey('checked')) {
-        props.remove('checked');
-      }
-    }
-  } else {
-    props['value'] = val;
+void _convertRefValue(Map args) {
+  var ref = args['ref'];
+  if (ref is Ref) {
+    args['ref'] = ref.jsRef;
   }
 }
 
@@ -951,7 +855,7 @@ final Expando<Function> _originalEventHandlers = new Expando();
 /// unconverted such that the original JS handlers are returned instead of their
 /// Dart synthetic counterparts.
 Map unconvertJsProps(/* ReactElement|ReactComponent */ instance) {
-  var props = JsBackedMap.copyToDart(instance.props);
+  var props = Map.from(JsBackedMap.backedBy(instance.props));
   eventPropKeyToEventFactory.keys.forEach((key) {
     if (props.containsKey(key)) {
       props[key] = unconvertJsEventHandler(props[key]) ?? props[key];
@@ -961,7 +865,7 @@ Map unconvertJsProps(/* ReactElement|ReactComponent */ instance) {
   // Convert the nested style map so it can be read by Dart code.
   var style = props['style'];
   if (style != null) {
-    props['style'] = JsBackedMap.copyToDart<String, dynamic>(style);
+    props['style'] = Map<String, dynamic>.from(JsBackedMap.backedBy(style));
   }
 
   return props;

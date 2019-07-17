@@ -1,7 +1,9 @@
+// ignore_for_file: deprecated_member_use_from_same_package
 import "dart:async";
 
 import "package:react/react.dart" as react;
 import 'package:react/react_client.dart';
+import 'package:react/react_client/js_backed_map.dart';
 import "package:react/react_dom.dart" as react_dom;
 
 class _HelloComponent extends react.Component2 {

@@ -2,6 +2,7 @@
 // for details. All rights reserved. Use of this source code is governed by a
 // BSD-style license that can be found in the LICENSE file.
 
+// ignore_for_file: deprecated_member_use_from_same_package
 library react_test;
 
 import 'package:react/react.dart';
@@ -30,7 +31,7 @@ _reactDom(String name) {
   };
 }
 
-initializeComponent(Component component, [Map props = const {}, List children, redraw, Ref ref]) {
+initializeComponent(Component component, [Map props = const {}, List children, redraw, RefMethod ref]) {
   if (redraw == null) redraw = () {};
   var extendedProps = new Map.from(component.getDefaultProps())..addAll(props);
   component.initComponentInternal(extendedProps, redraw, ref, null, component.context);
