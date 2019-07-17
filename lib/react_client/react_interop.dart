@@ -369,10 +369,19 @@ class InteropProps implements JsMap {
   });
 }
 
-/// Internal react-dart information used to proxy React JS lifecycle to Dart
-/// [Component] instances.
+/// __Deprecated.__
 ///
-/// __For internal/advanced use only.__
+/// This has been deprecated along with `Component` since its
+/// replacement - `Component2` utilizes JS Maps for props,
+/// making `InteropProps` obsolete.
+///
+/// Will be removed alongside `Component` in the `6.0.0` release.
+///
+/// > Internal react-dart information used to proxy React JS lifecycle to Dart
+/// > [Component] instances.
+/// >
+/// > __For internal/advanced use only.__
+@Deprecated('6.0.0')
 class ReactDartComponentInternal {
   /// For a `ReactElement`, this is the initial props with defaults merged.
   ///
@@ -440,9 +449,11 @@ external ReactClass createReactDartComponentClass(
 /// Returns a new JS [ReactClass] for a component that uses
 /// [dartInteropStatics] and [componentStatics] internally to proxy between
 /// the JS and Dart component instances.
+///
+/// See `_ReactDartInteropStatics2.staticsForJs`]` for an example implementation.
 @JS('_createReactDartComponentClass2')
-external ReactClass createReactDartComponentClass2(
-    ReactDartInteropStatics2 dartInteropStatics, ComponentStatics2 componentStatics,
+@visibleForTesting
+external ReactClass createReactDartComponentClass2(JsMap dartInteropStatics, ComponentStatics2 componentStatics,
     [JsComponentConfig2 jsConfig]);
 
 @JS('React.__isDevelopment')
@@ -462,7 +473,7 @@ bool get inReactDevMode => _inReactDevMode;
 
 /// An object that stores static methods used by all Dart components.
 ///
-/// __Deprecated.__ Use [ReactDartInteropStatics2] instead.
+/// __Deprecated.__
 ///
 /// Will be removed when [Component] is removed in the `6.0.0` release.
 @JS()
@@ -494,11 +505,6 @@ class ReactDartInteropStatics {
   });
 }
 
-/// An object that stores static methods used by all Dart components.
-@JS()
-@anonymous
-class ReactDartInteropStatics2 {}
-
 /// An object that stores static methods and information for a specific component class.
 ///
 /// This object is made accessible to a component's JS ReactClass config, which
@@ -516,6 +522,7 @@ class ComponentStatics {
 /// passes it to certain methods in [ReactDartInteropStatics2].
 ///
 /// See [ReactDartInteropStatics2], [createReactDartComponentClass2].
+@visibleForTesting
 class ComponentStatics2 {
   final ComponentFactory<Component2> componentFactory;
   final Component2 instanceForStaticMethods;
@@ -553,6 +560,7 @@ class JsComponentConfig {
 /// that needs to be directly accessible by that JS code.
 @JS()
 @anonymous
+@visibleForTesting
 class JsComponentConfig2 {
   external factory JsComponentConfig2({
     dynamic contextType,

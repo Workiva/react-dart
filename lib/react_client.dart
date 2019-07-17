@@ -476,7 +476,8 @@ final ReactDartInteropStatics _dartInteropStatics = (() {
       handleRender: allowInterop(handleRender));
 })();
 
-class InteropStatics2 {
+abstract class _ReactDartInteropStatics2 {
+  // TODO expose for testing?
   static final zone = Zone.root;
 
   static void _updatePropsAndStateWithJs(Component2 component, JsMap props, JsMap state) {
@@ -603,7 +604,7 @@ class InteropStatics2 {
         return component.render();
       });
 
-  static final ReactDartInteropStatics2 jsStatics = jsifyAndAllowInterop({
+  static final JsMap staticsForJs = jsifyAndAllowInterop({
     'initComponent': initComponent,
     'handleGetInitialState': handleGetInitialState,
     'handleComponentDidMount': handleComponentDidMount,
@@ -773,8 +774,9 @@ ReactDartComponentFactoryProxy2 _registerComponent2(
 
   /// Create the JS [`ReactClass` component class](https://facebook.github.io/react/docs/top-level-api.html#react.createclass)
   /// with custom JS lifecycle methods.
-  var reactComponentClass = createReactDartComponentClass2(InteropStatics2.jsStatics, componentStatics, jsConfig2)
-    ..displayName = componentInstance.displayName;
+  var reactComponentClass =
+      createReactDartComponentClass2(_ReactDartInteropStatics2.staticsForJs, componentStatics, jsConfig2)
+        ..displayName = componentInstance.displayName;
 
   reactComponentClass.dartComponentVersion = '2';
 
