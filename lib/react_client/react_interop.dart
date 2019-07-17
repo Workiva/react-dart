@@ -452,7 +452,6 @@ external ReactClass createReactDartComponentClass(
 ///
 /// See `_ReactDartInteropStatics2.staticsForJs`]` for an example implementation.
 @JS('_createReactDartComponentClass2')
-@visibleForTesting
 external ReactClass createReactDartComponentClass2(JsMap dartInteropStatics, ComponentStatics2 componentStatics,
     [JsComponentConfig2 jsConfig]);
 
@@ -522,7 +521,6 @@ class ComponentStatics {
 /// passes it to certain methods in [ReactDartInteropStatics2].
 ///
 /// See [ReactDartInteropStatics2], [createReactDartComponentClass2].
-@visibleForTesting
 class ComponentStatics2 {
   final ComponentFactory<Component2> componentFactory;
   final Component2 instanceForStaticMethods;
@@ -560,7 +558,6 @@ class JsComponentConfig {
 /// that needs to be directly accessible by that JS code.
 @JS()
 @anonymous
-@visibleForTesting
 class JsComponentConfig2 {
   external factory JsComponentConfig2({
     dynamic contextType,

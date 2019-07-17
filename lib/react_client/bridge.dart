@@ -1,10 +1,8 @@
 import 'package:js/js.dart';
-import 'package:meta/meta.dart';
 import 'package:react/react.dart';
-import 'package:react/react_client/react_interop.dart';
-
-import 'package:react/src/typedefs.dart';
 import 'package:react/react_client/js_backed_map.dart';
+import 'package:react/react_client/react_interop.dart';
+import 'package:react/src/typedefs.dart';
 
 /// A function that creates a bridge for a component.
 typedef Component2BridgeFactory = Component2Bridge Function(Component2);
@@ -23,7 +21,6 @@ typedef Component2BridgeFactory = Component2Bridge Function(Component2);
 ///
 /// __For internal/advanced use only.__
 abstract class Component2Bridge {
-  @visibleForTesting
   static final Expando<Component2Bridge> bridgeForComponent = new Expando();
 
   /// Returns the bridge instance associated with the given [component].
