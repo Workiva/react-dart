@@ -208,21 +208,11 @@ class _ErrorComponent extends react.Component2 {
 ReactDartComponentFactoryProxy2 LifecycleTest = react.registerComponent(() => new _LifecycleTest());
 
 class _LifecycleTest extends react.Component2 with LifecycleTestHelper {
-  void componentWillMount() {
-    super.componentWillMount();
-    lifecycleCall('componentWillMount');
-  }
-
   void componentDidMount() => lifecycleCall('componentDidMount');
   void componentWillUnmount() => lifecycleCall('componentWillUnmount');
 
   Map getDerivedStateFromProps(nextProps, prevState) => lifecycleCall('getDerivedStateFromProps',
       arguments: [new Map.from(nextProps), new Map.from(prevState)], staticProps: nextProps);
-
-  void componentWillUpdate(nextProps, nextState) {
-    super.componentWillUpdate(nextProps, nextState);
-    lifecycleCall('componentWillUpdate', arguments: [new Map.from(nextProps), new Map.from(nextState)]);
-  }
 
   dynamic getSnapshotBeforeUpdate(prevProps, prevState) =>
       lifecycleCall('getSnapshotBeforeUpdate', arguments: [new Map.from(prevProps), new Map.from(prevState)]);
