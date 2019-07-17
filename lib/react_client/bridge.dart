@@ -4,7 +4,7 @@ import 'package:react/react.dart';
 import 'package:react/react_client/react_interop.dart';
 
 import 'package:react/src/typedefs.dart';
-import 'package:react/src/react_client/js_backed_map.dart';
+import 'package:react/react_client/js_backed_map.dart';
 
 /// A function that creates a bridge for a component.
 typedef Component2BridgeFactory = Component2Bridge Function(Component2);
