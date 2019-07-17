@@ -461,8 +461,32 @@ abstract class Component {
   dynamic render();
 }
 
-/// Top-level ReactJS [Component class](https://facebook.github.io/react/docs/react-component.html)
-/// which provides the [ReactJS Component API](https://facebook.github.io/react/docs/react-component.html#reference)
+/// Top-level ReactJS [Component class](https://reactjs.org/docs/react-component.html)
+/// which provides the [ReactJS Component API](https://reactjs.org/docs/react-component.html#reference).
+///
+/// Differences from the deprecated [Component]:
+///
+/// 1. "JS-backed maps" - uses the JS React component's props / state objects maps under the hood
+///    instead of copying them into Dart Maps. Benefits:
+///     - Improved performance
+///     - Props/state key-value pairs are visible to React, and show up in the Dev Tools
+///     - Easier to maintain the JS-Dart interop and add new features
+///     - Easier to interop with JS libraries like react-redux
+///
+/// 2. Supports the new lifecycle methods introduced in React 16
+///    (See method doc comments for more info)
+///     - [getDerivedStateFromProps]
+///     - [getSnapshotBeforeUpdate]
+///     - [componentDidCatch]
+///     - [getDerivedStateFromError]
+///
+/// 3. Drops support for "unsafe" lifecycle methods deprecated in React 16
+///    (See method doc comments for migration instructions)
+///     - [componentWillMount]
+///     - [componentWillReceiveProps]
+///     - [componentWillUpdate]
+///
+/// 4. Supports React 16 [context]
 abstract class Component2 implements Component {
   /// Accessed once and cached when instance is created. The [contextType] property on a class can be assigned
   /// a [ReactDartContext] object created by [React.createContext]. This lets you consume the nearest current value of
