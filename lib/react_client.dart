@@ -531,24 +531,24 @@ class Component2BridgeImpl extends Component2Bridge {
 
   @override
   JsMap jsifyPropTypes(Map propTypes) => JsBackedMap.from(propTypes.map((propKey, validator) {
-      dynamic handlePropValidator(
-        dynamic props,
-        dynamic propName,
-        dynamic componentName,
-        dynamic location,
-        dynamic propFullName,
-        dynamic secret,
-      ) {
-        var convertedProps = JsBackedMap.fromJs(props);
-        var error = validator(convertedProps, propName, componentName, location, propFullName);
-        if (error != null) {
-          return JsError(error.toString());
+        dynamic handlePropValidator(
+          dynamic props,
+          dynamic propName,
+          dynamic componentName,
+          dynamic location,
+          dynamic propFullName,
+          dynamic secret,
+        ) {
+          var convertedProps = JsBackedMap.fromJs(props);
+          var error = validator(convertedProps, propName, componentName, location, propFullName);
+          if (error != null) {
+            return JsError(error.toString());
+          }
+          return error;
         }
-        return error;
-      }
 
-      return MapEntry(propKey, allowInterop(handlePropValidator));
-    })).jsObject;
+        return MapEntry(propKey, allowInterop(handlePropValidator));
+      })).jsObject;
 }
 
 class InteropStatics2 {
@@ -841,11 +841,10 @@ ReactDartComponentFactoryProxy2 _registerComponent2(
   final JsMap jsPropTypes = bridgeFactory(componentInstance).jsifyPropTypes(componentInstance.propTypes);
 
   var jsConfig2 = new JsComponentConfig2(
-    defaultProps: defaultProps.jsObject,
-    contextType: componentInstance.contextType?.jsThis,
-    skipMethods: filteredSkipMethods,
-    propTypes: jsPropTypes
-  );
+      defaultProps: defaultProps.jsObject,
+      contextType: componentInstance.contextType?.jsThis,
+      skipMethods: filteredSkipMethods,
+      propTypes: jsPropTypes);
 
   /// Create the JS [`ReactClass` component class](https://facebook.github.io/react/docs/top-level-api.html#react.createclass)
   /// with custom JS lifecycle methods.
