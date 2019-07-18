@@ -105,23 +105,25 @@ class Component2BridgeImpl extends Component2Bridge {
 
   @override
   @override
-  JsMap jsifyPropTypes(Map propTypes) => JsBackedMap.from(propTypes.map((propKey, validator) {
-        dynamic handlePropValidator(
-          dynamic props,
-          dynamic propName,
-          dynamic componentName,
-          dynamic location,
-          dynamic propFullName,
-          dynamic secret,
-        ) {
-          var convertedProps = JsBackedMap.fromJs(props);
-          var error = validator(convertedProps, propName, componentName, location, propFullName);
-          if (error != null) {
-            return JsError(error.toString());
-          }
-          return error;
+  JsMap jsifyPropTypes(Map propTypes) {
+    return JsBackedMap.from(propTypes.map((propKey, validator) {
+      dynamic handlePropValidator(
+        dynamic props,
+        dynamic propName,
+        dynamic componentName,
+        dynamic location,
+        dynamic propFullName,
+        dynamic secret,
+      ) {
+        var convertedProps = JsBackedMap.fromJs(props);
+        var error = validator(convertedProps, propName, componentName, location, propFullName);
+        if (error != null) {
+          return JsError(error.toString());
         }
+        return error;
+      }
 
-        return MapEntry(propKey, allowInterop(handlePropValidator));
-      })).jsObject;
+      return MapEntry(propKey, allowInterop(handlePropValidator));
+    })).jsObject;
+  }
 }
