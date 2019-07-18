@@ -524,7 +524,7 @@ class ComponentStatics {
 class ComponentStatics2 {
   final ComponentFactory<Component2> componentFactory;
   final Component2 instanceForStaticMethods;
-  final Component2Bridge Function(Component2) bridgeFactory;
+  final Component2BridgeFactory bridgeFactory;
 
   ComponentStatics2({
     @required this.componentFactory,

@@ -569,6 +569,8 @@ abstract class Component2 implements Component {
     return value;
   }
 
+  Component2Bridge get _bridge => Component2Bridge.forComponent(this);
+
   /// Triggers a rerender with new state obtained by shallow-merging [newState] into the current [state].
   ///
   /// Optionally accepts a [callback] that gets called after the component updates.
@@ -577,7 +579,7 @@ abstract class Component2 implements Component {
   ///
   /// See: <https://reactjs.org/docs/react-component.html#setstate>
   void setState(Map newState, [SetStateCallback callback]) {
-    Component2Bridge.forComponent(this).setState(newState, callback);
+    _bridge.setState(this, newState, callback);
   }
 
   /// Triggers a rerender with new state obtained by shallow-merging
@@ -587,7 +589,7 @@ abstract class Component2 implements Component {
   ///
   /// See: <https://reactjs.org/docs/react-component.html#setstate>
   void setStateWithUpdater(StateUpdaterCallback updater, [SetStateCallback callback]) {
-    Component2Bridge.forComponent(this).setStateWithUpdater(updater, callback);
+    _bridge.setStateWithUpdater(this, updater, callback);
   }
 
   /// Initializes this component's [state] to [value].
@@ -607,11 +609,11 @@ abstract class Component2 implements Component {
   ///       initializeState({'count': 0});
   ///     }
   void initializeState(Map value) {
-    Component2Bridge.forComponent(this).initializeState(value);
+    _bridge.initializeState(this, value);
   }
 
   void forceUpdate([SetStateCallback callback]) {
-    Component2Bridge.forComponent(this).forceUpdate(callback);
+    _bridge.forceUpdate(this, callback);
   }
 
   /// ReactJS lifecycle method that is invoked once, only on the client _(not on the server)_, immediately after the
