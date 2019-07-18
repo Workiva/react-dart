@@ -767,7 +767,8 @@ ReactDartComponentFactoryProxy2 _registerComponent2(
   // by ReactDartComponentFactoryProxy and externally.
   final JsBackedMap defaultProps = new JsBackedMap.from(componentInstance.getDefaultProps());
 
-  final JsMap jsPropTypes = bridgeFactory(componentInstance).jsifyPropTypes(componentInstance.propTypes);
+  final JsMap jsPropTypes =
+      bridgeFactory(componentInstance).jsifyPropTypes(componentInstance, componentInstance.propTypes);
 
   var jsConfig2 = new JsComponentConfig2(
       defaultProps: defaultProps.jsObject,
