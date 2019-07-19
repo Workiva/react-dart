@@ -719,7 +719,7 @@ ReactDartComponentFactoryProxy _registerComponent(
   return new ReactDartComponentFactoryProxy(reactComponentClass);
 }
 
-class _ReactJsContextComponentFactoryProxy extends ReactJsComponentFactoryProxy {
+class ReactJsContextComponentFactoryProxy extends ReactJsComponentFactoryProxy {
   /// The JS class used by this factory.
   @override
   final ReactClass type;
@@ -728,7 +728,7 @@ class _ReactJsContextComponentFactoryProxy extends ReactJsComponentFactoryProxy 
   final Function factory;
   final bool shouldConvertDomProps;
 
-  _ReactJsContextComponentFactoryProxy(
+  ReactJsContextComponentFactoryProxy(
     ReactClass jsClass, {
     this.shouldConvertDomProps: true,
     this.isConsumer: false,
@@ -1255,11 +1255,11 @@ class ReactDartContext {
   /// to context changes.
   ///
   /// Accepts a `value` prop to be passed to consuming components that are descendants of this [Provider].
-  final _ReactJsContextComponentFactoryProxy Provider;
+  final ReactJsContextComponentFactoryProxy Provider;
 
   /// A React component that subscribes to context changes.
   /// Requires a function as a child. The function receives the current context value and returns a React node.
-  final _ReactJsContextComponentFactoryProxy Consumer;
+  final ReactJsContextComponentFactoryProxy Consumer;
   ReactContext get jsThis => _jsThis;
 }
 
@@ -1312,8 +1312,8 @@ ReactDartContext createContext([
   var JSContext = React.createContext(_jsifyNewContext(defaultValue),
       calculateChangedBits != null ? allowInterop(jsifyCalculateChangedBitsArgs) : null);
   return new ReactDartContext(
-    new _ReactJsContextComponentFactoryProxy(JSContext.Provider, isProvider: true),
-    new _ReactJsContextComponentFactoryProxy(JSContext.Consumer, isConsumer: true),
+    new ReactJsContextComponentFactoryProxy(JSContext.Provider, isProvider: true),
+    new ReactJsContextComponentFactoryProxy(JSContext.Consumer, isConsumer: true),
     JSContext,
   );
 }
