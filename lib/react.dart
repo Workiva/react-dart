@@ -8,6 +8,7 @@
 library react;
 
 import 'package:meta/meta.dart';
+import 'package:react/react_client/bridge.dart';
 import 'package:react/src/typedefs.dart';
 import 'package:react/react_client.dart';
 import 'package:react/react_client/react_interop.dart';
@@ -100,7 +101,7 @@ abstract class Component {
   /// There are new and improved ways to use / set refs within [Component2].
   /// Until then, use a callback ref instead.
   ///
-  /// TODO: Add better description of how to utilize [Component2] refs.
+  /// FIXME 3.1.0-wip: Add better description of how to utilize [Component2] refs.
   @Deprecated('6.0.0')
   RefMethod get ref => _ref;
 
@@ -111,7 +112,7 @@ abstract class Component {
   /// There are new and improved ways to use / set refs within [Component2].
   /// Until then, use a callback ref instead.
   ///
-  /// TODO: Add better description of how to utilize [Component2] refs.
+  /// FIXME 3.1.0-wip: Add better description of how to utilize [Component2] refs.
   @Deprecated('6.0.0')
   set ref(RefMethod value) => _ref = value;
 
@@ -460,8 +461,32 @@ abstract class Component {
   dynamic render();
 }
 
-/// Top-level ReactJS [Component class](https://facebook.github.io/react/docs/react-component.html)
-/// which provides the [ReactJS Component API](https://facebook.github.io/react/docs/react-component.html#reference)
+/// Top-level ReactJS [Component class](https://reactjs.org/docs/react-component.html)
+/// which provides the [ReactJS Component API](https://reactjs.org/docs/react-component.html#reference).
+///
+/// Differences from the deprecated [Component]:
+///
+/// 1. "JS-backed maps" - uses the JS React component's props / state objects maps under the hood
+///    instead of copying them into Dart Maps. Benefits:
+///     - Improved performance
+///     - Props/state key-value pairs are visible to React, and show up in the Dev Tools
+///     - Easier to maintain the JS-Dart interop and add new features
+///     - Easier to interop with JS libraries like react-redux
+///
+/// 2. Supports the new lifecycle methods introduced in React 16
+///    (See method doc comments for more info)
+///     - [getDerivedStateFromProps]
+///     - [getSnapshotBeforeUpdate]
+///     - [componentDidCatch]
+///     - [getDerivedStateFromError]
+///
+/// 3. Drops support for "unsafe" lifecycle methods deprecated in React 16
+///    (See method doc comments for migration instructions)
+///     - [componentWillMount]
+///     - [componentWillReceiveProps]
+///     - [componentWillUpdate]
+///
+/// 4. Supports React 16 [context]
 abstract class Component2 implements Component {
   /// Accessed once and cached when instance is created. The [contextType] property on a class can be assigned
   /// a [ReactDartContext] object created by [React.createContext]. This lets you consume the nearest current value of
@@ -544,6 +569,8 @@ abstract class Component2 implements Component {
     return value;
   }
 
+  Component2Bridge get _bridge => Component2Bridge.forComponent(this);
+
   /// Triggers a rerender with new state obtained by shallow-merging [newState] into the current [state].
   ///
   /// Optionally accepts a [callback] that gets called after the component updates.
@@ -552,7 +579,7 @@ abstract class Component2 implements Component {
   ///
   /// See: <https://reactjs.org/docs/react-component.html#setstate>
   void setState(Map newState, [SetStateCallback callback]) {
-    bridgeForComponent[this].setState(newState, callback);
+    _bridge.setState(this, newState, callback);
   }
 
   /// Triggers a rerender with new state obtained by shallow-merging
@@ -562,7 +589,7 @@ abstract class Component2 implements Component {
   ///
   /// See: <https://reactjs.org/docs/react-component.html#setstate>
   void setStateWithUpdater(StateUpdaterCallback updater, [SetStateCallback callback]) {
-    bridgeForComponent[this].setStateWithUpdater(updater, callback);
+    _bridge.setStateWithUpdater(this, updater, callback);
   }
 
   /// Initializes this component's [state] to [value].
@@ -582,11 +609,11 @@ abstract class Component2 implements Component {
   ///       initializeState({'count': 0});
   ///     }
   void initializeState(Map value) {
-    bridgeForComponent[this].initializeState(value);
+    _bridge.initializeState(this, value);
   }
 
   void forceUpdate([SetStateCallback callback]) {
-    bridgeForComponent[this].forceUpdate(callback);
+    _bridge.forceUpdate(this, callback);
   }
 
   /// ReactJS lifecycle method that is invoked once, only on the client _(not on the server)_, immediately after the

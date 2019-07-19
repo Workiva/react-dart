@@ -3,7 +3,7 @@
 library react.js_backed_map_test.dart;
 
 import 'package:js/js.dart';
-import 'package:react/src/react_client/js_backed_map.dart';
+import 'package:react/react_client/js_backed_map.dart';
 import 'package:test/test.dart';
 
 import '../shared_type_tester.dart';

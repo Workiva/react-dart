@@ -9,7 +9,7 @@ import 'package:react/react_client/react_interop.dart';
 
 import 'package:react/react_test_utils.dart' as rtu;
 import 'package:react/react.dart' as react;
-import 'package:react/src/react_client/js_backed_map.dart';
+import 'package:react/react_client/js_backed_map.dart';
 
 @JS('Object.keys')
 external List _objectKeys(obj);

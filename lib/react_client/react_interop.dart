@@ -11,13 +11,11 @@ import 'package:meta/meta.dart';
 import 'package:js/js.dart';
 import 'package:react/react.dart';
 import 'package:react/react_client.dart' show ComponentFactory, ReactJsComponentFactoryProxy;
-import 'package:react/src/react_client/js_backed_map.dart';
+import 'package:react/react_client/bridge.dart';
+import 'package:react/react_client/js_backed_map.dart';
 import 'package:react/src/react_client/dart2_interop_workaround_bindings.dart';
-import 'package:react/src/typedefs.dart';
 
 typedef ReactElement ReactJsComponentFactory(props, children);
-
-typedef Component2BridgeFactory = Component2Bridge Function(Component2);
 
 // ----------------------------------------------------------------------------
 //   Top-level API
@@ -371,10 +369,19 @@ class InteropProps implements JsMap {
   });
 }
 
-/// Internal react-dart information used to proxy React JS lifecycle to Dart
-/// [Component] instances.
+/// __Deprecated.__
 ///
-/// __For internal/advanced use only.__
+/// This has been deprecated along with `Component` since its
+/// replacement - `Component2` utilizes JS Maps for props,
+/// making `InteropProps` obsolete.
+///
+/// Will be removed alongside `Component` in the `6.0.0` release.
+///
+/// > Internal react-dart information used to proxy React JS lifecycle to Dart
+/// > [Component] instances.
+/// >
+/// > __For internal/advanced use only.__
+@Deprecated('6.0.0')
 class ReactDartComponentInternal {
   /// For a `ReactElement`, this is the initial props with defaults merged.
   ///
@@ -442,9 +449,10 @@ external ReactClass createReactDartComponentClass(
 /// Returns a new JS [ReactClass] for a component that uses
 /// [dartInteropStatics] and [componentStatics] internally to proxy between
 /// the JS and Dart component instances.
+///
+/// See `_ReactDartInteropStatics2.staticsForJs`]` for an example implementation.
 @JS('_createReactDartComponentClass2')
-external ReactClass createReactDartComponentClass2(
-    ReactDartInteropStatics2 dartInteropStatics, ComponentStatics2 componentStatics,
+external ReactClass createReactDartComponentClass2(JsMap dartInteropStatics, ComponentStatics2 componentStatics,
     [JsComponentConfig2 jsConfig]);
 
 @JS('React.__isDevelopment')
@@ -464,7 +472,7 @@ bool get inReactDevMode => _inReactDevMode;
 
 /// An object that stores static methods used by all Dart components.
 ///
-/// __Deprecated.__ Use [ReactDartInteropStatics2] instead.
+/// __Deprecated.__
 ///
 /// Will be removed when [Component] is removed in the `6.0.0` release.
 @JS()
@@ -496,11 +504,6 @@ class ReactDartInteropStatics {
   });
 }
 
-/// An object that stores static methods used by all Dart components.
-@JS()
-@anonymous
-class ReactDartInteropStatics2 {}
-
 /// An object that stores static methods and information for a specific component class.
 ///
 /// This object is made accessible to a component's JS ReactClass config, which
@@ -521,7 +524,7 @@ class ComponentStatics {
 class ComponentStatics2 {
   final ComponentFactory<Component2> componentFactory;
   final Component2 instanceForStaticMethods;
-  final Component2Bridge Function(Component2) bridgeFactory;
+  final Component2BridgeFactory bridgeFactory;
 
   ComponentStatics2({
     @required this.componentFactory,
@@ -576,14 +579,4 @@ class ReactErrorInfo {
   /// The dart stack trace associated with this error.
   external StackTrace get dartStackTrace;
   external set dartStackTrace(StackTrace);
-}
-
-final Expando<Component2Bridge> bridgeForComponent = new Expando();
-
-abstract class Component2Bridge {
-  void setState(Map newState, SetStateCallback callback);
-  void setStateWithUpdater(StateUpdaterCallback stateUpdater, SetStateCallback callback);
-  void forceUpdate(SetStateCallback callback);
-  void initializeState(Map state);
-  JsMap jsifyPropTypes(Map propTypes);
 }
