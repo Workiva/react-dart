@@ -1,3 +1,4 @@
+// ignore_for_file: deprecated_member_use_from_same_package
 /// JS interop classes for main React JS APIs and react-dart internals.
 ///
 /// For use in `react_client.dart` and by advanced react-dart users.
@@ -10,7 +11,8 @@ import 'package:meta/meta.dart';
 import 'package:js/js.dart';
 import 'package:react/react.dart';
 import 'package:react/react_client.dart' show ComponentFactory, ReactJsComponentFactoryProxy;
-import 'package:react/src/react_client/js_backed_map.dart';
+import 'package:react/react_client/bridge.dart';
+import 'package:react/react_client/js_backed_map.dart';
 import 'package:react/src/react_client/dart2_interop_workaround_bindings.dart';
 
 typedef ReactElement ReactJsComponentFactory(props, children);
@@ -281,6 +283,7 @@ class ReactPortal {
 class ReactComponent {
   // TODO: Cast as Component2 in 6.0.0
   external Component get dartComponent;
+  // TODO how to make this JsMap without breaking stuff?
   external InteropProps get props;
   external dynamic get context;
   external JsMap get state;
@@ -366,10 +369,19 @@ class InteropProps implements JsMap {
   });
 }
 
-/// Internal react-dart information used to proxy React JS lifecycle to Dart
-/// [Component] instances.
+/// __Deprecated.__
 ///
-/// __For internal/advanced use only.__
+/// This has been deprecated along with `Component` since its
+/// replacement - `Component2` utilizes JS Maps for props,
+/// making `InteropProps` obsolete.
+///
+/// Will be removed alongside `Component` in the `6.0.0` release.
+///
+/// > Internal react-dart information used to proxy React JS lifecycle to Dart
+/// > [Component] instances.
+/// >
+/// > __For internal/advanced use only.__
+@Deprecated('6.0.0')
 class ReactDartComponentInternal {
   /// For a `ReactElement`, this is the initial props with defaults merged.
   ///
@@ -398,6 +410,7 @@ class ReactDartContextInternal {
 
 /// Throws the error passed to it from Javascript.
 /// This allows us to catch the error in dart which re-dartifies the js errors/exceptions.
+@alwaysThrows
 @JS('_throwErrorFromJS')
 external void throwErrorFromJS(error);
 
@@ -436,9 +449,10 @@ external ReactClass createReactDartComponentClass(
 /// Returns a new JS [ReactClass] for a component that uses
 /// [dartInteropStatics] and [componentStatics] internally to proxy between
 /// the JS and Dart component instances.
+///
+/// See `_ReactDartInteropStatics2.staticsForJs`]` for an example implementation.
 @JS('_createReactDartComponentClass2')
-external ReactClass createReactDartComponentClass2(
-    ReactDartInteropStatics2 dartInteropStatics, ComponentStatics2 componentStatics,
+external ReactClass createReactDartComponentClass2(JsMap dartInteropStatics, ComponentStatics2 componentStatics,
     [JsComponentConfig2 jsConfig]);
 
 @JS('React.__isDevelopment')
@@ -458,7 +472,7 @@ bool get inReactDevMode => _inReactDevMode;
 
 /// An object that stores static methods used by all Dart components.
 ///
-/// __Deprecated.__ Use [ReactDartInteropStatics2] instead.
+/// __Deprecated.__
 ///
 /// Will be removed when [Component] is removed in the `6.0.0` release.
 @JS()
@@ -490,42 +504,6 @@ class ReactDartInteropStatics {
   });
 }
 
-/// An object that stores static methods used by all Dart components.
-@JS()
-@anonymous
-class ReactDartInteropStatics2 implements ReactDartInteropStatics {
-  external factory ReactDartInteropStatics2({
-    Component2 Function(ReactComponent jsThis, ComponentStatics2 componentStatics) initComponent,
-    JsMap Function(Component2 component) handleGetInitialState,
-    void Function(Component2 component) handleComponentDidMount,
-    void Function(
-      ComponentStatics2 componentStatics,
-      JsMap jsNextProps,
-      JsMap jsPrevState,
-    )
-        handleGetDerivedStateFromProps,
-    bool Function(Component2 component, JsMap jsNextProps, JsMap jsNextState) handleShouldComponentUpdate,
-    void Function(
-      Component2 component,
-      JsMap jsPrevProps,
-      JsMap jsPrevState,
-    )
-        handleGetSnapshotBeforeUpdate,
-    void Function(
-      Component2 component,
-      ReactComponent jsThis,
-      JsMap jsPrevProps,
-      JsMap jsPrevState,
-      dynamic snapshot,
-    )
-        handleComponentDidUpdate,
-    void Function(Component2 component) handleComponentWillUnmount,
-    void Function(Component2 component, dynamic error, ReactErrorInfo info) handleComponentDidCatch,
-    JsMap Function(ComponentStatics2 instanceForStaticMethods, dynamic error) handleGetDerivedStateFromError,
-    dynamic Function(Component2 component, JsMap jsProps, JsMap jsState, dynamic jsContext) handleRender,
-  });
-}
-
 /// An object that stores static methods and information for a specific component class.
 ///
 /// This object is made accessible to a component's JS ReactClass config, which
@@ -546,7 +524,13 @@ class ComponentStatics {
 class ComponentStatics2 {
   final ComponentFactory<Component2> componentFactory;
   final Component2 instanceForStaticMethods;
-  ComponentStatics2(this.componentFactory, {@required this.instanceForStaticMethods});
+  final Component2BridgeFactory bridgeFactory;
+
+  ComponentStatics2({
+    @required this.componentFactory,
+    @required this.instanceForStaticMethods,
+    @required this.bridgeFactory,
+  });
 }
 
 /// Additional configuration passed to [createReactDartComponentClass]

@@ -2,6 +2,7 @@
 // for details. All rights reserved. Use of this source code is governed by a
 // BSD-style license that can be found in the LICENSE file.
 
+// ignore_for_file: deprecated_member_use_from_same_package
 @JS()
 library react_client;
 
@@ -14,12 +15,12 @@ import 'dart:js_util';
 import "package:js/js.dart";
 import "package:react/react.dart";
 import 'package:react/react_client/js_interop_helpers.dart';
-import 'package:react/react_client/react_interop.dart' hide Ref;
-import 'package:react/react_client/react_interop.dart' as react_interop show Ref;
+import 'package:react/react_client/react_interop.dart';
 import "package:react/react_dom.dart";
 import 'package:react/react_dom_server.dart';
+import 'package:react/react_client/bridge.dart';
 import "package:react/src/react_client/event_prop_key_to_event_factory.dart";
-import 'package:react/src/react_client/js_backed_map.dart';
+import 'package:react/react_client/js_backed_map.dart';
 import "package:react/src/react_client/synthetic_event_wrappers.dart" as events;
 import 'package:react/src/typedefs.dart';
 import 'package:react/src/ddc_emulated_function_name_bug.dart' as ddc_emulated_function_name_bug;
@@ -27,7 +28,6 @@ import 'package:react/src/ddc_emulated_function_name_bug.dart' as ddc_emulated_f
 export 'package:react/react_client/react_interop.dart'
     show ReactElement, ReactJsComponentFactory, inReactDevMode, Ref, forwardRef, createRef;
 export 'package:react/react.dart' show ReactComponentFactoryProxy, ComponentFactory;
-export 'package:react/src/react_client/js_backed_map.dart' show JsBackedMap, JsMap, jsBackingMapOrJsCopy;
 
 /// The type of [Component.ref] specified as a callback.
 ///
@@ -121,7 +121,7 @@ class ReactDartComponentFactoryProxy<TComponent extends Component> extends React
       // with the Dart Component instance, not the ReactComponent instance.
       if (ref is _CallbackRef) {
         interopProps.ref = allowInterop((ReactComponent instance) => ref(instance?.dartComponent));
-      } else if (ref is react_interop.Ref) {
+      } else if (ref is Ref) {
         interopProps.ref = ref.jsRef;
       } else {
         interopProps.ref = ref;
@@ -152,7 +152,7 @@ class ReactDartComponentFactoryProxy2<TComponent extends Component2> extends Rea
   ReactClass get type => reactClass;
 
   ReactElement build(Map props, [List childrenArgs = const []]) {
-    // TODO if we don't pass in a list into React, we don't get a list back in Dart...
+    // TODO 3.1.0-wip if we don't pass in a list into React, we don't get a list back in Dart...
 
     List children;
     if (childrenArgs.isEmpty) {
@@ -165,8 +165,8 @@ class ReactDartComponentFactoryProxy2<TComponent extends Component2> extends Rea
     }
 
     if (children == null) {
-      // FIXME are we cool to modify this list?
-      // FIXME why are there unmodifiable lists here?
+      // FIXME 3.1.0-wip are we cool to modify this list?
+      // FIXME 3.1.0-wip why are there unmodifiable lists here?
       children = childrenArgs.map(listifyChildren).toList();
       markChildrenValidated(children);
     }
@@ -190,7 +190,7 @@ class ReactDartComponentFactoryProxy2<TComponent extends Component2> extends Rea
         propsForJs['ref'] = allowInterop((ReactComponent instance) => ref(instance?.dartComponent));
       }
 
-      if (ref is react_interop.Ref) {
+      if (ref is Ref) {
         propsForJs['ref'] = ref.jsRef;
       }
     }
@@ -313,7 +313,7 @@ final ReactDartInteropStatics _dartInteropStatics = (() {
           jsThis.setState(newObject());
         }
 
-        Ref getRef = (name) {
+        RefMethod getRef = (name) {
           var ref = getProperty(jsThis.refs, name);
           if (ref == null) return null;
           if (ref is Element) return ref;
@@ -476,72 +476,25 @@ final ReactDartInteropStatics _dartInteropStatics = (() {
       handleRender: allowInterop(handleRender));
 })();
 
-// TODO custom adapter for over_react to avoid typedPropsFactory usages?
-class JsComponent2Adapter extends Component2Adapter {
-  // TODO find a way to inject this better
-  final ReactComponent jsThis;
+abstract class _ReactDartInteropStatics2 {
+  // TODO 3.1.0-wip expose for testing?
+  /// The zone in which all component lifecycle methods are run.
+  static final componentZone = Zone.root;
 
-  JsComponent2Adapter({
-    this.jsThis,
-  });
-
-  @override
-  void forceUpdate(SetStateCallback callback) {
-    if (callback == null) {
-      jsThis.forceUpdate();
-    } else {
-      jsThis.forceUpdate(allowInterop(callback));
-    }
+  static void _updatePropsAndStateWithJs(Component2 component, JsMap props, JsMap state) {
+    component
+      ..props = new JsBackedMap.backedBy(props)
+      ..state = new JsBackedMap.backedBy(state);
   }
 
-  @override
-  void setState(Map newState, SetStateCallback callback) {
-    // Short-circuit to match the ReactJS 16 behavior of not re-rendering the component if newState is null.
-    if (newState == null) return;
-
-    dynamic firstArg = jsBackingMapOrJsCopy(newState);
-
-    if (callback == null) {
-      jsThis.setState(firstArg);
-    } else {
-      jsThis.setState(firstArg, allowInterop(([_]) {
-        callback();
-      }));
-    }
+  static void _updateContextWithJs(Component2 component, dynamic jsContext) {
+    component.context = _unjsifyNewContext(jsContext);
   }
-
-  @override
-  void initializeState(Map state) {
-    dynamic jsState = jsBackingMapOrJsCopy(state);
-    jsThis.state = jsState;
-  }
-
-  @override
-  void setStateWithUpdater(StateUpdaterCallback stateUpdater, SetStateCallback callback) {
-    final firstArg = allowInterop((jsPrevState, jsProps, [_]) {
-      return jsBackingMapOrJsCopy(stateUpdater(
-        new JsBackedMap.backedBy(jsPrevState),
-        new JsBackedMap.backedBy(jsProps),
-      ));
-    });
-
-    if (callback == null) {
-      jsThis.setState(firstArg);
-    } else {
-      jsThis.setState(firstArg, allowInterop(([_]) {
-        callback();
-      }));
-    }
-  }
-}
-
-final ReactDartInteropStatics2 _dartInteropStatics2 = (() {
-  final zone = Zone.current;
 
   /// Wrapper for [Component.getInitialState].
-  Component2 initComponent(ReactComponent jsThis, ComponentStatics2 componentStatics) => zone.run(() {
+  static Component2 initComponent(ReactComponent jsThis, ComponentStatics2 componentStatics) => // dartfmt
+      componentZone.run(() {
         final component = componentStatics.componentFactory();
-        component.adapter = new JsComponent2Adapter(jsThis: jsThis);
         // Return the component so that the JS proxying component can store it,
         // avoiding an interceptor lookup.
 
@@ -549,6 +502,8 @@ final ReactDartInteropStatics2 _dartInteropStatics2 = (() {
           ..jsThis = jsThis
           ..props = new JsBackedMap.backedBy(jsThis.props)
           ..context = _unjsifyNewContext(jsThis.context);
+
+        Component2Bridge.bridgeForComponent[component] = componentStatics.bridgeFactory(component);
 
         component.init();
         if (component.state != null) {
@@ -558,25 +513,18 @@ final ReactDartInteropStatics2 _dartInteropStatics2 = (() {
         return component;
       });
 
-  JsMap handleGetInitialState(Component2 component) => zone.run(() {
+  static JsMap handleGetInitialState(Component2 component) => // dartfmt
+      componentZone.run(() {
         return jsBackingMapOrJsCopy(component.getInitialState());
       });
 
-  void handleComponentDidMount(Component2 component) => zone.run(() {
+  static void handleComponentDidMount(Component2 component) => // dartfmt
+      componentZone.run(() {
         component.componentDidMount();
       });
 
-  void _updatePropsAndStateWithJs(Component2 component, JsMap props, JsMap state) {
-    component
-      ..props = new JsBackedMap.backedBy(props)
-      ..state = new JsBackedMap.backedBy(state);
-  }
-
-  void _updateContextWithJs(Component2 component, dynamic jsContext) {
-    component.context = _unjsifyNewContext(jsContext);
-  }
-
-  bool handleShouldComponentUpdate(Component2 component, JsMap jsNextProps, JsMap jsNextState) => zone.run(() {
+  static bool handleShouldComponentUpdate(Component2 component, JsMap jsNextProps, JsMap jsNextState) => // dartfmt
+      componentZone.run(() {
         final value = component.shouldComponentUpdate(
           new JsBackedMap.backedBy(jsNextProps),
           new JsBackedMap.backedBy(jsNextState),
@@ -589,8 +537,9 @@ final ReactDartInteropStatics2 _dartInteropStatics2 = (() {
         return value;
       });
 
-  JsMap handleGetDerivedStateFromProps(ComponentStatics2 componentStatics, JsMap jsNextProps, JsMap jsPrevState) =>
-      zone.run(() {
+  static JsMap handleGetDerivedStateFromProps(
+          ComponentStatics2 componentStatics, JsMap jsNextProps, JsMap jsPrevState) => // dartfmt
+      componentZone.run(() {
         var derivedState = componentStatics.instanceForStaticMethods
             .getDerivedStateFromProps(new JsBackedMap.backedBy(jsNextProps), new JsBackedMap.backedBy(jsPrevState));
         if (derivedState != null) {
@@ -599,7 +548,8 @@ final ReactDartInteropStatics2 _dartInteropStatics2 = (() {
         return null;
       });
 
-  dynamic handleGetSnapshotBeforeUpdate(Component2 component, JsMap jsPrevProps, JsMap jsPrevState) => zone.run(() {
+  static dynamic handleGetSnapshotBeforeUpdate(Component2 component, JsMap jsPrevProps, JsMap jsPrevState) => // dartfmt
+      componentZone.run(() {
         final snapshotValue = component.getSnapshotBeforeUpdate(
           new JsBackedMap.backedBy(jsPrevProps),
           new JsBackedMap.backedBy(jsPrevState),
@@ -608,9 +558,10 @@ final ReactDartInteropStatics2 _dartInteropStatics2 = (() {
         return snapshotValue;
       });
 
-  void handleComponentDidUpdate(Component2 component, ReactComponent jsThis, JsMap jsPrevProps, JsMap jsPrevState,
-          [dynamic snapshot]) =>
-      zone.run(() {
+  static void handleComponentDidUpdate(
+          Component2 component, ReactComponent jsThis, JsMap jsPrevProps, JsMap jsPrevState,
+          [dynamic snapshot]) => // dartfmt
+      componentZone.run(() {
         component.componentDidUpdate(
           new JsBackedMap.backedBy(jsPrevProps),
           new JsBackedMap.backedBy(jsPrevState),
@@ -618,11 +569,13 @@ final ReactDartInteropStatics2 _dartInteropStatics2 = (() {
         );
       });
 
-  void handleComponentWillUnmount(Component2 component) => zone.run(() {
+  static void handleComponentWillUnmount(Component2 component) => // dartfmt
+      componentZone.run(() {
         component.componentWillUnmount();
       });
 
-  void handleComponentDidCatch(Component2 component, dynamic error, ReactErrorInfo info) => zone.run(() {
+  static void handleComponentDidCatch(Component2 component, dynamic error, ReactErrorInfo info) => // dartfmt
+      componentZone.run(() {
         // Due to the error object being passed in from ReactJS it is a javascript object that does not get dartified.
         // To fix this we throw the error again from Dart to the JS side and catch it Dart side which re-dartifies it.
         try {
@@ -634,7 +587,8 @@ final ReactDartInteropStatics2 _dartInteropStatics2 = (() {
         }
       });
 
-  JsMap handleGetDerivedStateFromError(ComponentStatics2 componentStatics, dynamic error) => zone.run(() {
+  static JsMap handleGetDerivedStateFromError(ComponentStatics2 componentStatics, dynamic error) => // dartfmt
+      componentZone.run(() {
         // Due to the error object being passed in from ReactJS it is a javascript object that does not get dartified.
         // To fix this we throw the error again from Dart to the JS side and catch it Dart side which re-dartifies it.
         try {
@@ -644,36 +598,39 @@ final ReactDartInteropStatics2 _dartInteropStatics2 = (() {
         }
       });
 
-  dynamic handleRender(Component2 component, JsMap jsProps, JsMap jsState, dynamic jsContext) => zone.run(() {
+  static dynamic handleRender(Component2 component, JsMap jsProps, JsMap jsState, dynamic jsContext) => // dartfmt
+      componentZone.run(() {
         _updatePropsAndStateWithJs(component, jsProps, jsState);
         _updateContextWithJs(component, jsContext);
         return component.render();
       });
 
-  return new ReactDartInteropStatics2(
-    initComponent: allowInterop(initComponent),
-    handleGetInitialState: allowInterop(handleGetInitialState),
-    handleComponentDidMount: allowInterop(handleComponentDidMount),
-    handleGetDerivedStateFromProps: allowInterop(handleGetDerivedStateFromProps),
-    handleShouldComponentUpdate: allowInterop(handleShouldComponentUpdate),
-    handleGetSnapshotBeforeUpdate: allowInterop(handleGetSnapshotBeforeUpdate),
-    handleComponentDidUpdate: allowInterop(handleComponentDidUpdate),
-    handleComponentWillUnmount: allowInterop(handleComponentWillUnmount),
-    handleComponentDidCatch: allowInterop(handleComponentDidCatch),
-    handleGetDerivedStateFromError: allowInterop(handleGetDerivedStateFromError),
-    handleRender: allowInterop(handleRender),
-  );
-})();
+  static final JsMap staticsForJs = jsifyAndAllowInterop({
+    'initComponent': initComponent,
+    'handleGetInitialState': handleGetInitialState,
+    'handleComponentDidMount': handleComponentDidMount,
+    'handleGetDerivedStateFromProps': handleGetDerivedStateFromProps,
+    'handleShouldComponentUpdate': handleShouldComponentUpdate,
+    'handleGetSnapshotBeforeUpdate': handleGetSnapshotBeforeUpdate,
+    'handleComponentDidUpdate': handleComponentDidUpdate,
+    'handleComponentWillUnmount': handleComponentWillUnmount,
+    'handleComponentDidCatch': handleComponentDidCatch,
+    'handleGetDerivedStateFromError': handleGetDerivedStateFromError,
+    'handleRender': handleRender,
+  });
+}
 
 /// Creates and returns a new [ReactDartComponentFactoryProxy] from the provided [componentFactory]
 /// which produces a new JS [`ReactClass` component class](https://facebook.github.io/react/docs/top-level-api.html#react.createclass).
 @Deprecated('6.0.0')
-ReactDartComponentFactoryProxy _registerComponent(ComponentFactory componentFactory,
-    [Iterable<String> skipMethods = const ['getDerivedStateFromError', 'componentDidCatch']]) {
+ReactDartComponentFactoryProxy _registerComponent(
+  ComponentFactory componentFactory, [
+  Iterable<String> skipMethods = const ['getDerivedStateFromError', 'componentDidCatch'],
+]) {
   var componentInstance = componentFactory();
 
   if (componentInstance is Component2) {
-    return _registerComponent2(componentFactory, skipMethods);
+    return _registerComponent2(componentFactory, skipMethods: skipMethods);
   }
 
   var componentStatics = new ComponentStatics(componentFactory);
@@ -697,7 +654,7 @@ ReactDartComponentFactoryProxy _registerComponent(ComponentFactory componentFact
   return new ReactDartComponentFactoryProxy(reactComponentClass);
 }
 
-class _ReactJsContextComponentFactoryProxy extends ReactJsComponentFactoryProxy {
+class ReactJsContextComponentFactoryProxy extends ReactJsComponentFactoryProxy {
   /// The JS class used by this factory.
   @override
   final ReactClass type;
@@ -706,7 +663,7 @@ class _ReactJsContextComponentFactoryProxy extends ReactJsComponentFactoryProxy 
   final Function factory;
   final bool shouldConvertDomProps;
 
-  _ReactJsContextComponentFactoryProxy(
+  ReactJsContextComponentFactoryProxy(
     ReactClass jsClass, {
     this.shouldConvertDomProps: true,
     this.isConsumer: false,
@@ -791,10 +748,19 @@ class ReactJsComponentFactoryProxy extends ReactComponentFactoryProxy {
 
 /// Creates and returns a new [ReactDartComponentFactoryProxy] from the provided [componentFactory]
 /// which produces a new JS [`ReactClass` component class](https://facebook.github.io/react/docs/top-level-api.html#react.createclass).
-ReactDartComponentFactoryProxy2 _registerComponent2(ComponentFactory<Component2> componentFactory,
-    [Iterable<String> skipMethods = const ['getDerivedStateFromError', 'componentDidCatch']]) {
+ReactDartComponentFactoryProxy2 _registerComponent2(
+  ComponentFactory<Component2> componentFactory, {
+  Iterable<String> skipMethods = const ['getDerivedStateFromError', 'componentDidCatch'],
+  Component2BridgeFactory bridgeFactory,
+}) {
+  bridgeFactory ??= Component2BridgeImpl.bridgeFactory;
+
   final componentInstance = componentFactory();
-  final componentStatics = new ComponentStatics2(componentFactory, instanceForStaticMethods: componentInstance);
+  final componentStatics = new ComponentStatics2(
+    componentFactory: componentFactory,
+    instanceForStaticMethods: componentInstance,
+    bridgeFactory: bridgeFactory,
+  );
   final filteredSkipMethods = _filterSkipMethods(skipMethods);
 
   // Cache default props and store them on the ReactClass so they can be used
@@ -809,8 +775,9 @@ ReactDartComponentFactoryProxy2 _registerComponent2(ComponentFactory<Component2>
 
   /// Create the JS [`ReactClass` component class](https://facebook.github.io/react/docs/top-level-api.html#react.createclass)
   /// with custom JS lifecycle methods.
-  var reactComponentClass = createReactDartComponentClass2(_dartInteropStatics2, componentStatics, jsConfig2)
-    ..displayName = componentInstance.displayName;
+  var reactComponentClass =
+      createReactDartComponentClass2(_ReactDartInteropStatics2.staticsForJs, componentStatics, jsConfig2)
+        ..displayName = componentInstance.displayName;
 
   reactComponentClass.dartComponentVersion = '2';
 
@@ -865,44 +832,9 @@ _reactDom(String name) {
   return new ReactDomComponentFactoryProxy(name);
 }
 
-/// Returns whether an [InputElement] is a [CheckboxInputElement] based the value of the `type` key in [props].
-_isCheckbox(props) {
-  return props['type'] == 'checkbox';
-}
-
-/// Get value from the provided [domElem].
-///
-/// If the [domElem] is a [CheckboxInputElement], return [bool], else return [String] value.
-_getValueFromDom(domElem) {
-  var props = domElem.attributes;
-
-  if (_isCheckbox(props)) {
-    return domElem.checked;
-  } else {
-    return domElem.value;
-  }
-}
-
-/// Set value to props based on type of input.
-///
-/// _Note: Processing checkbox `checked` value is handled as a special case._
-_setValueToProps(Map props, val) {
-  if (_isCheckbox(props)) {
-    if (val) {
-      props['checked'] = true;
-    } else {
-      if (props.containsKey('checked')) {
-        props.remove('checked');
-      }
-    }
-  } else {
-    props['value'] = val;
-  }
-}
-
 void _convertRefValue(Map args) {
   var ref = args['ref'];
-  if (ref is react_interop.Ref) {
+  if (ref is Ref) {
     args['ref'] = ref.jsRef;
   }
 }
@@ -921,7 +853,7 @@ final Expando<Function> _originalEventHandlers = new Expando();
 /// unconverted such that the original JS handlers are returned instead of their
 /// Dart synthetic counterparts.
 Map unconvertJsProps(/* ReactElement|ReactComponent */ instance) {
-  var props = JsBackedMap.copyToDart(instance.props);
+  var props = Map.from(JsBackedMap.backedBy(instance.props));
   eventPropKeyToEventFactory.keys.forEach((key) {
     if (props.containsKey(key)) {
       props[key] = unconvertJsEventHandler(props[key]) ?? props[key];
@@ -931,7 +863,7 @@ Map unconvertJsProps(/* ReactElement|ReactComponent */ instance) {
   // Convert the nested style map so it can be read by Dart code.
   var style = props['style'];
   if (style != null) {
-    props['style'] = JsBackedMap.copyToDart<String, dynamic>(style);
+    props['style'] = Map<String, dynamic>.from(JsBackedMap.backedBy(style));
   }
 
   return props;
@@ -1259,11 +1191,11 @@ class ReactDartContext {
   /// to context changes.
   ///
   /// Accepts a `value` prop to be passed to consuming components that are descendants of this [Provider].
-  final _ReactJsContextComponentFactoryProxy Provider;
+  final ReactJsContextComponentFactoryProxy Provider;
 
   /// A React component that subscribes to context changes.
   /// Requires a function as a child. The function receives the current context value and returns a React node.
-  final _ReactJsContextComponentFactoryProxy Consumer;
+  final ReactJsContextComponentFactoryProxy Consumer;
   ReactContext get jsThis => _jsThis;
 }
 
@@ -1316,8 +1248,8 @@ ReactDartContext createContext([
   var JSContext = React.createContext(_jsifyNewContext(defaultValue),
       calculateChangedBits != null ? allowInterop(jsifyCalculateChangedBitsArgs) : null);
   return new ReactDartContext(
-    new _ReactJsContextComponentFactoryProxy(JSContext.Provider, isProvider: true),
-    new _ReactJsContextComponentFactoryProxy(JSContext.Consumer, isConsumer: true),
+    new ReactJsContextComponentFactoryProxy(JSContext.Provider, isProvider: true),
+    new ReactJsContextComponentFactoryProxy(JSContext.Consumer, isConsumer: true),
     JSContext,
   );
 }
@@ -1335,7 +1267,7 @@ void setClientConfiguration() {
     throw new Exception('Loaded react.js must include react-dart JS interop helpers.');
   }
 
-  setReactConfiguration(_reactDom, _registerComponent);
+  setReactConfiguration(_reactDom, _registerComponent, customRegisterComponent2: _registerComponent2);
   setReactDOMConfiguration(ReactDom.render, ReactDom.unmountComponentAtNode, _findDomNode);
   // Accessing ReactDomServer.renderToString when it's not available breaks in DDC.
   if (context['ReactDOMServer'] != null) {

@@ -6,7 +6,7 @@ import 'package:react/react.dart';
 ///
 /// * `react.Component` if it is a Dart component.
 /// * `Element` _(DOM node)_ if it is a React DOM component.
-typedef dynamic Ref(String ref);
+typedef dynamic RefMethod(String ref);
 
 /// Typedef for the `updater` argument of [Component2.setStateWithUpdater].
 ///

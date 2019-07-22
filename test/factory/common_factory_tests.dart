@@ -1,3 +1,4 @@
+// ignore_for_file: deprecated_member_use_from_same_package
 import 'dart:async';
 import 'dart:html';
 import 'dart:js';
@@ -134,7 +135,7 @@ void domEventHandlerWrappingTests(ReactComponentFactoryProxy factory) {
 
     rtu.Simulate.click(react_dom.findDOMNode(renderedInstance));
 
-    expect(actualEvent, const isInstanceOf<react.SyntheticEvent>());
+    expect(actualEvent, isA<react.SyntheticEvent>());
   });
 
   test('doesn\'t wrap the handler if it is null', () {

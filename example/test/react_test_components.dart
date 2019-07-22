@@ -1,5 +1,5 @@
+// ignore_for_file: deprecated_member_use_from_same_package
 import "dart:async";
-import 'dart:math';
 
 import "package:react/react.dart" as react;
 import 'package:react/react_client.dart';

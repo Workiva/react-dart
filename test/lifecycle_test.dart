@@ -1,3 +1,4 @@
+// ignore_for_file: deprecated_member_use_from_same_package
 @TestOn('browser')
 @JS()
 library lifecycle_test;
@@ -9,6 +10,7 @@ import "package:js/js.dart";
 import 'package:meta/meta.dart';
 import 'package:react/react.dart' as react;
 import 'package:react/react_client.dart';
+import 'package:react/react_client/js_backed_map.dart';
 import 'package:react/react_client/react_interop.dart' as react_interop;
 import 'package:react/react_dom.dart' as react_dom;
 import 'package:react/react_test_utils.dart' as react_test_utils;
@@ -66,9 +68,7 @@ main() {
         int secondStateUpdateCalls;
         Map initialProps;
         Map newState1;
-        Map expectedState1;
         Map newState2;
-        Map expectedState2;
 
         setUp(() {
           firstStateUpdateCalls = 0;
@@ -76,8 +76,6 @@ main() {
           initialProps = unmodifiableMap({'getInitialState': (_) => initialState});
           newState1 = {'foo': 'bar'};
           newState2 = {'baz': 'foobar'};
-          expectedState1 = {}..addAll(initialState)..addAll(newState1);
-          expectedState2 = {}..addAll(expectedState1)..addAll(newState2);
 
           component = getDartComponent(render(components.LifecycleTest(initialProps)));
           component.lifecycleCalls.clear();
@@ -88,9 +86,7 @@ main() {
           component = null;
           initialProps = null;
           newState1 = null;
-          expectedState1 = null;
           newState2 = null;
-          expectedState2 = null;
         });
 
         test('when `replaceState` is called from within another `replaceState` callback', () {
@@ -366,7 +362,6 @@ main() {
         expect(() {
           var renderedInstance = react_dom.render(components2.DefaultSkipMethodsTest({}), mountNode);
           LifecycleTestHelper component = getDartComponent(renderedInstance);
-          Element renderedNode = react_dom.findDOMNode(renderedInstance);
           LifecycleTestHelper.staticLifecycleCalls.clear();
           component.setState({"shouldThrow": true});
         }, throwsA(anything));
