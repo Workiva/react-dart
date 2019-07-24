@@ -294,7 +294,7 @@ dynamic _jsifyNewContext(dynamic context) {
 // The value is unwrapped so that the same Dart value can be passed through js and retrived by Dart
 // when used with [_jsifyNewContext].
 dynamic _unjsifyNewContext(dynamic interopContext) {
-  if (interopContext != null) {
+  if (interopContext != null && hasProperty(interopContext, _reactDartContextSymbol)) {
     return getProperty(interopContext, _reactDartContextSymbol);
   }
   return interopContext;
