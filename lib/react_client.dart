@@ -735,6 +735,10 @@ class ReactJsComponentFactoryProxy extends ReactComponentFactoryProxy {
   ReactElement build(Map props, [List childrenArgs]) {
     dynamic children = _convertArgsToChildren(childrenArgs);
 
+    if (alwaysReturnChildrenAsList && children is! List) {
+      children = [children];
+    }
+
     Map potentiallyConvertedProps;
     if (shouldConvertDomProps) {
       // We can't mutate the original since we can't be certain that the value of the
