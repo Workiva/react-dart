@@ -718,7 +718,11 @@ class ReactJsComponentFactoryProxy extends ReactComponentFactoryProxy {
   /// Disable for more custom handling of these props.
   final bool shouldConvertDomProps;
 
-  ReactJsComponentFactoryProxy(ReactClass jsClass, {this.shouldConvertDomProps: true})
+  /// Whether the props.children should always be treated as a list or not.
+  /// Default: `false`
+  final bool alwaysReturnChildrenAsList;
+
+  ReactJsComponentFactoryProxy(ReactClass jsClass, {this.shouldConvertDomProps: true, this.alwaysReturnChildrenAsList: false})
       : this.type = jsClass,
         this.factory = React.createFactory(jsClass) {
     if (jsClass == null) {
