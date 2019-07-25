@@ -6,7 +6,7 @@ import 'package:react/src/typedefs.dart';
 
 /// A function that returns a bridge instance for use with a given [component].
 ///
-/// Where possible, it is recommended to avoid creating creating bridge objects
+/// Where possible, it is recommended to avoid creating bridge objects
 /// unnecessarily, and instead reuse a const instance.
 ///
 /// See [Component2BridgeImpl.bridgeFactory] for an example.
