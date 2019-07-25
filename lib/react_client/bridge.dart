@@ -109,18 +109,22 @@ class Component2BridgeImpl extends Component2Bridge {
   }
 
   @override
-  @override
   JsMap jsifyPropTypes(Component2 component, Map propTypes) {
     return JsBackedMap.from(propTypes.map((propKey, validator) {
+
+      // Wraps the propValidator methods that users provide in order to allow them to be consumable from javascript.
       dynamic handlePropValidator(
-        dynamic props,
-        dynamic propName,
-        dynamic componentName,
-        dynamic location,
-        dynamic propFullName,
-        dynamic secret,
+        JsMap props,
+        String propName,
+        String componentName,
+        String location,
+        String propFullName,
+        // This is a required argument of PropTypes but is usally hidden from the JS consumer.
+        String secret,
       ) {
+        // Create a Dart consumable version of the JsMap.
         var convertedProps = JsBackedMap.fromJs(props);
+        // Call the users validator with the newly wrapped props.
         var error = validator(convertedProps, propName, componentName, location, propFullName);
         if (error != null) {
           return JsError(error.toString());

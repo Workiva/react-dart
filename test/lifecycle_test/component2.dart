@@ -156,8 +156,9 @@ class PropTypesTestComponent extends react.Component2 {
   get propTypes => {
         'intProp': (Map props, propName, componentName, location, propFullName) {
           if (props[propName] is! int) {
-            throw ArgumentError('intProp should be int');
+            return ArgumentError('$propName should be int. {"props": "$props", "propName": "$propName", "componentName": "$componentName", "location": "$location", "propFullName": "$propFullName"}');
           }
+          return null;
         }
       };
 

@@ -4,6 +4,7 @@
 library lifecycle_test;
 
 import 'dart:async';
+import 'dart:convert';
 import 'dart:html';
 import 'dart:js';
 
@@ -133,15 +134,16 @@ main() {
 
       group('propTypes', () {
         bool consoleErrorCalled;
-        var consoleErrorMessage;
+        String consoleErrorMessage;
         JsFunction originalConsoleError;
         DivElement mountNode;
+        final String expectedWarningPrefix = 'Warning: Failed prop type: Invalid argument(s): intProp should be int. ';
 
         setUp(() {
           consoleErrorCalled = false;
           consoleErrorMessage = null;
           mountNode = new DivElement();
-
+          react_interop.PropTypes.resetWarningCache();
           originalConsoleError = context['console']['error'];
           context['console']['error'] = new JsFunction.withThis((self, message, arg1, arg2, arg3) {
             consoleErrorCalled = true;
@@ -158,12 +160,32 @@ main() {
         test('fails validation with incorrect prop type', () {
           react_dom.render(components2.PropTypesTest({'intProp': 'test'}), mountNode);
           expect(consoleErrorCalled, isTrue, reason: 'should have outputted a warning');
-          expect(consoleErrorMessage, contains('intProp should be int'));
+          expect(consoleErrorMessage, contains(expectedWarningPrefix));
         });
 
         test('passes validation with correct prop type', () {
           react_dom.render(components2.PropTypesTest({'intProp': 1}), mountNode);
           expect(consoleErrorCalled, isFalse, reason: 'should not have outputted a warning');
+        });
+
+        test('passes through all of the expected arguments to the prop validator', () {
+          react_dom.render(components2.PropTypesTest({'intProp': 'test'}), mountNode);
+          expect(consoleErrorCalled, isTrue, reason: 'should have outputted a warning');
+          expect(
+              consoleErrorMessage,
+              contains(expectedWarningPrefix),
+              reason: 'Did the warning message change? This test will break if the format cannot be converted to json.',
+            );
+          RegExp regExp = new RegExp(r'.*?({.*}).*', multiLine: true);
+          var matches = regExp.allMatches(consoleErrorMessage);
+          expect(matches, hasLength(1), reason: 'Should have found a json structure in the error.');
+          var match = matches.elementAt(0); // => extract the first (and only) match
+          Map errorArgs = json.decode(match.group(1));
+          expect(errorArgs['props'], '{intProp: test, children: []}');
+          expect(errorArgs['propName'], 'intProp');
+          expect(errorArgs['componentName'], 'PropTypesTestComponent');
+          expect(errorArgs['location'], 'prop');
+          expect(errorArgs['propFullName'], 'null');
         });
       });
 

@@ -9,7 +9,7 @@ import "package:react/react_dom.dart" as react_dom;
 class _HelloComponent extends react.Component2 {
   @override
   get propTypes => {
-        'name': (JsBackedMap props, propName, componentName, location, propFullName) {
+        'name': (Map props, propName, componentName, location, propFullName) {
           if (props[propName].length > 20) {
             return ArgumentError('(${props[propName]}) is too long. $propName has a max length of 20 characters.');
           }

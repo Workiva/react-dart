@@ -17,6 +17,8 @@ import 'package:react/react_client/js_backed_map.dart';
 import 'package:react/src/react_client/dart2_interop_workaround_bindings.dart';
 
 typedef ReactElement ReactJsComponentFactory(props, children);
+typedef dynamic JsPropValidator(
+    JsMap props, String propName, String componentName, String location, String propFullName, String secret);
 
 // ----------------------------------------------------------------------------
 //   Top-level API
@@ -132,8 +134,17 @@ abstract class ReactDomServer {
   external static String renderToStaticMarkup(ReactElement component);
 }
 
+
+/// Runtime type checking for React props and similar objects.
+///
+/// See: <https://reactjs.org/docs/typechecking-with-proptypes.html>
+/// See: <https://www.npmjs.com/package/prop-types>
 @JS('React.PropTypes')
 abstract class PropTypes {
+  /// PropTypes.checkPropTypes(...) only console.error.log(...)s a given message once.
+  /// To reset the cache while testing call PropTypes.resetWarningCache()
+  ///
+  /// See: <https://www.npmjs.com/package/prop-types#proptypesresetwarningcache>
   external static resetWarningCache();
 }
 

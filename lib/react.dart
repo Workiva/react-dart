@@ -16,8 +16,6 @@ import 'package:react/react_client/react_interop.dart';
 
 typedef Error PropValidator<TProps>(
     TProps props, String propName, String componentName, String location, String propFullName);
-typedef dynamic JsPropValidator(
-    dynamic props, dynamic propName, dynamic componentName, dynamic location, dynamic propFullName, dynamic secret);
 
 typedef T ComponentFactory<T extends Component>();
 typedef ReactComponentFactoryProxy ComponentRegistrar(ComponentFactory componentFactory,
