@@ -184,7 +184,7 @@ main() {
           expect(errorArgs['props'], '{intProp: test, children: []}');
           expect(errorArgs['propName'], 'intProp');
           // 'ReactDartComponent2' is the return when the tests are run in dart2js
-          expect(errorArgs['componentName'], anyOf('PropTypesTestComponent','ReactDartComponent2'));
+          expect(errorArgs['componentName'], anyOf('PropTypesTestComponent', 'ReactDartComponent2'));
           expect(errorArgs['location'], 'prop');
           expect(errorArgs['propFullName'], 'null');
         });
