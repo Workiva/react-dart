@@ -145,7 +145,7 @@ main() {
           mountNode = new DivElement();
           react_interop.PropTypes.resetWarningCache();
           originalConsoleError = context['console']['error'];
-          context['console']['error'] = new JsFunction.withThis((self, message, arg1, arg2, arg3) {
+          context['console']['error'] = new JsFunction.withThis((self, message) {
             consoleErrorCalled = true;
             consoleErrorMessage = message;
 
@@ -183,7 +183,8 @@ main() {
           Map errorArgs = json.decode(match.group(1));
           expect(errorArgs['props'], '{intProp: test, children: []}');
           expect(errorArgs['propName'], 'intProp');
-          expect(errorArgs['componentName'], 'PropTypesTestComponent');
+          // 'ReactDartComponent2' is the return when the tests are run in dart2js
+          expect(errorArgs['componentName'], anyOf('PropTypesTestComponent','ReactDartComponent2'));
           expect(errorArgs['location'], 'prop');
           expect(errorArgs['propFullName'], 'null');
         });
