@@ -181,12 +181,13 @@ main() {
           expect(matches, hasLength(1), reason: 'Should have found a json structure in the error.');
           var match = matches.elementAt(0); // => extract the first (and only) match
           Map errorArgs = json.decode(match.group(1));
-          expect(errorArgs['props'], '{intProp: test, children: []}');
-          expect(errorArgs['propName'], 'intProp');
-          // 'ReactDartComponent2' is the return when the tests are run in dart2js
-          expect(errorArgs['componentName'], anyOf('PropTypesTestComponent', 'ReactDartComponent2'));
-          expect(errorArgs['location'], 'prop');
-          expect(errorArgs['propFullName'], 'null');
+          expect(errorArgs, {
+            'props': '{intProp: test, children: []}',
+            'propName': 'intProp',
+            'componentName': anyOf('PropTypesTestComponent', 'ReactDartComponent2'),
+            'location': 'prop',
+            'propFullName': 'null',
+          });
         });
       });
 
