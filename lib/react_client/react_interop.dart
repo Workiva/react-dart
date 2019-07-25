@@ -5,7 +5,6 @@
 @JS()
 library react_client.react_interop;
 
-import 'dart:collection';
 import 'dart:html';
 
 import 'package:meta/meta.dart';
