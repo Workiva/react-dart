@@ -134,7 +134,6 @@ abstract class ReactDomServer {
   external static String renderToStaticMarkup(ReactElement component);
 }
 
-
 /// Runtime type checking for React props and similar objects.
 ///
 /// See: <https://reactjs.org/docs/typechecking-with-proptypes.html>

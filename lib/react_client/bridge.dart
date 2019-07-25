@@ -111,7 +111,6 @@ class Component2BridgeImpl extends Component2Bridge {
   @override
   JsMap jsifyPropTypes(Component2 component, Map propTypes) {
     return JsBackedMap.from(propTypes.map((propKey, validator) {
-
       // Wraps the propValidator methods that users provide in order to allow them to be consumable from javascript.
       dynamic handlePropValidator(
         JsMap props,

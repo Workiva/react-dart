@@ -172,10 +172,10 @@ main() {
           react_dom.render(components2.PropTypesTest({'intProp': 'test'}), mountNode);
           expect(consoleErrorCalled, isTrue, reason: 'should have outputted a warning');
           expect(
-              consoleErrorMessage,
-              contains(expectedWarningPrefix),
-              reason: 'Did the warning message change? This test will break if the format cannot be converted to json.',
-            );
+            consoleErrorMessage,
+            contains(expectedWarningPrefix),
+            reason: 'Did the warning message change? This test will break if the format cannot be converted to json.',
+          );
           RegExp regExp = new RegExp(r'.*?({.*}).*', multiLine: true);
           var matches = regExp.allMatches(consoleErrorMessage);
           expect(matches, hasLength(1), reason: 'Should have found a json structure in the error.');
