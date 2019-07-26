@@ -6,6 +6,7 @@ import 'core-js/es/set';
 import 'core-js/stable/reflect/delete-property';
 import 'core-js/stable/object/assign';
 
+
 // Additional polyfills are included by core-js based on 'usage' and browser requirements
 
 // Custom dart side methods
@@ -14,9 +15,11 @@ import DartHelpers from './_dart_helpers';
 const React = require('react');
 const PropTypes = require('prop-types');
 const CreateReactClass = require('create-react-class');
+const Tracing = require('scheduler/tracing')
 
 window.React = React;
 Object.assign(window, DartHelpers);
+window.ReactTracing = Tracing;
 
 React.createClass = CreateReactClass; // TODO: Remove this once over_react_test doesnt rely on createClass.
 React.PropTypes = PropTypes; // Only needed to support legacy context until we update.

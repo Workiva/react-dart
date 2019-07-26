@@ -37,7 +37,17 @@ abstract class React {
   external static bool isValidElement(dynamic object);
   external static ReactClass get Fragment;
 
+  @experimental
+  external static ReactClass get unstable_Profiler;
+
   external static JsRef createRef();
+}
+
+@experimental
+@JS('ReactTracing')
+class ReactTracing {
+  external static unstable_wrap(Function callback);
+  external static unstable_trace(String name, num timestamp, Function callback);
 }
 
 /// Creates a [Ref] object that can be attached to a [ReactElement] via the ref prop.

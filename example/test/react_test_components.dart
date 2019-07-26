@@ -1,12 +1,15 @@
 // ignore_for_file: deprecated_member_use_from_same_package
 import "dart:async";
+import 'dart:html';
 
+import 'package:js/js.dart';
 import "package:react/react.dart" as react;
 import 'package:react/react_client.dart';
+import 'package:react/react_client/react_interop.dart';
 import "package:react/react_dom.dart" as react_dom;
 
-class _HelloComponent extends react.Component {
-  void componentWillReceiveProps(nextProps) {
+class _HelloComponent extends react.Component2 {
+  void componentDidUpdate(nextProps, nextState, [snapshot]) {
     if (nextProps["name"].length > 20) {
       print("Too long Hello!");
     }
@@ -19,7 +22,7 @@ class _HelloComponent extends react.Component {
 
 var helloComponent = react.registerComponent(() => new _HelloComponent());
 
-class _HelloGreeter extends react.Component {
+class _HelloGreeter extends react.Component2 {
   var myInput;
   getInitialState() => {"name": "World"};
 
@@ -45,7 +48,7 @@ class _HelloGreeter extends react.Component {
 
 var helloGreeter = react.registerComponent(() => new _HelloGreeter());
 
-class _CheckBoxComponent extends react.Component {
+class _CheckBoxComponent extends react.Component2 {
   getInitialState() => {"checked": false};
 
   _handleChange(e) {
@@ -75,7 +78,7 @@ class _CheckBoxComponent extends react.Component {
 
 var checkBoxComponent = react.registerComponent(() => new _CheckBoxComponent());
 
-class _ClockComponent extends react.Component {
+class _ClockComponent extends react.Component2 {
   Timer timer;
 
   getInitialState() => {'secondsElapsed': 0};
@@ -118,20 +121,14 @@ class _ClockComponent extends react.Component {
 
 var clockComponent = react.registerComponent(() => new _ClockComponent());
 
-class _ListComponent extends react.Component {
+class _ListComponent extends react.Component2 {
   Map getInitialState() {
     return {
       "items": new List.from([0, 1, 2, 3])
     };
   }
 
-  void componentWillUpdate(nextProps, nextState) {
-    if (nextState["items"].length > state["items"].length) {
-      print("Adding " + nextState["items"].last.toString());
-    }
-  }
-
-  void componentDidUpdate(prevProps, prevState) {
+  void componentDidUpdate(prevProps, prevState, [snapshot]) {
     if (prevState["items"].length > state["items"].length) {
       print("Removed " + prevState["items"].first.toString());
     }
@@ -140,9 +137,38 @@ class _ListComponent extends react.Component {
   int iterator = 3;
 
   void addItem(event) {
-    List items = new List.from(state["items"]);
-    items.add(++iterator);
-    setState({"items": items});
+    ReactTracing.unstable_trace(
+      "Item Added",
+      window.performance.now(),
+      () {
+        List items = new List.from(state["items"]);
+        items.add(++iterator);
+        setState({"items": items});
+        print('adding item');
+      },
+    );
+  }
+
+  void addItemDelayed(event) {
+    ReactTracing.unstable_trace(
+      "Item Add Delay",
+      window.performance.now(),
+      () {
+        Future.delayed(Duration(seconds: 3),
+          ReactTracing.unstable_wrap(() {
+            ReactTracing.unstable_trace(
+            "Item Added Delay",
+            window.performance.now(),
+            () {
+              List items = new List.from(state["items"]);
+              items.add(++iterator);
+              setState({"items": items});
+              print('adding item');
+            });
+          })
+        );
+      },
+    );
   }
 
   dynamic render() {
@@ -158,6 +184,12 @@ class _ListComponent extends react.Component {
         'className': 'btn btn-primary',
         'onClick': addItem,
       }, 'addItem'),
+       react.button({
+        'type': 'button ',
+        'key': 'button2',
+        'className': 'btn btn-primary',
+        'onClick': addItemDelayed,
+      }, 'addItemDelayed'),
       react.ul({'key': 'list'}, items),
     ]);
   }

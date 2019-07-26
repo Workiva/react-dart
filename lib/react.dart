@@ -29,6 +29,8 @@ typedef ReactDartComponentFactoryProxy2 ComponentRegistrar2(
 /// See: <https://reactjs.org/docs/fragments.html>
 var Fragment = ReactJsComponentFactoryProxy(React.Fragment);
 
+var Profiler = ReactJsComponentFactoryProxy(React.unstable_Profiler);
+
 /// Top-level ReactJS [Component class](https://facebook.github.io/react/docs/react-component.html)
 /// which provides the [ReactJS Component API](https://facebook.github.io/react/docs/react-component.html#reference)
 ///

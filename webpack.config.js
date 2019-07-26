@@ -65,6 +65,7 @@ function createExports(exportMappings) {
         // This forces any packages that require react as a dependacy to have the same instance of react that
         // is provided by our react js bundles.
         exportObject.externals[0].react = "window.React";
+        exportObject.externals[0]['scheduler/tracing'] = "window.ReactTracing";
       }
       exportObjects.push(exportObject);
     } else {
