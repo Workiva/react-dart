@@ -27,22 +27,17 @@ main() {
           fooRef = ref;
         }
 
-        expect(callbackRef, const isInstanceOf<dynamic Function(dynamic)>(), reason: 'test setup check');
-
         expect(() => rtu.renderIntoDocument(Foo({'ref': callbackRef})), returnsNormally,
             reason: 'React should not have a problem with the ref we pass it, and calling it should not throw');
         expect(fooRef, const isInstanceOf<_Foo>(),
             reason: 'should be the correct type, not be a NativeJavaScrriptObject/etc.');
       });
 
-      test('`dynamic Function(dynamic)`', () {
+      test('`dynamic Function(ComponentClass)`', () {
         _Foo fooRef;
         callbackRef(_Foo ref) {
           fooRef = ref;
         }
-
-        expect(callbackRef, const isInstanceOf<dynamic Function(_Foo)>(), reason: 'test setup check');
-        expect(callbackRef, isNot(const isInstanceOf<dynamic Function(dynamic)>()), reason: 'test setup check');
 
         expect(() => rtu.renderIntoDocument(Foo({'ref': callbackRef})), returnsNormally,
             reason: 'React should not have a problem with the ref we pass it, and calling it should not throw');
