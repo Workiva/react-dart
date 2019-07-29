@@ -18,6 +18,7 @@ typedef ReactElement ReactJsComponentFactory(props, children);
 
 @JS()
 abstract class React {
+  external static String get version;
   @Deprecated('6.0.0')
   external static ReactClass createClass(ReactClassConfig reactClassConfig);
   external static ReactJsComponentFactory createFactory(type);
