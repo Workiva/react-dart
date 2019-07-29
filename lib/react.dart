@@ -329,7 +329,7 @@ abstract class Component {
   /// > in ReactJS 16 that is exposed via the [Component2] class.
   /// >
   /// > This will be completely removed when the JS side of it is slated for removal (ReactJS 17 / react.dart 6.0.0)
-  void componentWillReceivePropsWithContext(Map newProps, Map nextContext) {}
+  void componentWillReceivePropsWithContext(Map newProps, dynamic nextContext) {}
 
   /// ReactJS lifecycle method that is invoked before rendering when [nextProps] or [nextState] are being received.
   ///
