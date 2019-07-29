@@ -30,7 +30,7 @@ main() {
         expect(() => rtu.renderIntoDocument(Foo({'ref': callbackRef})), returnsNormally,
             reason: 'React should not have a problem with the ref we pass it, and calling it should not throw');
         expect(fooRef, const isInstanceOf<_Foo>(),
-            reason: 'should be the correct type, not be a NativeJavaScrriptObject/etc.');
+            reason: 'should be the correct type, not be a NativeJavaScriptObject/etc.');
       });
 
       test('`dynamic Function(ComponentClass)`', () {
@@ -42,7 +42,7 @@ main() {
         expect(() => rtu.renderIntoDocument(Foo({'ref': callbackRef})), returnsNormally,
             reason: 'React should not have a problem with the ref we pass it, and calling it should not throw');
         expect(fooRef, const isInstanceOf<_Foo>(),
-            reason: 'should be the correct type, not be a NativeJavaScrriptObject/etc.');
+            reason: 'should be the correct type, not be a NativeJavaScriptObject/etc.');
       });
     });
   });
