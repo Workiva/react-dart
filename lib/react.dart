@@ -767,6 +767,36 @@ abstract class Component2 implements Component {
   /// When an invalid value is provided for a prop, a warning will be shown in the JavaScript console.
   /// For performance reasons, propTypes is only checked in development mode.
   ///
+  /// Simple Example:
+  ///
+  ///       @override
+  ///       get propTypes => {
+  ///         'name': (Map props, propName, componentName, location, propFullName) {
+  ///           if (props[propName].length > 20) {
+  ///             return ArgumentError('(${props[propName]}) is too long. $propName has a max length of 20 characters.');
+  ///           }
+  ///           return null;
+  ///         },
+  ///       };
+  ///
+  /// Example of 2 props being dependant:
+  ///       @override
+  ///       get propTypes => {
+  ///         'someProp': (Map props, propName, componentName, location, propFullName) {
+  ///           if (props[propName] == true && props['anotherProp'] == null) {
+  ///             return ArgumentError('If (${props[propName]}) is true. You must have a value for "anotherProp".');
+  ///           }
+  ///           return null;
+  ///         },
+  ///         'anotherProp': (Map props, propName, componentName, location, propFullName) {
+  ///           if (props[propName] != null && props['someProp'] != true) {
+  ///             return ArgumentError('You must set "someProp" to true, to use $propName.');
+  ///           }
+  ///           return null;
+  ///         },
+  ///       };
+  ///
+  ///
   /// See: <https://reactjs.org/docs/typechecking-with-proptypes.html#proptypes>
   Map<String, PropValidator<Null>> get propTypes => {};
 
