@@ -798,7 +798,7 @@ void sharedLifecycleTests<T extends react.Component>({
         };
 
         final Map initialProps =
-            unmodifiableMap({'init': (react.Component2 component) => component.initializeState(initialState)});
+            unmodifiableMap({'init': (react.Component2 component) => component.state = initialState});
         final Map expectedProps = unmodifiableMap(defaultProps, initialProps, emptyChildrenProps);
         LifecycleTestHelper component = getDartComponent(render(LifecycleTest(initialProps)));
 
@@ -822,7 +822,7 @@ void sharedLifecycleTests<T extends react.Component>({
         };
 
         final Map initialProps = unmodifiableMap({
-          'init': (react.Component2 component) => component.initializeState(initialState),
+          'init': (react.Component2 component) => component.state = initialState,
           'getInitialState': (_) => initialState
         });
         expect(() {

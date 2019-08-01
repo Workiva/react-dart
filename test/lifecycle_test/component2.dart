@@ -23,13 +23,13 @@ class _SetStateTest extends react.Component2 with LifecycleTestHelper {
   @override
   void init() {
     lifecycleCall('init');
-    initializeState({
+    state = {
       'counter': 1,
       'shouldThrow': true,
       'errorFromGetDerivedState': '',
       'error': '',
       'info': '',
-    });
+    };
   }
 
   @override

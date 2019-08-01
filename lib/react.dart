@@ -542,7 +542,7 @@ abstract class Component2 implements Component {
   Map props;
 
   @override
-  Map state;
+  Map get state => _state;
 
   @override
   dynamic _jsThis;
@@ -608,8 +608,10 @@ abstract class Component2 implements Component {
   ///     init() {
   ///       initializeState({'count': 0});
   ///     }
-  void initializeState(Map value) {
+  @override
+  set state(Map value) {
     _bridge.initializeState(this, value);
+    _state = value;
   }
 
   void forceUpdate([SetStateCallback callback]) {

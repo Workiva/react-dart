@@ -86,6 +86,7 @@ class Component2BridgeImpl extends Component2Bridge {
 
   @override
   void initializeState(Component2 component, Map state) {
+    if (component.jsThis.state != null) return;
     dynamic jsState = jsBackingMapOrJsCopy(state);
     component.jsThis.state = jsState;
   }
