@@ -390,10 +390,14 @@ class _NewContextTypeConsumerComponent extends react.Component2 {
 }
 
 class _Component2TestComponent extends react.Component2 with react.TypedSnapshot<String> {
-  Map getInitialState() {
-    return {
+  get defaultProps => {
+    'defaultProp': true
+  };
+
+  init(){
+    initializeState({
       "items": new List.from([0, 1, 2, 3])
-    };
+    });
   }
 
   Map getDerivedStateFromProps(nextProps, prevState) {

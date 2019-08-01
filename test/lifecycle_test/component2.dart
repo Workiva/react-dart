@@ -233,7 +233,7 @@ class _LifecycleTest extends react.Component2 with LifecycleTestHelper {
 
   void init() => lifecycleCall('init', defaultReturnValue: () => {});
 
-  Map getDefaultProps() {
+  Map get defaultProps {
     lifecycleCall('getDefaultProps');
 
     return {'defaultProp': 'default'};

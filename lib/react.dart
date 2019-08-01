@@ -510,6 +510,15 @@ abstract class Component2 implements Component {
   /// See: <https://reactjs.org/docs/context.html#classcontexttype>
   ReactDartContext get contextType => null;
 
+  /// Invoked once and cached when [reactComponentClass] is called. Values in the mapping will be set on [props]
+  /// if that prop is not specified by the parent component.
+  ///
+  /// This method is invoked before any instances are created and thus cannot rely on [props]. In addition, be aware
+  /// that any complex objects returned by `defaultProps` will be shared across instances, not copied.
+  ///
+  /// See: <https://reactjs.org/docs/react-component.html#defaultprops>
+  Map get defaultProps => {};
+
   /// The context value from the [contextType] assigned to this component.
   /// The value is passed down from the provider of the same [contextType].
   /// You can reference [context] in any of the lifecycle methods including the render function.
@@ -763,10 +772,10 @@ abstract class Component2 implements Component {
   /// if that prop is not specified by the parent component.
   ///
   /// This method is invoked before any instances are created and thus cannot rely on [props]. In addition, be aware
-  /// that any complex objects returned by `defaultProps` will be shared across instances, not copied.
+  /// that any complex objects returned by `getDefaultProps` will be shared across instances, not copied.
   ///
-  /// See: <https://reactjs.org/docs/react-component.html#defaultprops>
-  Map get defaultProps => {};
+  /// See: <https://facebook.github.io/react/docs/react-component.html#getdefaultprops>
+  Map getDefaultProps() => const {};
 
   /// This is equivalent to `Constructor` in React 16, this is called before mounting
   /// See: <https://reactjs.org/docs/react-component.html#constructor>
@@ -783,15 +792,6 @@ abstract class Component2 implements Component {
   ///      }
   ///    }
   void init() {}
-
-  /// Invoked once and cached when [reactComponentClass] is called. Values in the mapping will be set on [props]
-  /// if that prop is not specified by the parent component.
-  ///
-  /// This method is invoked before any instances are created and thus cannot rely on [props]. In addition, be aware
-  /// that any complex objects returned by `getDefaultProps` will be shared across instances, not copied.
-  ///
-  /// See: <https://facebook.github.io/react/docs/react-component.html#getdefaultprops>
-  Map getDefaultProps() => const {};
 
   /// __Required.__
   ///
