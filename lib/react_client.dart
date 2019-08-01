@@ -765,7 +765,8 @@ ReactDartComponentFactoryProxy2 _registerComponent2(
 
   // Cache default props and store them on the ReactClass so they can be used
   // by ReactDartComponentFactoryProxy and externally.
-  final JsBackedMap defaultProps = new JsBackedMap.from(componentInstance.defaultProps.isNotEmpty ? componentInstance.defaultProps : componentInstance.getDefaultProps());
+  final JsBackedMap defaultProps = new JsBackedMap.from(
+      componentInstance.defaultProps.isNotEmpty ? componentInstance.defaultProps : componentInstance.getDefaultProps());
 
   var jsConfig2 = new JsComponentConfig2(
     defaultProps: defaultProps.jsObject,
