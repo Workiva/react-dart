@@ -13,6 +13,7 @@ import 'dart:js';
 import 'dart:js_util';
 
 import "package:js/js.dart";
+
 import "package:react/react.dart";
 import 'package:react/react_client/js_interop_helpers.dart';
 import 'package:react/react_client/react_interop.dart';
@@ -767,11 +768,14 @@ ReactDartComponentFactoryProxy2 _registerComponent2(
   // by ReactDartComponentFactoryProxy and externally.
   final JsBackedMap defaultProps = new JsBackedMap.from(componentInstance.getDefaultProps());
 
+  final JsMap jsPropTypes =
+      bridgeFactory(componentInstance).jsifyPropTypes(componentInstance, componentInstance.propTypes);
+
   var jsConfig2 = new JsComponentConfig2(
-    defaultProps: defaultProps.jsObject,
-    contextType: componentInstance.contextType?.jsThis,
-    skipMethods: filteredSkipMethods,
-  );
+      defaultProps: defaultProps.jsObject,
+      contextType: componentInstance.contextType?.jsThis,
+      skipMethods: filteredSkipMethods,
+      propTypes: jsPropTypes);
 
   /// Create the JS [`ReactClass` component class](https://facebook.github.io/react/docs/top-level-api.html#react.createclass)
   /// with custom JS lifecycle methods.

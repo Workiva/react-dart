@@ -3,14 +3,19 @@ import "dart:async";
 
 import "package:react/react.dart" as react;
 import 'package:react/react_client.dart';
+import 'package:react/react_client/js_backed_map.dart';
 import "package:react/react_dom.dart" as react_dom;
 
-class _HelloComponent extends react.Component {
-  void componentWillReceiveProps(nextProps) {
-    if (nextProps["name"].length > 20) {
-      print("Too long Hello!");
-    }
-  }
+class _HelloComponent extends react.Component2 {
+  @override
+  get propTypes => {
+        'name': (Map props, propName, componentName, location, propFullName) {
+          if (props[propName].length > 20) {
+            return ArgumentError('(${props[propName]}) is too long. $propName has a max length of 20 characters.');
+          }
+          return null;
+        },
+      };
 
   render() {
     return react.span({}, ["Hello ${props['name']}!"]);

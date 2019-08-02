@@ -16,6 +16,8 @@ import 'package:react/react_client/js_backed_map.dart';
 import 'package:react/src/react_client/dart2_interop_workaround_bindings.dart';
 
 typedef ReactElement ReactJsComponentFactory(props, children);
+typedef dynamic JsPropValidator(
+    JsMap props, String propName, String componentName, String location, String propFullName, String secret);
 
 // ----------------------------------------------------------------------------
 //   Top-level API
@@ -129,6 +131,19 @@ abstract class ReactDom {
 abstract class ReactDomServer {
   external static String renderToString(ReactElement component);
   external static String renderToStaticMarkup(ReactElement component);
+}
+
+/// Runtime type checking for React props and similar objects.
+///
+/// See: <https://reactjs.org/docs/typechecking-with-proptypes.html>
+/// See: <https://www.npmjs.com/package/prop-types>
+@JS('React.PropTypes')
+abstract class PropTypes {
+  /// PropTypes.checkPropTypes(...) only console.error(...)s a given message once.
+  /// To reset the cache while testing call PropTypes.resetWarningCache()
+  ///
+  /// See: <https://www.npmjs.com/package/prop-types#proptypesresetwarningcache>
+  external static resetWarningCache();
 }
 
 // ----------------------------------------------------------------------------
@@ -408,6 +423,12 @@ class ReactDartContextInternal {
   ReactDartContextInternal(this.value);
 }
 
+/// Creates a new JS Error object with the provided message.
+@JS('Error')
+class JsError {
+  external JsError(message);
+}
+
 /// Throws the error passed to it from Javascript.
 /// This allows us to catch the error in dart which re-dartifies the js errors/exceptions.
 @alwaysThrows
@@ -562,6 +583,7 @@ class JsComponentConfig2 {
   external factory JsComponentConfig2({
     dynamic contextType,
     JsMap defaultProps,
+    JsMap propTypes,
     @required List<String> skipMethods,
   });
 }

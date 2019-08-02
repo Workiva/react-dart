@@ -9,9 +9,13 @@ library react;
 
 import 'package:meta/meta.dart';
 import 'package:react/react_client/bridge.dart';
+import 'package:react/react_client/js_interop_helpers.dart' show jsifyPropTypes;
 import 'package:react/src/typedefs.dart';
 import 'package:react/react_client.dart';
 import 'package:react/react_client/react_interop.dart';
+
+typedef Error PropValidator<TProps>(
+    TProps props, String propName, String componentName, String location, String propFullName);
 
 typedef T ComponentFactory<T extends Component>();
 typedef ReactComponentFactoryProxy ComponentRegistrar(ComponentFactory componentFactory,
@@ -758,6 +762,43 @@ abstract class Component2 implements Component {
   ///
   /// See: <https://facebook.github.io/react/docs/react-component.html#getinitialstate>
   Map getInitialState() => const {};
+
+  /// Allows usage of PropValidator functions to check the validity of a prop passed to it.
+  /// When an invalid value is provided for a prop, a warning will be shown in the JavaScript console.
+  /// For performance reasons, propTypes is only checked in development mode.
+  ///
+  /// Simple Example:
+  ///
+  ///       @override
+  ///       get propTypes => {
+  ///         'name': (Map props, propName, componentName, location, propFullName) {
+  ///           if (props[propName].length > 20) {
+  ///             return ArgumentError('(${props[propName]}) is too long. $propName has a max length of 20 characters.');
+  ///           }
+  ///           return null;
+  ///         },
+  ///       };
+  ///
+  /// Example of 2 props being dependent:
+  ///       @override
+  ///       get propTypes => {
+  ///         'someProp': (Map props, propName, componentName, location, propFullName) {
+  ///           if (props[propName] == true && props['anotherProp'] == null) {
+  ///             return ArgumentError('If (${props[propName]}) is true. You must have a value for "anotherProp".');
+  ///           }
+  ///           return null;
+  ///         },
+  ///         'anotherProp': (Map props, propName, componentName, location, propFullName) {
+  ///           if (props[propName] != null && props['someProp'] != true) {
+  ///             return ArgumentError('You must set "someProp" to true to use $propName.');
+  ///           }
+  ///           return null;
+  ///         },
+  ///       };
+  ///
+  ///
+  /// See: <https://reactjs.org/docs/typechecking-with-proptypes.html#proptypes>
+  Map<String, PropValidator<Null>> get propTypes => {};
 
   /// This is equivalent to `Constructor` in React 16, this is called before mounting
   /// See: <https://reactjs.org/docs/react-component.html#constructor>
