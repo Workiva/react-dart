@@ -139,7 +139,7 @@ abstract class ReactDomServer {
 /// See: <https://www.npmjs.com/package/prop-types>
 @JS('React.PropTypes')
 abstract class PropTypes {
-  /// PropTypes.checkPropTypes(...) only console.error.log(...)s a given message once.
+  /// PropTypes.checkPropTypes(...) only console.error(...)s a given message once.
   /// To reset the cache while testing call PropTypes.resetWarningCache()
   ///
   /// See: <https://www.npmjs.com/package/prop-types#proptypesresetwarningcache>

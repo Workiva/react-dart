@@ -125,10 +125,7 @@ class Component2BridgeImpl extends Component2Bridge {
         var convertedProps = JsBackedMap.fromJs(props);
         // Call the users validator with the newly wrapped props.
         var error = validator(convertedProps, propName, componentName, location, propFullName);
-        if (error != null) {
-          return JsError(error.toString());
-        }
-        return error;
+        return error == null ? null : JsError(error.toString());
       }
 
       return MapEntry(propKey, allowInterop(handlePropValidator));

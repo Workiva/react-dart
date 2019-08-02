@@ -779,7 +779,7 @@ abstract class Component2 implements Component {
   ///         },
   ///       };
   ///
-  /// Example of 2 props being dependant:
+  /// Example of 2 props being dependent:
   ///       @override
   ///       get propTypes => {
   ///         'someProp': (Map props, propName, componentName, location, propFullName) {
@@ -790,7 +790,7 @@ abstract class Component2 implements Component {
   ///         },
   ///         'anotherProp': (Map props, propName, componentName, location, propFullName) {
   ///           if (props[propName] != null && props['someProp'] != true) {
-  ///             return ArgumentError('You must set "someProp" to true, to use $propName.');
+  ///             return ArgumentError('You must set "someProp" to true to use $propName.');
   ///           }
   ///           return null;
   ///         },
