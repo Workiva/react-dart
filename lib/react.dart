@@ -12,6 +12,9 @@ import 'package:react/react_client/bridge.dart';
 import 'package:react/src/typedefs.dart';
 import 'package:react/react_client.dart';
 import 'package:react/react_client/react_interop.dart';
+import 'package:react/src/context.dart';
+
+export 'package:react/src/context.dart';
 
 typedef T ComponentFactory<T extends Component>();
 typedef ReactComponentFactoryProxy ComponentRegistrar(ComponentFactory componentFactory,

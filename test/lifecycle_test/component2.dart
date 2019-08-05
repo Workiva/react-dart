@@ -150,7 +150,7 @@ class _DefaultPropsTest extends react.Component2 {
   render() => false;
 }
 
-ReactDartContext LifecycleTestContext = createContext();
+react.ReactDartContext LifecycleTestContext = react.createContext();
 
 ReactDartComponentFactoryProxy2 ContextConsumerWrapper = react.registerComponent(() => new _ContextConsumerWrapper());
 

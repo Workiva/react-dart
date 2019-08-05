@@ -267,7 +267,7 @@ int calculateChangedBits(currentValue, nextValue) {
   return result;
 }
 
-var TestNewContext = createContext({'renderCount': 0}, calculateChangedBits);
+var TestNewContext = react.createContext({'renderCount': 0}, calculateChangedBits);
 
 class _NewContextProviderComponent extends react.Component2 {
   _NewContextRefComponent componentRef;
