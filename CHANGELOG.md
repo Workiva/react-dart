@@ -1,3 +1,18 @@
+## [4.9.0](https://github.com/cleandart/react-dart/compare/4.8.1...4.9.0)
+- [#202] Add bindings for transition / animation events
+- [#198] Updates in preparation for 5.0.0 release
+
+## [4.8.1](https://github.com/cleandart/react-dart/compare/4.8.0...4.8.1)
+- [#197] Fix Dart component callback refs with typed arguments not working in Dart 2
+    dynamic ref argument (worked):
+    ```dart
+    Foo({'ref': (ref) => _fooRef = ref})
+    ```
+    non-dynamic ref argument (did not work):
+    ```dart
+    Foo({'ref': (FooComponent ref) => _fooRef = ref})
+    ```
+
 ## [4.8.0](https://github.com/cleandart/react-dart/compare/4.7.1...4.8.0)
 
 - [#181]: Remove unnecessary zoning on event handlers that interferes with testing

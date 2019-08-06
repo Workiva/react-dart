@@ -82,6 +82,9 @@ void main() {
     }
 
     group('event', () {
+      group('animationEnd', () => testEvent(Simulate.animationEnd, 'animationEnd'));
+      group('animationIteration', () => testEvent(Simulate.animationIteration, 'animationIteration'));
+      group('animationStart', () => testEvent(Simulate.animationStart, 'animationStart'));
       group('blur', () => testEvent(Simulate.blur, 'blur'));
       group('change', () => testEvent(Simulate.change, 'change'));
       group('click', () => testEvent(Simulate.click, 'click'));
@@ -113,6 +116,7 @@ void main() {
       group('touchEnd', () => testEvent(Simulate.touchEnd, 'touchEnd'));
       group('touchMove', () => testEvent(Simulate.touchMove, 'touchMove'));
       group('touchStart', () => testEvent(Simulate.touchStart, 'touchStart'));
+      group('transitionEnd', () => testEvent(Simulate.transitionEnd, 'transitionEnd'));
       group('wheel', () => testEvent(Simulate.wheel, 'wheel'));
     });
 

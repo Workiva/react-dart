@@ -28,7 +28,7 @@ export 'package:react/react.dart' show ReactComponentFactoryProxy, ComponentFact
 /// The type of [Component.ref] specified as a callback.
 ///
 /// See: <https://facebook.github.io/react/docs/more-about-refs.html#the-ref-callback-attribute>
-typedef _CallbackRef(componentOrDomNode);
+typedef _CallbackRef<T>(T componentOrDomNode);
 
 /// Prepares [children] to be passed to the ReactJS [React.createElement] and
 /// the Dart [react.Component].
@@ -112,8 +112,16 @@ class ReactDartComponentFactoryProxy<TComponent extends Component> extends React
 
       // If the ref is a callback, pass ReactJS a function that will call it
       // with the Dart Component instance, not the ReactComponent instance.
-      if (ref is _CallbackRef) {
-        interopProps.ref = allowInterop((ReactComponent instance) => ref(instance?.dartComponent));
+      //
+      // Use _CallbackRef<Null> to check arity, since parameters could be non-dynamic, and thus
+      // would fail the `is _CallbackRef<dynamic>` check.
+      // See https://github.com/dart-lang/sdk/issues/34593 for more information on arity checks.
+      if (ref is _CallbackRef<Null>) {
+        interopProps.ref = allowInterop((ReactComponent instance) {
+          // Call as dynamic to perform dynamic dispatch, since we can't cast to _CallbackRef<dynamic>,
+          // and since calling with non-null values will fail at runtime due to the _CallbackRef<Null> typing.
+          return (ref as dynamic)(instance?.dartComponent);
+        });
       } else {
         interopProps.ref = ref;
       }
@@ -702,6 +710,48 @@ SyntheticTouchEvent syntheticTouchEventFactory(events.SyntheticTouchEvent e) {
     e.shiftKey,
     e.targetTouches,
     e.touches,
+  );
+}
+
+/// Wrapper for [SyntheticTransitionEvent].
+SyntheticTransitionEvent syntheticTransitionEventFactory(events.SyntheticTransitionEvent e) {
+  return new SyntheticTransitionEvent(
+    e.bubbles,
+    e.cancelable,
+    e.currentTarget,
+    e.defaultPrevented,
+    () => e.preventDefault(),
+    () => e.stopPropagation(),
+    e.eventPhase,
+    e.isTrusted,
+    e.nativeEvent,
+    e.target,
+    e.timeStamp,
+    e.type,
+    e.propertyName,
+    e.elapsedTime,
+    e.pseudoElement,
+  );
+}
+
+/// Wrapper for [SyntheticAnimationEvent].
+SyntheticAnimationEvent syntheticAnimationEventFactory(events.SyntheticAnimationEvent e) {
+  return new SyntheticAnimationEvent(
+    e.bubbles,
+    e.cancelable,
+    e.currentTarget,
+    e.defaultPrevented,
+    () => e.preventDefault(),
+    () => e.stopPropagation(),
+    e.eventPhase,
+    e.isTrusted,
+    e.nativeEvent,
+    e.target,
+    e.timeStamp,
+    e.type,
+    e.animationName,
+    e.elapsedTime,
+    e.pseudoElement,
   );
 }
 
