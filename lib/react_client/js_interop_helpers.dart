@@ -3,8 +3,9 @@
 @JS()
 library react_client.js_interop_helpers;
 
-import "package:js/js.dart";
 import "dart:js_util";
+
+import "package:js/js.dart";
 
 // The following code is adapted from `package:js` in the dart-lang/sdk repo:
 // https://github.com/dart-lang/sdk/blob/2.2.0/sdk/lib/js_util/dart2js/js_util_dart2js.dart#L27

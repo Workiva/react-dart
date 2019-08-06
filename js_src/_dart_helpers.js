@@ -156,6 +156,9 @@ function _createReactDartComponentClass2(dartInteropStatics, componentStatics, j
     if (jsConfig.defaultProps) {
       ReactDartComponent2.defaultProps = jsConfig.defaultProps;
     }
+    if (jsConfig.propTypes) {
+      ReactDartComponent2.propTypes = jsConfig.propTypes;
+    }
   }
 
   return ReactDartComponent2;

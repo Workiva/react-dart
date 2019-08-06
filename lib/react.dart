@@ -9,12 +9,16 @@ library react;
 
 import 'package:meta/meta.dart';
 import 'package:react/react_client/bridge.dart';
+import 'package:react/react_client/js_interop_helpers.dart' show jsifyPropTypes;
 import 'package:react/src/typedefs.dart';
 import 'package:react/react_client.dart';
 import 'package:react/react_client/react_interop.dart';
 import 'package:react/src/context.dart';
 
 export 'package:react/src/context.dart';
+
+typedef Error PropValidator<TProps>(
+    TProps props, String propName, String componentName, String location, String propFullName);
 
 typedef T ComponentFactory<T extends Component>();
 typedef ReactComponentFactoryProxy ComponentRegistrar(ComponentFactory componentFactory,
@@ -332,7 +336,7 @@ abstract class Component {
   /// > in ReactJS 16 that is exposed via the [Component2] class.
   /// >
   /// > This will be completely removed when the JS side of it is slated for removal (ReactJS 17 / react.dart 6.0.0)
-  void componentWillReceivePropsWithContext(Map newProps, Map nextContext) {}
+  void componentWillReceivePropsWithContext(Map newProps, dynamic nextContext) {}
 
   /// ReactJS lifecycle method that is invoked before rendering when [nextProps] or [nextState] are being received.
   ///
@@ -761,6 +765,43 @@ abstract class Component2 implements Component {
   ///
   /// See: <https://facebook.github.io/react/docs/react-component.html#getinitialstate>
   Map getInitialState() => const {};
+
+  /// Allows usage of PropValidator functions to check the validity of a prop passed to it.
+  /// When an invalid value is provided for a prop, a warning will be shown in the JavaScript console.
+  /// For performance reasons, propTypes is only checked in development mode.
+  ///
+  /// Simple Example:
+  ///
+  ///       @override
+  ///       get propTypes => {
+  ///         'name': (Map props, propName, componentName, location, propFullName) {
+  ///           if (props[propName].length > 20) {
+  ///             return ArgumentError('(${props[propName]}) is too long. $propName has a max length of 20 characters.');
+  ///           }
+  ///           return null;
+  ///         },
+  ///       };
+  ///
+  /// Example of 2 props being dependent:
+  ///       @override
+  ///       get propTypes => {
+  ///         'someProp': (Map props, propName, componentName, location, propFullName) {
+  ///           if (props[propName] == true && props['anotherProp'] == null) {
+  ///             return ArgumentError('If (${props[propName]}) is true. You must have a value for "anotherProp".');
+  ///           }
+  ///           return null;
+  ///         },
+  ///         'anotherProp': (Map props, propName, componentName, location, propFullName) {
+  ///           if (props[propName] != null && props['someProp'] != true) {
+  ///             return ArgumentError('You must set "someProp" to true to use $propName.');
+  ///           }
+  ///           return null;
+  ///         },
+  ///       };
+  ///
+  ///
+  /// See: <https://reactjs.org/docs/typechecking-with-proptypes.html#proptypes>
+  Map<String, PropValidator<Null>> get propTypes => {};
 
   /// This is equivalent to `Constructor` in React 16, this is called before mounting
   /// See: <https://reactjs.org/docs/react-component.html#constructor>
@@ -1587,6 +1628,56 @@ class SyntheticTouchEvent extends SyntheticEvent {
     this.targetTouches,
     this.touches,
   ) : super(bubbles, cancelable, currentTarget, defaultPrevented, preventDefault, stopPropagation, eventPhase,
+            isTrusted, nativeEvent, target, timeStamp, type) {}
+}
+
+class SyntheticTransitionEvent extends SyntheticEvent {
+  final String propertyName;
+  final num elapsedTime;
+  final String pseudoElement;
+
+  SyntheticTransitionEvent(
+      bubbles,
+      cancelable,
+      currentTarget,
+      _defaultPrevented,
+      _preventDefault,
+      stopPropagation,
+      eventPhase,
+      isTrusted,
+      nativeEvent,
+      target,
+      timeStamp,
+      type,
+      this.propertyName,
+      this.elapsedTime,
+      this.pseudoElement)
+      : super(bubbles, cancelable, currentTarget, _defaultPrevented, _preventDefault, stopPropagation, eventPhase,
+            isTrusted, nativeEvent, target, timeStamp, type) {}
+}
+
+class SyntheticAnimationEvent extends SyntheticEvent {
+  final String animationName;
+  final num elapsedTime;
+  final String pseudoElement;
+
+  SyntheticAnimationEvent(
+      bubbles,
+      cancelable,
+      currentTarget,
+      _defaultPrevented,
+      _preventDefault,
+      stopPropagation,
+      eventPhase,
+      isTrusted,
+      nativeEvent,
+      target,
+      timeStamp,
+      type,
+      this.animationName,
+      this.elapsedTime,
+      this.pseudoElement)
+      : super(bubbles, cancelable, currentTarget, _defaultPrevented, _preventDefault, stopPropagation, eventPhase,
             isTrusted, nativeEvent, target, timeStamp, type) {}
 }
 
