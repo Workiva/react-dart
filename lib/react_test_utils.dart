@@ -52,9 +52,12 @@ dynamic _jsifyEventData(Map eventData) => jsifyAndAllowInterop(eventData ?? cons
 /// This should include all events documented at:
 /// http://facebook.github.io/react/docs/events.html
 class Simulate {
-  static void animationEnd(/* [1] */ node, [Map eventData]) => sw.Simulate.animationEnd(node, _jsifyEventData(eventData));
-  static void animationIteration(/* [1] */ node, [Map eventData]) => sw.Simulate.animationIteration(node, _jsifyEventData(eventData));
-  static void animationStart(/* [1] */ node, [Map eventData]) => sw.Simulate.animationStart(node, _jsifyEventData(eventData));
+  static void animationEnd(/* [1] */ node, [Map eventData]) =>
+      sw.Simulate.animationEnd(node, _jsifyEventData(eventData));
+  static void animationIteration(/* [1] */ node, [Map eventData]) =>
+      sw.Simulate.animationIteration(node, _jsifyEventData(eventData));
+  static void animationStart(/* [1] */ node, [Map eventData]) =>
+      sw.Simulate.animationStart(node, _jsifyEventData(eventData));
   static void blur(/*[1]*/ node, [Map eventData]) => sw.Simulate.blur(node, _jsifyEventData(eventData));
   static void change(/*[1]*/ node, [Map eventData]) => sw.Simulate.change(node, _jsifyEventData(eventData));
   static void click(/*[1]*/ node, [Map eventData]) => sw.Simulate.click(node, _jsifyEventData(eventData));
@@ -87,7 +90,8 @@ class Simulate {
   static void touchEnd(/*[1]*/ node, [Map eventData]) => sw.Simulate.touchEnd(node, _jsifyEventData(eventData));
   static void touchMove(/*[1]*/ node, [Map eventData]) => sw.Simulate.touchMove(node, _jsifyEventData(eventData));
   static void touchStart(/*[1]*/ node, [Map eventData]) => sw.Simulate.touchStart(node, _jsifyEventData(eventData));
-  static void transitionEnd(/*[1]*/ node, [Map eventData]) => sw.Simulate.transitionEnd(node, _jsifyEventData(eventData));
+  static void transitionEnd(/*[1]*/ node, [Map eventData]) =>
+      sw.Simulate.transitionEnd(node, _jsifyEventData(eventData));
   static void wheel(/*[1]*/ node, [Map eventData]) => sw.Simulate.wheel(node, _jsifyEventData(eventData));
 }
 
