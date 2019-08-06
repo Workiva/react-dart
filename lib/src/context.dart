@@ -17,7 +17,7 @@ import 'package:react/react_client.dart';
 ///
 /// __Example__:
 ///
-///     ReactDartContext MyContext = createContext('test');
+///     Context MyContext = createContext('test');
 ///
 ///     class MyContextTypeClass extends react.Component2 {
 ///       @override
@@ -32,7 +32,7 @@ import 'package:react/react_client.dart';
 ///
 /// // OR
 ///
-///     ReactDartContext MyContext = createContext();
+///     Context MyContext = createContext();
 ///
 ///     class MyClass extends react.Component2 {
 ///       render() {
@@ -47,11 +47,11 @@ import 'package:react/react_client.dart';
 ///     }
 ///
 /// Learn more at: https://reactjs.org/docs/context.html
-class ReactDartContext {
-  ReactDartContext(this.Provider, this.Consumer, this._jsThis);
+class Context {
+  Context(this.Provider, this.Consumer, this._jsThis);
   final ReactContext _jsThis;
 
-  /// Every [ReactDartContext] object comes with a Provider component that allows consuming components to subscribe
+  /// Every [Context] object comes with a Provider component that allows consuming components to subscribe
   /// to context changes.
   ///
   /// Accepts a `value` prop to be passed to consuming components that are descendants of this [Provider].
@@ -63,15 +63,15 @@ class ReactDartContext {
   ReactContext get jsThis => _jsThis;
 }
 
-/// Creates a [ReactDartContext] object. When React renders a component that subscribes to this [ReactDartContext]
+/// Creates a [Context] object. When React renders a component that subscribes to this [Context]
 /// object it will read the current context value from the closest matching Provider above it in the tree.
 ///
-/// The `defaultValue` argument is only used when a component does not have a matching [ReactDartContext.Provider]
+/// The `defaultValue` argument is only used when a component does not have a matching [Context.Provider]
 /// above it in the tree. This can be helpful for testing components in isolation without wrapping them.
 ///
 /// __Example__:
 ///
-///     ReactDartContext MyContext = createContext('test');
+///     Context MyContext = createContext('test');
 ///
 ///     class MyContextTypeClass extends react.Component2 {
 ///       @override
@@ -86,7 +86,7 @@ class ReactDartContext {
 ///
 /// ___ OR ___
 ///
-///     ReactDartContext MyContext = createContext();
+///     Context MyContext = createContext();
 ///
 ///     class MyClass extends react.Component2 {
 ///       render() {
@@ -101,7 +101,7 @@ class ReactDartContext {
 ///     }
 ///
 /// Learn more: https://reactjs.org/docs/context.html#reactcreatecontext
-ReactDartContext createContext([
+Context createContext([
   dynamic defaultValue,
   int Function(dynamic currentValue, dynamic nextValue) calculateChangedBits,
 ]) {
@@ -112,7 +112,7 @@ ReactDartContext createContext([
 
   var JSContext = React.createContext(ContextHelpers.jsifyNewContext(defaultValue),
       calculateChangedBits != null ? allowInterop(jsifyCalculateChangedBitsArgs) : null);
-  return new ReactDartContext(
+  return Context(
     new ReactJsContextComponentFactoryProxy(JSContext.Provider, isProvider: true),
     new ReactJsContextComponentFactoryProxy(JSContext.Consumer, isConsumer: true),
     JSContext,
