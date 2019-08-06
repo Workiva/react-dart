@@ -9,6 +9,9 @@ import 'package:js/js.dart';
 
 @JS('React.addons.TestUtils.Simulate')
 abstract class Simulate {
+  external static void animationEnd(componentOrNode, [eventData]);
+  external static void animationIteration(componentOrNode, [eventData]);
+  external static void animationStart(componentOrNode, [eventData]);
   external static void blur(componentOrNode, [eventData]);
   external static void change(componentOrNode, [eventData]);
   external static void click(componentOrNode, [eventData]);
@@ -41,11 +44,15 @@ abstract class Simulate {
   external static void touchEnd(componentOrNode, [eventData]);
   external static void touchMove(componentOrNode, [eventData]);
   external static void touchStart(componentOrNode, [eventData]);
+  external static void transitionEnd(componentOrNode, [eventData]);
   external static void wheel(componentOrNode, [eventData]);
 }
 
 @JS('React.addons.TestUtils.SimulateNative')
 abstract class SimulateNative {
+  external static void animationEnd(componentOrNode, [eventData]);
+  external static void animationIteration(componentOrNode, [eventData]);
+  external static void animationStart(componentOrNode, [eventData]);
   external static void blur(componentOrNode, [eventData]);
   external static void click(componentOrNode, [eventData]);
   external static void contextMenu(componentOrNode, [eventData]);
@@ -76,5 +83,6 @@ abstract class SimulateNative {
   external static void touchEnd(componentOrNode, [eventData]);
   external static void touchMove(componentOrNode, [eventData]);
   external static void touchStart(componentOrNode, [eventData]);
+  external static void transitionEnd(componentOrNode, [eventData]);
   external static void wheel(componentOrNode, [eventData]);
 }

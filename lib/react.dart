@@ -836,6 +836,56 @@ class SyntheticTouchEvent extends SyntheticEvent {
             isTrusted, nativeEvent, target, timeStamp, type) {}
 }
 
+class SyntheticTransitionEvent extends SyntheticEvent {
+  final String propertyName;
+  final num elapsedTime;
+  final String pseudoElement;
+
+  SyntheticTransitionEvent(
+      bubbles,
+      cancelable,
+      currentTarget,
+      _defaultPrevented,
+      _preventDefault,
+      stopPropagation,
+      eventPhase,
+      isTrusted,
+      nativeEvent,
+      target,
+      timeStamp,
+      type,
+      this.propertyName,
+      this.elapsedTime,
+      this.pseudoElement)
+      : super(bubbles, cancelable, currentTarget, _defaultPrevented, _preventDefault, stopPropagation, eventPhase,
+            isTrusted, nativeEvent, target, timeStamp, type) {}
+}
+
+class SyntheticAnimationEvent extends SyntheticEvent {
+  final String animationName;
+  final num elapsedTime;
+  final String pseudoElement;
+
+  SyntheticAnimationEvent(
+      bubbles,
+      cancelable,
+      currentTarget,
+      _defaultPrevented,
+      _preventDefault,
+      stopPropagation,
+      eventPhase,
+      isTrusted,
+      nativeEvent,
+      target,
+      timeStamp,
+      type,
+      this.animationName,
+      this.elapsedTime,
+      this.pseudoElement)
+      : super(bubbles, cancelable, currentTarget, _defaultPrevented, _preventDefault, stopPropagation, eventPhase,
+            isTrusted, nativeEvent, target, timeStamp, type) {}
+}
+
 class SyntheticUIEvent extends SyntheticEvent {
   final num detail;
   final /*DOMAbstractView*/ view;

@@ -731,6 +731,48 @@ SyntheticTouchEvent syntheticTouchEventFactory(events.SyntheticTouchEvent e) {
   );
 }
 
+/// Wrapper for [SyntheticTransitionEvent].
+SyntheticTransitionEvent syntheticTransitionEventFactory(events.SyntheticTransitionEvent e) {
+  return new SyntheticTransitionEvent(
+    e.bubbles,
+    e.cancelable,
+    e.currentTarget,
+    e.defaultPrevented,
+    () => e.preventDefault(),
+    () => e.stopPropagation(),
+    e.eventPhase,
+    e.isTrusted,
+    e.nativeEvent,
+    e.target,
+    e.timeStamp,
+    e.type,
+    e.propertyName,
+    e.elapsedTime,
+    e.pseudoElement,
+  );
+}
+
+/// Wrapper for [SyntheticAnimationEvent].
+SyntheticAnimationEvent syntheticAnimationEventFactory(events.SyntheticAnimationEvent e) {
+  return new SyntheticAnimationEvent(
+    e.bubbles,
+    e.cancelable,
+    e.currentTarget,
+    e.defaultPrevented,
+    () => e.preventDefault(),
+    () => e.stopPropagation(),
+    e.eventPhase,
+    e.isTrusted,
+    e.nativeEvent,
+    e.target,
+    e.timeStamp,
+    e.type,
+    e.animationName,
+    e.elapsedTime,
+    e.pseudoElement,
+  );
+}
+
 /// Wrapper for [SyntheticUIEvent].
 SyntheticUIEvent syntheticUIEventFactory(events.SyntheticUIEvent e) {
   return new SyntheticUIEvent(

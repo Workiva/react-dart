@@ -58,6 +58,12 @@ typedef bool ComponentTestFunction(/* [1] */ component);
 /// This should include all events documented at:
 /// http://facebook.github.io/react/docs/events.html
 class Simulate {
+  static void animationEnd(/* [1] */ componentOrNode, [Map eventData = const {}]) =>
+      simulate_wrappers.Simulate.animationEnd(componentOrNode, jsify(eventData));
+  static void animationIteration(/* [1] */ componentOrNode, [Map eventData = const {}]) =>
+      simulate_wrappers.Simulate.animationIteration(componentOrNode, jsify(eventData));
+  static void animationStart(/* [1] */ componentOrNode, [Map eventData = const {}]) =>
+      simulate_wrappers.Simulate.animationStart(componentOrNode, jsify(eventData));
   static void blur(/* [1] */ componentOrNode, [Map eventData = const {}]) =>
       simulate_wrappers.Simulate.blur(componentOrNode, jsify(eventData));
   static void change(/* [1] */ componentOrNode, [Map eventData = const {}]) =>
@@ -122,6 +128,8 @@ class Simulate {
       simulate_wrappers.Simulate.touchMove(componentOrNode, jsify(eventData));
   static void touchStart(/* [1] */ componentOrNode, [Map eventData = const {}]) =>
       simulate_wrappers.Simulate.touchStart(componentOrNode, jsify(eventData));
+  static void transitionEnd(/* [1] */ componentOrNode, [Map eventData = const {}]) =>
+      simulate_wrappers.Simulate.transitionEnd(componentOrNode, jsify(eventData));
   static void wheel(/* [1] */ componentOrNode, [Map eventData = const {}]) =>
       simulate_wrappers.Simulate.wheel(componentOrNode, jsify(eventData));
 }
