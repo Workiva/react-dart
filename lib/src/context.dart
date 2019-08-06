@@ -106,7 +106,8 @@ ReactDartContext createContext([
   int Function(dynamic currentValue, dynamic nextValue) calculateChangedBits,
 ]) {
   int jsifyCalculateChangedBitsArgs(currentValue, nextValue) {
-    return calculateChangedBits(ContextHelpers.unjsifyNewContext(currentValue), ContextHelpers.unjsifyNewContext(nextValue));
+    return calculateChangedBits(
+        ContextHelpers.unjsifyNewContext(currentValue), ContextHelpers.unjsifyNewContext(nextValue));
   }
 
   var JSContext = React.createContext(ContextHelpers.jsifyNewContext(defaultValue),
@@ -144,4 +145,3 @@ class ContextHelpers {
     return interopContext;
   }
 }
-
