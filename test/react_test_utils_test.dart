@@ -82,8 +82,6 @@ void main() {
       });
     }
 
-    ;
-
     group('event', () {
       group('blur', () => testEvent(Simulate.blur, 'blur'));
       group('change', () => testEvent(Simulate.change, 'change'));
