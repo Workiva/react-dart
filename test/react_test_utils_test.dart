@@ -82,9 +82,10 @@ void main() {
       });
     }
 
-    ;
-
     group('event', () {
+      group('animationEnd', () => testEvent(Simulate.animationEnd, 'animationEnd'));
+      group('animationIteration', () => testEvent(Simulate.animationIteration, 'animationIteration'));
+      group('animationStart', () => testEvent(Simulate.animationStart, 'animationStart'));
       group('blur', () => testEvent(Simulate.blur, 'blur'));
       group('change', () => testEvent(Simulate.change, 'change'));
       group('click', () => testEvent(Simulate.click, 'click'));
@@ -116,10 +117,14 @@ void main() {
       group('touchEnd', () => testEvent(Simulate.touchEnd, 'touchEnd'));
       group('touchMove', () => testEvent(Simulate.touchMove, 'touchMove'));
       group('touchStart', () => testEvent(Simulate.touchStart, 'touchStart'));
+      group('transitionEnd', () => testEvent(Simulate.transitionEnd, 'transitionEnd'));
       group('wheel', () => testEvent(Simulate.wheel, 'wheel'));
     });
 
     group('native event', () {
+      group('animationEnd', () => testEvent(SimulateNative.animationEnd, 'animationEnd'));
+      group('animationIteration', () => testEvent(SimulateNative.animationIteration, 'animationIteration'));
+      group('animationStart', () => testEvent(SimulateNative.animationStart, 'animationStart'));
       group('blur', () => testEvent(SimulateNative.blur, 'blur'));
       group('click', () => testEvent(SimulateNative.click, 'click'));
       group('copy', () => testEvent(SimulateNative.copy, 'copy'));
@@ -149,6 +154,7 @@ void main() {
       group('touchEnd', () => testEvent(SimulateNative.touchEnd, 'touchEnd'));
       group('touchMove', () => testEvent(SimulateNative.touchMove, 'touchMove'));
       group('touchStart', () => testEvent(SimulateNative.touchStart, 'touchStart'));
+      group('transitionEnd', () => testEvent(SimulateNative.transitionEnd, 'transitionEnd'));
       group('wheel', () => testEvent(SimulateNative.wheel, 'wheel'));
     });
   });

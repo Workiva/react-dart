@@ -101,6 +101,22 @@ class SyntheticTouchEvent extends SyntheticEvent {
 
 @JS()
 @anonymous
+class SyntheticTransitionEvent extends SyntheticEvent {
+  external String get propertyName;
+  external num get elapsedTime;
+  external String get pseudoElement;
+}
+
+@JS()
+@anonymous
+class SyntheticAnimationEvent extends SyntheticEvent {
+  external String get animationName;
+  external num get elapsedTime;
+  external String get pseudoElement;
+}
+
+@JS()
+@anonymous
 class SyntheticUIEvent extends SyntheticEvent {
   external num get detail;
   external get view;

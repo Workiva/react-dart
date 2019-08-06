@@ -51,6 +51,14 @@ final Map<String, Function> eventPropKeyToEventFactory = (() {
     'onTouchMove': syntheticTouchEventFactory,
     'onTouchStart': syntheticTouchEventFactory,
 
+    // SyntheticTransitionEvent
+    'onTransitionEnd': syntheticTransitionEventFactory,
+
+    // SyntheticAnimationEvent
+    'onAnimationEnd': syntheticAnimationEventFactory,
+    'onAnimationIteration': syntheticAnimationEventFactory,
+    'onAnimationStart': syntheticAnimationEventFactory,
+
     // SyntheticUIEvent
     'onScroll': syntheticUIEventFactory,
 
