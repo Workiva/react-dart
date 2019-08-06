@@ -33,7 +33,7 @@ export 'package:react/react.dart' show ReactComponentFactoryProxy, ComponentFact
 /// The type of [Component.ref] specified as a callback.
 ///
 /// See: <https://facebook.github.io/react/docs/more-about-refs.html#the-ref-callback-attribute>
-typedef _CallbackRef(componentOrDomNode);
+typedef _CallbackRef<T>(T componentOrDomNode);
 
 /// Prepares [children] to be passed to the ReactJS [React.createElement] and
 /// the Dart [react.Component].
@@ -1101,6 +1101,48 @@ SyntheticTouchEvent syntheticTouchEventFactory(events.SyntheticTouchEvent e) {
     e.shiftKey,
     e.targetTouches,
     e.touches,
+  );
+}
+
+/// Wrapper for [SyntheticTransitionEvent].
+SyntheticTransitionEvent syntheticTransitionEventFactory(events.SyntheticTransitionEvent e) {
+  return new SyntheticTransitionEvent(
+    e.bubbles,
+    e.cancelable,
+    e.currentTarget,
+    e.defaultPrevented,
+    () => e.preventDefault(),
+    () => e.stopPropagation(),
+    e.eventPhase,
+    e.isTrusted,
+    e.nativeEvent,
+    e.target,
+    e.timeStamp,
+    e.type,
+    e.propertyName,
+    e.elapsedTime,
+    e.pseudoElement,
+  );
+}
+
+/// Wrapper for [SyntheticAnimationEvent].
+SyntheticAnimationEvent syntheticAnimationEventFactory(events.SyntheticAnimationEvent e) {
+  return new SyntheticAnimationEvent(
+    e.bubbles,
+    e.cancelable,
+    e.currentTarget,
+    e.defaultPrevented,
+    () => e.preventDefault(),
+    () => e.stopPropagation(),
+    e.eventPhase,
+    e.isTrusted,
+    e.nativeEvent,
+    e.target,
+    e.timeStamp,
+    e.type,
+    e.animationName,
+    e.elapsedTime,
+    e.pseudoElement,
   );
 }
 
