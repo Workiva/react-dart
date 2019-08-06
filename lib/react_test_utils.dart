@@ -151,6 +151,12 @@ class Simulate {
 ///   which the `react` Dart package will be upgrading to in the `5.0.0` release.
 @Deprecated('5.0.0')
 class SimulateNative {
+  static void animationEnd(/* [1] */ componentOrNode, [Map eventData = const {}]) =>
+      simulate_wrappers.SimulateNative.animationEnd(componentOrNode, jsify(eventData));
+  static void animationIteration(/* [1] */ componentOrNode, [Map eventData = const {}]) =>
+      simulate_wrappers.SimulateNative.animationIteration(componentOrNode, jsify(eventData));
+  static void animationStart(/* [1] */ componentOrNode, [Map eventData = const {}]) =>
+      simulate_wrappers.SimulateNative.animationStart(componentOrNode, jsify(eventData));
   static void blur(/* [1] */ componentOrNode, [Map eventData = const {}]) =>
       simulate_wrappers.SimulateNative.blur(componentOrNode, jsify(eventData));
   static void click(/* [1] */ componentOrNode, [Map eventData = const {}]) =>
@@ -211,6 +217,8 @@ class SimulateNative {
       simulate_wrappers.SimulateNative.touchMove(componentOrNode, jsify(eventData));
   static void touchStart(/* [1] */ componentOrNode, [Map eventData = const {}]) =>
       simulate_wrappers.SimulateNative.touchStart(componentOrNode, jsify(eventData));
+  static void transitionEnd(/* [1] */ componentOrNode, [Map eventData = const {}]) =>
+      simulate_wrappers.SimulateNative.transitionEnd(componentOrNode, jsify(eventData));
   static void wheel(/* [1] */ componentOrNode, [Map eventData = const {}]) =>
       simulate_wrappers.SimulateNative.wheel(componentOrNode, jsify(eventData));
 }
