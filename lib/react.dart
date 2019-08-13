@@ -870,7 +870,7 @@ abstract class Component2 implements Component {
   /// If you call [setState] within this method, [render] will see the updated state and will be executed only once
   /// despite the [state] value change.
   ///
-  /// See: <https://facebook.github.io/react/docs/react-component.html#mounting-componentwillmount>
+  /// See: <https://facebook.github.io/react/docs/react-component.html#unsafe_componentwillmount>
   ///
   /// > __DEPRECATED - DO NOT USE__
   /// >
@@ -887,6 +887,9 @@ abstract class Component2 implements Component {
   /// [setState]. The old props can be accessed via [props].
   ///
   /// Calling [setState] within this function will not trigger an additional [render].
+  ///
+  /// See: <https://facebook.github.io/react/docs/react-component.html#unsafe_componentwillreceiveprops>
+  ///
   /// > __DEPRECATED - DO NOT USE__
   /// >
   /// > This will be removed once 6.0.0 releases, switching to [Component2.getDerivedStateFromProps] is the path forward
@@ -908,7 +911,7 @@ abstract class Component2 implements Component {
   /// __Note__: Choose either this method or [componentWillUpdateWithContext]. They are both called at the same time so
   /// using both provides no added benefit.
   ///
-  /// See: <https://facebook.github.io/react/docs/react-component.html#updating-componentwillupdate>
+  /// See: <https://facebook.github.io/react/docs/react-component.html#unsafe_componentwillupdate>
   ///
   /// > __DEPRECATED - DO NOT USE__
   /// >
