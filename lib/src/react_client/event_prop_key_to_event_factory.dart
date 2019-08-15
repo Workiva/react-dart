@@ -1,4 +1,4 @@
-import 'package:react/react_client.dart';
+import 'package:react/src/react_client/synthetic_event/synthetic_event.dart';
 
 /// A mapping from event prop keys to their respective event factories.
 ///
@@ -6,76 +6,76 @@ import 'package:react/react_client.dart';
 final Map<String, Function> eventPropKeyToEventFactory = (() {
   var _eventPropKeyToEventFactory = <String, Function>{
     // SyntheticClipboardEvent
-    'onCopy': syntheticClipboardEventFactory,
-    'onCut': syntheticClipboardEventFactory,
-    'onPaste': syntheticClipboardEventFactory,
+    'onCopy': syntheticClipboardEventV2Factory,
+    'onCut': syntheticClipboardEventV2Factory,
+    'onPaste': syntheticClipboardEventV2Factory,
 
     // SyntheticKeyboardEvent
-    'onKeyDown': syntheticKeyboardEventFactory,
-    'onKeyPress': syntheticKeyboardEventFactory,
-    'onKeyUp': syntheticKeyboardEventFactory,
+    'onKeyDown': syntheticKeyboardEventV2Factory,
+    'onKeyPress': syntheticKeyboardEventV2Factory,
+    'onKeyUp': syntheticKeyboardEventV2Factory,
 
     // SyntheticFocusEvent
-    'onFocus': syntheticFocusEventFactory,
-    'onBlur': syntheticFocusEventFactory,
+    'onFocus': syntheticFocusEventV2Factory,
+    'onBlur': syntheticFocusEventV2Factory,
 
     // SyntheticFormEvent
-    'onChange': syntheticFormEventFactory,
-    'onInput': syntheticFormEventFactory,
-    'onSubmit': syntheticFormEventFactory,
-    'onReset': syntheticFormEventFactory,
+    'onChange': syntheticFormEventV2Factory,
+    'onInput': syntheticFormEventV2Factory,
+    'onSubmit': syntheticFormEventV2Factory,
+    'onReset': syntheticFormEventV2Factory,
 
     // SyntheticMouseEvent
-    'onClick': syntheticMouseEventFactory,
-    'onContextMenu': syntheticMouseEventFactory,
-    'onDoubleClick': syntheticMouseEventFactory,
-    'onDrag': syntheticMouseEventFactory,
-    'onDragEnd': syntheticMouseEventFactory,
-    'onDragEnter': syntheticMouseEventFactory,
-    'onDragExit': syntheticMouseEventFactory,
-    'onDragLeave': syntheticMouseEventFactory,
-    'onDragOver': syntheticMouseEventFactory,
-    'onDragStart': syntheticMouseEventFactory,
-    'onDrop': syntheticMouseEventFactory,
-    'onMouseDown': syntheticMouseEventFactory,
-    'onMouseEnter': syntheticMouseEventFactory,
-    'onMouseLeave': syntheticMouseEventFactory,
-    'onMouseMove': syntheticMouseEventFactory,
-    'onMouseOut': syntheticMouseEventFactory,
-    'onMouseOver': syntheticMouseEventFactory,
-    'onMouseUp': syntheticMouseEventFactory,
+    'onClick': syntheticMouseEventV2Factory,
+    'onContextMenu': syntheticMouseEventV2Factory,
+    'onDoubleClick': syntheticMouseEventV2Factory,
+    'onDrag': syntheticMouseEventV2Factory,
+    'onDragEnd': syntheticMouseEventV2Factory,
+    'onDragEnter': syntheticMouseEventV2Factory,
+    'onDragExit': syntheticMouseEventV2Factory,
+    'onDragLeave': syntheticMouseEventV2Factory,
+    'onDragOver': syntheticMouseEventV2Factory,
+    'onDragStart': syntheticMouseEventV2Factory,
+    'onDrop': syntheticMouseEventV2Factory,
+    'onMouseDown': syntheticMouseEventV2Factory,
+    'onMouseEnter': syntheticMouseEventV2Factory,
+    'onMouseLeave': syntheticMouseEventV2Factory,
+    'onMouseMove': syntheticMouseEventV2Factory,
+    'onMouseOut': syntheticMouseEventV2Factory,
+    'onMouseOver': syntheticMouseEventV2Factory,
+    'onMouseUp': syntheticMouseEventV2Factory,
 
     // SyntheticPointerEvent
-    'onGotPointerCapture': syntheticPointerEventFactory,
-    'onLostPointerCapture': syntheticPointerEventFactory,
-    'onPointerCancel': syntheticPointerEventFactory,
-    'onPointerDown': syntheticPointerEventFactory,
-    'onPointerEnter': syntheticPointerEventFactory,
-    'onPointerLeave': syntheticPointerEventFactory,
-    'onPointerMove': syntheticPointerEventFactory,
-    'onPointerOver': syntheticPointerEventFactory,
-    'onPointerOut': syntheticPointerEventFactory,
-    'onPointerUp': syntheticPointerEventFactory,
+    'onGotPointerCapture': syntheticPointerEventV2Factory,
+    'onLostPointerCapture': syntheticPointerEventV2Factory,
+    'onPointerCancel': syntheticPointerEventV2Factory,
+    'onPointerDown': syntheticPointerEventV2Factory,
+    'onPointerEnter': syntheticPointerEventV2Factory,
+    'onPointerLeave': syntheticPointerEventV2Factory,
+    'onPointerMove': syntheticPointerEventV2Factory,
+    'onPointerOver': syntheticPointerEventV2Factory,
+    'onPointerOut': syntheticPointerEventV2Factory,
+    'onPointerUp': syntheticPointerEventV2Factory,
 
     // SyntheticTouchEvent
-    'onTouchCancel': syntheticTouchEventFactory,
-    'onTouchEnd': syntheticTouchEventFactory,
-    'onTouchMove': syntheticTouchEventFactory,
-    'onTouchStart': syntheticTouchEventFactory,
+    'onTouchCancel': syntheticTouchEventV2Factory,
+    'onTouchEnd': syntheticTouchEventV2Factory,
+    'onTouchMove': syntheticTouchEventV2Factory,
+    'onTouchStart': syntheticTouchEventV2Factory,
 
     // SyntheticTransitionEvent
-    'onTransitionEnd': syntheticTransitionEventFactory,
+    'onTransitionEnd': syntheticTransitionEventV2Factory,
 
     // SyntheticAnimationEvent
-    'onAnimationEnd': syntheticAnimationEventFactory,
-    'onAnimationIteration': syntheticAnimationEventFactory,
-    'onAnimationStart': syntheticAnimationEventFactory,
+    'onAnimationEnd': syntheticAnimationEventV2Factory,
+    'onAnimationIteration': syntheticAnimationEventV2Factory,
+    'onAnimationStart': syntheticAnimationEventV2Factory,
 
     // SyntheticUIEvent
-    'onScroll': syntheticUIEventFactory,
+    'onScroll': syntheticUIEventV2Factory,
 
     // SyntheticWheelEvent
-    'onWheel': syntheticWheelEventFactory,
+    'onWheel': syntheticWheelEventV2Factory,
   };
 
   // Add support for capturing variants; e.g., onClick/onClickCapture
