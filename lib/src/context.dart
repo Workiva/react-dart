@@ -71,7 +71,7 @@ class Context {
 ///
 /// __Example__:
 ///
-///     Context MyContext = createContext('test');
+///     react.Context MyContext = react.createContext('test');
 ///
 ///     class MyContextTypeClass extends react.Component2 {
 ///       @override
@@ -86,7 +86,7 @@ class Context {
 ///
 /// ___ OR ___
 ///
-///     Context MyContext = createContext();
+///     react.Context MyContext = react.createContext();
 ///
 ///     class MyClass extends react.Component2 {
 ///       render() {
@@ -126,7 +126,7 @@ external get _reactDartContextSymbol;
 /// A context utility for to assist with common needs of ReactDartContext.
 ///
 /// __For internal/advanced use only.__
-class ContextHelpers {
+abstract class ContextHelpers {
   // Wraps context value in a JS Object for use on the JS side.
   // It is wrapped so that the same Dart value can be retrieved from Dart with [_unjsifyNewContext].
   static dynamic jsifyNewContext(dynamic context) {
