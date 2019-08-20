@@ -682,11 +682,7 @@ external List getUpdatingSetStateLifeCycleCalls();
 external List getNonUpdatingSetStateLifeCycleCalls();
 
 /// A test helper to record lifecycle calls
-abstract class LifecycleTestHelper {
-  Map context;
-  Map props;
-  Map state;
-
+abstract class LifecycleTestHelper implements react.Component {
   List lifecycleCalls = [];
 
   dynamic lifecycleCall(String memberName, {List arguments: const [], defaultReturnValue()}) {
