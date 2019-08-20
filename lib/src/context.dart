@@ -47,7 +47,7 @@ import 'package:react/react_client.dart';
 ///     }
 ///
 /// Learn more at: https://reactjs.org/docs/context.html
-class Context {
+class Context<TValue>{
   Context(this.Provider, this.Consumer, this._jsThis);
   final ReactContext _jsThis;
 
@@ -55,11 +55,11 @@ class Context {
   /// to context changes.
   ///
   /// Accepts a `value` prop to be passed to consuming components that are descendants of this [Provider].
-  final ReactJsContextComponentFactoryProxy Provider;
+  final ReactJsContextComponentFactoryProxy<TValue> Provider;
 
   /// A React component that subscribes to context changes.
   /// Requires a function as a child. The function receives the current context value and returns a React node.
-  final ReactJsContextComponentFactoryProxy Consumer;
+  final ReactJsContextComponentFactoryProxy<TValue> Consumer;
   ReactContext get jsThis => _jsThis;
 }
 
@@ -101,9 +101,9 @@ class Context {
 ///     }
 ///
 /// Learn more: https://reactjs.org/docs/context.html#reactcreatecontext
-Context createContext([
-  dynamic defaultValue,
-  int Function(dynamic currentValue, dynamic nextValue) calculateChangedBits,
+Context<TValue> createContext<TValue>([
+  TValue defaultValue,
+  int Function(TValue currentValue, TValue nextValue) calculateChangedBits,
 ]) {
   int jsifyCalculateChangedBitsArgs(currentValue, nextValue) {
     return calculateChangedBits(
@@ -113,8 +113,8 @@ Context createContext([
   var JSContext = React.createContext(ContextHelpers.jsifyNewContext(defaultValue),
       calculateChangedBits != null ? allowInterop(jsifyCalculateChangedBitsArgs) : null);
   return Context(
-    new ReactJsContextComponentFactoryProxy(JSContext.Provider, isProvider: true),
-    new ReactJsContextComponentFactoryProxy(JSContext.Consumer, isConsumer: true),
+    new ReactJsContextComponentFactoryProxy<TValue>(JSContext.Provider, isProvider: true),
+    new ReactJsContextComponentFactoryProxy<TValue>(JSContext.Consumer, isConsumer: true),
     JSContext,
   );
 }
