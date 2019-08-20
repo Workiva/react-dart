@@ -47,7 +47,7 @@ import 'package:react/react_client.dart';
 ///     }
 ///
 /// Learn more at: https://reactjs.org/docs/context.html
-class Context<TValue>{
+class Context<TValue> {
   Context(this.Provider, this.Consumer, this._jsThis);
   final ReactContext _jsThis;
 
