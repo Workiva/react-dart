@@ -62,7 +62,7 @@ abstract class Component {
   /// >
   /// > It is strongly recommended that you do not use this, and instead wait for `Component2.context`.
   @experimental
-  set context(Map value) => _context = value;
+  set context(dynamic value) => _context = value;
 
   /// ReactJS [Component] props.
   ///
