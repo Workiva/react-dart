@@ -1,3 +1,6 @@
+## [4.9.1](https://github.com/cleandart/react-dart/compare/4.9.0...4.9.1)
+- [#205] Fix `context` setter typing to match getter and not fail `implicit_casts: false`
+
 ## [4.9.0](https://github.com/cleandart/react-dart/compare/4.8.1...4.9.0)
 - [#202] Add bindings for transition / animation events
 - [#198] Updates in preparation for 5.0.0 release
