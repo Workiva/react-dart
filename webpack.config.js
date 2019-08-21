@@ -61,10 +61,20 @@ function createExports(exportMappings) {
         devtool: "source-map",
       };
 
+      // `react-redux` requires `redux` but we do not utilize the one section that it is used.
+      // For reference, react-redux.js uses `redux` only one time ever, in [whenMapDispatchToPropsIsObject]
+      // and it calls `redux.bindActionCreators`.
+      //
+      // This line fakes any `require('redux')` calls, so that webpack will not include all of the `redux` code.
+      exportObject.externals[0]['redux'] = "window.Object";
+
       if ( !includeReact ) {
         // This forces any packages that require react as a dependacy to have the same instance of react that
         // is provided by our react js bundles.
         exportObject.externals[0].react = "window.React";
+
+        // Re-uses React.PropTypes setup in react.js instead of including the entire lib again.
+        exportObject.externals[0]['prop-types'] = "window.React.PropTypes";
       }
       exportObjects.push(exportObject);
     } else {

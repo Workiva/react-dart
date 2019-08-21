@@ -2,8 +2,6 @@
 import "dart:async";
 
 import "package:react/react.dart" as react;
-import 'package:react/react_client.dart';
-import 'package:react/react_client/js_backed_map.dart';
 import "package:react/react_dom.dart" as react_dom;
 
 class _HelloComponent extends react.Component2 {
@@ -272,7 +270,7 @@ int calculateChangedBits(currentValue, nextValue) {
   return result;
 }
 
-var TestNewContext = createContext({'renderCount': 0}, calculateChangedBits);
+var TestNewContext = react.createContext({'renderCount': 0}, calculateChangedBits);
 
 class _NewContextProviderComponent extends react.Component2 {
   _NewContextRefComponent componentRef;

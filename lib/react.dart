@@ -13,6 +13,9 @@ import 'package:react/react_client/js_interop_helpers.dart' show jsifyPropTypes;
 import 'package:react/src/typedefs.dart';
 import 'package:react/react_client.dart';
 import 'package:react/react_client/react_interop.dart';
+import 'package:react/src/context.dart';
+
+export 'package:react/src/context.dart';
 
 typedef Error PropValidator<TProps>(
     TProps props, String propName, String componentName, String location, String propFullName);
@@ -512,7 +515,7 @@ abstract class Component2 implements Component {
   ///     }
   ///
   /// See: <https://reactjs.org/docs/context.html#classcontexttype>
-  ReactDartContext get contextType => null;
+  Context get contextType => null;
 
   /// The context value from the [contextType] assigned to this component.
   /// The value is passed down from the provider of the same [contextType].

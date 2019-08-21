@@ -166,7 +166,7 @@ class PropTypesTestComponent extends react.Component2 {
   render() => '';
 }
 
-ReactDartContext LifecycleTestContext = createContext();
+react.Context LifecycleTestContext = react.createContext();
 
 ReactDartComponentFactoryProxy2 ContextConsumerWrapper = react.registerComponent(() => new _ContextConsumerWrapper());
 
