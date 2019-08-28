@@ -387,7 +387,7 @@ void sharedLifecycleTests<T extends react.Component>({
 }) {
   group('(shared behavior)', () {
     group('default props', () {
-      test('defaultProps getter is only called once per component factory and cached', () {
+      test('defaultProps is only called once per component factory and cached', () {
         final staticHelperInstance = defaultPropsCachingTestComponentFactory() as DefaultPropsCachingTestHelper;
         staticHelperInstance.staticGetDefaultPropsCallCount = 0;
         expect(staticHelperInstance.staticGetDefaultPropsCallCount, 0);

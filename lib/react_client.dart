@@ -513,11 +513,6 @@ abstract class _ReactDartInteropStatics2 {
         return component;
       });
 
-  static JsMap handleGetInitialState(Component2 component) => // dartfmt
-      componentZone.run(() {
-        return jsBackingMapOrJsCopy(component.getInitialState());
-      });
-
   static void handleComponentDidMount(Component2 component) => // dartfmt
       componentZone.run(() {
         component.componentDidMount();
@@ -607,7 +602,6 @@ abstract class _ReactDartInteropStatics2 {
 
   static final JsMap staticsForJs = jsifyAndAllowInterop({
     'initComponent': initComponent,
-    'handleGetInitialState': handleGetInitialState,
     'handleComponentDidMount': handleComponentDidMount,
     'handleGetDerivedStateFromProps': handleGetDerivedStateFromProps,
     'handleShouldComponentUpdate': handleShouldComponentUpdate,
@@ -766,9 +760,13 @@ ReactDartComponentFactoryProxy2 _registerComponent2(
   // Cache default props and store them on the ReactClass so they can be used
   // by ReactDartComponentFactoryProxy and externally.
   final JsBackedMap defaultProps = new JsBackedMap.from(
-      componentInstance.defaultProps.isNotEmpty ? componentInstance.defaultProps : componentInstance.getDefaultProps());
+      componentInstance.defaultProps.isNotEmpty ? componentInstance.defaultProps : {});
+
+  final JsBackedMap initialState = new JsBackedMap.from(
+      componentInstance.initialState.isNotEmpty ? componentInstance.initialState : {});
 
   var jsConfig2 = new JsComponentConfig2(
+    initialState: initialState.jsObject,
     defaultProps: defaultProps.jsObject,
     contextType: componentInstance.contextType?.jsThis,
     skipMethods: filteredSkipMethods,

@@ -519,6 +519,11 @@ abstract class Component2 implements Component {
   /// See: <https://reactjs.org/docs/react-component.html#defaultprops>
   Map get defaultProps => {};
 
+  /// Invoked once before the `Component` is mounted. The return value will be used as the initial value of [state].
+  ///
+  /// See: <https://facebook.github.io/react/docs/react-component.html#getinitialstate>
+  Map get initialState => {};
+
   /// The context value from the [contextType] assigned to this component.
   /// The value is passed down from the provider of the same [contextType].
   /// You can reference [context] in any of the lifecycle methods including the render function.
@@ -766,7 +771,9 @@ abstract class Component2 implements Component {
   /// Invoked once before the `Component` is mounted. The return value will be used as the initial value of [state].
   ///
   /// See: <https://facebook.github.io/react/docs/react-component.html#getinitialstate>
-  Map getInitialState() => const {};
+  Map getInitialState() {
+    _unsupportedLifecycleError('getInitialState');
+  }
 
   /// Invoked once and cached when [reactComponentClass] is called. Values in the mapping will be set on [props]
   /// if that prop is not specified by the parent component.
@@ -775,7 +782,9 @@ abstract class Component2 implements Component {
   /// that any complex objects returned by `getDefaultProps` will be shared across instances, not copied.
   ///
   /// See: <https://facebook.github.io/react/docs/react-component.html#getdefaultprops>
-  Map getDefaultProps() => const {};
+  Map getDefaultProps() {
+    _unsupportedLifecycleError('getDefaultProps');
+  }
 
   /// This is equivalent to `Constructor` in React 16, this is called before mounting
   /// See: <https://reactjs.org/docs/react-component.html#constructor>
