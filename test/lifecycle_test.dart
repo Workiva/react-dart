@@ -697,11 +697,7 @@ external String getUpdatingRenderedCounter();
 external String getNonUpdatingRenderedCounter();
 
 /// A test helper to record lifecycle calls
-abstract class LifecycleTestHelper {
-  Map context;
-  Map props;
-  Map state;
-
+abstract class LifecycleTestHelper implements react.Component {
   List lifecycleCalls = [];
 
   dynamic lifecycleCall(String memberName, {List arguments: const [], defaultReturnValue()}) {
