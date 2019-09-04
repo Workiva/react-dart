@@ -2,6 +2,7 @@
 // for details. All rights reserved. Use of this source code is governed by a
 // BSD-style license that can be found in the LICENSE file.
 
+@Deprecated('5.0.0')
 library react_test;
 
 import 'package:react/react.dart';
