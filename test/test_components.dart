@@ -6,6 +6,9 @@ class EventComponent extends Component {
   getInitialState() => {'text': ''};
   onEvent(SyntheticEvent e) => setState({'text': '${e.type} ${e.timeStamp}'});
   render() => div({
+        'onAnimationEnd': onEvent,
+        'onAnimationIteration': onEvent,
+        'onAnimationStart': onEvent,
         'onBlur': onEvent,
         'onChange': onEvent,
         'onClick': onEvent,
@@ -48,6 +51,7 @@ class EventComponent extends Component {
         'onTouchEnd': onEvent,
         'onTouchMove': onEvent,
         'onTouchStart': onEvent,
+        'onTransitionEnd': onEvent,
         'onWheel': onEvent
       }, state['text']);
 }

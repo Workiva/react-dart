@@ -13,11 +13,17 @@ cache:
 
 jobs:
   include:
-    - stage: Dart 2
+    - stage: Dart 2 stable
       dart: stable
       script:
         - dartanalyzer .
         - dartfmt --line-length=120 --dry-run --set-exit-if-changed .
         - pub run dependency_validator -i build_runner,build_test,build_web_compilers
         - pub run build_runner test --release -- -p chrome
+        - pub run build_runner test -- -p chrome
+    - stage: Dart 2 dev
+      dart: dev
+      script:
+        - dartanalyzer .
+        - pub run test -p chrome
         - pub run build_runner test -- -p chrome
