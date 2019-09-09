@@ -503,10 +503,10 @@ class _CustomException implements Exception {
 
 class _Component2ErrorTestComponent extends react.Component2 {
   Map get initialState => {
-      "clicked": false,
-      "errored": false,
-      "error": null,
-    };
+        "clicked": false,
+        "errored": false,
+        "error": null,
+      };
 
   void componentDidCatch(error, info) {
     if (error is _CustomException) {

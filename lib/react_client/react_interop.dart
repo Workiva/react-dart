@@ -159,7 +159,6 @@ abstract class PropTypes {
 @JS()
 @anonymous
 class ReactClass {
-
   /// The cached, unmodifiable copy of [Component.defaultProps] computed in
   /// [registerComponent2].
   ///
