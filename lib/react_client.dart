@@ -471,7 +471,6 @@ abstract class _ReactDartInteropStatics2 {
     component.context = ContextHelpers.unjsifyNewContext(jsContext);
   }
 
-  /// Wrapper for [Component.getInitialState].
   static Component2 initComponent(ReactComponent jsThis, ComponentStatics2 componentStatics) => // dartfmt
       componentZone.run(() {
         final component = componentStatics.componentFactory();
@@ -483,13 +482,11 @@ abstract class _ReactDartInteropStatics2 {
           ..props = new JsBackedMap.backedBy(jsThis.props)
           ..context = ContextHelpers.unjsifyNewContext(jsThis.context);
 
+        jsThis.state = jsBackingMapOrJsCopy(component.initialState);
+
+        component..state = new JsBackedMap.backedBy(jsThis.state);
+
         Component2Bridge.bridgeForComponent[component] = componentStatics.bridgeFactory(component);
-
-        component.init();
-        if (component.state != null) {
-          jsThis.state = new JsBackedMap.from(component.state).jsObject;
-        }
-
         return component;
       });
 
@@ -748,17 +745,12 @@ ReactDartComponentFactoryProxy2 _registerComponent2(
 
   // Cache default props and store them on the ReactClass so they can be used
   // by ReactDartComponentFactoryProxy and externally.
-  final JsBackedMap defaultProps =
-      new JsBackedMap.from(componentInstance.defaultProps.isNotEmpty ? componentInstance.defaultProps : {});
-
-  final JsBackedMap initialState =
-      new JsBackedMap.from(componentInstance.initialState.isNotEmpty ? componentInstance.initialState : {});
+  final JsBackedMap defaultProps = new JsBackedMap.from(componentInstance.defaultProps);
 
   final JsMap jsPropTypes =
       bridgeFactory(componentInstance).jsifyPropTypes(componentInstance, componentInstance.propTypes);
 
   var jsConfig2 = new JsComponentConfig2(
-    initialState: initialState.jsObject,
     defaultProps: defaultProps.jsObject,
     contextType: componentInstance.contextType?.jsThis,
     skipMethods: filteredSkipMethods,

@@ -16,21 +16,18 @@ ReactDartComponentFactoryProxy2 SkipMethodsTest =
 
 class _SetStateTest extends react.Component2 with LifecycleTestHelper {
   @override
-  Map getDefaultProps() => {
+  get defaultProps => {
         'shouldUpdate': true,
       };
 
   @override
-  void init() {
-    lifecycleCall('init');
-    initializeState({
-      'counter': 1,
-      'shouldThrow': true,
-      'errorFromGetDerivedState': '',
-      'error': '',
-      'info': '',
-    });
-  }
+  get initialState => {
+        'counter': 1,
+        'shouldThrow': true,
+        'errorFromGetDerivedState': '',
+        'error': '',
+        'info': '',
+      };
 
   @override
   Map getDerivedStateFromProps(_, __) {
@@ -245,13 +242,7 @@ class _LifecycleTest extends react.Component2 with LifecycleTestHelper {
 
   dynamic render() => lifecycleCall('render', defaultReturnValue: () => react.div({}));
 
-  Map get initialState => lifecycleCall('getInitialState', defaultReturnValue: () => {});
+  Map get initialState => lifecycleCall('initialState', defaultReturnValue: () => {});
 
-  void init() => lifecycleCall('init', defaultReturnValue: () => {});
-
-  Map get defaultProps {
-    lifecycleCall('getDefaultProps');
-
-    return {'defaultProp': 'default'};
-  }
+  Map get defaultProps => lifecycleCall('defaultProps', defaultReturnValue: () => {'defaultProp': 'default'});
 }

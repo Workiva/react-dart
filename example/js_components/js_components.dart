@@ -22,7 +22,7 @@ var IndexComponent = react.registerComponent(() => new _IndexComponent());
 class _IndexComponent extends react.Component2 {
   SimpleCustomComponent simpleRef;
 
-  getInitialState() => {
+  get initialState => {
         'open': false,
       };
 

@@ -92,7 +92,6 @@ function _createReactDartComponentClass2(dartInteropStatics, componentStatics, j
     constructor(props, context) {
       super(props, context);
       // TODO combine these two calls into one
-      this.state = jsConfig.initialState;
       this.dartComponent = dartInteropStatics.initComponent(this, componentStatics);
     }
 

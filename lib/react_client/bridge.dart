@@ -42,7 +42,6 @@ abstract class Component2Bridge {
   void setState(Component2 component, Map newState, SetStateCallback callback);
   void setStateWithUpdater(Component2 component, StateUpdaterCallback stateUpdater, SetStateCallback callback);
   void forceUpdate(Component2 component, SetStateCallback callback);
-  void initializeState(Component2 component, Map state);
   JsMap jsifyPropTypes(Component2 component, Map propTypes);
 }
 
@@ -82,12 +81,6 @@ class Component2BridgeImpl extends Component2Bridge {
         callback();
       }));
     }
-  }
-
-  @override
-  void initializeState(Component2 component, Map state) {
-    dynamic jsState = jsBackingMapOrJsCopy(state);
-    component.jsThis.state = jsState;
   }
 
   @override
