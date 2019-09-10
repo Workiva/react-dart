@@ -24,8 +24,10 @@ import 'package:js/js.dart';
 class JsBackedMap extends MapBase<dynamic, dynamic> {
   final JsMap jsObject;
 
+  /// Creates a JsBackedMap instance backed by a new [jsObject].
   JsBackedMap() : jsObject = new JsMap();
 
+  /// Creates a JsBackedMap instance backed by [jsObject].
   JsBackedMap.backedBy(this.jsObject);
 
   /// Creates a JsBackedMap instance that contains all key/value pairs of [other].
