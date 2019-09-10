@@ -870,7 +870,7 @@ abstract class Component2 implements Component {
   ///
   /// > __DEPRECATED - DO NOT USE__
   /// >
-  /// > Use [init] instead
+  /// > Use [componentDidMount] instead
   @mustCallSuper
   @Deprecated('6.0.0')
   void componentWillMount() => _unsupportedLifecycleError('componentWillMount');
