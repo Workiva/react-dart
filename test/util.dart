@@ -32,8 +32,8 @@ bool isDartComponent(ReactElement element) {
   return element.type is! String && (element.type as ReactClass).dartComponentVersion != null;
 }
 
-react.Component getDartComponent(ReactComponent dartComponent) {
-  return dartComponent.dartComponent;
+T getDartComponent<T extends react.Component>(ReactComponent dartComponent) {
+  return dartComponent.dartComponent as T;
 }
 
 Map getDartComponentProps(ReactComponent dartComponent) {
