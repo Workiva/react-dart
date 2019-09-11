@@ -1,4 +1,5 @@
 import 'package:js/js.dart';
+import 'package:meta/meta.dart';
 import 'package:react/react.dart';
 import 'package:react/react_client/js_backed_map.dart';
 import 'package:react/react_client/react_interop.dart';
@@ -27,6 +28,10 @@ typedef Component2BridgeFactory = Component2Bridge Function(Component2 component
 ///
 /// __For internal/advanced use only.__
 abstract class Component2Bridge {
+  /// Associates a bridge with a component instance.
+  ///
+  /// Protected; use [forComponent] instead.
+  @protected
   static final Expando<Component2Bridge> bridgeForComponent = new Expando();
 
   const Component2Bridge();
