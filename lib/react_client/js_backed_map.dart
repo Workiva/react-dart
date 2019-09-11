@@ -117,6 +117,9 @@ class JsBackedMap extends MapBase<dynamic, dynamic> {
       return jsObject.hashCode;
     } catch (_) {}
 
+    // While constant hashCode like this one are not high-quality and may cause
+    // hashCode collisions more often, they are completely valid.
+    // For more information, see the `Object.hashCode` doc comment.
     return 0;
   }
 }

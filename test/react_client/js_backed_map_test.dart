@@ -72,6 +72,7 @@ main() {
         'baz': 3,
       });
     });
+
     test('is equal to other instances backed by the same JS object', () {
       final jsObjectA = JsMap();
       final jsObjectB = JsMap();
