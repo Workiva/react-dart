@@ -855,12 +855,12 @@ Map unconvertJsProps(/* ReactElement|ReactComponent */ instance) {
   // Convert the nested style map so it can be read by Dart code.
   var style = props['style'];
   if (style != null) {
-      if (style is! Map) {
-        props['style'] = Map<String, dynamic>.from(JsBackedMap.backedBy(style));
-      } else {
-        props['style'] = Map<String, dynamic>.from(JsBackedMap.from(style));
-      }
+    if (style is! Map) {
+      props['style'] = Map<String, dynamic>.from(JsBackedMap.backedBy(style));
+    } else {
+      props['style'] = Map<String, dynamic>.from(JsBackedMap.from(style));
     }
+  }
 
   return props;
 }
