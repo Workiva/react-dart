@@ -523,12 +523,32 @@ abstract class Component2 implements Component {
   /// This method is invoked before any instances are created and thus cannot rely on [props]. In addition, be aware
   /// that any complex objects returned by `defaultProps` will be shared across instances, not copied.
   ///
-  /// See: <https://reactjs.org/docs/react-component.html#defaultprops>
+  /// __Example__:
+  ///
+  ///     // ES6 component
+  ///     Component.defaultProps = {
+  ///       count: 0
+  ///     };
+  ///
+  ///     // Dart component
+  ///     @override
+  ///     get defaultProps => {'count': 0};
+  ///
   Map get defaultProps => const {};
 
   /// Invoked once before the `Component` is mounted. The return value will be used as the initial value of [state].
   ///
-  /// See: <https://facebook.github.io/react/docs/react-component.html#getinitialstate>
+  /// __Example__:
+  ///
+  ///     // ES6 component
+  ///     constructor() {
+  ///       this.state = {count: 0};
+  ///     }
+  ///
+  ///     // Dart component
+  ///     @override
+  ///     get initialState => {'count': 0};
+  ///
   Map get initialState => const {};
 
   /// The context value from the [contextType] assigned to this component.
