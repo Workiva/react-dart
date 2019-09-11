@@ -484,7 +484,7 @@ abstract class _ReactDartInteropStatics2 {
 
         jsThis.state = jsBackingMapOrJsCopy(component.initialState);
 
-        component..state = new JsBackedMap.backedBy(jsThis.state);
+        component.state = new JsBackedMap.backedBy(jsThis.state);
 
         Component2Bridge.bridgeForComponent[component] = componentStatics.bridgeFactory(component);
         return component;

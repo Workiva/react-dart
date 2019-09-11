@@ -587,7 +587,6 @@ class JsComponentConfig {
 class JsComponentConfig2 {
   external factory JsComponentConfig2({
     dynamic contextType,
-    JsMap initialState,
     JsMap defaultProps,
     JsMap propTypes,
     @required List<String> skipMethods,
