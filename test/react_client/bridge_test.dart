@@ -20,7 +20,9 @@ main() {
       });
 
       test('can be a custom bridge specified via registerComponent2', () {
-        customBridgeCalls.clear();
+        customBridgeCalls = [];
+        addTearDown(() => customBridgeCalls = null);
+
         final instance = getDartComponent<_BridgeTest>(render(BridgeTest({})));
         final bridge = Component2Bridge.forComponent(instance);
         expect(bridge, isNotNull);
@@ -52,11 +54,11 @@ class _Foo extends react.Component2 {
   render() => react.div({});
 }
 
-final customBridgeCalls = [];
+List<Map> customBridgeCalls;
 
 final BridgeTest = react.registerComponent2(() => new _BridgeTest(), bridgeFactory: (component) {
   final returnedBridge = new CustomComponent2Bridge();
-  customBridgeCalls.add({
+  customBridgeCalls?.add({
     'component': component,
     'returnedBridge': returnedBridge,
   });
