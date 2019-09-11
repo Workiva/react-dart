@@ -524,12 +524,12 @@ abstract class Component2 implements Component {
   /// that any complex objects returned by `defaultProps` will be shared across instances, not copied.
   ///
   /// See: <https://reactjs.org/docs/react-component.html#defaultprops>
-  Map get defaultProps => {};
+  Map get defaultProps => const {};
 
   /// Invoked once before the `Component` is mounted. The return value will be used as the initial value of [state].
   ///
   /// See: <https://facebook.github.io/react/docs/react-component.html#getinitialstate>
-  Map get initialState => {};
+  Map get initialState => const {};
 
   /// The context value from the [contextType] assigned to this component.
   /// The value is passed down from the provider of the same [contextType].
@@ -834,6 +834,7 @@ abstract class Component2 implements Component {
   /// Invoked once before the `Component` is mounted. The return value will be used as the initial value of [state].
   ///
   /// See: <https://facebook.github.io/react/docs/react-component.html#getinitialstate>
+  ///
   /// > __DEPRECATED - DO NOT USE__
   /// >
   /// > Use the [initialState] getter instead.
