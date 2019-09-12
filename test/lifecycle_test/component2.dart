@@ -16,21 +16,18 @@ ReactDartComponentFactoryProxy2 SkipMethodsTest =
 
 class _SetStateTest extends react.Component2 with LifecycleTestHelper {
   @override
-  Map getDefaultProps() => {
+  get defaultProps => {
         'shouldUpdate': true,
       };
 
   @override
-  void init() {
-    lifecycleCall('init');
-    initializeState({
-      'counter': 1,
-      'shouldThrow': true,
-      'errorFromGetDerivedState': '',
-      'error': '',
-      'info': '',
-    });
-  }
+  get initialState => {
+        'counter': 1,
+        'shouldThrow': true,
+        'errorFromGetDerivedState': '',
+        'error': '',
+        'info': '',
+      };
 
   @override
   Map getDerivedStateFromProps(_, __) {
@@ -132,7 +129,7 @@ class _DefaultPropsCachingTest extends react.Component2 implements DefaultPropsC
   @override
   set staticGetDefaultPropsCallCount(int value) => getDefaultPropsCallCount = value;
 
-  Map getDefaultProps() {
+  Map get defaultProps {
     getDefaultPropsCallCount++;
     return {'getDefaultPropsCallCount': getDefaultPropsCallCount};
   }
@@ -145,7 +142,7 @@ ReactDartComponentFactoryProxy2 DefaultPropsTest = react.registerComponent(() =>
 class _DefaultPropsTest extends react.Component2 {
   static int getDefaultPropsCallCount = 0;
 
-  Map getDefaultProps() => {'defaultProp': 'default'};
+  Map get defaultProps => {'defaultProp': 'default'};
 
   render() => false;
 }
@@ -245,13 +242,7 @@ class _LifecycleTest extends react.Component2 with LifecycleTestHelper {
 
   dynamic render() => lifecycleCall('render', defaultReturnValue: () => react.div({}));
 
-  Map getInitialState() => lifecycleCall('getInitialState', defaultReturnValue: () => {});
+  Map get initialState => lifecycleCall('initialState', defaultReturnValue: () => {});
 
-  void init() => lifecycleCall('init', defaultReturnValue: () => {});
-
-  Map getDefaultProps() {
-    lifecycleCall('getDefaultProps');
-
-    return {'defaultProp': 'default'};
-  }
+  Map get defaultProps => lifecycleCall('defaultProps', defaultReturnValue: () => {'defaultProp': 'default'});
 }

@@ -471,7 +471,6 @@ abstract class _ReactDartInteropStatics2 {
     component.context = ContextHelpers.unjsifyNewContext(jsContext);
   }
 
-  /// Wrapper for [Component.getInitialState].
   static Component2 initComponent(ReactComponent jsThis, ComponentStatics2 componentStatics) => // dartfmt
       componentZone.run(() {
         final component = componentStatics.componentFactory();
@@ -483,19 +482,12 @@ abstract class _ReactDartInteropStatics2 {
           ..props = new JsBackedMap.backedBy(jsThis.props)
           ..context = ContextHelpers.unjsifyNewContext(jsThis.context);
 
+        jsThis.state = jsBackingMapOrJsCopy(component.initialState);
+
+        component.state = new JsBackedMap.backedBy(jsThis.state);
+
         Component2Bridge.bridgeForComponent[component] = componentStatics.bridgeFactory(component);
-
-        component.init();
-        if (component.state != null) {
-          jsThis.state = new JsBackedMap.from(component.state).jsObject;
-        }
-
         return component;
-      });
-
-  static JsMap handleGetInitialState(Component2 component) => // dartfmt
-      componentZone.run(() {
-        return jsBackingMapOrJsCopy(component.getInitialState());
       });
 
   static void handleComponentDidMount(Component2 component) => // dartfmt
@@ -587,7 +579,6 @@ abstract class _ReactDartInteropStatics2 {
 
   static final JsMap staticsForJs = jsifyAndAllowInterop({
     'initComponent': initComponent,
-    'handleGetInitialState': handleGetInitialState,
     'handleComponentDidMount': handleComponentDidMount,
     'handleGetDerivedStateFromProps': handleGetDerivedStateFromProps,
     'handleShouldComponentUpdate': handleShouldComponentUpdate,
@@ -754,16 +745,17 @@ ReactDartComponentFactoryProxy2 _registerComponent2(
 
   // Cache default props and store them on the ReactClass so they can be used
   // by ReactDartComponentFactoryProxy and externally.
-  final JsBackedMap defaultProps = new JsBackedMap.from(componentInstance.getDefaultProps());
+  final JsBackedMap defaultProps = new JsBackedMap.from(componentInstance.defaultProps);
 
   final JsMap jsPropTypes =
       bridgeFactory(componentInstance).jsifyPropTypes(componentInstance, componentInstance.propTypes);
 
   var jsConfig2 = new JsComponentConfig2(
-      defaultProps: defaultProps.jsObject,
-      contextType: componentInstance.contextType?.jsThis,
-      skipMethods: filteredSkipMethods,
-      propTypes: jsPropTypes);
+    defaultProps: defaultProps.jsObject,
+    contextType: componentInstance.contextType?.jsThis,
+    skipMethods: filteredSkipMethods,
+    propTypes: jsPropTypes,
+  );
 
   /// Create the JS [`ReactClass` component class](https://facebook.github.io/react/docs/top-level-api.html#react.createclass)
   /// with custom JS lifecycle methods.

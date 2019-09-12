@@ -60,7 +60,6 @@ class ReactSetStateTestComponent2 extends React.Component {
         _shouldThrow = true;
         _shouldUpdate = props.shouldUpdate;
         this.state = {counter: _component2Counter, shouldThrow: _shouldThrow, error: '', info: '', errorFromGetDerivedState: ''};
-        this.recordLifecycleCall("init");
     }
 
     recordStateChange(newCount) {
@@ -74,8 +73,8 @@ class ReactSetStateTestComponent2 extends React.Component {
 
     static getDerivedStateFromProps(nextProps, __) {
         _shouldUpdate = nextProps.shouldUpdate;
-        _shouldUpdate 
-            ? _component2UpdatingSetStateLifeCycleCalls.push("getDerivedStateFromProps") 
+        _shouldUpdate
+            ? _component2UpdatingSetStateLifeCycleCalls.push("getDerivedStateFromProps")
             : _component2NonUpdatingSetStateLifeCycleCalls.push("getDerivedStateFromProps");
         return null;
     }

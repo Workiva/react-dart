@@ -122,7 +122,7 @@ var TestContext = react.createContext();
 ReactDartComponentFactoryProxy2 ContextProviderWrapper = react.registerComponent(() => new _ContextProviderWrapper());
 
 class _ContextProviderWrapper extends react.Component2 {
-  getInitialState() {
+  get initialState {
     return {'counter': 1};
   }
 

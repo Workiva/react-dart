@@ -517,6 +517,44 @@ abstract class Component2 implements Component {
   /// See: <https://reactjs.org/docs/context.html#classcontexttype>
   Context get contextType => null;
 
+  /// Invoked once and cached when [reactComponentClass] is called. Values in the mapping will be set on [props]
+  /// if that prop is not specified by the parent component.
+  ///
+  /// This method is invoked before any instances are created and thus cannot rely on [props]. In addition, be aware
+  /// that any complex objects returned by `defaultProps` will be shared across instances, not copied.
+  ///
+  /// __Example__:
+  ///
+  ///     // ES6 component
+  ///     Component.defaultProps = {
+  ///       count: 0
+  ///     };
+  ///
+  ///     // Dart component
+  ///     @override
+  ///     get defaultProps => {'count': 0};
+  ///
+  /// See: <https://reactjs.org/docs/react-without-es6.html#declaring-default-props>
+  /// See: <https://reactjs.org/docs/react-component.html#defaultprops>
+  Map get defaultProps => const {};
+
+  /// Invoked once before the `Component` is mounted. The return value will be used as the initial value of [state].
+  ///
+  /// __Example__:
+  ///
+  ///     // ES6 component
+  ///     constructor() {
+  ///       this.state = {count: 0};
+  ///     }
+  ///
+  ///     // Dart component
+  ///     @override
+  ///     get initialState => {'count': 0};
+  ///
+  /// See: <https://reactjs.org/docs/react-without-es6.html#setting-the-initial-state>
+  /// See: <https://reactjs.org/docs/react-component.html#constructor>
+  Map get initialState => const {};
+
   /// The context value from the [contextType] assigned to this component.
   /// The value is passed down from the provider of the same [contextType].
   /// You can reference [context] in any of the lifecycle methods including the render function.
@@ -597,26 +635,6 @@ abstract class Component2 implements Component {
   /// See: <https://reactjs.org/docs/react-component.html#setstate>
   void setStateWithUpdater(StateUpdaterCallback updater, [SetStateCallback callback]) {
     _bridge.setStateWithUpdater(this, updater, callback);
-  }
-
-  /// Initializes this component's [state] to [value].
-  ///
-  /// Whereas `this.state` can be set directly in JavaScript components during initialization,
-  /// supporting that is difficult in the Dart implementation, so this method must be used instead.
-  ///
-  /// __Example__:
-  ///
-  ///     // JavaScript
-  ///     constructor() {
-  ///       this.state = {count: 0};
-  ///     }
-  ///
-  ///     // Dart
-  ///     init() {
-  ///       initializeState({'count': 0});
-  ///     }
-  void initializeState(Map value) {
-    _bridge.initializeState(this, value);
   }
 
   void forceUpdate([SetStateCallback callback]) {
@@ -761,11 +779,6 @@ abstract class Component2 implements Component {
   /// See: <https://reactjs.org/docs/react-component.html#static-getderivedstatefromerror>
   Map getDerivedStateFromError(dynamic error) => null;
 
-  /// Invoked once before the `Component` is mounted. The return value will be used as the initial value of [state].
-  ///
-  /// See: <https://facebook.github.io/react/docs/react-component.html#getinitialstate>
-  Map getInitialState() => const {};
-
   /// Allows usage of PropValidator functions to check the validity of a prop passed to it.
   /// When an invalid value is provided for a prop, a warning will be shown in the JavaScript console.
   /// For performance reasons, propTypes is only checked in development mode.
@@ -802,31 +815,6 @@ abstract class Component2 implements Component {
   ///
   /// See: <https://reactjs.org/docs/typechecking-with-proptypes.html#proptypes>
   Map<String, PropValidator<Null>> get propTypes => {};
-
-  /// This is equivalent to `Constructor` in React 16, this is called before mounting
-  /// See: <https://reactjs.org/docs/react-component.html#constructor>
-  ///
-  /// __NOTE__: In contrast to `Constructor`, state should be initialized via [initializeState]
-  /// rather than `this.state = {}`.
-  ///
-  /// __Example__:
-  ///
-  ///    class MyClass extends react.Component2 {
-  ///      @override
-  ///      void init() {
-  ///        initializeState({'foo': 0, 'bar': 1});
-  ///      }
-  ///    }
-  void init() {}
-
-  /// Invoked once and cached when [reactComponentClass] is called. Values in the mapping will be set on [props]
-  /// if that prop is not specified by the parent component.
-  ///
-  /// This method is invoked before any instances are created and thus cannot rely on [props]. In addition, be aware
-  /// that any complex objects returned by `getDefaultProps` will be shared across instances, not copied.
-  ///
-  /// See: <https://facebook.github.io/react/docs/react-component.html#getdefaultprops>
-  Map getDefaultProps() => const {};
 
   /// __Required.__
   ///
@@ -867,6 +855,36 @@ abstract class Component2 implements Component {
       new UnsupportedError('Component2 drops support for the lifecycle method $memberName.'
           ' See doc comment on Component2.$memberName for migration instructions.');
 
+  /// Invoked once before the `Component` is mounted. The return value will be used as the initial value of [state].
+  ///
+  /// See: <https://facebook.github.io/react/docs/react-component.html#getinitialstate>
+  ///
+  /// > __DEPRECATED - DO NOT USE__
+  /// >
+  /// > Use the [initialState] getter instead.
+  @mustCallSuper
+  @Deprecated('6.0.0')
+  Map getInitialState() {
+    _unsupportedLifecycleError('getInitialState');
+  }
+
+  /// Invoked once and cached when [reactComponentClass] is called. Values in the mapping will be set on [props]
+  /// if that prop is not specified by the parent component.
+  ///
+  /// This method is invoked before any instances are created and thus cannot rely on [props]. In addition, be aware
+  /// that any complex objects returned by `getDefaultProps` will be shared across instances, not copied.
+  ///
+  /// See: <https://facebook.github.io/react/docs/react-component.html#getdefaultprops>
+  ///
+  /// > __DEPRECATED - DO NOT USE__
+  /// >
+  /// > Use the [defaultProps] getter instead.
+  @mustCallSuper
+  @Deprecated('6.0.0')
+  Map getDefaultProps() {
+    _unsupportedLifecycleError('getDefaultProps');
+  }
+
   /// ReactJS lifecycle method that is invoked once, both on the client and server, immediately before the initial
   /// rendering occurs.
   ///
@@ -877,7 +895,7 @@ abstract class Component2 implements Component {
   ///
   /// > __DEPRECATED - DO NOT USE__
   /// >
-  /// > Use [init] instead
+  /// > Use [componentDidMount] instead
   @mustCallSuper
   @Deprecated('6.0.0')
   void componentWillMount() => _unsupportedLifecycleError('componentWillMount');

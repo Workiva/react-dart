@@ -275,7 +275,7 @@ var TestNewContext = react.createContext({'renderCount': 0}, calculateChangedBit
 class _NewContextProviderComponent extends react.Component2 {
   _NewContextRefComponent componentRef;
 
-  getInitialState() => {'renderCount': 0, 'complexMap': false};
+  get initialState => {'renderCount': 0, 'complexMap': false};
 
   printMe() {
     print('printMe!');
@@ -393,11 +393,9 @@ class _NewContextTypeConsumerComponent extends react.Component2 {
 }
 
 class _Component2TestComponent extends react.Component2 with react.TypedSnapshot<String> {
-  Map getInitialState() {
-    return {
-      "items": new List.from([0, 1, 2, 3])
-    };
-  }
+  get defaultProps => {'defaultProp': true};
+
+  get initialState => {'defaultState': true, 'items': []};
 
   Map getDerivedStateFromProps(nextProps, prevState) {
     final prevItems = prevState['items'];
@@ -504,13 +502,11 @@ class _CustomException implements Exception {
 }
 
 class _Component2ErrorTestComponent extends react.Component2 {
-  Map getInitialState() {
-    return {
-      "clicked": false,
-      "errored": false,
-      "error": null,
-    };
-  }
+  Map get initialState => {
+        "clicked": false,
+        "errored": false,
+        "error": null,
+      };
 
   void componentDidCatch(error, info) {
     if (error is _CustomException) {
