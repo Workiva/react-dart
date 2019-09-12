@@ -848,8 +848,8 @@ Map unconvertJsProps(/* ReactElement|ReactComponent */ instance) {
   var props = Map.from(JsBackedMap.backedBy(instance.props));
 
   // Catch if a Dart component has been passed in.
-  if (props['internal'] != null || (props['style'] != null && props['style'] is Map)) {
-    throw new Exception('A Dart Component cannot be passed into unconvertJsProps.');
+  if (props['internal'] is ReactDartComponentInternal || (props['style'] != null && props['style'] is Map)) {
+    throw new ArgumentError('A Dart Component cannot be passed into unconvertJsProps.');
   }
 
   eventPropKeyToEventFactory.keys.forEach((key) {

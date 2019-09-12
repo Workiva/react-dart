@@ -7,7 +7,6 @@ import 'dart:html' show DivElement;
 
 import 'package:js/js.dart';
 import 'package:react/react.dart';
-import 'package:react/react_client/js_backed_map.dart';
 import 'package:test/test.dart';
 
 import 'package:react/react.dart' as react;
@@ -16,8 +15,6 @@ import 'package:react/react_client/react_interop.dart' show React, ReactComponen
 import 'package:react/react_client/js_interop_helpers.dart';
 import 'package:react/react_dom.dart' as react_dom;
 import 'package:react/src/react_client/event_prop_key_to_event_factory.dart';
-
-import 'test_components.dart';
 
 main() {
   setClientConfiguration();
@@ -49,7 +46,7 @@ main() {
         'style': testStyle,
       }, testChildren);
 
-      expect(() => unconvertJsProps(instance), throwsException);
+      expect(() => unconvertJsProps(instance), throwsArgumentError);
     });
 
     test('throws when a Dart component is passed in', () {
@@ -58,7 +55,7 @@ main() {
         'style': testStyle,
       }, testChildren);
 
-      expect(() => unconvertJsProps(instance), throwsException);
+      expect(() => unconvertJsProps(instance), throwsArgumentError);
     });
 
     test('returns props for a composite JS ReactComponent', () {
