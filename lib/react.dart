@@ -534,6 +534,8 @@ abstract class Component2 implements Component {
   ///     @override
   ///     get defaultProps => {'count': 0};
   ///
+  /// See: <https://reactjs.org/docs/react-without-es6.html#declaring-default-props>
+  /// See: <https://reactjs.org/docs/react-component.html#defaultprops>
   Map get defaultProps => const {};
 
   /// Invoked once before the `Component` is mounted. The return value will be used as the initial value of [state].
@@ -549,6 +551,8 @@ abstract class Component2 implements Component {
   ///     @override
   ///     get initialState => {'count': 0};
   ///
+  /// See: <https://reactjs.org/docs/react-without-es6.html#setting-the-initial-state>
+  /// See: <https://reactjs.org/docs/react-component.html#constructor>
   Map get initialState => const {};
 
   /// The context value from the [contextType] assigned to this component.
