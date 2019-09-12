@@ -15,7 +15,7 @@ import 'package:react/src/react_client/event_prop_key_to_event_factory.dart';
 
 main() {
   setClientConfiguration();
-
+  // comment just to trigger a rebuild
   group('unconvertJsProps', () {
     const List testChildren = const ['child1', 'child2'];
     const Map<String, dynamic> testStyle = const {'background': 'white'};
