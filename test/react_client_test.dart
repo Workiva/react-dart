@@ -43,26 +43,22 @@ main() {
       expect(unconvertJsProps(instance)['style'], isA<Map<String, dynamic>>());
     });
 
-    test('returns props for a Dart component (Component2)', () {
+    test('throws when a Dart component (Component2) is passed in', () {
       final instance = DartComponent2({
         'jsProp': 'js',
         'style': testStyle,
       }, testChildren);
 
-      expect(() => unconvertJsProps(instance),
-        throwsException
-      );
+      expect(() => unconvertJsProps(instance), throwsException);
     });
 
-    test('returns props for a Dart component', () {
+    test('throws when a Dart component is passed in', () {
       final instance = DartComponent({
         'jsProp': 'js',
         'style': testStyle,
       }, testChildren);
 
-      expect(() => unconvertJsProps(instance),
-          throwsException
-      );
+      expect(() => unconvertJsProps(instance), throwsException);
     });
 
     test('returns props for a composite JS ReactComponent', () {
@@ -195,7 +191,6 @@ final Function testJsComponentFactory = (() {
 })();
 
 class DartComponent2Component extends Component2 {
-
   @override
   render() {
     return null;
@@ -205,7 +200,6 @@ class DartComponent2Component extends Component2 {
 ReactDartComponentFactoryProxy2 DartComponent2 = react.registerComponent(() => new DartComponent2Component());
 
 class DartComponentComponent extends Component {
-
   @override
   render() {
     return null;

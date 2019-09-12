@@ -846,10 +846,10 @@ final Expando<Function> _originalEventHandlers = new Expando();
 /// Dart synthetic counterparts.
 Map unconvertJsProps(/* ReactElement|ReactComponent */ instance) {
   var props = Map.from(JsBackedMap.backedBy(instance.props));
-  
+
   // Catch if a Dart component has been passed in.
   if (props['internal'] != null || (props['style'] != null && props['style'] is Map)) {
-    throw new Exception('A Dart Component cannot be passed into unconvertJsProps');
+    throw new Exception('A Dart Component cannot be passed into unconvertJsProps.');
   }
 
   eventPropKeyToEventFactory.keys.forEach((key) {
@@ -861,7 +861,7 @@ Map unconvertJsProps(/* ReactElement|ReactComponent */ instance) {
   // Convert the nested style map so it can be read by Dart code.
   var style = props['style'];
   if (style != null) {
-      props['style'] = Map<String, dynamic>.from(JsBackedMap.backedBy(style));
+    props['style'] = Map<String, dynamic>.from(JsBackedMap.backedBy(style));
   }
 
   return props;
