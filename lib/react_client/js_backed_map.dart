@@ -24,8 +24,10 @@ import 'package:js/js.dart';
 class JsBackedMap extends MapBase<dynamic, dynamic> {
   final JsMap jsObject;
 
+  /// Creates a JsBackedMap instance backed by a new [jsObject].
   JsBackedMap() : jsObject = new JsMap();
 
+  /// Creates a JsBackedMap instance backed by [jsObject].
   JsBackedMap.backedBy(this.jsObject);
 
   /// Creates a JsBackedMap instance that contains all key/value pairs of [other].
@@ -107,9 +109,19 @@ class JsBackedMap extends MapBase<dynamic, dynamic> {
   @override
   bool operator ==(other) => other is JsBackedMap && other.jsObject == jsObject;
 
-  // FIXME 3.1.0-wip add workaround for DDC hashcode bug
   @override
-  int get hashCode => jsObject.hashCode;
+  int get hashCode {
+    // Work around DDC throwing when accessing hashCode on frozen JS objects:
+    // https://github.com/dart-lang/sdk/issues/36354
+    try {
+      return jsObject.hashCode;
+    } catch (_) {}
+
+    // While constant hashCode like this one are not high-quality and may cause
+    // hashCode collisions more often, they are completely valid.
+    // For more information, see the `Object.hashCode` doc comment.
+    return 0;
+  }
 }
 
 /// A utility interop class for a plain JS "object"/"map"/"dictionary".

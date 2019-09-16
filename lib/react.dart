@@ -864,9 +864,7 @@ abstract class Component2 implements Component {
   /// > Use the [initialState] getter instead.
   @mustCallSuper
   @Deprecated('6.0.0')
-  Map getInitialState() {
-    _unsupportedLifecycleError('getInitialState');
-  }
+  Map getInitialState() => throw _unsupportedLifecycleError('getInitialState');
 
   /// Invoked once and cached when [reactComponentClass] is called. Values in the mapping will be set on [props]
   /// if that prop is not specified by the parent component.
@@ -881,9 +879,7 @@ abstract class Component2 implements Component {
   /// > Use the [defaultProps] getter instead.
   @mustCallSuper
   @Deprecated('6.0.0')
-  Map getDefaultProps() {
-    _unsupportedLifecycleError('getDefaultProps');
-  }
+  Map getDefaultProps() => throw _unsupportedLifecycleError('getDefaultProps');
 
   /// ReactJS lifecycle method that is invoked once, both on the client and server, immediately before the initial
   /// rendering occurs.
@@ -898,7 +894,7 @@ abstract class Component2 implements Component {
   /// > Use [componentDidMount] instead
   @mustCallSuper
   @Deprecated('6.0.0')
-  void componentWillMount() => _unsupportedLifecycleError('componentWillMount');
+  void componentWillMount() => throw _unsupportedLifecycleError('componentWillMount');
 
   /// ReactJS lifecycle method that is invoked when a `Component` is receiving [newProps].
   ///
@@ -920,7 +916,7 @@ abstract class Component2 implements Component {
   /// > This will be completely removed when the JS side of it is slated for removal (ReactJS 17 / react.dart 6.0.0)
   @mustCallSuper
   @Deprecated('6.0.0')
-  void componentWillReceiveProps(Map newProps) => _unsupportedLifecycleError('componentWillReceiveProps');
+  void componentWillReceiveProps(Map newProps) => throw _unsupportedLifecycleError('componentWillReceiveProps');
 
   /// ReactJS lifecycle method that is invoked immediately before rendering when [nextProps] or [nextState] are being
   /// received.
@@ -945,7 +941,7 @@ abstract class Component2 implements Component {
   /// > This will be completely removed when the JS side of it is slated for removal (ReactJS 17 / react.dart 6.0.0)
   @mustCallSuper
   @Deprecated('6.0.0')
-  void componentWillUpdate(Map nextProps, Map nextState) => _unsupportedLifecycleError('componentWillUpdate');
+  void componentWillUpdate(Map nextProps, Map nextState) => throw _unsupportedLifecycleError('componentWillUpdate');
 
   /// Do not use; this is part of the legacy context API.
   ///

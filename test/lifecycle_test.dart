@@ -872,7 +872,7 @@ void sharedLifecycleTests<T extends react.Component>({
       });
     }
 
-    test('updates state with correct lifecycle calls', () {
+    group('updates state with correct lifecycle calls', () {
       const Map initialState = const {
         'initialState': 'initial',
       };
@@ -884,45 +884,84 @@ void sharedLifecycleTests<T extends react.Component>({
         'newState': 'new',
       };
 
-      final Map initialProps =
-          unmodifiableMap({'getInitialState': (_) => initialState, 'initialState': (_) => initialState});
+      Map initialProps;
+      Map expectedProps;
+      dynamic newContext;
+      Null expectedSnapshot;
+      LifecycleTestHelper component;
 
-      final dynamic newContext = isComponent2 ? null : const {};
+      setUp(() {
+        initialProps = unmodifiableMap({'getInitialState': (_) => initialState, 'initialState': (_) => initialState});
+        expectedProps = unmodifiableMap(defaultProps, initialProps, emptyChildrenProps);
+        newContext = isComponent2 ? null : const {};
+        expectedSnapshot = null;
 
-      final Map expectedProps = unmodifiableMap(defaultProps, initialProps, emptyChildrenProps);
+        component = getDartComponent(render(LifecycleTest(initialProps)));
+        component.lifecycleCalls.clear();
+      });
 
-      final Null expectedSnapshot = null;
+      tearDown(() {
+        expect(
+            component.lifecycleCalls,
+            equals([
+              isComponent2 ? matchCall('getDerivedStateFromProps', args: [expectedProps, newState]) : null,
+              skipLegacyContextTests
+                  ? matchCall('shouldComponentUpdate', args: [expectedProps, newState], state: initialState)
+                  : matchCall('shouldComponentUpdateWithContext',
+                      args: [expectedProps, newState, newContext], state: initialState),
+              !isComponent2
+                  ? matchCall('componentWillUpdate', args: [expectedProps, newState], state: initialState)
+                  : null,
+              skipLegacyContextTests
+                  ? null
+                  : matchCall('componentWillUpdateWithContext',
+                      args: [expectedProps, newState, newContext], state: initialState),
+              matchCall('render', state: newState),
+              isComponent2
+                  ? matchCall('getSnapshotBeforeUpdate', args: [expectedProps, initialState], state: newState)
+                  : null,
+              isComponent2
+                  ? matchCall('componentDidUpdate',
+                      args: [expectedProps, initialState, expectedSnapshot], state: newState)
+                  : matchCall('componentDidUpdate', args: [expectedProps, initialState], state: newState),
+            ].where((matcher) => matcher != null)));
+      });
 
-      LifecycleTestHelper component = getDartComponent(render(LifecycleTest(initialProps)));
+      test('setState with Map argument', () {
+        component.setState(stateDelta);
+      });
 
-      component.lifecycleCalls.clear();
+      test('setState with updater argument', () {
+        var calls = [];
+        Map stateUpdater(Map prevState, Map props) {
+          calls.add({
+            'name': 'stateUpdater',
+            'prevState': new Map.from(prevState),
+            'props': new Map.from(props),
+          });
+          return stateDelta;
+        }
 
-      component.setState(stateDelta);
+        void setStateCallback() => calls.add({'name': 'setStateCallback'});
 
-      expect(
-          component.lifecycleCalls,
-          equals([
-            isComponent2 ? matchCall('getDerivedStateFromProps', args: [expectedProps, newState]) : null,
-            skipLegacyContextTests
-                ? matchCall('shouldComponentUpdate', args: [expectedProps, newState], state: initialState)
-                : matchCall('shouldComponentUpdateWithContext',
-                    args: [expectedProps, newState, newContext], state: initialState),
-            !isComponent2
-                ? matchCall('componentWillUpdate', args: [expectedProps, newState], state: initialState)
-                : null,
-            skipLegacyContextTests
-                ? null
-                : matchCall('componentWillUpdateWithContext',
-                    args: [expectedProps, newState, newContext], state: initialState),
-            matchCall('render', state: newState),
-            isComponent2
-                ? matchCall('getSnapshotBeforeUpdate', args: [expectedProps, initialState], state: newState)
-                : null,
-            isComponent2
-                ? matchCall('componentDidUpdate',
-                    args: [expectedProps, initialState, expectedSnapshot], state: newState)
-                : matchCall('componentDidUpdate', args: [expectedProps, initialState], state: newState),
-          ].where((matcher) => matcher != null)));
+        if (isComponent2) {
+          (component as react.Component2).setStateWithUpdater(stateUpdater, setStateCallback);
+        } else {
+          component.setState(stateUpdater, setStateCallback);
+        }
+
+        expect(
+            calls,
+            [
+              {
+                'name': 'stateUpdater',
+                'prevState': initialState,
+                'props': expectedProps,
+              },
+              {'name': 'setStateCallback'}
+            ],
+            reason: 'updater should be called with expected arguments');
+      });
     });
 
     test('updates state with correct lifecycle calls when `redraw` is called', () {

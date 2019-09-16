@@ -486,6 +486,7 @@ abstract class _ReactDartInteropStatics2 {
 
         component.state = new JsBackedMap.backedBy(jsThis.state);
 
+        // ignore: invalid_use_of_protected_member
         Component2Bridge.bridgeForComponent[component] = componentStatics.bridgeFactory(component);
         return component;
       });
