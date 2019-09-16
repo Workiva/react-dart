@@ -848,9 +848,9 @@ Map unconvertJsProps(/* ReactElement|ReactComponent */ instance) {
   var props = Map.from(JsBackedMap.backedBy(instance.props));
 
   // Catch if a Dart component has been passed in. Component (version 1) can be identified by having the "internal"
-  // prop value. Component2, however, does not have that but can be detected by checking whether or not the style
-  // prop is a Map. Because non-Dart components will have a JS Object, it can be assumed that if the style prop is a
-  // Map then it is a Dart Component.
+  // prop. Component2, however, does not have that but can be detected by checking whether or not the style prop is a
+  // Map. Because non-Dart components will have a JS Object, it can be assumed that if the style prop is a Map then
+  // it is a Dart Component.
   if (props['internal'] is ReactDartComponentInternal || (props['style'] != null && props['style'] is Map)) {
     throw new ArgumentError('A Dart Component cannot be passed into unconvertJsProps.');
   }
