@@ -407,7 +407,6 @@ class ReactDomComponentFactoryProxy extends ReactComponentFactoryProxy {
 
   /// Prepares the bound values, event handlers, and style props for consumption by ReactJS DOM components.
   static void convertProps(Map props) {
-    _convertBoundValues(props);
     _convertEventHandlers(props);
   }
 }
@@ -449,29 +448,6 @@ _setValueToProps(Map props, val) {
     }
   } else {
     props['value'] = val;
-  }
-}
-
-/// Convert bound values to pure value and packed onChange function
-///
-/// TODO: Remove in 6.0.0 when [Component.bind] is removed.
-_convertBoundValues(Map args) {
-  var boundValue = args['value'];
-
-  if (boundValue is List) {
-    _setValueToProps(args, boundValue[0]);
-    args['value'] = boundValue[0];
-    var onChange = args['onChange'];
-
-    // Put new function into onChange event handler.
-    // If there was something listening for that event, trigger it and return its return value.
-    args['onChange'] = (event) {
-      boundValue[1](_getValueFromDom(event.target));
-
-      if (onChange != null) {
-        return onChange(event);
-      }
-    };
   }
 }
 
