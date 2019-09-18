@@ -57,39 +57,43 @@ abstract class React {
 ///     }
 ///
 /// Learn more: <https://reactjs.org/docs/refs-and-the-dom.html#creating-refs>.
-Ref<CurrentType> createRef<CurrentType>() {
-  return new Ref<CurrentType>();
+Ref<T> createRef<T>() {
+  return new Ref<T>();
 }
 
 /// When this is provided as the ref prop, a reference to the rendered component
 /// will be available via [current].
 ///
-/// See: <https://reactjs.org/docs/refs-and-the-dom.html#creating-refs>.
-class Ref<CurrentType> {
+/// See [createRef] for usage examples and more info.
+class Ref<T> {
   /// A JavaScript ref object returned by [React.createRef].
-  JsRef jsRef;
+  final JsRef jsRef;
 
-  Ref() {
-    jsRef = React.createRef();
-  }
+  Ref() : jsRef = React.createRef();
+
+  Ref.fromJs(this.jsRef);
 
   /// A reference to the latest instance of the rendered component.
   ///
-  /// See: <https://reactjs.org/docs/refs-and-the-dom.html#creating-refs>.
-  CurrentType get current {
+  /// See [createRef] for usage examples and more info.
+  T get current {
     final jsCurrent = jsRef.current;
 
     if (jsCurrent is! Element) {
       final dartCurrent = (jsCurrent as ReactComponent)?.dartComponent;
 
       if (dartCurrent != null) {
-        return dartCurrent as CurrentType;
+        return dartCurrent as T;
       }
     }
     return jsCurrent;
   }
 }
 
+/// A JS ref object returned by [React.createRef].
+///
+/// Dart factories will automatically unwrap [Ref] objects to this JS representation,
+/// so using this class directly shouldn't be necessary.
 @JS()
 @anonymous
 class JsRef {
