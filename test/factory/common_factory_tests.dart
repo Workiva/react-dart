@@ -5,6 +5,7 @@ import 'dart:js';
 import 'dart:js_util';
 
 import 'package:meta/meta.dart';
+import 'package:react/react_client/js_backed_map.dart';
 import 'package:test/test.dart';
 
 import 'package:react/react_client.dart';
@@ -241,13 +242,18 @@ void refTests(ReactComponentFactoryProxy factory, {void verifyRefValue(dynamic r
       'childId': 'test',
     }));
 
-    // Component props are accessed differently depending on if it is a dom component
-    // or a dart component.
+    // Props are accessed differently for DOM, Dart, and JS components.
     var idValue;
-    if (refObject.current is Element) {
-      idValue = refObject.current.id;
+    final current = refObject.current;
+    expect(current, isNotNull);
+    if (current is Element) {
+      idValue = current.id;
+    } else if (current is react.Component) {
+      idValue = current.props['id'];
+    } else if (rtu.isCompositeComponent(current)) {
+      idValue = JsBackedMap.fromJs((current as ReactComponent).props)['id'];
     } else {
-      idValue = refObject.current.props['id'];
+      fail('Unknown instance type: current');
     }
 
     expect(idValue, equals('test'), reason: 'child component should have access to parent props');

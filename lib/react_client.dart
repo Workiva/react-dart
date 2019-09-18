@@ -712,11 +712,18 @@ class ReactJsComponentFactoryProxy extends ReactComponentFactoryProxy {
     }
 
     Map potentiallyConvertedProps;
-    if (shouldConvertDomProps) {
+
+    final mightNeedConverting = shouldConvertDomProps || props['ref'] != null;
+    if (mightNeedConverting) {
       // We can't mutate the original since we can't be certain that the value of the
       // the converted event handler will be compatible with the Map's type parameters.
-      potentiallyConvertedProps = new Map.from(props);
-      _convertEventHandlers(potentiallyConvertedProps);
+      // We also want to avoid mutating the original map where possible.
+      // So, make a copy and mutate that.
+      potentiallyConvertedProps = Map.from(props);
+      if (shouldConvertDomProps) {
+        _convertEventHandlers(potentiallyConvertedProps);
+      }
+      _convertRefValue(potentiallyConvertedProps);
     } else {
       potentiallyConvertedProps = props;
     }
