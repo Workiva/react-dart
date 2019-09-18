@@ -229,6 +229,10 @@ void refTests(ReactComponentFactoryProxy factory, {void verifyRefValue(dynamic r
 
   test('forwardRef function passes a ref through a component to one of its children', () {
     var ForwardRefTestComponent = forwardRef((props, ref) {
+      // Extra type checking since JS refs being passed through
+      // aren't caught by built-in type checking.
+      expect(ref, isA<Ref>());
+
       return factory({
         'ref': ref,
         'id': props['childId'],

@@ -104,17 +104,17 @@ class JsRef {
 ///
 /// See: <https://reactjs.org/docs/forwarding-refs.html>.
 ReactJsComponentFactoryProxy forwardRef(Function(Map props, Ref ref) wrapperFunction) {
-  var hoc = _jsForwardRef(allowInterop((JsMap props, Ref ref) {
-    var dartProps = new JsBackedMap.backedBy(props);
-
-    return wrapperFunction(dartProps, ref);
+  var hoc = _jsForwardRef(allowInterop((JsMap props, JsRef ref) {
+    final dartProps = JsBackedMap.backedBy(props);
+    final dartRef = Ref.fromJs(ref);
+    return wrapperFunction(dartProps, dartRef);
   }));
 
   return new ReactJsComponentFactoryProxy(hoc, shouldConvertDomProps: false);
 }
 
 @JS('React.forwardRef')
-external ReactClass _jsForwardRef(Function(JsMap props, Ref ref) wrapperFunction);
+external ReactClass _jsForwardRef(Function(JsMap props, JsRef ref) wrapperFunction);
 
 abstract class ReactDom {
   static Element findDOMNode(object) => ReactDOM.findDOMNode(object);
