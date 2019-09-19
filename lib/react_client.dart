@@ -614,7 +614,8 @@ ReactDartComponentFactoryProxy _registerComponent(
   /// Create the JS [`ReactClass` component class](https://facebook.github.io/react/docs/top-level-api.html#react.createclass)
   /// with custom JS lifecycle methods.
   var reactComponentClass = createReactDartComponentClass(_dartInteropStatics, componentStatics, jsConfig)
-    ..dartComponentVersion = '1'
+    // ignore: invalid_use_of_protected_member
+    ..dartComponentVersion = ReactDartComponentVersion.component
     ..displayName = componentFactory().displayName;
 
   // Cache default props and store them on the ReactClass so they can be used
@@ -769,8 +770,8 @@ ReactDartComponentFactoryProxy2 _registerComponent2(
   var reactComponentClass =
       createReactDartComponentClass2(_ReactDartInteropStatics2.staticsForJs, componentStatics, jsConfig2)
         ..displayName = componentInstance.displayName;
-
-  reactComponentClass.dartComponentVersion = '2';
+  // ignore: invalid_use_of_protected_member
+  reactComponentClass.dartComponentVersion = ReactDartComponentVersion.component2;
 
   return new ReactDartComponentFactoryProxy2(reactComponentClass);
 }

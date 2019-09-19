@@ -187,8 +187,44 @@ class ReactClass {
   @Deprecated('6.0.0')
   external set dartDefaultProps(Map value);
 
+  /// A string to distinguish between different Dart component implementations / base classes.
+  ///
+  /// See [ReactDartComponentVersion] for values.
+  ///
+  /// __For internal use only.__
+  @protected
   external String get dartComponentVersion;
+  @protected
   external set dartComponentVersion(String value);
+}
+
+/// Constants for use with [ReactClass.dartComponentVersion] to distinguish
+/// different versions of Dart component implementations / base classes.
+///
+/// __For internal use only.__
+@protected
+@sealed
+abstract class ReactDartComponentVersion {
+  /// A [Component]-based component.
+  @protected
+  static const String component = '1';
+
+  /// A [Component2]-based component.
+  @protected
+  static const String component2 = '2';
+
+  /// Returns [ReactClass.dartComponentVersion] if [type] is the [ReactClass] for a Dart component
+  /// (a react-dart [ReactElement] or [ReactComponent]), and null otherwise.
+  @protected
+  static String fromType(dynamic type) {
+    // This check doesn't do much since ReactClass is an  an anonymous JS object,
+    // but it lets us safely cast to ReactClass.
+    if (type is ReactClass) {
+      return type.dartComponentVersion;
+    }
+
+    return null;
+  }
 }
 
 /// A JS interop class used as an argument to [React.createClass].
