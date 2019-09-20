@@ -217,7 +217,7 @@ abstract class ReactDartComponentVersion {
   /// (a react-dart [ReactElement] or [ReactComponent]), and null otherwise.
   @protected
   static String fromType(dynamic type) {
-    // This check doesn't do much since ReactClass is an  an anonymous JS object,
+    // This check doesn't do much since ReactClass is an anonymous JS object,
     // but it lets us safely cast to ReactClass.
     if (type is ReactClass) {
       return type.dartComponentVersion;
