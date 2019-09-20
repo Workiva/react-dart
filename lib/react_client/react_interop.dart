@@ -57,39 +57,43 @@ abstract class React {
 ///     }
 ///
 /// Learn more: <https://reactjs.org/docs/refs-and-the-dom.html#creating-refs>.
-Ref<CurrentType> createRef<CurrentType>() {
-  return new Ref<CurrentType>();
+Ref<T> createRef<T>() {
+  return new Ref<T>();
 }
 
 /// When this is provided as the ref prop, a reference to the rendered component
 /// will be available via [current].
 ///
-/// See: <https://reactjs.org/docs/refs-and-the-dom.html#creating-refs>.
-class Ref<CurrentType> {
+/// See [createRef] for usage examples and more info.
+class Ref<T> {
   /// A JavaScript ref object returned by [React.createRef].
-  JsRef jsRef;
+  final JsRef jsRef;
 
-  Ref() {
-    jsRef = React.createRef();
-  }
+  Ref() : jsRef = React.createRef();
+
+  Ref.fromJs(this.jsRef);
 
   /// A reference to the latest instance of the rendered component.
   ///
-  /// See: <https://reactjs.org/docs/refs-and-the-dom.html#creating-refs>.
-  CurrentType get current {
+  /// See [createRef] for usage examples and more info.
+  T get current {
     final jsCurrent = jsRef.current;
 
     if (jsCurrent is! Element) {
       final dartCurrent = (jsCurrent as ReactComponent)?.dartComponent;
 
       if (dartCurrent != null) {
-        return dartCurrent as CurrentType;
+        return dartCurrent as T;
       }
     }
     return jsCurrent;
   }
 }
 
+/// A JS ref object returned by [React.createRef].
+///
+/// Dart factories will automatically unwrap [Ref] objects to this JS representation,
+/// so using this class directly shouldn't be necessary.
 @JS()
 @anonymous
 class JsRef {
@@ -100,17 +104,17 @@ class JsRef {
 ///
 /// See: <https://reactjs.org/docs/forwarding-refs.html>.
 ReactJsComponentFactoryProxy forwardRef(Function(Map props, Ref ref) wrapperFunction) {
-  var hoc = _jsForwardRef(allowInterop((JsMap props, Ref ref) {
-    var dartProps = new JsBackedMap.backedBy(props);
-
-    return wrapperFunction(dartProps, ref);
+  var hoc = _jsForwardRef(allowInterop((JsMap props, JsRef ref) {
+    final dartProps = JsBackedMap.backedBy(props);
+    final dartRef = Ref.fromJs(ref);
+    return wrapperFunction(dartProps, dartRef);
   }));
 
   return new ReactJsComponentFactoryProxy(hoc, shouldConvertDomProps: false);
 }
 
 @JS('React.forwardRef')
-external ReactClass _jsForwardRef(Function(JsMap props, Ref ref) wrapperFunction);
+external ReactClass _jsForwardRef(Function(JsMap props, JsRef ref) wrapperFunction);
 
 abstract class ReactDom {
   static Element findDOMNode(object) => ReactDOM.findDOMNode(object);
@@ -183,8 +187,44 @@ class ReactClass {
   @Deprecated('6.0.0')
   external set dartDefaultProps(Map value);
 
+  /// A string to distinguish between different Dart component implementations / base classes.
+  ///
+  /// See [ReactDartComponentVersion] for values.
+  ///
+  /// __For internal use only.__
+  @protected
   external String get dartComponentVersion;
+  @protected
   external set dartComponentVersion(String value);
+}
+
+/// Constants for use with [ReactClass.dartComponentVersion] to distinguish
+/// different versions of Dart component implementations / base classes.
+///
+/// __For internal use only.__
+@protected
+@sealed
+abstract class ReactDartComponentVersion {
+  /// A [Component]-based component.
+  @protected
+  static const String component = '1';
+
+  /// A [Component2]-based component.
+  @protected
+  static const String component2 = '2';
+
+  /// Returns [ReactClass.dartComponentVersion] if [type] is the [ReactClass] for a Dart component
+  /// (a react-dart [ReactElement] or [ReactComponent]), and null otherwise.
+  @protected
+  static String fromType(dynamic type) {
+    // This check doesn't do much since ReactClass is an anonymous JS object,
+    // but it lets us safely cast to ReactClass.
+    if (type is ReactClass) {
+      return type.dartComponentVersion;
+    }
+
+    return null;
+  }
 }
 
 /// A JS interop class used as an argument to [React.createClass].

@@ -7,6 +7,7 @@ import 'package:test/test.dart';
 
 import 'package:react/react_client.dart';
 import 'package:react/react_client/react_interop.dart';
+import 'package:react/react_test_utils.dart';
 
 import 'common_factory_tests.dart';
 
@@ -20,6 +21,12 @@ main() {
 
     group('- dom event handler wrapping -', () {
       domEventHandlerWrappingTests(JsFoo);
+    });
+
+    group('- refs -', () {
+      refTests(JsFoo, verifyRefValue: (ref) {
+        expect(isCompositeComponentWithTypeV2(ref, JsFoo), isTrue);
+      });
     });
 
     test('has a type corresponding to the backing JS class', () {
