@@ -27,3 +27,10 @@ jobs:
         - dartanalyzer .
         - pub run test -p chrome
         - pub run build_runner test -- -p chrome
+    - stage: Dart 1
+      dart: 1.24.3
+      before_install:
+        - sed -i '/Remove if solving times out in Dart 1/d'  pubspec.yaml
+      script:
+        - dartanalyzer .
+        - pub run test -p chrome
