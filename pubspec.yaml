@@ -1,10 +1,13 @@
 name: react
-version: 5.0.0-dev.0
+version: 5.0.0-alpha.0
 authors:
   - Samuel Hapák <samuel.hapak@gmail.com>
   - Greg Littlefield <greg.littlefield@workiva.com>
   - Claire Sarsam <claire.sarsam@workiva.com>
   - Aaron Lademann <aaron.lademann@workiva.com>
+  - Keal Jones <keal.jones@workiva.com>
+  - Joe Bingham <joe.bingham@workiva.com>
+  - Sydney Jodon <sydney.jodon@workiva.com>
 description: Bindings of the ReactJS library for building interactive interfaces.
 homepage: https://github.com/cleandart/react-dart
 environment:
