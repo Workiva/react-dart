@@ -32,6 +32,15 @@ abstract class ReactDom {
   static Element findDOMNode(object) => ReactDOM.findDOMNode(object);
   static ReactComponent render(ReactElement component, Element element) => ReactDOM.render(component, element);
   static bool unmountComponentAtNode(Element element) => ReactDOM.unmountComponentAtNode(element);
+
+  /// Returns a a portal that renders [children] into a [container].
+  ///
+  /// Portals provide a first-class way to render children into a DOM node that exists outside the DOM hierarchy of the parent component.
+  ///
+  /// [children] can be any renderable React child, such as a [ReactElement], [String], or fragment.
+  ///
+  /// See: <https://reactjs.org/docs/portals.html>
+  static ReactPortal createPortal(dynamic children, Element container) => ReactDOM.createPortal(children, container);
 }
 
 @JS('ReactDOMServer')
@@ -113,11 +122,23 @@ class ReactElementStore {
   external set validated(bool value);
 }
 
-/// A virtual instance of a React component that is returned by component
-/// factories and `Component.render` methods, and passed into [react.render].
+/// A virtual DOM element representing an instance of a DOM element,
+/// React component, or fragment.
 ///
-/// See <http://facebook.github.io/react/docs/glossary.html#react-elements>
-/// and <http://facebook.github.io/react/docs/glossary.html#react-components>.
+/// React elements are the building blocks of React applications.
+/// One might confuse elements with a more widely known concept of "components".
+/// An element describes what you want to see on the screen. React elements are immutable.
+///
+/// Typically, elements are not used directly, but get returned from components.
+///
+/// These can be created directly by [React.createElement], or by invoking
+/// React element DOM/component factories.
+///
+///     react.h1({}, 'Content here');
+///     MaterialButton({}, 'Click me');
+///
+/// See <https://reactjs.org/docs/glossary.html#elements>
+/// and <https://reactjs.org/docs/glossary.html#components>.
 @JS()
 @anonymous
 class ReactElement {
@@ -135,16 +156,33 @@ class ReactElement {
 
   /// This element's `key`, which is used to uniquely identify it among its siblings.
   ///
-  /// Not needed when children are passed variadically.
+  /// Not needed when children are passed variadically
+  /// (as arguments to a factory, as opposed to items within a list/iterable).
   ///
-  /// See: <http://facebook.github.io/react/docs/reconciliation.html#keys>.
+  /// See: <https://reactjs.org/docs/reconciliation.html#keys>.
   external String get key;
 
   /// This element's `ref`, which can be used to access the associated
   /// [Component]/[ReactComponent]/[Element] after it has been rendered.
   ///
-  /// See: <http://facebook.github.io/react/docs/more-about-refs.html>.
+  /// See: <https://reactjs.org/docs/refs-and-the-dom.html>.
   external dynamic get ref;
+}
+
+/// A virtual DOM node representing a React Portal, returned by [ReactDom.createPortal].
+///
+/// Portals provide a first-class way to render children into a DOM node that exists outside the DOM hierarchy of the parent component.
+///
+/// Children can be any renderable React child, such as an element, string, or fragment.
+///
+/// While closely related, portals are not [ReactElement]s.
+///
+/// See: <https://reactjs.org/docs/portals.html>
+@JS()
+@anonymous
+class ReactPortal {
+  external dynamic /* ReactNodeList */ get children;
+  external dynamic get containerInfo;
 }
 
 /// The JavaScript component instance, which backs each react-dart [Component].
@@ -158,33 +196,6 @@ class ReactComponent {
   external get refs;
   external void setState(state, [callback]);
   external void forceUpdate([callback]);
-
-  /// __DEPRECATED.__
-  ///
-  /// Will be completely removed in the `5.0.0` release.
-  ///
-  /// The analogous JS bits for this were removed in ReactJS 16,
-  /// which the `react` Dart package will be upgrading to in the `5.0.0` release.
-  ///
-  /// Instead, set your own flag within a `Component` instance like so:
-  ///
-  ///     class _SomeComponent extends react.Component {
-  ///       bool _isMounted;
-  ///
-  ///       @override
-  ///       void componentDidMount() {
-  ///         _isMounted = true;
-  ///       }
-  ///
-  ///       @override
-  ///       void componentWillUnmount() {
-  ///         _isMounted = false;
-  ///       }
-  ///     }
-  ///
-  /// And then reference the private flag instead of calling `isMounted()`.
-  @Deprecated('5.0.0')
-  external bool isMounted();
 }
 
 // ----------------------------------------------------------------------------
@@ -201,7 +212,7 @@ class ReactComponent {
 /// > __DEPRECATED - DO NOT USE__
 /// >
 /// > This API was never stable in any version of ReactJS, and was replaced with a new, incompatible context API
-/// > in ReactJS 16 that will be exposed in version `5.0.0` of the `react` Dart package via a
+/// > in ReactJS 16 that will be exposed in version `5.1.0` of the `react` Dart package via a
 /// > new version of `Component` called `Component2`.
 /// >
 /// > This will be completely removed when the JS side of it is slated for removal (ReactJS 17 / react.dart 6.0.0)
@@ -252,7 +263,7 @@ class ReactDartComponentInternal {
 /// > __DEPRECATED - DO NOT USE__
 /// >
 /// > This API was never stable in any version of ReactJS, and was replaced with a new, incompatible context API
-/// > in ReactJS 16 that will be exposed in version `5.0.0` of the `react` Dart package via a
+/// > in ReactJS 16 that will be exposed in version `5.1.0` of the `react` Dart package via a
 /// > new version of `Component` called `Component2`.
 /// >
 /// > This will be completely removed when the JS side of it is slated for removal (ReactJS 17 / react.dart 6.0.0)
@@ -262,6 +273,11 @@ class ReactDartContextInternal {
 
   ReactDartContextInternal(this.value);
 }
+
+/// Throws the error passed to it from Javascript.
+/// This allows us to catch the error in dart which re-dartifies the js errors/exceptions.
+@JS('_throwErrorFromJS')
+external void throwErrorFromJS(error);
 
 /// Marks [child] as validated, as if it were passed into [React.createElement]
 /// as a variadic child.
@@ -282,27 +298,13 @@ void markChildrenValidated(List<dynamic> children) {
   });
 }
 
-/// Returns a new JS [ReactClassConfig] for a component that uses
+/// Returns a new JS [ReactClass] for a component that uses
 /// [dartInteropStatics] and [componentStatics] internally to proxy between
 /// the JS and Dart component instances.
-///
-/// > __DEPRECATED.__
-/// >
-/// > Use [createReactDartComponentClass] instead.
-@Deprecated('5.0.0')
-@JS('_createReactDartComponentClassConfig')
-external ReactClassConfig createReactDartComponentClassConfig(
+@JS('_createReactDartComponentClass')
+external ReactClass createReactDartComponentClass(
     ReactDartInteropStatics dartInteropStatics, ComponentStatics componentStatics,
     [JsComponentConfig jsConfig]);
-
-/// Returns a new JS [ReactClassConfig] for a component that uses
-/// [dartInteropStatics] and [componentStatics] internally to proxy between
-/// the JS and Dart component instances.
-ReactClass createReactDartComponentClass(ReactDartInteropStatics dartInteropStatics, ComponentStatics componentStatics,
-    [JsComponentConfig jsConfig]) {
-  // TODO: Change this impl to external in 5.0.0, and deprecate it as 6.0.0 removal
-  return React.createClass(createReactDartComponentClassConfig(dartInteropStatics, componentStatics, jsConfig));
-}
 
 typedef Component _InitComponent(ReactComponent jsThis, ReactDartComponentInternal internal,
     InteropContextValue context, ComponentStatics componentStatics);
@@ -356,21 +358,21 @@ class ReactDartInteropStatics {
 /// This object is made accessible to a component's JS ReactClass config, which
 /// passes it to certain methods in [ReactDartInteropStatics].
 ///
-/// See [ReactDartInteropStatics], [createReactDartComponentClassConfig].
+/// See [ReactDartInteropStatics], [createReactDartComponentClass].
 class ComponentStatics {
   final ComponentFactory componentFactory;
 
   ComponentStatics(this.componentFactory);
 }
 
-/// Additional configuration passed to [createReactDartComponentClassConfig]
+/// Additional configuration passed to [createReactDartComponentClass]
 /// that needs to be directly accessible by that JS code.
 ///
 /// > __DEPRECATED - DO NOT USE__
 /// >
 /// > The `context` API that this supports was never stable in any version of ReactJS,
 /// > and was replaced with a new, incompatible context API in ReactJS 16 that will be
-/// > exposed in version `5.0.0` of the `react` Dart package via a new version of
+/// > exposed in version `5.1.0` of the `react` Dart package via a new version of
 /// > `Component` called `Component2`.
 /// >
 /// > This will be completely removed when the JS side of `context` it is slated for

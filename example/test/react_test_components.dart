@@ -18,11 +18,13 @@ class _HelloComponent extends react.Component {
 var helloComponent = react.registerComponent(() => new _HelloComponent());
 
 class _HelloGreeter extends react.Component {
+  var myInput;
   getInitialState() => {"name": "World"};
 
   onInputChange(e) {
-    var input = react_dom.findDOMNode(ref('myInput'));
+    var input = react_dom.findDOMNode(myInput);
     print(input.borderEdge);
+    setState({'name': e.target.value});
   }
 
   render() {
@@ -30,8 +32,8 @@ class _HelloGreeter extends react.Component {
       react.input({
         'key': 'input',
         'className': 'form-control',
-        'ref': 'myInput',
-        'value': bind('name'),
+        'ref': (ref) => myInput = ref,
+        'value': state['name'],
         'onChange': onInputChange,
       }),
       helloComponent({'key': 'hello', 'name': state['name']})
@@ -44,7 +46,7 @@ var helloGreeter = react.registerComponent(() => new _HelloGreeter());
 class _CheckBoxComponent extends react.Component {
   getInitialState() => {"checked": false};
 
-  change(e) {
+  _handleChange(e) {
     this.setState({'checked': e.target.checked});
   }
 
@@ -57,7 +59,8 @@ class _CheckBoxComponent extends react.Component {
         'key': 'input',
         'className': 'form-check-input',
         'type': 'checkbox',
-        'value': bind('checked'),
+        'checked': state['checked'],
+        'onChange': _handleChange,
       }),
       react.label({
         'htmlFor': 'doTheDishes',
@@ -141,13 +144,14 @@ class _ListComponent extends react.Component {
   }
 
   dynamic render() {
-    List<dynamic> items = ["\\", "&", ">", "<", "\"", "'", "/"];
+    List<dynamic> items = [];
     for (var item in state['items']) {
       items.add(react.li({"key": item}, "$item"));
     }
 
     return react.div({}, [
       react.button({
+        'type': 'button',
         'key': 'button',
         'className': 'btn btn-primary',
         'onClick': addItem,
@@ -161,7 +165,7 @@ var listComponent = react.registerComponent(() => new _ListComponent());
 
 class _MainComponent extends react.Component {
   render() {
-    return react.div({'ref': 'myDiv'}, props['children']);
+    return react.div({}, props['children']);
   }
 }
 
@@ -183,6 +187,7 @@ class _ContextComponent extends react.Component {
       'key': 'ul'
     }, [
       react.button({
+        'type': 'button',
         'key': 'button',
         'className': 'btn btn-primary',
         'onClick': _onButtonClick,

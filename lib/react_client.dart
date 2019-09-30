@@ -9,10 +9,11 @@ import "dart:async";
 import "dart:collection";
 import "dart:html";
 import 'dart:js';
+import 'dart:js_util';
 
 import "package:js/js.dart";
 import "package:react/react.dart";
-import "package:react/react_client/js_interop_helpers.dart";
+import 'package:react/react_client/js_interop_helpers.dart';
 import 'package:react/react_client/react_interop.dart';
 import "package:react/react_dom.dart";
 import "package:react/react_dom_server.dart";
@@ -23,26 +24,6 @@ import 'package:react/src/ddc_emulated_function_name_bug.dart' as ddc_emulated_f
 
 export 'package:react/react_client/react_interop.dart' show ReactElement, ReactJsComponentFactory, inReactDevMode;
 export 'package:react/react.dart' show ReactComponentFactoryProxy, ComponentFactory;
-
-/// __Deprecated. Will be removed in the `5.0.0` release.__
-///
-/// Use `newObject()` from the `dart:js_util` library instead.
-@Deprecated('5.0.0')
-final EmptyObject emptyJsMap = new EmptyObject();
-
-/// __Deprecated. Will be removed in the `5.0.0` release.__ Use [ReactComponentFactoryProxy] instead.
-///
-/// __You should discontinue use of this, and all typedefs for the return value of [registerComponent].__
-///
-///     // Don't do this
-///     ReactComponentFactory customComponent = registerComponent(() => new CustomComponent());
-///
-///     // Do this.
-///     var customComponent = registerComponent(() => new CustomComponent());
-///
-/// > Type of [children] must be child or list of children, when child is [ReactElement] or [String]
-@Deprecated('5.0.0')
-typedef ReactElement ReactComponentFactory(Map props, [dynamic children]);
 
 /// The type of [Component.ref] specified as a callback.
 ///
@@ -174,6 +155,7 @@ external List<String> _objectKeys(Object object);
 InteropContextValue _jsifyContext(Map<String, dynamic> context) {
   var interopContext = new InteropContextValue();
   context.forEach((key, value) {
+    // ignore: argument_type_not_assignable
     setProperty(interopContext, key, new ReactDartContextInternal(value));
   });
 
@@ -183,6 +165,7 @@ InteropContextValue _jsifyContext(Map<String, dynamic> context) {
 Map<String, dynamic> _unjsifyContext(InteropContextValue interopContext) {
   // TODO consider using `contextKeys` for this if perf of objectKeys is bad.
   return new Map.fromIterable(_objectKeys(interopContext), value: (key) {
+    // ignore: argument_type_not_assignable
     ReactDartContextInternal internal = getProperty(interopContext, key);
     return internal?.value;
   });
@@ -197,7 +180,7 @@ final ReactDartInteropStatics _dartInteropStatics = (() {
           ComponentStatics componentStatics) =>
       zone.run(() {
         void jsRedraw() {
-          jsThis.setState(emptyJsMap);
+          jsThis.setState(newObject());
         }
 
         Ref getRef = (name) {
@@ -377,9 +360,8 @@ ReactDartComponentFactoryProxy _registerComponent(ComponentFactory componentFact
 
   /// Create the JS [`ReactClass` component class](https://facebook.github.io/react/docs/top-level-api.html#react.createclass)
   /// with custom JS lifecycle methods.
-  var reactComponentClass = React.createClass(
-      createReactDartComponentClassConfig(_dartInteropStatics, componentStatics, jsConfig)
-        ..displayName = componentInstance.displayName);
+  var reactComponentClass = createReactDartComponentClass(_dartInteropStatics, componentStatics, jsConfig)
+    ..displayName = componentFactory().displayName;
 
   // Cache default props and store them on the ReactClass so they can be used
   // by ReactDartComponentFactoryProxy and externally.
@@ -417,15 +399,14 @@ class ReactDomComponentFactoryProxy extends ReactComponentFactoryProxy {
 
     // We can't mutate the original since we can't be certain that the value of the
     // the converted event handler will be compatible with the Map's type parameters.
-    var convertibleProps = {}..addAll(props);
+    var convertibleProps = new Map.from(props);
     convertProps(convertibleProps);
 
-    return factory(jsify(convertibleProps), children);
+    return factory(jsifyAndAllowInterop(convertibleProps), children);
   }
 
   /// Prepares the bound values, event handlers, and style props for consumption by ReactJS DOM components.
   static void convertProps(Map props) {
-    _convertBoundValues(props);
     _convertEventHandlers(props);
   }
 }
@@ -467,29 +448,6 @@ _setValueToProps(Map props, val) {
     }
   } else {
     props['value'] = val;
-  }
-}
-
-/// Convert bound values to pure value and packed onChange function
-///
-/// TODO: Remove in 6.0.0 when [Component.bind] is removed.
-_convertBoundValues(Map args) {
-  var boundValue = args['value'];
-
-  if (boundValue is List) {
-    _setValueToProps(args, boundValue[0]);
-    args['value'] = boundValue[0];
-    var onChange = args['onChange'];
-
-    // Put new function into onChange event handler.
-    // If there was something listening for that event, trigger it and return its return value.
-    args['onChange'] = (event) {
-      boundValue[1](_getValueFromDom(event.target));
-
-      if (onChange != null) {
-        return onChange(event);
-      }
-    };
   }
 }
 
@@ -825,7 +783,7 @@ void setClientConfiguration() {
     // corresponding JS functions are not available.
     React.isValidElement(null);
     ReactDom.findDOMNode(null);
-    createReactDartComponentClassConfig(null, null);
+    createReactDartComponentClass(null, null, null);
   } on NoSuchMethodError catch (_) {
     throw new Exception('react.js and react_dom.js must be loaded.');
   } catch (_) {

@@ -64,6 +64,7 @@ class _ParentComponent extends react.Component {
           }),
           '\u00a0',
           react.button({
+            'type': 'button',
             'key': 'string-show-input',
             'className': 'btn btn-primary',
             'onClick': showInputValue,
@@ -77,12 +78,14 @@ class _ParentComponent extends react.Component {
           ChildComponent({'key': 'string-child', "ref": "childRef"}),
           '\u00a0',
           react.button({
+            'type': 'button',
             'key': 'string-show-button',
             'className': 'btn btn-primary',
             'onClick': showChildValue,
           }, 'Print child value'),
           '\u00a0',
           react.button({
+            'type': 'button',
             'key': 'string-increment-button',
             'className': 'btn btn-primary',
             'onClick': incrementChildValue,
@@ -101,6 +104,7 @@ class _ParentComponent extends react.Component {
           }),
           '\u00a0',
           react.button({
+            'type': 'button',
             'key': 'callback-show-input',
             'className': 'btn btn-primary',
             'onClick': showInputCallbackRefValue,
@@ -117,12 +121,14 @@ class _ParentComponent extends react.Component {
           }),
           '\u00a0',
           react.button({
+            'type': 'button',
             'key': 'callback-show-button',
             'className': 'btn btn-primary',
             'onClick': showChildCallbackRefValue,
           }, 'Print child value'),
           '\u00a0',
           react.button({
+            'type': 'button',
             'key': 'callback-increment-button',
             'className': 'btn btn-primary',
             'onClick': incrementChildCallbackRefValue,

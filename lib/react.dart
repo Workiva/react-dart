@@ -49,7 +49,7 @@ abstract class Component {
   /// Only keys declared in this component's [contextKeys] will be present.
   ///
   /// > This API was never stable in any version of ReactJS, and was replaced with a new, incompatible context API
-  /// > in ReactJS 16 that will be exposed in version `5.0.0` of the `react` Dart package via a
+  /// > in ReactJS 16 that will be exposed in version `5.1.0` of the `react` Dart package via a
   /// > new version of `Component` called `Component2`.
   /// >
   /// > It is strongly recommended that you do not use this, and instead wait for `Component2.context`.
@@ -57,7 +57,7 @@ abstract class Component {
   dynamic get context => _context;
 
   /// > This API was never stable in any version of ReactJS, and was replaced with a new, incompatible context API
-  /// > in ReactJS 16 that will be exposed in version `5.0.0` of the `react` Dart package via a
+  /// > in ReactJS 16 that will be exposed in version `5.1.0` of the `react` Dart package via a
   /// > new version of `Component` called `Component2`.
   /// >
   /// > It is strongly recommended that you do not use this, and instead wait for `Component2.context`.
@@ -80,7 +80,7 @@ abstract class Component {
   ///
   /// Support for String `ref`s will be removed in the `6.0.0` release when `Component` is removed.
   ///
-  /// There will be new and improved ways to use / set refs in the `5.0.0` release via APIs exposed in `Component2`.
+  /// There will be new and improved ways to use / set refs in the `5.1.0` release via APIs exposed in `Component2`.
   /// Until then, use a callback ref instead.
   @Deprecated('6.0.0')
   Ref get ref => _ref;
@@ -89,7 +89,7 @@ abstract class Component {
   ///
   /// Support for String `ref`s will be removed in the `6.0.0` release when `Component` is removed.
   ///
-  /// There will be new and improved ways to use / set refs in the `5.0.0` release via APIs exposed in `Component2`.
+  /// There will be new and improved ways to use / set refs in the `5.1.0` release via APIs exposed in `Component2`.
   /// Until then, use a callback ref instead.
   @Deprecated('6.0.0')
   set ref(Ref value) => _ref = value;
@@ -115,18 +115,6 @@ abstract class Component {
   /// Allows the [ReactJS `displayName` property](https://facebook.github.io/react/docs/react-component.html#displayname)
   /// to be set for debugging purposes.
   String get displayName => runtimeType.toString();
-
-  /// > Bind the value of input to [state[key]].
-  ///
-  /// __DEPRECATED.__
-  ///
-  /// This is being removed since it was a non-standard component API that
-  /// only exists in react-dart, and not React JS in the Dart implementation.
-  @Deprecated('5.0.0')
-  bind(key) => [
-        state[key],
-        (value) => setState({key: value})
-      ];
 
   initComponentInternal(props, _jsRedraw, [Ref ref, _jsThis, context]) {
     this._jsRedraw = _jsRedraw;
@@ -161,7 +149,7 @@ abstract class Component {
   /// > __DEPRECATED - DO NOT USE__
   /// >
   /// > This API was never stable in any version of ReactJS, and was replaced with a new, incompatible context API
-  /// > in ReactJS 16 that will be exposed in version `5.0.0` of the `react` Dart package via a
+  /// > in ReactJS 16 that will be exposed in version `5.1.0` of the `react` Dart package via a
   /// > new version of `Component` called `Component2`.
   /// >
   /// > This will be completely removed when the JS side of it is slated for removal (ReactJS 17 / react.dart 6.0.0)
@@ -181,7 +169,7 @@ abstract class Component {
   /// > __DEPRECATED - DO NOT USE__
   /// >
   /// > This API was never stable in any version of ReactJS, and was replaced with a new, incompatible context API
-  /// > in ReactJS 16 that will be exposed in version `5.0.0` of the `react` Dart package via a
+  /// > in ReactJS 16 that will be exposed in version `5.1.0` of the `react` Dart package via a
   /// > new version of `Component` called `Component2`.
   /// >
   /// > This will be completely removed when the JS side of it is slated for removal (ReactJS 17 / react.dart 6.0.0)
@@ -213,7 +201,8 @@ abstract class Component {
   ///
   /// > __DEPRECATED.__
   /// >
-  /// > This was never designed for public consumption, and there will be no replacement implementation in `Component2`.
+  /// > This was never designed for public consumption, and there will be no replacement
+  /// > implementation in `Component2` when it is released in `5.1.0`.
   /// >
   /// > Will be removed in `6.0.0` along with `Component`.
   @Deprecated('6.0.0')
@@ -228,10 +217,6 @@ abstract class Component {
   /// Force a call to [render] by calling [setState], which effectively "redraws" the `Component`.
   ///
   /// Optionally accepts a [callback] that gets called after the component updates.
-  ///
-  /// [A.k.a "forceUpdate"](https://facebook.github.io/react/docs/react-component.html#forceupdate)
-  ///
-  /// TODO: Deprecate in 5.0.0-wip (use `Component2.forceUpdate` instead)
   void redraw([callback()]) {
     setState({}, callback);
   }
@@ -310,7 +295,7 @@ abstract class Component {
   /// > __DEPRECATED - DO NOT USE__
   /// >
   /// > This API was never stable in any version of ReactJS, and was replaced with a new, incompatible context API
-  /// > in ReactJS 16 that will be exposed in version `5.0.0` of the `react` Dart package via a
+  /// > in ReactJS 16 that will be exposed in version `5.1.0` of the `react` Dart package via a
   /// > new version of `Component` called `Component2`.
   /// >
   /// > This will be completely removed when the JS side of it is slated for removal (ReactJS 17 / react.dart 6.0.0)
@@ -328,8 +313,7 @@ abstract class Component {
   /// > __DEPRECATED - DO NOT USE__
   /// >
   /// > This API was never stable in any version of ReactJS, and was replaced with a new, incompatible context API
-  /// > being received.
-  /// > in ReactJS 16 that will be exposed in version `5.0.0` of the `react` Dart package via a
+  /// > in ReactJS 16 that will be exposed in version `5.1.0` of the `react` Dart package via a
   /// > new version of `Component` called `Component2`.
   /// >
   /// > This will be completely removed when the JS side of it is slated for removal (ReactJS 17 / react.dart 6.0.0)
@@ -352,7 +336,7 @@ abstract class Component {
   /// > __DEPRECATED - DO NOT USE__
   /// >
   /// > This API was never stable in any version of ReactJS, and was replaced with a new, incompatible context API
-  /// > in ReactJS 16 that will be exposed in version `5.0.0` of the `react` Dart package via a
+  /// > in ReactJS 16 that will be exposed in version `5.1.0` of the `react` Dart package via a
   /// > new version of `Component` called `Component2`.
   /// >
   /// > This will be completely removed when the JS side of it is slated for removal (ReactJS 17 / react.dart 6.0.0)
@@ -384,7 +368,7 @@ abstract class Component {
   /// > __DEPRECATED - DO NOT USE__
   /// >
   /// > This API was never stable in any version of ReactJS, and was replaced with a new, incompatible context API
-  /// > in ReactJS 16 that will be exposed in version `5.0.0` of the `react` Dart package via a
+  /// > in ReactJS 16 that will be exposed in version `5.1.0` of the `react` Dart package via a
   /// > new version of `Component` called `Component2`.
   /// >
   /// > This will be completely removed when the JS side of it is slated for removal (ReactJS 17 / react.dart 6.0.0)
@@ -398,7 +382,7 @@ abstract class Component {
   /// > __DEPRECATED - DO NOT USE__
   /// >
   /// > This API was never stable in any version of ReactJS, and was replaced with a new, incompatible context API
-  /// > in ReactJS 16 that will be exposed in version `5.0.0` of the `react` Dart package via a
+  /// > in ReactJS 16 that will be exposed in version `5.1.0` of the `react` Dart package via a
   /// > new version of `Component` called `Component2`.
   /// >
   /// > This will be completely removed when the JS side of it is slated for removal (ReactJS 17 / react.dart 6.0.0)
@@ -412,7 +396,7 @@ abstract class Component {
   /// > __DEPRECATED - DO NOT USE__
   /// >
   /// > This API was never stable in any version of ReactJS, and was replaced with a new, incompatible context API
-  /// > in ReactJS 16 that will be exposed in version `5.0.0` of the `react` Dart package via a
+  /// > in ReactJS 16 that will be exposed in version `5.1.0` of the `react` Dart package via a
   /// > new version of `Component` called `Component2`.
   /// >
   /// > This will be completely removed when the JS side of it is slated for removal (ReactJS 17 / react.dart 6.0.0)
@@ -684,10 +668,34 @@ class SyntheticEvent {
 class SyntheticClipboardEvent extends SyntheticEvent {
   final clipboardData;
 
-  SyntheticClipboardEvent(bubbles, cancelable, currentTarget, _defaultPrevented, _preventDefault, stopPropagation,
-      eventPhase, isTrusted, nativeEvent, target, timeStamp, type, this.clipboardData)
-      : super(bubbles, cancelable, currentTarget, _defaultPrevented, _preventDefault, stopPropagation, eventPhase,
-            isTrusted, nativeEvent, target, timeStamp, type) {}
+  SyntheticClipboardEvent(
+    bool bubbles,
+    bool cancelable,
+    dynamic currentTarget,
+    bool defaultPrevented,
+    dynamic preventDefault,
+    dynamic stopPropagation,
+    num eventPhase,
+    bool isTrusted,
+    dynamic nativeEvent,
+    dynamic target,
+    num timeStamp,
+    String type,
+    this.clipboardData,
+  ) /* Prevent formatting differences between Dart 1 and Dart 2 */ : super(
+          bubbles,
+          cancelable,
+          currentTarget,
+          defaultPrevented,
+          preventDefault,
+          stopPropagation,
+          eventPhase,
+          isTrusted,
+          nativeEvent,
+          target,
+          timeStamp,
+          type,
+        ) {}
 }
 
 class SyntheticKeyboardEvent extends SyntheticEvent {
@@ -704,47 +712,106 @@ class SyntheticKeyboardEvent extends SyntheticEvent {
   final num charCode;
 
   SyntheticKeyboardEvent(
-      bubbles,
-      cancelable,
-      currentTarget,
-      _defaultPrevented,
-      _preventDefault,
-      stopPropagation,
-      eventPhase,
-      isTrusted,
-      nativeEvent,
-      target,
-      timeStamp,
-      type,
-      this.altKey,
-      this.char,
-      this.charCode,
-      this.ctrlKey,
-      this.locale,
-      this.location,
-      this.key,
-      this.keyCode,
-      this.metaKey,
-      this.repeat,
-      this.shiftKey)
-      : super(bubbles, cancelable, currentTarget, _defaultPrevented, _preventDefault, stopPropagation, eventPhase,
-            isTrusted, nativeEvent, target, timeStamp, type) {}
+    bool bubbles,
+    bool cancelable,
+    dynamic currentTarget,
+    bool defaultPrevented,
+    dynamic preventDefault,
+    dynamic stopPropagation,
+    num eventPhase,
+    bool isTrusted,
+    dynamic nativeEvent,
+    dynamic target,
+    num timeStamp,
+    String type,
+    this.altKey,
+    this.char,
+    this.charCode,
+    this.ctrlKey,
+    this.locale,
+    this.location,
+    this.key,
+    this.keyCode,
+    this.metaKey,
+    this.repeat,
+    this.shiftKey,
+  ) /* Prevent formatting differences between Dart 1 and Dart 2 */ : super(
+          bubbles,
+          cancelable,
+          currentTarget,
+          defaultPrevented,
+          preventDefault,
+          stopPropagation,
+          eventPhase,
+          isTrusted,
+          nativeEvent,
+          target,
+          timeStamp,
+          type,
+        ) {}
 }
 
 class SyntheticFocusEvent extends SyntheticEvent {
   final /*DOMEventTarget*/ relatedTarget;
 
-  SyntheticFocusEvent(bubbles, cancelable, currentTarget, _defaultPrevented, _preventDefault, stopPropagation,
-      eventPhase, isTrusted, nativeEvent, target, timeStamp, type, this.relatedTarget)
-      : super(bubbles, cancelable, currentTarget, _defaultPrevented, _preventDefault, stopPropagation, eventPhase,
-            isTrusted, nativeEvent, target, timeStamp, type) {}
+  SyntheticFocusEvent(
+    bool bubbles,
+    bool cancelable,
+    dynamic currentTarget,
+    bool defaultPrevented,
+    dynamic preventDefault,
+    dynamic stopPropagation,
+    num eventPhase,
+    bool isTrusted,
+    dynamic nativeEvent,
+    dynamic target,
+    num timeStamp,
+    String type,
+    this.relatedTarget,
+  ) /* Prevent formatting differences between Dart 1 and Dart 2 */ : super(
+          bubbles,
+          cancelable,
+          currentTarget,
+          defaultPrevented,
+          preventDefault,
+          stopPropagation,
+          eventPhase,
+          isTrusted,
+          nativeEvent,
+          target,
+          timeStamp,
+          type,
+        ) {}
 }
 
 class SyntheticFormEvent extends SyntheticEvent {
-  SyntheticFormEvent(bubbles, cancelable, currentTarget, _defaultPrevented, _preventDefault, stopPropagation,
-      eventPhase, isTrusted, nativeEvent, target, timeStamp, type)
-      : super(bubbles, cancelable, currentTarget, _defaultPrevented, _preventDefault, stopPropagation, eventPhase,
-            isTrusted, nativeEvent, target, timeStamp, type) {}
+  SyntheticFormEvent(
+    bool bubbles,
+    bool cancelable,
+    dynamic currentTarget,
+    bool defaultPrevented,
+    dynamic preventDefault,
+    dynamic stopPropagation,
+    num eventPhase,
+    bool isTrusted,
+    dynamic nativeEvent,
+    dynamic target,
+    num timeStamp,
+    String type,
+  ) /* Prevent formatting differences between Dart 1 and Dart 2 */ : super(
+          bubbles,
+          cancelable,
+          currentTarget,
+          defaultPrevented,
+          preventDefault,
+          stopPropagation,
+          eventPhase,
+          isTrusted,
+          nativeEvent,
+          target,
+          timeStamp,
+          type,
+        ) {}
 }
 
 class SyntheticDataTransfer {
@@ -773,34 +840,46 @@ class SyntheticMouseEvent extends SyntheticEvent {
   final bool shiftKey;
 
   SyntheticMouseEvent(
-      bubbles,
-      cancelable,
-      currentTarget,
-      _defaultPrevented,
-      _preventDefault,
-      stopPropagation,
-      eventPhase,
-      isTrusted,
-      nativeEvent,
-      target,
-      timeStamp,
-      type,
-      this.altKey,
-      this.button,
-      this.buttons,
-      this.clientX,
-      this.clientY,
-      this.ctrlKey,
-      this.dataTransfer,
-      this.metaKey,
-      this.pageX,
-      this.pageY,
-      this.relatedTarget,
-      this.screenX,
-      this.screenY,
-      this.shiftKey)
-      : super(bubbles, cancelable, currentTarget, _defaultPrevented, _preventDefault, stopPropagation, eventPhase,
-            isTrusted, nativeEvent, target, timeStamp, type) {}
+    bool bubbles,
+    bool cancelable,
+    dynamic currentTarget,
+    bool defaultPrevented,
+    dynamic preventDefault,
+    dynamic stopPropagation,
+    num eventPhase,
+    bool isTrusted,
+    dynamic nativeEvent,
+    dynamic target,
+    num timeStamp,
+    String type,
+    this.altKey,
+    this.button,
+    this.buttons,
+    this.clientX,
+    this.clientY,
+    this.ctrlKey,
+    this.dataTransfer,
+    this.metaKey,
+    this.pageX,
+    this.pageY,
+    this.relatedTarget,
+    this.screenX,
+    this.screenY,
+    this.shiftKey,
+  ) /* Prevent formatting differences between Dart 1 and Dart 2 */ : super(
+          bubbles,
+          cancelable,
+          currentTarget,
+          defaultPrevented,
+          preventDefault,
+          stopPropagation,
+          eventPhase,
+          isTrusted,
+          nativeEvent,
+          target,
+          timeStamp,
+          type,
+        ) {}
 }
 
 class SyntheticTouchEvent extends SyntheticEvent {
@@ -813,27 +892,39 @@ class SyntheticTouchEvent extends SyntheticEvent {
   final /*DOMTouchList*/ touches;
 
   SyntheticTouchEvent(
-      bubbles,
-      cancelable,
-      currentTarget,
-      _defaultPrevented,
-      _preventDefault,
-      stopPropagation,
-      eventPhase,
-      isTrusted,
-      nativeEvent,
-      target,
-      timeStamp,
-      type,
-      this.altKey,
-      this.changedTouches,
-      this.ctrlKey,
-      this.metaKey,
-      this.shiftKey,
-      this.targetTouches,
-      this.touches)
-      : super(bubbles, cancelable, currentTarget, _defaultPrevented, _preventDefault, stopPropagation, eventPhase,
-            isTrusted, nativeEvent, target, timeStamp, type) {}
+    bool bubbles,
+    bool cancelable,
+    dynamic currentTarget,
+    bool defaultPrevented,
+    dynamic preventDefault,
+    dynamic stopPropagation,
+    num eventPhase,
+    bool isTrusted,
+    dynamic nativeEvent,
+    dynamic target,
+    num timeStamp,
+    String type,
+    this.altKey,
+    this.changedTouches,
+    this.ctrlKey,
+    this.metaKey,
+    this.shiftKey,
+    this.targetTouches,
+    this.touches,
+  ) /* Prevent formatting differences between Dart 1 and Dart 2 */ : super(
+          bubbles,
+          cancelable,
+          currentTarget,
+          defaultPrevented,
+          preventDefault,
+          stopPropagation,
+          eventPhase,
+          isTrusted,
+          nativeEvent,
+          target,
+          timeStamp,
+          type,
+        ) {}
 }
 
 class SyntheticTransitionEvent extends SyntheticEvent {
@@ -890,10 +981,35 @@ class SyntheticUIEvent extends SyntheticEvent {
   final num detail;
   final /*DOMAbstractView*/ view;
 
-  SyntheticUIEvent(bubbles, cancelable, currentTarget, _defaultPrevented, _preventDefault, stopPropagation, eventPhase,
-      isTrusted, nativeEvent, target, timeStamp, type, this.detail, this.view)
-      : super(bubbles, cancelable, currentTarget, _defaultPrevented, _preventDefault, stopPropagation, eventPhase,
-            isTrusted, nativeEvent, target, timeStamp, type) {}
+  SyntheticUIEvent(
+    bool bubbles,
+    bool cancelable,
+    dynamic currentTarget,
+    bool _defaultPrevented,
+    dynamic _preventDefault,
+    dynamic stopPropagation,
+    num eventPhase,
+    bool isTrusted,
+    dynamic nativeEvent,
+    dynamic target,
+    num timeStamp,
+    String type,
+    this.detail,
+    this.view,
+  ) /* Prevent formatting differences between Dart 1 and Dart 2 */ : super(
+          bubbles,
+          cancelable,
+          currentTarget,
+          _defaultPrevented,
+          _preventDefault,
+          stopPropagation,
+          eventPhase,
+          isTrusted,
+          nativeEvent,
+          target,
+          timeStamp,
+          type,
+        ) {}
 }
 
 class SyntheticWheelEvent extends SyntheticEvent {
@@ -903,24 +1019,36 @@ class SyntheticWheelEvent extends SyntheticEvent {
   final num deltaZ;
 
   SyntheticWheelEvent(
-      bubbles,
-      cancelable,
-      currentTarget,
-      _defaultPrevented,
-      _preventDefault,
-      stopPropagation,
-      eventPhase,
-      isTrusted,
-      nativeEvent,
-      target,
-      timeStamp,
-      type,
-      this.deltaX,
-      this.deltaMode,
-      this.deltaY,
-      this.deltaZ)
-      : super(bubbles, cancelable, currentTarget, _defaultPrevented, _preventDefault, stopPropagation, eventPhase,
-            isTrusted, nativeEvent, target, timeStamp, type) {}
+    bool bubbles,
+    bool cancelable,
+    dynamic currentTarget,
+    bool defaultPrevented,
+    dynamic preventDefault,
+    dynamic stopPropagation,
+    num eventPhase,
+    bool isTrusted,
+    dynamic nativeEvent,
+    dynamic target,
+    num timeStamp,
+    String type,
+    this.deltaX,
+    this.deltaMode,
+    this.deltaY,
+    this.deltaZ,
+  ) /* Prevent formatting differences between Dart 1 and Dart 2 */ : super(
+          bubbles,
+          cancelable,
+          currentTarget,
+          defaultPrevented,
+          preventDefault,
+          stopPropagation,
+          eventPhase,
+          isTrusted,
+          nativeEvent,
+          target,
+          timeStamp,
+          type,
+        ) {}
 }
 
 /// Registers [componentFactory] on both client and server.

@@ -7,7 +7,6 @@ import 'dart:js_util' as js_util;
 import 'package:react/react.dart';
 import 'package:react/react_dom.dart' as react_dom;
 import 'package:react/react_client.dart';
-import 'package:react/react_client/js_interop_helpers.dart';
 import 'package:react/react_test_utils.dart';
 import 'package:test/test.dart';
 
@@ -121,41 +120,28 @@ void main() {
       group('wheel', () => testEvent(Simulate.wheel, 'wheel'));
     });
 
-    group('native event', () {
-      group('animationEnd', () => testEvent(SimulateNative.animationEnd, 'animationEnd'));
-      group('animationIteration', () => testEvent(SimulateNative.animationIteration, 'animationIteration'));
-      group('animationStart', () => testEvent(SimulateNative.animationStart, 'animationStart'));
-      group('blur', () => testEvent(SimulateNative.blur, 'blur'));
-      group('click', () => testEvent(SimulateNative.click, 'click'));
-      group('copy', () => testEvent(SimulateNative.copy, 'copy'));
-      group('cut', () => testEvent(SimulateNative.cut, 'cut'));
-      group('doubleClick', () => testEvent(SimulateNative.doubleClick, 'doubleClick'));
-      group('drag', () => testEvent(SimulateNative.drag, 'drag'));
-      group('dragEnd', () => testEvent(SimulateNative.dragEnd, 'dragEnd'));
-      group('dragEnter', () => testEvent(SimulateNative.dragEnter, 'dragEnter'));
-      group('dragExit', () => testEvent(SimulateNative.dragExit, 'dragExit'));
-      group('dragLeave', () => testEvent(SimulateNative.dragLeave, 'dragLeave'));
-      group('dragOver', () => testEvent(SimulateNative.dragOver, 'dragOver'));
-      group('dragStart', () => testEvent(SimulateNative.dragStart, 'dragStart'));
-      group('drop', () => testEvent(SimulateNative.drop, 'drop'));
-      group('focus', () => testEvent(SimulateNative.focus, 'focus'));
-      group('input', () => testEvent(SimulateNative.input, 'input'));
-      group('keyDown', () => testEvent(SimulateNative.keyDown, 'keyDown'));
-      group('keyUp', () => testEvent(SimulateNative.keyUp, 'keyUp'));
-      group('mouseDown', () => testEvent(SimulateNative.mouseDown, 'mouseDown'));
-      group('mouseMove', () => testEvent(SimulateNative.mouseMove, 'mouseMove'));
-      group('mouseOut', () => testEvent(SimulateNative.mouseOut, 'mouseOut'));
-      group('mouseOver', () => testEvent(SimulateNative.mouseOver, 'mouseOver'));
-      group('mouseUp', () => testEvent(SimulateNative.mouseUp, 'mouseUp'));
-      group('paste', () => testEvent(SimulateNative.paste, 'paste'));
-      group('scroll', () => testEvent(SimulateNative.scroll, 'scroll'));
-      group('submit', () => testEvent(SimulateNative.submit, 'submit'));
-      group('touchCancel', () => testEvent(SimulateNative.touchCancel, 'touchCancel'));
-      group('touchEnd', () => testEvent(SimulateNative.touchEnd, 'touchEnd'));
-      group('touchMove', () => testEvent(SimulateNative.touchMove, 'touchMove'));
-      group('touchStart', () => testEvent(SimulateNative.touchStart, 'touchStart'));
-      group('transitionEnd', () => testEvent(SimulateNative.transitionEnd, 'transitionEnd'));
-      group('wheel', () => testEvent(SimulateNative.wheel, 'wheel'));
+    test('passes in and jsifies eventData properly', () {
+      const testKeyCode = 42;
+
+      String callInfo;
+      bool wasStopPropagationCalled = false;
+
+      final renderedNode = renderIntoDocument(div({
+        'onKeyDown': (event) {
+          event.stopPropagation();
+          callInfo = 'onKeyDown ${event.keyCode}';
+        }
+      }));
+
+      Simulate.keyDown(renderedNode, {
+        'keyCode': testKeyCode,
+        'stopPropagation': () {
+          wasStopPropagationCalled = true;
+        }
+      });
+
+      expect(callInfo, 'onKeyDown $testKeyCode');
+      expect(wasStopPropagationCalled, isTrue, reason: 'should have successfully called Dart function passed in');
     });
   });
 
@@ -163,14 +149,14 @@ void main() {
     component = renderIntoDocument(sampleComponent({}));
     var spanComponent = findRenderedDOMComponentWithClass(component, 'span1');
 
-    expect(getProperty(spanComponent, 'tagName'), equals('SPAN'));
+    expect(js_util.getProperty(spanComponent, 'tagName'), equals('SPAN'));
   });
 
   test('findRenderedDOMComponentWithTag', () {
     component = renderIntoDocument(sampleComponent({}));
     var h1Component = findRenderedDOMComponentWithTag(component, 'h1');
 
-    expect(getProperty(h1Component, 'tagName'), equals('H1'));
+    expect(js_util.getProperty(h1Component, 'tagName'), equals('H1'));
   });
 
   test('findRenderedComponentWithTypeV2', () {
@@ -227,7 +213,6 @@ void main() {
     });
 
     test('returns false argument is not an element', () {
-      expect(isElement(new EmptyObject()), isFalse);
       expect(isElement(js_util.newObject()), isFalse);
     });
   });
@@ -263,8 +248,8 @@ void main() {
     var results = scryRenderedDOMComponentsWithClass(component, 'divClass');
 
     expect(results.length, 2);
-    expect(getProperty(results[0], 'tagName'), equals('DIV'));
-    expect(getProperty(results[1], 'tagName'), equals('DIV'));
+    expect(js_util.getProperty(results[0], 'tagName'), equals('DIV'));
+    expect(js_util.getProperty(results[1], 'tagName'), equals('DIV'));
   });
 
   test('scryRenderedDOMComponentsWithTag', () {
@@ -273,9 +258,9 @@ void main() {
     var results = scryRenderedDOMComponentsWithTag(component, 'div');
 
     expect(results.length, 3);
-    expect(getProperty(results[0], 'tagName'), equals('DIV'));
-    expect(getProperty(results[1], 'tagName'), equals('DIV'));
-    expect(getProperty(results[2], 'tagName'), equals('DIV'));
+    expect(js_util.getProperty(results[0], 'tagName'), equals('DIV'));
+    expect(js_util.getProperty(results[1], 'tagName'), equals('DIV'));
+    expect(js_util.getProperty(results[2], 'tagName'), equals('DIV'));
   });
 
   test('renderIntoDocument', () {

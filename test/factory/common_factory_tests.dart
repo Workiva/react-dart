@@ -1,6 +1,7 @@
 import 'dart:async';
 import 'dart:html';
 import 'dart:js';
+import 'dart:js_util';
 
 import 'dart:js_util';
 import 'package:test/test.dart';
@@ -9,6 +10,7 @@ import 'package:react/react_client.dart';
 import 'package:react/react_dom.dart' as react_dom;
 import 'package:react/react_test_utils.dart' as rtu;
 import 'package:react/react.dart' as react;
+import 'package:react/react_client/react_interop.dart';
 
 import '../util.dart';
 
@@ -174,6 +176,29 @@ void domEventHandlerWrappingTests(ReactComponentFactoryProxy factory) {
   });
 }
 
+void refTests(ReactComponentFactoryProxy factory, {void verifyRefValue(dynamic refValue)}) {
+  test('callback refs are called with the correct value', () {
+    var called = false;
+    var refValue;
+
+    rtu.renderIntoDocument(factory({
+      'ref': (ref) {
+        called = true;
+        refValue = ref;
+      }
+    }));
+
+    expect(called, isTrue, reason: 'should have called the callback ref');
+    verifyRefValue(refValue);
+  });
+
+  test('string refs are created with the correct value', () {
+    ReactComponent renderedInstance = _renderWithOwner(() => factory({'ref': 'test'}));
+
+    verifyRefValue(renderedInstance.dartComponent.ref('test'));
+  });
+}
+
 void _childKeyWarningTests(Function factory) {
   group('key/children validation', () {
     bool consoleErrorCalled;
@@ -185,7 +210,7 @@ void _childKeyWarningTests(Function factory) {
       consoleErrorMessage = null;
 
       originalConsoleError = context['console']['error'];
-      context['console']['error'] = new JsFunction.withThis((self, message) {
+      context['console']['error'] = new JsFunction.withThis((self, message, arg1, arg2, arg3) {
         consoleErrorCalled = true;
         consoleErrorMessage = message;
 
@@ -201,14 +226,13 @@ void _childKeyWarningTests(Function factory) {
       _renderWithUniqueOwnerName(() => factory({}, [react.span({})]));
 
       expect(consoleErrorCalled, isTrue, reason: 'should have outputted a warning');
-      expect(consoleErrorMessage, contains('Each child in an array or iterator should have a unique "key" prop.'));
+      expect(consoleErrorMessage, contains('Each child in a list should have a unique "key" prop.'));
     });
 
     test('warns when multiple children are passed as a list', () {
       _renderWithUniqueOwnerName(() => factory({}, [react.span({}), react.span({}), react.span({})]));
 
       expect(consoleErrorCalled, isTrue, reason: 'should have outputted a warning');
-      expect(consoleErrorMessage, contains('Each child in an array or iterator should have a unique "key" prop.'));
     });
 
     test('does not warn when multiple children are passed as variadic args', () {
@@ -236,6 +260,12 @@ void _renderWithUniqueOwnerName(ReactElement render()) {
   _nextFactoryId++;
 
   rtu.renderIntoDocument(factory({'render': render}));
+}
+
+_renderWithOwner(ReactElement render()) {
+  final factory = react.registerComponent(() => new _OwnerHelperComponent()) as ReactDartComponentFactoryProxy;
+
+  return rtu.renderIntoDocument(factory({'render': render}));
 }
 
 class _OwnerHelperComponent extends react.Component {

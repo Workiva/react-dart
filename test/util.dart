@@ -1,8 +1,9 @@
 @JS()
 library react.test.util;
 
+import 'dart:js_util' show getProperty;
+
 import 'package:js/js.dart';
-import 'dart:js_util';
 
 @JS('Object.keys')
 external List _objectKeys(obj);
