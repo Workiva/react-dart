@@ -1174,11 +1174,14 @@ abstract class Component2 implements Component {
 ///       /* Include other standard component logic */
 ///
 ///     }
-mixin TypedSnapshot<TSnapshot> on Component2 {
-  @override
+///
+/// This mixin should only be used with `Component2` or `UiComponent2`. This is not
+/// enforced via the `on` keyword because of an issue with the Dart SDK.
+///
+/// See: <https://github.com/dart-lang/sdk/issues/38098>
+mixin TypedSnapshot<TSnapshot> {
   TSnapshot getSnapshotBeforeUpdate(Map prevProps, Map prevState);
 
-  @override
   void componentDidUpdate(Map prevProps, Map prevState, [covariant TSnapshot snapshot]);
 }
 
