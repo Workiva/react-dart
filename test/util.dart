@@ -36,8 +36,16 @@ T getDartComponent<T extends react.Component>(ReactComponent dartComponent) {
   return dartComponent.dartComponent as T;
 }
 
+T getDartComponent2<T extends react.Component2>(ReactComponent dartComponent) {
+  return dartComponent.dartComponent as T;
+}
+
 Map getDartComponentProps(ReactComponent dartComponent) {
   return getDartComponent(dartComponent).props;
+}
+
+Map getDartComponentProps2(ReactComponent dartComponent) {
+  return getDartComponent2(dartComponent).props;
 }
 
 Map getDartElementProps(ReactElement dartElement) {

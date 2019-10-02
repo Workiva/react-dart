@@ -201,11 +201,11 @@ main() {
 
         final Map expectedProps = unmodifiableMap(defaultProps, initialProps, emptyChildrenProps);
 
-        LifecycleTestHelper component = getDartComponent(render(components2.LifecycleTest(initialProps)));
+        LifecycleTestHelper2 component = getDartComponent2(render(components2.LifecycleTest(initialProps)));
 
         component.lifecycleCalls.clear();
 
-        (component as react.Component2).forceUpdate();
+        component.forceUpdate();
 
         expect(
             component.lifecycleCalls,
@@ -219,7 +219,7 @@ main() {
 
       group('componentDidUpdate receives the same value created in getSnapshotBeforeUpdate when snapshot is', () {
         void testSnapshotType(dynamic expectedSnapshot) {
-          LifecycleTestHelper component = getDartComponent(
+          LifecycleTestHelper2 component = getDartComponent2(
               render(components2.LifecycleTest({'getSnapshotBeforeUpdate': (_, __, ___) => expectedSnapshot})));
           component.lifecycleCalls.clear();
           component.setState({});
@@ -261,7 +261,7 @@ main() {
           var mountNode = new DivElement();
           var instance = react_dom.render(components2.LifecycleTest(initialProps), mountNode);
 
-          LifecycleTestHelper component = getDartComponent(instance);
+          LifecycleTestHelper2 component = getDartComponent2(instance);
 
           expect(
               component.lifecycleCalls,
@@ -275,7 +275,7 @@ main() {
           component.lifecycleCalls.clear();
 
           instance = react_dom.render(components2.LifecycleTest(updatedProps), mountNode);
-          component = getDartComponent(instance);
+          component = getDartComponent2(instance);
 
           expect(
               component.lifecycleCalls,
@@ -303,11 +303,11 @@ main() {
           var mountNode = new DivElement();
           var instance = react_dom.render(components2.LifecycleTest(initialProps), mountNode);
 
-          LifecycleTestHelper component = getDartComponent(instance);
+          LifecycleTestHelper2 component = getDartComponent2(instance);
 
           component.lifecycleCalls.clear();
 
-          (component as react.Component2).forceUpdate();
+          component.forceUpdate();
 
           expect(
               component.lifecycleCalls,
@@ -323,8 +323,8 @@ main() {
       test('triggers error lifecycle events when an error is thrown', () {
         var mountNode = new DivElement();
         var renderedInstance = react_dom.render(components2.SetStateTest({}), mountNode);
-        LifecycleTestHelper component = getDartComponent(renderedInstance);
-        LifecycleTestHelper.staticLifecycleCalls.clear();
+        LifecycleTestHelper2 component = getDartComponent2(renderedInstance);
+        LifecycleTestHelper2.staticLifecycleCalls.clear();
         component.setState({"shouldThrow": true});
 
         // First render throws an error, caught by `getDerivedStateFromError`.
@@ -357,8 +357,8 @@ main() {
       test('error lifecycle methods get passed Dartified Error/Exception when an error is thrown', () {
         var mountNode = new DivElement();
         var renderedInstance = react_dom.render(components2.SetStateTest({}), mountNode);
-        LifecycleTestHelper component = getDartComponent(renderedInstance);
-        LifecycleTestHelper.staticLifecycleCalls.clear();
+        LifecycleTestHelper2 component = getDartComponent2(renderedInstance);
+        LifecycleTestHelper2.staticLifecycleCalls.clear();
         component.setState({"shouldThrow": true});
 
         expect(
@@ -375,8 +375,8 @@ main() {
       test('can skip methods passed into _registerComponent2', () {
         var mountNode = new DivElement();
         var renderedInstance = react_dom.render(components2.SkipMethodsTest({}), mountNode);
-        LifecycleTestHelper component = getDartComponent(renderedInstance);
-        LifecycleTestHelper.staticLifecycleCalls.clear();
+        LifecycleTestHelper2 component = getDartComponent2(renderedInstance);
+        LifecycleTestHelper2.staticLifecycleCalls.clear();
         component.setState({"shouldThrow": true});
 
         expect(
@@ -402,9 +402,9 @@ main() {
       test('passes the correct error/info to lifecycle methods when an error is thrown', () {
         var mountNode = new DivElement();
         var renderedInstance = react_dom.render(components2.SetStateTest({}), mountNode);
-        LifecycleTestHelper component = getDartComponent(renderedInstance);
+        LifecycleTestHelper2 component = getDartComponent2(renderedInstance);
         Element renderedNode = react_dom.findDOMNode(renderedInstance);
-        LifecycleTestHelper.staticLifecycleCalls.clear();
+        LifecycleTestHelper2.staticLifecycleCalls.clear();
         component.setState({"shouldThrow": true});
 
         expect(renderedNode.children[1].text, contains(getComponent2ErrorMessage()));
@@ -423,8 +423,8 @@ main() {
 
         expect(() {
           var renderedInstance = react_dom.render(components2.DefaultSkipMethodsTest({}), mountNode);
-          LifecycleTestHelper component = getDartComponent(renderedInstance);
-          LifecycleTestHelper.staticLifecycleCalls.clear();
+          LifecycleTestHelper2 component = getDartComponent2(renderedInstance);
+          LifecycleTestHelper2.staticLifecycleCalls.clear();
           component.setState({"shouldThrow": true});
         }, throwsA(anything));
       });
@@ -450,7 +450,12 @@ void sharedLifecycleTests<T extends react.Component>({
   group('(shared behavior)', () {
     group('default props', () {
       test('is only called once per component factory and cached', () {
-        final staticHelperInstance = defaultPropsCachingTestComponentFactory() as DefaultPropsCachingTestHelper;
+        var staticHelperInstance;
+        if(isComponent2) {
+          staticHelperInstance = defaultPropsCachingTestComponentFactory() as DefaultPropsCachingTestHelper2;
+        } else {
+          staticHelperInstance = defaultPropsCachingTestComponentFactory() as DefaultPropsCachingTestHelper;
+        }
         staticHelperInstance.staticGetDefaultPropsCallCount = 0;
         expect(staticHelperInstance.staticGetDefaultPropsCallCount, 0);
 
@@ -505,8 +510,8 @@ void sharedLifecycleTests<T extends react.Component>({
     });
 
     test('receives correct lifecycle calls on component mount', () {
-      LifecycleTestHelper component = getDartComponent(render(LifecycleTest({})));
       if (!isComponent2) {
+        LifecycleTestHelper component = getDartComponent(render(LifecycleTest({})));
         expect(
             component.lifecycleCalls,
             equals([
@@ -516,6 +521,7 @@ void sharedLifecycleTests<T extends react.Component>({
               matchCall('componentDidMount'),
             ]));
       } else {
+        LifecycleTestHelper2 component = getDartComponent2(render(LifecycleTest({})));
         expect(
             component.lifecycleCalls,
             equals([

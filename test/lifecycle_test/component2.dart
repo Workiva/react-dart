@@ -9,12 +9,12 @@ import 'package:react/react_client/react_interop.dart';
 
 import 'util.dart';
 
-ReactDartComponentFactoryProxy2 SetStateTest = react.registerComponent(() => new _SetStateTest(), [null]);
-ReactDartComponentFactoryProxy2 DefaultSkipMethodsTest = react.registerComponent(() => new _SetStateTest());
+ReactDartComponentFactoryProxy2 SetStateTest = react.registerComponent2(() => new _SetStateTest(), skipMethods: [null]);
+ReactDartComponentFactoryProxy2 DefaultSkipMethodsTest = react.registerComponent2(() => new _SetStateTest());
 ReactDartComponentFactoryProxy2 SkipMethodsTest =
-    react.registerComponent(() => new _SetStateTest(), ['getSnapshotBeforeUpdate']);
+    react.registerComponent2(() => new _SetStateTest(), skipMethods: ['getSnapshotBeforeUpdate']);
 
-class _SetStateTest extends react.Component2 with LifecycleTestHelper {
+class _SetStateTest extends react.Component2 with LifecycleTestHelper2 {
   @override
   get defaultProps => {
         'shouldUpdate': true,
@@ -121,7 +121,7 @@ class _SetStateTest extends react.Component2 with LifecycleTestHelper {
 
 _DefaultPropsCachingTest defaultPropsCachingTestComponentFactory() => new _DefaultPropsCachingTest();
 
-class _DefaultPropsCachingTest extends react.Component2 implements DefaultPropsCachingTestHelper {
+class _DefaultPropsCachingTest extends react.Component2 implements DefaultPropsCachingTestHelper2 {
   static int getDefaultPropsCallCount = 0;
 
   int get staticGetDefaultPropsCallCount => getDefaultPropsCallCount;
@@ -137,7 +137,7 @@ class _DefaultPropsCachingTest extends react.Component2 implements DefaultPropsC
   render() => false;
 }
 
-ReactDartComponentFactoryProxy2 DefaultPropsTest = react.registerComponent(() => new _DefaultPropsTest());
+ReactDartComponentFactoryProxy2 DefaultPropsTest = react.registerComponent2(() => new _DefaultPropsTest());
 
 class _DefaultPropsTest extends react.Component2 {
   static int getDefaultPropsCallCount = 0;
@@ -147,7 +147,7 @@ class _DefaultPropsTest extends react.Component2 {
   render() => false;
 }
 
-ReactDartComponentFactoryProxy2 PropTypesTest = react.registerComponent(() => new PropTypesTestComponent());
+ReactDartComponentFactoryProxy2 PropTypesTest = react.registerComponent2(() => new PropTypesTestComponent());
 
 class PropTypesTestComponent extends react.Component2 {
   get propTypes => {
@@ -165,17 +165,17 @@ class PropTypesTestComponent extends react.Component2 {
 
 react.Context LifecycleTestContext = react.createContext();
 
-ReactDartComponentFactoryProxy2 ContextConsumerWrapper = react.registerComponent(() => new _ContextConsumerWrapper());
+ReactDartComponentFactoryProxy2 ContextConsumerWrapper = react.registerComponent2(() => new _ContextConsumerWrapper());
 
-class _ContextConsumerWrapper extends react.Component2 with LifecycleTestHelper {
+class _ContextConsumerWrapper extends react.Component2 with LifecycleTestHelper2 {
   dynamic render() {
     return LifecycleTestContext.Consumer({}, props['children'].first);
   }
 }
 
-ReactDartComponentFactoryProxy2 ContextWrapper = react.registerComponent(() => new _ContextWrapper());
+ReactDartComponentFactoryProxy2 ContextWrapper = react.registerComponent2(() => new _ContextWrapper());
 
-class _ContextWrapper extends react.Component2 with LifecycleTestHelper {
+class _ContextWrapper extends react.Component2 with LifecycleTestHelper2 {
   dynamic render() {
     return LifecycleTestContext.Provider(
       {
@@ -187,14 +187,14 @@ class _ContextWrapper extends react.Component2 with LifecycleTestHelper {
 }
 
 ReactDartComponentFactoryProxy2 LifecycleTestWithContext =
-    react.registerComponent(() => new _LifecycleTestWithContext());
+    react.registerComponent2(() => new _LifecycleTestWithContext());
 
 class _LifecycleTestWithContext extends _LifecycleTest {
   @override
   get contextType => LifecycleTestContext;
 }
 
-ReactDartComponentFactoryProxy2 ErrorComponent = react.registerComponent(() => new _ErrorComponent());
+ReactDartComponentFactoryProxy2 ErrorComponent = react.registerComponent2(() => new _ErrorComponent());
 
 class TestDartException implements Exception {
   int code;
@@ -218,9 +218,9 @@ class _ErrorComponent extends react.Component2 {
   }
 }
 
-ReactDartComponentFactoryProxy2 LifecycleTest = react.registerComponent(() => new _LifecycleTest());
+ReactDartComponentFactoryProxy2 LifecycleTest = react.registerComponent2(() => new _LifecycleTest());
 
-class _LifecycleTest extends react.Component2 with LifecycleTestHelper {
+class _LifecycleTest extends react.Component2 with LifecycleTestHelper2 {
   void componentDidMount() => lifecycleCall('componentDidMount');
   void componentWillUnmount() => lifecycleCall('componentWillUnmount');
 

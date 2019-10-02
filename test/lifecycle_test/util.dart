@@ -61,7 +61,58 @@ mixin LifecycleTestHelper on Component {
   }
 }
 
+/// A test helper to record lifecycle calls
+mixin LifecycleTestHelper2 on Component2 {
+  static List staticLifecycleCalls = [];
+
+  /// We needed to add [staticLifecycleCalls] to be able to test static
+  /// lifecycle methods like [getDerivedStateFromProps] and
+  /// [getDerivedStateFromError], which don't get called on the same instance
+  /// as other lifecycle methods.
+  ///
+  /// This alllows static and instance lifecycle methods to add calls to the same list
+  List get lifecycleCalls => staticLifecycleCalls;
+
+  List get lifecycleCallMemberNames => staticLifecycleCalls.map((call) {
+    return call['memberName'];
+  }).toList();
+
+  dynamic lifecycleCall(String memberName, {List arguments: const [], defaultReturnValue(), Map staticProps}) {
+    lifecycleCalls.add({
+      'memberName': memberName,
+      'arguments': arguments,
+      'props': props == null ? null : new Map.from(props),
+      'state': state == null ? null : new Map.from(state),
+      'context': context,
+    });
+
+    var lifecycleCallback = props == null ? staticProps == null ? null : staticProps[memberName] : props[memberName];
+    if (lifecycleCallback != null) {
+      return Function.apply(
+          lifecycleCallback,
+          []
+            ..add(this)
+            ..addAll(arguments));
+    }
+
+    if (defaultReturnValue != null) {
+      return defaultReturnValue();
+    }
+
+    return null;
+  }
+
+  void callSetStateWithNullValue() {
+    setState(null);
+  }
+}
+
 abstract class DefaultPropsCachingTestHelper implements Component {
+  int get staticGetDefaultPropsCallCount;
+  set staticGetDefaultPropsCallCount(int value);
+}
+
+abstract class DefaultPropsCachingTestHelper2 implements Component2 {
   int get staticGetDefaultPropsCallCount;
   set staticGetDefaultPropsCallCount(int value);
 }

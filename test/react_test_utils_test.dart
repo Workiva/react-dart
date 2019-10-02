@@ -10,7 +10,7 @@ import 'package:react/react_client.dart';
 import 'package:react/react_test_utils.dart';
 import 'package:test/test.dart';
 
-import 'test_components.dart';
+import 'test_components2.dart';
 import 'util.dart';
 
 void main() {
@@ -29,7 +29,7 @@ void main() {
     ReactShallowRenderer shallowRenderer;
 
     setUp(() {
-      content = sampleComponent({'className': 'test', 'id': 'createRendererTest'});
+      content = sampleComponent2({'className': 'test', 'id': 'createRendererTest'});
 
       shallowRenderer = createRenderer();
     });
@@ -53,7 +53,7 @@ void main() {
 
   group('Simulate', () {
     setUp(() {
-      component = renderIntoDocument(eventComponent({}));
+      component = renderIntoDocument(eventComponent2({}));
       domNode = react_dom.findDOMNode(component);
       expect(domNode.text, equals(''));
     });
@@ -156,28 +156,28 @@ void main() {
   });
 
   test('findRenderedDOMComponentWithClass', () {
-    component = renderIntoDocument(sampleComponent({}));
+    component = renderIntoDocument(sampleComponent2({}));
     var spanComponent = findRenderedDOMComponentWithClass(component, 'span1');
 
     expect(getProperty(spanComponent, 'tagName'), equals('SPAN'));
   });
 
   test('findRenderedDOMComponentWithTag', () {
-    component = renderIntoDocument(sampleComponent({}));
+    component = renderIntoDocument(sampleComponent2({}));
     var h1Component = findRenderedDOMComponentWithTag(component, 'h1');
 
     expect(getProperty(h1Component, 'tagName'), equals('H1'));
   });
 
   test('findRenderedComponentWithTypeV2', () {
-    component = renderIntoDocument(wrapperComponent({}, [sampleComponent({})]));
-    var result = findRenderedComponentWithTypeV2(component, sampleComponent);
-    expect(isCompositeComponentWithTypeV2(result, sampleComponent), isTrue);
+    component = renderIntoDocument(wrapperComponent2({}, [sampleComponent2({})]));
+    var result = findRenderedComponentWithTypeV2(component, sampleComponent2);
+    expect(isCompositeComponentWithTypeV2(result, sampleComponent2), isTrue);
   });
 
   group('isCompositeComponent', () {
     test('returns true when element is a composite component (created with React.createClass())', () {
-      component = renderIntoDocument(eventComponent({}));
+      component = renderIntoDocument(eventComponent2({}));
 
       expect(isCompositeComponent(component), isTrue);
     });
@@ -190,23 +190,23 @@ void main() {
   });
 
   group('isCompositeComponentWithTypeV2', () {
-    var renderedInstance = renderIntoDocument(sampleComponent({}));
+    var renderedInstance = renderIntoDocument(sampleComponent2({}));
 
     test('returns true when element is a composite component (created with React.createClass()) of the specified type',
         () {
-      expect(isCompositeComponentWithTypeV2(renderedInstance, sampleComponent), isTrue);
+      expect(isCompositeComponentWithTypeV2(renderedInstance, sampleComponent2), isTrue);
     });
 
     test(
         'returns false when element is not a composite component (created with React.createClass()) of the specified type',
         () {
-      expect(isCompositeComponentWithTypeV2(renderedInstance, eventComponent), isFalse);
+      expect(isCompositeComponentWithTypeV2(renderedInstance, eventComponent2), isFalse);
     });
   });
 
   group('isDOMComponent', () {
     test('returns true when argument is a DOM component', () {
-      component = renderIntoDocument(sampleComponent({}));
+      component = renderIntoDocument(sampleComponent2({}));
       var h1Element = findRenderedDOMComponentWithTag(component, 'h1');
 
       expect(isDOMComponent(h1Element), isTrue);
@@ -239,17 +239,17 @@ void main() {
 
   test('scryRenderedComponentsWithTypeV2', () {
     component =
-        renderIntoDocument(wrapperComponent({}, [sampleComponent({}), sampleComponent({}), eventComponent({})]));
+        renderIntoDocument(wrapperComponent2({}, [sampleComponent2({}), sampleComponent2({}), eventComponent2({})]));
 
-    var results = scryRenderedComponentsWithTypeV2(component, sampleComponent);
+    var results = scryRenderedComponentsWithTypeV2(component, sampleComponent2);
 
     expect(results.length, 2);
-    expect(isCompositeComponentWithTypeV2(results[0], sampleComponent), isTrue);
-    expect(isCompositeComponentWithTypeV2(results[1], sampleComponent), isTrue);
+    expect(isCompositeComponentWithTypeV2(results[0], sampleComponent2), isTrue);
+    expect(isCompositeComponentWithTypeV2(results[1], sampleComponent2), isTrue);
   });
 
   test('scryRenderedDOMComponentsWithClass', () {
-    component = renderIntoDocument(wrapperComponent({}, [
+    component = renderIntoDocument(wrapperComponent2({}, [
       div({'className': 'divClass'}),
       div({'className': 'divClass'}),
       span({})
@@ -263,7 +263,7 @@ void main() {
   });
 
   test('scryRenderedDOMComponentsWithTag', () {
-    component = renderIntoDocument(wrapperComponent({}, [div({}), div({}), span({})]));
+    component = renderIntoDocument(wrapperComponent2({}, [div({}), div({}), span({})]));
 
     var results = scryRenderedDOMComponentsWithTag(component, 'div');
 
@@ -274,7 +274,7 @@ void main() {
   });
 
   test('renderIntoDocument', () {
-    var reactComponent = renderIntoDocument(sampleComponent({}));
+    var reactComponent = renderIntoDocument(sampleComponent2({}));
     var divElements = scryRenderedDOMComponentsWithTag(reactComponent, 'div');
     var h1Elements = scryRenderedDOMComponentsWithTag(reactComponent, 'h1');
     var spanElements = scryRenderedDOMComponentsWithTag(reactComponent, 'span');

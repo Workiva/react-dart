@@ -4,7 +4,6 @@ import 'package:test/test.dart';
 
 import 'package:react/react.dart' as react;
 import 'package:react/react_client.dart';
-import 'package:react/react_test_utils.dart' as rtu;
 
 import '../util.dart';
 import 'common_factory_tests.dart';

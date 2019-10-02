@@ -279,26 +279,26 @@ void _childKeyWarningTests(Function factory) {
     });
 
     test('warns when a single child is passed as a list', () {
-      _renderWithUniqueOwnerName(() => factory({}, [react.span({})]));
+      _renderWithUniqueOwnerName2(() => factory({}, [react.span({})]));
 
       expect(consoleErrorCalled, isTrue, reason: 'should have outputted a warning');
       expect(consoleErrorMessage, contains('Each child in a list should have a unique "key" prop.'));
     });
 
     test('warns when multiple children are passed as a list', () {
-      _renderWithUniqueOwnerName(() => factory({}, [react.span({}), react.span({}), react.span({})]));
+      _renderWithUniqueOwnerName2(() => factory({}, [react.span({}), react.span({}), react.span({})]));
 
       expect(consoleErrorCalled, isTrue, reason: 'should have outputted a warning');
     });
 
     test('does not warn when multiple children are passed as variadic args', () {
-      _renderWithUniqueOwnerName(() => factory({}, react.span({}), react.span({}), react.span({})));
+      _renderWithUniqueOwnerName2(() => factory({}, react.span({}), react.span({}), react.span({})));
 
       expect(consoleErrorCalled, isFalse, reason: 'should not have outputted a warning');
     });
 
     test('when rendering custom Dart components', () {
-      _renderWithUniqueOwnerName(() => factory({}, react.span({})));
+      _renderWithUniqueOwnerName2(() => factory({}, react.span({})));
 
       expect(consoleErrorCalled, isFalse, reason: 'should not have outputted a warning');
     });
@@ -324,7 +324,29 @@ _renderWithOwner(ReactElement render()) {
   return rtu.renderIntoDocument(factory({'render': render}));
 }
 
+/// Renders the provided [render] function with a owner that will have a unique name.
+///
+/// This prevents React JS from not printing key warnings it deems as "duplicates".
+void _renderWithUniqueOwnerName2(ReactElement render()) {
+  final factory = react.registerComponent2(() => new _OwnerHelperComponent2());
+  factory.reactClass.displayName = 'OwnerHelperComponent2_$_nextFactoryId';
+  _nextFactoryId++;
+
+  rtu.renderIntoDocument(factory({'render': render}));
+}
+
+_renderWithOwner2(ReactElement render()) {
+  final factory = react.registerComponent2(() => new _OwnerHelperComponent2());
+
+  return rtu.renderIntoDocument(factory({'render': render}));
+}
+
 class _OwnerHelperComponent extends react.Component {
+  @override
+  render() => props['render']();
+}
+
+class _OwnerHelperComponent2 extends react.Component2 {
   @override
   render() => props['render']();
 }

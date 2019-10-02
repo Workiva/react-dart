@@ -15,7 +15,7 @@ main() {
   group('Component2Bridge', () {
     group('.forComponent returns the bridge used by that mounted component, which', () {
       test('by default is a const instance of Component2BridgeImpl', () {
-        final instance = getDartComponent<_Foo>(render(Foo({})));
+        final instance = getDartComponent2<_Foo>(render(Foo({})));
         expect(Component2Bridge.forComponent(instance), same(const Component2BridgeImpl()));
       });
 
@@ -23,7 +23,7 @@ main() {
         customBridgeCalls = [];
         addTearDown(() => customBridgeCalls = null);
 
-        final instance = getDartComponent<_BridgeTest>(render(BridgeTest({})));
+        final instance = getDartComponent2<_BridgeTest>(render(BridgeTest({})));
         final bridge = Component2Bridge.forComponent(instance);
         expect(bridge, isNotNull);
         expect(
