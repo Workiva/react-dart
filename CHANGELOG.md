@@ -1,9 +1,15 @@
-## [5.0.0-alpha.0](https://github.com/cleandart/react-dart/compare/4.9.1...5.0.0-alpha.0)
+## 5.0.0 (alpha)
 
-__ReactJS 16.x Support__
+- [5.0.0-alpha.1](https://github.com/cleandart/react-dart/compare/5.0.0-alpha.0...5.0.0-alpha.1)
 
-- The underlying `.js` files provided by this package are now ReactJS version 16.
-- Support for the new / updated lifecycle methods from ReactJS 16 [will be released in version `5.1.0`](https://github.com/cleandart/react-dart/milestone/1).
+  - [#216] Update to ReactJS version 16.10.1
+
+- [5.0.0-alpha.0](https://github.com/cleandart/react-dart/compare/4.9.1...5.0.0-alpha.0)
+
+  __ReactJS 16.x Support__
+
+  - The underlying `.js` files provided by this package are now ReactJS version 16.
+  - Support for the new / updated lifecycle methods from ReactJS 16 [will be released in version `5.1.0`](https://github.com/cleandart/react-dart/milestone/1).
 
 > [Full list of 5.0.0 Pull Requests](https://github.com/cleandart/react-dart/milestone/2?closed=1) 
 
