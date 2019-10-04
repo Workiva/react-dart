@@ -1,8 +1,8 @@
 // ignore_for_file: deprecated_member_use_from_same_package
 import 'dart:async';
+import 'dart:convert';
 import 'dart:html';
 
-import 'package:dart2_constant/convert.dart' as convert;
 import 'package:react/react.dart' as react;
 import 'package:react/react_dom.dart' as react_dom;
 import 'package:react/react_client.dart';
@@ -264,7 +264,7 @@ class _GeocodesApp extends react.Component {
         // If yes, query was `OK` and `shown_addresses` are replaced
         state['history'][id]['status'] = 'OK';
 
-        var data = convert.json.decode(raw);
+        var data = json.decode(raw);
 
         // Calling `setState` will update the state and then repaint the component.
         //
