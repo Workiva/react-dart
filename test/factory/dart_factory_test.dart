@@ -23,7 +23,7 @@ main() {
     group('- common factory behavior -', () {
       group('Component -', () {
         group('- common factory behavior -', () {
-          commonFactoryTests(Foo);
+          commonFactoryTests(Foo, isComponent2: false);
         });
 
         group('- refs -', () {
@@ -35,7 +35,7 @@ main() {
 
       group('Component2 -', () {
         group('- common factory behavior -', () {
-          commonFactoryTests(Foo2);
+          commonFactoryTests(Foo2, isComponent2: true);
         });
 
         group('- refs -', () {
