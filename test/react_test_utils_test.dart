@@ -17,8 +17,16 @@ import 'util.dart';
 void main() {
   setClientConfiguration();
 
-  testUtils(isComponent2: false, eventComponent: component1.eventComponent, sampleComponent: component1.sampleComponent, wrapperComponent: component1.wrapperComponent);
-  testUtils(isComponent2: true, eventComponent: component2.eventComponent, sampleComponent: component2.sampleComponent, wrapperComponent: component2.wrapperComponent);
+  testUtils(
+      isComponent2: false,
+      eventComponent: component1.eventComponent,
+      sampleComponent: component1.sampleComponent,
+      wrapperComponent: component1.wrapperComponent);
+  testUtils(
+      isComponent2: true,
+      eventComponent: component2.eventComponent,
+      sampleComponent: component2.sampleComponent,
+      wrapperComponent: component2.wrapperComponent);
 }
 
 testUtils({isComponent2: false, dynamic eventComponent, dynamic sampleComponent, dynamic wrapperComponent}) {
@@ -30,7 +38,7 @@ testUtils({isComponent2: false, dynamic eventComponent, dynamic sampleComponent,
     domNode = null;
   });
 
-  group('Shallow Rendering with a Component${isComponent2 ? "2":""}', () {
+  group('Shallow Rendering with a Component${isComponent2 ? "2" : ""}', () {
     ReactElement content;
     ReactShallowRenderer shallowRenderer;
 
@@ -57,7 +65,7 @@ testUtils({isComponent2: false, dynamic eventComponent, dynamic sampleComponent,
     });
   });
 
-  group('Simulate on a Component${isComponent2 ? "2":""}', () {
+  group('Simulate on a Component${isComponent2 ? "2" : ""}', () {
     setUp(() {
       component = renderIntoDocument(eventComponent({}));
       domNode = react_dom.findDOMNode(component);
@@ -161,27 +169,27 @@ testUtils({isComponent2: false, dynamic eventComponent, dynamic sampleComponent,
     });
   });
 
-  test('findRenderedDOMComponentWithClass on a Component${isComponent2 ? "2":""}', () {
+  test('findRenderedDOMComponentWithClass on a Component${isComponent2 ? "2" : ""}', () {
     component = renderIntoDocument(sampleComponent({}));
     var spanComponent = findRenderedDOMComponentWithClass(component, 'span1');
 
     expect(getProperty(spanComponent, 'tagName'), equals('SPAN'));
   });
 
-  test('findRenderedDOMComponentWithTag on a Component${isComponent2 ? "2":""}', () {
+  test('findRenderedDOMComponentWithTag on a Component${isComponent2 ? "2" : ""}', () {
     component = renderIntoDocument(sampleComponent({}));
     var h1Component = findRenderedDOMComponentWithTag(component, 'h1');
 
     expect(getProperty(h1Component, 'tagName'), equals('H1'));
   });
 
-  test('findRenderedComponentWithTypeV2 on a Component${isComponent2 ? "2":""}', () {
+  test('findRenderedComponentWithTypeV2 on a Component${isComponent2 ? "2" : ""}', () {
     component = renderIntoDocument(wrapperComponent({}, [sampleComponent({})]));
     var result = findRenderedComponentWithTypeV2(component, sampleComponent);
     expect(isCompositeComponentWithTypeV2(result, sampleComponent), isTrue);
   });
 
-  group('isCompositeComponent on a Component${isComponent2 ? "2":""}', () {
+  group('isCompositeComponent on a Component${isComponent2 ? "2" : ""}', () {
     test('returns true when element is a composite component (created with React.createClass())', () {
       component = renderIntoDocument(eventComponent({}));
 
@@ -195,7 +203,7 @@ testUtils({isComponent2: false, dynamic eventComponent, dynamic sampleComponent,
     });
   });
 
-  group('isCompositeComponentWithTypeV2 on a Component${isComponent2 ? "2":""}', () {
+  group('isCompositeComponentWithTypeV2 on a Component${isComponent2 ? "2" : ""}', () {
     var renderedInstance = renderIntoDocument(sampleComponent({}));
 
     test('returns true when element is a composite component (created with React.createClass()) of the specified type',
@@ -210,7 +218,7 @@ testUtils({isComponent2: false, dynamic eventComponent, dynamic sampleComponent,
     });
   });
 
-  group('isDOMComponent on a Component${isComponent2 ? "2":""}', () {
+  group('isDOMComponent on a Component${isComponent2 ? "2" : ""}', () {
     test('returns true when argument is a DOM component', () {
       component = renderIntoDocument(sampleComponent({}));
       var h1Element = findRenderedDOMComponentWithTag(component, 'h1');
@@ -243,7 +251,7 @@ testUtils({isComponent2: false, dynamic eventComponent, dynamic sampleComponent,
     });
   });
 
-  test('scryRenderedComponentsWithTypeV2 on a Component${isComponent2 ? "2":""}', () {
+  test('scryRenderedComponentsWithTypeV2 on a Component${isComponent2 ? "2" : ""}', () {
     component =
         renderIntoDocument(wrapperComponent({}, [sampleComponent({}), sampleComponent({}), eventComponent({})]));
 
@@ -279,7 +287,7 @@ testUtils({isComponent2: false, dynamic eventComponent, dynamic sampleComponent,
     expect(getProperty(results[2], 'tagName'), equals('DIV'));
   });
 
-  test('renderIntoDocument with a Component${isComponent2 ? "2":""}', () {
+  test('renderIntoDocument with a Component${isComponent2 ? "2" : ""}', () {
     var reactComponent = renderIntoDocument(sampleComponent({}));
     var divElements = scryRenderedDOMComponentsWithTag(reactComponent, 'div');
     var h1Elements = scryRenderedDOMComponentsWithTag(reactComponent, 'h1');
