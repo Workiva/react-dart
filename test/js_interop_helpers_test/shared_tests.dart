@@ -30,5 +30,11 @@ void sharedJsFunctionTests() {
         expect(() => createReactDartComponentClass(null, null), returnsNormally);
       });
     });
+
+    group('createReactDartComponentClass2', () {
+      test('is function that does not throw when called', () {
+        expect(() => createReactDartComponentClass2(null, null, JsComponentConfig2(skipMethods: [])), returnsNormally);
+      });
+    });
   });
 }
