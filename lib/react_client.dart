@@ -637,38 +637,72 @@ SyntheticFormEvent syntheticFormEventFactory(events.SyntheticFormEvent e) {
 }
 
 /// Wrapper for [SyntheticDataTransfer].
-SyntheticDataTransfer syntheticDataTransferFactory(events.SyntheticDataTransfer dt) {
+///
+/// [dt] is typed as Object instead of [dynamic] to avoid dynamic calls in the method body,
+/// ensuring the code is statically sound.
+SyntheticDataTransfer syntheticDataTransferFactory(Object dt) {
   if (dt == null) return null;
-  List<File> files = [];
-  if (dt.files != null) {
-    for (int i = 0; i < dt.files.length; i++) {
-      files.add(dt.files[i]);
+
+  List rawFiles;
+  List rawTypes;
+
+  String effectAllowed;
+  String dropEffect;
+
+  // Handle `dt` being either a native DOM DataTransfer object or a JS object that looks like it (events.NonNativeDataTransfer).
+  // Casting a JS object to DataTransfer fails intermittently in dart2js, and vice-versa fails intermittently in either DDC or dart2js.
+  // TODO figure out when NonNativeDataTransfer is used.
+  //
+  // Some logic here is duplicated to ensure statically-sound access of same-named members.
+  if (dt is DataTransfer) {
+    rawFiles = dt.files;
+    rawTypes = dt.types;
+
+    try {
+      // Works around a bug in IE where dragging from outside the browser fails.
+      // Trying to access this property throws the error "Unexpected call to method or property access.".
+      effectAllowed = dt.effectAllowed;
+    } catch (_) {
+      effectAllowed = 'uninitialized';
+    }
+    try {
+      // For certain types of drag events in IE (anything but ondragenter, ondragover, and ondrop), this fails.
+      // Trying to access this property throws the error "Unexpected call to method or property access.".
+      dropEffect = dt.dropEffect;
+    } catch (_) {
+      dropEffect = 'none';
+    }
+  } else {
+    // Assume it's a NonNativeDataTransfer otherwise.
+    // Perform a cast inside `else` instead of an `else if (dt is ...)` since is-checks for
+    // anonymous JS objects have undefined behavior.
+    final castedDt = dt as events.NonNativeDataTransfer;
+
+    rawFiles = castedDt.files;
+    rawTypes = castedDt.types;
+
+    try {
+      // Works around a bug in IE where dragging from outside the browser fails.
+      // Trying to access this property throws the error "Unexpected call to method or property access.".
+      effectAllowed = castedDt.effectAllowed;
+    } catch (_) {
+      effectAllowed = 'uninitialized';
+    }
+    try {
+      // For certain types of drag events in IE (anything but ondragenter, ondragover, and ondrop), this fails.
+      // Trying to access this property throws the error "Unexpected call to method or property access.".
+      dropEffect = castedDt.dropEffect;
+    } catch (_) {
+      dropEffect = 'none';
     }
   }
-  List<String> types = [];
-  if (dt.types != null) {
-    for (int i = 0; i < dt.types.length; i++) {
-      types.add(dt.types[i]);
-    }
-  }
-  var effectAllowed;
-  var dropEffect;
 
-  try {
-    // Works around a bug in IE where dragging from outside the browser fails.
-    // Trying to access this property throws the error "Unexpected call to method or property access.".
-    effectAllowed = dt.effectAllowed;
-  } catch (exception) {
-    effectAllowed = 'uninitialized';
-  }
-
-  try {
-    // For certain types of drag events in IE (anything but ondragenter, ondragover, and ondrop), this fails.
-    // Trying to access this property throws the error "Unexpected call to method or property access.".
-    dropEffect = dt.dropEffect;
-  } catch (exception) {
-    dropEffect = 'none';
-  }
+  // Copy these lists and ensure they're typed properly.
+  // todo use .cast() in Dart 2
+  final files = <File>[];
+  final types = <String>[];
+  rawFiles?.forEach(files.add);
+  rawTypes?.forEach(types.add);
 
   return new SyntheticDataTransfer(dropEffect, effectAllowed, files, types);
 }
