@@ -104,10 +104,10 @@ abstract class Component {
   List<TransactionalSetStateCallback> _transactionalSetStateCallbacks = [];
 
   /// The List of callbacks to be called after the component has been updated from a call to [setState].
-  List get setStateCallbacks => _setStateCallbacks;
+  List<SetStateCallback> get setStateCallbacks => _setStateCallbacks;
 
   /// The List of transactional `setState` callbacks to be called before the component updates.
-  List get transactionalSetStateCallbacks => _transactionalSetStateCallbacks;
+  List<TransactionalSetStateCallback> get transactionalSetStateCallbacks => _transactionalSetStateCallbacks;
 
   /// The JavaScript [`ReactComponent`](https://facebook.github.io/react/docs/top-level-api.html#reactdom.render)
   /// instance of this `Component` returned by [render].
