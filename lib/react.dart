@@ -597,7 +597,7 @@ class SyntheticEvent {
 
   bool _defaultPrevented;
 
-  dynamic _preventDefault;
+  void Function() _preventDefault;
 
   /// Indicates whether or not [preventDefault] was called on the event.
   ///
@@ -615,7 +615,7 @@ class SyntheticEvent {
   /// Prevents further propagation of the current event.
   ///
   /// See: <https://developer.mozilla.org/en-US/docs/Web/API/Event/stopPropagation>
-  final dynamic stopPropagation;
+  final void Function() stopPropagation;
 
   /// Indicates which phase of the [Event] flow is currently being evaluated.
   ///
