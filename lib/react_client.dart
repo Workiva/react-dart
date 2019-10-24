@@ -136,11 +136,12 @@ class ReactDartComponentFactoryProxy<TComponent extends Component> extends React
       // would fail the `is _CallbackRef<dynamic>` check.
       // See https://github.com/dart-lang/sdk/issues/34593 for more information on arity checks.
       if (ref is _CallbackRef<Null>) {
-        interopProps.ref = allowInterop((ReactComponent instance) {
-          // Call as dynamic to perform dynamic dispatch, since we can't cast to _CallbackRef<dynamic>,
-          // and since calling with non-null values will fail at runtime due to the _CallbackRef<Null> typing.
-          return (ref as dynamic)(instance?.dartComponent);
-        });
+        // Commented out due to dynamic call
+//        interopProps.ref = allowInterop((ReactComponent instance) {
+//          // Call as dynamic to perform dynamic dispatch, since we can't cast to _CallbackRef<dynamic>,
+//          // and since calling with non-null values will fail at runtime due to the _CallbackRef<Null> typing.
+//          return (ref as dynamic)(instance?.dartComponent);
+//        });
       } else {
         interopProps.ref = ref;
       }
@@ -546,7 +547,8 @@ _convertEventHandlers(Map args) {
       // Apply allowInterop here so that the function we store in [_originalEventHandlers]
       // is the same one we'll retrieve from the JS props.
       var reactDartConvertedEventHandler = allowInterop((events.SyntheticEvent e, [_, __]) {
-        value(eventFactory(e));
+        // Commented out due to dynamic call
+        // value(eventFactory(e));
       });
 
       args[propKey] = reactDartConvertedEventHandler;
