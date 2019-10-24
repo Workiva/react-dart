@@ -40,7 +40,11 @@ typedef _CallbackRef<T>(T componentOrDomNode);
 ///
 /// See <https://facebook.github.io/react/docs/components-and-props.html#functional-and-class-components>.
 typedef DartFunctionComponent = dynamic Function(Map props);
-typedef JsFunctionComponent = dynamic Function(JsMap props);
+/// The ReactJS function signature.
+/// [props] will always be supplied as the first argument
+/// [legacyContext] has been deprecated and should not be used but remains for backward compatibility and is necessary
+/// to match darts generated call signature based on the number of args react provides.
+typedef JsFunctionComponent = dynamic Function(JsMap props, [JsMap legacyContext]);
 
 /// Prepares [children] to be passed to the ReactJS [React.createElement] and
 /// the Dart [react.Component].
@@ -772,7 +776,7 @@ JsFunctionComponent _wrapFunctionComponent(DartFunctionComponent dartFunctionCom
     componentName ??= getProperty(dartFunctionComponent, 'name');
     return true;
   }());
-  jsFunctionComponent(JsMap jsProps) =>
+  jsFunctionComponent(JsMap jsProps, JsMap _legacyContext) =>
       dartFunctionComponent(jsProps != null ? JsBackedMap.backedBy(jsProps) : JsBackedMap());
   var interopFunction = allowInterop(jsFunctionComponent);
   if (componentName != null) {
