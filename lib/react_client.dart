@@ -628,7 +628,7 @@ ReactDartComponentFactoryProxy _registerComponent(
     contextKeys: componentInstance.contextKeys,
   );
 
-  /// Create the JS [`ReactClass` component class](https://facebook.github.io/react/docs/top-level-api.html#react.createclass)
+  /// Create the JS `ReactClass` component class
   /// with custom JS lifecycle methods.
   var reactComponentClass = createReactDartComponentClass(_dartInteropStatics, componentStatics, jsConfig)
     // ignore: invalid_use_of_protected_member
@@ -800,7 +800,7 @@ ReactDartFunctionComponentFactoryProxy _registerFunctionComponent(DartFunctionCo
     new ReactDartFunctionComponentFactoryProxy(_wrapFunctionComponent(dartFunctionComponent, displayName: displayName));
 
 /// Creates and returns a new [ReactDartComponentFactoryProxy] from the provided [componentFactory]
-/// which produces a new JS [`ReactClass` component class].
+/// which produces a new JS `ReactClass` component class.
 ReactDartComponentFactoryProxy2 _registerComponent2(
   ComponentFactory<Component2> componentFactory, {
   Iterable<String> skipMethods = const ['getDerivedStateFromError', 'componentDidCatch'],
@@ -830,7 +830,7 @@ ReactDartComponentFactoryProxy2 _registerComponent2(
     propTypes: jsPropTypes,
   );
 
-  /// Create the JS [`ReactClass` component class](https://facebook.github.io/react/docs/top-level-api.html#react.createclass)
+  /// Create the JS `ReactClass` component class
   /// with custom JS lifecycle methods.
   var reactComponentClass =
       createReactDartComponentClass2(_ReactDartInteropStatics2.staticsForJs, componentStatics, jsConfig2)
