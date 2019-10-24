@@ -7,6 +7,7 @@ library react_client.react_interop;
 
 import 'dart:html';
 
+import 'package:js/js_util.dart';
 import 'package:meta/meta.dart';
 import 'package:js/js.dart';
 import 'package:react/react.dart';
@@ -218,9 +219,12 @@ abstract class ReactDartComponentVersion {
   @protected
   static String fromType(dynamic type) {
     // This check doesn't do much since ReactClass is an anonymous JS object,
-    // but it lets us safely cast to ReactClass.
+    // but it lets us safely cast to ReactClass
     if (type is ReactClass) {
       return type.dartComponentVersion;
+    }
+    if (type is Function) {
+      return getProperty(type, 'dartComponentVersion');
     }
 
     return null;

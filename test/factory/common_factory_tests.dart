@@ -16,10 +16,10 @@ import 'package:react/react_client/react_interop.dart';
 
 import '../util.dart';
 
-void commonFactoryTests(ReactComponentFactoryProxy factory, {bool isComponent2 = false}) {
+void commonFactoryTests(ReactComponentFactoryProxy factory, {bool isComponent2 = false, bool isFunctionComponent = false}) {
   _childKeyWarningTests(
     factory,
-    renderWithUniqueOwnerName: isComponent2 ? _renderWithUniqueOwnerName2 : _renderWithUniqueOwnerName,
+    renderWithUniqueOwnerName: (isComponent2 || isFunctionComponent) ? _renderWithUniqueOwnerName2 : _renderWithUniqueOwnerName,
   );
 
   test('renders an instance with the corresponding `type`', () {
@@ -97,7 +97,8 @@ void commonFactoryTests(ReactComponentFactoryProxy factory, {bool isComponent2 =
         shouldAlwaysBeList: isDartComponent2(factory({})));
   });
 
-  if (isDartComponent(factory({}))) {
+  // Skipped for Function Components because they dont have instance memebers ... they are functions.
+  if (isDartComponent(factory({})) && !isFunctionComponent) {
     group('passes children to the Dart component when specified as', () {
       dynamic getDartChildren(ReactElement instance) {
         // Actually render the component to provide full end-to-end coverage

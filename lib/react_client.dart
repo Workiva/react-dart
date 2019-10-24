@@ -11,6 +11,7 @@ import "dart:collection";
 import "dart:html";
 import 'dart:js';
 import 'dart:js_util';
+import 'dart:js_util' as js_util;
 
 import "package:js/js.dart";
 
@@ -34,6 +35,12 @@ export 'package:react/react.dart' show ReactComponentFactoryProxy, ComponentFact
 ///
 /// See: <https://facebook.github.io/react/docs/more-about-refs.html#the-ref-callback-attribute>
 typedef _CallbackRef<T>(T componentOrDomNode);
+
+/// A React component declared using a function that takes in [props] and returns rendered output.
+///
+/// See <https://facebook.github.io/react/docs/components-and-props.html#functional-and-class-components>.
+typedef DartFunctionComponent = dynamic Function(Map props);
+typedef JsFunctionComponent = dynamic Function(JsMap props);
 
 /// Prepares [children] to be passed to the ReactJS [React.createElement] and
 /// the Dart [react.Component].
@@ -134,7 +141,7 @@ class ReactDartComponentFactoryProxy<TComponent extends Component> extends React
 }
 
 /// Creates ReactJS [Component2] instances for Dart components.
-class ReactDartComponentFactoryProxy2<TComponent extends Component2> extends ReactComponentFactoryProxy
+class ReactDartComponentFactoryProxy2<TComponent extends Component2> extends ReactComponentFactoryProxy with JsBackedMapsComponentFactoryBuilder
     implements ReactDartComponentFactoryProxy {
   /// The ReactJS class used as the type for all [ReactElement]s built by
   /// this factory.
@@ -148,10 +155,12 @@ class ReactDartComponentFactoryProxy2<TComponent extends Component2> extends Rea
   ReactDartComponentFactoryProxy2(ReactClass reactClass)
       : this.reactClass = reactClass,
         this.reactComponentFactory = React.createFactory(reactClass),
-        this.defaultProps = new JsBackedMap.fromJs(reactClass.defaultProps);
+        this.defaultProps = new JsBackedMap.fromJs(reactClass?.defaultProps);
 
   ReactClass get type => reactClass;
+}
 
+mixin JsBackedMapsComponentFactoryBuilder on ReactComponentFactoryProxy {
   ReactElement build(Map props, [List childrenArgs = const []]) {
     // TODO 3.1.0-wip if we don't pass in a list into React, we don't get a list back in Dart...
 
@@ -181,6 +190,8 @@ class ReactDartComponentFactoryProxy2<TComponent extends Component2> extends Rea
   /// Returns a JavaScript version of the specified [props], preprocessed for consumption by ReactJS and prepared for
   /// consumption by the [react] library internals.
   static JsMap generateExtendedJsProps(Map props) {
+    if (props == null) return newObject();
+    
     final propsForJs = new JsBackedMap.from(props);
 
     final ref = propsForJs['ref'];
@@ -734,8 +745,49 @@ class ReactJsComponentFactoryProxy extends ReactComponentFactoryProxy {
   }
 }
 
+class ReactDartFunctionComponentFactoryProxy extends ReactComponentFactoryProxy with JsBackedMapsComponentFactoryBuilder {
+  /// The ReactJS function used as the type for all [ReactElement]s built by
+  /// this factory.
+  final Function reactFunction;
+
+  /// The name of this function.
+  final String componentName;
+
+  /// The JS component factory used by this factory to build [ReactElement]s.
+  final ReactJsComponentFactory reactComponentFactory;
+
+  ReactDartFunctionComponentFactoryProxy(reactFunction, [String componentName])
+      : this.reactFunction = reactFunction,
+        this.componentName = componentName,
+        this.reactComponentFactory = React.createFactory(reactFunction);
+
+  get type => reactFunction;
+}
+/// Creates a function component from the given [dartFunctionComponent] that can be used with React.
+JsFunctionComponent _wrapFunctionComponent(DartFunctionComponent dartFunctionComponent, {String componentName}) {
+  assert(() {
+    componentName ??= getProperty(dartFunctionComponent, 'name');
+    return true;
+  }());
+  jsFunctionComponent(JsMap jsProps) => dartFunctionComponent(jsProps != null ? JsBackedMap.backedBy(jsProps) : JsBackedMap());
+  var interopFunction = allowInterop(jsFunctionComponent);
+  if (componentName != null){
+    // This is a work-around to display the correct name in the React DevTools.
+    callMethod(getProperty(window, 'Object'), 'defineProperty', [interopFunction, 'name', jsify({'value': componentName})]);
+  }
+  // ignore: invalid_use_of_protected_member
+  setProperty(interopFunction, 'dartComponentVersion', ReactDartComponentVersion.component2);
+  return interopFunction;
+}
+
+/// Creates and returns a new [ReactDartComponentFactoryProxy] from the provided [dartFunctionComponent]
+/// which produces a new `JsFunctionComponent`.
+ReactDartFunctionComponentFactoryProxy _registerFunctionComponent(DartFunctionComponent dartFunctionComponent, {String componentName}) =>
+    new ReactDartFunctionComponentFactoryProxy(_wrapFunctionComponent(dartFunctionComponent, componentName: componentName));
+
+
 /// Creates and returns a new [ReactDartComponentFactoryProxy] from the provided [componentFactory]
-/// which produces a new JS [`ReactClass` component class](https://facebook.github.io/react/docs/top-level-api.html#react.createclass).
+/// which produces a new JS [`ReactClass` component class].
 ReactDartComponentFactoryProxy2 _registerComponent2(
   ComponentFactory<Component2> componentFactory, {
   Iterable<String> skipMethods = const ['getDerivedStateFromError', 'componentDidCatch'],
@@ -1202,7 +1254,7 @@ void setClientConfiguration() {
     throw new Exception('Loaded react.js must include react-dart JS interop helpers.');
   }
 
-  setReactConfiguration(_reactDom, _registerComponent, customRegisterComponent2: _registerComponent2);
+  setReactConfiguration(_reactDom, _registerComponent, customRegisterComponent2: _registerComponent2, customRegisterFunctionComponent: _registerFunctionComponent);
   setReactDOMConfiguration(ReactDom.render, ReactDom.unmountComponentAtNode, _findDomNode);
   // Accessing ReactDomServer.renderToString when it's not available breaks in DDC.
   if (context['ReactDOMServer'] != null) {

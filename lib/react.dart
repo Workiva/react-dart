@@ -20,6 +20,7 @@ export 'package:react/react_client/react_interop.dart' show forwardRef, createRe
 typedef Error PropValidator<TProps>(
     TProps props, String propName, String componentName, String location, String propFullName);
 
+typedef FunctionComponent = dynamic Function(Map props);
 typedef T ComponentFactory<T extends Component>();
 typedef ReactComponentFactoryProxy ComponentRegistrar(ComponentFactory componentFactory,
     [Iterable<String> skipMethods]);
@@ -29,6 +30,8 @@ typedef ReactDartComponentFactoryProxy2 ComponentRegistrar2(
   Iterable<String> skipMethods,
   Component2BridgeFactory bridgeFactory,
 });
+
+typedef ReactDartFunctionComponentFactoryProxy FunctionComponentRegistrar(FunctionComponent componentFactory, {String componentName});
 
 /// Fragment component that allows the wrapping of children without the necessity of using
 /// an element that adds an additional layer to the DOM (div, span, etc).
@@ -1186,6 +1189,9 @@ mixin TypedSnapshot<TSnapshot> {
 
 /// Creates a ReactJS virtual DOM instance (`ReactElement` on the client).
 abstract class ReactComponentFactoryProxy implements Function {
+  /// The JS component factory used by this factory to build [ReactElement]s.
+  ReactJsComponentFactory reactComponentFactory;
+
   /// The type of component created by this factory.
   get type;
 
@@ -1766,6 +1772,10 @@ ComponentRegistrar2 registerComponent2 = (
   throw new Exception('setClientConfiguration must be called before registerComponent.');
 };
 
+/// Registers [componentFactory] on both client and server.
+FunctionComponentRegistrar registerFunctionComponent = (FunctionComponent componentFactory, {String componentName}) {
+  throw new Exception('setClientConfiguration must be called before registerComponent.');
+};
 /// The HTML `<a>` [AnchorElement].
 var a;
 
@@ -2570,9 +2580,13 @@ _createDOMComponents(creator) {
 ///
 /// The arguments are assigned to global variables, and React DOM `Component`s are created by calling
 /// [_createDOMComponents] with [domCreator].
-void setReactConfiguration(domCreator, customRegisterComponent, {ComponentRegistrar2 customRegisterComponent2}) {
+void setReactConfiguration(domCreator, customRegisterComponent, {
+    ComponentRegistrar2 customRegisterComponent2,
+    FunctionComponentRegistrar customRegisterFunctionComponent,
+}) {
   registerComponent = customRegisterComponent;
   registerComponent2 = customRegisterComponent2;
+  registerFunctionComponent = customRegisterFunctionComponent;
   // HTML Elements
   _createDOMComponents(domCreator);
 }
