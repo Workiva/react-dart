@@ -797,8 +797,7 @@ JsFunctionComponent _wrapFunctionComponent(DartFunctionComponent dartFunctionCom
 /// which produces a new `JsFunctionComponent`.
 ReactDartFunctionComponentFactoryProxy _registerFunctionComponent(DartFunctionComponent dartFunctionComponent,
         {String displayName}) =>
-    new ReactDartFunctionComponentFactoryProxy(
-        _wrapFunctionComponent(dartFunctionComponent, displayName: displayName));
+    new ReactDartFunctionComponentFactoryProxy(_wrapFunctionComponent(dartFunctionComponent, displayName: displayName));
 
 /// Creates and returns a new [ReactDartComponentFactoryProxy] from the provided [componentFactory]
 /// which produces a new JS [`ReactClass` component class].
