@@ -30,7 +30,7 @@ abstract class React {
 
 abstract class ReactDom {
   static Element findDOMNode(object) => ReactDOM.findDOMNode(object);
-  static ReactComponent render(ReactElement component, Element element) => ReactDOM.render(component, element);
+  static ReactComponent render(dynamic component, Element element) => ReactDOM.render(component, element);
   static bool unmountComponentAtNode(Element element) => ReactDOM.unmountComponentAtNode(element);
 }
 

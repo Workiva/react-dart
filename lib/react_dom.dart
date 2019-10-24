@@ -4,6 +4,14 @@
 
 library react_dom;
 
+import 'dart:html';
+
+import 'react_client/react_interop.dart';
+
+typedef ReactDomRenderFunction = dynamic Function(dynamic, Element);
+typedef ReactDomUnmountComponentAtNodeFunction = bool Function(Element);
+typedef ReactDomFindDOMNodeFunction = dynamic Function(dynamic);
+
 /// Renders a ReactElement into the DOM in the supplied [container] and return a reference to the [component]
 /// (or returns null for stateless components).
 ///
@@ -11,22 +19,22 @@ library react_dom;
 /// mutate the DOM as necessary to reflect the latest React component.
 ///
 /// TODO: Is there any reason to omit the [ReactElement] type for [component] or the [Element] type for [container]?
-Function render = (/* ReactComponent */ component, /* Element */ container) {
+ReactDomRenderFunction render = (/* ReactComponent */ component, /* Element */ container) {
   throw new Exception('setClientConfiguration must be called before render.');
 };
 
 /// Removes a mounted React [Component] from the DOM and cleans up its event handlers and state.
 ///
 /// > Returns `false` if no component was mounted in the container specified via [render], otherwise returns `true`.
-Function unmountComponentAtNode;
+ReactDomUnmountComponentAtNodeFunction unmountComponentAtNode;
 
 /// If the [Component] has been mounted into the DOM, this returns the corresponding native browser DOM [Element].
-Function findDOMNode;
+ReactDomFindDOMNodeFunction findDOMNode;
 
 /// Sets configuration based on passed functions.
 ///
 /// Passes arguments to global variables.
-setReactDOMConfiguration(Function customRender, Function customUnmountComponentAtNode, Function customFindDOMNode) {
+setReactDOMConfiguration(ReactDomRenderFunction customRender, ReactDomUnmountComponentAtNodeFunction customUnmountComponentAtNode, ReactDomFindDOMNodeFunction customFindDOMNode) {
   render = customRender;
   unmountComponentAtNode = customUnmountComponentAtNode;
   findDOMNode = customFindDOMNode;

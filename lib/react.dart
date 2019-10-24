@@ -6,6 +6,7 @@
 library react;
 
 import 'package:meta/meta.dart';
+import 'package:react/react_client.dart';
 import 'package:react/src/typedefs.dart';
 
 typedef Component ComponentFactory();
@@ -924,817 +925,216 @@ class SyntheticWheelEvent extends SyntheticEvent {
 }
 
 /// Registers [componentFactory] on both client and server.
-/*ComponentRegistrar*/ Function registerComponent =
+ComponentRegistrar registerComponent =
     (/*ComponentFactory*/ componentFactory, [/*Iterable<String>*/ skipMethods]) {
   throw new Exception('setClientConfiguration must be called before registerComponent.');
 };
 
-/// The HTML `<a>` [AnchorElement].
-var a;
-
-/// The HTML `<abbr>` [Element].
-var abbr;
-
-/// The HTML `<address>` [Element].
-var address;
-
-/// The HTML `<area>` [AreaElement].
-var area;
-
-/// The HTML `<article>` [Element].
-var article;
-
-/// The HTML `<aside>` [Element].
-var aside;
-
-/// The HTML `<audio>` [AudioElement].
-var audio;
-
-/// The HTML `<b>` [Element].
-var b;
-
-/// The HTML `<base>` [BaseElement].
-var base;
-
-/// The HTML `<bdi>` [Element].
-var bdi;
-
-/// The HTML `<bdo>` [Element].
-var bdo;
-
-/// The HTML `<big>` [Element].
-var big;
-
-/// The HTML `<blockquote>` [Element].
-var blockquote;
-
-/// The HTML `<body>` [BodyElement].
-var body;
-
-/// The HTML `<br>` [BRElement].
-var br;
-
-/// The HTML `<button>` [ButtonElement].
-var button;
-
-/// The HTML `<canvas>` [CanvasElement].
-var canvas;
-
-/// The HTML `<caption>` [Element].
-var caption;
-
-/// The HTML `<cite>` [Element].
-var cite;
-
-/// The HTML `<code>` [Element].
-var code;
-
-/// The HTML `<col>` [Element].
-var col;
-
-/// The HTML `<colgroup>` [Element].
-var colgroup;
-
-/// The HTML `<data>` [Element].
-var data;
-
-/// The HTML `<datalist>` [DataListElement].
-var datalist;
-
-/// The HTML `<dd>` [Element].
-var dd;
-
-/// The HTML `<del>` [Element].
-var del;
-
-/// The HTML `<details>` [DetailsElement].
-var details;
-
-/// The HTML `<dfn>` [Element].
-var dfn;
-
-/// The HTML `<dialog>` [DialogElement].
-var dialog;
-
-/// The HTML `<div>` [DivElement].
-var div;
-
-/// The HTML `<dl>` [DListElement].
-var dl;
-
-/// The HTML `<dt>` [Element].
-var dt;
-
-/// The HTML `<em>` [Element].
-var em;
-
-/// The HTML `<embed>` [EmbedElement].
-var embed;
-
-/// The HTML `<fieldset>` [FieldSetElement].
-var fieldset;
-
-/// The HTML `<figcaption>` [Element].
-var figcaption;
-
-/// The HTML `<figure>` [Element].
-var figure;
-
-/// The HTML `<footer>` [Element].
-var footer;
-
-/// The HTML `<form>` [FormElement].
-var form;
-
-/// The HTML `<h1>` [HeadingElement].
-var h1;
-
-/// The HTML `<h2>` [HeadingElement].
-var h2;
-
-/// The HTML `<h3>` [HeadingElement].
-var h3;
-
-/// The HTML `<h4>` [HeadingElement].
-var h4;
-
-/// The HTML `<h5>` [HeadingElement].
-var h5;
-
-/// The HTML `<h6>` [HeadingElement].
-var h6;
-
-/// The HTML `<head>` [HeadElement].
-var head;
-
-/// The HTML `<header>` [Element].
-var header;
-
-/// The HTML `<hr>` [HRElement].
-var hr;
-
-/// The HTML `<html>` [HtmlHtmlElement].
-var html;
-
-/// The HTML `<i>` [Element].
-var i;
-
-/// The HTML `<iframe>` [IFrameElement].
-var iframe;
-
-/// The HTML `<img>` [ImageElement].
-var img;
-
-/// The HTML `<input>` [InputElement].
-var input;
-
-/// The HTML `<ins>` [Element].
-var ins;
-
-/// The HTML `<kbd>` [Element].
-var kbd;
-
-/// The HTML `<keygen>` [KeygenElement].
-var keygen;
-
-/// The HTML `<label>` [LabelElement].
-var label;
-
-/// The HTML `<legend>` [LegendElement].
-var legend;
-
-/// The HTML `<li>` [LIElement].
-var li;
-
-/// The HTML `<link>` [LinkElement].
-var link;
-
-/// The HTML `<main>` [Element].
-var main;
-
-/// The HTML `<map>` [MapElement].
-var map;
-
-/// The HTML `<mark>` [Element].
-var mark;
-
-/// The HTML `<menu>` [MenuElement].
-var menu;
-
-/// The HTML `<menuitem>` [MenuItemElement].
-var menuitem;
-
-/// The HTML `<meta>` [MetaElement].
-var meta;
-
-/// The HTML `<meter>` [MeterElement].
-var meter;
-
-/// The HTML `<nav>` [Element].
-var nav;
-
-/// The HTML `<noscript>` [Element].
-var noscript;
-
-/// The HTML `<object>` [ObjectElement].
-var object;
-
-/// The HTML `<ol>` [OListElement].
-var ol;
-
-/// The HTML `<optgroup>` [OptGroupElement].
-var optgroup;
-
-/// The HTML `<option>` [OptionElement].
-var option;
-
-/// The HTML `<output>` [OutputElement].
-var output;
-
-/// The HTML `<p>` [ParagraphElement].
-var p;
-
-/// The HTML `<param>` [ParamElement].
-var param;
-
-/// The HTML `<picture>` [PictureElement].
-var picture;
-
-/// The HTML `<pre>` [PreElement].
-var pre;
-
-/// The HTML `<progress>` [ProgressElement].
-var progress;
-
-/// The HTML `<q>` [QuoteElement].
-var q;
-
-/// The HTML `<rp>` [Element].
-var rp;
-
-/// The HTML `<rt>` [Element].
-var rt;
-
-/// The HTML `<ruby>` [Element].
-var ruby;
-
-/// The HTML `<s>` [Element].
-var s;
-
-/// The HTML `<samp>` [Element].
-var samp;
-
-/// The HTML `<script>` [ScriptElement].
-var script;
-
-/// The HTML `<section>` [Element].
-var section;
-
-/// The HTML `<select>` [SelectElement].
-var select;
-
-/// The HTML `<small>` [Element].
-var small;
-
-/// The HTML `<source>` [SourceElement].
-var source;
-
-/// The HTML `<span>` [SpanElement].
-var span;
-
-/// The HTML `<strong>` [Element].
-var strong;
-
-/// The HTML `<style>` [StyleElement].
-var style;
-
-/// The HTML `<sub>` [Element].
-var sub;
-
-/// The HTML `<summary>` [Element].
-var summary;
-
-/// The HTML `<sup>` [Element].
-var sup;
-
-/// The HTML `<table>` [TableElement].
-var table;
-
-/// The HTML `<tbody>` [TableSectionElement].
-var tbody;
-
-/// The HTML `<td>` [TableCellElement].
-var td;
-
-/// The HTML `<textarea>` [TextAreaElement].
-var textarea;
-
-/// The HTML `<tfoot>` [TableSectionElement].
-var tfoot;
-
-/// The HTML `<th>` [TableCellElement].
-var th;
-
-/// The HTML `<thead>` [TableSectionElement].
-var thead;
-
-/// The HTML `<time>` [TimeInputElement].
-var time;
-
-/// The HTML `<title>` [TitleElement].
-var title;
-
-/// The HTML `<tr>` [TableRowElement].
-var tr;
-
-/// The HTML `<track>` [TrackElement].
-var track;
-
-/// The HTML `<u>` [Element].
-var u;
-
-/// The HTML `<ul>` [UListElement].
-var ul;
-
-/// The HTML `<var>` [Element].
-///
-/// _Named variable because `var` is a reserved word in Dart._
-var variable;
-
-/// The HTML `<video>` [VideoElement].
-var video;
-
-/// The HTML `<wbr>` [Element].
-var wbr;
-
-/// The SVG `<altGlyph>` [AltGlyphElement].
-var altGlyph;
-
-/// The SVG `<altGlyphDef>` [AltGlyphDefElement].
-var altGlyphDef;
-
-/// The SVG `<altGlyphItem>` [AltGlyphItemElement].
-var altGlyphItem;
-
-/// The SVG `<animate>` [AnimateElement].
-var animate;
-
-/// The SVG `<animateColor>` [AnimateColorElement].
-var animateColor;
-
-/// The SVG `<animateMotion>` [AnimateMotionElement].
-var animateMotion;
-
-/// The SVG `<animateTransform>` [AnimateTransformElement].
-var animateTransform;
-
-/// The SVG `<circle>` [CircleElement].
-var circle;
-
-/// The SVG `<clipPath>` [ClipPathElement].
-var clipPath;
-
-/// The SVG `<color-profile>` [ColorProfileElement].
-var colorProfile;
-
-/// The SVG `<cursor>` [CursorElement].
-var cursor;
-
-/// The SVG `<defs>` [DefsElement].
-var defs;
-
-/// The SVG `<desc>` [DescElement].
-var desc;
-
-/// The SVG `<discard>` [DiscardElement].
-var discard;
-
-/// The SVG `<ellipse>` [EllipseElement].
-var ellipse;
-
-/// The SVG `<feBlend>` [FeBlendElement].
-var feBlend;
-
-/// The SVG `<feColorMatrix>` [FeColorMatrixElement].
-var feColorMatrix;
-
-/// The SVG `<feComponentTransfer>` [FeComponentTransferElement].
-var feComponentTransfer;
-
-/// The SVG `<feComposite>` [FeCompositeElement].
-var feComposite;
-
-/// The SVG `<feConvolveMatrix>` [FeConvolveMatrixElement].
-var feConvolveMatrix;
-
-/// The SVG `<feDiffuseLighting>` [FeDiffuseLightingElement].
-var feDiffuseLighting;
-
-/// The SVG `<feDisplacementMap>` [FeDisplacementMapElement].
-var feDisplacementMap;
-
-/// The SVG `<feDistantLight>` [FeDistantLightElement].
-var feDistantLight;
-
-/// The SVG `<feDropShadow>` [FeDropShadowElement].
-var feDropShadow;
-
-/// The SVG `<feFlood>` [FeFloodElement].
-var feFlood;
-
-/// The SVG `<feFuncA>` [FeFuncAElement].
-var feFuncA;
-
-/// The SVG `<feFuncB>` [FeFuncBElement].
-var feFuncB;
-
-/// The SVG `<feFuncG>` [FeFuncGElement].
-var feFuncG;
-
-/// The SVG `<feFuncR>` [FeFuncRElement].
-var feFuncR;
-
-/// The SVG `<feGaussianBlur>` [FeGaussianBlurElement].
-var feGaussianBlur;
-
-/// The SVG `<feImage>` [FeImageElement].
-var feImage;
-
-/// The SVG `<feMerge>` [FeMergeElement].
-var feMerge;
-
-/// The SVG `<feMergeNode>` [FeMergeNodeElement].
-var feMergeNode;
-
-/// The SVG `<feMorphology>` [FeMorphologyElement].
-var feMorphology;
-
-/// The SVG `<feOffset>` [FeOffsetElement].
-var feOffset;
-
-/// The SVG `<fePointLight>` [FePointLightElement].
-var fePointLight;
-
-/// The SVG `<feSpecularLighting>` [FeSpecularLightingElement].
-var feSpecularLighting;
-
-/// The SVG `<feSpotLight>` [FeSpotLightElement].
-var feSpotLight;
-
-/// The SVG `<feTile>` [FeTileElement].
-var feTile;
-
-/// The SVG `<feTurbulence>` [FeTurbulenceElement].
-var feTurbulence;
-
-/// The SVG `<filter>` [FilterElement].
-var filter;
-
-/// The SVG `<font>` [FontElement].
-var font;
-
-/// The SVG `<font-face>` [FontFaceElement].
-var fontFace;
-
-/// The SVG `<font-face-format>` [FontFaceFormatElement].
-var fontFaceFormat;
-
-/// The SVG `<font-face-name>` [FontFaceNameElement].
-var fontFaceName;
-
-/// The SVG `<font-face-src>` [FontFaceSrcElement].
-var fontFaceSrc;
-
-/// The SVG `<font-face-uri>` [FontFaceUriElement].
-var fontFaceUri;
-
-/// The SVG `<foreignObject>` [ForeignObjectElement].
-var foreignObject;
-
-/// The SVG `<g>` [GElement].
-var g;
-
-/// The SVG `<glyph>` [GlyphElement].
-var glyph;
-
-/// The SVG `<glyphRef>` [GlyphRefElement].
-var glyphRef;
-
-/// The SVG `<hatch>` [HatchElement].
-var hatch;
-
-/// The SVG `<hatchpath>` [HatchpathElement].
-var hatchpath;
-
-/// The SVG `<hkern>` [HkernElement].
-var hkern;
-
-/// The SVG `<image>` [ImageElement].
-var image;
-
-/// The SVG `<line>` [LineElement].
-var line;
-
-/// The SVG `<linearGradient>` [LinearGradientElement].
-var linearGradient;
-
-/// The SVG `<marker>` [MarkerElement].
-var marker;
-
-/// The SVG `<mask>` [MaskElement].
-var mask;
-
-/// The SVG `<mesh>` [MeshElement].
-var mesh;
-
-/// The SVG `<meshgradient>` [MeshgradientElement].
-var meshgradient;
-
-/// The SVG `<meshpatch>` [MeshpatchElement].
-var meshpatch;
-
-/// The SVG `<meshrow>` [MeshrowElement].
-var meshrow;
-
-/// The SVG `<metadata>` [MetadataElement].
-var metadata;
-
-/// The SVG `<missing-glyph>` [MissingGlyphElement].
-var missingGlyph;
-
-/// The SVG `<mpath>` [MpathElement].
-var mpath;
-
-/// The SVG `<path>` [PathElement].
-var path;
-
-/// The SVG `<pattern>` [PatternElement].
-var pattern;
-
-/// The SVG `<polygon>` [PolygonElement].
-var polygon;
-
-/// The SVG `<polyline>` [PolylineElement].
-var polyline;
-
-/// The SVG `<radialGradient>` [RadialGradientElement].
-var radialGradient;
-
-/// The SVG `<rect>` [RectElement].
-var rect;
-
-/// The SVG `<set>` [SetElement].
-var svgSet;
-
-/// The SVG `<solidcolor>` [SolidcolorElement].
-var solidcolor;
-
-/// The SVG `<stop>` [StopElement].
-var stop;
-
-/// The SVG `<svg>` [SvgSvgElement].
-var svg;
-
-/// The SVG `<switch>` [SwitchElement].
-var svgSwitch;
-
-/// The SVG `<symbol>` [SymbolElement].
-var symbol;
-
-/// The SVG `<text>` [TextElement].
-var text;
-
-/// The SVG `<textPath>` [TextPathElement].
-var textPath;
-
-/// The SVG `<tref>` [TrefElement].
-var tref;
-
-/// The SVG `<tspan>` [TSpanElement].
-var tspan;
-
-/// The SVG `<unknown>` [UnknownElement].
-var unknown;
-
-/// The SVG `<use>` [UseElement].
-var use;
-
-/// The SVG `<view>` [ViewElement].
-var view;
-
-/// The SVG `<vkern>` [VkernElement].
-var vkern;
-
-/// Create React DOM `Component`s by calling the specified [creator].
-_createDOMComponents(creator) {
-  a = creator('a');
-  abbr = creator('abbr');
-  address = creator('address');
-  area = creator('area');
-  article = creator('article');
-  aside = creator('aside');
-  audio = creator('audio');
-  b = creator('b');
-  base = creator('base');
-  bdi = creator('bdi');
-  bdo = creator('bdo');
-  big = creator('big');
-  blockquote = creator('blockquote');
-  body = creator('body');
-  br = creator('br');
-  button = creator('button');
-  canvas = creator('canvas');
-  caption = creator('caption');
-  cite = creator('cite');
-  code = creator('code');
-  col = creator('col');
-  colgroup = creator('colgroup');
-  data = creator('data');
-  datalist = creator('datalist');
-  dd = creator('dd');
-  del = creator('del');
-  details = creator('details');
-  dfn = creator('dfn');
-  dialog = creator('dialog');
-  div = creator('div');
-  dl = creator('dl');
-  dt = creator('dt');
-  em = creator('em');
-  embed = creator('embed');
-  fieldset = creator('fieldset');
-  figcaption = creator('figcaption');
-  figure = creator('figure');
-  footer = creator('footer');
-  form = creator('form');
-  h1 = creator('h1');
-  h2 = creator('h2');
-  h3 = creator('h3');
-  h4 = creator('h4');
-  h5 = creator('h5');
-  h6 = creator('h6');
-  head = creator('head');
-  header = creator('header');
-  hr = creator('hr');
-  html = creator('html');
-  i = creator('i');
-  iframe = creator('iframe');
-  img = creator('img');
-  input = creator('input');
-  ins = creator('ins');
-  kbd = creator('kbd');
-  keygen = creator('keygen');
-  label = creator('label');
-  legend = creator('legend');
-  li = creator('li');
-  link = creator('link');
-  main = creator('main');
-  map = creator('map');
-  mark = creator('mark');
-  menu = creator('menu');
-  menuitem = creator('menuitem');
-  meta = creator('meta');
-  meter = creator('meter');
-  nav = creator('nav');
-  noscript = creator('noscript');
-  object = creator('object');
-  ol = creator('ol');
-  optgroup = creator('optgroup');
-  option = creator('option');
-  output = creator('output');
-  p = creator('p');
-  param = creator('param');
-  picture = creator('picture');
-  pre = creator('pre');
-  progress = creator('progress');
-  q = creator('q');
-  rp = creator('rp');
-  rt = creator('rt');
-  ruby = creator('ruby');
-  s = creator('s');
-  samp = creator('samp');
-  script = creator('script');
-  section = creator('section');
-  select = creator('select');
-  small = creator('small');
-  source = creator('source');
-  span = creator('span');
-  strong = creator('strong');
-  style = creator('style');
-  sub = creator('sub');
-  summary = creator('summary');
-  sup = creator('sup');
-  table = creator('table');
-  tbody = creator('tbody');
-  td = creator('td');
-  textarea = creator('textarea');
-  tfoot = creator('tfoot');
-  th = creator('th');
-  thead = creator('thead');
-  time = creator('time');
-  title = creator('title');
-  tr = creator('tr');
-  track = creator('track');
-  u = creator('u');
-  ul = creator('ul');
-  variable = creator('var');
-  video = creator('video');
-  wbr = creator('wbr');
-
-  // SVG Elements
-  altGlyph = creator('altGlyph');
-  altGlyphDef = creator('altGlyphDef');
-  altGlyphItem = creator('altGlyphItem');
-  animate = creator('animate');
-  animateColor = creator('animateColor');
-  animateMotion = creator('animateMotion');
-  animateTransform = creator('animateTransform');
-  circle = creator('circle');
-  clipPath = creator('clipPath');
-  colorProfile = creator('color-profile');
-  cursor = creator('cursor');
-  defs = creator('defs');
-  desc = creator('desc');
-  discard = creator('discard');
-  ellipse = creator('ellipse');
-  feBlend = creator('feBlend');
-  feColorMatrix = creator('feColorMatrix');
-  feComponentTransfer = creator('feComponentTransfer');
-  feComposite = creator('feComposite');
-  feConvolveMatrix = creator('feConvolveMatrix');
-  feDiffuseLighting = creator('feDiffuseLighting');
-  feDisplacementMap = creator('feDisplacementMap');
-  feDistantLight = creator('feDistantLight');
-  feDropShadow = creator('feDropShadow');
-  feFlood = creator('feFlood');
-  feFuncA = creator('feFuncA');
-  feFuncB = creator('feFuncB');
-  feFuncG = creator('feFuncG');
-  feFuncR = creator('feFuncR');
-  feGaussianBlur = creator('feGaussianBlur');
-  feImage = creator('feImage');
-  feMerge = creator('feMerge');
-  feMergeNode = creator('feMergeNode');
-  feMorphology = creator('feMorphology');
-  feOffset = creator('feOffset');
-  fePointLight = creator('fePointLight');
-  feSpecularLighting = creator('feSpecularLighting');
-  feSpotLight = creator('feSpotLight');
-  feTile = creator('feTile');
-  feTurbulence = creator('feTurbulence');
-  filter = creator('filter');
-  font = creator('font');
-  fontFace = creator('font-face');
-  fontFaceFormat = creator('font-face-format');
-  fontFaceName = creator('font-face-name');
-  fontFaceSrc = creator('font-face-src');
-  fontFaceUri = creator('font-face-uri');
-  foreignObject = creator('foreignObject');
-  g = creator('g');
-  glyph = creator('glyph');
-  glyphRef = creator('glyphRef');
-  hatch = creator('hatch');
-  hatchpath = creator('hatchpath');
-  hkern = creator('hkern');
-  image = creator('image');
-  line = creator('line');
-  linearGradient = creator('linearGradient');
-  marker = creator('marker');
-  mask = creator('mask');
-  mesh = creator('mesh');
-  meshgradient = creator('meshgradient');
-  meshpatch = creator('meshpatch');
-  meshrow = creator('meshrow');
-  metadata = creator('metadata');
-  missingGlyph = creator('missing-glyph');
-  mpath = creator('mpath');
-  path = creator('path');
-  pattern = creator('pattern');
-  polygon = creator('polygon');
-  polyline = creator('polyline');
-  radialGradient = creator('radialGradient');
-  rect = creator('rect');
-  svgSet = creator('set');
-  solidcolor = creator('solidcolor');
-  stop = creator('stop');
-  svg = creator('svg');
-  svgSwitch = creator('switch');
-  symbol = creator('symbol');
-  text = creator('text');
-  textPath = creator('textPath');
-  tref = creator('tref');
-  tspan = creator('tspan');
-  unknown = creator('unknown');
-  use = creator('use');
-  view = creator('view');
-  vkern = creator('vkern');
-}
+final a = new ReactDomComponentFactoryProxy('a');
+final abbr = new ReactDomComponentFactoryProxy('abbr');
+final address = new ReactDomComponentFactoryProxy('address');
+final area = new ReactDomComponentFactoryProxy('area');
+final article = new ReactDomComponentFactoryProxy('article');
+final aside = new ReactDomComponentFactoryProxy('aside');
+final audio = new ReactDomComponentFactoryProxy('audio');
+final b = new ReactDomComponentFactoryProxy('b');
+final base = new ReactDomComponentFactoryProxy('base');
+final bdi = new ReactDomComponentFactoryProxy('bdi');
+final bdo = new ReactDomComponentFactoryProxy('bdo');
+final big = new ReactDomComponentFactoryProxy('big');
+final blockquote = new ReactDomComponentFactoryProxy('blockquote');
+final body = new ReactDomComponentFactoryProxy('body');
+final br = new ReactDomComponentFactoryProxy('br');
+final button = new ReactDomComponentFactoryProxy('button');
+final canvas = new ReactDomComponentFactoryProxy('canvas');
+final caption = new ReactDomComponentFactoryProxy('caption');
+final cite = new ReactDomComponentFactoryProxy('cite');
+final code = new ReactDomComponentFactoryProxy('code');
+final col = new ReactDomComponentFactoryProxy('col');
+final colgroup = new ReactDomComponentFactoryProxy('colgroup');
+final data = new ReactDomComponentFactoryProxy('data');
+final datalist = new ReactDomComponentFactoryProxy('datalist');
+final dd = new ReactDomComponentFactoryProxy('dd');
+final del = new ReactDomComponentFactoryProxy('del');
+final details = new ReactDomComponentFactoryProxy('details');
+final dfn = new ReactDomComponentFactoryProxy('dfn');
+final dialog = new ReactDomComponentFactoryProxy('dialog');
+final div = new ReactDomComponentFactoryProxy('div');
+final dl = new ReactDomComponentFactoryProxy('dl');
+final dt = new ReactDomComponentFactoryProxy('dt');
+final em = new ReactDomComponentFactoryProxy('em');
+final embed = new ReactDomComponentFactoryProxy('embed');
+final fieldset = new ReactDomComponentFactoryProxy('fieldset');
+final figcaption = new ReactDomComponentFactoryProxy('figcaption');
+final figure = new ReactDomComponentFactoryProxy('figure');
+final footer = new ReactDomComponentFactoryProxy('footer');
+final form = new ReactDomComponentFactoryProxy('form');
+final h1 = new ReactDomComponentFactoryProxy('h1');
+final h2 = new ReactDomComponentFactoryProxy('h2');
+final h3 = new ReactDomComponentFactoryProxy('h3');
+final h4 = new ReactDomComponentFactoryProxy('h4');
+final h5 = new ReactDomComponentFactoryProxy('h5');
+final h6 = new ReactDomComponentFactoryProxy('h6');
+final head = new ReactDomComponentFactoryProxy('head');
+final header = new ReactDomComponentFactoryProxy('header');
+final hr = new ReactDomComponentFactoryProxy('hr');
+final html = new ReactDomComponentFactoryProxy('html');
+final i = new ReactDomComponentFactoryProxy('i');
+final iframe = new ReactDomComponentFactoryProxy('iframe');
+final img = new ReactDomComponentFactoryProxy('img');
+final input = new ReactDomComponentFactoryProxy('input');
+final ins = new ReactDomComponentFactoryProxy('ins');
+final kbd = new ReactDomComponentFactoryProxy('kbd');
+final keygen = new ReactDomComponentFactoryProxy('keygen');
+final label = new ReactDomComponentFactoryProxy('label');
+final legend = new ReactDomComponentFactoryProxy('legend');
+final li = new ReactDomComponentFactoryProxy('li');
+final link = new ReactDomComponentFactoryProxy('link');
+final main = new ReactDomComponentFactoryProxy('main');
+final map = new ReactDomComponentFactoryProxy('map');
+final mark = new ReactDomComponentFactoryProxy('mark');
+final menu = new ReactDomComponentFactoryProxy('menu');
+final menuitem = new ReactDomComponentFactoryProxy('menuitem');
+final meta = new ReactDomComponentFactoryProxy('meta');
+final meter = new ReactDomComponentFactoryProxy('meter');
+final nav = new ReactDomComponentFactoryProxy('nav');
+final noscript = new ReactDomComponentFactoryProxy('noscript');
+final object = new ReactDomComponentFactoryProxy('object');
+final ol = new ReactDomComponentFactoryProxy('ol');
+final optgroup = new ReactDomComponentFactoryProxy('optgroup');
+final option = new ReactDomComponentFactoryProxy('option');
+final output = new ReactDomComponentFactoryProxy('output');
+final p = new ReactDomComponentFactoryProxy('p');
+final param = new ReactDomComponentFactoryProxy('param');
+final picture = new ReactDomComponentFactoryProxy('picture');
+final pre = new ReactDomComponentFactoryProxy('pre');
+final progress = new ReactDomComponentFactoryProxy('progress');
+final q = new ReactDomComponentFactoryProxy('q');
+final rp = new ReactDomComponentFactoryProxy('rp');
+final rt = new ReactDomComponentFactoryProxy('rt');
+final ruby = new ReactDomComponentFactoryProxy('ruby');
+final s = new ReactDomComponentFactoryProxy('s');
+final samp = new ReactDomComponentFactoryProxy('samp');
+final script = new ReactDomComponentFactoryProxy('script');
+final section = new ReactDomComponentFactoryProxy('section');
+final select = new ReactDomComponentFactoryProxy('select');
+final small = new ReactDomComponentFactoryProxy('small');
+final source = new ReactDomComponentFactoryProxy('source');
+final span = new ReactDomComponentFactoryProxy('span');
+final strong = new ReactDomComponentFactoryProxy('strong');
+final style = new ReactDomComponentFactoryProxy('style');
+final sub = new ReactDomComponentFactoryProxy('sub');
+final summary = new ReactDomComponentFactoryProxy('summary');
+final sup = new ReactDomComponentFactoryProxy('sup');
+final table = new ReactDomComponentFactoryProxy('table');
+final tbody = new ReactDomComponentFactoryProxy('tbody');
+final td = new ReactDomComponentFactoryProxy('td');
+final textarea = new ReactDomComponentFactoryProxy('textarea');
+final tfoot = new ReactDomComponentFactoryProxy('tfoot');
+final th = new ReactDomComponentFactoryProxy('th');
+final thead = new ReactDomComponentFactoryProxy('thead');
+final time = new ReactDomComponentFactoryProxy('time');
+final title = new ReactDomComponentFactoryProxy('title');
+final tr = new ReactDomComponentFactoryProxy('tr');
+final track = new ReactDomComponentFactoryProxy('track');
+final u = new ReactDomComponentFactoryProxy('u');
+final ul = new ReactDomComponentFactoryProxy('ul');
+final variable = new ReactDomComponentFactoryProxy('var');
+final video = new ReactDomComponentFactoryProxy('video');
+final wbr = new ReactDomComponentFactoryProxy('wbr');
+
+// SVG Elements
+final altGlyph = new ReactDomComponentFactoryProxy('altGlyph');
+final altGlyphDef = new ReactDomComponentFactoryProxy('altGlyphDef');
+final altGlyphItem = new ReactDomComponentFactoryProxy('altGlyphItem');
+final animate = new ReactDomComponentFactoryProxy('animate');
+final animateColor = new ReactDomComponentFactoryProxy('animateColor');
+final animateMotion = new ReactDomComponentFactoryProxy('animateMotion');
+final animateTransform = new ReactDomComponentFactoryProxy('animateTransform');
+final circle = new ReactDomComponentFactoryProxy('circle');
+final clipPath = new ReactDomComponentFactoryProxy('clipPath');
+final colorProfile = new ReactDomComponentFactoryProxy('color-profile');
+final cursor = new ReactDomComponentFactoryProxy('cursor');
+final defs = new ReactDomComponentFactoryProxy('defs');
+final desc = new ReactDomComponentFactoryProxy('desc');
+final discard = new ReactDomComponentFactoryProxy('discard');
+final ellipse = new ReactDomComponentFactoryProxy('ellipse');
+final feBlend = new ReactDomComponentFactoryProxy('feBlend');
+final feColorMatrix = new ReactDomComponentFactoryProxy('feColorMatrix');
+final feComponentTransfer = new ReactDomComponentFactoryProxy('feComponentTransfer');
+final feComposite = new ReactDomComponentFactoryProxy('feComposite');
+final feConvolveMatrix = new ReactDomComponentFactoryProxy('feConvolveMatrix');
+final feDiffuseLighting = new ReactDomComponentFactoryProxy('feDiffuseLighting');
+final feDisplacementMap = new ReactDomComponentFactoryProxy('feDisplacementMap');
+final feDistantLight = new ReactDomComponentFactoryProxy('feDistantLight');
+final feDropShadow = new ReactDomComponentFactoryProxy('feDropShadow');
+final feFlood = new ReactDomComponentFactoryProxy('feFlood');
+final feFuncA = new ReactDomComponentFactoryProxy('feFuncA');
+final feFuncB = new ReactDomComponentFactoryProxy('feFuncB');
+final feFuncG = new ReactDomComponentFactoryProxy('feFuncG');
+final feFuncR = new ReactDomComponentFactoryProxy('feFuncR');
+final feGaussianBlur = new ReactDomComponentFactoryProxy('feGaussianBlur');
+final feImage = new ReactDomComponentFactoryProxy('feImage');
+final feMerge = new ReactDomComponentFactoryProxy('feMerge');
+final feMergeNode = new ReactDomComponentFactoryProxy('feMergeNode');
+final feMorphology = new ReactDomComponentFactoryProxy('feMorphology');
+final feOffset = new ReactDomComponentFactoryProxy('feOffset');
+final fePointLight = new ReactDomComponentFactoryProxy('fePointLight');
+final feSpecularLighting = new ReactDomComponentFactoryProxy('feSpecularLighting');
+final feSpotLight = new ReactDomComponentFactoryProxy('feSpotLight');
+final feTile = new ReactDomComponentFactoryProxy('feTile');
+final feTurbulence = new ReactDomComponentFactoryProxy('feTurbulence');
+final filter = new ReactDomComponentFactoryProxy('filter');
+final font = new ReactDomComponentFactoryProxy('font');
+final fontFace = new ReactDomComponentFactoryProxy('font-face');
+final fontFaceFormat = new ReactDomComponentFactoryProxy('font-face-format');
+final fontFaceName = new ReactDomComponentFactoryProxy('font-face-name');
+final fontFaceSrc = new ReactDomComponentFactoryProxy('font-face-src');
+final fontFaceUri = new ReactDomComponentFactoryProxy('font-face-uri');
+final foreignObject = new ReactDomComponentFactoryProxy('foreignObject');
+final g = new ReactDomComponentFactoryProxy('g');
+final glyph = new ReactDomComponentFactoryProxy('glyph');
+final glyphRef = new ReactDomComponentFactoryProxy('glyphRef');
+final hatch = new ReactDomComponentFactoryProxy('hatch');
+final hatchpath = new ReactDomComponentFactoryProxy('hatchpath');
+final hkern = new ReactDomComponentFactoryProxy('hkern');
+final image = new ReactDomComponentFactoryProxy('image');
+final line = new ReactDomComponentFactoryProxy('line');
+final linearGradient = new ReactDomComponentFactoryProxy('linearGradient');
+final marker = new ReactDomComponentFactoryProxy('marker');
+final mask = new ReactDomComponentFactoryProxy('mask');
+final mesh = new ReactDomComponentFactoryProxy('mesh');
+final meshgradient = new ReactDomComponentFactoryProxy('meshgradient');
+final meshpatch = new ReactDomComponentFactoryProxy('meshpatch');
+final meshrow = new ReactDomComponentFactoryProxy('meshrow');
+final metadata = new ReactDomComponentFactoryProxy('metadata');
+final missingGlyph = new ReactDomComponentFactoryProxy('missing-glyph');
+final mpath = new ReactDomComponentFactoryProxy('mpath');
+final path = new ReactDomComponentFactoryProxy('path');
+final pattern = new ReactDomComponentFactoryProxy('pattern');
+final polygon = new ReactDomComponentFactoryProxy('polygon');
+final polyline = new ReactDomComponentFactoryProxy('polyline');
+final radialGradient = new ReactDomComponentFactoryProxy('radialGradient');
+final rect = new ReactDomComponentFactoryProxy('rect');
+final svgSet = new ReactDomComponentFactoryProxy('set');
+final solidcolor = new ReactDomComponentFactoryProxy('solidcolor');
+final stop = new ReactDomComponentFactoryProxy('stop');
+final svg = new ReactDomComponentFactoryProxy('svg');
+final svgSwitch = new ReactDomComponentFactoryProxy('switch');
+final symbol = new ReactDomComponentFactoryProxy('symbol');
+final text = new ReactDomComponentFactoryProxy('text');
+final textPath = new ReactDomComponentFactoryProxy('textPath');
+final tref = new ReactDomComponentFactoryProxy('tref');
+final tspan = new ReactDomComponentFactoryProxy('tspan');
+final unknown = new ReactDomComponentFactoryProxy('unknown');
+final use = new ReactDomComponentFactoryProxy('use');
+final view = new ReactDomComponentFactoryProxy('view');
+final vkern = new ReactDomComponentFactoryProxy('vkern');
 
 /// Set configuration based on functions provided as arguments.
 ///
 /// The arguments are assigned to global variables, and React DOM `Component`s are created by calling
 /// [_createDOMComponents] with [domCreator].
-setReactConfiguration(domCreator, customRegisterComponent) {
+setReactConfiguration(_, ComponentRegistrar customRegisterComponent) {
   registerComponent = customRegisterComponent;
-  // HTML Elements
-  _createDOMComponents(domCreator);
 }
