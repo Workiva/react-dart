@@ -40,6 +40,7 @@ typedef _CallbackRef<T>(T componentOrDomNode);
 ///
 /// See <https://facebook.github.io/react/docs/components-and-props.html#functional-and-class-components>.
 typedef DartFunctionComponent = dynamic Function(Map props);
+
 /// The ReactJS function signature.
 /// [props] will always be supplied as the first argument
 /// [legacyContext] has been deprecated and should not be used but remains for backward compatibility and is necessary
