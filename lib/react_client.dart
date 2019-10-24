@@ -437,38 +437,38 @@ _reactDom(String name) {
 }
 
 /// Returns whether an [InputElement] is a [CheckboxInputElement] based the value of the `type` key in [props].
-_isCheckbox(props) {
-  return props['type'] == 'checkbox';
-}
+//_isCheckbox(props) {
+//  return props['type'] == 'checkbox';
+//}
 
 /// Get value from the provided [domElem].
 ///
 /// If the [domElem] is a [CheckboxInputElement], return [bool], else return [String] value.
-_getValueFromDom(domElem) {
-  var props = domElem.attributes;
-
-  if (_isCheckbox(props)) {
-    return domElem.checked;
-  } else {
-    return domElem.value;
-  }
+_getValueFromDom(Element domElem) {
+//  var props = domElem.attributes;
+//
+//  if (_isCheckbox(props)) {
+//    return domElem.checked;
+//  } else {
+//    return domElem.value;
+//  }
 }
 
 /// Set value to props based on type of input.
 ///
 /// _Note: Processing checkbox `checked` value is handled as a special case._
 _setValueToProps(Map props, val) {
-  if (_isCheckbox(props)) {
-    if (val) {
-      props['checked'] = true;
-    } else {
-      if (props.containsKey('checked')) {
-        props.remove('checked');
-      }
-    }
-  } else {
-    props['value'] = val;
-  }
+//  if (_isCheckbox(props)) {
+//    if (val) {
+//      props['checked'] = true;
+//    } else {
+//      if (props.containsKey('checked')) {
+//        props.remove('checked');
+//      }
+//    }
+//  } else {
+//    props['value'] = val;
+//  }
 }
 
 /// Convert bound values to pure value and packed onChange function
