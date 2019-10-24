@@ -141,7 +141,8 @@ class ReactDartComponentFactoryProxy<TComponent extends Component> extends React
 }
 
 /// Creates ReactJS [Component2] instances for Dart components.
-class ReactDartComponentFactoryProxy2<TComponent extends Component2> extends ReactComponentFactoryProxy with JsBackedMapsComponentFactoryBuilder
+class ReactDartComponentFactoryProxy2<TComponent extends Component2> extends ReactComponentFactoryProxy
+    with JsBackedMapsComponentFactoryBuilder
     implements ReactDartComponentFactoryProxy {
   /// The ReactJS class used as the type for all [ReactElement]s built by
   /// this factory.
@@ -191,7 +192,7 @@ mixin JsBackedMapsComponentFactoryBuilder on ReactComponentFactoryProxy {
   /// consumption by the [react] library internals.
   static JsMap generateExtendedJsProps(Map props) {
     if (props == null) return newObject();
-    
+
     final propsForJs = new JsBackedMap.from(props);
 
     final ref = propsForJs['ref'];
@@ -745,7 +746,8 @@ class ReactJsComponentFactoryProxy extends ReactComponentFactoryProxy {
   }
 }
 
-class ReactDartFunctionComponentFactoryProxy extends ReactComponentFactoryProxy with JsBackedMapsComponentFactoryBuilder {
+class ReactDartFunctionComponentFactoryProxy extends ReactComponentFactoryProxy
+    with JsBackedMapsComponentFactoryBuilder {
   /// The ReactJS function used as the type for all [ReactElement]s built by
   /// this factory.
   final Function reactFunction;
@@ -763,17 +765,23 @@ class ReactDartFunctionComponentFactoryProxy extends ReactComponentFactoryProxy 
 
   get type => reactFunction;
 }
+
 /// Creates a function component from the given [dartFunctionComponent] that can be used with React.
 JsFunctionComponent _wrapFunctionComponent(DartFunctionComponent dartFunctionComponent, {String componentName}) {
   assert(() {
     componentName ??= getProperty(dartFunctionComponent, 'name');
     return true;
   }());
-  jsFunctionComponent(JsMap jsProps) => dartFunctionComponent(jsProps != null ? JsBackedMap.backedBy(jsProps) : JsBackedMap());
+  jsFunctionComponent(JsMap jsProps) =>
+      dartFunctionComponent(jsProps != null ? JsBackedMap.backedBy(jsProps) : JsBackedMap());
   var interopFunction = allowInterop(jsFunctionComponent);
-  if (componentName != null){
+  if (componentName != null) {
     // This is a work-around to display the correct name in the React DevTools.
-    callMethod(getProperty(window, 'Object'), 'defineProperty', [interopFunction, 'name', jsify({'value': componentName})]);
+    callMethod(getProperty(window, 'Object'), 'defineProperty', [
+      interopFunction,
+      'name',
+      jsify({'value': componentName})
+    ]);
   }
   // ignore: invalid_use_of_protected_member
   setProperty(interopFunction, 'dartComponentVersion', ReactDartComponentVersion.component2);
@@ -782,9 +790,10 @@ JsFunctionComponent _wrapFunctionComponent(DartFunctionComponent dartFunctionCom
 
 /// Creates and returns a new [ReactDartComponentFactoryProxy] from the provided [dartFunctionComponent]
 /// which produces a new `JsFunctionComponent`.
-ReactDartFunctionComponentFactoryProxy _registerFunctionComponent(DartFunctionComponent dartFunctionComponent, {String componentName}) =>
-    new ReactDartFunctionComponentFactoryProxy(_wrapFunctionComponent(dartFunctionComponent, componentName: componentName));
-
+ReactDartFunctionComponentFactoryProxy _registerFunctionComponent(DartFunctionComponent dartFunctionComponent,
+        {String componentName}) =>
+    new ReactDartFunctionComponentFactoryProxy(
+        _wrapFunctionComponent(dartFunctionComponent, componentName: componentName));
 
 /// Creates and returns a new [ReactDartComponentFactoryProxy] from the provided [componentFactory]
 /// which produces a new JS [`ReactClass` component class].
@@ -1254,7 +1263,8 @@ void setClientConfiguration() {
     throw new Exception('Loaded react.js must include react-dart JS interop helpers.');
   }
 
-  setReactConfiguration(_reactDom, _registerComponent, customRegisterComponent2: _registerComponent2, customRegisterFunctionComponent: _registerFunctionComponent);
+  setReactConfiguration(_reactDom, _registerComponent,
+      customRegisterComponent2: _registerComponent2, customRegisterFunctionComponent: _registerFunctionComponent);
   setReactDOMConfiguration(ReactDom.render, ReactDom.unmountComponentAtNode, _findDomNode);
   // Accessing ReactDomServer.renderToString when it's not available breaks in DDC.
   if (context['ReactDOMServer'] != null) {

@@ -31,7 +31,8 @@ typedef ReactDartComponentFactoryProxy2 ComponentRegistrar2(
   Component2BridgeFactory bridgeFactory,
 });
 
-typedef ReactDartFunctionComponentFactoryProxy FunctionComponentRegistrar(FunctionComponent componentFactory, {String componentName});
+typedef ReactDartFunctionComponentFactoryProxy FunctionComponentRegistrar(FunctionComponent componentFactory,
+    {String componentName});
 
 /// Fragment component that allows the wrapping of children without the necessity of using
 /// an element that adds an additional layer to the DOM (div, span, etc).
@@ -1776,6 +1777,7 @@ ComponentRegistrar2 registerComponent2 = (
 FunctionComponentRegistrar registerFunctionComponent = (FunctionComponent componentFactory, {String componentName}) {
   throw new Exception('setClientConfiguration must be called before registerComponent.');
 };
+
 /// The HTML `<a>` [AnchorElement].
 var a;
 
@@ -2580,9 +2582,11 @@ _createDOMComponents(creator) {
 ///
 /// The arguments are assigned to global variables, and React DOM `Component`s are created by calling
 /// [_createDOMComponents] with [domCreator].
-void setReactConfiguration(domCreator, customRegisterComponent, {
-    ComponentRegistrar2 customRegisterComponent2,
-    FunctionComponentRegistrar customRegisterFunctionComponent,
+void setReactConfiguration(
+  domCreator,
+  customRegisterComponent, {
+  ComponentRegistrar2 customRegisterComponent2,
+  FunctionComponentRegistrar customRegisterFunctionComponent,
 }) {
   registerComponent = customRegisterComponent;
   registerComponent2 = customRegisterComponent2;

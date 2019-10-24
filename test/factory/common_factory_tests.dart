@@ -16,10 +16,12 @@ import 'package:react/react_client/react_interop.dart';
 
 import '../util.dart';
 
-void commonFactoryTests(ReactComponentFactoryProxy factory, {bool isComponent2 = false, bool isFunctionComponent = false}) {
+void commonFactoryTests(ReactComponentFactoryProxy factory,
+    {bool isComponent2 = false, bool isFunctionComponent = false}) {
   _childKeyWarningTests(
     factory,
-    renderWithUniqueOwnerName: (isComponent2 || isFunctionComponent) ? _renderWithUniqueOwnerName2 : _renderWithUniqueOwnerName,
+    renderWithUniqueOwnerName:
+        (isComponent2 || isFunctionComponent) ? _renderWithUniqueOwnerName2 : _renderWithUniqueOwnerName,
   );
 
   test('renders an instance with the corresponding `type`', () {

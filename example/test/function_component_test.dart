@@ -9,7 +9,5 @@ import 'react_test_components.dart';
 void main() {
   setClientConfiguration();
 
-  react_dom.render(
-      functionComponent({},'Hello World!'),
-      querySelector('#content'));
+  react_dom.render(functionComponent({}, 'Hello World!'), querySelector('#content'));
 }

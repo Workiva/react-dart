@@ -27,7 +27,6 @@ main() {
         });
       });
 
-
       group('utils', () {
         test('ReactDartComponentVersion.fromType', () {
           expect(ReactDartComponentVersion.fromType(react.div({}).type), isNull);
