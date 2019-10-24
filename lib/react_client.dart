@@ -763,7 +763,7 @@ class ReactDartFunctionComponentFactoryProxy extends ReactComponentFactoryProxy
   /// The JS component factory used by this factory to build [ReactElement]s.
   final ReactJsComponentFactory reactComponentFactory;
 
-  ReactDartFunctionComponentFactoryProxy(reactFunction, [String componentName])
+  ReactDartFunctionComponentFactoryProxy(JsFunctionComponent reactFunction, [String componentName])
       : this.reactFunction = reactFunction,
         this.componentName = componentName,
         this.reactComponentFactory = React.createFactory(reactFunction);
@@ -777,9 +777,9 @@ JsFunctionComponent _wrapFunctionComponent(DartFunctionComponent dartFunctionCom
     componentName ??= getProperty(dartFunctionComponent, 'name');
     return true;
   }());
-  jsFunctionComponent(JsMap jsProps, JsMap _legacyContext) =>
-      dartFunctionComponent(jsProps != null ? JsBackedMap.backedBy(jsProps) : JsBackedMap());
-  var interopFunction = allowInterop(jsFunctionComponent);
+  jsFunctionComponent(JsMap jsProps, [JsMap _legacyContext]) =>
+      (dartFunctionComponent(jsProps != null ? JsBackedMap.backedBy(jsProps) : JsBackedMap()) ?? jsNull);
+  JsFunctionComponent interopFunction = allowInterop(jsFunctionComponent);
   if (componentName != null) {
     // This is a work-around to display the correct name in the React DevTools.
     callMethod(getProperty(window, 'Object'), 'defineProperty', [

@@ -10,9 +10,13 @@ var _reactDartContextSymbol = Symbol(_reactDartSymbolPrefix+'context');
 /// A JS side function to allow Dart to throw an error from JS in order to catch it Dart side.
 /// Used within Component2 error boundry methods to dartify the error argument.
 /// See: https://github.com/dart-lang/sdk/issues/36363
-function _throwErrorFromJS(error){
+function _throwErrorFromJS(error) {
   throw error;
 }
+
+/// A JS variable that can be used with dart interop in order to force returning a
+/// javascript `null`. This prevents dart2js from possibly converting dart `null` into `undefined`.
+var _jsNull = null;
 
 function _createReactDartComponentClass(dartInteropStatics, componentStatics, jsConfig) {
   class ReactDartComponent extends React.Component {
@@ -165,4 +169,5 @@ export default {
   _createReactDartComponentClass2,
   _markChildValidated,
   _throwErrorFromJS,
+  _jsNull,
 }

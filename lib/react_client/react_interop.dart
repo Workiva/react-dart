@@ -478,6 +478,11 @@ class JsError {
   external JsError(message);
 }
 
+/// A JS variable that can be used with dart interop in order to force returning a javascript `null`.
+/// Use this if dart2js is possibly converting dart `null` into `undefined`.
+@JS('_jsNull')
+external get jsNull;
+
 /// Throws the error passed to it from Javascript.
 /// This allows us to catch the error in dart which re-dartifies the js errors/exceptions.
 @alwaysThrows
