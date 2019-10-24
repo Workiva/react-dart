@@ -392,7 +392,7 @@ class _NewContextTypeConsumerComponent extends react.Component2 {
   }
 }
 
-var functionComponent = react.registerFunctionComponent(HelloGreg);
+var functionComponent = react.registerFunctionComponent(HelloGreg, displayName: 'HelloGreg');
 
 HelloGreg(Map props) {
   return react.div({}, props['children'] ?? 'Hello Greg');

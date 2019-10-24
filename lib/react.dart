@@ -32,7 +32,7 @@ typedef ReactDartComponentFactoryProxy2 ComponentRegistrar2(
 });
 
 typedef ReactDartFunctionComponentFactoryProxy FunctionComponentRegistrar(FunctionComponent componentFactory,
-    {String componentName});
+    {String displayName});
 
 /// Fragment component that allows the wrapping of children without the necessity of using
 /// an element that adds an additional layer to the DOM (div, span, etc).
@@ -1774,7 +1774,7 @@ ComponentRegistrar2 registerComponent2 = (
 };
 
 /// Registers [componentFactory] on both client and server.
-FunctionComponentRegistrar registerFunctionComponent = (FunctionComponent componentFactory, {String componentName}) {
+FunctionComponentRegistrar registerFunctionComponent = (FunctionComponent componentFactory, {String displayName}) {
   throw new Exception('setClientConfiguration must be called before registerComponent.');
 };
 

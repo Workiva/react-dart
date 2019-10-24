@@ -609,7 +609,7 @@ abstract class _ReactDartInteropStatics2 {
 }
 
 /// Creates and returns a new [ReactDartComponentFactoryProxy] from the provided [componentFactory]
-/// which produces a new JS [`ReactClass` component class](https://facebook.github.io/react/docs/top-level-api.html#react.createclass).
+/// which produces a new JS `ReactClass` component class.
 @Deprecated('6.0.0')
 ReactDartComponentFactoryProxy _registerComponent(
   ComponentFactory componentFactory, [
@@ -758,34 +758,34 @@ class ReactDartFunctionComponentFactoryProxy extends ReactComponentFactoryProxy
   final Function reactFunction;
 
   /// The name of this function.
-  final String componentName;
+  final String displayName;
 
   /// The JS component factory used by this factory to build [ReactElement]s.
   final ReactJsComponentFactory reactComponentFactory;
 
-  ReactDartFunctionComponentFactoryProxy(JsFunctionComponent reactFunction, [String componentName])
+  ReactDartFunctionComponentFactoryProxy(JsFunctionComponent reactFunction, [String displayName])
       : this.reactFunction = reactFunction,
-        this.componentName = componentName,
+        this.displayName = displayName,
         this.reactComponentFactory = React.createFactory(reactFunction);
 
   get type => reactFunction;
 }
 
 /// Creates a function component from the given [dartFunctionComponent] that can be used with React.
-JsFunctionComponent _wrapFunctionComponent(DartFunctionComponent dartFunctionComponent, {String componentName}) {
+JsFunctionComponent _wrapFunctionComponent(DartFunctionComponent dartFunctionComponent, {String displayName}) {
   assert(() {
-    componentName ??= getProperty(dartFunctionComponent, 'name');
+    displayName ??= getProperty(dartFunctionComponent, 'name');
     return true;
   }());
   jsFunctionComponent(JsMap jsProps, [JsMap _legacyContext]) =>
       (dartFunctionComponent(jsProps != null ? JsBackedMap.backedBy(jsProps) : JsBackedMap()) ?? jsNull);
   JsFunctionComponent interopFunction = allowInterop(jsFunctionComponent);
-  if (componentName != null) {
+  if (displayName != null) {
     // This is a work-around to display the correct name in the React DevTools.
     callMethod(getProperty(window, 'Object'), 'defineProperty', [
       interopFunction,
       'name',
-      jsify({'value': componentName})
+      jsify({'value': displayName})
     ]);
   }
   // ignore: invalid_use_of_protected_member
@@ -796,9 +796,9 @@ JsFunctionComponent _wrapFunctionComponent(DartFunctionComponent dartFunctionCom
 /// Creates and returns a new [ReactDartComponentFactoryProxy] from the provided [dartFunctionComponent]
 /// which produces a new `JsFunctionComponent`.
 ReactDartFunctionComponentFactoryProxy _registerFunctionComponent(DartFunctionComponent dartFunctionComponent,
-        {String componentName}) =>
+        {String displayName}) =>
     new ReactDartFunctionComponentFactoryProxy(
-        _wrapFunctionComponent(dartFunctionComponent, componentName: componentName));
+        _wrapFunctionComponent(dartFunctionComponent, displayName: displayName));
 
 /// Creates and returns a new [ReactDartComponentFactoryProxy] from the provided [componentFactory]
 /// which produces a new JS [`ReactClass` component class].
