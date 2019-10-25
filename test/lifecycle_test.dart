@@ -433,15 +433,15 @@ main() {
     group('Function Component', () {
       Element mountNode;
 
-      setUp((){
+      setUp(() {
         mountNode = DivElement();
       });
 
-      group('', (){
+      group('', () {
         ReactDartFunctionComponentFactoryProxy PropsTest;
 
-        setUpAll((){
-          PropsTest = react.registerFunctionComponent((Map props){
+        setUpAll(() {
+          PropsTest = react.registerFunctionComponent((Map props) {
             return [props['testProp'], props['children']];
           });
         });
@@ -465,7 +465,7 @@ main() {
       group('recieves a JsBackedMap from the props argument', () {
         var propTypeCheck;
         ReactDartFunctionComponentFactoryProxy PropsArgTypeTest;
-        setUp((){
+        setUp(() {
           PropsArgTypeTest = react.registerFunctionComponent((Map props) {
             propTypeCheck = props;
             return null;
