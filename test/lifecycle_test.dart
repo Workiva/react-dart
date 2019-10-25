@@ -20,7 +20,6 @@ import 'package:test/test.dart';
 
 import 'lifecycle_test/component.dart' as components;
 import 'lifecycle_test/component2.dart' as components2;
-import 'lifecycle_test/function_component.dart' as function_components;
 import 'lifecycle_test/util.dart';
 import 'shared_type_tester.dart';
 import 'util.dart';
@@ -432,70 +431,74 @@ main() {
     });
 
     group('Function Component', () {
-      test('renders correctly', () {
-        var testProps = {'testProp': 'test'};
-        var mountNode = new DivElement();
-        react_dom.render(function_components.PropsTest(testProps, ['Child']), mountNode);
-        expect(mountNode.innerHtml, 'testChild');
+      Element mountNode;
+
+      setUp((){
+        mountNode = DivElement();
       });
 
-      test('updates on rerender with new props', () {
-        var testProps = {'testProp': 'test'};
-        var updatedProps = {'testProp': 'test2'};
-        var mountNode = new DivElement();
-        react_dom.render(function_components.PropsTest(testProps, ['Child']), mountNode);
-        expect(mountNode.innerHtml, 'testChild');
-        react_dom.render(function_components.PropsTest(updatedProps, ['Child']), mountNode);
-        expect(mountNode.innerHtml, 'test2Child');
+      group('', (){
+        ReactDartFunctionComponentFactoryProxy PropsTest;
+
+        setUpAll((){
+          PropsTest = react.registerFunctionComponent((Map props){
+            return [props['testProp'], props['children']];
+          });
+        });
+
+        test('renders correctly', () {
+          var testProps = {'testProp': 'test'};
+          react_dom.render(PropsTest(testProps, ['Child']), mountNode);
+          expect(mountNode.innerHtml, 'testChild');
+        });
+
+        test('updates on rerender with new props', () {
+          var testProps = {'testProp': 'test'};
+          var updatedProps = {'testProp': 'test2'};
+          react_dom.render(PropsTest(testProps, ['Child']), mountNode);
+          expect(mountNode.innerHtml, 'testChild');
+          react_dom.render(PropsTest(updatedProps, ['Child']), mountNode);
+          expect(mountNode.innerHtml, 'test2Child');
+        });
       });
 
       group('recieves a JsBackedMap from the props argument', () {
-        test('when provided with an empty dart map', () {
-          Element mountNode = DivElement();
-          _PropsArgTypeTest(Map props) {
-            expect(props, isA<JsBackedMap>());
+        var propTypeCheck;
+        ReactDartFunctionComponentFactoryProxy PropsArgTypeTest;
+        setUp((){
+          PropsArgTypeTest = react.registerFunctionComponent((Map props) {
+            propTypeCheck = props;
             return null;
-          }
+          });
+        });
 
-          ReactDartFunctionComponentFactoryProxy PropsArgTypeTest = react.registerFunctionComponent(_PropsArgTypeTest);
+        test('when provided with an empty dart map', () {
           react_dom.render(PropsArgTypeTest({}), mountNode);
+          expect(propTypeCheck, isA<JsBackedMap>());
         });
 
         test('when provided null', () {
-          Element mountNode = DivElement();
-          _PropsArgTypeTest(Map props) {
-            expect(props, isA<JsBackedMap>());
-            return null;
-          }
-
-          ReactDartFunctionComponentFactoryProxy PropsArgTypeTest = react.registerFunctionComponent(_PropsArgTypeTest);
           react_dom.render(PropsArgTypeTest(null), mountNode);
+          expect(propTypeCheck, isA<JsBackedMap>());
         });
       });
 
-      group('props are recieved correctly without interop interfering with the values:', () {
+      group('props are received correctly without interop interfering with the values:', () {
         void testTypeValue(dynamic testValue) {
-          var retrievedValue;
-          Element mountNode = DivElement();
-          _PropsTypeTest(Map props) {
-            expect(props, isA<JsBackedMap>());
-            retrievedValue = props['testValue'];
-            return null;
-          }
+          var receivedValue;
+          var receivedProps;
 
-          ReactDartFunctionComponentFactoryProxy PropsTypeTest = react.registerFunctionComponent(_PropsTypeTest);
+          ReactDartFunctionComponentFactoryProxy PropsTypeTest = react.registerFunctionComponent((Map props) {
+            receivedProps = props;
+            receivedValue = props['testValue'];
+            return null;
+          });
           react_dom.render(PropsTypeTest({'testValue': testValue}), mountNode);
-          expect(retrievedValue, same(testValue));
+          expect(receivedProps, isA<JsBackedMap>());
+          expect(receivedValue, same(testValue));
         }
 
         sharedTypeTests(testTypeValue);
-      });
-
-      test('recieves an empty JsBackedMap if no props are provided', () {
-        var testProps = {'testProp': 'test'};
-        var mountNode = new DivElement();
-        react_dom.render(function_components.PropsTest(testProps, ['Child']), mountNode);
-        expect(mountNode.outerHtml, contains('testChild'));
       });
     }, tags: ['functionComponent']);
   });
