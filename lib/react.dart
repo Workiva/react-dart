@@ -22,6 +22,7 @@ typedef Error PropValidator<TProps>(
 
 typedef FunctionComponent = dynamic Function(Map props);
 typedef T ComponentFactory<T extends Component>();
+
 typedef ReactComponentFactoryProxy ComponentRegistrar(ComponentFactory componentFactory,
     [Iterable<String> skipMethods]);
 
