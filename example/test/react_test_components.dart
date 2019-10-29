@@ -392,10 +392,14 @@ class _NewContextTypeConsumerComponent extends react.Component2 {
   }
 }
 
-var functionComponent = react.registerFunctionComponent(HelloGreg, displayName: 'HelloGreg');
+var helloGregFunctionComponent = react.registerFunctionComponent(HelloGreg, displayName: 'HelloGreg');
 
 HelloGreg(Map props) {
-  return react.div({}, props['children'] ?? 'Hello Greg');
+  var content = ['Hello Greg!'];
+  if (props['children'].isNotEmpty) {
+    content = ['Hello ' + props['children'].join(' ') + '!'];
+  }
+  return react.Fragment({}, content);
 }
 
 class _Component2TestComponent extends react.Component2 with react.TypedSnapshot<String> {
