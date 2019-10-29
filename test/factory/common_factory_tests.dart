@@ -99,7 +99,7 @@ void commonFactoryTests(ReactComponentFactoryProxy factory,
         shouldAlwaysBeList: isDartComponent2(factory({})));
   });
 
-  // Skipped for Function Components because they dont have instance memebers ... they are functions.
+  // Skipped for Function Components because they dont have instance members ... they are functions.
   if (isDartComponent(factory({})) && !isFunctionComponent) {
     group('passes children to the Dart component when specified as', () {
       dynamic getDartChildren(ReactElement instance) {

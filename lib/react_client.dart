@@ -11,7 +11,6 @@ import "dart:collection";
 import "dart:html";
 import 'dart:js';
 import 'dart:js_util';
-import 'dart:js_util' as js_util;
 
 import "package:js/js.dart";
 
