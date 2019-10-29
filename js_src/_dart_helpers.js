@@ -7,7 +7,7 @@ const _reactDartSymbolPrefix = 'react-dart.';
 
 /// A global symbol to identify javascript objects owned by react-dart context,
 /// in order to jsify and unjsify context objects correctly.
-const _reactDartContextSymbol = Symbol(_reactDartSymbolPrefix+'context');
+const _reactDartContextSymbol = Symbol(_reactDartSymbolPrefix + 'context');
 
 /// A JS side function to allow Dart to throw an error from JS in order to catch it Dart side.
 /// Used within Component2 error boundry methods to dartify the error argument.
@@ -137,7 +137,7 @@ function _createReactDartComponentClass2(dartInteropStatics, componentStatics, j
   }
 
   // Delete methods that the user does not want to include (such as error boundary event).
-  jsConfig.skipMethods.forEach((method) => {
+  jsConfig.skipMethods.forEach(method => {
     if (ReactDartComponent2[method]) {
       delete ReactDartComponent2[method];
     } else {
@@ -172,4 +172,4 @@ export default {
   _markChildValidated,
   _throwErrorFromJS,
   _jsNull,
-}
+};
