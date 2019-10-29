@@ -786,7 +786,7 @@ JsFunctionComponent _wrapFunctionComponent(DartFunctionComponent dartFunctionCom
   return interopFunction;
 }
 
-/// Creates and returns a new [ReactDartComponentFactoryProxy] from the provided [dartFunctionComponent]
+/// Creates and returns a new `ReactDartFunctionComponentFactoryProxy` from the provided [dartFunctionComponent]
 /// which produces a new `JsFunctionComponent`.
 ReactDartFunctionComponentFactoryProxy _registerFunctionComponent(DartFunctionComponent dartFunctionComponent,
         {String displayName}) =>

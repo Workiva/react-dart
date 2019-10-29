@@ -1779,7 +1779,7 @@ ComponentRegistrar2 registerComponent2 = (
 
 /// Registers [componentFactory] on both client and server.
 FunctionComponentRegistrar registerFunctionComponent = (DartFunctionComponent componentFactory, {String displayName}) {
-  throw new Exception('setClientConfiguration must be called before registerComponent.');
+  throw new Exception('setClientConfiguration must be called before registerFunctionComponent.');
 };
 
 /// The HTML `<a>` [AnchorElement].
