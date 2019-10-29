@@ -20,7 +20,10 @@ export 'package:react/react_client/react_interop.dart' show forwardRef, createRe
 typedef Error PropValidator<TProps>(
     TProps props, String propName, String componentName, String location, String propFullName);
 
-typedef FunctionComponent = dynamic Function(Map props);
+/// A React component declared using a function that takes in [props] and returns rendered output.
+///
+/// See <https://facebook.github.io/react/docs/components-and-props.html#functional-and-class-components>.
+typedef DartFunctionComponent = dynamic Function(Map props);
 typedef T ComponentFactory<T extends Component>();
 
 typedef ReactComponentFactoryProxy ComponentRegistrar(ComponentFactory componentFactory,
@@ -32,7 +35,7 @@ typedef ReactDartComponentFactoryProxy2 ComponentRegistrar2(
   Component2BridgeFactory bridgeFactory,
 });
 
-typedef ReactDartFunctionComponentFactoryProxy FunctionComponentRegistrar(FunctionComponent componentFactory,
+typedef ReactDartFunctionComponentFactoryProxy FunctionComponentRegistrar(DartFunctionComponent componentFactory,
     {String displayName});
 
 /// Fragment component that allows the wrapping of children without the necessity of using
@@ -1775,7 +1778,7 @@ ComponentRegistrar2 registerComponent2 = (
 };
 
 /// Registers [componentFactory] on both client and server.
-FunctionComponentRegistrar registerFunctionComponent = (FunctionComponent componentFactory, {String displayName}) {
+FunctionComponentRegistrar registerFunctionComponent = (DartFunctionComponent componentFactory, {String displayName}) {
   throw new Exception('setClientConfiguration must be called before registerComponent.');
 };
 

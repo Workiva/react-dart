@@ -446,6 +446,10 @@ main() {
           });
         });
 
+        tearDownAll((){
+          PropsTest = null;
+        });
+
         test('renders correctly', () {
           var testProps = {'testProp': 'test'};
           react_dom.render(PropsTest(testProps, ['Child']), mountNode);
@@ -465,11 +469,16 @@ main() {
       group('recieves a JsBackedMap from the props argument', () {
         var propTypeCheck;
         ReactDartFunctionComponentFactoryProxy PropsArgTypeTest;
+
         setUp(() {
           PropsArgTypeTest = react.registerFunctionComponent((Map props) {
             propTypeCheck = props;
             return null;
           });
+        });
+
+        tearDownAll((){
+          PropsArgTypeTest = null;
         });
 
         test('when provided with an empty dart map', () {

@@ -20,48 +20,45 @@ main() {
       expect(FunctionFoo.type, equals(FunctionFoo.reactFunction));
     });
 
-    group('- common factory behavior -', () {
-      group('Function Component -', () {
-        group('- common factory behavior -', () {
-          commonFactoryTests(FunctionFoo, isFunctionComponent: true);
-        });
+    group('Function Component -', () {
+      group('- common factory behavior -', () {
+        commonFactoryTests(FunctionFoo, isFunctionComponent: true);
+      });
+    });
+
+    group('utils', () {
+      test('ReactDartComponentVersion.fromType', () {
+        expect(ReactDartComponentVersion.fromType(react.div({}).type), isNull);
+        expect(ReactDartComponentVersion.fromType(JsFoo({}).type), isNull);
+        expect(ReactDartComponentVersion.fromType(FunctionFoo({}).type), ReactDartComponentVersion.component2);
+        expect(ReactDartComponentVersion.fromType(Foo({}).type), ReactDartComponentVersion.component);
+        expect(ReactDartComponentVersion.fromType(Foo2({}).type), ReactDartComponentVersion.component2);
+      });
+    });
+
+    group('test utils', () {
+      test('isDartComponent2', () {
+        expect(isDartComponent2(react.div({})), isFalse);
+        expect(isDartComponent2(JsFoo({})), isFalse);
+        expect(isDartComponent2(FunctionFoo({})), isTrue);
+        expect(isDartComponent2(Foo({})), isFalse);
+        expect(isDartComponent2(Foo2({})), isTrue);
       });
 
-      group('utils', () {
-        test('ReactDartComponentVersion.fromType', () {
-          expect(ReactDartComponentVersion.fromType(react.div({}).type), isNull);
-          expect(ReactDartComponentVersion.fromType(JsFoo({}).type), isNull);
-          expect(ReactDartComponentVersion.fromType(FunctionFoo({}).type), ReactDartComponentVersion.component2);
-          expect(ReactDartComponentVersion.fromType(Foo({}).type), ReactDartComponentVersion.component);
-          expect(ReactDartComponentVersion.fromType(Foo2({}).type), ReactDartComponentVersion.component2);
-        });
+      test('isDartComponent1', () {
+        expect(isDartComponent1(react.div({})), isFalse);
+        expect(isDartComponent1(JsFoo({})), isFalse);
+        expect(isDartComponent1(FunctionFoo({})), isFalse);
+        expect(isDartComponent1(Foo({})), isTrue);
+        expect(isDartComponent1(Foo2({})), isFalse);
       });
 
-      group('test utils', () {
-        // todo move somewhere else
-        test('isDartComponent2', () {
-          expect(isDartComponent2(react.div({})), isFalse);
-          expect(isDartComponent2(JsFoo({})), isFalse);
-          expect(isDartComponent2(FunctionFoo({})), isTrue);
-          expect(isDartComponent2(Foo({})), isFalse);
-          expect(isDartComponent2(Foo2({})), isTrue);
-        });
-
-        test('isDartComponent1', () {
-          expect(isDartComponent1(react.div({})), isFalse);
-          expect(isDartComponent1(JsFoo({})), isFalse);
-          expect(isDartComponent1(FunctionFoo({})), isFalse);
-          expect(isDartComponent1(Foo({})), isTrue);
-          expect(isDartComponent1(Foo2({})), isFalse);
-        });
-
-        test('isDartComponent', () {
-          expect(isDartComponent(react.div({})), isFalse);
-          expect(isDartComponent(JsFoo({})), isFalse);
-          expect(isDartComponent(FunctionFoo({})), isTrue);
-          expect(isDartComponent(Foo({})), isTrue);
-          expect(isDartComponent(Foo2({})), isTrue);
-        });
+      test('isDartComponent', () {
+        expect(isDartComponent(react.div({})), isFalse);
+        expect(isDartComponent(JsFoo({})), isFalse);
+        expect(isDartComponent(FunctionFoo({})), isTrue);
+        expect(isDartComponent(Foo({})), isTrue);
+        expect(isDartComponent(Foo2({})), isTrue);
       });
     });
   });

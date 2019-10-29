@@ -35,14 +35,10 @@ export 'package:react/react.dart' show ReactComponentFactoryProxy, ComponentFact
 /// See: <https://facebook.github.io/react/docs/more-about-refs.html#the-ref-callback-attribute>
 typedef _CallbackRef<T>(T componentOrDomNode);
 
-/// A React component declared using a function that takes in [props] and returns rendered output.
-///
-/// See <https://facebook.github.io/react/docs/components-and-props.html#functional-and-class-components>.
-typedef DartFunctionComponent = dynamic Function(Map props);
-
 /// The ReactJS function signature.
-/// [props] will always be supplied as the first argument
-/// [legacyContext] has been deprecated and should not be used but remains for backward compatibility and is necessary
+///
+/// - [props] will always be supplied as the first argument
+/// - [legacyContext] has been deprecated and should not be used but remains for backward compatibility and is necessary
 /// to match darts generated call signature based on the number of args react provides.
 typedef JsFunctionComponent = dynamic Function(JsMap props, [JsMap legacyContext]);
 
@@ -160,7 +156,7 @@ class ReactDartComponentFactoryProxy2<TComponent extends Component2> extends Rea
   ReactDartComponentFactoryProxy2(ReactClass reactClass)
       : this.reactClass = reactClass,
         this.reactComponentFactory = React.createFactory(reactClass),
-        this.defaultProps = new JsBackedMap.fromJs(reactClass?.defaultProps);
+        this.defaultProps = new JsBackedMap.fromJs(reactClass.defaultProps);
 
   ReactClass get type => reactClass;
 }
@@ -754,7 +750,7 @@ class ReactDartFunctionComponentFactoryProxy extends ReactComponentFactoryProxy
     with JsBackedMapsComponentFactoryBuilder {
   /// The ReactJS function used as the type for all [ReactElement]s built by
   /// this factory.
-  final Function reactFunction;
+  final JsFunctionComponent reactFunction;
 
   /// The name of this function.
   final String displayName;
@@ -762,10 +758,8 @@ class ReactDartFunctionComponentFactoryProxy extends ReactComponentFactoryProxy
   /// The JS component factory used by this factory to build [ReactElement]s.
   final ReactJsComponentFactory reactComponentFactory;
 
-  ReactDartFunctionComponentFactoryProxy(JsFunctionComponent reactFunction, [String displayName])
-      : this.reactFunction = reactFunction,
-        this.displayName = displayName,
-        this.reactComponentFactory = React.createFactory(reactFunction);
+  ReactDartFunctionComponentFactoryProxy(this.reactFunction, [this.displayName])
+      : this.reactComponentFactory = React.createFactory(reactFunction);
 
   get type => reactFunction;
 }
@@ -796,7 +790,7 @@ JsFunctionComponent _wrapFunctionComponent(DartFunctionComponent dartFunctionCom
 /// which produces a new `JsFunctionComponent`.
 ReactDartFunctionComponentFactoryProxy _registerFunctionComponent(DartFunctionComponent dartFunctionComponent,
         {String displayName}) =>
-    new ReactDartFunctionComponentFactoryProxy(_wrapFunctionComponent(dartFunctionComponent, displayName: displayName));
+    ReactDartFunctionComponentFactoryProxy(_wrapFunctionComponent(dartFunctionComponent, displayName: displayName));
 
 /// Creates and returns a new [ReactDartComponentFactoryProxy] from the provided [componentFactory]
 /// which produces a new JS `ReactClass` component class.
