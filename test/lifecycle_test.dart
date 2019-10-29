@@ -446,7 +446,7 @@ main() {
           });
         });
 
-        tearDownAll((){
+        tearDownAll(() {
           PropsTest = null;
         });
 
@@ -477,7 +477,7 @@ main() {
           });
         });
 
-        tearDownAll((){
+        tearDownAll(() {
           PropsArgTypeTest = null;
         });
 
