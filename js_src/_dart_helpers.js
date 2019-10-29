@@ -2,7 +2,7 @@
  * react-dart JS interop helpers (used by react_client.dart and react_client/js_interop_helpers.dart)
  */
 
-/// A simple prefix for react-dart js symbols
+/// Prefix to namespace react-dart symbols
 const _reactDartSymbolPrefix = 'react-dart.';
 
 /// A global symbol to identify javascript objects owned by react-dart context,
