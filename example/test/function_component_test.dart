@@ -8,12 +8,27 @@ import 'react_test_components.dart';
 
 void main() {
   setClientConfiguration();
+  var inputValue = 'World';
+  // TODO: replace this with hooks/useState when they are added.
+  render() {
+    react_dom.render(
+        react.Fragment({}, [
+          react.input(
+            {
+              'defaultValue': inputValue,
+              'onChange': (event) {
+                inputValue = event.currentTarget.value;
+                render();
+              }
+            },
+          ),
+          react.br({}),
+          helloGregFunctionComponent({'key': 'greg'}),
+          react.br({}),
+          helloGregFunctionComponent({'key': 'not greg'}, inputValue)
+        ]),
+        querySelector('#content'));
+  }
 
-  react_dom.render(
-      react.Fragment({}, [
-        helloGregFunctionComponent({'key': 'greg'}),
-        react.br({}),
-        helloGregFunctionComponent({'key': 'not greg'}, 'World')
-      ]),
-      querySelector('#content'));
+  render();
 }
