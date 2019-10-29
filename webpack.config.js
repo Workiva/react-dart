@@ -66,7 +66,7 @@ function createExports(exportMappings) {
       // and it calls `redux.bindActionCreators`.
       //
       // This line fakes any `require('redux')` calls, so that webpack will not include all of the `redux` code.
-      exportObject.externals[0]['redux'] = "window.Object";
+      exportObject.externals[0].redux = "window.Object";
 
       if ( !includeReact ) {
         // This forces any packages that require react as a dependacy to have the same instance of react that

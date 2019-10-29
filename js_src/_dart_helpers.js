@@ -1,11 +1,13 @@
 /**
  * react-dart JS interop helpers (used by react_client.dart and react_client/js_interop_helpers.dart)
  */
-/// Prefix to namespace react-dart symbols
-var _reactDartSymbolPrefix = 'react-dart.';
+
+/// A simple prefix for react-dart js symbols
+const _reactDartSymbolPrefix = 'react-dart.';
+
 /// A global symbol to identify javascript objects owned by react-dart context,
 /// in order to jsify and unjsify context objects correctly.
-var _reactDartContextSymbol = Symbol(_reactDartSymbolPrefix+'context');
+const _reactDartContextSymbol = Symbol(_reactDartSymbolPrefix+'context');
 
 /// A JS side function to allow Dart to throw an error from JS in order to catch it Dart side.
 /// Used within Component2 error boundry methods to dartify the error argument.
@@ -16,7 +18,7 @@ function _throwErrorFromJS(error) {
 
 /// A JS variable that can be used with Fart interop in order to force returning a
 /// JavaScript `null`. This prevents dart2js from possibly converting Dart `null` into `undefined`.
-var _jsNull = null;
+const _jsNull = null;
 
 function _createReactDartComponentClass(dartInteropStatics, componentStatics, jsConfig) {
   class ReactDartComponent extends React.Component {
