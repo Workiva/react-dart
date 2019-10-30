@@ -4,8 +4,7 @@ import 'package:react/react.dart' as react;
 import 'package:react/react_dom.dart' as react_dom;
 import 'package:react/react_client.dart';
 
-var useStateTestFunctionComponent =
-react.registerFunctionComponent(UseStateTestComponent, displayName: 'useStateTest');
+var useStateTestFunctionComponent = react.registerFunctionComponent(UseStateTestComponent, displayName: 'useStateTest');
 
 UseStateTestComponent(Map props) {
   final count = react.useState(0);
