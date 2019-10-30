@@ -41,6 +41,9 @@ abstract class React {
   external static ReactClass get Fragment;
 
   external static JsRef createRef();
+  external static ReactClass forwardRef(Function(JsMap props, JsRef ref) wrapperFunction);
+
+  external static List<dynamic> useState(dynamic value);
 }
 
 /// Creates a [Ref] object that can be attached to a [ReactElement] via the ref prop.
@@ -105,7 +108,7 @@ class JsRef {
 ///
 /// See: <https://reactjs.org/docs/forwarding-refs.html>.
 ReactJsComponentFactoryProxy forwardRef(Function(Map props, Ref ref) wrapperFunction) {
-  var hoc = _jsForwardRef(allowInterop((JsMap props, JsRef ref) {
+  var hoc = React.forwardRef(allowInterop((JsMap props, JsRef ref) {
     final dartProps = JsBackedMap.backedBy(props);
     final dartRef = Ref.fromJs(ref);
     return wrapperFunction(dartProps, dartRef);
@@ -114,35 +117,80 @@ ReactJsComponentFactoryProxy forwardRef(Function(Map props, Ref ref) wrapperFunc
   return new ReactJsComponentFactoryProxy(hoc, shouldConvertDomProps: false);
 }
 
-@JS('React.forwardRef')
-external ReactClass _jsForwardRef(Function(JsMap props, JsRef ref) wrapperFunction);
-
-@JS('React.useState')
-external List<dynamic> _jsUseState(dynamic value);
-
+/// The return value of [useState].
+///
+/// The current value of the state variable is available via [value] and
+/// functions to update it are available via [set] and [setTx].
 class StateHook<T> {
+  /// The first item of the pair returned by [React.useState].
   T _value;
 
+  /// The second item in the pair returned by [React.useState].
   void Function(dynamic) _setValue;
 
   StateHook(T initialValue) {
-    final result = _jsUseState(initialValue);
+    final result = React.useState(initialValue);
     _value = result[0];
     _setValue = result[1];
   }
 
   StateHook.init(T init()) {
-    final result = _jsUseState(init);
+    final result = React.useState(allowInterop(init));
     _value = result[0];
     _setValue = result[1];
   }
 
+  /// The current value of the state variable.
   T get value => _value;
+
+  /// Updates [value] to [newValue].
   void set(T newValue) => _setValue(newValue);
-  void setTx(T computeNewValue(T oldValue)) => _setValue(computeNewValue);
+
+  /// Updates [value] to the return value of [computeNewValue].
+  ///
+  /// See: <https://reactjs.org/docs/hooks-reference.html#functional-updates>.
+  void setTx(T computeNewValue(T oldValue)) => _setValue(allowInterop(computeNewValue));
 }
 
+/// When called inside a [DartFunctionComponent], adds a local state to the component.
+///
+/// Returns a [StateHook] with [StateHook.value] initialized to [initialValue].
+///
+/// __Example__:
+///
+///     UseStateTestComponent(Map props) {
+///       final count = react.useState(0);
+///
+///       return react.div({}, [
+///         count.value,
+///         react.button({'onClick': (_) => count.set(0)}, ['Reset']),
+///         react.button({'onClick': (_) => count.setTx((prev) => prev + 1)}, ['+']),
+///       ]);
+///     }
+///
+/// Learn more: <https://reactjs.org/docs/hooks-state.html>.
 StateHook<T> useState<T>(T initialValue) => new StateHook(initialValue);
+
+/// When called inside a [DartFunctionComponent], adds a local state to the component.
+///
+/// Returns a [StateHook] with [StateHook.value] initialized to the return value of [init].
+///
+/// __Example__:
+///
+///     UseStateTestComponent(Map props) {
+///       final count = react.useStateInit(() {
+///         var initialState = someExpensiveComputation(props);
+///         return initialState;
+///       }));
+///
+///       return react.div({}, [
+///         count.value,
+///         react.button({'onClick': (_) => count.set(0)}, ['Reset']),
+///         react.button({'onClick': (_) => count.setTx((prev) => prev + 1)}, ['+']),
+///       ]);
+///     }
+///
+/// Learn more: <https://reactjs.org/docs/hooks-reference.html#lazy-initial-state>.
 StateHook<T> useStateInit<T>(T init()) => new StateHook.init(init);
 
 abstract class ReactDom {

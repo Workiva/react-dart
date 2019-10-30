@@ -4,7 +4,7 @@ import 'package:react/react.dart' as react;
 import 'package:react/react_dom.dart' as react_dom;
 import 'package:react/react_client.dart';
 
-var useStateTestFunctionalComponent =
+var useStateTestFunctionComponent =
 react.registerFunctionComponent(UseStateTestComponent, displayName: 'useStateTest');
 
 UseStateTestComponent(Map props) {
@@ -24,7 +24,7 @@ void main() {
     react_dom.render(
         react.Fragment({}, [
           react.h2({'key': 'useStateTestLabel'}, ['useState Hook Test']),
-          useStateTestFunctionalComponent({'key': 'useStateTest'}, [])
+          useStateTestFunctionComponent({'key': 'useStateTest'}, [])
         ]),
         querySelector('#content'));
   }
