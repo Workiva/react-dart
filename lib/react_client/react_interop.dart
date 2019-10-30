@@ -131,11 +131,19 @@ class StateHook<T> {
     _setValue = result[1];
   }
 
+  StateHook.init(T init()) {
+    final result = _jsUseState(init);
+    _value = result[0];
+    _setValue = result[1];
+  }
+
   T get value => _value;
   void set(T newValue) => _setValue(newValue);
+  void setTx(T computeNewValue(T oldValue)) => _setValue(computeNewValue);
 }
 
 StateHook<T> useState<T>(T initialValue) => new StateHook(initialValue);
+StateHook<T> useStateInit<T>(T init()) => new StateHook.init(init);
 
 abstract class ReactDom {
   static Element findDOMNode(object) => ReactDOM.findDOMNode(object);
