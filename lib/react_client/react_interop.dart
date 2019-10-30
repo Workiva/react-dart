@@ -117,6 +117,26 @@ ReactJsComponentFactoryProxy forwardRef(Function(Map props, Ref ref) wrapperFunc
 @JS('React.forwardRef')
 external ReactClass _jsForwardRef(Function(JsMap props, JsRef ref) wrapperFunction);
 
+@JS('React.useState')
+external List<dynamic> _jsUseState(dynamic value);
+
+class StateHook<T> {
+  T _value;
+
+  void Function(dynamic) _setValue;
+
+  StateHook(T initialValue) {
+    final result = _jsUseState(initialValue);
+    _value = result[0];
+    _setValue = result[1];
+  }
+
+  T get value => _value;
+  void set(T newValue) => _setValue(newValue);
+}
+
+StateHook<T> useState<T>(T initialValue) => new StateHook(initialValue);
+
 abstract class ReactDom {
   static Element findDOMNode(object) => ReactDOM.findDOMNode(object);
   static ReactComponent render(ReactElement component, Element element) => ReactDOM.render(component, element);
