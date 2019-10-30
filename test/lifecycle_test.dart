@@ -565,23 +565,23 @@ main() {
           UseStateTest = null;
         });
 
-          test('useState initializes state correctly', () {
-            expect(countRef.text, '0');
-          });
+        test('useState initializes state correctly', () {
+          expect(countRef.text, '0');
+        });
 
-          test('useState Init initializes state correctly', () {
-            expect(textRef.text, 'initialValue');
-          });
+        test('useState Init initializes state correctly', () {
+          expect(textRef.text, 'initialValue');
+        });
 
-          test('StateHook.set updates state correctly', () {
-            react_test_utils.Simulate.click(setButtonRef);
-            expect(textRef.text, 'newValue');
-          });
+        test('StateHook.set updates state correctly', () {
+          react_test_utils.Simulate.click(setButtonRef);
+          expect(textRef.text, 'newValue');
+        });
 
-          test('StateHook.setTx updates state correctly', () {
-            react_test_utils.Simulate.click(setTxButtonRef);
-            expect(countRef.text, '1');
-          });
+        test('StateHook.setTx updates state correctly', () {
+          react_test_utils.Simulate.click(setTxButtonRef);
+          expect(countRef.text, '1');
+        });
       });
     }, tags: ['functionComponent']);
   });
