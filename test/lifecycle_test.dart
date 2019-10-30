@@ -6,14 +6,12 @@ library lifecycle_test;
 import 'dart:async';
 import 'dart:convert';
 import 'dart:html';
-import 'dart:html' as prefix1;
 import 'dart:js';
 
 import "package:js/js.dart";
 import 'package:meta/meta.dart';
 import 'package:react/react.dart' as react;
 import 'package:react/react_client.dart';
-import 'package:react/react_client.dart' as prefix0;
 import 'package:react/react_client/js_backed_map.dart';
 import 'package:react/react_client/react_interop.dart' as react_interop;
 import 'package:react/react_dom.dart' as react_dom;

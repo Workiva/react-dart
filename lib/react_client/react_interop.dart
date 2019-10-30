@@ -119,8 +119,10 @@ ReactJsComponentFactoryProxy forwardRef(Function(Map props, Ref ref) wrapperFunc
 
 /// The return value of [useState].
 ///
-/// The current value of the state variable is available via [value] and
+/// The current value of the state is available via [value] and
 /// functions to update it are available via [set] and [setTx].
+///
+/// Learn more: <https://reactjs.org/docs/hooks-state.html>.
 class StateHook<T> {
   /// The first item of the pair returned by [React.useState].
   T _value;
@@ -140,10 +142,14 @@ class StateHook<T> {
     _setValue = result[1];
   }
 
-  /// The current value of the state variable.
+  /// The current value of the state.
+  ///
+  /// See: <https://reactjs.org/docs/hooks-reference.html#usestate>.
   T get value => _value;
 
   /// Updates [value] to [newValue].
+  ///
+  /// See: <https://reactjs.org/docs/hooks-state.html#updating-state>.
   void set(T newValue) => _setValue(newValue);
 
   /// Updates [value] to the return value of [computeNewValue].
