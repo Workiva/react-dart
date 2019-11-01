@@ -13,7 +13,6 @@ import 'dart:js';
 import 'dart:js_util';
 
 import "package:js/js.dart";
-import 'package:meta/meta.dart';
 
 import "package:react/react.dart";
 import 'package:react/react_client/js_interop_helpers.dart';
@@ -76,6 +75,7 @@ class ReactDartComponentFactoryProxy<TComponent extends Component> extends React
   /// The JS component factory used by this factory to build [ReactElement]s.
   ///
   /// Deprecated: [ReactComponentFactoryProxy]s now use inline [React.createElement()].
+  @override
   @Deprecated('6.0.0')
   final ReactJsComponentFactory reactComponentFactory;
 
@@ -88,8 +88,10 @@ class ReactDartComponentFactoryProxy<TComponent extends Component> extends React
         this.reactComponentFactory = React.createFactory(reactClass),
         this.defaultProps = reactClass.dartDefaultProps;
 
+  @override
   ReactClass get type => reactClass;
 
+  @override
   ReactElement build(Map props, [List childrenArgs = const []]) {
     var children = _convertArgsToChildren(childrenArgs);
     children = listifyChildren(children);
@@ -153,14 +155,17 @@ class ReactDartComponentFactoryProxy2<TComponent extends Component2> extends Rea
     implements ReactDartComponentFactoryProxy {
   /// The ReactJS class used as the type for all [ReactElement]s built by
   /// this factory.
+  @override
   final ReactClass reactClass;
 
   /// The JS component factory used by this factory to build [ReactElement]s.
   ///
   /// Deprecated: [ReactComponentFactoryProxy]s now use inline [React.createElement()].
+  @override
   @Deprecated('6.0.0')
   final ReactJsComponentFactory reactComponentFactory;
 
+  @override
   final Map defaultProps;
 
   ReactDartComponentFactoryProxy2(ReactClass reactClass)
@@ -168,6 +173,7 @@ class ReactDartComponentFactoryProxy2<TComponent extends Component2> extends Rea
         this.reactComponentFactory = React.createFactory(reactClass),
         this.defaultProps = JsBackedMap.fromJs(reactClass.defaultProps);
 
+  @override
   ReactClass get type => reactClass;
 
   /// Returns a JavaScript version of the specified [props], preprocessed for consumption by ReactJS and prepared for
@@ -177,6 +183,7 @@ class ReactDartComponentFactoryProxy2<TComponent extends Component2> extends Rea
 
 /// Shared component factory proxy [build] method for components that utilize [JsBackedMap]s.
 mixin JsBackedMapComponentFactoryMixin on ReactComponentFactoryProxy {
+  @override
   ReactElement build(Map props, [List childrenArgs = const []]) {
     var children = _generateChildren(childrenArgs, shouldAlwaysBeList: true);
     return React.createElement(type, JsBackedMapComponentFactoryMixin.generateExtendedJsProps(props), children);
@@ -339,8 +346,10 @@ class ReactJsContextComponentFactoryProxy extends ReactJsComponentFactoryProxy {
   final bool isProvider;
 
   /// Deprecated: [ReactComponentFactoryProxy]s now use inline [React.createElement()].
+  @override
   @Deprecated('6.0.0')
   final Function factory;
+  @override
   final bool shouldConvertDomProps;
 
   ReactJsContextComponentFactoryProxy(
@@ -388,16 +397,13 @@ class ReactDartFunctionComponentFactoryProxy extends ReactComponentFactoryProxy
   /// The name of this function.
   final String displayName;
 
+  /// The React JS component definition of this Function Component.
   final JsFunctionComponent reactFunction;
 
   ReactDartFunctionComponentFactoryProxy(this.reactFunction, [this.displayName]);
 
+  @override
   JsFunctionComponent get type => reactFunction;
-
-  /// DO NOT USE: Functional components do not have default props.
-  /// Throws an Exception if accessed.
-  @alwaysThrows
-  get defaultProps => throw new Exception('Function components dont have default props!');
 }
 
 /// Creates a function component from the given [dartFunctionComponent] that can be used with React.
