@@ -1195,7 +1195,13 @@ mixin TypedSnapshot<TSnapshot> {
 /// Creates a ReactJS virtual DOM instance (`ReactElement` on the client).
 abstract class ReactComponentFactoryProxy implements Function {
   /// The JS component factory used by this factory to build [ReactElement]s.
+  ///
+  /// Deprecated in favor of using create element
+  @Deprecated('6.0.0')
   ReactJsComponentFactory reactComponentFactory;
+
+  /// The ReactJS Component definition.
+  dynamic /*ReactJsComponentFactory|ReactClass|String*/ get reactJsComponent;
 
   /// The type of component created by this factory.
   get type;

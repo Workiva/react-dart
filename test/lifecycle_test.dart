@@ -446,10 +446,6 @@ main() {
           });
         });
 
-        tearDownAll(() {
-          PropsTest = null;
-        });
-
         test('renders correctly', () {
           var testProps = {'testProp': 'test'};
           react_dom.render(PropsTest(testProps, ['Child']), mountNode);
@@ -471,23 +467,15 @@ main() {
         ReactDartFunctionComponentFactoryProxy PropsArgTypeTest;
 
         setUp(() {
+          propTypeCheck = null;
           PropsArgTypeTest = react.registerFunctionComponent((Map props) {
             propTypeCheck = props;
             return null;
           });
         });
 
-        tearDownAll(() {
-          PropsArgTypeTest = null;
-        });
-
         test('when provided with an empty dart map', () {
           react_dom.render(PropsArgTypeTest({}), mountNode);
-          expect(propTypeCheck, isA<JsBackedMap>());
-        });
-
-        test('when provided null', () {
-          react_dom.render(PropsArgTypeTest(null), mountNode);
           expect(propTypeCheck, isA<JsBackedMap>());
         });
       });
@@ -509,7 +497,7 @@ main() {
 
         sharedTypeTests(testTypeValue);
       });
-    }, tags: ['functionComponent']);
+    });
   });
 }
 

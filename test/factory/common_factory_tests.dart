@@ -202,7 +202,7 @@ void domEventHandlerWrappingTests(ReactComponentFactoryProxy factory) {
 }
 
 void refTests(ReactComponentFactoryProxy factory, {void verifyRefValue(dynamic refValue)}) {
-  test('callback refs are called with the correct value', () {
+  test('GREGGREG callback refs are called with the correct value', () {
     var called = false;
     var refValue;
 
@@ -328,7 +328,7 @@ int _nextFactoryId = 0;
 /// This prevents React JS from not printing key warnings it deems as "duplicates".
 void _renderWithUniqueOwnerName(ReactElement render()) {
   final factory = react.registerComponent(() => new _OwnerHelperComponent()) as ReactDartComponentFactoryProxy;
-  factory.reactClass.displayName = 'OwnerHelperComponent_$_nextFactoryId';
+  factory.reactJsComponent.displayName = 'OwnerHelperComponent_$_nextFactoryId';
   _nextFactoryId++;
 
   rtu.renderIntoDocument(factory({'render': render}));
@@ -350,7 +350,7 @@ class _OwnerHelperComponent extends react.Component {
 /// This prevents React JS from not printing key warnings it deems as "duplicates".
 void _renderWithUniqueOwnerName2(ReactElement render()) {
   final factory = react.registerComponent2(() => new _OwnerHelperComponent2());
-  factory.reactClass.displayName = 'OwnerHelperComponent2_$_nextFactoryId';
+  factory.reactJsComponent.displayName = 'OwnerHelperComponent2_$_nextFactoryId';
   _nextFactoryId++;
 
   rtu.renderIntoDocument(factory({'render': render}));

@@ -17,7 +17,7 @@ main() {
 
   group('ReactDartComponentFactoryProxy', () {
     test('has a type corresponding to the backing JS class', () {
-      expect(Foo.type, equals(Foo.reactClass));
+      expect(Foo.type, equals(Foo.reactJsComponent));
     });
 
     group('- common factory behavior -', () {

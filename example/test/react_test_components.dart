@@ -270,7 +270,7 @@ int calculateChangedBits(currentValue, nextValue) {
   return result;
 }
 
-var TestNewContext = react.createContext({'renderCount': 0}, calculateChangedBits);
+var TestNewContext = react.createContext<Map<String, dynamic>>({'renderCount': 0}, calculateChangedBits);
 
 class _NewContextProviderComponent extends react.Component2 {
   _NewContextRefComponent componentRef;
@@ -282,9 +282,9 @@ class _NewContextProviderComponent extends react.Component2 {
   }
 
   render() {
-    Map provideMap = {'renderCount': this.state['renderCount']};
+    Map<String, dynamic> provideMap = {'renderCount': this.state['renderCount']};
 
-    Map complexValues = {
+    Map<String, dynamic> complexValues = {
       'callback': printMe,
       'dartComponent': newContextRefComponent,
       'map': {
@@ -392,7 +392,7 @@ class _NewContextTypeConsumerComponent extends react.Component2 {
   }
 }
 
-var helloGregFunctionComponent = react.registerFunctionComponent(HelloGreg, displayName: 'HelloGreg');
+var helloGregFunctionComponent = react.registerFunctionComponent(HelloGreg);
 
 HelloGreg(Map props) {
   var content = ['Hello Greg!'];
