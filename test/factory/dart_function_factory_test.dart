@@ -17,7 +17,7 @@ main() {
 
   group('ReactDartFunctionComponentFactoryProxy', () {
     test('has a type corresponding to the backing JS Function', () {
-      expect(FunctionFoo.type, equals(FunctionFoo.reactJsComponent));
+      expect(FunctionFoo.type, equals(FunctionFoo.reactFunction));
     });
 
     group('Function Component -', () {

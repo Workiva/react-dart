@@ -328,7 +328,7 @@ int _nextFactoryId = 0;
 /// This prevents React JS from not printing key warnings it deems as "duplicates".
 void _renderWithUniqueOwnerName(ReactElement render()) {
   final factory = react.registerComponent(() => new _OwnerHelperComponent()) as ReactDartComponentFactoryProxy;
-  factory.reactJsComponent.displayName = 'OwnerHelperComponent_$_nextFactoryId';
+  factory.reactClass.displayName = 'OwnerHelperComponent_$_nextFactoryId';
   _nextFactoryId++;
 
   rtu.renderIntoDocument(factory({'render': render}));
@@ -350,7 +350,7 @@ class _OwnerHelperComponent extends react.Component {
 /// This prevents React JS from not printing key warnings it deems as "duplicates".
 void _renderWithUniqueOwnerName2(ReactElement render()) {
   final factory = react.registerComponent2(() => new _OwnerHelperComponent2());
-  factory.reactJsComponent.displayName = 'OwnerHelperComponent2_$_nextFactoryId';
+  factory.reactClass.displayName = 'OwnerHelperComponent2_$_nextFactoryId';
   _nextFactoryId++;
 
   rtu.renderIntoDocument(factory({'render': render}));
