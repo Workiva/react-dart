@@ -9,7 +9,6 @@ import 'package:react/react.dart' as react;
 import 'package:react/react_client.dart';
 import 'package:react/react_client/react_interop.dart';
 
-import '../util.dart';
 import 'common_factory_tests.dart';
 
 main() {
@@ -42,39 +41,6 @@ main() {
           refTests(Foo2, verifyRefValue: (ref) {
             expect(ref, TypeMatcher<_Foo2>());
           });
-        });
-      });
-
-      group('utils', () {
-        test('ReactDartComponentVersion.fromType', () {
-          expect(ReactDartComponentVersion.fromType(react.div({}).type), isNull);
-          expect(ReactDartComponentVersion.fromType(JsFoo({}).type), isNull);
-          expect(ReactDartComponentVersion.fromType(Foo({}).type), ReactDartComponentVersion.component);
-          expect(ReactDartComponentVersion.fromType(Foo2({}).type), ReactDartComponentVersion.component2);
-        });
-      });
-
-      group('test utils', () {
-        // todo move somewhere else
-        test('isDartComponent2', () {
-          expect(isDartComponent2(react.div({})), isFalse);
-          expect(isDartComponent2(JsFoo({})), isFalse);
-          expect(isDartComponent2(Foo({})), isFalse);
-          expect(isDartComponent2(Foo2({})), isTrue);
-        });
-
-        test('isDartComponent1', () {
-          expect(isDartComponent1(react.div({})), isFalse);
-          expect(isDartComponent1(JsFoo({})), isFalse);
-          expect(isDartComponent1(Foo({})), isTrue);
-          expect(isDartComponent1(Foo2({})), isFalse);
-        });
-
-        test('isDartComponent', () {
-          expect(isDartComponent(react.div({})), isFalse);
-          expect(isDartComponent(JsFoo({})), isFalse);
-          expect(isDartComponent(Foo({})), isTrue);
-          expect(isDartComponent(Foo2({})), isTrue);
         });
       });
     });
