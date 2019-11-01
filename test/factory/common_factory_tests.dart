@@ -202,7 +202,7 @@ void domEventHandlerWrappingTests(ReactComponentFactoryProxy factory) {
 }
 
 void refTests(ReactComponentFactoryProxy factory, {void verifyRefValue(dynamic refValue)}) {
-  test('GREGGREG callback refs are called with the correct value', () {
+  test('callback refs are called with the correct value', () {
     var called = false;
     var refValue;
 
