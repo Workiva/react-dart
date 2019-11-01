@@ -859,7 +859,7 @@ abstract class _ReactDartInteropStatics2 {
 }
 
 /// Creates and returns a new [ReactDartComponentFactoryProxy] from the provided [componentFactory]
-/// which produces a new JS 1ReactClass1.
+/// which produces a new JS `ReactClass`.
 @Deprecated('6.0.0')
 ReactDartComponentFactoryProxy _registerComponent(
   ComponentFactory componentFactory, [
@@ -878,7 +878,7 @@ ReactDartComponentFactoryProxy _registerComponent(
     contextKeys: componentInstance.contextKeys,
   );
 
-  /// Create the JS 1ReactClass1.
+  /// Create the JS `ReactClass`.
   /// with custom JS lifecycle methods.
   var reactComponentClass = createReactDartComponentClass(_dartInteropStatics, componentStatics, jsConfig)
     // ignore: invalid_use_of_protected_member
