@@ -10,6 +10,7 @@ import 'dart:js';
 
 import "package:js/js.dart";
 import 'package:meta/meta.dart';
+import 'package:react/hooks.dart';
 import 'package:react/react.dart' as react;
 import 'package:react/react_client.dart';
 import 'package:react/react_client/js_backed_map.dart';
@@ -519,10 +520,10 @@ main() {
 
         setUpAll(() {
           UseStateTest = react.registerFunctionComponent((Map props) {
-            final text = react.useStateInit(() {
+            final text = useStateInit(() {
               return 'initialValue';
             });
-            final count = react.useState(0);
+            final count = useState(0);
 
             return react.div({}, [
               react.div({
