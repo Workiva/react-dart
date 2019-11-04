@@ -5,22 +5,30 @@ import 'package:react/react.dart' as react;
 import 'package:react/react_dom.dart' as react_dom;
 import 'package:react/react_client.dart';
 
-var useStateTestFunctionComponent = react.registerFunctionComponent(UseStateTestComponent, displayName: 'useStateTest');
+var hookTestFunctionComponent = react.registerFunctionComponent(HookTestComponent, displayName: 'useStateTest');
 
-UseStateTestComponent(Map props) {
-  final count = useState(0);
+HookTestComponent(Map props) {
+  final count = useState(1);
+  final evenOdd = useState('even');
 
-  useEffect(() {
-    print('count changed to ' + count.value.toString());
+  useEffectConditional(() {
+    if(count.value % 2 == 0) {
+      print('count changed to ' + count.value.toString());
+      evenOdd.set('even');
+    } else {
+      print('count changed to ' + count.value.toString());
+      evenOdd.set('odd');
+    }
     return () {
-      print('count is about to change');
+      print('count is changing...');
     };
-  });
+  }, [count.value]);
 
   return react.div({}, [
-    count.value,
-    react.button({'onClick': (_) => count.set(0)}, ['Reset']),
+    react.button({'onClick': (_) => count.set(1)}, ['Reset']),
     react.button({'onClick': (_) => count.setTx((prev) => prev + 1)}, ['+']),
+    react.br({}),
+    react.p({}, [count.value.toString() + ' is ' + evenOdd.value.toString()]),
   ]);
 }
 
@@ -30,8 +38,8 @@ void main() {
   render() {
     react_dom.render(
         react.Fragment({}, [
-          react.h2({'key': 'useStateTestLabel'}, ['useState Hook Test']),
-          useStateTestFunctionComponent({'key': 'useStateTest'}, []),
+          react.h1({'key': 'functionComponentTestLabel'}, ['Function Component Test']),
+          hookTestFunctionComponent({'key': 'useStateTest'}, []),
         ]),
         querySelector('#content'));
   }

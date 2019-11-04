@@ -1,13 +1,15 @@
 @JS()
 library hooks;
 
+import 'dart:html_common';
+
 import 'package:js/js.dart';
 import 'package:react/react.dart';
 
 @JS()
 abstract class React {
   external static List<dynamic> useState(dynamic value);
-  external static void useEffect(void Function() effect);
+  external static void useEffect(void Function() effect, [List<Object> dependencies]);
 }
 
 /// The return value of [useState].
@@ -93,6 +95,11 @@ StateHook<T> useState<T>(T initialValue) => new StateHook(initialValue);
 StateHook<T> useStateInit<T>(T init()) => new StateHook.init(init);
 
 ///
-void useEffect(void Function() effect) {
-  return React.useEffect(allowInterop(effect));
+void useEffect(void Function() sideEffect) {
+  return React.useEffect(allowInterop(sideEffect));
+}
+
+/// See: <https://reactjs.org/docs/hooks-effect.html#tip-optimizing-performance-by-skipping-effects>.
+void useEffectConditional(void Function() sideEffect, List<Object> dependencies) {
+  return React.useEffect(allowInterop(sideEffect), dependencies);
 }
