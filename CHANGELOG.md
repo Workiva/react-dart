@@ -1,11 +1,13 @@
-## [5.0.0-alpha.0](https://github.com/cleandart/react-dart/compare/4.9.1...5.0.0-alpha.0)
+## [5.0.0](https://github.com/cleandart/react-dart/compare/4.9.1...5.0.0)
 
 __ReactJS 16.x Support__
 
 - The underlying `.js` files provided by this package are now ReactJS version 16.
 - Support for the new / updated lifecycle methods from ReactJS 16 [will be released in version `5.1.0`](https://github.com/cleandart/react-dart/milestone/1).
 
-> [Full list of 5.0.0 Pull Requests](https://github.com/cleandart/react-dart/milestone/2?closed=1) 
+> [Full list of 5.0.0 Changes](https://github.com/cleandart/react-dart/milestone/2?closed=1) 
+
+> __[Full List of Breaking Changes](https://github.com/cleandart/react-dart/pull/224)__
 
 ## [4.9.1](https://github.com/cleandart/react-dart/compare/4.9.0...4.9.1)
 - [#205] Fix `context` setter typing to match getter and not fail `implicit_casts: false`
