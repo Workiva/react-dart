@@ -192,15 +192,18 @@ mixin JsBackedMapComponentFactoryMixin on ReactComponentFactoryProxy {
   static JsMap generateExtendedJsProps(Map props) => _generateJsProps(props);
 }
 
-JsMap _generateJsProps(Map props, {bool convertEventHandlers = false, bool convertRefValue = true, bool convertCallbackRefValue = true, bool wrapWithJsify = false}) {
-    final propsForJs = JsBackedMap.from(props);
+JsMap _generateJsProps(Map props,
+    {bool convertEventHandlers = false,
+    bool convertRefValue = true,
+    bool convertCallbackRefValue = true,
+    bool wrapWithJsify = false}) {
+  final propsForJs = JsBackedMap.from(props);
 
-    if (convertEventHandlers) _convertEventHandlers(propsForJs);
-    if (convertRefValue) _convertRefValue2(propsForJs, convertCallbackRefValue: convertCallbackRefValue);
+  if (convertEventHandlers) _convertEventHandlers(propsForJs);
+  if (convertRefValue) _convertRefValue2(propsForJs, convertCallbackRefValue: convertCallbackRefValue);
 
-    return wrapWithJsify ? jsifyAndAllowInterop(propsForJs) : propsForJs.jsObject;
+  return wrapWithJsify ? jsifyAndAllowInterop(propsForJs) : propsForJs.jsObject;
 }
-
 
 /// Creates ReactJS [ReactElement] instances for components defined in the JS.
 class ReactJsComponentFactoryProxy extends ReactComponentFactoryProxy {
@@ -266,7 +269,6 @@ class ReactJsComponentFactoryProxy extends ReactComponentFactoryProxy {
   }
 }
 
-
 /// Creates ReactJS [ReactElement] instances for DOM components.
 class ReactDomComponentFactoryProxy extends ReactComponentFactoryProxy {
   /// The name of the proxied DOM component.
@@ -325,16 +327,16 @@ void _convertRefValue(Map args) {
   }
 }
 
-void _convertRefValue2(Map args, { bool convertCallbackRefValue = true }) {
+void _convertRefValue2(Map args, {bool convertCallbackRefValue = true}) {
   var ref = args['ref'];
 
   if (ref is Ref) {
     args['ref'] = ref.jsRef;
   } else if (ref is _CallbackRef && convertCallbackRefValue) {
     args['ref'] = allowInterop((dynamic instance) {
-        if (instance is ReactComponent && instance.dartComponent != null) return ref(instance.dartComponent);
-        return ref(instance);
-      });
+      if (instance is ReactComponent && instance.dartComponent != null) return ref(instance.dartComponent);
+      return ref(instance);
+    });
   }
 }
 
@@ -391,9 +393,7 @@ class ReactJsContextComponentFactoryProxy extends ReactJsComponentFactoryProxy {
 }
 
 /// Creates ReactJS [Function Component] from Dart Function.
-class ReactDartFunctionComponentFactoryProxy extends ReactComponentFactoryProxy
-    with JsBackedMapComponentFactoryMixin {
-
+class ReactDartFunctionComponentFactoryProxy extends ReactComponentFactoryProxy with JsBackedMapComponentFactoryMixin {
   /// The name of this function.
   final String displayName;
 
@@ -940,7 +940,6 @@ ReactDartComponentFactoryProxy2 _registerComponent2(
 ReactDartFunctionComponentFactoryProxy _registerFunctionComponent(DartFunctionComponent dartFunctionComponent,
         {String displayName}) =>
     ReactDartFunctionComponentFactoryProxy(_wrapFunctionComponent(dartFunctionComponent, displayName: displayName));
-
 
 /// A mapping from converted/wrapped JS handler functions (the result of [_convertEventHandlers])
 /// to the original Dart functions (the input of [_convertEventHandlers]).

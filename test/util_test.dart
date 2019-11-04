@@ -43,7 +43,6 @@ void main() {
   });
 }
 
-
 final FunctionFoo = react.registerFunctionComponent(_FunctionFoo);
 
 _FunctionFoo(Map props) {
@@ -68,4 +67,3 @@ final JsFoo = ReactJsComponentFactoryProxy(React.createClass(ReactClassConfig(
   displayName: 'JsFoo',
   render: allowInterop(() => react.div({})),
 )));
-
