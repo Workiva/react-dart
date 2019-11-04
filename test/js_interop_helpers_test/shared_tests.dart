@@ -2,10 +2,9 @@
 library js_function_test;
 
 import 'dart:html';
-import 'dart:js_util';
+import 'dart:js_util' as js_util;
 
 import 'package:js/js.dart';
-import 'dart:js_util' as js_util;
 import 'package:react/react_client/react_interop.dart';
 import 'package:test/test.dart';
 
