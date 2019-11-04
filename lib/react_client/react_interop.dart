@@ -42,8 +42,6 @@ abstract class React {
 
   external static JsRef createRef();
   external static ReactClass forwardRef(Function(JsMap props, JsRef ref) wrapperFunction);
-
-  external static List<dynamic> useState(dynamic value);
 }
 
 /// Creates a [Ref] object that can be attached to a [ReactElement] via the ref prop.

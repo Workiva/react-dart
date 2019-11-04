@@ -7,7 +7,6 @@ import 'package:react/react.dart';
 @JS()
 abstract class React {
   external static List<dynamic> useState(dynamic value);
-  external static void useEffect(void Function() effect);
 }
 
 /// The return value of [useState].
