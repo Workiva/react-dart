@@ -2,6 +2,9 @@
 /// JS interop classes for main React JS APIs and react-dart internals.
 ///
 /// For use in `react_client.dart` and by advanced react-dart users.
+
+// ignore_for_file: deprecated_member_use_from_same_package
+
 @JS()
 library react_client.react_interop;
 
@@ -154,7 +157,7 @@ abstract class PropTypes {
 //   Types and data structures
 // ----------------------------------------------------------------------------
 
-/// A React class specification returned by [React.createClass].
+/// A React class specification returned by `React.createClass`.
 ///
 /// To be used as the value of [ReactElement.type], which is set upon initialization
 /// by a component factory or by [React.createElement].

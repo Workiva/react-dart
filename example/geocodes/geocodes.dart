@@ -104,7 +104,7 @@ var geocodesResultList = react.registerComponent(() => new _GeocodesResultList()
 ///
 /// > The functions can be [Component] parameters _(handy for callbacks)_
 ///
-/// > The DOM [Element]s can be accessed using [ref]s.
+/// > The DOM [Element]s can be accessed using `ref`s.
 class _GeocodesForm extends react.Component {
   var searchInputInstance;
 
