@@ -10,6 +10,13 @@ var useStateTestFunctionComponent = react.registerFunctionComponent(UseStateTest
 UseStateTestComponent(Map props) {
   final count = useState(0);
 
+  useEffect(() {
+    print('count changed to ' + count.value.toString());
+    return () {
+      print('count is about to change');
+    };
+  });
+
   return react.div({}, [
     count.value,
     react.button({'onClick': (_) => count.set(0)}, ['Reset']),
@@ -24,7 +31,7 @@ void main() {
     react_dom.render(
         react.Fragment({}, [
           react.h2({'key': 'useStateTestLabel'}, ['useState Hook Test']),
-          useStateTestFunctionComponent({'key': 'useStateTest'}, [])
+          useStateTestFunctionComponent({'key': 'useStateTest'}, []),
         ]),
         querySelector('#content'));
   }

@@ -7,6 +7,7 @@ import 'package:react/react.dart';
 @JS()
 abstract class React {
   external static List<dynamic> useState(dynamic value);
+  external static void useEffect(void Function() effect);
 }
 
 /// The return value of [useState].
@@ -90,3 +91,8 @@ StateHook<T> useState<T>(T initialValue) => new StateHook(initialValue);
 ///
 /// Learn more: <https://reactjs.org/docs/hooks-reference.html#lazy-initial-state>.
 StateHook<T> useStateInit<T>(T init()) => new StateHook.init(init);
+
+///
+void useEffect(void Function() effect) {
+  return React.useEffect(allowInterop(effect));
+}
