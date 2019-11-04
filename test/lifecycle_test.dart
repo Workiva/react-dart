@@ -405,9 +405,11 @@ void main() {
         void handleFirstStateUpdate() {
           firstStateUpdateCalls++;
           expect(component.state, newState1);
+          // ignore: deprecated_member_use_from_same_package
           component.replaceState(newState2, handleSecondStateUpdate);
         }
 
+        // ignore: deprecated_member_use_from_same_package
         component.replaceState(newState1, handleFirstStateUpdate);
 
         expect(firstStateUpdateCalls, 1);
