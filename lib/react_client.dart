@@ -74,7 +74,18 @@ class ReactDartComponentFactoryProxy<TComponent extends Component> extends React
 
   /// The JS component factory used by this factory to build [ReactElement]s.
   ///
-  /// Deprecated: [ReactComponentFactoryProxy]s now use inline [React.createElement()].
+  /// Deprecated: Use [React.createElement()] instead and pass in [type] as
+  /// the first argument, followed by `props` and `children`.
+  ///
+  /// Before:
+  /// ```
+  ///   YourFactoryProxy.reactComponentFactory(props, children);
+  /// ```
+  ///
+  /// After:
+  /// ```
+  ///   React.createElement(YourFactoryProxy.type, props, children);
+  /// ```
   @override
   @Deprecated('6.0.0')
   final ReactJsComponentFactory reactComponentFactory;
@@ -160,7 +171,18 @@ class ReactDartComponentFactoryProxy2<TComponent extends Component2> extends Rea
 
   /// The JS component factory used by this factory to build [ReactElement]s.
   ///
-  /// Deprecated: [ReactComponentFactoryProxy]s now use inline [React.createElement()].
+  /// Deprecated: Use [React.createElement()] instead and pass in [type] as
+  /// the first argument, followed by `props` and `children`.
+  ///
+  /// Before:
+  /// ```
+  ///   YourFactoryProxy.reactComponentFactory(props, children);
+  /// ```
+  ///
+  /// After:
+  /// ```
+  ///   React.createElement(YourFactoryProxy.type, props, children);
+  /// ```
   @override
   @Deprecated('6.0.0')
   final ReactJsComponentFactory reactComponentFactory;
@@ -213,7 +235,17 @@ class ReactJsComponentFactoryProxy extends ReactComponentFactoryProxy {
 
   /// The JS component factory used by this factory to build [ReactElement]s.
   ///
-  /// Deprecated: [ReactComponentFactoryProxy]s now use inline [React.createElement()].
+  /// Deprecated: Use [React.createElement()] instead and pass in [type] as
+  /// the first argument, followed by `props` and `children`.
+  ///
+  /// Before:
+  /// ```
+  ///   YourFactoryProxy.reactComponentFactory(props, children);
+  /// ```
+  ///
+  /// After:
+  /// ```
+  ///   React.createElement(YourFactoryProxy.type, props, children);
   @Deprecated('6.0.0')
   final Function factory;
 
@@ -278,7 +310,17 @@ class ReactDomComponentFactoryProxy extends ReactComponentFactoryProxy {
 
   /// The JS component factory used by this factory to build [ReactElement]s.
   ///
-  /// Deprecated: [ReactComponentFactoryProxy]s now use inline [React.createElement()].
+  /// Deprecated: Use [React.createElement()] instead and pass in [type] as
+  /// the first argument, followed by `props` and `children`.
+  ///
+  /// Before:
+  /// ```
+  ///   YourFactoryProxy.reactComponentFactory(props, children);
+  /// ```
+  ///
+  /// After:
+  /// ```
+  ///   React.createElement(YourFactoryProxy.type, props, children);
   @Deprecated('6.0.0')
   final Function factory;
 
@@ -347,7 +389,27 @@ class ReactJsContextComponentFactoryProxy extends ReactJsComponentFactoryProxy {
   final bool isConsumer;
   final bool isProvider;
 
-  /// Deprecated: [ReactComponentFactoryProxy]s now use inline [React.createElement()].
+  /// Deprecated: Use [React.createElement()] instead and pass in [type] as
+  /// the first argument, followed by `props` and `children`.
+  ///
+  /// Before:
+  /// ```
+  ///   YourFactoryProxy.reactComponentFactory(props, children);
+  /// ```
+  ///
+  /// After:
+  /// ```
+  ///   React.createElement(YourFactoryProxy.type, props, children);  /// Deprecated: Use [React.createElement()] instead and pass in [type] as
+  /// the first argument, followed by `props` and `children`.
+  ///
+  /// Before:
+  /// ```
+  ///   YourFactoryProxy.reactComponentFactory(props, children);
+  /// ```
+  ///
+  /// After:
+  /// ```
+  ///   React.createElement(YourFactoryProxy.type, props, children);
   @override
   @Deprecated('6.0.0')
   final Function factory;

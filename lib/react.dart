@@ -1196,7 +1196,18 @@ mixin TypedSnapshot<TSnapshot> {
 abstract class ReactComponentFactoryProxy implements Function {
   /// The JS component factory used by this factory to build [ReactElement]s.
   ///
-  /// Deprecated: [ReactComponentFactoryProxy]s now use inline [React.createElement()].
+  /// Deprecated: Use [React.createElement()] instead and pass in [type] as
+  /// the first argument, followed by `props` and `children`.
+  ///
+  /// Before:
+  /// ```
+  ///   YourReactComponentFactoryProxy.reactComponentFactory(props, children);
+  /// ```
+  ///
+  /// After:
+  /// ```
+  ///   React.createElement(YourReactComponentFactoryProxy.type, props, children);
+  /// ```
   @Deprecated('6.0.0')
   ReactJsComponentFactory reactComponentFactory;
 
@@ -1780,7 +1791,14 @@ ComponentRegistrar2 registerComponent2 = (
   throw new Exception('setClientConfiguration must be called before registerComponent.');
 };
 
-/// Registers [componentFactory] on both client and server.
+/// Registers [componentFactory] on client.
+///
+/// Example:
+/// ```
+///   var myFunctionComponent = registerFunctionComponent((Map props) {
+///         return ['I am a function component', ...props.children];
+///       });
+/// ```
 FunctionComponentRegistrar registerFunctionComponent = (DartFunctionComponent componentFactory, {String displayName}) {
   throw new Exception('setClientConfiguration must be called before registerFunctionComponent.');
 };
