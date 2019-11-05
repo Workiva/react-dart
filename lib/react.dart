@@ -1201,12 +1201,12 @@ abstract class ReactComponentFactoryProxy implements Function {
   ///
   /// Before:
   /// ```
-  ///   YourReactComponentFactoryProxy.reactComponentFactory(props, children);
+  /// YourFactoryProxy.reactComponentFactory(props, children);
   /// ```
   ///
   /// After:
   /// ```
-  ///   React.createElement(YourReactComponentFactoryProxy.type, props, children);
+  /// React.createElement(YourFactoryProxy.type, props, children);
   /// ```
   @Deprecated('6.0.0')
   ReactJsComponentFactory reactComponentFactory;
@@ -1795,9 +1795,9 @@ ComponentRegistrar2 registerComponent2 = (
 ///
 /// Example:
 /// ```
-///   var myFunctionComponent = registerFunctionComponent((Map props) {
-///         return ['I am a function component', ...props.children];
-///       });
+/// var myFunctionComponent = registerFunctionComponent((Map props) {
+///   return ['I am a function component', ...props.children];
+/// });
 /// ```
 FunctionComponentRegistrar registerFunctionComponent = (DartFunctionComponent componentFactory, {String displayName}) {
   throw new Exception('setClientConfiguration must be called before registerFunctionComponent.');

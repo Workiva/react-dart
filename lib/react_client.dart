@@ -79,12 +79,12 @@ class ReactDartComponentFactoryProxy<TComponent extends Component> extends React
   ///
   /// Before:
   /// ```
-  ///   YourFactoryProxy.reactComponentFactory(props, children);
+  /// YourFactoryProxy.reactComponentFactory(props, children);
   /// ```
   ///
   /// After:
   /// ```
-  ///   React.createElement(YourFactoryProxy.type, props, children);
+  /// React.createElement(YourFactoryProxy.type, props, children);
   /// ```
   @override
   @Deprecated('6.0.0')
@@ -176,12 +176,12 @@ class ReactDartComponentFactoryProxy2<TComponent extends Component2> extends Rea
   ///
   /// Before:
   /// ```
-  ///   YourFactoryProxy.reactComponentFactory(props, children);
+  /// YourFactoryProxy.reactComponentFactory(props, children);
   /// ```
   ///
   /// After:
   /// ```
-  ///   React.createElement(YourFactoryProxy.type, props, children);
+  /// React.createElement(YourFactoryProxy.type, props, children);
   /// ```
   @override
   @Deprecated('6.0.0')
@@ -240,12 +240,13 @@ class ReactJsComponentFactoryProxy extends ReactComponentFactoryProxy {
   ///
   /// Before:
   /// ```
-  ///   YourFactoryProxy.reactComponentFactory(props, children);
+  /// YourFactoryProxy.reactComponentFactory(props, children);
   /// ```
   ///
   /// After:
   /// ```
-  ///   React.createElement(YourFactoryProxy.type, props, children);
+  /// React.createElement(YourFactoryProxy.type, props, children);
+  /// ```
   @Deprecated('6.0.0')
   final Function factory;
 
@@ -315,12 +316,13 @@ class ReactDomComponentFactoryProxy extends ReactComponentFactoryProxy {
   ///
   /// Before:
   /// ```
-  ///   YourFactoryProxy.reactComponentFactory(props, children);
+  /// YourFactoryProxy.reactComponentFactory(props, children);
   /// ```
   ///
   /// After:
   /// ```
-  ///   React.createElement(YourFactoryProxy.type, props, children);
+  /// React.createElement(YourFactoryProxy.type, props, children);
+  /// ```
   @Deprecated('6.0.0')
   final Function factory;
 
@@ -389,27 +391,20 @@ class ReactJsContextComponentFactoryProxy extends ReactJsComponentFactoryProxy {
   final bool isConsumer;
   final bool isProvider;
 
+  /// The JS component factory used by this factory to build [ReactElement]s.
+  ///
   /// Deprecated: Use [React.createElement()] instead and pass in [type] as
   /// the first argument, followed by `props` and `children`.
   ///
   /// Before:
   /// ```
-  ///   YourFactoryProxy.reactComponentFactory(props, children);
+  /// YourFactoryProxy.reactComponentFactory(props, children);
   /// ```
   ///
   /// After:
   /// ```
-  ///   React.createElement(YourFactoryProxy.type, props, children);  /// Deprecated: Use [React.createElement()] instead and pass in [type] as
-  /// the first argument, followed by `props` and `children`.
-  ///
-  /// Before:
+  /// React.createElement(YourFactoryProxy.type, props, children);
   /// ```
-  ///   YourFactoryProxy.reactComponentFactory(props, children);
-  /// ```
-  ///
-  /// After:
-  /// ```
-  ///   React.createElement(YourFactoryProxy.type, props, children);
   @override
   @Deprecated('6.0.0')
   final Function factory;
