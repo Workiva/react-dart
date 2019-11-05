@@ -32,14 +32,14 @@ abstract class Component2Bridge {
   ///
   /// Protected; use [forComponent] instead.
   @protected
-  static final Expando<Component2Bridge> bridgeForComponent = new Expando();
+  static final Expando<Component2Bridge> bridgeForComponent = Expando();
 
   const Component2Bridge();
 
   /// Returns the bridge instance associated with the given [component].
   ///
   /// This will only be available for components that are instantiated by the
-  /// [ReactDartComponentFactoryProxy2], and not when manually instantiated.
+  /// `ReactDartComponentFactoryProxy2`, and not when manually instantiated.
   ///
   /// __For internal/advanced use only.__
   static Component2Bridge forComponent(Component2 component) => bridgeForComponent[component];
@@ -61,6 +61,7 @@ class Component2BridgeImpl extends Component2Bridge {
   /// Returns a const bridge instance suitable for use with any component.
   ///
   /// See [Component2BridgeFactory] for more info.
+  // ignore: prefer_constructors_over_static_methods
   static Component2BridgeImpl bridgeFactory(Component2 _) => const Component2BridgeImpl();
 
   @override
@@ -90,10 +91,11 @@ class Component2BridgeImpl extends Component2Bridge {
 
   @override
   void setStateWithUpdater(Component2 component, StateUpdaterCallback stateUpdater, SetStateCallback callback) {
+    // ignore: avoid_types_on_closure_parameters
     final firstArg = allowInterop((JsMap jsPrevState, JsMap jsProps, [_]) {
       return jsBackingMapOrJsCopy(stateUpdater(
-        new JsBackedMap.backedBy(jsPrevState),
-        new JsBackedMap.backedBy(jsProps),
+        JsBackedMap.backedBy(jsPrevState),
+        JsBackedMap.backedBy(jsProps),
       ));
     });
 

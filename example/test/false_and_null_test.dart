@@ -6,6 +6,7 @@ import 'package:react/react_dom.dart' as react_dom;
 import 'package:react/react_client.dart';
 
 class _Component extends react.Component {
+  @override
   render() {
     if (props['hardCodedNullReturn'] == true) {
       return null;
@@ -15,7 +16,7 @@ class _Component extends react.Component {
   }
 }
 
-var component = react.registerComponent(() => new _Component());
+var component = react.registerComponent(() => _Component());
 
 void main() {
   setClientConfiguration();

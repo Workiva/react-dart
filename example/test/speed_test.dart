@@ -1,44 +1,49 @@
 // ignore_for_file: deprecated_member_use_from_same_package
-import "dart:html";
-import "dart:async";
+import 'dart:html';
+import 'dart:async';
 
-import "package:react/react.dart" as react;
-import "package:react/react_dom.dart" as react_dom;
-import "package:react/react_client.dart";
+import 'package:react/react.dart' as react;
+import 'package:react/react_dom.dart' as react_dom;
+import 'package:react/react_client.dart';
 
-Stopwatch stopwatch = new Stopwatch()..start();
+Stopwatch stopwatch = Stopwatch()..start();
 timeprint(message) {
-  print("$message ${stopwatch.elapsedMilliseconds}");
+  print('$message ${stopwatch.elapsedMilliseconds}');
   stopwatch.reset();
 }
 
 class _Div extends react.Component {
+  @override
   shouldComponentUpdate(nProps, nState) {
     return nProps['key'] != props['key'];
   }
 
+  @override
   render() {
     return react.div(props, props['children']);
   }
 }
 
-var Div = react.registerComponent(() => new _Div());
+var Div = react.registerComponent(() => _Div());
 
 class _Span extends react.Component {
+  @override
   shouldComponentUpdate(nProps, nState) {
     return nProps['children'][0] != props['children'][0];
   }
 
+  @override
   render() {
     return react.span(props, props['children']);
   }
 }
 
-var Span = react.registerComponent(() => new _Span());
+var Span = react.registerComponent(() => _Span());
 
 class _Hello extends react.Component {
+  @override
   componentWillMount() {
-    new Future.delayed(new Duration(seconds: 5), () {
+    Future.delayed(Duration(seconds: 5), () {
       stopwatch.reset();
       timeprint('before redraw call');
       redraw();
@@ -46,8 +51,9 @@ class _Hello extends react.Component {
     });
   }
 
+  @override
   render() {
-    timeprint("rendering start");
+    timeprint('rendering start');
     var data = props['data'];
     var children = [];
     for (var elem in data) {
@@ -55,7 +61,7 @@ class _Hello extends react.Component {
         'key': elem[0]
       }, [
         react.span({'key': 'span1'}, elem[0]),
-        " ",
+        ' ',
         react.span({'key': 'span2'}, elem[1])
       ]));
     }
@@ -66,20 +72,20 @@ class _Hello extends react.Component {
 //          react.span({}, elem[1])
 //        ]))
 //    );
-    timeprint("rendering almost ends");
+    timeprint('rendering almost ends');
     var res = react.div({}, children);
-    timeprint("rendering ends");
+    timeprint('rendering ends');
     return res;
   }
 }
 
-var Hello = react.registerComponent(() => new _Hello());
+var Hello = react.registerComponent(() => _Hello());
 
 void main() {
   setClientConfiguration();
   var data = [];
   for (num i = 0; i < 1000; i++) {
-    data.add(["name_$i", "value_$i"]);
+    data.add(['name_$i", "value_$i']);
   }
-  react_dom.render(Hello({"data": data}, []), querySelector('#content'));
+  react_dom.render(Hello({'data': data}, []), querySelector('#content'));
 }

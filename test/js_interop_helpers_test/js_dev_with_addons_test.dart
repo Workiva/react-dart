@@ -8,9 +8,7 @@ main() {
   verifyJsFileLoaded('react_with_addons.js');
   verifyJsFileLoaded('react_dom.js');
 
-  group('React JS files (dev w/ addons build):', () {
-    sharedJsFunctionTests();
-  });
+  group('React JS files (dev w/ addons build):', sharedJsFunctionTests);
 
   test('inReactDevMode (dev build):', () {
     expect(inReactDevMode, isTrue);

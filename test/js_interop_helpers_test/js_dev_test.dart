@@ -8,9 +8,7 @@ main() {
   verifyJsFileLoaded('react.js');
   verifyJsFileLoaded('react_dom.js');
 
-  group('React JS files (dev build):', () {
-    sharedJsFunctionTests();
-  });
+  group('React JS files (dev build):', sharedJsFunctionTests);
 
   test('inReactDevMode (dev build):', () {
     expect(inReactDevMode, isTrue);

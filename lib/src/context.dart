@@ -48,6 +48,7 @@ import 'package:react/react_client.dart';
 ///
 /// Learn more at: https://reactjs.org/docs/context.html
 class Context {
+  // ignore: avoid_types_as_parameter_names
   Context(this.Provider, this.Consumer, this._jsThis);
   final ReactContext _jsThis;
 
@@ -113,8 +114,8 @@ Context createContext<TValue>([
   var JSContext = React.createContext(ContextHelpers.jsifyNewContext(defaultValue),
       calculateChangedBits != null ? allowInterop(jsifyCalculateChangedBitsArgs) : null);
   return Context(
-    new ReactJsContextComponentFactoryProxy(JSContext.Provider, isProvider: true),
-    new ReactJsContextComponentFactoryProxy(JSContext.Consumer, isConsumer: true),
+    ReactJsContextComponentFactoryProxy(JSContext.Provider, isProvider: true),
+    ReactJsContextComponentFactoryProxy(JSContext.Consumer, isConsumer: true),
     JSContext,
   );
 }

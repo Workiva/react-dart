@@ -1,17 +1,18 @@
 // ignore_for_file: deprecated_member_use_from_same_package
-import "dart:html";
+import 'dart:html';
 
-import "package:react/react_dom.dart" as react_dom;
-import "package:react/react.dart" as react;
-import "package:react/react_client.dart";
+import 'package:react/react_dom.dart' as react_dom;
+import 'package:react/react.dart' as react;
+import 'package:react/react_client.dart';
 
 class _CustomComponent extends react.Component {
+  @override
   render() {
     return react.div({}, props['children']);
   }
 }
 
-var customComponent = react.registerComponent(() => new _CustomComponent());
+var customComponent = react.registerComponent(() => _CustomComponent());
 
 void main() {
   setClientConfiguration();

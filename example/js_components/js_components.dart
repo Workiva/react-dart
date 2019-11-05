@@ -1,3 +1,4 @@
+// ignore_for_file: avoid_classes_with_only_static_members
 @JS()
 library js_components;
 
@@ -17,11 +18,12 @@ main() {
   react_dom.render(content, querySelector('#content'));
 }
 
-var IndexComponent = react.registerComponent(() => new _IndexComponent());
+var IndexComponent = react.registerComponent(() => _IndexComponent());
 
 class _IndexComponent extends react.Component2 {
   SimpleCustomComponent simpleRef;
 
+  @override
   get initialState => {
         'open': false,
       };
@@ -39,6 +41,7 @@ class _IndexComponent extends react.Component2 {
     print(simpleRef.getFoo());
   }
 
+  @override
   render() {
     return MuiThemeProvider(
       {
@@ -64,21 +67,21 @@ class _IndexComponent extends react.Component2 {
           DialogActions(
             {},
             Button({
-              'color': "primary",
+              'color': 'primary',
               'onClick': handleClose,
             }, 'OK'),
           )),
       Typography({
-        'variant': "h4",
+        'variant': 'h4',
         'gutterBottom': true,
       }, 'Material-UI'),
       Typography({
-        'variant': "subtitle1",
+        'variant': 'subtitle1',
         'gutterBottom': true,
       }, 'example project'),
       Button({
-        'variant': "contained",
-        'color': "secondary",
+        'variant': 'contained',
+        'color': 'secondary',
         'onClick': handleClick,
       }, Icon({}, 'fingerprint'), 'Super Secret Password'),
     );
@@ -100,7 +103,7 @@ external ReactClass get _SimpleCustomComponent;
 ///
 /// This converts the Dart props [Map] passed into it in the
 /// the same way props are converted for DOM components.
-final SimpleCustom = new ReactJsComponentFactoryProxy(_SimpleCustomComponent);
+final SimpleCustom = ReactJsComponentFactoryProxy(_SimpleCustomComponent);
 
 /// JS interop wrapper class for the component,
 /// allowing us to interact with component instances
@@ -133,13 +136,13 @@ class MaterialUI {
 external Map get theme;
 
 // All the Material UI components converted to dart Components
-final Button = new ReactJsComponentFactoryProxy(MaterialUI.Button);
-final CssBaseline = new ReactJsComponentFactoryProxy(MaterialUI.CssBaseline);
-final Dialog = new ReactJsComponentFactoryProxy(MaterialUI.Dialog);
-final DialogActions = new ReactJsComponentFactoryProxy(MaterialUI.DialogActions);
-final DialogContent = new ReactJsComponentFactoryProxy(MaterialUI.DialogContent);
-final DialogContentText = new ReactJsComponentFactoryProxy(MaterialUI.DialogContentText);
-final DialogTitle = new ReactJsComponentFactoryProxy(MaterialUI.DialogTitle);
-final Icon = new ReactJsComponentFactoryProxy(MaterialUI.Icon);
-final MuiThemeProvider = new ReactJsComponentFactoryProxy(MaterialUI.MuiThemeProvider);
-final Typography = new ReactJsComponentFactoryProxy(MaterialUI.Typography);
+final Button = ReactJsComponentFactoryProxy(MaterialUI.Button);
+final CssBaseline = ReactJsComponentFactoryProxy(MaterialUI.CssBaseline);
+final Dialog = ReactJsComponentFactoryProxy(MaterialUI.Dialog);
+final DialogActions = ReactJsComponentFactoryProxy(MaterialUI.DialogActions);
+final DialogContent = ReactJsComponentFactoryProxy(MaterialUI.DialogContent);
+final DialogContentText = ReactJsComponentFactoryProxy(MaterialUI.DialogContentText);
+final DialogTitle = ReactJsComponentFactoryProxy(MaterialUI.DialogTitle);
+final Icon = ReactJsComponentFactoryProxy(MaterialUI.Icon);
+final MuiThemeProvider = ReactJsComponentFactoryProxy(MaterialUI.MuiThemeProvider);
+final Typography = ReactJsComponentFactoryProxy(MaterialUI.Typography);

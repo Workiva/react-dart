@@ -38,7 +38,7 @@ import 'package:react/src/react_test_utils/simulate_wrappers.dart' as sw;
 /// * For custom composite components React.createClass()-based components, this will return the [ReactClass].
 dynamic getComponentTypeV2(ReactComponentFactoryProxy componentFactory) => componentFactory.type;
 
-typedef bool ComponentTestFunction(/* [1] */ component);
+typedef ComponentTestFunction = bool Function(/* [1] */ dynamic component);
 
 dynamic _jsifyEventData(Map eventData) => jsifyAndAllowInterop(eventData ?? const {});
 

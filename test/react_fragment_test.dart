@@ -15,7 +15,7 @@ main() {
 
   group('Fragment', () {
     test('renders nothing but its children', () {
-      var wrappingDivRef;
+      Element wrappingDivRef;
 
       react_dom.render(
         react.div({
@@ -30,7 +30,7 @@ main() {
             react.div({}),
           ])
         ]),
-        new Element.div(),
+        Element.div(),
       );
 
       expect(wrappingDivRef.children, hasLength(4));
@@ -39,7 +39,7 @@ main() {
     test('passes the key properly onto the fragment', () {
       var callCount = 0;
 
-      var mountElement = new Element.div();
+      var mountElement = Element.div();
 
       react_dom.render(
           react.Fragment({
@@ -78,9 +78,10 @@ class _FragmentTestDummy extends react.Component2 {
     props['onComponentDidMount']();
   }
 
+  @override
   render() {
     return react.button(props, 'hi');
   }
 }
 
-ReactDartComponentFactoryProxy2 FragmentTestDummy = react.registerComponent(() => new _FragmentTestDummy());
+ReactDartComponentFactoryProxy2 FragmentTestDummy = react.registerComponent(() => _FragmentTestDummy());

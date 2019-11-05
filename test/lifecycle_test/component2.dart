@@ -2,17 +2,17 @@
 @JS()
 library react.lifecycle_test.component2;
 
-import "package:js/js.dart";
+import 'package:js/js.dart';
 import 'package:react/react.dart' as react;
 import 'package:react/react_client.dart';
 import 'package:react/react_client/react_interop.dart';
 
 import 'util.dart';
 
-ReactDartComponentFactoryProxy2 SetStateTest = react.registerComponent(() => new _SetStateTest(), [null]);
-ReactDartComponentFactoryProxy2 DefaultSkipMethodsTest = react.registerComponent(() => new _SetStateTest());
+ReactDartComponentFactoryProxy2 SetStateTest = react.registerComponent(() => _SetStateTest(), [null]);
+ReactDartComponentFactoryProxy2 DefaultSkipMethodsTest = react.registerComponent(() => _SetStateTest());
 ReactDartComponentFactoryProxy2 SkipMethodsTest =
-    react.registerComponent(() => new _SetStateTest(), ['getSnapshotBeforeUpdate']);
+    react.registerComponent(() => _SetStateTest(), ['getSnapshotBeforeUpdate']);
 
 class _SetStateTest extends react.Component2 with LifecycleTestHelper {
   @override
@@ -60,7 +60,7 @@ class _SetStateTest extends react.Component2 with LifecycleTestHelper {
   @override
   Map getDerivedStateFromError(error) {
     lifecycleCall('getDerivedStateFromError', arguments: [error]);
-    return {"shouldThrow": false, "errorFromGetDerivedState": error};
+    return {'shouldThrow': false, 'errorFromGetDerivedState': error};
   }
 
   Map outerTransactionalSetStateCallback(Map previousState, __) {
@@ -73,6 +73,7 @@ class _SetStateTest extends react.Component2 with LifecycleTestHelper {
     return {'counter': previousState['counter'] + 1};
   }
 
+  @override
   render() {
     lifecycleCall('render');
 
@@ -112,45 +113,52 @@ class _SetStateTest extends react.Component2 with LifecycleTestHelper {
               });
             }
           }, [
-            state["shouldThrow"] ? ErrorComponent({"key": "errorComp"}) : null,
+            state['shouldThrow'] ? ErrorComponent({'key': 'errorComp'}) : null,
             state['counter']
           ]));
     }
   }
 }
 
-_DefaultPropsCachingTest defaultPropsCachingTestComponentFactory() => new _DefaultPropsCachingTest();
+_DefaultPropsCachingTest defaultPropsCachingTestComponentFactory() => _DefaultPropsCachingTest();
 
 class _DefaultPropsCachingTest extends react.Component2 implements DefaultPropsCachingTestHelper {
   static int getDefaultPropsCallCount = 0;
 
+  @override
   int get staticGetDefaultPropsCallCount => getDefaultPropsCallCount;
 
   @override
   set staticGetDefaultPropsCallCount(int value) => getDefaultPropsCallCount = value;
 
-  Map get defaultProps {
+  @override
+  get defaultProps {
     getDefaultPropsCallCount++;
     return {'getDefaultPropsCallCount': getDefaultPropsCallCount};
   }
 
+  @override
   render() => false;
 }
 
-ReactDartComponentFactoryProxy2 DefaultPropsTest = react.registerComponent(() => new _DefaultPropsTest());
+ReactDartComponentFactoryProxy2 DefaultPropsTest = react.registerComponent(() => _DefaultPropsTest());
 
 class _DefaultPropsTest extends react.Component2 {
   static int getDefaultPropsCallCount = 0;
 
-  Map get defaultProps => {'defaultProp': 'default'};
+  @override
+  get defaultProps => {'defaultProp': 'default'};
 
+  @override
   render() => false;
 }
 
-ReactDartComponentFactoryProxy2 PropTypesTest = react.registerComponent(() => new PropTypesTestComponent());
+ReactDartComponentFactoryProxy2 PropTypesTest = react.registerComponent(() => PropTypesTestComponent());
 
 class PropTypesTestComponent extends react.Component2 {
+  @override
   get propTypes => {
+        // ignore: avoid_types_on_closure_parameters
         'intProp': (Map props, propName, componentName, location, propFullName) {
           if (props[propName] is! int) {
             return ArgumentError(
@@ -160,22 +168,25 @@ class PropTypesTestComponent extends react.Component2 {
         }
       };
 
+  @override
   render() => '';
 }
 
 react.Context LifecycleTestContext = react.createContext();
 
-ReactDartComponentFactoryProxy2 ContextConsumerWrapper = react.registerComponent(() => new _ContextConsumerWrapper());
+ReactDartComponentFactoryProxy2 ContextConsumerWrapper = react.registerComponent(() => _ContextConsumerWrapper());
 
 class _ContextConsumerWrapper extends react.Component2 with LifecycleTestHelper {
+  @override
   dynamic render() {
     return LifecycleTestContext.Consumer({}, props['children'].first);
   }
 }
 
-ReactDartComponentFactoryProxy2 ContextWrapper = react.registerComponent(() => new _ContextWrapper());
+ReactDartComponentFactoryProxy2 ContextWrapper = react.registerComponent(() => _ContextWrapper());
 
 class _ContextWrapper extends react.Component2 with LifecycleTestHelper {
+  @override
   dynamic render() {
     return LifecycleTestContext.Provider(
       {
@@ -186,15 +197,14 @@ class _ContextWrapper extends react.Component2 with LifecycleTestHelper {
   }
 }
 
-ReactDartComponentFactoryProxy2 LifecycleTestWithContext =
-    react.registerComponent(() => new _LifecycleTestWithContext());
+ReactDartComponentFactoryProxy2 LifecycleTestWithContext = react.registerComponent(() => _LifecycleTestWithContext());
 
 class _LifecycleTestWithContext extends _LifecycleTest {
   @override
   get contextType => LifecycleTestContext;
 }
 
-ReactDartComponentFactoryProxy2 ErrorComponent = react.registerComponent(() => new _ErrorComponent());
+ReactDartComponentFactoryProxy2 ErrorComponent = react.registerComponent(() => _ErrorComponent());
 
 class TestDartException implements Exception {
   int code;
@@ -202,6 +212,7 @@ class TestDartException implements Exception {
 
   TestDartException(this.message, this.code);
 
+  @override
   toString() {
     return message;
   }
@@ -209,40 +220,52 @@ class TestDartException implements Exception {
 
 class _ErrorComponent extends react.Component2 {
   void _throwError() {
-    throw TestDartException("It crashed!", 100);
+    throw TestDartException('It crashed!', 100);
   }
 
-  void render() {
+  @override
+  render() {
     _throwError();
-    return react.div({'key': 'defaultMessage'}, "Error");
+    return react.div({'key': 'defaultMessage'}, 'Error');
   }
 }
 
-ReactDartComponentFactoryProxy2 LifecycleTest = react.registerComponent(() => new _LifecycleTest());
+ReactDartComponentFactoryProxy2 LifecycleTest = react.registerComponent(() => _LifecycleTest());
 
 class _LifecycleTest extends react.Component2 with LifecycleTestHelper {
+  @override
   void componentDidMount() => lifecycleCall('componentDidMount');
+  @override
   void componentWillUnmount() => lifecycleCall('componentWillUnmount');
 
+  @override
   Map getDerivedStateFromProps(nextProps, prevState) => lifecycleCall('getDerivedStateFromProps',
-      arguments: [new Map.from(nextProps), new Map.from(prevState)], staticProps: nextProps);
+      arguments: [Map.from(nextProps), Map.from(prevState)], staticProps: nextProps);
 
+  @override
   dynamic getSnapshotBeforeUpdate(prevProps, prevState) =>
-      lifecycleCall('getSnapshotBeforeUpdate', arguments: [new Map.from(prevProps), new Map.from(prevState)]);
+      lifecycleCall('getSnapshotBeforeUpdate', arguments: [Map.from(prevProps), Map.from(prevState)]);
 
+  @override
   void componentDidUpdate(prevProps, prevState, [snapshot]) =>
-      lifecycleCall('componentDidUpdate', arguments: [new Map.from(prevProps), new Map.from(prevState), snapshot]);
+      lifecycleCall('componentDidUpdate', arguments: [Map.from(prevProps), Map.from(prevState), snapshot]);
 
+  @override
   void componentDidCatch(error, info) => lifecycleCall('componentDidCatch', arguments: [error, info]);
 
+  @override
   Map getDerivedStateFromError(error) => lifecycleCall('getDerivedStateFromError', arguments: [error]);
 
+  @override
   bool shouldComponentUpdate(nextProps, nextState) => lifecycleCall('shouldComponentUpdate',
-      arguments: [new Map.from(nextProps), new Map.from(nextState)], defaultReturnValue: () => true);
+      arguments: [Map.from(nextProps), Map.from(nextState)], defaultReturnValue: () => true);
 
+  @override
   dynamic render() => lifecycleCall('render', defaultReturnValue: () => react.div({}));
 
-  Map get initialState => lifecycleCall('initialState', defaultReturnValue: () => {});
+  @override
+  get initialState => lifecycleCall('initialState', defaultReturnValue: () => {});
 
-  Map get defaultProps => lifecycleCall('defaultProps', defaultReturnValue: () => {'defaultProp': 'default'});
+  @override
+  get defaultProps => lifecycleCall('defaultProps', defaultReturnValue: () => {'defaultProp': 'default'});
 }

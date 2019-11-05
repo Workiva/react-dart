@@ -2,7 +2,7 @@
 // for details. All rights reserved. Use of this source code is governed by a
 // BSD-style license that can be found in the LICENSE file.
 
-// ignore_for_file: deprecated_member_use_from_same_package
+// ignore_for_file: deprecated_member_use_from_same_package, unnecessary_getters_setters, prefer_function_declarations_over_variables, avoid_types_on_closure_parameters
 
 /// A Dart library for building UI using ReactJS.
 library react;
@@ -17,14 +17,14 @@ import 'package:react/src/context.dart';
 export 'package:react/src/context.dart';
 export 'package:react/react_client/react_interop.dart' show forwardRef, createRef;
 
-typedef Error PropValidator<TProps>(
+typedef PropValidator<TProps> = Error Function(
     TProps props, String propName, String componentName, String location, String propFullName);
 
-typedef T ComponentFactory<T extends Component>();
-typedef ReactComponentFactoryProxy ComponentRegistrar(ComponentFactory componentFactory,
+typedef ComponentFactory<T extends Component> = T Function();
+typedef ComponentRegistrar = ReactComponentFactoryProxy Function(ComponentFactory componentFactory,
     [Iterable<String> skipMethods]);
 
-typedef ReactDartComponentFactoryProxy2 ComponentRegistrar2(
+typedef ComponentRegistrar2 = ReactDartComponentFactoryProxy2 Function(
   ComponentFactory<Component2> componentFactory, {
   Iterable<String> skipMethods,
   Component2BridgeFactory bridgeFactory,
@@ -158,21 +158,21 @@ abstract class Component {
     /// [context]s typing was loosened from Map to dynamic to support the new context API in [Component2]
     /// which extends from [Component]. Only "legacy" context APIs are supported in [Component] - which means
     /// it will still be expected to be a Map.
-    this.context = new Map.from(context ?? const {});
+    this.context = Map.from(context ?? const {});
 
     /// [nextContext]s typing was loosened from Map to dynamic to support the new context API in [Component2]
     /// which extends from [Component]. Only "legacy" context APIs are supported in [Component] - which means
     /// it will still be expected to be a Map.
-    this.nextContext = new Map.from(this.context ?? const {});
+    this.nextContext = Map.from(this.context ?? const {});
   }
 
   _initProps(props) {
-    this.props = new Map.from(props);
+    this.props = Map.from(props);
     this.nextProps = this.props;
   }
 
   initStateInternal() {
-    this.state = new Map.from(getInitialState());
+    this.state = Map.from(getInitialState());
 
     // Call `transferComponentState` to get state also to `_prevState`
     transferComponentState();
@@ -221,7 +221,7 @@ abstract class Component {
   /// Public getter for [_nextState].
   ///
   /// If `null`, then [_nextState] is equal to [state] - which is the value that will be returned.
-  Map get nextState => _nextState == null ? state : _nextState;
+  Map get nextState => _nextState == null ? state : _nextState; // ignore: prefer_if_null_operators
 
   /// Reference to the value of [props] for the upcoming render cycle.
   ///
@@ -244,13 +244,13 @@ abstract class Component {
     if (_nextState != null) {
       state = _nextState;
     }
-    _nextState = new Map.from(state);
+    _nextState = Map.from(state);
   }
 
   /// Force a call to [render] by calling [setState], which effectively "redraws" the `Component`.
   ///
   /// Optionally accepts a [callback] that gets called after the component updates.
-  void redraw([callback()]) {
+  void redraw([Function() callback]) {
     setState({}, callback);
   }
 
@@ -261,13 +261,13 @@ abstract class Component {
   /// Also allows [newState] to be used as a transactional `setState` callback.
   ///
   /// See: <https://facebook.github.io/react/docs/react-component.html#setstate>
-  void setState(covariant dynamic newState, [callback()]) {
+  void setState(covariant dynamic newState, [Function() callback]) {
     if (newState is Map) {
       _nextState.addAll(newState);
     } else if (newState is StateUpdaterCallback) {
       _transactionalSetStateCallbacks.add(newState);
     } else if (newState != null) {
-      throw new ArgumentError(
+      throw ArgumentError(
           'setState expects its first parameter to either be a Map or a `TransactionalSetStateCallback`.');
     }
 
@@ -286,8 +286,8 @@ abstract class Component {
   /// >
   /// > Use [setState] instead.
   @Deprecated('6.0.0')
-  void replaceState(Map newState, [callback()]) {
-    Map nextState = newState == null ? {} : new Map.from(newState);
+  void replaceState(Map newState, [Function() callback]) {
+    Map nextState = newState == null ? {} : Map.from(newState);
     _nextState = nextState;
     if (callback != null) _setStateCallbacks.add(callback);
 
@@ -306,7 +306,7 @@ abstract class Component {
   /// ReactJS lifecycle method that is invoked once, only on the client _(not on the server)_, immediately after the
   /// initial rendering occurs.
   ///
-  /// At this point in the lifecycle, you can access any [ref]s to the children of [rootNode].
+  /// At this point in the lifecycle, you can access any [ref]s to the children of the root node.
   ///
   /// The [componentDidMount] method of child `Component`s is invoked _before_ that of parent `Component`.
   ///
@@ -391,7 +391,7 @@ abstract class Component {
   ///
   /// This method is not called for the initial [render].
   ///
-  /// Use this as an opportunity to operate on the [rootNode] (DOM) when the `Component` has been updated as a result
+  /// Use this as an opportunity to operate on the root node (DOM) when the `Component` has been updated as a result
   /// of the values of [prevProps] / [prevState].
   ///
   /// See: <https://facebook.github.io/react/docs/react-component.html#updating-componentdidupdate>
@@ -399,7 +399,7 @@ abstract class Component {
 
   /// ReactJS lifecycle method that is invoked immediately before a `Component` is unmounted from the DOM.
   ///
-  /// Perform any necessary cleanup in this method, such as invalidating timers or cleaning up any DOM [Element]s that
+  /// Perform any necessary cleanup in this method, such as invalidating timers or cleaning up any DOM `Element`s that
   /// were created in [componentDidMount].
   ///
   /// See: <https://facebook.github.io/react/docs/react-component.html#unmounting-componentwillunmount>
@@ -449,7 +449,7 @@ abstract class Component {
   /// See: <https://facebook.github.io/react/docs/react-component.html#getinitialstate>
   Map getInitialState() => {};
 
-  /// Invoked once and cached when [reactComponentClass] is called. Values in the mapping will be set on [props]
+  /// Invoked once and cached when the component class is created. Values in the mapping will be set on [props]
   /// if that prop is not specified by the parent component.
   ///
   /// This method is invoked before any instances are created and thus cannot rely on [props]. In addition, be aware
@@ -460,8 +460,8 @@ abstract class Component {
 
   /// __Required.__
   ///
-  /// When called, it should examine [props] and [state] and return a single child [Element]. This child [Element] can
-  /// be either a virtual representation of a native DOM component (such as [DivElement]) or another composite
+  /// When called, it should examine [props] and [state] and return a single child `Element`. This child `Element` can
+  /// be either a virtual representation of a native DOM component (such as `DivElement`) or another composite
   /// `Component` that you've defined yourself.
   ///
   /// See: <https://facebook.github.io/react/docs/react-component.html#render>
@@ -495,9 +495,10 @@ abstract class Component {
 ///
 /// 4. Supports React 16 [context]
 abstract class Component2 implements Component {
-  /// Accessed once and cached when instance is created. The [contextType] property on a class can be assigned
-  /// a [ReactDartContext] object created by [React.createContext]. This lets you consume the nearest current value of
-  /// that Context using [context].
+  /// Accessed once and cached when the `Component` instance is created.
+  ///
+  /// This property can be assigned a `Context` object created by [React.createContext].
+  /// This lets you consume the nearest current value of that Context using [context].
   ///
   /// __Example__:
   ///
@@ -517,8 +518,9 @@ abstract class Component2 implements Component {
   /// See: <https://reactjs.org/docs/context.html#classcontexttype>
   Context get contextType => null;
 
-  /// Invoked once and cached when [reactComponentClass] is called. Values in the mapping will be set on [props]
-  /// if that prop is not specified by the parent component.
+  /// Invoked once and cached when the instance is created.
+  ///
+  /// Values in the mapping will be set on [props] if that prop is not specified by the parent component.
   ///
   /// This method is invoked before any instances are created and thus cannot rely on [props]. In addition, be aware
   /// that any complex objects returned by `defaultProps` will be shared across instances, not copied.
@@ -605,8 +607,9 @@ abstract class Component2 implements Component {
   ///
   /// This will result in the dart2js name being `ReactDartComponent2` (the
   /// name of the proxying JS component defined in _dart_helpers.js).
+  @override
   String get displayName {
-    var value;
+    String value;
     assert(() {
       value = runtimeType.toString();
       return true;
@@ -623,6 +626,7 @@ abstract class Component2 implements Component {
   /// To use a transactional `setState` callback, check out [setStateWithUpdater].
   ///
   /// See: <https://reactjs.org/docs/react-component.html#setstate>
+  @override
   void setState(Map newState, [SetStateCallback callback]) {
     _bridge.setState(this, newState, callback);
   }
@@ -644,11 +648,12 @@ abstract class Component2 implements Component {
   /// ReactJS lifecycle method that is invoked once, only on the client _(not on the server)_, immediately after the
   /// initial rendering occurs.
   ///
-  /// At this point in the lifecycle, you can access any [ref]s to the children of [rootNode].
+  /// At this point in the lifecycle, you can access any [ref]s to the children of the root node.
   ///
   /// The [componentDidMount] method of child `Component`s is invoked _before_ that of parent `Component`.
   ///
   /// See: <https://facebook.github.io/react/docs/react-component.html#mounting-componentdidmount>
+  @override
   void componentDidMount() {}
 
   /// ReactJS lifecycle method that is invoked before rendering on initial mount and on subsequent updates when [nextProps] is received.
@@ -683,6 +688,7 @@ abstract class Component2 implements Component {
   /// will not require a component update.
   ///
   /// See: <https://facebook.github.io/react/docs/react-component.html#updating-shouldcomponentupdate>
+  @override
   bool shouldComponentUpdate(Map nextProps, Map nextState) => true;
 
   /// ReactJS lifecycle method that is invoked immediately after rendering
@@ -730,7 +736,7 @@ abstract class Component2 implements Component {
   ///
   /// This method is not called for the initial [render].
   ///
-  /// Use this as an opportunity to operate on the [rootNode] (DOM) when the `Component` has been updated as a result
+  /// Use this as an opportunity to operate on the root node (DOM) when the `Component` has been updated as a result
   /// of the values of [prevProps] / [prevState].
   ///
   /// __Note__: React 16 added a third parameter to componentDidUpdate, which
@@ -739,14 +745,16 @@ abstract class Component2 implements Component {
   /// parameter in componentDidUpdate will be null.
   ///
   /// See: <https://facebook.github.io/react/docs/react-component.html#updating-componentdidupdate>
+  @override
   void componentDidUpdate(Map prevProps, Map prevState, [dynamic snapshot]) {}
 
   /// ReactJS lifecycle method that is invoked immediately before a `Component` is unmounted from the DOM.
   ///
-  /// Perform any necessary cleanup in this method, such as invalidating timers or cleaning up any DOM [Element]s that
+  /// Perform any necessary cleanup in this method, such as invalidating timers or cleaning up any DOM `Element`s that
   /// were created in [componentDidMount].
   ///
   /// See: <https://facebook.github.io/react/docs/react-component.html#unmounting-componentwillunmount>
+  @override
   void componentWillUnmount() {}
 
   /// ReactJS lifecycle method that is invoked after an error is thrown by a
@@ -818,11 +826,12 @@ abstract class Component2 implements Component {
 
   /// __Required.__
   ///
-  /// When called, it should examine [props] and [state] and return a single child [Element]. This child [Element] can
-  /// be either a virtual representation of a native DOM component (such as [DivElement]) or another composite
+  /// When called, it should examine [props] and [state] and return a single child `Element`. This child `Element` can
+  /// be either a virtual representation of a native DOM component (such as `DivElement`) or another composite
   /// `Component` that you've defined yourself.
   ///
   /// See: <https://facebook.github.io/react/docs/react-component.html#render>
+  @override
   dynamic render();
 
   // ******************************************************************************************************************
@@ -852,7 +861,7 @@ abstract class Component2 implements Component {
   // ******************************************************************************************************************
 
   UnsupportedError _unsupportedLifecycleError(String memberName) =>
-      new UnsupportedError('Component2 drops support for the lifecycle method $memberName.'
+      UnsupportedError('Component2 drops support for the lifecycle method $memberName.'
           ' See doc comment on Component2.$memberName for migration instructions.');
 
   /// Invoked once before the `Component` is mounted. The return value will be used as the initial value of [state].
@@ -862,11 +871,12 @@ abstract class Component2 implements Component {
   /// > __DEPRECATED - DO NOT USE__
   /// >
   /// > Use the [initialState] getter instead.
+  @override
   @mustCallSuper
   @Deprecated('6.0.0')
   Map getInitialState() => throw _unsupportedLifecycleError('getInitialState');
 
-  /// Invoked once and cached when [reactComponentClass] is called. Values in the mapping will be set on [props]
+  /// Invoked once and cached when the instance is created. Values in the mapping will be set on [props]
   /// if that prop is not specified by the parent component.
   ///
   /// This method is invoked before any instances are created and thus cannot rely on [props]. In addition, be aware
@@ -877,6 +887,7 @@ abstract class Component2 implements Component {
   /// > __DEPRECATED - DO NOT USE__
   /// >
   /// > Use the [defaultProps] getter instead.
+  @override
   @mustCallSuper
   @Deprecated('6.0.0')
   Map getDefaultProps() => throw _unsupportedLifecycleError('getDefaultProps');
@@ -892,6 +903,7 @@ abstract class Component2 implements Component {
   /// > __DEPRECATED - DO NOT USE__
   /// >
   /// > Use [componentDidMount] instead
+  @override
   @mustCallSuper
   @Deprecated('6.0.0')
   void componentWillMount() => throw _unsupportedLifecycleError('componentWillMount');
@@ -914,6 +926,7 @@ abstract class Component2 implements Component {
   /// > React 16 has deprecated [componentWillReceiveProps] in favor of [getDerivedStateFromProps]
   /// >
   /// > This will be completely removed when the JS side of it is slated for removal (ReactJS 17 / react.dart 6.0.0)
+  @override
   @mustCallSuper
   @Deprecated('6.0.0')
   void componentWillReceiveProps(Map newProps) => throw _unsupportedLifecycleError('componentWillReceiveProps');
@@ -939,6 +952,7 @@ abstract class Component2 implements Component {
   /// > getSnapshotBeforeUpdate instead.
   /// >
   /// > This will be completely removed when the JS side of it is slated for removal (ReactJS 17 / react.dart 6.0.0)
+  @override
   @mustCallSuper
   @Deprecated('6.0.0')
   void componentWillUpdate(Map nextProps, Map nextState) => throw _unsupportedLifecycleError('componentWillUpdate');
@@ -990,8 +1004,7 @@ abstract class Component2 implements Component {
   // Other deprecated and unsupported members
   // ******************************************************************************************************************
 
-  UnsupportedError _unsupportedError(String memberName) =>
-      new UnsupportedError('Component2 drops support for $memberName');
+  UnsupportedError _unsupportedError(String memberName) => UnsupportedError('Component2 drops support for $memberName');
 
   /// Do not use.
   ///
@@ -1005,14 +1018,14 @@ abstract class Component2 implements Component {
   /// Will be removed when [Component] is removed in the `6.0.0` release.
   @override
   @Deprecated('6.0.0')
-  Iterable<String> get childContextKeys => throw _unsupportedError('"Legacy" Context [childContextKeys]');
+  Iterable<String> get childContextKeys => throw _unsupportedError('\'Legacy\' Context [childContextKeys]');
 
   /// Do not use.
   ///
   /// Will be removed when [Component] is removed in the `6.0.0` release.
   @override
   @Deprecated('6.0.0')
-  Iterable<String> get contextKeys => throw _unsupportedError('"Legacy" Context [contextKeys]');
+  Iterable<String> get contextKeys => throw _unsupportedError('\'Legacy\' Context [contextKeys]');
 
   /// Do not use.
   ///
@@ -1034,28 +1047,30 @@ abstract class Component2 implements Component {
   /// Will be removed when [Component] is removed in the `6.0.0` release.
   @override
   @Deprecated('6.0.0')
-  get nextContext => throw _unsupportedError('"Legacy" Context [nextContext]');
+  get nextContext => throw _unsupportedError('\'Legacy\' Context [nextContext]');
   @override
   @Deprecated('6.0.0')
-  set nextContext(_) => throw _unsupportedError('"Legacy" Context [nextContext]');
+  set nextContext(_) => throw _unsupportedError('\'Legacy\' Context [nextContext]');
 
   /// Do not use.
   ///
   /// Will be removed when [Component] is removed in the `6.0.0` release.
   @override
   @Deprecated('6.0.0')
-  get prevContext => throw _unsupportedError('"Legacy" Context [prevContext]');
+  get prevContext => throw _unsupportedError('\'Legacy\' Context [prevContext]');
   @override
   @Deprecated('6.0.0')
-  set prevContext(_) => throw _unsupportedError('"Legacy" Context [prevContext]');
+  set prevContext(_) => throw _unsupportedError('\'Legacy\' Context [prevContext]');
 
   /// Do not use.
   ///
   /// Will be removed when [Component] is removed in the `6.0.0` release.
   @override
   @Deprecated('6.0.0')
-  Map get prevState => throw _unsupportedError('"Legacy" Context [prevContext]');
-  set prevState(_) => throw _unsupportedError('"Legacy" Context [prevContext]');
+  Map get prevState => throw _unsupportedError('\'Legacy\' Context [prevContext]');
+  @override
+  @Deprecated('6.0.0')
+  set prevState(_) => throw _unsupportedError('\'Legacy\' Context [prevContext]');
 
   /// Do not use.
   ///
@@ -1070,6 +1085,8 @@ abstract class Component2 implements Component {
   @override
   @Deprecated('6.0.0')
   Map get nextProps => throw _unsupportedError('nextProps');
+  @override
+  @Deprecated('6.0.0')
   set nextProps(_) => throw _unsupportedError('nextProps');
 
   /// Do not use.
@@ -1085,6 +1102,8 @@ abstract class Component2 implements Component {
   @override
   @Deprecated('6.0.0')
   RefMethod get ref => throw _unsupportedError('ref');
+  @override
+  @Deprecated('6.0.0')
   set ref(_) => throw _unsupportedError('ref');
 
   /// Do not use.
@@ -1109,7 +1128,7 @@ abstract class Component2 implements Component {
 
   @override
   @Deprecated('6.0.0')
-  var _jsRedraw;
+  dynamic _jsRedraw;
 
   @override
   @Deprecated('6.0.0')
@@ -1193,7 +1212,7 @@ abstract class ReactComponentFactoryProxy implements Function {
   ///
   /// Necessary to work around DDC `dart.dcall` issues in <https://github.com/dart-lang/sdk/issues/29904>,
   /// since invoking the function directly doesn't work.
-  dynamic /*ReactElement*/ build(Map props, [List childrenArgs]);
+  dynamic /*ReactElement*/ build(Map props, [List children]);
 
   /// Returns a new rendered component instance with the specified [props] and `children` ([c1], [c2], et. al.).
   ///
@@ -1305,7 +1324,7 @@ abstract class ReactComponentFactoryProxy implements Function {
   }
 }
 
-const _notSpecified = const NotSpecified();
+const _notSpecified = NotSpecified();
 
 class NotSpecified {
   const NotSpecified();
@@ -1318,23 +1337,23 @@ class NotSpecified {
 ///
 /// See: <https://facebook.github.io/react/docs/events.html#syntheticevent>
 class SyntheticEvent {
-  /// Indicates whether the [Event] bubbles up through the DOM or not.
+  /// Indicates whether the `Event` bubbles up through the DOM or not.
   ///
   /// See: <https://developer.mozilla.org/en-US/docs/Web/API/Event/bubbles>
   final bool bubbles;
 
-  /// Indicates whether the [Event] is cancelable or not.
+  /// Indicates whether the `Event` is cancelable or not.
   ///
   /// See: <https://developer.mozilla.org/en-US/docs/Web/API/Event/cancelable>
   final bool cancelable;
 
-  /// Identifies the current target for the event, as the [Event] traverses the DOM.
+  /// Identifies the current target for the event, as the `Event` traverses the DOM.
   ///
-  /// It always refers to the [Element] the [Event] handler has been attached to as opposed to [target] which identifies
-  /// the [Element] on which the [Event] occurred.
+  /// It always refers to the `Element` the `Event` handler has been attached to as opposed to [target] which identifies
+  /// the `Element` on which the `Event` occurred.
   ///
   /// See: <https://developer.mozilla.org/en-US/docs/Web/API/Event/currentTarget>
-  final /*DOMEventTarget*/ currentTarget;
+  final /*DOMEventTarget*/ dynamic currentTarget;
 
   bool _defaultPrevented;
 
@@ -1345,7 +1364,7 @@ class SyntheticEvent {
   /// See: <https://developer.mozilla.org/en-US/docs/Web/API/Event/defaultPrevented>
   bool get defaultPrevented => _defaultPrevented;
 
-  /// Cancels the [Event] if it is [cancelable], without stopping further propagation of the event.
+  /// Cancels the `Event` if it is [cancelable], without stopping further propagation of the event.
   ///
   /// See: <https://developer.mozilla.org/en-US/docs/Web/API/Event/preventDefault>
   void preventDefault() {
@@ -1358,27 +1377,27 @@ class SyntheticEvent {
   /// See: <https://developer.mozilla.org/en-US/docs/Web/API/Event/stopPropagation>
   final dynamic stopPropagation;
 
-  /// Indicates which phase of the [Event] flow is currently being evaluated.
+  /// Indicates which phase of the `Event` flow is currently being evaluated.
   ///
   /// Possible values:
   ///
-  /// > [Event.CAPTURING_PHASE] (1) - The [Event] is being propagated through the [target]'s ancestor objects. This
-  /// process starts with the Window, then [HtmlDocument], then the [HtmlHtmlElement], and so on through the [Element]s
+  /// > `Event.CAPTURING_PHASE` (1) - The `Event` is being propagated through the [target]'s ancestor objects. This
+  /// process starts with the Window, then `HtmlDocument`, then the `HtmlHtmlElement`, and so on through the `Element`s
   /// until the [target]'s parent is reached. Event listeners registered for capture mode when
-  /// [EventTarget.addEventListener] was called are triggered during this phase.
+  /// `EventTarget.addEventListener` was called are triggered during this phase.
   ///
-  /// > [Event.AT_TARGET] (2) - The [Event] has arrived at the [target]. Event listeners registered for this phase are
-  /// called at this time. If [bubbles] is `false`, processing the [Event] is finished after this phase is complete.
+  /// > `Event.AT_TARGET` (2) - The `Event` has arrived at the [target]. Event listeners registered for this phase are
+  /// called at this time. If [bubbles] is `false`, processing the `Event` is finished after this phase is complete.
   ///
-  /// > [Event.BUBBLING_PHASE] (3) - The [Event] is propagating back up through the [target]'s ancestors in reverse
+  /// > `Event.BUBBLING_PHASE` (3) - The `Event` is propagating back up through the [target]'s ancestors in reverse
   /// order, starting with the parent, and eventually reaching the containing Window. This is known as bubbling, and
-  /// occurs only if [bubbles] is `true`. [Event] listeners registered for this phase are triggered during this process.
+  /// occurs only if [bubbles] is `true`. `Event` listeners registered for this phase are triggered during this process.
   ///
   /// See: <https://developer.mozilla.org/en-US/docs/Web/API/Event/eventPhase>
   final num eventPhase;
 
-  /// Is `true` when the [Event] was generated by a user action, and `false` when the [Event] was created or modified
-  /// by a script or dispatched via [Event.dispatchEvent].
+  /// Is `true` when the `Event` was generated by a user action, and `false` when the `Event` was created or modified
+  /// by a script or dispatched via `Event.dispatchEvent`.
   ///
   /// __Read Only__
   ///
@@ -1386,44 +1405,33 @@ class SyntheticEvent {
   final bool isTrusted;
 
   /// Native browser event that [SyntheticEvent] wraps around.
-  final /*DOMEvent*/ nativeEvent;
+  final /*DOMEvent*/ dynamic nativeEvent;
 
-  /// A reference to the object that dispatched the event. It is different from [currentTarget] when the [Event]
-  /// handler is called when [eventPhase] is [Event.BUBBLING_PHASE] or [Event.CAPTURING_PHASE].
+  /// A reference to the object that dispatched the event. It is different from [currentTarget] when the `Event`
+  /// handler is called when [eventPhase] is `Event.BUBBLING_PHASE` or `Event.CAPTURING_PHASE`.
   ///
   /// See: <https://developer.mozilla.org/en-US/docs/Web/API/Event/target>
-  final /*DOMEventTarget*/ target;
+  final /*DOMEventTarget*/ dynamic target;
 
-  /// Returns the [Time] (in milliseconds) at which the [Event] was created.
+  /// Returns the `Time` (in milliseconds) at which the `Event` was created.
   ///
   /// _Starting with Chrome 49, returns a high-resolution monotonic time instead of epoch time._
   ///
   /// See: <https://developer.mozilla.org/en-US/docs/Web/API/Event/timeStamp>
   final num timeStamp;
 
-  /// Returns a string containing the type of event. It is set when the [Event] is constructed and is the name commonly
+  /// Returns a string containing the type of event. It is set when the `Event` is constructed and is the name commonly
   /// used to refer to the specific event.
   ///
   /// See: <https://developer.mozilla.org/en-US/docs/Web/API/Event/type>
   final String type;
 
-  SyntheticEvent(
-      this.bubbles,
-      this.cancelable,
-      this.currentTarget,
-      this._defaultPrevented,
-      this._preventDefault,
-      this.stopPropagation,
-      this.eventPhase,
-      this.isTrusted,
-      this.nativeEvent,
-      this.target,
-      this.timeStamp,
-      this.type) {}
+  SyntheticEvent(this.bubbles, this.cancelable, this.currentTarget, this._defaultPrevented, this._preventDefault,
+      this.stopPropagation, this.eventPhase, this.isTrusted, this.nativeEvent, this.target, this.timeStamp, this.type);
 }
 
 class SyntheticClipboardEvent extends SyntheticEvent {
-  final clipboardData;
+  final dynamic clipboardData;
 
   SyntheticClipboardEvent(
     bool bubbles,
@@ -1440,7 +1448,7 @@ class SyntheticClipboardEvent extends SyntheticEvent {
     String type,
     this.clipboardData,
   ) : super(bubbles, cancelable, currentTarget, defaultPrevented, preventDefault, stopPropagation, eventPhase,
-            isTrusted, nativeEvent, target, timeStamp, type) {}
+            isTrusted, nativeEvent, target, timeStamp, type);
 }
 
 class SyntheticKeyboardEvent extends SyntheticEvent {
@@ -1481,11 +1489,11 @@ class SyntheticKeyboardEvent extends SyntheticEvent {
     this.repeat,
     this.shiftKey,
   ) : super(bubbles, cancelable, currentTarget, defaultPrevented, preventDefault, stopPropagation, eventPhase,
-            isTrusted, nativeEvent, target, timeStamp, type) {}
+            isTrusted, nativeEvent, target, timeStamp, type);
 }
 
 class SyntheticFocusEvent extends SyntheticEvent {
-  final /*DOMEventTarget*/ relatedTarget;
+  final /*DOMEventTarget*/ dynamic relatedTarget;
 
   SyntheticFocusEvent(
     bool bubbles,
@@ -1502,7 +1510,7 @@ class SyntheticFocusEvent extends SyntheticEvent {
     String type,
     this.relatedTarget,
   ) : super(bubbles, cancelable, currentTarget, defaultPrevented, preventDefault, stopPropagation, eventPhase,
-            isTrusted, nativeEvent, target, timeStamp, type) {}
+            isTrusted, nativeEvent, target, timeStamp, type);
 }
 
 class SyntheticFormEvent extends SyntheticEvent {
@@ -1520,7 +1528,7 @@ class SyntheticFormEvent extends SyntheticEvent {
     num timeStamp,
     String type,
   ) : super(bubbles, cancelable, currentTarget, defaultPrevented, preventDefault, stopPropagation, eventPhase,
-            isTrusted, nativeEvent, target, timeStamp, type) {}
+            isTrusted, nativeEvent, target, timeStamp, type);
 }
 
 class SyntheticDataTransfer {
@@ -1543,7 +1551,7 @@ class SyntheticMouseEvent extends SyntheticEvent {
   final bool metaKey;
   final num pageX;
   final num pageY;
-  final /*DOMEventTarget*/ relatedTarget;
+  final /*DOMEventTarget*/ dynamic relatedTarget;
   final num screenX;
   final num screenY;
   final bool shiftKey;
@@ -1576,7 +1584,7 @@ class SyntheticMouseEvent extends SyntheticEvent {
     this.screenY,
     this.shiftKey,
   ) : super(bubbles, cancelable, currentTarget, defaultPrevented, preventDefault, stopPropagation, eventPhase,
-            isTrusted, nativeEvent, target, timeStamp, type) {}
+            isTrusted, nativeEvent, target, timeStamp, type);
 }
 
 class SyntheticPointerEvent extends SyntheticEvent {
@@ -1615,17 +1623,17 @@ class SyntheticPointerEvent extends SyntheticEvent {
     this.pointerType,
     this.isPrimary,
   ) : super(bubbles, cancelable, currentTarget, defaultPrevented, preventDefault, stopPropagation, eventPhase,
-            isTrusted, nativeEvent, target, timeStamp, type) {}
+            isTrusted, nativeEvent, target, timeStamp, type);
 }
 
 class SyntheticTouchEvent extends SyntheticEvent {
   final bool altKey;
-  final /*DOMTouchList*/ changedTouches;
+  final /*DOMTouchList*/ dynamic changedTouches;
   final bool ctrlKey;
   final bool metaKey;
   final bool shiftKey;
-  final /*DOMTouchList*/ targetTouches;
-  final /*DOMTouchList*/ touches;
+  final /*DOMTouchList*/ dynamic targetTouches;
+  final /*DOMTouchList*/ dynamic touches;
 
   SyntheticTouchEvent(
     bool bubbles,
@@ -1648,7 +1656,7 @@ class SyntheticTouchEvent extends SyntheticEvent {
     this.targetTouches,
     this.touches,
   ) : super(bubbles, cancelable, currentTarget, defaultPrevented, preventDefault, stopPropagation, eventPhase,
-            isTrusted, nativeEvent, target, timeStamp, type) {}
+            isTrusted, nativeEvent, target, timeStamp, type);
 }
 
 class SyntheticTransitionEvent extends SyntheticEvent {
@@ -1673,7 +1681,7 @@ class SyntheticTransitionEvent extends SyntheticEvent {
       this.elapsedTime,
       this.pseudoElement)
       : super(bubbles, cancelable, currentTarget, _defaultPrevented, _preventDefault, stopPropagation, eventPhase,
-            isTrusted, nativeEvent, target, timeStamp, type) {}
+            isTrusted, nativeEvent, target, timeStamp, type);
 }
 
 class SyntheticAnimationEvent extends SyntheticEvent {
@@ -1698,12 +1706,12 @@ class SyntheticAnimationEvent extends SyntheticEvent {
       this.elapsedTime,
       this.pseudoElement)
       : super(bubbles, cancelable, currentTarget, _defaultPrevented, _preventDefault, stopPropagation, eventPhase,
-            isTrusted, nativeEvent, target, timeStamp, type) {}
+            isTrusted, nativeEvent, target, timeStamp, type);
 }
 
 class SyntheticUIEvent extends SyntheticEvent {
   final num detail;
-  final /*DOMAbstractView*/ view;
+  final /*DOMAbstractView*/ dynamic view;
 
   SyntheticUIEvent(
     bool bubbles,
@@ -1721,7 +1729,7 @@ class SyntheticUIEvent extends SyntheticEvent {
     this.detail,
     this.view,
   ) : super(bubbles, cancelable, currentTarget, _defaultPrevented, _preventDefault, stopPropagation, eventPhase,
-            isTrusted, nativeEvent, target, timeStamp, type) {}
+            isTrusted, nativeEvent, target, timeStamp, type);
 }
 
 class SyntheticWheelEvent extends SyntheticEvent {
@@ -1748,619 +1756,619 @@ class SyntheticWheelEvent extends SyntheticEvent {
     this.deltaY,
     this.deltaZ,
   ) : super(bubbles, cancelable, currentTarget, defaultPrevented, preventDefault, stopPropagation, eventPhase,
-            isTrusted, nativeEvent, target, timeStamp, type) {}
+            isTrusted, nativeEvent, target, timeStamp, type);
 }
 
-/// Registers [componentFactory] on both client and server.
+/// Registers `componentFactory` on both client and server.
 /*ComponentRegistrar*/ Function registerComponent =
     (/*ComponentFactory*/ componentFactory, [/*Iterable<String>*/ skipMethods]) {
-  throw new Exception('setClientConfiguration must be called before registerComponent.');
+  throw Exception('setClientConfiguration must be called before registerComponent.');
 };
 
-/// Registers [componentFactory] on both client and server.
+/// Registers `componentFactory` on both client and server.
 ComponentRegistrar2 registerComponent2 = (
   ComponentFactory<Component2> componentFactory, {
   Iterable<String> skipMethods,
   Component2BridgeFactory bridgeFactory,
 }) {
-  throw new Exception('setClientConfiguration must be called before registerComponent.');
+  throw Exception('setClientConfiguration must be called before registerComponent.');
 };
 
-/// The HTML `<a>` [AnchorElement].
-var a;
+/// The HTML `<a>` `AnchorElement`.
+dynamic a;
 
-/// The HTML `<abbr>` [Element].
-var abbr;
+/// The HTML `<abbr>` `Element`.
+dynamic abbr;
 
-/// The HTML `<address>` [Element].
-var address;
+/// The HTML `<address>` `Element`.
+dynamic address;
 
-/// The HTML `<area>` [AreaElement].
-var area;
+/// The HTML `<area>` `AreaElement`.
+dynamic area;
 
-/// The HTML `<article>` [Element].
-var article;
+/// The HTML `<article>` `Element`.
+dynamic article;
 
-/// The HTML `<aside>` [Element].
-var aside;
+/// The HTML `<aside>` `Element`.
+dynamic aside;
 
-/// The HTML `<audio>` [AudioElement].
-var audio;
+/// The HTML `<audio>` `AudioElement`.
+dynamic audio;
 
-/// The HTML `<b>` [Element].
-var b;
+/// The HTML `<b>` `Element`.
+dynamic b;
 
-/// The HTML `<base>` [BaseElement].
-var base;
+/// The HTML `<base>` `BaseElement`.
+dynamic base;
 
-/// The HTML `<bdi>` [Element].
-var bdi;
+/// The HTML `<bdi>` `Element`.
+dynamic bdi;
 
-/// The HTML `<bdo>` [Element].
-var bdo;
+/// The HTML `<bdo>` `Element`.
+dynamic bdo;
 
-/// The HTML `<big>` [Element].
-var big;
+/// The HTML `<big>` `Element`.
+dynamic big;
 
-/// The HTML `<blockquote>` [Element].
-var blockquote;
+/// The HTML `<blockquote>` `Element`.
+dynamic blockquote;
 
-/// The HTML `<body>` [BodyElement].
-var body;
+/// The HTML `<body>` `BodyElement`.
+dynamic body;
 
-/// The HTML `<br>` [BRElement].
-var br;
+/// The HTML `<br>` `BRElement`.
+dynamic br;
 
-/// The HTML `<button>` [ButtonElement].
-var button;
+/// The HTML `<button>` `ButtonElement`.
+dynamic button;
 
-/// The HTML `<canvas>` [CanvasElement].
-var canvas;
+/// The HTML `<canvas>` `CanvasElement`.
+dynamic canvas;
 
-/// The HTML `<caption>` [Element].
-var caption;
+/// The HTML `<caption>` `Element`.
+dynamic caption;
 
-/// The HTML `<cite>` [Element].
-var cite;
+/// The HTML `<cite>` `Element`.
+dynamic cite;
 
-/// The HTML `<code>` [Element].
-var code;
+/// The HTML `<code>` `Element`.
+dynamic code;
 
-/// The HTML `<col>` [Element].
-var col;
+/// The HTML `<col>` `Element`.
+dynamic col;
 
-/// The HTML `<colgroup>` [Element].
-var colgroup;
+/// The HTML `<colgroup>` `Element`.
+dynamic colgroup;
 
-/// The HTML `<data>` [Element].
-var data;
+/// The HTML `<data>` `Element`.
+dynamic data;
 
-/// The HTML `<datalist>` [DataListElement].
-var datalist;
+/// The HTML `<datalist>` `DataListElement`.
+dynamic datalist;
 
-/// The HTML `<dd>` [Element].
-var dd;
+/// The HTML `<dd>` `Element`.
+dynamic dd;
 
-/// The HTML `<del>` [Element].
-var del;
+/// The HTML `<del>` `Element`.
+dynamic del;
 
-/// The HTML `<details>` [DetailsElement].
-var details;
+/// The HTML `<details>` `DetailsElement`.
+dynamic details;
 
-/// The HTML `<dfn>` [Element].
-var dfn;
+/// The HTML `<dfn>` `Element`.
+dynamic dfn;
 
-/// The HTML `<dialog>` [DialogElement].
-var dialog;
+/// The HTML `<dialog>` `DialogElement`.
+dynamic dialog;
 
-/// The HTML `<div>` [DivElement].
-var div;
+/// The HTML `<div>` `DivElement`.
+dynamic div;
 
-/// The HTML `<dl>` [DListElement].
-var dl;
+/// The HTML `<dl>` `DListElement`.
+dynamic dl;
 
-/// The HTML `<dt>` [Element].
-var dt;
+/// The HTML `<dt>` `Element`.
+dynamic dt;
 
-/// The HTML `<em>` [Element].
-var em;
+/// The HTML `<em>` `Element`.
+dynamic em;
 
-/// The HTML `<embed>` [EmbedElement].
-var embed;
+/// The HTML `<embed>` `EmbedElement`.
+dynamic embed;
 
-/// The HTML `<fieldset>` [FieldSetElement].
-var fieldset;
+/// The HTML `<fieldset>` `FieldSetElement`.
+dynamic fieldset;
 
-/// The HTML `<figcaption>` [Element].
-var figcaption;
+/// The HTML `<figcaption>` `Element`.
+dynamic figcaption;
 
-/// The HTML `<figure>` [Element].
-var figure;
+/// The HTML `<figure>` `Element`.
+dynamic figure;
 
-/// The HTML `<footer>` [Element].
-var footer;
+/// The HTML `<footer>` `Element`.
+dynamic footer;
 
-/// The HTML `<form>` [FormElement].
-var form;
+/// The HTML `<form>` `FormElement`.
+dynamic form;
 
-/// The HTML `<h1>` [HeadingElement].
-var h1;
+/// The HTML `<h1>` `HeadingElement`.
+dynamic h1;
 
-/// The HTML `<h2>` [HeadingElement].
-var h2;
+/// The HTML `<h2>` `HeadingElement`.
+dynamic h2;
 
-/// The HTML `<h3>` [HeadingElement].
-var h3;
+/// The HTML `<h3>` `HeadingElement`.
+dynamic h3;
 
-/// The HTML `<h4>` [HeadingElement].
-var h4;
+/// The HTML `<h4>` `HeadingElement`.
+dynamic h4;
 
-/// The HTML `<h5>` [HeadingElement].
-var h5;
+/// The HTML `<h5>` `HeadingElement`.
+dynamic h5;
 
-/// The HTML `<h6>` [HeadingElement].
-var h6;
+/// The HTML `<h6>` `HeadingElement`.
+dynamic h6;
 
-/// The HTML `<head>` [HeadElement].
-var head;
+/// The HTML `<head>` `HeadElement`.
+dynamic head;
 
-/// The HTML `<header>` [Element].
-var header;
+/// The HTML `<header>` `Element`.
+dynamic header;
 
-/// The HTML `<hr>` [HRElement].
-var hr;
+/// The HTML `<hr>` `HRElement`.
+dynamic hr;
 
-/// The HTML `<html>` [HtmlHtmlElement].
-var html;
+/// The HTML `<html>` `HtmlHtmlElement`.
+dynamic html;
 
-/// The HTML `<i>` [Element].
-var i;
+/// The HTML `<i>` `Element`.
+dynamic i;
 
-/// The HTML `<iframe>` [IFrameElement].
-var iframe;
+/// The HTML `<iframe>` `IFrameElement`.
+dynamic iframe;
 
-/// The HTML `<img>` [ImageElement].
-var img;
+/// The HTML `<img>` `ImageElement`.
+dynamic img;
 
-/// The HTML `<input>` [InputElement].
-var input;
+/// The HTML `<input>` `InputElement`.
+dynamic input;
 
-/// The HTML `<ins>` [Element].
-var ins;
+/// The HTML `<ins>` `Element`.
+dynamic ins;
 
-/// The HTML `<kbd>` [Element].
-var kbd;
+/// The HTML `<kbd>` `Element`.
+dynamic kbd;
 
-/// The HTML `<keygen>` [KeygenElement].
-var keygen;
+/// The HTML `<keygen>` `KeygenElement`.
+dynamic keygen;
 
-/// The HTML `<label>` [LabelElement].
-var label;
+/// The HTML `<label>` `LabelElement`.
+dynamic label;
 
-/// The HTML `<legend>` [LegendElement].
-var legend;
+/// The HTML `<legend>` `LegendElement`.
+dynamic legend;
 
-/// The HTML `<li>` [LIElement].
-var li;
+/// The HTML `<li>` `LIElement`.
+dynamic li;
 
-/// The HTML `<link>` [LinkElement].
-var link;
+/// The HTML `<link>` `LinkElement`.
+dynamic link;
 
-/// The HTML `<main>` [Element].
-var main;
+/// The HTML `<main>` `Element`.
+dynamic main;
 
-/// The HTML `<map>` [MapElement].
-var map;
+/// The HTML `<map>` `MapElement`.
+dynamic map;
 
-/// The HTML `<mark>` [Element].
-var mark;
+/// The HTML `<mark>` `Element`.
+dynamic mark;
 
-/// The HTML `<menu>` [MenuElement].
-var menu;
+/// The HTML `<menu>` `MenuElement`.
+dynamic menu;
 
-/// The HTML `<menuitem>` [MenuItemElement].
-var menuitem;
+/// The HTML `<menuitem>` `MenuItemElement`.
+dynamic menuitem;
 
-/// The HTML `<meta>` [MetaElement].
-var meta;
+/// The HTML `<meta>` `MetaElement`.
+dynamic meta;
 
-/// The HTML `<meter>` [MeterElement].
-var meter;
+/// The HTML `<meter>` `MeterElement`.
+dynamic meter;
 
-/// The HTML `<nav>` [Element].
-var nav;
+/// The HTML `<nav>` `Element`.
+dynamic nav;
 
-/// The HTML `<noscript>` [Element].
-var noscript;
+/// The HTML `<noscript>` `Element`.
+dynamic noscript;
 
-/// The HTML `<object>` [ObjectElement].
-var object;
+/// The HTML `<object>` `ObjectElement`.
+dynamic object;
 
-/// The HTML `<ol>` [OListElement].
-var ol;
+/// The HTML `<ol>` `OListElement`.
+dynamic ol;
 
-/// The HTML `<optgroup>` [OptGroupElement].
-var optgroup;
+/// The HTML `<optgroup>` `OptGroupElement`.
+dynamic optgroup;
 
-/// The HTML `<option>` [OptionElement].
-var option;
+/// The HTML `<option>` `OptionElement`.
+dynamic option;
 
-/// The HTML `<output>` [OutputElement].
-var output;
+/// The HTML `<output>` `OutputElement`.
+dynamic output;
 
-/// The HTML `<p>` [ParagraphElement].
-var p;
+/// The HTML `<p>` `ParagraphElement`.
+dynamic p;
 
-/// The HTML `<param>` [ParamElement].
-var param;
+/// The HTML `<param>` `ParamElement`.
+dynamic param;
 
-/// The HTML `<picture>` [PictureElement].
-var picture;
+/// The HTML `<picture>` `PictureElement`.
+dynamic picture;
 
-/// The HTML `<pre>` [PreElement].
-var pre;
+/// The HTML `<pre>` `PreElement`.
+dynamic pre;
 
-/// The HTML `<progress>` [ProgressElement].
-var progress;
+/// The HTML `<progress>` `ProgressElement`.
+dynamic progress;
 
-/// The HTML `<q>` [QuoteElement].
-var q;
+/// The HTML `<q>` `QuoteElement`.
+dynamic q;
 
-/// The HTML `<rp>` [Element].
-var rp;
+/// The HTML `<rp>` `Element`.
+dynamic rp;
 
-/// The HTML `<rt>` [Element].
-var rt;
+/// The HTML `<rt>` `Element`.
+dynamic rt;
 
-/// The HTML `<ruby>` [Element].
-var ruby;
+/// The HTML `<ruby>` `Element`.
+dynamic ruby;
 
-/// The HTML `<s>` [Element].
-var s;
+/// The HTML `<s>` `Element`.
+dynamic s;
 
-/// The HTML `<samp>` [Element].
-var samp;
+/// The HTML `<samp>` `Element`.
+dynamic samp;
 
-/// The HTML `<script>` [ScriptElement].
-var script;
+/// The HTML `<script>` `ScriptElement`.
+dynamic script;
 
-/// The HTML `<section>` [Element].
-var section;
+/// The HTML `<section>` `Element`.
+dynamic section;
 
-/// The HTML `<select>` [SelectElement].
-var select;
+/// The HTML `<select>` `SelectElement`.
+dynamic select;
 
-/// The HTML `<small>` [Element].
-var small;
+/// The HTML `<small>` `Element`.
+dynamic small;
 
-/// The HTML `<source>` [SourceElement].
-var source;
+/// The HTML `<source>` `SourceElement`.
+dynamic source;
 
-/// The HTML `<span>` [SpanElement].
-var span;
+/// The HTML `<span>` `SpanElement`.
+dynamic span;
 
-/// The HTML `<strong>` [Element].
-var strong;
+/// The HTML `<strong>` `Element`.
+dynamic strong;
 
-/// The HTML `<style>` [StyleElement].
-var style;
+/// The HTML `<style>` `StyleElement`.
+dynamic style;
 
-/// The HTML `<sub>` [Element].
-var sub;
+/// The HTML `<sub>` `Element`.
+dynamic sub;
 
-/// The HTML `<summary>` [Element].
-var summary;
+/// The HTML `<summary>` `Element`.
+dynamic summary;
 
-/// The HTML `<sup>` [Element].
-var sup;
+/// The HTML `<sup>` `Element`.
+dynamic sup;
 
-/// The HTML `<table>` [TableElement].
-var table;
+/// The HTML `<table>` `TableElement`.
+dynamic table;
 
-/// The HTML `<tbody>` [TableSectionElement].
-var tbody;
+/// The HTML `<tbody>` `TableSectionElement`.
+dynamic tbody;
 
-/// The HTML `<td>` [TableCellElement].
-var td;
+/// The HTML `<td>` `TableCellElement`.
+dynamic td;
 
-/// The HTML `<textarea>` [TextAreaElement].
-var textarea;
+/// The HTML `<textarea>` `TextAreaElement`.
+dynamic textarea;
 
-/// The HTML `<tfoot>` [TableSectionElement].
-var tfoot;
+/// The HTML `<tfoot>` `TableSectionElement`.
+dynamic tfoot;
 
-/// The HTML `<th>` [TableCellElement].
-var th;
+/// The HTML `<th>` `TableCellElement`.
+dynamic th;
 
-/// The HTML `<thead>` [TableSectionElement].
-var thead;
+/// The HTML `<thead>` `TableSectionElement`.
+dynamic thead;
 
-/// The HTML `<time>` [TimeInputElement].
-var time;
+/// The HTML `<time>` `TimeInputElement`.
+dynamic time;
 
-/// The HTML `<title>` [TitleElement].
-var title;
+/// The HTML `<title>` `TitleElement`.
+dynamic title;
 
-/// The HTML `<tr>` [TableRowElement].
-var tr;
+/// The HTML `<tr>` `TableRowElement`.
+dynamic tr;
 
-/// The HTML `<track>` [TrackElement].
-var track;
+/// The HTML `<track>` `TrackElement`.
+dynamic track;
 
-/// The HTML `<u>` [Element].
-var u;
+/// The HTML `<u>` `Element`.
+dynamic u;
 
-/// The HTML `<ul>` [UListElement].
-var ul;
+/// The HTML `<ul>` `UListElement`.
+dynamic ul;
 
-/// The HTML `<var>` [Element].
+/// The HTML `<var>` `Element`.
 ///
 /// _Named variable because `var` is a reserved word in Dart._
-var variable;
+dynamic variable;
 
-/// The HTML `<video>` [VideoElement].
-var video;
+/// The HTML `<video>` `VideoElement`.
+dynamic video;
 
-/// The HTML `<wbr>` [Element].
-var wbr;
+/// The HTML `<wbr>` `Element`.
+dynamic wbr;
 
-/// The SVG `<altGlyph>` [AltGlyphElement].
-var altGlyph;
+/// The SVG `<altGlyph>` `AltGlyphElement`.
+dynamic altGlyph;
 
-/// The SVG `<altGlyphDef>` [AltGlyphDefElement].
-var altGlyphDef;
+/// The SVG `<altGlyphDef>` `AltGlyphDefElement`.
+dynamic altGlyphDef;
 
-/// The SVG `<altGlyphItem>` [AltGlyphItemElement].
-var altGlyphItem;
+/// The SVG `<altGlyphItem>` `AltGlyphItemElement`.
+dynamic altGlyphItem;
 
-/// The SVG `<animate>` [AnimateElement].
-var animate;
+/// The SVG `<animate>` `AnimateElement`.
+dynamic animate;
 
-/// The SVG `<animateColor>` [AnimateColorElement].
-var animateColor;
+/// The SVG `<animateColor>` `AnimateColorElement`.
+dynamic animateColor;
 
-/// The SVG `<animateMotion>` [AnimateMotionElement].
-var animateMotion;
+/// The SVG `<animateMotion>` `AnimateMotionElement`.
+dynamic animateMotion;
 
-/// The SVG `<animateTransform>` [AnimateTransformElement].
-var animateTransform;
+/// The SVG `<animateTransform>` `AnimateTransformElement`.
+dynamic animateTransform;
 
-/// The SVG `<circle>` [CircleElement].
-var circle;
+/// The SVG `<circle>` `CircleElement`.
+dynamic circle;
 
-/// The SVG `<clipPath>` [ClipPathElement].
-var clipPath;
+/// The SVG `<clipPath>` `ClipPathElement`.
+dynamic clipPath;
 
-/// The SVG `<color-profile>` [ColorProfileElement].
-var colorProfile;
+/// The SVG `<color-profile>` `ColorProfileElement`.
+dynamic colorProfile;
 
-/// The SVG `<cursor>` [CursorElement].
-var cursor;
+/// The SVG `<cursor>` `CursorElement`.
+dynamic cursor;
 
-/// The SVG `<defs>` [DefsElement].
-var defs;
+/// The SVG `<defs>` `DefsElement`.
+dynamic defs;
 
-/// The SVG `<desc>` [DescElement].
-var desc;
+/// The SVG `<desc>` `DescElement`.
+dynamic desc;
 
-/// The SVG `<discard>` [DiscardElement].
-var discard;
+/// The SVG `<discard>` `DiscardElement`.
+dynamic discard;
 
-/// The SVG `<ellipse>` [EllipseElement].
-var ellipse;
+/// The SVG `<ellipse>` `EllipseElement`.
+dynamic ellipse;
 
-/// The SVG `<feBlend>` [FeBlendElement].
-var feBlend;
+/// The SVG `<feBlend>` `FeBlendElement`.
+dynamic feBlend;
 
-/// The SVG `<feColorMatrix>` [FeColorMatrixElement].
-var feColorMatrix;
+/// The SVG `<feColorMatrix>` `FeColorMatrixElement`.
+dynamic feColorMatrix;
 
-/// The SVG `<feComponentTransfer>` [FeComponentTransferElement].
-var feComponentTransfer;
+/// The SVG `<feComponentTransfer>` `FeComponentTransferElement`.
+dynamic feComponentTransfer;
 
-/// The SVG `<feComposite>` [FeCompositeElement].
-var feComposite;
+/// The SVG `<feComposite>` `FeCompositeElement`.
+dynamic feComposite;
 
-/// The SVG `<feConvolveMatrix>` [FeConvolveMatrixElement].
-var feConvolveMatrix;
+/// The SVG `<feConvolveMatrix>` `FeConvolveMatrixElement`.
+dynamic feConvolveMatrix;
 
-/// The SVG `<feDiffuseLighting>` [FeDiffuseLightingElement].
-var feDiffuseLighting;
+/// The SVG `<feDiffuseLighting>` `FeDiffuseLightingElement`.
+dynamic feDiffuseLighting;
 
-/// The SVG `<feDisplacementMap>` [FeDisplacementMapElement].
-var feDisplacementMap;
+/// The SVG `<feDisplacementMap>` `FeDisplacementMapElement`.
+dynamic feDisplacementMap;
 
-/// The SVG `<feDistantLight>` [FeDistantLightElement].
-var feDistantLight;
+/// The SVG `<feDistantLight>` `FeDistantLightElement`.
+dynamic feDistantLight;
 
-/// The SVG `<feDropShadow>` [FeDropShadowElement].
-var feDropShadow;
+/// The SVG `<feDropShadow>` `FeDropShadowElement`.
+dynamic feDropShadow;
 
-/// The SVG `<feFlood>` [FeFloodElement].
-var feFlood;
+/// The SVG `<feFlood>` `FeFloodElement`.
+dynamic feFlood;
 
-/// The SVG `<feFuncA>` [FeFuncAElement].
-var feFuncA;
+/// The SVG `<feFuncA>` `FeFuncAElement`.
+dynamic feFuncA;
 
-/// The SVG `<feFuncB>` [FeFuncBElement].
-var feFuncB;
+/// The SVG `<feFuncB>` `FeFuncBElement`.
+dynamic feFuncB;
 
-/// The SVG `<feFuncG>` [FeFuncGElement].
-var feFuncG;
+/// The SVG `<feFuncG>` `FeFuncGElement`.
+dynamic feFuncG;
 
-/// The SVG `<feFuncR>` [FeFuncRElement].
-var feFuncR;
+/// The SVG `<feFuncR>` `FeFuncRElement`.
+dynamic feFuncR;
 
-/// The SVG `<feGaussianBlur>` [FeGaussianBlurElement].
-var feGaussianBlur;
+/// The SVG `<feGaussianBlur>` `FeGaussianBlurElement`.
+dynamic feGaussianBlur;
 
-/// The SVG `<feImage>` [FeImageElement].
-var feImage;
+/// The SVG `<feImage>` `FeImageElement`.
+dynamic feImage;
 
-/// The SVG `<feMerge>` [FeMergeElement].
-var feMerge;
+/// The SVG `<feMerge>` `FeMergeElement`.
+dynamic feMerge;
 
-/// The SVG `<feMergeNode>` [FeMergeNodeElement].
-var feMergeNode;
+/// The SVG `<feMergeNode>` `FeMergeNodeElement`.
+dynamic feMergeNode;
 
-/// The SVG `<feMorphology>` [FeMorphologyElement].
-var feMorphology;
+/// The SVG `<feMorphology>` `FeMorphologyElement`.
+dynamic feMorphology;
 
-/// The SVG `<feOffset>` [FeOffsetElement].
-var feOffset;
+/// The SVG `<feOffset>` `FeOffsetElement`.
+dynamic feOffset;
 
-/// The SVG `<fePointLight>` [FePointLightElement].
-var fePointLight;
+/// The SVG `<fePointLight>` `FePointLightElement`.
+dynamic fePointLight;
 
-/// The SVG `<feSpecularLighting>` [FeSpecularLightingElement].
-var feSpecularLighting;
+/// The SVG `<feSpecularLighting>` `FeSpecularLightingElement`.
+dynamic feSpecularLighting;
 
-/// The SVG `<feSpotLight>` [FeSpotLightElement].
-var feSpotLight;
+/// The SVG `<feSpotLight>` `FeSpotLightElement`.
+dynamic feSpotLight;
 
-/// The SVG `<feTile>` [FeTileElement].
-var feTile;
+/// The SVG `<feTile>` `FeTileElement`.
+dynamic feTile;
 
-/// The SVG `<feTurbulence>` [FeTurbulenceElement].
-var feTurbulence;
+/// The SVG `<feTurbulence>` `FeTurbulenceElement`.
+dynamic feTurbulence;
 
-/// The SVG `<filter>` [FilterElement].
-var filter;
+/// The SVG `<filter>` `FilterElement`.
+dynamic filter;
 
-/// The SVG `<font>` [FontElement].
-var font;
+/// The SVG `<font>` `FontElement`.
+dynamic font;
 
-/// The SVG `<font-face>` [FontFaceElement].
-var fontFace;
+/// The SVG `<font-face>` `FontFaceElement`.
+dynamic fontFace;
 
-/// The SVG `<font-face-format>` [FontFaceFormatElement].
-var fontFaceFormat;
+/// The SVG `<font-face-format>` `FontFaceFormatElement`.
+dynamic fontFaceFormat;
 
-/// The SVG `<font-face-name>` [FontFaceNameElement].
-var fontFaceName;
+/// The SVG `<font-face-name>` `FontFaceNameElement`.
+dynamic fontFaceName;
 
-/// The SVG `<font-face-src>` [FontFaceSrcElement].
-var fontFaceSrc;
+/// The SVG `<font-face-src>` `FontFaceSrcElement`.
+dynamic fontFaceSrc;
 
-/// The SVG `<font-face-uri>` [FontFaceUriElement].
-var fontFaceUri;
+/// The SVG `<font-face-uri>` `FontFaceUriElement`.
+dynamic fontFaceUri;
 
-/// The SVG `<foreignObject>` [ForeignObjectElement].
-var foreignObject;
+/// The SVG `<foreignObject>` `ForeignObjectElement`.
+dynamic foreignObject;
 
-/// The SVG `<g>` [GElement].
-var g;
+/// The SVG `<g>` `GElement`.
+dynamic g;
 
-/// The SVG `<glyph>` [GlyphElement].
-var glyph;
+/// The SVG `<glyph>` `GlyphElement`.
+dynamic glyph;
 
-/// The SVG `<glyphRef>` [GlyphRefElement].
-var glyphRef;
+/// The SVG `<glyphRef>` `GlyphRefElement`.
+dynamic glyphRef;
 
-/// The SVG `<hatch>` [HatchElement].
-var hatch;
+/// The SVG `<hatch>` `HatchElement`.
+dynamic hatch;
 
-/// The SVG `<hatchpath>` [HatchpathElement].
-var hatchpath;
+/// The SVG `<hatchpath>` `HatchpathElement`.
+dynamic hatchpath;
 
-/// The SVG `<hkern>` [HkernElement].
-var hkern;
+/// The SVG `<hkern>` `HkernElement`.
+dynamic hkern;
 
-/// The SVG `<image>` [ImageElement].
-var image;
+/// The SVG `<image>` `ImageElement`.
+dynamic image;
 
-/// The SVG `<line>` [LineElement].
-var line;
+/// The SVG `<line>` `LineElement`.
+dynamic line;
 
-/// The SVG `<linearGradient>` [LinearGradientElement].
-var linearGradient;
+/// The SVG `<linearGradient>` `LinearGradientElement`.
+dynamic linearGradient;
 
-/// The SVG `<marker>` [MarkerElement].
-var marker;
+/// The SVG `<marker>` `MarkerElement`.
+dynamic marker;
 
-/// The SVG `<mask>` [MaskElement].
-var mask;
+/// The SVG `<mask>` `MaskElement`.
+dynamic mask;
 
-/// The SVG `<mesh>` [MeshElement].
-var mesh;
+/// The SVG `<mesh>` `MeshElement`.
+dynamic mesh;
 
-/// The SVG `<meshgradient>` [MeshgradientElement].
-var meshgradient;
+/// The SVG `<meshgradient>` `MeshgradientElement`.
+dynamic meshgradient;
 
-/// The SVG `<meshpatch>` [MeshpatchElement].
-var meshpatch;
+/// The SVG `<meshpatch>` `MeshpatchElement`.
+dynamic meshpatch;
 
-/// The SVG `<meshrow>` [MeshrowElement].
-var meshrow;
+/// The SVG `<meshrow>` `MeshrowElement`.
+dynamic meshrow;
 
-/// The SVG `<metadata>` [MetadataElement].
-var metadata;
+/// The SVG `<metadata>` `MetadataElement`.
+dynamic metadata;
 
-/// The SVG `<missing-glyph>` [MissingGlyphElement].
-var missingGlyph;
+/// The SVG `<missing-glyph>` `MissingGlyphElement`.
+dynamic missingGlyph;
 
-/// The SVG `<mpath>` [MpathElement].
-var mpath;
+/// The SVG `<mpath>` `MpathElement`.
+dynamic mpath;
 
-/// The SVG `<path>` [PathElement].
-var path;
+/// The SVG `<path>` `PathElement`.
+dynamic path;
 
-/// The SVG `<pattern>` [PatternElement].
-var pattern;
+/// The SVG `<pattern>` `PatternElement`.
+dynamic pattern;
 
-/// The SVG `<polygon>` [PolygonElement].
-var polygon;
+/// The SVG `<polygon>` `PolygonElement`.
+dynamic polygon;
 
-/// The SVG `<polyline>` [PolylineElement].
-var polyline;
+/// The SVG `<polyline>` `PolylineElement`.
+dynamic polyline;
 
-/// The SVG `<radialGradient>` [RadialGradientElement].
-var radialGradient;
+/// The SVG `<radialGradient>` `RadialGradientElement`.
+dynamic radialGradient;
 
-/// The SVG `<rect>` [RectElement].
-var rect;
+/// The SVG `<rect>` `RectElement`.
+dynamic rect;
 
-/// The SVG `<set>` [SetElement].
-var svgSet;
+/// The SVG `<set>` `SetElement`.
+dynamic svgSet;
 
-/// The SVG `<solidcolor>` [SolidcolorElement].
-var solidcolor;
+/// The SVG `<solidcolor>` `SolidcolorElement`.
+dynamic solidcolor;
 
-/// The SVG `<stop>` [StopElement].
-var stop;
+/// The SVG `<stop>` `StopElement`.
+dynamic stop;
 
-/// The SVG `<svg>` [SvgSvgElement].
-var svg;
+/// The SVG `<svg>` `SvgSvgElement`.
+dynamic svg;
 
-/// The SVG `<switch>` [SwitchElement].
-var svgSwitch;
+/// The SVG `<switch>` `SwitchElement`.
+dynamic svgSwitch;
 
-/// The SVG `<symbol>` [SymbolElement].
-var symbol;
+/// The SVG `<symbol>` `SymbolElement`.
+dynamic symbol;
 
-/// The SVG `<text>` [TextElement].
-var text;
+/// The SVG `<text>` `TextElement`.
+dynamic text;
 
-/// The SVG `<textPath>` [TextPathElement].
-var textPath;
+/// The SVG `<textPath>` `TextPathElement`.
+dynamic textPath;
 
-/// The SVG `<tref>` [TrefElement].
-var tref;
+/// The SVG `<tref>` `TrefElement`.
+dynamic tref;
 
-/// The SVG `<tspan>` [TSpanElement].
-var tspan;
+/// The SVG `<tspan>` `TSpanElement`.
+dynamic tspan;
 
-/// The SVG `<unknown>` [UnknownElement].
-var unknown;
+/// The SVG `<unknown>` `UnknownElement`.
+dynamic unknown;
 
-/// The SVG `<use>` [UseElement].
-var use;
+/// The SVG `<use>` `UseElement`.
+dynamic use;
 
-/// The SVG `<view>` [ViewElement].
-var view;
+/// The SVG `<view>` `ViewElement`.
+dynamic view;
 
-/// The SVG `<vkern>` [VkernElement].
-var vkern;
+/// The SVG `<vkern>` `VkernElement`.
+dynamic vkern;
 
 /// Create React DOM `Component`s by calling the specified [creator].
 _createDOMComponents(creator) {

@@ -2,7 +2,7 @@ import 'package:react/react_client.dart';
 
 /// A mapping from event prop keys to their respective event factories.
 ///
-/// Used in [_convertEventHandlers] for efficient event handler conversion.
+/// Used in `_convertEventHandlers` for efficient event handler conversion.
 final Map<String, Function> eventPropKeyToEventFactory = (() {
   var _eventPropKeyToEventFactory = <String, Function>{
     // SyntheticClipboardEvent

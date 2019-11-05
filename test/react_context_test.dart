@@ -17,9 +17,9 @@ main() {
   setClientConfiguration();
 
   void testTypeValue(dynamic typeToTest) {
-    var mountNode = new html.DivElement();
-    var contextTypeRef;
-    var consumerRef;
+    var mountNode = html.DivElement();
+    _ContextTypeComponent contextTypeRef;
+    _ContextConsumerWrapper consumerRef;
     react_dom.render(
         ContextProviderWrapper({
           'contextToUse': TestContext,
@@ -48,7 +48,7 @@ main() {
     });
 
     group('calculateChangeBits argument functions correctly', () {
-      var mountNode = new html.DivElement();
+      var mountNode = html.DivElement();
       _ContextProviderWrapper providerRef;
       _ContextConsumerWrapper consumerEvenRef;
       _ContextConsumerWrapper consumerOddRef;
@@ -119,9 +119,10 @@ var TestCalculateChangedBitsContext = react.createContext(1, calculateChangedBit
 
 var TestContext = react.createContext();
 
-ReactDartComponentFactoryProxy2 ContextProviderWrapper = react.registerComponent(() => new _ContextProviderWrapper());
+ReactDartComponentFactoryProxy2 ContextProviderWrapper = react.registerComponent(() => _ContextProviderWrapper());
 
 class _ContextProviderWrapper extends react.Component2 {
+  @override
   get initialState {
     return {'counter': 1};
   }
@@ -130,6 +131,7 @@ class _ContextProviderWrapper extends react.Component2 {
     this.setState({'counter': state['counter'] + 1});
   }
 
+  @override
   render() {
     return react.div({}, [
       props['contextToUse']
@@ -138,10 +140,11 @@ class _ContextProviderWrapper extends react.Component2 {
   }
 }
 
-ReactDartComponentFactoryProxy2 ContextConsumerWrapper = react.registerComponent(() => new _ContextConsumerWrapper());
+ReactDartComponentFactoryProxy2 ContextConsumerWrapper = react.registerComponent(() => _ContextConsumerWrapper());
 
 class _ContextConsumerWrapper extends react.Component2 {
   dynamic latestValue;
+  @override
   render() {
     return props['contextToUse'].Consumer({'unstable_observedBits': props['unstable_observedBits']}, (value) {
       latestValue = value;
@@ -150,11 +153,13 @@ class _ContextConsumerWrapper extends react.Component2 {
   }
 }
 
-ReactDartComponentFactoryProxy2 ContextTypeComponent = react.registerComponent(() => new _ContextTypeComponent());
+ReactDartComponentFactoryProxy2 ContextTypeComponent = react.registerComponent(() => _ContextTypeComponent());
 
 class _ContextTypeComponent extends react.Component2 {
+  @override
   var contextType = TestContext;
 
+  @override
   render() {
     return react.div({}, '${this.context}');
   }

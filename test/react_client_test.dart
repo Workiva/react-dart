@@ -20,8 +20,8 @@ main() {
   setClientConfiguration();
 
   group('unconvertJsProps', () {
-    const List testChildren = const ['child1', 'child2'];
-    const Map<String, dynamic> testStyle = const {'background': 'white'};
+    const List testChildren = ['child1', 'child2'];
+    const Map<String, dynamic> testStyle = {'background': 'white'};
 
     test('returns props for a composite JS component ReactElement', () {
       ReactElement instance = testJsComponentFactory({
@@ -59,7 +59,7 @@ main() {
     });
 
     test('returns props for a composite JS ReactComponent', () {
-      var mountNode = new DivElement();
+      var mountNode = DivElement();
       ReactComponent renderedInstance = react_dom.render(
           testJsComponentFactory({
             'jsProp': 'js',
@@ -78,7 +78,7 @@ main() {
     });
 
     test('returns props for a composite JS ReactComponent, even when the props change', () {
-      var mountNode = new DivElement();
+      var mountNode = DivElement();
       ReactComponent renderedInstance = react_dom.render(
           testJsComponentFactory({
             'jsProp': 'js',
@@ -165,7 +165,7 @@ main() {
 
   group('unconvertJsEventHandler', () {
     test('returns null when the input is null', () {
-      var result;
+      dynamic result;
       expect(() {
         result = unconvertJsEventHandler(null);
       }, returnsNormally);
@@ -194,7 +194,7 @@ class DartComponent2Component extends Component2 {
   }
 }
 
-ReactDartComponentFactoryProxy2 DartComponent2 = react.registerComponent(() => new DartComponent2Component());
+ReactDartComponentFactoryProxy2 DartComponent2 = react.registerComponent(() => DartComponent2Component());
 
 class DartComponentComponent extends Component {
   @override
@@ -203,4 +203,4 @@ class DartComponentComponent extends Component {
   }
 }
 
-ReactDartComponentFactoryProxy DartComponent = react.registerComponent(() => new DartComponentComponent());
+ReactDartComponentFactoryProxy DartComponent = react.registerComponent(() => DartComponentComponent());

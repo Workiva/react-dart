@@ -3,7 +3,7 @@
 ///
 /// For use in `react_client.dart` and by advanced react-dart users.
 
-// ignore_for_file: deprecated_member_use_from_same_package
+// ignore_for_file: deprecated_member_use_from_same_package, avoid_classes_with_only_static_members
 
 @JS()
 library react_client.react_interop;
@@ -18,8 +18,8 @@ import 'package:react/react_client/bridge.dart';
 import 'package:react/react_client/js_backed_map.dart';
 import 'package:react/src/react_client/dart2_interop_workaround_bindings.dart';
 
-typedef ReactElement ReactJsComponentFactory(props, children);
-typedef dynamic JsPropValidator(
+typedef ReactJsComponentFactory = ReactElement Function(dynamic props, dynamic children);
+typedef JsPropValidator = dynamic Function(
     JsMap props, String propName, String componentName, String location, String propFullName, String secret);
 
 // ----------------------------------------------------------------------------
@@ -61,7 +61,7 @@ abstract class React {
 ///
 /// Learn more: <https://reactjs.org/docs/refs-and-the-dom.html#creating-refs>.
 Ref<T> createRef<T>() {
-  return new Ref<T>();
+  return Ref<T>();
 }
 
 /// When this is provided as the ref prop, a reference to the rendered component
@@ -107,13 +107,14 @@ class JsRef {
 ///
 /// See: <https://reactjs.org/docs/forwarding-refs.html>.
 ReactJsComponentFactoryProxy forwardRef(Function(Map props, Ref ref) wrapperFunction) {
+  // ignore: avoid_types_on_closure_parameters
   var hoc = _jsForwardRef(allowInterop((JsMap props, JsRef ref) {
     final dartProps = JsBackedMap.backedBy(props);
     final dartRef = Ref.fromJs(ref);
     return wrapperFunction(dartProps, dartRef);
   }));
 
-  return new ReactJsComponentFactoryProxy(hoc, shouldConvertDomProps: false);
+  return ReactJsComponentFactoryProxy(hoc, shouldConvertDomProps: false);
 }
 
 @JS('React.forwardRef')
@@ -166,10 +167,10 @@ abstract class PropTypes {
 @JS()
 @anonymous
 class ReactClass {
-  /// The cached, unmodifiable copy of [Component.defaultProps] computed in
+  /// The cached, unmodifiable copy of [Component2.defaultProps] computed in
   /// [registerComponent2].
   ///
-  /// For use in [ReactDartComponentFactoryProxy2] when creating new [ReactElement]s,
+  /// For use in `ReactDartComponentFactoryProxy2` when creating new [ReactElement]s,
   /// or for external use involving inspection of Dart prop defaults.
   external JsMap get defaultProps;
   external set defaultProps(JsMap value);
@@ -183,7 +184,7 @@ class ReactClass {
   /// The cached, unmodifiable copy of [Component.getDefaultProps] computed in
   /// [registerComponent].
   ///
-  /// For use in [ReactDartComponentFactoryProxy] when creating new [ReactElement]s,
+  /// For use in `ReactDartComponentFactoryProxy` when creating new [ReactElement]s,
   /// or for external use involving inspection of Dart prop defaults.
   @Deprecated('6.0.0')
   external Map get dartDefaultProps;
@@ -587,9 +588,9 @@ class ComponentStatics {
 /// An object that stores static methods and information for a specific component class.
 ///
 /// This object is made accessible to a component's JS ReactClass config, which
-/// passes it to certain methods in [ReactDartInteropStatics2].
+/// passes it to certain methods in `ReactDartInteropStatics2`.
 ///
-/// See [ReactDartInteropStatics2], [createReactDartComponentClass2].
+/// See: `ReactDartInteropStatics2`, [createReactDartComponentClass2].
 class ComponentStatics2 {
   final ComponentFactory<Component2> componentFactory;
   final Component2 instanceForStaticMethods;
@@ -648,5 +649,5 @@ class ReactErrorInfo {
 
   /// The dart stack trace associated with this error.
   external StackTrace get dartStackTrace;
-  external set dartStackTrace(StackTrace);
+  external set dartStackTrace(StackTrace dartStackTrace);
 }

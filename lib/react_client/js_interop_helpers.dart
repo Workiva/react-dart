@@ -3,9 +3,9 @@
 @JS()
 library react_client.js_interop_helpers;
 
-import "dart:js_util";
+import 'dart:js_util';
 
-import "package:js/js.dart";
+import 'package:js/js.dart';
 
 // The following code is adapted from `package:js` in the dart-lang/sdk repo:
 // https://github.com/dart-lang/sdk/blob/2.2.0/sdk/lib/js_util/dart2js/js_util_dart2js.dart#L27
@@ -45,7 +45,7 @@ import "package:js/js.dart";
 /// methods in this library. Only use this method as a last resort.
 ///
 /// Recursively converts a JSON-like collection of Dart objects to a
-/// collection of JavaScript objects and returns a [JsObject] proxy to it.
+/// collection of JavaScript objects and returns a `JsObject` proxy to it.
 ///
 /// [object] must be a [Map] or [Iterable], the contents of which are also
 /// converted. Maps and Iterables are copied to a new JavaScript object.
@@ -53,13 +53,13 @@ import "package:js/js.dart";
 /// JavaScript type, and all other objects are proxied.
 dynamic jsifyAndAllowInterop(object) {
   if (object is! Map && object is! Iterable) {
-    throw new ArgumentError.value(object, 'object', 'must be a Map or Iterable');
+    throw ArgumentError.value(object, 'object', 'must be a Map or Iterable');
   }
   return _convertDataTree(object);
 }
 
 _convertDataTree(data) {
-  final _convertedObjects = new Map.identity();
+  final _convertedObjects = Map.identity();
 
   _convert(o) {
     if (_convertedObjects.containsKey(o)) {

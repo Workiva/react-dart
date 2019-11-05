@@ -1,12 +1,14 @@
 // ignore_for_file: deprecated_member_use_from_same_package
-import "dart:async";
+import 'dart:async';
+import 'dart:html';
 
-import "package:react/react.dart" as react;
-import "package:react/react_dom.dart" as react_dom;
+import 'package:react/react.dart' as react;
+import 'package:react/react_dom.dart' as react_dom;
 
 class _HelloComponent extends react.Component2 {
   @override
   get propTypes => {
+        // ignore: avoid_types_on_closure_parameters
         'name': (Map props, propName, componentName, location, propFullName) {
           if (props[propName].length > 20) {
             return ArgumentError('(${props[propName]}) is too long. $propName has a max length of 20 characters.');
@@ -15,16 +17,19 @@ class _HelloComponent extends react.Component2 {
         },
       };
 
+  @override
   render() {
-    return react.span({}, ["Hello ${props['name']}!"]);
+    return react.span({}, ['Hello ${props['name']}!']);
   }
 }
 
-var helloComponent = react.registerComponent(() => new _HelloComponent());
+var helloComponent = react.registerComponent(() => _HelloComponent());
 
 class _HelloGreeter extends react.Component {
-  var myInput;
-  getInitialState() => {"name": "World"};
+  Element myInput;
+
+  @override
+  getInitialState() => {'name': 'World'};
 
   onInputChange(e) {
     var input = react_dom.findDOMNode(myInput);
@@ -32,6 +37,7 @@ class _HelloGreeter extends react.Component {
     setState({'name': e.target.value});
   }
 
+  @override
   render() {
     return react.div({}, [
       react.input({
@@ -46,15 +52,17 @@ class _HelloGreeter extends react.Component {
   }
 }
 
-var helloGreeter = react.registerComponent(() => new _HelloGreeter());
+var helloGreeter = react.registerComponent(() => _HelloGreeter());
 
 class _CheckBoxComponent extends react.Component {
-  getInitialState() => {"checked": false};
+  @override
+  getInitialState() => {'checked': false};
 
   _handleChange(e) {
     this.setState({'checked': e.target.checked});
   }
 
+  @override
   render() {
     return react.div({
       'className': 'form-check'
@@ -76,82 +84,94 @@ class _CheckBoxComponent extends react.Component {
   }
 }
 
-var checkBoxComponent = react.registerComponent(() => new _CheckBoxComponent());
+var checkBoxComponent = react.registerComponent(() => _CheckBoxComponent());
 
 class _ClockComponent extends react.Component {
   Timer timer;
 
+  @override
   getInitialState() => {'secondsElapsed': 0};
 
+  @override
   Map getDefaultProps() => {'refreshRate': 1000};
 
+  @override
   void componentWillMount() {
-    timer = new Timer.periodic(new Duration(milliseconds: this.props["refreshRate"]), this.tick);
+    timer = Timer.periodic(Duration(milliseconds: this.props['refreshRate']), this.tick);
   }
 
+  @override
   void componentWillUnmount() {
     timer.cancel();
   }
 
+  @override
   void componentDidMount() {
-    var rootNode = react_dom.findDOMNode(this);
-    rootNode.style.backgroundColor = "#FFAAAA";
+    Element rootNode = react_dom.findDOMNode(this);
+    rootNode.style.backgroundColor = '#FFAAAA';
   }
 
+  @override
   bool shouldComponentUpdate(nextProps, nextState) {
     //print("Next state: $nextState, props: $nextProps");
     //print("Old state: $state, props: $props");
     return nextState['secondsElapsed'] % 2 == 1;
   }
 
+  @override
   void componentWillReceiveProps(nextProps) {
-    print("Received props: $nextProps");
+    print('Received props: $nextProps');
   }
 
   tick(Timer timer) {
     setState({'secondsElapsed': state['secondsElapsed'] + 1});
   }
 
+  @override
   render() {
-    return react.span({'onClick': (event) => print("Hello World!")},
+    return react.span({'onClick': (event) => print('Hello World!')},
 //        { 'onClick': (event, [domid = null]) => print("Hello World!") },
-        ["Seconds elapsed: ", "${state['secondsElapsed']}"]);
+        ['Seconds elapsed: ", "${state['secondsElapsed']}']);
   }
 }
 
-var clockComponent = react.registerComponent(() => new _ClockComponent());
+var clockComponent = react.registerComponent(() => _ClockComponent());
 
 class _ListComponent extends react.Component {
+  @override
   Map getInitialState() {
     return {
-      "items": new List.from([0, 1, 2, 3])
+      'items': List.from([0, 1, 2, 3])
     };
   }
 
+  @override
   void componentWillUpdate(nextProps, nextState) {
-    if (nextState["items"].length > state["items"].length) {
-      print("Adding " + nextState["items"].last.toString());
+    if (nextState['items"].length > state["items'].length) {
+      print('Adding ' + nextState['items'].last.toString());
     }
   }
 
+  @override
   void componentDidUpdate(prevProps, prevState) {
-    if (prevState["items"].length > state["items"].length) {
-      print("Removed " + prevState["items"].first.toString());
+    if (prevState['items"].length > state["items'].length) {
+      print('Removed ' + prevState['items'].first.toString());
     }
   }
 
   int iterator = 3;
 
   void addItem(event) {
-    List items = new List.from(state["items"]);
+    List items = List.from(state['items']);
     items.add(++iterator);
-    setState({"items": items});
+    setState({'items': items});
   }
 
+  @override
   dynamic render() {
     List<dynamic> items = [];
     for (var item in state['items']) {
-      items.add(react.li({"key": item}, "$item"));
+      items.add(react.li({'key': item}, '$item'));
     }
 
     return react.div({}, [
@@ -166,15 +186,16 @@ class _ListComponent extends react.Component {
   }
 }
 
-var listComponent = react.registerComponent(() => new _ListComponent());
+var listComponent = react.registerComponent(() => _ListComponent());
 
 class _MainComponent extends react.Component {
+  @override
   render() {
     return react.div({}, props['children']);
   }
 }
 
-var mainComponent = react.registerComponent(() => new _MainComponent());
+var mainComponent = react.registerComponent(() => _MainComponent());
 
 /////
 // REACT OLD CONTEXT COMPONENTS
@@ -190,6 +211,7 @@ class _LegacyContextComponent extends react.Component {
         'renderCount': this.state['renderCount']
       };
 
+  @override
   render() {
     return react.ul({
       'key': 'ul'
@@ -209,12 +231,13 @@ class _LegacyContextComponent extends react.Component {
   }
 }
 
-var legacyContextComponent = react.registerComponent(() => new _LegacyContextComponent());
+var legacyContextComponent = react.registerComponent(() => _LegacyContextComponent());
 
 class _LegacyContextConsumerComponent extends react.Component {
   @override
   Iterable<String> get contextKeys => const ['foo'];
 
+  @override
   render() {
     return react.ul({
       'key': 'ul'
@@ -228,12 +251,13 @@ class _LegacyContextConsumerComponent extends react.Component {
   }
 }
 
-var legacyContextConsumerComponent = react.registerComponent(() => new _LegacyContextConsumerComponent());
+var legacyContextConsumerComponent = react.registerComponent(() => _LegacyContextConsumerComponent());
 
 class _GrandchildLegacyContextConsumerComponent extends react.Component {
   @override
   Iterable<String> get contextKeys => const ['renderCount'];
 
+  @override
   render() {
     return react.ul({
       'key': 'ul'
@@ -245,12 +269,13 @@ class _GrandchildLegacyContextConsumerComponent extends react.Component {
 }
 
 var grandchildLegacyContextConsumerComponent =
-    react.registerComponent(() => new _GrandchildLegacyContextConsumerComponent());
+    react.registerComponent(() => _GrandchildLegacyContextConsumerComponent());
 
 ////
 // REACT NEW CONTEXT COMPONENTS
 ////
 class _NewContextRefComponent extends react.Component2 {
+  @override
   render() {
     return react.div({}, props['children']);
   }
@@ -260,7 +285,7 @@ class _NewContextRefComponent extends react.Component2 {
   }
 }
 
-var newContextRefComponent = react.registerComponent(() => new _NewContextRefComponent());
+var newContextRefComponent = react.registerComponent(() => _NewContextRefComponent());
 
 int calculateChangedBits(currentValue, nextValue) {
   int result = 1 << 1;
@@ -275,12 +300,14 @@ var TestNewContext = react.createContext({'renderCount': 0}, calculateChangedBit
 class _NewContextProviderComponent extends react.Component2 {
   _NewContextRefComponent componentRef;
 
+  @override
   get initialState => {'renderCount': 0, 'complexMap': false};
 
   printMe() {
     print('printMe!');
   }
 
+  @override
   render() {
     Map provideMap = {'renderCount': this.state['renderCount']};
 
@@ -322,7 +349,7 @@ class _NewContextProviderComponent extends react.Component2 {
         'onClick': _onComplexClick,
       }, 'Redraw With Complex Value'),
       react.br({'key': 'break1'}),
-      'TestContext.Provider props.value: ${provideMap}',
+      'TestContext.Provider props.value: $provideMap',
       react.br({'key': 'break2'}),
       react.br({'key': 'break3'}),
       TestNewContext.Provider(
@@ -341,15 +368,16 @@ class _NewContextProviderComponent extends react.Component2 {
   }
 }
 
-var newContextProviderComponent = react.registerComponent(() => new _NewContextProviderComponent());
+var newContextProviderComponent = react.registerComponent(() => _NewContextProviderComponent());
 
 class _NewContextConsumerComponent extends react.Component2 {
+  @override
   render() {
     return TestNewContext.Consumer({'unstable_observedBits': props['unstable_observedBits']}, (value) {
       return react.ul({
         'key': 'ul1'
       }, [
-        'TestContext.Consumer: value = ${value}',
+        'TestContext.Consumer: value = $value',
         react.br({'key': 'break12'}),
         react.br({'key': 'break22'}),
         props['children'],
@@ -358,15 +386,16 @@ class _NewContextConsumerComponent extends react.Component2 {
   }
 }
 
-var newContextConsumerComponent = react.registerComponent(() => new _NewContextConsumerComponent());
+var newContextConsumerComponent = react.registerComponent(() => _NewContextConsumerComponent());
 
 class _NewContextConsumerObservedBitsComponent extends react.Component2 {
+  @override
   render() {
     return TestNewContext.Consumer({'unstable_observedBits': props['unstable_observedBits']}, (value) {
       return react.ul({
         'key': 'ul2'
       }, [
-        'TestContext.Consumer (with unstable_observedBits set to trigger when `renderCount % 2 == 0`): value = ${value}',
+        'TestContext.Consumer (with unstable_observedBits set to trigger when `renderCount % 2 == 0`): value = $value',
         react.br({'key': 'break13'}),
         react.br({'key': 'break23'}),
         props['children'],
@@ -375,13 +404,13 @@ class _NewContextConsumerObservedBitsComponent extends react.Component2 {
   }
 }
 
-var newContextConsumerObservedBitsComponent =
-    react.registerComponent(() => new _NewContextConsumerObservedBitsComponent());
+var newContextConsumerObservedBitsComponent = react.registerComponent(() => _NewContextConsumerObservedBitsComponent());
 
 class _NewContextTypeConsumerComponent extends react.Component2 {
   @override
   final contextType = TestNewContext;
 
+  @override
   render() {
     this.context['componentRef']?.test();
     return react.ul({
@@ -393,55 +422,60 @@ class _NewContextTypeConsumerComponent extends react.Component2 {
 }
 
 class _Component2TestComponent extends react.Component2 with react.TypedSnapshot<String> {
+  @override
   get defaultProps => {'defaultProp': true};
 
+  @override
   get initialState => {'defaultState': true, 'items': []};
 
+  @override
   Map getDerivedStateFromProps(nextProps, prevState) {
     final prevItems = prevState['items'];
     if (prevItems.isEmpty || prevItems[0] != 3) {
       return ({
-        'items': new List.from([3, 1, 2, 0])
+        'items': List.from([3, 1, 2, 0])
       });
     }
     return null;
   }
 
+  @override
   String getSnapshotBeforeUpdate(nextProps, prevState) {
-    if (prevState["items"].length > state["items"].length) {
-      return "removed " + prevState["items"].last.toString();
+    if (prevState['items"].length > state["items'].length) {
+      return 'removed ' + prevState['items'].last.toString();
     } else {
-      return "added " + state["items"].last.toString();
+      return 'added ' + state['items'].last.toString();
     }
   }
 
+  @override
   void componentDidUpdate(prevProps, prevState, [String snapshot]) {
     if (snapshot != null) {
       print('Updated DOM and ' + snapshot);
-      return null;
     }
-    print("No Snapshot");
+    print('No Snapshot');
   }
 
   void removeItem(event) {
-    List items = new List.from(state["items"]);
+    List items = List.from(state['items']);
     items.removeAt(items.length - 1);
-    setState({"items": items});
+    setState({'items': items});
   }
 
   void addItem(event) {
-    List items = new List.from(state["items"]);
+    List items = List.from(state['items']);
     items.add(items.length);
-    setState({"items": items});
+    setState({'items': items});
   }
 
+  @override
   dynamic render() {
     // Used to generate unique keys even when the list contains duplicate items
     final itemCounts = <dynamic, int>{};
     final items = [];
     for (var item in state['items']) {
       final count = itemCounts[item] = (itemCounts[item] ?? 0) + 1;
-      items.add(react.li({'key': 'c2-$item-$count'}, "$item"));
+      items.add(react.li({'key': 'c2-$item-$count'}, '$item'));
     }
 
     return react.div({}, [
@@ -462,25 +496,27 @@ class _Component2TestComponent extends react.Component2 with react.TypedSnapshot
   }
 }
 
-var newContextTypeConsumerComponentComponent = react.registerComponent(() => new _NewContextTypeConsumerComponent());
-var component2TestComponent = react.registerComponent(() => new _Component2TestComponent());
+var newContextTypeConsumerComponentComponent = react.registerComponent(() => _NewContextTypeConsumerComponent());
+var component2TestComponent = react.registerComponent(() => _Component2TestComponent());
 
 class _ErrorComponent extends react.Component2 {
+  @override
   void componentDidMount() {
-    if (!props["errored"]) {
-      throw new _CustomException("It broke!", 2);
+    if (!props['errored']) {
+      throw _CustomException('It broke!', 2);
     }
   }
 
+  @override
   dynamic render() {
     return react.div(
         {'key': 'eb-d1-e'},
-        "Oh no, I'm an error! Check your "
-        "console.");
+        'Oh no, I\'m an error! Check your '
+        'console.');
   }
 }
 
-var ErrorComponent = react.registerComponent(() => new _ErrorComponent());
+var ErrorComponent = react.registerComponent(() => _ErrorComponent());
 
 class _CustomException implements Exception {
   int code;
@@ -490,58 +526,62 @@ class _CustomException implements Exception {
   _CustomException(this.message, this.code) {
     switch (code) {
       case 1:
-        randomMessage = "The code is a 1";
+        randomMessage = 'The code is a 1';
         break;
       case 2:
-        randomMessage = "The Code is a 2";
+        randomMessage = 'The Code is a 2';
         break;
       default:
-        randomMessage = "Default Error Code";
+        randomMessage = 'Default Error Code';
     }
   }
 }
 
 class _Component2ErrorTestComponent extends react.Component2 {
-  Map get initialState => {
-        "clicked": false,
-        "errored": false,
-        "error": null,
+  @override
+  get initialState => {
+        'clicked': false,
+        'errored': false,
+        'error': null,
       };
 
+  @override
   void componentDidCatch(error, info) {
     if (error is _CustomException) {
       print(info.dartStackTrace);
-      setState({"error": error.randomMessage});
+      setState({'error': error.randomMessage});
     } else {
       setState({
-        "error": "We can capture the error, store it in state and "
-            "display it here."
+        'error': 'We can capture the error, store it in state and '
+            'display it here.'
       });
     }
   }
 
+  @override
   Map getDerivedStateFromError(error) {
-    return {"errored": true};
+    return {'errored': true};
   }
 
   void error(event) {
-    setState({"clicked": true});
+    setState({'clicked': true});
   }
 
   void clearError(event) {
-    setState({"clicked": false, "error": null, "errored": false});
+    setState({'clicked": false, "error": null, "errored': false});
   }
 
+  @override
   dynamic render() {
-    dynamic errorMessage = state["error"] ?? "No error yet";
+    dynamic errorMessage = state['error'] ?? 'No error yet';
 
     return react.div({
-      "key": "e-cont"
+      'key": "e-cont'
     }, [
-      react.h3({"key": "e-header"}, "Error Boundary Test"),
-      state["clicked"] ? ErrorComponent({'key': 'ec-1', 'errored': state['errored']}) : null,
+      react.h3({'key': 'e-header'}, 'Error Boundary Test'),
+      state['clicked'] ? ErrorComponent({'key': 'ec-1', 'errored': state['errored']}) : null,
       errorMessage != null ? react.div({'key': 'ec-m-1'}, '$errorMessage') : null,
-      !state["errored"]
+      !state['errored']
           ? react.button({
               'type': 'button',
               'key': 'c3-r-button',
@@ -549,7 +589,7 @@ class _Component2ErrorTestComponent extends react.Component2 {
               'onClick': error,
             }, 'Trigger Error')
           : null,
-      state["errored"]
+      state['errored']
           ? react.button({
               'type': 'button',
               'key': 'c3-c-button',
@@ -557,9 +597,9 @@ class _Component2ErrorTestComponent extends react.Component2 {
               'onClick': clearError,
             }, 'Clear Error')
           : null,
-      react.hr({"key": "e-hr"}),
+      react.hr({'key": "e-hr'}),
     ]);
   }
 }
 
-var component2ErrorTestComponent = react.registerComponent(() => new _Component2ErrorTestComponent(), ['render']);
+var component2ErrorTestComponent = react.registerComponent(() => _Component2ErrorTestComponent(), ['render']);

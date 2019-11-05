@@ -2,6 +2,7 @@
 // for details. All rights reserved. Use of this source code is governed by a
 // BSD-style license that can be found in the LICENSE file.
 
+// ignore_for_file: prefer_typing_uninitialized_variables
 library react_dom_server;
 
 /// Renders a ReactElement to its initial HTML. This should only be used on the server.

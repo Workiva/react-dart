@@ -1,24 +1,26 @@
 // ignore_for_file: deprecated_member_use_from_same_package
-import "dart:html";
+import 'dart:html';
 
-import "package:react/react.dart" as react;
-import "package:react/react_dom.dart" as react_dom;
-import "package:react/react_client.dart";
+import 'package:react/react.dart' as react;
+import 'package:react/react_dom.dart' as react_dom;
+import 'package:react/react_client.dart';
 
 customAssert(text, condition) {
-  if (condition)
-    print("${text} passed");
-  else
+  if (condition) {
+    print('$text passed');
+  } else {
     throw (text);
+  }
 }
 
-var ChildComponent = react.registerComponent(() => new _ChildComponent());
+var ChildComponent = react.registerComponent(() => _ChildComponent());
 
 class _ChildComponent extends react.Component {
   var counter = 0;
 
+  @override
   render() => react.div({}, [
-        "Test element",
+        'Test element',
         counter.toString(),
         react.button({
           'type': 'button',
@@ -32,31 +34,35 @@ class _ChildComponent extends react.Component {
       ]);
 }
 
-var simpleComponent = react.registerComponent(() => new SimpleComponent());
+var simpleComponent = react.registerComponent(() => SimpleComponent());
 
 class SimpleComponent extends react.Component {
-  var refToSpan;
-  var refToElement;
+  Element refToSpan;
+  _ChildComponent refToElement;
 
-  componentWillMount() => print("mount");
+  @override
+  componentWillMount() => print('mount');
 
-  componentWillUnmount() => print("unmount");
+  @override
+  componentWillUnmount() => print('unmount');
 
+  @override
   componentDidMount() {
-    customAssert("ref to span return span ", refToSpan.text == "Test");
-    customAssert("findDOMNode works on this", react_dom.findDOMNode(this) != null);
-    customAssert("random ref resolves to null", this.ref("someRandomRef") == null);
+    customAssert('ref to span return span ', refToSpan.text == 'Test');
+    customAssert('findDOMNode works on this', react_dom.findDOMNode(this) != null);
+    customAssert('random ref resolves to null', this.ref('someRandomRef') == null);
   }
 
   var counter = 0;
 
+  @override
   render() => react.div({}, [
         react.span({
           'key': 'span1',
-          "ref": (ref) {
+          'ref': (ref) {
             refToSpan = ref;
           }
-        }, "Test"),
+        }, 'Test'),
         react.span({'key': 'span2'}, counter),
         react.button({
           'type': 'button',
@@ -67,7 +73,7 @@ class SimpleComponent extends react.Component {
         react.br({'key': 'br'}),
         ChildComponent({
           'key': 'child',
-          "ref": (ref) {
+          'ref': (ref) {
             refToElement = ref;
           }
         }),
