@@ -1,3 +1,4 @@
+// ignore_for_file: deprecated_member_use_from_same_package
 import 'package:matcher/matcher.dart';
 import 'package:react/react.dart';
 
@@ -16,10 +17,6 @@ Map matchCall(String memberName, {args: anything, props: anything, state: anythi
 
 /// A test helper to record lifecycle calls
 mixin LifecycleTestHelper on Component {
-  dynamic context;
-  Map props;
-  Map state;
-
   static List staticLifecycleCalls = [];
 
   /// We needed to add [staticLifecycleCalls] to be able to test static

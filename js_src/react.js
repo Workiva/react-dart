@@ -19,7 +19,7 @@ window.React = React;
 Object.assign(window, DartHelpers);
 
 React.createClass = CreateReactClass; // TODO: Remove this once over_react_test doesnt rely on createClass.
-React.PropTypes = PropTypes; // Only needed to support legacy context until we update.
+React.PropTypes = PropTypes; // Only needed to support legacy context until we update. lol jk we need it for prop validation now.
 
 if (process.env.NODE_ENV == 'production') {
     require('./dart_env_prod');

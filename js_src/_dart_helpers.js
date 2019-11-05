@@ -92,24 +92,14 @@ function _createReactDartComponentClass2(dartInteropStatics, componentStatics, j
     constructor(props, context) {
       super(props, context);
       // TODO combine these two calls into one
-      this.state = null;
       this.dartComponent = dartInteropStatics.initComponent(this, componentStatics);
-      const initialStateFromGetInitialState =
-      dartInteropStatics.handleGetInitialState(this.dartComponent);
-      // If the returned state is empty, assume it's coming from the default implementation.
-      // This is done to avoid changing the default getInitialState implementation to null, which would cause breakages.
-      if (this.state && Object.keys(initialStateFromGetInitialState).length != 0) {
-        throw 'Error: State cannot be initialized in both init and getInitialState';
-      } else if (!this.state) {
-        this.state = initialStateFromGetInitialState;
-      }
     }
 
     componentDidMount() {
       dartInteropStatics.handleComponentDidMount(this.dartComponent);
     }
-    shouldComponentUpdate(nextProps, nextState, nextContext) {
-      return dartInteropStatics.handleShouldComponentUpdate(this.dartComponent, nextProps, nextState, nextContext);
+    shouldComponentUpdate(nextProps, nextState) {
+      return dartInteropStatics.handleShouldComponentUpdate(this.dartComponent, nextProps, nextState);
     }
 
     static getDerivedStateFromProps(nextProps, prevState) {
@@ -155,6 +145,9 @@ function _createReactDartComponentClass2(dartInteropStatics, componentStatics, j
     }
     if (jsConfig.defaultProps) {
       ReactDartComponent2.defaultProps = jsConfig.defaultProps;
+    }
+    if (jsConfig.propTypes) {
+      ReactDartComponent2.propTypes = jsConfig.propTypes;
     }
   }
 

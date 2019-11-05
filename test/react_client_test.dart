@@ -1,3 +1,4 @@
+// ignore_for_file: deprecated_member_use_from_same_package
 @TestOn('browser')
 @JS()
 library react_test_utils_test;
@@ -5,11 +6,12 @@ library react_test_utils_test;
 import 'dart:html' show DivElement;
 
 import 'package:js/js.dart';
+import 'package:react/react.dart';
 import 'package:test/test.dart';
 
 import 'package:react/react.dart' as react;
 import 'package:react/react_client.dart';
-import 'package:react/react_client/react_interop.dart' show React, ReactClass, ReactComponent;
+import 'package:react/react_client/react_interop.dart' show React, ReactComponent;
 import 'package:react/react_client/js_interop_helpers.dart';
 import 'package:react/react_dom.dart' as react_dom;
 import 'package:react/src/react_client/event_prop_key_to_event_factory.dart';
@@ -35,7 +37,25 @@ main() {
           'children': testChildren,
         }),
       );
-      expect(unconvertJsProps(instance)['style'], new isInstanceOf<Map<String, dynamic>>());
+      expect(unconvertJsProps(instance)['style'], isA<Map<String, dynamic>>());
+    });
+
+    test('throws when a Dart component (Component2) is passed in', () {
+      final instance = DartComponent2({
+        'jsProp': 'js',
+        'style': testStyle,
+      }, testChildren);
+
+      expect(() => unconvertJsProps(instance), throwsArgumentError);
+    });
+
+    test('throws when a Dart component is passed in', () {
+      final instance = DartComponent({
+        'jsProp': 'js',
+        'style': testStyle,
+      }, testChildren);
+
+      expect(() => unconvertJsProps(instance), throwsArgumentError);
     });
 
     test('returns props for a composite JS ReactComponent', () {
@@ -166,3 +186,21 @@ final Function testJsComponentFactory = (() {
     return reactFactory(jsifyAndAllowInterop(props), listifyChildren(children));
   };
 })();
+
+class DartComponent2Component extends Component2 {
+  @override
+  render() {
+    return null;
+  }
+}
+
+ReactDartComponentFactoryProxy2 DartComponent2 = react.registerComponent(() => new DartComponent2Component());
+
+class DartComponentComponent extends Component {
+  @override
+  render() {
+    return null;
+  }
+}
+
+ReactDartComponentFactoryProxy DartComponent = react.registerComponent(() => new DartComponentComponent());

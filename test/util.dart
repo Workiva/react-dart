@@ -1,3 +1,5 @@
+// ignore_for_file: deprecated_member_use_from_same_package
+// ignore_for_file: invalid_use_of_protected_member
 @JS()
 library react.test.util;
 
@@ -8,7 +10,7 @@ import 'package:react/react_client/react_interop.dart';
 
 import 'package:react/react_test_utils.dart' as rtu;
 import 'package:react/react.dart' as react;
-import 'package:react/src/react_client/js_backed_map.dart';
+import 'package:react/react_client/js_backed_map.dart';
 
 @JS('Object.keys')
 external List _objectKeys(obj);
@@ -19,20 +21,16 @@ Map getProps(dynamic elementOrComponent) {
   return new Map.fromIterable(_objectKeys(props), value: (key) => getProperty(props, key));
 }
 
-bool isDartComponent1(ReactElement element) {
-  return element.type is! String && (element.type as ReactClass).dartComponentVersion == '1';
-}
+bool isDartComponent1(ReactElement element) =>
+    ReactDartComponentVersion.fromType(element.type) == ReactDartComponentVersion.component;
 
-bool isDartComponent2(ReactElement element) {
-  return element.type is! String && (element.type as ReactClass).dartComponentVersion == '2';
-}
+bool isDartComponent2(ReactElement element) =>
+    ReactDartComponentVersion.fromType(element.type) == ReactDartComponentVersion.component2;
 
-bool isDartComponent(ReactElement element) {
-  return element.type is! String && (element.type as ReactClass).dartComponentVersion != null;
-}
+bool isDartComponent(ReactElement element) => ReactDartComponentVersion.fromType(element.type) != null;
 
-react.Component getDartComponent(ReactComponent dartComponent) {
-  return dartComponent.dartComponent;
+T getDartComponent<T extends react.Component>(ReactComponent dartComponent) {
+  return dartComponent.dartComponent as T;
 }
 
 Map getDartComponentProps(ReactComponent dartComponent) {

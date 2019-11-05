@@ -2,8 +2,8 @@
 import 'package:react/react.dart';
 
 /// Base component for event handling classes used in test cases.
-class EventComponent extends Component {
-  getInitialState() => {'text': ''};
+class EventComponent2 extends Component2 {
+  get initialState => {'text': ''};
   onEvent(SyntheticEvent e) => setState({'text': '${e.type} ${e.timeStamp}'});
   render() => div({
         'onAnimationEnd': onEvent,
@@ -56,7 +56,7 @@ class EventComponent extends Component {
       }, state['text']);
 }
 
-class SampleComponent extends Component {
+class SampleComponent2 extends Component2 {
   render() => div(props, [
         h1({}, 'A header'),
         div({'className': 'div1'}, 'First div'),
@@ -65,12 +65,12 @@ class SampleComponent extends Component {
       ]);
 }
 
-class WrapperComponent extends Component {
+class WrapperComponent2 extends Component2 {
   render() => div(props, props['children']);
 }
 
-final eventComponent = registerComponent(() => new EventComponent());
+final eventComponent = registerComponent(() => new EventComponent2());
 
-final sampleComponent = registerComponent(() => new SampleComponent());
+final sampleComponent = registerComponent(() => new SampleComponent2());
 
-final wrapperComponent = registerComponent(() => new WrapperComponent());
+final wrapperComponent = registerComponent(() => new WrapperComponent2());

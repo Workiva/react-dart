@@ -1,3 +1,4 @@
+// ignore_for_file: deprecated_member_use_from_same_package
 @JS()
 library js_function_test;
 
@@ -27,6 +28,12 @@ void sharedJsFunctionTests() {
     group('createReactDartComponentClass', () {
       test('is function that does not throw when called', () {
         expect(() => createReactDartComponentClass(null, null), returnsNormally);
+      });
+    });
+
+    group('createReactDartComponentClass2', () {
+      test('is function that does not throw when called', () {
+        expect(() => createReactDartComponentClass2(null, null, JsComponentConfig2(skipMethods: [])), returnsNormally);
       });
     });
   });

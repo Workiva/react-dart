@@ -1,9 +1,11 @@
+// ignore_for_file: deprecated_member_use_from_same_package
 import 'dart:async';
 import 'dart:html';
 import 'dart:js';
 import 'dart:js_util';
 
 import 'package:meta/meta.dart';
+import 'package:react/react_client/js_backed_map.dart';
 import 'package:test/test.dart';
 
 import 'package:react/react_client.dart';
@@ -14,8 +16,11 @@ import 'package:react/react_client/react_interop.dart';
 
 import '../util.dart';
 
-void commonFactoryTests(ReactComponentFactoryProxy factory) {
-  _childKeyWarningTests(factory);
+void commonFactoryTests(ReactComponentFactoryProxy factory, {bool isComponent2 = false}) {
+  _childKeyWarningTests(
+    factory,
+    renderWithUniqueOwnerName: isComponent2 ? _renderWithUniqueOwnerName2 : _renderWithUniqueOwnerName,
+  );
 
   test('renders an instance with the corresponding `type`', () {
     var instance = factory({});
@@ -134,7 +139,7 @@ void domEventHandlerWrappingTests(ReactComponentFactoryProxy factory) {
 
     rtu.Simulate.click(react_dom.findDOMNode(renderedInstance));
 
-    expect(actualEvent, const isInstanceOf<react.SyntheticEvent>());
+    expect(actualEvent, isA<react.SyntheticEvent>());
   });
 
   test('doesn\'t wrap the handler if it is null', () {
@@ -212,11 +217,59 @@ void refTests(ReactComponentFactoryProxy factory, {void verifyRefValue(dynamic r
   test('string refs are created with the correct value', () {
     ReactComponent renderedInstance = _renderWithOwner(() => factory({'ref': 'test'}));
 
+    // ignore: deprecated_member_use_from_same_package
     verifyRefValue(renderedInstance.dartComponent.ref('test'));
+  });
+
+  test('createRef function creates ref with correct value', () {
+    final Ref ref = createRef();
+
+    rtu.renderIntoDocument(factory({
+      'ref': ref,
+    }));
+
+    verifyRefValue(ref.current);
+  });
+
+  test('forwardRef function passes a ref through a component to one of its children', () {
+    var ForwardRefTestComponent = forwardRef((props, ref) {
+      // Extra type checking since JS refs being passed through
+      // aren't caught by built-in type checking.
+      expect(ref, isA<Ref>());
+
+      return factory({
+        'ref': ref,
+        'id': props['childId'],
+      });
+    });
+
+    final Ref refObject = createRef();
+
+    rtu.renderIntoDocument(ForwardRefTestComponent({
+      'ref': refObject,
+      'childId': 'test',
+    }));
+
+    // Props are accessed differently for DOM, Dart, and JS components.
+    var idValue;
+    final current = refObject.current;
+    expect(current, isNotNull);
+    if (current is Element) {
+      idValue = current.id;
+    } else if (current is react.Component) {
+      idValue = current.props['id'];
+    } else if (rtu.isCompositeComponent(current)) {
+      idValue = JsBackedMap.fromJs((current as ReactComponent).props)['id'];
+    } else {
+      fail('Unknown instance type: current');
+    }
+
+    expect(idValue, equals('test'), reason: 'child component should have access to parent props');
+    verifyRefValue(refObject.current);
   });
 }
 
-void _childKeyWarningTests(Function factory) {
+void _childKeyWarningTests(Function factory, {Function(ReactElement Function()) renderWithUniqueOwnerName}) {
   group('key/children validation', () {
     bool consoleErrorCalled;
     var consoleErrorMessage;
@@ -247,19 +300,19 @@ void _childKeyWarningTests(Function factory) {
     });
 
     test('warns when multiple children are passed as a list', () {
-      _renderWithUniqueOwnerName(() => factory({}, [react.span({}), react.span({}), react.span({})]));
+      renderWithUniqueOwnerName(() => factory({}, [react.span({}), react.span({}), react.span({})]));
 
       expect(consoleErrorCalled, isTrue, reason: 'should have outputted a warning');
     });
 
     test('does not warn when multiple children are passed as variadic args', () {
-      _renderWithUniqueOwnerName(() => factory({}, react.span({}), react.span({}), react.span({})));
+      renderWithUniqueOwnerName(() => factory({}, react.span({}), react.span({}), react.span({})));
 
       expect(consoleErrorCalled, isFalse, reason: 'should not have outputted a warning');
     });
 
     test('when rendering custom Dart components', () {
-      _renderWithUniqueOwnerName(() => factory({}, react.span({})));
+      renderWithUniqueOwnerName(() => factory({}, react.span({})));
 
       expect(consoleErrorCalled, isFalse, reason: 'should not have outputted a warning');
     });
@@ -286,6 +339,22 @@ _renderWithOwner(ReactElement render()) {
 }
 
 class _OwnerHelperComponent extends react.Component {
+  @override
+  render() => props['render']();
+}
+
+/// Renders the provided [render] function with a Component2 owner that will have a unique name.
+///
+/// This prevents React JS from not printing key warnings it deems as "duplicates".
+void _renderWithUniqueOwnerName2(ReactElement render()) {
+  final factory = react.registerComponent2(() => new _OwnerHelperComponent2());
+  factory.reactClass.displayName = 'OwnerHelperComponent2_$_nextFactoryId';
+  _nextFactoryId++;
+
+  rtu.renderIntoDocument(factory({'render': render}));
+}
+
+class _OwnerHelperComponent2 extends react.Component2 {
   @override
   render() => props['render']();
 }

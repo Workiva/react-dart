@@ -115,14 +115,14 @@ int calculateChangedBits(currentValue, nextValue) {
   return result;
 }
 
-var TestCalculateChangedBitsContext = createContext(1, calculateChangedBits);
+var TestCalculateChangedBitsContext = react.createContext(1, calculateChangedBits);
 
-var TestContext = createContext();
+var TestContext = react.createContext();
 
 ReactDartComponentFactoryProxy2 ContextProviderWrapper = react.registerComponent(() => new _ContextProviderWrapper());
 
 class _ContextProviderWrapper extends react.Component2 {
-  getInitialState() {
+  get initialState {
     return {'counter': 1};
   }
 
