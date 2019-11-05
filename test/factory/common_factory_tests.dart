@@ -16,12 +16,10 @@ import 'package:react/react_client/react_interop.dart';
 
 import '../util.dart';
 
-void commonFactoryTests(ReactComponentFactoryProxy factory,
-    {bool isComponent2 = false, bool isFunctionComponent = false}) {
+void commonFactoryTests(ReactComponentFactoryProxy factory, {bool isFunctionComponent = false}) {
   _childKeyWarningTests(
     factory,
-    renderWithUniqueOwnerName:
-        (isComponent2 || isFunctionComponent) ? _renderWithUniqueOwnerName2 : _renderWithUniqueOwnerName,
+    renderWithUniqueOwnerName: _renderWithUniqueOwnerName,
   );
 
   test('renders an instance with the corresponding `type`', () {
@@ -218,7 +216,7 @@ void refTests(ReactComponentFactoryProxy factory, {void verifyRefValue(dynamic r
   });
 
   test('string refs are created with the correct value', () {
-    ReactComponent renderedInstance = _renderWithOwner(() => factory({'ref': 'test'}));
+    ReactComponent renderedInstance = _renderWithStringRefSupportingOwner(() => factory({'ref': 'test'}));
 
     verifyRefValue(renderedInstance.dartComponent.ref('test'));
   });
@@ -321,42 +319,33 @@ void _childKeyWarningTests(Function factory, {Function(ReactElement Function()) 
   });
 }
 
+class _StringRefOwnerOwnerHelperComponent extends react.Component {
+  @override
+  render() => props['render']();
+}
+
+/// Renders the provided [render] function with a Component owner that supports string refs,
+/// for string ref tests.
+ReactComponent _renderWithStringRefSupportingOwner(ReactElement render()) {
+  final factory = react.registerComponent(() => new _StringRefOwnerOwnerHelperComponent()) as ReactDartComponentFactoryProxy;
+
+  return rtu.renderIntoDocument(factory({'render': render}));
+}
+
 int _nextFactoryId = 0;
 
-/// Renders the provided [render] function with an owner that will have a unique name.
+/// Renders the provided [render] function with a Component2 owner that will have a unique name.
 ///
 /// This prevents React JS from not printing key warnings it deems as "duplicates".
 void _renderWithUniqueOwnerName(ReactElement render()) {
-  final factory = react.registerComponent(() => new _OwnerHelperComponent()) as ReactDartComponentFactoryProxy;
+  final factory = react.registerComponent2(() => new _UniqueOwnerHelperComponent());
   factory.reactClass.displayName = 'OwnerHelperComponent_$_nextFactoryId';
   _nextFactoryId++;
 
   rtu.renderIntoDocument(factory({'render': render}));
 }
 
-_renderWithOwner(ReactElement render()) {
-  final factory = react.registerComponent(() => new _OwnerHelperComponent()) as ReactDartComponentFactoryProxy;
-
-  return rtu.renderIntoDocument(factory({'render': render}));
-}
-
-class _OwnerHelperComponent extends react.Component {
-  @override
-  render() => props['render']();
-}
-
-/// Renders the provided [render] function with a Component2 owner that will have a unique name.
-///
-/// This prevents React JS from not printing key warnings it deems as "duplicates".
-void _renderWithUniqueOwnerName2(ReactElement render()) {
-  final factory = react.registerComponent2(() => new _OwnerHelperComponent2());
-  factory.reactClass.displayName = 'OwnerHelperComponent2_$_nextFactoryId';
-  _nextFactoryId++;
-
-  rtu.renderIntoDocument(factory({'render': render}));
-}
-
-class _OwnerHelperComponent2 extends react.Component2 {
+class _UniqueOwnerHelperComponent extends react.Component2 {
   @override
   render() => props['render']();
 }
