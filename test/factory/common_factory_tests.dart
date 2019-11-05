@@ -3,7 +3,6 @@ import 'dart:html';
 import 'dart:js';
 import 'dart:js_util';
 
-import 'dart:js_util';
 import 'package:test/test.dart';
 
 import 'package:react/react_client.dart';
@@ -195,6 +194,7 @@ void refTests(ReactComponentFactoryProxy factory, {void verifyRefValue(dynamic r
   test('string refs are created with the correct value', () {
     ReactComponent renderedInstance = _renderWithOwner(() => factory({'ref': 'test'}));
 
+    // ignore: deprecated_member_use_from_same_package
     verifyRefValue(renderedInstance.dartComponent.ref('test'));
   });
 }
