@@ -233,6 +233,7 @@ void _convertRefValue2(Map args, {bool convertCallbackRefValue = true}) {
 
 /// Creates ReactJS [Component2] instances for Dart components.
 class ReactDartComponentFactoryProxy2<TComponent extends Component2> extends ReactComponentFactoryProxy
+    with JsBackedMapComponentFactoryMixin
     implements ReactDartComponentFactoryProxy {
   /// The ReactJS class used as the type for all [ReactElement]s built by
   /// this factory.
@@ -249,53 +250,6 @@ class ReactDartComponentFactoryProxy2<TComponent extends Component2> extends Rea
         this.defaultProps = new JsBackedMap.fromJs(reactClass.defaultProps);
 
   ReactClass get type => reactClass;
-
-  ReactElement build(Map props, [List childrenArgs = const []]) {
-    // TODO 3.1.0-wip if we don't pass in a list into React, we don't get a list back in Dart...
-
-    List children;
-    if (childrenArgs.isEmpty) {
-      children = childrenArgs;
-    } else if (childrenArgs.length == 1) {
-      final singleChild = listifyChildren(childrenArgs[0]);
-      if (singleChild is List) {
-        children = singleChild;
-      }
-    }
-
-    if (children == null) {
-      // FIXME 3.1.0-wip are we cool to modify this list?
-      // FIXME 3.1.0-wip why are there unmodifiable lists here?
-      children = childrenArgs.map(listifyChildren).toList();
-      markChildrenValidated(children);
-    }
-
-    return reactComponentFactory(
-      generateExtendedJsProps(props),
-      children,
-    );
-  }
-
-  /// Returns a JavaScript version of the specified [props], preprocessed for consumption by ReactJS and prepared for
-  /// consumption by the [react] library internals.
-  static JsMap generateExtendedJsProps(Map props) {
-    final propsForJs = new JsBackedMap.from(props);
-
-    final ref = propsForJs['ref'];
-    if (ref != null) {
-      // If the ref is a callback, pass ReactJS a function that will call it
-      // with the Dart Component instance, not the ReactComponent instance.
-      if (ref is _CallbackRef) {
-        propsForJs['ref'] = allowInterop((ReactComponent instance) => ref(instance?.dartComponent));
-      }
-
-      if (ref is Ref) {
-        propsForJs['ref'] = ref.jsRef;
-      }
-    }
-
-    return propsForJs.jsObject;
-  }
 }
 
 /// Converts a list of variadic children arguments to children that should be passed to ReactJS.
@@ -738,7 +692,7 @@ class ReactJsContextComponentFactoryProxy extends ReactJsComponentFactoryProxy {
 
   @override
   ReactElement build(Map props, [List childrenArgs]) {
-    dynamic children = _convertArgsToChildren(childrenArgs);
+    dynamic children = _generateChildren(childrenArgs);
 
     if (isConsumer) {
       if (children is Function) {
@@ -749,7 +703,7 @@ class ReactJsContextComponentFactoryProxy extends ReactJsComponentFactoryProxy {
       }
     }
 
-    return factory(generateExtendedJsProps(props), children);
+    return React.createElement(type, generateExtendedJsProps(props), children);
   }
 
   /// Returns a JavaScript version of the specified [props], preprocessed for consumption by ReactJS and prepared for
@@ -798,31 +752,10 @@ class ReactJsComponentFactoryProxy extends ReactComponentFactoryProxy {
 
   @override
   ReactElement build(Map props, [List childrenArgs]) {
-    dynamic children = _convertArgsToChildren(childrenArgs);
-
-    if (alwaysReturnChildrenAsList && children is! List) {
-      children = [children];
-    }
-
-    Map potentiallyConvertedProps;
-
-    final mightNeedConverting = shouldConvertDomProps || props['ref'] != null;
-    if (mightNeedConverting) {
-      // We can't mutate the original since we can't be certain that the value of the
-      // the converted event handler will be compatible with the Map's type parameters.
-      // We also want to avoid mutating the original map where possible.
-      // So, make a copy and mutate that.
-      potentiallyConvertedProps = Map.from(props);
-      if (shouldConvertDomProps) {
-        _convertEventHandlers(potentiallyConvertedProps);
-      }
-      _convertRefValue(potentiallyConvertedProps);
-    } else {
-      potentiallyConvertedProps = props;
-    }
-
-    // jsifyAndAllowInterop also handles converting props with nested Map/List structures, like `style`
-    return factory(jsifyAndAllowInterop(potentiallyConvertedProps), children);
+    dynamic children = _generateChildren(childrenArgs, shouldAlwaysBeList: alwaysReturnChildrenAsList);
+    JsMap convertedProps = _generateJsProps(props,
+        convertEventHandlers: shouldConvertDomProps || props['ref'] != null, convertCallbackRefValue: false);
+    return React.createElement(type, convertedProps, children);
   }
 }
 
@@ -892,16 +825,9 @@ class ReactDomComponentFactoryProxy extends ReactComponentFactoryProxy {
 
   @override
   ReactElement build(Map props, [List childrenArgs = const []]) {
-    var children = _convertArgsToChildren(childrenArgs);
-    children = listifyChildren(children);
-
-    // We can't mutate the original since we can't be certain that the value of the
-    // the converted event handler will be compatible with the Map's type parameters.
-    var convertibleProps = new Map.from(props);
-    convertProps(convertibleProps);
-
-    // jsifyAndAllowInterop also handles converting props with nested Map/List structures, like `style`
-    return factory(jsifyAndAllowInterop(convertibleProps), children);
+    var children = _generateChildren(childrenArgs);
+    var convertedProps = _generateJsProps(props);
+    return React.createElement(type, convertedProps, children);
   }
 
   /// Performs special handling of certain props for consumption by ReactJS DOM components.
