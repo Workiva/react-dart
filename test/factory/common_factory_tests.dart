@@ -327,7 +327,8 @@ class _StringRefOwnerOwnerHelperComponent extends react.Component {
 /// Renders the provided [render] function with a Component owner that supports string refs,
 /// for string ref tests.
 ReactComponent _renderWithStringRefSupportingOwner(ReactElement render()) {
-  final factory = react.registerComponent(() => new _StringRefOwnerOwnerHelperComponent()) as ReactDartComponentFactoryProxy;
+  final factory =
+      react.registerComponent(() => new _StringRefOwnerOwnerHelperComponent()) as ReactDartComponentFactoryProxy;
 
   return rtu.renderIntoDocument(factory({'render': render}));
 }
