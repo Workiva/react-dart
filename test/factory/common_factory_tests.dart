@@ -218,6 +218,7 @@ void refTests(ReactComponentFactoryProxy factory, {void verifyRefValue(dynamic r
   test('string refs are created with the correct value', () {
     ReactComponent renderedInstance = _renderWithStringRefSupportingOwner(() => factory({'ref': 'test'}));
 
+    // ignore: deprecated_member_use_from_same_package
     verifyRefValue(renderedInstance.dartComponent.ref('test'));
   });
 

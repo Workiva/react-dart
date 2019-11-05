@@ -1,9 +1,9 @@
 # Dart wrapper for [React JS](https://reactjs.org/)
 
-[![Pub](https://img.shields.io/pub/v/react.svg)](https://pub.dartlang.org/packages/react)
+[![Pub](https://img.shields.io/pub/v/react.svg)](https://pub.dev/packages/react)
 ![ReactJS v16.10.1](https://img.shields.io/badge/React_JS-v16.10.1-green.svg)
 [![Build Status](https://travis-ci.com/cleandart/react-dart.svg?branch=master)](https://travis-ci.com/cleandart/react-dart)
-[![React Dart API Docs](https://img.shields.io/badge/api_docs-react-blue.svg)](https://pub.dartlang.org/documentation/react/latest/)
+[![React Dart API Docs](https://img.shields.io/badge/api_docs-react-blue.svg)](https://pub.dev/documentation/react/latest/)
 
 ## Getting Started
 

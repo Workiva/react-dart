@@ -3,7 +3,7 @@
 library js_function_test;
 
 import 'dart:html';
-import 'dart:js_util';
+import 'dart:js_util' as js_util;
 
 import 'package:js/js.dart';
 import 'package:react/react_client/react_interop.dart';
@@ -21,7 +21,7 @@ void sharedJsFunctionTests() {
   group('JS functions:', () {
     group('markChildValidated', () {
       test('is function that does not throw when called', () {
-        expect(() => markChildValidated(newObject()), returnsNormally);
+        expect(() => markChildValidated(js_util.newObject()), returnsNormally);
       });
     });
 
