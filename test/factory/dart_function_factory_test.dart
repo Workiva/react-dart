@@ -1,7 +1,7 @@
 // ignore_for_file: deprecated_member_use_from_same_package
 // ignore_for_file: invalid_use_of_protected_member
+import 'package:js/js_util.dart';
 @TestOn('browser')
-
 import 'package:test/test.dart';
 import 'package:react/react.dart' as react;
 import 'package:react/react_client.dart';
@@ -19,9 +19,31 @@ main() {
       group('- common factory behavior -', () {
         commonFactoryTests(FunctionFoo, isFunctionComponent: true);
       });
+
+      group('displayName', () {
+        test('gets automaticly populated when not provided', () {
+          expect(FunctionFoo.displayName, '_FunctionFoo');
+
+          expect(_getJsFunctionName(FunctionFoo.reactFunction), '_FunctionFoo');
+
+          expect(FunctionFoo.displayName, _getJsFunctionName(FunctionFoo.reactFunction));
+        });
+
+        test('is populated by the provided argument', () {
+          expect(NamedFunctionFoo.displayName, 'Bar');
+
+          expect(_getJsFunctionName(NamedFunctionFoo.reactFunction), 'Bar');
+
+          expect(NamedFunctionFoo.displayName, _getJsFunctionName(NamedFunctionFoo.reactFunction));
+        });
+      });
     });
   });
 }
+
+String _getJsFunctionName(Function object) => getProperty(object, 'name') ?? getProperty(object, '\$static_name');
+
+final NamedFunctionFoo = react.registerFunctionComponent(_FunctionFoo, displayName: 'Bar');
 
 final FunctionFoo = react.registerFunctionComponent(_FunctionFoo);
 

@@ -25,6 +25,7 @@ void main() {
       expect(isDartComponent2(JsFoo({})), isFalse);
       expect(isDartComponent2(Foo({})), isFalse);
       expect(isDartComponent2(Foo2({})), isTrue);
+      expect(isDartComponent2(FunctionFoo({})), isTrue);
     });
 
     test('isDartComponent1', () {
@@ -32,6 +33,7 @@ void main() {
       expect(isDartComponent1(JsFoo({})), isFalse);
       expect(isDartComponent1(Foo({})), isTrue);
       expect(isDartComponent1(Foo2({})), isFalse);
+      expect(isDartComponent1(FunctionFoo({})), isFalse);
     });
 
     test('isDartComponent', () {
@@ -39,6 +41,7 @@ void main() {
       expect(isDartComponent(JsFoo({})), isFalse);
       expect(isDartComponent(Foo({})), isTrue);
       expect(isDartComponent(Foo2({})), isTrue);
+      expect(isDartComponent(FunctionFoo({})), isTrue);
     });
   });
 }
