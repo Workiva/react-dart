@@ -907,28 +907,30 @@ void sharedLifecycleTests<T extends react.Component>({
         if (updatingStateWithNull) newState = initialState;
         expect(
             component.lifecycleCalls,
-            (updatingStateWithNull && isComponent2) ? [] : equals([
-              isComponent2 ? matchCall('getDerivedStateFromProps', args: [expectedProps, newState]) : null,
-              skipLegacyContextTests
-                  ? matchCall('shouldComponentUpdate', args: [expectedProps, newState], state: initialState)
-                  : matchCall('shouldComponentUpdateWithContext',
-                      args: [expectedProps, newState, newContext], state: initialState),
-              !isComponent2
-                  ? matchCall('componentWillUpdate', args: [expectedProps, newState], state: initialState)
-                  : null,
-              skipLegacyContextTests
-                  ? null
-                  : matchCall('componentWillUpdateWithContext',
-                      args: [expectedProps, newState, newContext], state: initialState),
-              matchCall('render', state: newState),
-              isComponent2
-                  ? matchCall('getSnapshotBeforeUpdate', args: [expectedProps, initialState], state: newState)
-                  : null,
-              isComponent2
-                  ? matchCall('componentDidUpdate',
-                      args: [expectedProps, initialState, expectedSnapshot], state: newState)
-                  : matchCall('componentDidUpdate', args: [expectedProps, initialState], state: newState),
-            ].where((matcher) => matcher != null)));
+            (updatingStateWithNull && isComponent2)
+                ? []
+                : equals([
+                    isComponent2 ? matchCall('getDerivedStateFromProps', args: [expectedProps, newState]) : null,
+                    skipLegacyContextTests
+                        ? matchCall('shouldComponentUpdate', args: [expectedProps, newState], state: initialState)
+                        : matchCall('shouldComponentUpdateWithContext',
+                            args: [expectedProps, newState, newContext], state: initialState),
+                    !isComponent2
+                        ? matchCall('componentWillUpdate', args: [expectedProps, newState], state: initialState)
+                        : null,
+                    skipLegacyContextTests
+                        ? null
+                        : matchCall('componentWillUpdateWithContext',
+                            args: [expectedProps, newState, newContext], state: initialState),
+                    matchCall('render', state: newState),
+                    isComponent2
+                        ? matchCall('getSnapshotBeforeUpdate', args: [expectedProps, initialState], state: newState)
+                        : null,
+                    isComponent2
+                        ? matchCall('componentDidUpdate',
+                            args: [expectedProps, initialState, expectedSnapshot], state: newState)
+                        : matchCall('componentDidUpdate', args: [expectedProps, initialState], state: newState),
+                  ].where((matcher) => matcher != null)));
       });
 
       test('setState with Map argument', () {
