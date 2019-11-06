@@ -28,7 +28,7 @@ main() {
         var mountNode = new DivElement();
 
         UseStateTest = react.registerFunctionComponent((Map props) {
-          final text = useStateInit(() {
+          final text = useStateLazy(() {
             return 'initialValue';
           });
           final count = useState(0);

@@ -3,11 +3,7 @@ library hooks;
 
 import 'package:js/js.dart';
 import 'package:react/react.dart';
-
-@JS()
-abstract class React {
-  external static List<dynamic> useState(dynamic value);
-}
+import 'package:react/react_client/react_interop.dart';
 
 /// The return value of [useState].
 ///
@@ -33,7 +29,11 @@ class StateHook<T> {
     _setValue = result[1];
   }
 
-  StateHook.init(T init()) {
+  /// Constructor for [useStateLazy], calls lazy version of [React.useState] to
+  /// initialize [_value] to the return value of [init].
+  ///
+  /// See: <https://reactjs.org/docs/hooks-reference.html#lazy-initial-state>.
+  StateHook.lazy(T init()) {
     final result = React.useState(allowInterop(init));
     _value = result[0];
     _setValue = result[1];
@@ -55,15 +55,16 @@ class StateHook<T> {
   void setTx(T computeNewValue(T oldValue)) => _setValue(allowInterop(computeNewValue));
 }
 
-/// When called inside a [DartFunctionComponent], adds a local state to the component.
+/// Adds local state to a [DartFunctionComponent]
+/// by returning a [StateHook] with [StateHook.value] initialized to [initialValue].
 ///
-/// Returns a [StateHook] with [StateHook.value] initialized to [initialValue].
+/// > __Note:__ If the [initialValue] is expensive to compute, [useStateLazy] should be used instead.
 ///
 /// __Example__:
 ///
 /// ```
 /// UseStateTestComponent(Map props) {
-///   final count = react.useState(0);
+///   final count = useState(0);
 ///
 ///   return react.div({}, [
 ///     count.value,
@@ -74,17 +75,16 @@ class StateHook<T> {
 /// ```
 ///
 /// Learn more: <https://reactjs.org/docs/hooks-state.html>.
-StateHook<T> useState<T>(T initialValue) => new StateHook(initialValue);
+StateHook<T> useState<T>(T initialValue) => StateHook(initialValue);
 
-/// When called inside a [DartFunctionComponent], adds a local state to the component.
-///
-/// Returns a [StateHook] with [StateHook.value] initialized to the return value of [init].
+/// Adds local state to a [DartFunctionComponent]
+/// by returning a [StateHook] with [StateHook.value] initialized to the return value of [init].
 ///
 /// __Example__:
 ///
 /// ```
 /// UseStateTestComponent(Map props) {
-///   final count = react.useStateInit(() {
+///   final count = useStateLazy(() {
 ///     var initialState = someExpensiveComputation(props);
 ///     return initialState;
 ///   }));
@@ -98,4 +98,4 @@ StateHook<T> useState<T>(T initialValue) => new StateHook(initialValue);
 /// ```
 ///
 /// Learn more: <https://reactjs.org/docs/hooks-reference.html#lazy-initial-state>.
-StateHook<T> useStateInit<T>(T init()) => new StateHook.init(init);
+StateHook<T> useStateLazy<T>(T init()) => StateHook.lazy(init);
