@@ -14,6 +14,7 @@ import 'package:react/react.dart' as react;
 import 'package:react/react_client.dart';
 import 'package:react/react_client/js_backed_map.dart';
 import 'package:react/react_client/react_interop.dart' as react_interop;
+import 'package:react/react_client/react_interop.dart';
 import 'package:react/react_dom.dart' as react_dom;
 import 'package:react/react_test_utils.dart' as react_test_utils;
 import 'package:test/test.dart';
@@ -876,7 +877,7 @@ void sharedLifecycleTests<T extends react.Component>({
       const Map initialState = const {
         'initialState': 'initial',
       };
-      const Map newState = const {
+      Map newState = const {
         'initialState': 'initial',
         'newState': 'new',
       };
@@ -888,6 +889,7 @@ void sharedLifecycleTests<T extends react.Component>({
       Map expectedProps;
       dynamic newContext;
       Null expectedSnapshot;
+      bool updatingStateWithNull;
       LifecycleTestHelper component;
 
       setUp(() {
@@ -895,15 +897,17 @@ void sharedLifecycleTests<T extends react.Component>({
         expectedProps = unmodifiableMap(defaultProps, initialProps, emptyChildrenProps);
         newContext = isComponent2 ? null : const {};
         expectedSnapshot = null;
+        updatingStateWithNull = false;
 
         component = getDartComponent(render(LifecycleTest(initialProps)));
         component.lifecycleCalls.clear();
       });
 
       tearDown(() {
+        if (updatingStateWithNull) newState = initialState;
         expect(
             component.lifecycleCalls,
-            equals([
+            (updatingStateWithNull && isComponent2) ? [] : equals([
               isComponent2 ? matchCall('getDerivedStateFromProps', args: [expectedProps, newState]) : null,
               skipLegacyContextTests
                   ? matchCall('shouldComponentUpdate', args: [expectedProps, newState], state: initialState)
@@ -940,6 +944,39 @@ void sharedLifecycleTests<T extends react.Component>({
             'props': new Map.from(props),
           });
           return stateDelta;
+        }
+
+        void setStateCallback() => calls.add({'name': 'setStateCallback'});
+
+        if (isComponent2) {
+          (component as react.Component2).setStateWithUpdater(stateUpdater, setStateCallback);
+        } else {
+          component.setState(stateUpdater, setStateCallback);
+        }
+
+        expect(
+            calls,
+            [
+              {
+                'name': 'stateUpdater',
+                'prevState': initialState,
+                'props': expectedProps,
+              },
+              {'name': 'setStateCallback'}
+            ],
+            reason: 'updater should be called with expected arguments');
+      });
+
+      test('setStateWithUpdater argument that returns null (no re-render)', () {
+        updatingStateWithNull = true;
+        var calls = [];
+        Map stateUpdater(Map prevState, Map props) {
+          calls.add({
+            'name': 'stateUpdater',
+            'prevState': new Map.from(prevState),
+            'props': new Map.from(props),
+          });
+          return null;
         }
 
         void setStateCallback() => calls.add({'name': 'setStateCallback'});

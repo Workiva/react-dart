@@ -360,7 +360,7 @@ final ReactDartInteropStatics _dartInteropStatics = (() {
     var props = new UnmodifiableMapView(component.props);
 
     component.transactionalSetStateCallbacks.forEach((callback) {
-      nextState.addAll(callback(nextState, props));
+      nextState.addAll(callback(nextState, props) ?? nextState);
     });
     component.transactionalSetStateCallbacks.clear();
   }
