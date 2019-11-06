@@ -35,7 +35,7 @@ export 'package:react/react.dart' show ReactComponentFactoryProxy, ComponentFact
 /// See: <https://facebook.github.io/react/docs/more-about-refs.html#the-ref-callback-attribute>
 typedef _CallbackRef<T>(T componentOrDomNode);
 
-/// The ReactJS function signature.
+/// The function signature for ReactJS Function Components.
 ///
 /// - [props] will always be supplied as the first argument
 /// - [legacyContext] has been deprecated and should not be used but remains for backward compatibility and is necessary
