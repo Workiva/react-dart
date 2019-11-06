@@ -151,10 +151,11 @@ ReactDartComponentFactoryProxy2 PropTypesTest = react.registerComponent(() => ne
 
 class PropTypesTestComponent extends react.Component2 {
   get propTypes => {
-        'intProp': (Map props, propName, componentName, location, propFullName) {
-          if (props[propName] is! int) {
+        'intProp': (Map props, info) {
+          dynamic propValue = props[info.propName];
+          if (propValue is! int) {
             return ArgumentError(
-                '$propName should be int. {"props": "$props", "propName": "$propName", "componentName": "$componentName", "location": "$location", "propFullName": "$propFullName"}');
+                '${info.propName} should be int. {"props": "$props", "propName": "${info.propName}", "componentName": "${info.componentName}", "location": "${info.location}", "propFullName": "${info.propFullName}"}');
           }
           return null;
         }
