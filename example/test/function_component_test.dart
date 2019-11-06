@@ -12,7 +12,7 @@ HookTestComponent(Map props) {
   final evenOdd = useState('even');
 
   useEffectConditional(() {
-    if(count.value % 2 == 0) {
+    if (count.value % 2 == 0) {
       print('count changed to ' + count.value.toString());
       evenOdd.set('even');
     } else {
