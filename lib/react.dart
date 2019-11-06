@@ -1799,6 +1799,20 @@ ComponentRegistrar2 registerComponent2 = (
 ///   return ['I am a function component', ...props.children];
 /// });
 /// ```
+///
+/// Example with display name:
+/// ```
+/// var myFunctionComponent = registerFunctionComponent((Map props) {
+///   return ['I am a function component', ...props.children];
+/// }, displayName: 'myFunctionComponent');
+/// ```
+/// or with an inferred name from the Dart function
+/// ```
+/// myDartFunctionComponent(Map props) {
+///   return ['I am a function component', ...props.children];
+/// }
+/// var myFunctionComponent = registerFunctionComponent(myDartFunctionComponent);
+/// ```
 FunctionComponentRegistrar registerFunctionComponent = (DartFunctionComponent componentFactory, {String displayName}) {
   throw new Exception('setClientConfiguration must be called before registerFunctionComponent.');
 };
