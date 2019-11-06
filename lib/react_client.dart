@@ -140,7 +140,6 @@ class ReactDartComponentFactoryProxy<TComponent extends Component> extends React
   }
 }
 
-
 /// Creates and returns a new `ReactDartFunctionComponentFactoryProxy` from the provided [dartFunctionComponent]
 /// which produces a new `JsFunctionComponent`.
 ReactDartFunctionComponentFactoryProxy _registerFunctionComponent(DartFunctionComponent dartFunctionComponent,
@@ -170,7 +169,6 @@ mixin JsBackedMapComponentFactoryMixin on ReactComponentFactoryProxy {
       _generateJsProps(props, convertEventHandlers: false, wrapWithJsify: false);
 }
 
-
 /// Converts a list of variadic children arguments to children that should be passed to ReactJS.
 ///
 /// Returns:
@@ -181,7 +179,7 @@ mixin JsBackedMapComponentFactoryMixin on ReactComponentFactoryProxy {
 /// - otherwise, the same list of args, will all top-level children validated
 dynamic _generateChildren(List childrenArgs, {bool shouldAlwaysBeList = false}) {
   var children;
-  
+
   if (childrenArgs.isEmpty) {
     if (!shouldAlwaysBeList) return null;
     children = childrenArgs;
@@ -222,7 +220,6 @@ JsMap _generateJsProps(Map props,
   return wrapWithJsify ? jsifyAndAllowInterop(propsForJs) : propsForJs.jsObject;
 }
 
-
 void _convertRefValue2(Map args, {bool convertCallbackRefValue = true}) {
   var ref = args['ref'];
 
@@ -258,7 +255,8 @@ class ReactDartComponentFactoryProxy2<TComponent extends Component2> extends Rea
 
   /// Returns a JavaScript version of the specified [props], preprocessed for consumption by ReactJS and prepared for
   /// consumption by the [react] library internals.
-  static JsMap generateExtendedJsProps(Map props) => _generateJsProps(props, convertEventHandlers: false, wrapWithJsify: false);
+  static JsMap generateExtendedJsProps(Map props) =>
+      _generateJsProps(props, convertEventHandlers: false, wrapWithJsify: false);
 }
 
 /// Converts a list of variadic children arguments to children that should be passed to ReactJS.
@@ -321,7 +319,6 @@ external List<String> _objectKeys(Object object);
 
 @JS('Object.defineProperty')
 external void _defineProperty(dynamic object, String propertyName, JsMap descriptor);
-
 
 @Deprecated('6.0.0')
 InteropContextValue _jsifyContext(Map<String, dynamic> context) {
@@ -1276,7 +1273,8 @@ void setClientConfiguration() {
     throw new Exception('Loaded react.js must include react-dart JS interop helpers.');
   }
 
-  setReactConfiguration(_reactDom, _registerComponent, customRegisterComponent2: _registerComponent2, customRegisterFunctionComponent: _registerFunctionComponent);
+  setReactConfiguration(_reactDom, _registerComponent,
+      customRegisterComponent2: _registerComponent2, customRegisterFunctionComponent: _registerFunctionComponent);
   setReactDOMConfiguration(ReactDom.render, ReactDom.unmountComponentAtNode, _findDomNode);
   // Accessing ReactDomServer.renderToString when it's not available breaks in DDC.
   if (context['ReactDOMServer'] != null) {
