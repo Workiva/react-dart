@@ -61,15 +61,17 @@ class StateHook<T> {
 ///
 /// __Example__:
 ///
-///     UseStateTestComponent(Map props) {
-///       final count = react.useState(0);
+/// ```
+/// UseStateTestComponent(Map props) {
+///   final count = react.useState(0);
 ///
-///       return react.div({}, [
-///         count.value,
-///         react.button({'onClick': (_) => count.set(0)}, ['Reset']),
-///         react.button({'onClick': (_) => count.setTx((prev) => prev + 1)}, ['+']),
-///       ]);
-///     }
+///   return react.div({}, [
+///     count.value,
+///     react.button({'onClick': (_) => count.set(0)}, ['Reset']),
+///     react.button({'onClick': (_) => count.setTx((prev) => prev + 1)}, ['+']),
+///   ]);
+/// }
+/// ```
 ///
 /// Learn more: <https://reactjs.org/docs/hooks-state.html>.
 StateHook<T> useState<T>(T initialValue) => new StateHook(initialValue);
@@ -80,18 +82,20 @@ StateHook<T> useState<T>(T initialValue) => new StateHook(initialValue);
 ///
 /// __Example__:
 ///
-///     UseStateTestComponent(Map props) {
-///       final count = react.useStateInit(() {
-///         var initialState = someExpensiveComputation(props);
-///         return initialState;
-///       }));
+/// ```
+/// UseStateTestComponent(Map props) {
+///   final count = react.useStateInit(() {
+///     var initialState = someExpensiveComputation(props);
+///     return initialState;
+///   }));
 ///
-///       return react.div({}, [
-///         count.value,
-///         react.button({'onClick': (_) => count.set(0)}, ['Reset']),
-///         react.button({'onClick': (_) => count.setTx((prev) => prev + 1)}, ['+']),
-///       ]);
-///     }
+///   return react.div({}, [
+///     count.value,
+///     react.button({'onClick': (_) => count.set(0)}, ['Reset']),
+///     react.button({'onClick': (_) => count.setTx((prev) => prev + 1)}, ['+']),
+///   ]);
+/// }
+/// ```
 ///
 /// Learn more: <https://reactjs.org/docs/hooks-reference.html#lazy-initial-state>.
 StateHook<T> useStateInit<T>(T init()) => new StateHook.init(init);
