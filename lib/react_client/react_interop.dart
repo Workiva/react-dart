@@ -2,14 +2,17 @@
 /// JS interop classes for main React JS APIs and react-dart internals.
 ///
 /// For use in `react_client.dart` and by advanced react-dart users.
+
+// ignore_for_file: deprecated_member_use_from_same_package
+
 @JS()
 library react_client.react_interop;
 
 import 'dart:html';
 
+import 'package:js/js.dart';
 import 'package:js/js_util.dart';
 import 'package:meta/meta.dart';
-import 'package:js/js.dart';
 import 'package:react/react.dart';
 import 'package:react/react_client.dart' show ComponentFactory, ReactJsComponentFactoryProxy;
 import 'package:react/react_client/bridge.dart';
@@ -155,7 +158,7 @@ abstract class PropTypes {
 //   Types and data structures
 // ----------------------------------------------------------------------------
 
-/// A React class specification returned by [React.createClass].
+/// A React class specification returned by `React.createClass`.
 ///
 /// To be used as the value of [ReactElement.type], which is set upon initialization
 /// by a component factory or by [React.createElement].
@@ -478,8 +481,8 @@ class JsError {
   external JsError(message);
 }
 
-/// A JS variable that can be used with dart interop in order to force returning a javascript `null`.
-/// Use this if dart2js is possibly converting dart `null` into `undefined`.
+/// A JS variable that can be used with Dart interop in order to force returning a JavaScript `null`.
+/// Use this if dart2js is possibly converting Dart `null` into `undefined`.
 @JS('_jsNull')
 external get jsNull;
 

@@ -1195,6 +1195,20 @@ mixin TypedSnapshot<TSnapshot> {
 /// Creates a ReactJS virtual DOM instance (`ReactElement` on the client).
 abstract class ReactComponentFactoryProxy implements Function {
   /// The JS component factory used by this factory to build [ReactElement]s.
+  ///
+  /// Deprecated: Use [React.createElement()] instead and pass in [type] as
+  /// the first argument, followed by `props` and `children`.
+  ///
+  /// Before:
+  /// ```
+  /// YourFactoryProxy.reactComponentFactory(props, children);
+  /// ```
+  ///
+  /// After:
+  /// ```
+  /// React.createElement(YourFactoryProxy.type, props, children);
+  /// ```
+  @Deprecated('6.0.0')
   ReactJsComponentFactory reactComponentFactory;
 
   /// The type of component created by this factory.
@@ -1777,7 +1791,28 @@ ComponentRegistrar2 registerComponent2 = (
   throw new Exception('setClientConfiguration must be called before registerComponent.');
 };
 
-/// Registers [componentFactory] on both client and server.
+/// Registers [componentFactory] on client.
+///
+/// Example:
+/// ```
+/// var myFunctionComponent = registerFunctionComponent((Map props) {
+///   return ['I am a function component', ...props.children];
+/// });
+/// ```
+///
+/// Example with display name:
+/// ```
+/// var myFunctionComponent = registerFunctionComponent((Map props) {
+///   return ['I am a function component', ...props.children];
+/// }, displayName: 'myFunctionComponent');
+/// ```
+/// or with an inferred name from the Dart function
+/// ```
+/// myDartFunctionComponent(Map props) {
+///   return ['I am a function component', ...props.children];
+/// }
+/// var myFunctionComponent = registerFunctionComponent(myDartFunctionComponent);
+/// ```
 FunctionComponentRegistrar registerFunctionComponent = (DartFunctionComponent componentFactory, {String displayName}) {
   throw new Exception('setClientConfiguration must be called before registerFunctionComponent.');
 };
