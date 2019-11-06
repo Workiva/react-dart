@@ -181,6 +181,7 @@ mixin JsBackedMapComponentFactoryMixin on ReactComponentFactoryProxy {
 /// - otherwise, the same list of args, will all top-level children validated
 dynamic _generateChildren(List childrenArgs, {bool shouldAlwaysBeList = false}) {
   var children;
+  
   if (childrenArgs.isEmpty) {
     if (!shouldAlwaysBeList) return null;
     children = childrenArgs;
@@ -193,6 +194,10 @@ dynamic _generateChildren(List childrenArgs, {bool shouldAlwaysBeList = false}) 
     } else {
       children = childrenArgs.single;
     }
+  }
+
+  if (children is Iterable && children is! List) {
+    children = children.toList(growable: false);
   }
 
   if (children == null) {
@@ -250,6 +255,10 @@ class ReactDartComponentFactoryProxy2<TComponent extends Component2> extends Rea
         this.defaultProps = new JsBackedMap.fromJs(reactClass.defaultProps);
 
   ReactClass get type => reactClass;
+
+  /// Returns a JavaScript version of the specified [props], preprocessed for consumption by ReactJS and prepared for
+  /// consumption by the [react] library internals.
+  static JsMap generateExtendedJsProps(Map props) => _generateJsProps(props, convertEventHandlers: false, wrapWithJsify: false);
 }
 
 /// Converts a list of variadic children arguments to children that should be passed to ReactJS.
@@ -826,7 +835,7 @@ class ReactDomComponentFactoryProxy extends ReactComponentFactoryProxy {
   @override
   ReactElement build(Map props, [List childrenArgs = const []]) {
     var children = _generateChildren(childrenArgs);
-    var convertedProps = _generateJsProps(props);
+    var convertedProps = _generateJsProps(props, convertCallbackRefValue: false, wrapWithJsify: true);
     return React.createElement(type, convertedProps, children);
   }
 
