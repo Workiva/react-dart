@@ -1,10 +1,12 @@
 // ignore_for_file: deprecated_member_use_from_same_package
 // ignore_for_file: invalid_use_of_protected_member
-import 'package:js/js_util.dart';
 @TestOn('browser')
-import 'package:test/test.dart';
+
+import 'package:js/js_util.dart';
 import 'package:react/react.dart' as react;
 import 'package:react/react_client.dart';
+import 'package:test/test.dart';
+
 import 'common_factory_tests.dart';
 
 main() {

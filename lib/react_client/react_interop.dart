@@ -10,9 +10,9 @@ library react_client.react_interop;
 
 import 'dart:html';
 
+import 'package:js/js.dart';
 import 'package:js/js_util.dart';
 import 'package:meta/meta.dart';
-import 'package:js/js.dart';
 import 'package:react/react.dart';
 import 'package:react/react_client.dart' show ComponentFactory, ReactJsComponentFactoryProxy;
 import 'package:react/react_client/bridge.dart';
