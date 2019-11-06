@@ -1,16 +1,8 @@
 @JS()
 library hooks;
 
-import 'dart:html_common';
-
 import 'package:js/js.dart';
 import 'package:react/react.dart';
-
-@JS()
-abstract class React {
-  external static List<dynamic> useState(dynamic value);
-  external static void useEffect(void Function() effect, [List<Object> dependencies]);
-}
 import 'package:react/react_client/react_interop.dart';
 
 /// The return value of [useState].
