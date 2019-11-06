@@ -30,16 +30,16 @@ import 'package:react/src/ddc_emulated_function_name_bug.dart' as ddc_emulated_f
 export 'package:react/react_client/react_interop.dart' show ReactElement, ReactJsComponentFactory, inReactDevMode, Ref;
 export 'package:react/react.dart' show ReactComponentFactoryProxy, ComponentFactory;
 
-/// The type of [Component.ref] specified as a callback.
+/// The type of `Component.ref` specified as a callback.
 ///
 /// See: <https://facebook.github.io/react/docs/more-about-refs.html#the-ref-callback-attribute>
 typedef _CallbackRef<T>(T componentOrDomNode);
 
-/// The ReactJS function signature.
+/// The function signature for ReactJS Function Components.
 ///
 /// - [props] will always be supplied as the first argument
 /// - [legacyContext] has been deprecated and should not be used but remains for backward compatibility and is necessary
-/// to match darts generated call signature based on the number of args react provides.
+/// to match Dart's generated call signature based on the number of args React provides.
 typedef JsFunctionComponent = dynamic Function(JsMap props, [JsMap legacyContext]);
 
 /// Prepares [children] to be passed to the ReactJS [React.createElement] and
@@ -140,9 +140,102 @@ class ReactDartComponentFactoryProxy<TComponent extends Component> extends React
   }
 }
 
+/// Creates and returns a new `ReactDartFunctionComponentFactoryProxy` from the provided [dartFunctionComponent]
+/// which produces a new `JsFunctionComponent`.
+ReactDartFunctionComponentFactoryProxy _registerFunctionComponent(DartFunctionComponent dartFunctionComponent,
+        {String displayName}) =>
+    ReactDartFunctionComponentFactoryProxy(dartFunctionComponent, displayName: displayName);
+
+@Deprecated('6.0.0')
+Map<String, dynamic> _unjsifyContext(InteropContextValue interopContext) {
+  // TODO consider using `contextKeys` for this if perf of objectKeys is bad.
+  return new Map.fromIterable(_objectKeys(interopContext), value: (key) {
+    // ignore: argument_type_not_assignable
+    ReactDartContextInternal internal = getProperty(interopContext, key);
+    return internal?.value;
+  });
+}
+
+/// Shared component factory proxy [build] method for components that utilize [JsBackedMap]s.
+mixin JsBackedMapComponentFactoryMixin on ReactComponentFactoryProxy {
+  @override
+  ReactElement build(Map props, [List childrenArgs = const []]) {
+    var children = _generateChildren(childrenArgs, shouldAlwaysBeList: true);
+    var convertedProps = generateExtendedJsProps(props);
+    return React.createElement(type, convertedProps, children);
+  }
+
+  static JsMap generateExtendedJsProps(Map props) =>
+      _generateJsProps(props, convertEventHandlers: false, wrapWithJsify: false);
+}
+
+/// Converts a list of variadic children arguments to children that should be passed to ReactJS.
+///
+/// Returns:
+///
+/// - `null` if there are no args and [shouldAlwaysBeList] is false
+/// - `[]` if there are no args and [shouldAlwaysBeList] is true
+/// - the single child if only one was specified
+/// - otherwise, the same list of args, will all top-level children validated
+dynamic _generateChildren(List childrenArgs, {bool shouldAlwaysBeList = false}) {
+  var children;
+
+  if (childrenArgs.isEmpty) {
+    if (!shouldAlwaysBeList) return null;
+    children = childrenArgs;
+  } else if (childrenArgs.length == 1) {
+    if (shouldAlwaysBeList) {
+      final singleChild = listifyChildren(childrenArgs.single);
+      if (singleChild is List) {
+        children = singleChild;
+      }
+    } else {
+      children = childrenArgs.single;
+    }
+  }
+
+  if (children is Iterable && children is! List) {
+    children = children.toList(growable: false);
+  }
+
+  if (children == null) {
+    children = shouldAlwaysBeList ? childrenArgs.map(listifyChildren).toList() : childrenArgs;
+    markChildrenValidated(children);
+  }
+
+  return children;
+}
+
+/// Converts [props] into a [JsMap] that can be utilized with [React.createElement()].
+JsMap _generateJsProps(Map props,
+    {bool convertEventHandlers = true,
+    bool convertRefValue = true,
+    bool convertCallbackRefValue = true,
+    bool wrapWithJsify = true}) {
+  final propsForJs = JsBackedMap.from(props);
+
+  if (convertEventHandlers) _convertEventHandlers(propsForJs);
+  if (convertRefValue) _convertRefValue2(propsForJs, convertCallbackRefValue: convertCallbackRefValue);
+
+  return wrapWithJsify ? jsifyAndAllowInterop(propsForJs) : propsForJs.jsObject;
+}
+
+void _convertRefValue2(Map args, {bool convertCallbackRefValue = true}) {
+  var ref = args['ref'];
+
+  if (ref is Ref) {
+    args['ref'] = ref.jsRef;
+  } else if (ref is _CallbackRef && convertCallbackRefValue) {
+    args['ref'] = allowInterop((dynamic instance) {
+      if (instance is ReactComponent && instance.dartComponent != null) return ref(instance.dartComponent);
+      return ref(instance);
+    });
+  }
+}
+
 /// Creates ReactJS [Component2] instances for Dart components.
 class ReactDartComponentFactoryProxy2<TComponent extends Component2> extends ReactComponentFactoryProxy
-    with JsBackedMapsComponentFactoryBuilder
+    with JsBackedMapComponentFactoryMixin
     implements ReactDartComponentFactoryProxy {
   /// The ReactJS class used as the type for all [ReactElement]s built by
   /// this factory.
@@ -159,57 +252,11 @@ class ReactDartComponentFactoryProxy2<TComponent extends Component2> extends Rea
         this.defaultProps = new JsBackedMap.fromJs(reactClass.defaultProps);
 
   ReactClass get type => reactClass;
-}
-
-mixin JsBackedMapsComponentFactoryBuilder on ReactComponentFactoryProxy {
-  ReactElement build(Map props, [List childrenArgs = const []]) {
-    // TODO 3.1.0-wip if we don't pass in a list into React, we don't get a list back in Dart...
-
-    List children;
-    if (childrenArgs.isEmpty) {
-      children = childrenArgs;
-    } else if (childrenArgs.length == 1) {
-      final singleChild = listifyChildren(childrenArgs[0]);
-      if (singleChild is List) {
-        children = singleChild;
-      }
-    }
-
-    if (children == null) {
-      // FIXME 3.1.0-wip are we cool to modify this list?
-      // FIXME 3.1.0-wip why are there unmodifiable lists here?
-      children = childrenArgs.map(listifyChildren).toList();
-      markChildrenValidated(children);
-    }
-
-    return reactComponentFactory(
-      generateExtendedJsProps(props),
-      children,
-    );
-  }
 
   /// Returns a JavaScript version of the specified [props], preprocessed for consumption by ReactJS and prepared for
   /// consumption by the [react] library internals.
-  static JsMap generateExtendedJsProps(Map props) {
-    if (props == null) return newObject();
-
-    final propsForJs = new JsBackedMap.from(props);
-
-    final ref = propsForJs['ref'];
-    if (ref != null) {
-      // If the ref is a callback, pass ReactJS a function that will call it
-      // with the Dart Component instance, not the ReactComponent instance.
-      if (ref is _CallbackRef) {
-        propsForJs['ref'] = allowInterop((ReactComponent instance) => ref(instance?.dartComponent));
-      }
-
-      if (ref is Ref) {
-        propsForJs['ref'] = ref.jsRef;
-      }
-    }
-
-    return propsForJs.jsObject;
-  }
+  static JsMap generateExtendedJsProps(Map props) =>
+      _generateJsProps(props, convertEventHandlers: false, wrapWithJsify: false);
 }
 
 /// Converts a list of variadic children arguments to children that should be passed to ReactJS.
@@ -270,6 +317,9 @@ List<String> _filterSkipMethods(List<String> methods) {
 @JS('Object.keys')
 external List<String> _objectKeys(Object object);
 
+@JS('Object.defineProperty')
+external void _defineProperty(dynamic object, String propertyName, JsMap descriptor);
+
 @Deprecated('6.0.0')
 InteropContextValue _jsifyContext(Map<String, dynamic> context) {
   var interopContext = new InteropContextValue();
@@ -279,16 +329,6 @@ InteropContextValue _jsifyContext(Map<String, dynamic> context) {
   });
 
   return interopContext;
-}
-
-@Deprecated('6.0.0')
-Map<String, dynamic> _unjsifyContext(InteropContextValue interopContext) {
-  // TODO consider using `contextKeys` for this if perf of objectKeys is bad.
-  return new Map.fromIterable(_objectKeys(interopContext), value: (key) {
-    // ignore: argument_type_not_assignable
-    ReactDartContextInternal internal = getProperty(interopContext, key);
-    return internal?.value;
-  });
 }
 
 /// The static methods that proxy JS component lifecycle methods to Dart components.
@@ -604,7 +644,7 @@ abstract class _ReactDartInteropStatics2 {
 }
 
 /// Creates and returns a new [ReactDartComponentFactoryProxy] from the provided [componentFactory]
-/// which produces a new JS `ReactClass` component class.
+/// which produces a new JS [`ReactClass` component class](https://facebook.github.io/react/docs/top-level-api.html#react.createclass).
 @Deprecated('6.0.0')
 ReactDartComponentFactoryProxy _registerComponent(
   ComponentFactory componentFactory, [
@@ -623,7 +663,7 @@ ReactDartComponentFactoryProxy _registerComponent(
     contextKeys: componentInstance.contextKeys,
   );
 
-  /// Create the JS `ReactClass` component class
+  /// Create the JS [`ReactClass` component class](https://facebook.github.io/react/docs/top-level-api.html#react.createclass)
   /// with custom JS lifecycle methods.
   var reactComponentClass = createReactDartComponentClass(_dartInteropStatics, componentStatics, jsConfig)
     // ignore: invalid_use_of_protected_member
@@ -658,7 +698,7 @@ class ReactJsContextComponentFactoryProxy extends ReactJsComponentFactoryProxy {
 
   @override
   ReactElement build(Map props, [List childrenArgs]) {
-    dynamic children = _convertArgsToChildren(childrenArgs);
+    dynamic children = _generateChildren(childrenArgs);
 
     if (isConsumer) {
       if (children is Function) {
@@ -669,7 +709,7 @@ class ReactJsContextComponentFactoryProxy extends ReactJsComponentFactoryProxy {
       }
     }
 
-    return factory(generateExtendedJsProps(props), children);
+    return React.createElement(type, generateExtendedJsProps(props), children);
   }
 
   /// Returns a JavaScript version of the specified [props], preprocessed for consumption by ReactJS and prepared for
@@ -718,82 +758,15 @@ class ReactJsComponentFactoryProxy extends ReactComponentFactoryProxy {
 
   @override
   ReactElement build(Map props, [List childrenArgs]) {
-    dynamic children = _convertArgsToChildren(childrenArgs);
-
-    if (alwaysReturnChildrenAsList && children is! List) {
-      children = [children];
-    }
-
-    Map potentiallyConvertedProps;
-
-    final mightNeedConverting = shouldConvertDomProps || props['ref'] != null;
-    if (mightNeedConverting) {
-      // We can't mutate the original since we can't be certain that the value of the
-      // the converted event handler will be compatible with the Map's type parameters.
-      // We also want to avoid mutating the original map where possible.
-      // So, make a copy and mutate that.
-      potentiallyConvertedProps = Map.from(props);
-      if (shouldConvertDomProps) {
-        _convertEventHandlers(potentiallyConvertedProps);
-      }
-      _convertRefValue(potentiallyConvertedProps);
-    } else {
-      potentiallyConvertedProps = props;
-    }
-
-    // jsifyAndAllowInterop also handles converting props with nested Map/List structures, like `style`
-    return factory(jsifyAndAllowInterop(potentiallyConvertedProps), children);
+    dynamic children = _generateChildren(childrenArgs, shouldAlwaysBeList: alwaysReturnChildrenAsList);
+    JsMap convertedProps = _generateJsProps(props,
+        convertEventHandlers: shouldConvertDomProps || props['ref'] != null, convertCallbackRefValue: false);
+    return React.createElement(type, convertedProps, children);
   }
 }
-
-class ReactDartFunctionComponentFactoryProxy extends ReactComponentFactoryProxy
-    with JsBackedMapsComponentFactoryBuilder {
-  /// The ReactJS function used as the type for all [ReactElement]s built by
-  /// this factory.
-  final JsFunctionComponent reactFunction;
-
-  /// The name of this function.
-  final String displayName;
-
-  /// The JS component factory used by this factory to build [ReactElement]s.
-  final ReactJsComponentFactory reactComponentFactory;
-
-  ReactDartFunctionComponentFactoryProxy(this.reactFunction, [this.displayName])
-      : this.reactComponentFactory = React.createFactory(reactFunction);
-
-  get type => reactFunction;
-}
-
-/// Creates a function component from the given [dartFunctionComponent] that can be used with React.
-JsFunctionComponent _wrapFunctionComponent(DartFunctionComponent dartFunctionComponent, {String displayName}) {
-  assert(() {
-    displayName ??= getProperty(dartFunctionComponent, 'name');
-    return true;
-  }());
-  jsFunctionComponent(JsMap jsProps, [JsMap _legacyContext]) =>
-      (dartFunctionComponent(jsProps != null ? JsBackedMap.backedBy(jsProps) : JsBackedMap()) ?? jsNull);
-  JsFunctionComponent interopFunction = allowInterop(jsFunctionComponent);
-  if (displayName != null) {
-    // This is a work-around to display the correct name in the React DevTools.
-    callMethod(getProperty(window, 'Object'), 'defineProperty', [
-      interopFunction,
-      'name',
-      jsify({'value': displayName})
-    ]);
-  }
-  // ignore: invalid_use_of_protected_member
-  setProperty(interopFunction, 'dartComponentVersion', ReactDartComponentVersion.component2);
-  return interopFunction;
-}
-
-/// Creates and returns a new `ReactDartFunctionComponentFactoryProxy` from the provided [dartFunctionComponent]
-/// which produces a new `JsFunctionComponent`.
-ReactDartFunctionComponentFactoryProxy _registerFunctionComponent(DartFunctionComponent dartFunctionComponent,
-        {String displayName}) =>
-    ReactDartFunctionComponentFactoryProxy(_wrapFunctionComponent(dartFunctionComponent, displayName: displayName));
 
 /// Creates and returns a new [ReactDartComponentFactoryProxy] from the provided [componentFactory]
-/// which produces a new JS `ReactClass` component class.
+/// which produces a new JS [`ReactClass` component class](https://facebook.github.io/react/docs/top-level-api.html#react.createclass).
 ReactDartComponentFactoryProxy2 _registerComponent2(
   ComponentFactory<Component2> componentFactory, {
   Iterable<String> skipMethods = const ['getDerivedStateFromError', 'componentDidCatch'],
@@ -823,7 +796,7 @@ ReactDartComponentFactoryProxy2 _registerComponent2(
     propTypes: jsPropTypes,
   );
 
-  /// Create the JS `ReactClass` component class
+  /// Create the JS [`ReactClass` component class](https://facebook.github.io/react/docs/top-level-api.html#react.createclass)
   /// with custom JS lifecycle methods.
   var reactComponentClass =
       createReactDartComponentClass2(_ReactDartInteropStatics2.staticsForJs, componentStatics, jsConfig2)
@@ -858,22 +831,62 @@ class ReactDomComponentFactoryProxy extends ReactComponentFactoryProxy {
 
   @override
   ReactElement build(Map props, [List childrenArgs = const []]) {
-    var children = _convertArgsToChildren(childrenArgs);
-    children = listifyChildren(children);
-
-    // We can't mutate the original since we can't be certain that the value of the
-    // the converted event handler will be compatible with the Map's type parameters.
-    var convertibleProps = new Map.from(props);
-    convertProps(convertibleProps);
-
-    // jsifyAndAllowInterop also handles converting props with nested Map/List structures, like `style`
-    return factory(jsifyAndAllowInterop(convertibleProps), children);
+    var children = _generateChildren(childrenArgs);
+    var convertedProps = _generateJsProps(props, convertCallbackRefValue: false, wrapWithJsify: true);
+    return React.createElement(type, convertedProps, children);
   }
 
   /// Performs special handling of certain props for consumption by ReactJS DOM components.
   static void convertProps(Map props) {
     _convertEventHandlers(props);
     _convertRefValue(props);
+  }
+}
+
+/// Creates ReactJS [Function Component] from Dart Function.
+class ReactDartFunctionComponentFactoryProxy extends ReactComponentFactoryProxy with JsBackedMapComponentFactoryMixin {
+  /// The name of this function.
+  final String displayName;
+
+  /// The React JS component definition of this Function Component.
+  final JsFunctionComponent reactFunction;
+
+  ReactDartFunctionComponentFactoryProxy(DartFunctionComponent dartFunctionComponent, {String displayName})
+      : this.displayName = displayName ?? _getJsFunctionName(dartFunctionComponent),
+        this.reactFunction = _wrapFunctionComponent(dartFunctionComponent,
+            displayName: displayName ?? _getJsFunctionName(dartFunctionComponent));
+
+  @override
+  JsFunctionComponent get type => reactFunction;
+
+  static String _getJsFunctionName(Function object) =>
+      getProperty(object, 'name') ?? getProperty(object, '\$static_name');
+
+  /// Creates a function component from the given [dartFunctionComponent] that can be used with React.
+  ///
+  /// [displayName] Sets the component name for debugging purposes.
+  ///
+  /// In DDC, this will be the [DartFunctionComponent] name, but in dart2js it will be null unless
+  /// overridden, since using runtimeType can lead to larger dart2js output.
+  ///
+  /// This will result in the dart2js name being `ReactDartComponent2` (the
+  /// name of the proxying JS component defined in _dart_helpers.js).
+  static JsFunctionComponent _wrapFunctionComponent(DartFunctionComponent dartFunctionComponent, {String displayName}) {
+    // dart2js uses null and undefined interchangeably, meaning returning `null` from dart
+    // may show up in js as `undefined`, ReactJS doesnt like that and expects a js `null` to be returned,
+    // and throws if it gets `undefined`. `jsNull` is an interop variable that holds a JS `null` value
+    // to force `null` as the return value if user returns a Dart `null`.
+    // See: https://github.com/dart-lang/sdk/issues/27485
+    jsFunctionComponent(JsMap jsProps, [JsMap _legacyContext]) =>
+        dartFunctionComponent(JsBackedMap.backedBy(jsProps)) ?? jsNull;
+    JsFunctionComponent interopFunction = allowInterop(jsFunctionComponent);
+    if (displayName != null) {
+      // This is a work-around to display the correct name in the React DevTools.
+      _defineProperty(interopFunction, 'name', jsify({'value': displayName}));
+    }
+    // ignore: invalid_use_of_protected_member
+    setProperty(interopFunction, 'dartComponentVersion', ReactDartComponentVersion.component2);
+    return interopFunction;
   }
 }
 

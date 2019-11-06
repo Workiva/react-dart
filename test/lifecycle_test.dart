@@ -10,7 +10,6 @@ import 'dart:js';
 
 import "package:js/js.dart";
 import 'package:meta/meta.dart';
-import 'package:react/hooks.dart';
 import 'package:react/react.dart' as react;
 import 'package:react/react_client.dart';
 import 'package:react/react_client/js_backed_map.dart';
@@ -447,10 +446,6 @@ main() {
           });
         });
 
-        tearDownAll(() {
-          PropsTest = null;
-        });
-
         test('renders correctly', () {
           var testProps = {'testProp': 'test'};
           react_dom.render(PropsTest(testProps, ['Child']), mountNode);
@@ -472,23 +467,15 @@ main() {
         ReactDartFunctionComponentFactoryProxy PropsArgTypeTest;
 
         setUp(() {
+          propTypeCheck = null;
           PropsArgTypeTest = react.registerFunctionComponent((Map props) {
             propTypeCheck = props;
             return null;
           });
         });
 
-        tearDownAll(() {
-          PropsArgTypeTest = null;
-        });
-
         test('when provided with an empty dart map', () {
           react_dom.render(PropsArgTypeTest({}), mountNode);
-          expect(propTypeCheck, isA<JsBackedMap>());
-        });
-
-        test('when provided null', () {
-          react_dom.render(PropsArgTypeTest(null), mountNode);
           expect(propTypeCheck, isA<JsBackedMap>());
         });
       });
@@ -510,81 +497,7 @@ main() {
 
         sharedTypeTests(testTypeValue);
       });
-
-      group('- Hook useState:', () {
-        ReactDartFunctionComponentFactoryProxy UseStateTest;
-        DivElement textRef;
-        DivElement countRef;
-        ButtonElement setButtonRef;
-        ButtonElement setTxButtonRef;
-
-        setUpAll(() {
-          UseStateTest = react.registerFunctionComponent((Map props) {
-            final text = useStateInit(() {
-              return 'initialValue';
-            });
-            final count = useState(0);
-
-            return react.div({}, [
-              react.div({
-                'ref': (ref) {
-                  textRef = ref;
-                },
-              }, [
-                text.value
-              ]),
-              react.div({
-                'ref': (ref) {
-                  countRef = ref;
-                },
-              }, [
-                count.value
-              ]),
-              react.button({
-                'onClick': (_) => text.set('newValue'),
-                'ref': (ref) {
-                  setButtonRef = ref;
-                },
-              }, [
-                'Set'
-              ]),
-              react.button({
-                'onClick': (_) => count.setTx((prev) => prev + 1),
-                'ref': (ref) {
-                  setTxButtonRef = ref;
-                },
-              }, [
-                '+'
-              ]),
-            ]);
-          });
-
-          react_dom.render(UseStateTest({}, []), mountNode);
-        });
-
-        tearDownAll(() {
-          UseStateTest = null;
-        });
-
-        test('useState initializes state correctly', () {
-          expect(countRef.text, '0');
-        });
-
-        test('useState Init initializes state correctly', () {
-          expect(textRef.text, 'initialValue');
-        });
-
-        test('StateHook.set updates state correctly', () {
-          react_test_utils.Simulate.click(setButtonRef);
-          expect(textRef.text, 'newValue');
-        });
-
-        test('StateHook.setTx updates state correctly', () {
-          react_test_utils.Simulate.click(setTxButtonRef);
-          expect(countRef.text, '1');
-        });
-      });
-    }, tags: ['functionComponent']);
+    });
   });
 }
 

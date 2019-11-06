@@ -11,11 +11,17 @@ abstract class React {
   external static List<dynamic> useState(dynamic value);
   external static void useEffect(void Function() effect, [List<Object> dependencies]);
 }
+import 'package:react/react_client/react_interop.dart';
 
 /// The return value of [useState].
 ///
 /// The current value of the state is available via [value] and
 /// functions to update it are available via [set] and [setTx].
+///
+/// Note are two rules for using Hooks (<https://reactjs.org/docs/hooks-rules.html>):
+///
+/// * Only call Hooks at the top level.
+/// * Only call Hooks from inside a [DartFunctionComponent].
 ///
 /// Learn more: <https://reactjs.org/docs/hooks-state.html>.
 class StateHook<T> {
@@ -31,7 +37,11 @@ class StateHook<T> {
     _setValue = result[1];
   }
 
-  StateHook.init(T init()) {
+  /// Constructor for [useStateLazy], calls lazy version of [React.useState] to
+  /// initialize [_value] to the return value of [init].
+  ///
+  /// See: <https://reactjs.org/docs/hooks-reference.html#lazy-initial-state>.
+  StateHook.lazy(T init()) {
     final result = React.useState(allowInterop(init));
     _value = result[0];
     _setValue = result[1];
@@ -53,46 +63,50 @@ class StateHook<T> {
   void setTx(T computeNewValue(T oldValue)) => _setValue(allowInterop(computeNewValue));
 }
 
-/// When called inside a [DartFunctionComponent], adds a local state to the component.
+/// Adds local state to a [DartFunctionComponent]
+/// by returning a [StateHook] with [StateHook.value] initialized to [initialValue].
 ///
-/// Returns a [StateHook] with [StateHook.value] initialized to [initialValue].
+/// > __Note:__ If the [initialValue] is expensive to compute, [useStateLazy] should be used instead.
 ///
 /// __Example__:
 ///
-///     UseStateTestComponent(Map props) {
-///       final count = react.useState(0);
+/// ```
+/// UseStateTestComponent(Map props) {
+///   final count = useState(0);
 ///
-///       return react.div({}, [
-///         count.value,
-///         react.button({'onClick': (_) => count.set(0)}, ['Reset']),
-///         react.button({'onClick': (_) => count.setTx((prev) => prev + 1)}, ['+']),
-///       ]);
-///     }
+///   return react.div({}, [
+///     count.value,
+///     react.button({'onClick': (_) => count.set(0)}, ['Reset']),
+///     react.button({'onClick': (_) => count.setTx((prev) => prev + 1)}, ['+']),
+///   ]);
+/// }
+/// ```
 ///
 /// Learn more: <https://reactjs.org/docs/hooks-state.html>.
-StateHook<T> useState<T>(T initialValue) => new StateHook(initialValue);
+StateHook<T> useState<T>(T initialValue) => StateHook(initialValue);
 
-/// When called inside a [DartFunctionComponent], adds a local state to the component.
-///
-/// Returns a [StateHook] with [StateHook.value] initialized to the return value of [init].
+/// Adds local state to a [DartFunctionComponent]
+/// by returning a [StateHook] with [StateHook.value] initialized to the return value of [init].
 ///
 /// __Example__:
 ///
-///     UseStateTestComponent(Map props) {
-///       final count = react.useStateInit(() {
-///         var initialState = someExpensiveComputation(props);
-///         return initialState;
-///       }));
+/// ```
+/// UseStateTestComponent(Map props) {
+///   final count = useStateLazy(() {
+///     var initialState = someExpensiveComputation(props);
+///     return initialState;
+///   }));
 ///
-///       return react.div({}, [
-///         count.value,
-///         react.button({'onClick': (_) => count.set(0)}, ['Reset']),
-///         react.button({'onClick': (_) => count.setTx((prev) => prev + 1)}, ['+']),
-///       ]);
-///     }
+///   return react.div({}, [
+///     count.value,
+///     react.button({'onClick': (_) => count.set(0)}, ['Reset']),
+///     react.button({'onClick': (_) => count.setTx((prev) => prev + 1)}, ['+']),
+///   ]);
+/// }
+/// ```
 ///
 /// Learn more: <https://reactjs.org/docs/hooks-reference.html#lazy-initial-state>.
-StateHook<T> useStateInit<T>(T init()) => new StateHook.init(init);
+StateHook<T> useStateLazy<T>(T init()) => StateHook.lazy(init);
 
 ///
 void useEffect(void Function() sideEffect) {
