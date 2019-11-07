@@ -128,7 +128,11 @@ class Component2BridgeImpl extends Component2Bridge {
         var error = validator(
             convertedProps,
             PropValidatorInfo(
-                propName: propName, componentName: componentName, location: location, propFullName: propFullName));
+              propName: propName,
+              componentName: componentName,
+              location: location,
+              propFullName: propFullName,
+            ));
         return error == null ? null : JsError(error.toString());
       }
 
