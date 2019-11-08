@@ -1,3 +1,38 @@
+## [5.1.0](https://github.com/cleandart/react-dart/compare/5.0.0...5.1.0)
+
+__Full ReactJS 16.x Component Lifecycle Support__
+
+- The new `Component2` class replaces the now deprecated `Component` class.
+  - Faster
+  - Improved dev experience
+  - Easier to maintain
+  - Easier integration with JS libs
+    - `ReactJsComponentFactoryProxy` makes it easy to use JS components with Dart!
+      - [Check out this example of MaterialUI components!](https://github.com/cleandart/react-dart/blob/5.1.0-wip/example/js_components/js_components.dart#L115-L145)
+  - Supports new lifecycle methods, allowing us to use Concurrent Mode in the future
+    - <s>`componentWillMount`</s> => `componentDidMount`
+    - <s>`componentWillReceiveProps`</s> => `getDerivedStateFromProps` _(new)_
+    - <s>`componentWillUpdate`</s> => `getSnapshotBeforeUpdate` _(new)_
+    - `componentDidCatch` / `getDerivedStateFromError` _(new)_
+      - Adds support for [error boundaries](https://reactjs.org/docs/error-boundaries.html).
+      
+__[Portals](https://reactjs.org/docs/portals.html)__
+
+- _"Portals provide a first-class way to render children into a DOM node that exists outside the DOM hierarchy of the parent component."_
+
+__Improved, stable [Context](https://reactjs.org/docs/context.html) API__
+
+- _"Context provides a way to pass data through the component tree without having to pass props down manually at every level. … Context is primarily used when some data needs to be accessible by many components at different nesting levels. Apply it sparingly because it makes component reuse more difficult."_
+
+__[Fragments](https://reactjs.org/docs/fragments.html)__
+
+- _"A common pattern in React is for a component to return multiple elements. Fragments let you group a list of children without adding extra nodes to the DOM."_
+- Component.render can now return Fragments (multiple children) or other values like strings and lists instead of just a single ReactElement
+
+__New and improved ref API: [React.createRef](https://reactjs.org/docs/refs-and-the-dom.html#creating-refs)__
+
+> [Full list of 5.1.0 Changes](https://github.com/cleandart/react-dart/milestone/1?closed=1)
+
 ## [5.0.0](https://github.com/cleandart/react-dart/compare/4.9.1...5.0.0)
 
   __ReactJS 16.x Support__
