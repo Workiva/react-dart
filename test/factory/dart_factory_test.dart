@@ -27,7 +27,7 @@ main() {
         });
 
         group('- refs -', () {
-          refTests(Foo, verifyRefValue: (ref) {
+          refTests<_Foo>(Foo, verifyRefValue: (ref) {
             expect(ref, TypeMatcher<_Foo>());
           });
         });
@@ -39,7 +39,7 @@ main() {
         });
 
         group('- refs -', () {
-          refTests(Foo2, verifyRefValue: (ref) {
+          refTests<_Foo2>(Foo2, verifyRefValue: (ref) {
             expect(ref, TypeMatcher<_Foo2>());
           });
         });

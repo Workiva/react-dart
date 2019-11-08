@@ -120,8 +120,16 @@ class ReactDartComponentFactoryProxy<TComponent extends Component> extends React
 
       // If the ref is a callback, pass ReactJS a function that will call it
       // with the Dart Component instance, not the ReactComponent instance.
-      if (ref is _CallbackRef) {
-        interopProps.ref = allowInterop((ReactComponent instance) => ref(instance?.dartComponent));
+      //
+      // Use _CallbackRef<Null> to check arity, since parameters could be non-dynamic, and thus
+      // would fail the `is _CallbackRef<dynamic>` check.
+      // See https://github.com/dart-lang/sdk/issues/34593 for more information on arity checks.
+      if (ref is _CallbackRef<Null>) {
+        interopProps.ref = allowInterop((ReactComponent instance) {
+          // Call as dynamic to perform dynamic dispatch, since we can't cast to _CallbackRef<dynamic>,
+          // and since calling with non-null values will fail at runtime due to the _CallbackRef<Null> typing.
+          return (ref as dynamic)(instance?.dartComponent);
+        });
       } else if (ref is Ref) {
         interopProps.ref = ref.jsRef;
       } else {
@@ -187,8 +195,16 @@ class ReactDartComponentFactoryProxy2<TComponent extends Component2> extends Rea
     if (ref != null) {
       // If the ref is a callback, pass ReactJS a function that will call it
       // with the Dart Component instance, not the ReactComponent instance.
-      if (ref is _CallbackRef) {
-        propsForJs['ref'] = allowInterop((ReactComponent instance) => ref(instance?.dartComponent));
+      //
+      // Use _CallbackRef<Null> to check arity, since parameters could be non-dynamic, and thus
+      // would fail the `is _CallbackRef<dynamic>` check.
+      // See https://github.com/dart-lang/sdk/issues/34593 for more information on arity checks.
+      if (ref is _CallbackRef<Null>) {
+        propsForJs['ref'] = allowInterop((ReactComponent instance) {
+          // Call as dynamic to perform dynamic dispatch, since we can't cast to _CallbackRef<dynamic>,
+          // and since calling with non-null values will fail at runtime due to the _CallbackRef<Null> typing.
+          return (ref as dynamic)(instance?.dartComponent);
+        });
       }
 
       if (ref is Ref) {

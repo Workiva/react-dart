@@ -198,7 +198,7 @@ void domEventHandlerWrappingTests(ReactComponentFactoryProxy factory) {
   });
 }
 
-void refTests(ReactComponentFactoryProxy factory, {void verifyRefValue(dynamic refValue)}) {
+void refTests<T>(ReactComponentFactoryProxy factory, {void verifyRefValue(dynamic refValue)}) {
   test('callback refs are called with the correct value', () {
     var called = false;
     var refValue;
@@ -266,6 +266,38 @@ void refTests(ReactComponentFactoryProxy factory, {void verifyRefValue(dynamic r
 
     expect(idValue, equals('test'), reason: 'child component should have access to parent props');
     verifyRefValue(refObject.current);
+  });
+
+  _typedCallbackRefTests<T>(factory);
+}
+
+void _typedCallbackRefTests<T>(react.ReactComponentFactoryProxy factory) {
+  if (T == dynamic) {
+    throw ArgumentError('Generic parameter T must be specified');
+  }
+
+  group('has functional callback refs when they are typed as', () {
+    test('`dynamic Function(dynamic)`', () {
+      T fooRef;
+      callbackRef(dynamic ref) {
+        fooRef = ref;
+      }
+
+      expect(() => rtu.renderIntoDocument(factory({'ref': callbackRef})), returnsNormally,
+          reason: 'React should not have a problem with the ref we pass it, and calling it should not throw');
+      expect(fooRef, isA<T>(), reason: 'should be the correct type, not be a NativeJavaScriptObject/etc.');
+    });
+
+    test('`dynamic Function(ComponentClass)`', () {
+      T fooRef;
+      callbackRef(T ref) {
+        fooRef = ref;
+      }
+
+      expect(() => rtu.renderIntoDocument(factory({'ref': callbackRef})), returnsNormally,
+          reason: 'React should not have a problem with the ref we pass it, and calling it should not throw');
+      expect(fooRef, isA<T>(), reason: 'should be the correct type, not be a NativeJavaScriptObject/etc.');
+    });
   });
 }
 
