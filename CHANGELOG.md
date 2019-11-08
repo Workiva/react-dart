@@ -1,3 +1,7 @@
+## [5.0.1](https://github.com/cleandart/react-dart/compare/5.0.0...5.0.1)
+Pull in 4.9.2 changes that were accidentally reverted as part of 5.0.0.
+> - [#220] Fix bug where reading `dataTransfer` sometimes threw during synthetic event conversion
+
 ## [5.0.0](https://github.com/cleandart/react-dart/compare/4.9.1...5.0.0)
 
   __ReactJS 16.x Support__
