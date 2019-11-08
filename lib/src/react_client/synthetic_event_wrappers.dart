@@ -59,9 +59,12 @@ class SyntheticFocusEvent extends SyntheticEvent {
 @anonymous
 class SyntheticFormEvent extends SyntheticEvent {}
 
+/// A JS object that looks like a [DataTransfer] but isn't one.
+///
+/// See `syntheticDataTransferFactory` for more info.
 @JS()
 @anonymous
-class SyntheticDataTransfer {
+class NonNativeDataTransfer {
   external String get dropEffect;
   external String get effectAllowed;
   external List<File> get files;
@@ -77,7 +80,7 @@ class SyntheticMouseEvent extends SyntheticEvent {
   external num get clientX;
   external num get clientY;
   external bool get ctrlKey;
-  external SyntheticDataTransfer get dataTransfer;
+  external dynamic get dataTransfer;
   external bool get metaKey;
   external num get pageX;
   external num get pageY;
