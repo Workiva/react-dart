@@ -829,13 +829,24 @@ abstract class Component2 implements Component {
   /// See: <https://reactjs.org/docs/typechecking-with-proptypes.html#proptypes>
   Map<String, PropValidator<Null>> get propTypes => {};
 
-  /// __Required.__
+  /// Examines [props] and [state] and returns one of the following types:
   ///
-  /// When called, it should examine [props] and [state] and return a single child [Element]. This child [Element] can
-  /// be either a virtual representation of a native DOM component (such as [DivElement]) or another composite
-  /// `Component` that you've defined yourself.
+  /// * [ReactElement] (renders a single DOM `Element`)
+  /// * [Fragment] (renders multiple elements)
+  /// * [ReactPortal] (renders children into a different DOM subtree)
+  /// * `String` / `num` (renders text nodes in the DOM)
+  /// * `bool` / `null` (renders nothing)
   ///
-  /// See: <https://facebook.github.io/react/docs/react-component.html#render>
+  /// This method is __required__ for class components.
+  ///
+  /// The function should be _pure_, meaning that it should not modify component [state],
+  /// it returns the same result each time it is invoked, and it does not directly interact
+  /// with browser / DOM apis.
+  ///
+  /// If you need to interact with the browser / DOM apis, perform your work in [componentDidMount]
+  /// or the other lifecycle methods instead. Keeping `render` pure makes components easier to think about.
+  ///
+  /// See: <https://reactjs.org/docs/react-component.html#render>
   dynamic render();
 
   // ******************************************************************************************************************
