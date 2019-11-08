@@ -8,14 +8,38 @@
 library react;
 
 import 'package:meta/meta.dart';
+import 'package:react/react_client/bridge.dart';
+import 'package:react/src/prop_validator.dart';
 import 'package:react/src/typedefs.dart';
+import 'package:react/react_client.dart';
+import 'package:react/react_client/react_interop.dart';
+import 'package:react/src/context.dart';
 
-typedef Component ComponentFactory();
+export 'package:react/src/context.dart';
+export 'package:react/src/prop_validator.dart';
+export 'package:react/react_client/react_interop.dart' show forwardRef, createRef;
+
+typedef T ComponentFactory<T extends Component>();
 typedef ReactComponentFactoryProxy ComponentRegistrar(ComponentFactory componentFactory,
     [Iterable<String> skipMethods]);
 
+typedef ReactDartComponentFactoryProxy2 ComponentRegistrar2(
+  ComponentFactory<Component2> componentFactory, {
+  Iterable<String> skipMethods,
+  Component2BridgeFactory bridgeFactory,
+});
+
+/// Fragment component that allows the wrapping of children without the necessity of using
+/// an element that adds an additional layer to the DOM (div, span, etc).
+///
+/// See: <https://reactjs.org/docs/fragments.html>
+var Fragment = ReactJsComponentFactoryProxy(React.Fragment);
+
 /// Top-level ReactJS [Component class](https://facebook.github.io/react/docs/react-component.html)
 /// which provides the [ReactJS Component API](https://facebook.github.io/react/docs/react-component.html#reference)
+///
+/// __Deprecated. Use [Component2] instead.__
+@Deprecated('6.0.0')
 abstract class Component {
   Map _context;
 
@@ -44,25 +68,23 @@ abstract class Component {
   /// [doesn't work for overriding fields](https://github.com/dart-lang/sdk/issues/27452).
   ///
   /// TODO: Switch back to a plain field once this issue is fixed.
-  Ref _ref;
+  RefMethod _ref;
 
   /// The React context map of this component, passed down from its ancestors' [getChildContext] value.
   ///
   /// Only keys declared in this component's [contextKeys] will be present.
   ///
   /// > This API was never stable in any version of ReactJS, and was replaced with a new, incompatible context API
-  /// > in ReactJS 16 that will be exposed in version `5.1.0` of the `react` Dart package via a
-  /// > new version of `Component` called `Component2`.
+  /// > in ReactJS 16 that is exposed via the [Component2] class.
   /// >
-  /// > It is strongly recommended that you do not use this, and instead wait for `Component2.context`.
+  /// > It is strongly recommended that you migrate to [Component2] and use [Component2.context] instead.
   @experimental
   dynamic get context => _context;
 
   /// > This API was never stable in any version of ReactJS, and was replaced with a new, incompatible context API
-  /// > in ReactJS 16 that will be exposed in version `5.1.0` of the `react` Dart package via a
-  /// > new version of `Component` called `Component2`.
+  /// > in ReactJS 16 that is exposed via the [Component2] class.
   /// >
-  /// > It is strongly recommended that you do not use this, and instead wait for `Component2.context`.
+  /// > It is strongly recommended that you migrate to [Component2] and use [Component2.context] instead.
   @experimental
   set context(dynamic value) => _context = value;
 
@@ -82,19 +104,23 @@ abstract class Component {
   ///
   /// Support for String `ref`s will be removed in the `6.0.0` release when `Component` is removed.
   ///
-  /// There will be new and improved ways to use / set refs in the `5.1.0` release via APIs exposed in `Component2`.
+  /// There are new and improved ways to use / set refs within [Component2].
   /// Until then, use a callback ref instead.
+  ///
+  /// FIXME 3.1.0-wip: Add better description of how to utilize [Component2] refs.
   @Deprecated('6.0.0')
-  Ref get ref => _ref;
+  RefMethod get ref => _ref;
 
   /// __DEPRECATED.__
   ///
   /// Support for String `ref`s will be removed in the `6.0.0` release when `Component` is removed.
   ///
-  /// There will be new and improved ways to use / set refs in the `5.1.0` release via APIs exposed in `Component2`.
+  /// There are new and improved ways to use / set refs within [Component2].
   /// Until then, use a callback ref instead.
+  ///
+  /// FIXME 3.1.0-wip: Add better description of how to utilize [Component2] refs.
   @Deprecated('6.0.0')
-  set ref(Ref value) => _ref = value;
+  set ref(RefMethod value) => _ref = value;
 
   dynamic _jsRedraw;
 
@@ -102,7 +128,7 @@ abstract class Component {
 
   List<SetStateCallback> _setStateCallbacks = [];
 
-  List<TransactionalSetStateCallback> _transactionalSetStateCallbacks = [];
+  List<StateUpdaterCallback> _transactionalSetStateCallbacks = [];
 
   /// The List of callbacks to be called after the component has been updated from a call to [setState].
   List get setStateCallbacks => _setStateCallbacks;
@@ -118,7 +144,7 @@ abstract class Component {
   /// to be set for debugging purposes.
   String get displayName => runtimeType.toString();
 
-  initComponentInternal(props, _jsRedraw, [Ref ref, _jsThis, context]) {
+  initComponentInternal(props, _jsRedraw, [RefMethod ref, _jsThis, context]) {
     this._jsRedraw = _jsRedraw;
     this.ref = ref;
     this._jsThis = _jsThis;
@@ -128,8 +154,15 @@ abstract class Component {
 
   /// Initializes context
   _initContext(context) {
+    /// [context]s typing was loosened from Map to dynamic to support the new context API in [Component2]
+    /// which extends from [Component]. Only "legacy" context APIs are supported in [Component] - which means
+    /// it will still be expected to be a Map.
     this.context = new Map.from(context ?? const {});
-    this.nextContext = this.context;
+
+    /// [nextContext]s typing was loosened from Map to dynamic to support the new context API in [Component2]
+    /// which extends from [Component]. Only "legacy" context APIs are supported in [Component] - which means
+    /// it will still be expected to be a Map.
+    this.nextContext = new Map.from(this.context ?? const {});
   }
 
   _initProps(props) {
@@ -151,8 +184,7 @@ abstract class Component {
   /// > __DEPRECATED - DO NOT USE__
   /// >
   /// > This API was never stable in any version of ReactJS, and was replaced with a new, incompatible context API
-  /// > in ReactJS 16 that will be exposed in version `5.1.0` of the `react` Dart package via a
-  /// > new version of `Component` called `Component2`.
+  /// > in ReactJS 16 that is exposed via the [Component2] class.
   /// >
   /// > This will be completely removed when the JS side of it is slated for removal (ReactJS 17 / react.dart 6.0.0)
   @Deprecated('6.0.0')
@@ -171,8 +203,7 @@ abstract class Component {
   /// > __DEPRECATED - DO NOT USE__
   /// >
   /// > This API was never stable in any version of ReactJS, and was replaced with a new, incompatible context API
-  /// > in ReactJS 16 that will be exposed in version `5.1.0` of the `react` Dart package via a
-  /// > new version of `Component` called `Component2`.
+  /// > in ReactJS 16 that is exposed via the [Component2] class.
   /// >
   /// > This will be completely removed when the JS side of it is slated for removal (ReactJS 17 / react.dart 6.0.0)
   @Deprecated('6.0.0')
@@ -203,8 +234,7 @@ abstract class Component {
   ///
   /// > __DEPRECATED.__
   /// >
-  /// > This was never designed for public consumption, and there will be no replacement
-  /// > implementation in `Component2` when it is released in `5.1.0`.
+  /// > This was never designed for public consumption, and there will be no replacement implementation in `Component2`.
   /// >
   /// > Will be removed in `6.0.0` along with `Component`.
   @Deprecated('6.0.0')
@@ -230,10 +260,10 @@ abstract class Component {
   /// Also allows [newState] to be used as a transactional `setState` callback.
   ///
   /// See: <https://facebook.github.io/react/docs/react-component.html#setstate>
-  void setState(dynamic newState, [callback()]) {
+  void setState(covariant dynamic newState, [callback()]) {
     if (newState is Map) {
       _nextState.addAll(newState);
-    } else if (newState is TransactionalSetStateCallback) {
+    } else if (newState is StateUpdaterCallback) {
       _transactionalSetStateCallbacks.add(newState);
     } else if (newState != null) {
       throw new ArgumentError(
@@ -292,17 +322,20 @@ abstract class Component {
   /// Calling [setState] within this function will not trigger an additional [render].
   ///
   /// See: <https://facebook.github.io/react/docs/react-component.html#updating-componentwillreceiveprops>
-  void componentWillReceiveProps(Map newProps) {}
-
-  /// > __DEPRECATED - DO NOT USE__
+  /// > __UNSUPPORTED IN COMPONENT2__
   /// >
-  /// > This API was never stable in any version of ReactJS, and was replaced with a new, incompatible context API
-  /// > in ReactJS 16 that will be exposed in version `5.1.0` of the `react` Dart package via a
-  /// > new version of `Component` called `Component2`.
+  /// > This will be removed once 6.0.0 releases; switching to [Component2.getDerivedStateFromProps] is the path forward.
   /// >
   /// > This will be completely removed when the JS side of it is slated for removal (ReactJS 17 / react.dart 6.0.0)
-  @Deprecated('6.0.0')
-  void componentWillReceivePropsWithContext(Map newProps, nextContext) {}
+  void componentWillReceiveProps(Map newProps) {}
+
+  /// > __UNSUPPORTED IN COMPONENT2__
+  /// >
+  /// > This API was never stable in any version of ReactJS, and was replaced with a new, incompatible context API
+  /// > in ReactJS 16 that is exposed via the [Component2] class.
+  /// >
+  /// > This will be completely removed when the JS side of it is slated for removal (ReactJS 17 / react.dart 6.0.0)
+  void componentWillReceivePropsWithContext(Map newProps, dynamic nextContext) {}
 
   /// ReactJS lifecycle method that is invoked before rendering when [nextProps] or [nextState] are being received.
   ///
@@ -315,8 +348,7 @@ abstract class Component {
   /// > __DEPRECATED - DO NOT USE__
   /// >
   /// > This API was never stable in any version of ReactJS, and was replaced with a new, incompatible context API
-  /// > in ReactJS 16 that will be exposed in version `5.1.0` of the `react` Dart package via a
-  /// > new version of `Component` called `Component2`.
+  /// > in ReactJS 16 that is exposed via the [Component2] class.
   /// >
   /// > This will be completely removed when the JS side of it is slated for removal (ReactJS 17 / react.dart 6.0.0)
   @Deprecated('6.0.0')
@@ -333,13 +365,22 @@ abstract class Component {
   /// using both provides no added benefit.
   ///
   /// See: <https://facebook.github.io/react/docs/react-component.html#updating-componentwillupdate>
+  ///
+  /// > __UNSUPPORTED IN COMPONENT2__
+  /// >
+  /// > Due to the release of getSnapshotBeforeUpdate in ReactJS 16,
+  /// > componentWillUpdate is no longer the method used to check the state
+  /// > and props before a re-render. Both the Component class and
+  /// > componentWillUpdate will be removed in the react.dart 6.0.0 release.
+  /// > Use Component2 and Component2.getSnapshotBeforeUpdate instead.
+  /// >
+  /// > This will be completely removed when the JS side of it is slated for removal (ReactJS 17 / react.dart 6.0.0)
   void componentWillUpdate(Map nextProps, Map nextState) {}
 
   /// > __DEPRECATED - DO NOT USE__
   /// >
   /// > This API was never stable in any version of ReactJS, and was replaced with a new, incompatible context API
-  /// > in ReactJS 16 that will be exposed in version `5.1.0` of the `react` Dart package via a
-  /// > new version of `Component` called `Component2`.
+  /// > in ReactJS 16 that is exposed via the [Component2] class.
   /// >
   /// > This will be completely removed when the JS side of it is slated for removal (ReactJS 17 / react.dart 6.0.0)
   @Deprecated('6.0.0')
@@ -370,8 +411,7 @@ abstract class Component {
   /// > __DEPRECATED - DO NOT USE__
   /// >
   /// > This API was never stable in any version of ReactJS, and was replaced with a new, incompatible context API
-  /// > in ReactJS 16 that will be exposed in version `5.1.0` of the `react` Dart package via a
-  /// > new version of `Component` called `Component2`.
+  /// > in ReactJS 16 that is exposed via the [Component2] class.
   /// >
   /// > This will be completely removed when the JS side of it is slated for removal (ReactJS 17 / react.dart 6.0.0)
   @Deprecated('6.0.0')
@@ -384,8 +424,7 @@ abstract class Component {
   /// > __DEPRECATED - DO NOT USE__
   /// >
   /// > This API was never stable in any version of ReactJS, and was replaced with a new, incompatible context API
-  /// > in ReactJS 16 that will be exposed in version `5.1.0` of the `react` Dart package via a
-  /// > new version of `Component` called `Component2`.
+  /// > in ReactJS 16 that is exposed via the [Component2] class.
   /// >
   /// > This will be completely removed when the JS side of it is slated for removal (ReactJS 17 / react.dart 6.0.0)
   @Deprecated('6.0.0')
@@ -398,8 +437,7 @@ abstract class Component {
   /// > __DEPRECATED - DO NOT USE__
   /// >
   /// > This API was never stable in any version of ReactJS, and was replaced with a new, incompatible context API
-  /// > in ReactJS 16 that will be exposed in version `5.1.0` of the `react` Dart package via a
-  /// > new version of `Component` called `Component2`.
+  /// > in ReactJS 16 that is exposed via the [Component2] class.
   /// >
   /// > This will be completely removed when the JS side of it is slated for removal (ReactJS 17 / react.dart 6.0.0)
   @Deprecated('6.0.0')
@@ -427,6 +465,747 @@ abstract class Component {
   ///
   /// See: <https://facebook.github.io/react/docs/react-component.html#render>
   dynamic render();
+}
+
+/// Top-level ReactJS [Component class](https://reactjs.org/docs/react-component.html)
+/// which provides the [ReactJS Component API](https://reactjs.org/docs/react-component.html#reference).
+///
+/// Differences from the deprecated [Component]:
+///
+/// 1. "JS-backed maps" - uses the JS React component's props / state objects maps under the hood
+///    instead of copying them into Dart Maps. Benefits:
+///     - Improved performance
+///     - Props/state key-value pairs are visible to React, and show up in the Dev Tools
+///     - Easier to maintain the JS-Dart interop and add new features
+///     - Easier to interop with JS libraries like react-redux
+///
+/// 2. Supports the new lifecycle methods introduced in React 16
+///    (See method doc comments for more info)
+///     - [getDerivedStateFromProps]
+///     - [getSnapshotBeforeUpdate]
+///     - [componentDidCatch]
+///     - [getDerivedStateFromError]
+///
+/// 3. Drops support for "unsafe" lifecycle methods deprecated in React 16
+///    (See method doc comments for migration instructions)
+///     - [componentWillMount]
+///     - [componentWillReceiveProps]
+///     - [componentWillUpdate]
+///
+/// 4. Supports React 16 [context]
+abstract class Component2 implements Component {
+  /// Accessed once and cached when instance is created. The [contextType] property on a class can be assigned
+  /// a [ReactDartContext] object created by [React.createContext]. This lets you consume the nearest current value of
+  /// that Context using [context].
+  ///
+  /// __Example__:
+  ///
+  ///     var MyContext = createContext('test');
+  ///
+  ///     class MyClass extends react.Component2 {
+  ///       @override
+  ///       final contextType = MyContext;
+  ///
+  ///       render() {
+  ///         return react.span({}, [
+  ///           '${this.context}', // Outputs: 'test'
+  ///         ]);
+  ///       }
+  ///     }
+  ///
+  /// See: <https://reactjs.org/docs/context.html#classcontexttype>
+  Context get contextType => null;
+
+  /// Invoked once and cached when [reactComponentClass] is called. Values in the mapping will be set on [props]
+  /// if that prop is not specified by the parent component.
+  ///
+  /// This method is invoked before any instances are created and thus cannot rely on [props]. In addition, be aware
+  /// that any complex objects returned by `defaultProps` will be shared across instances, not copied.
+  ///
+  /// __Example__:
+  ///
+  ///     // ES6 component
+  ///     Component.defaultProps = {
+  ///       count: 0
+  ///     };
+  ///
+  ///     // Dart component
+  ///     @override
+  ///     get defaultProps => {'count': 0};
+  ///
+  /// See: <https://reactjs.org/docs/react-without-es6.html#declaring-default-props>
+  /// See: <https://reactjs.org/docs/react-component.html#defaultprops>
+  Map get defaultProps => const {};
+
+  /// Invoked once before the `Component` is mounted. The return value will be used as the initial value of [state].
+  ///
+  /// __Example__:
+  ///
+  ///     // ES6 component
+  ///     constructor() {
+  ///       this.state = {count: 0};
+  ///     }
+  ///
+  ///     // Dart component
+  ///     @override
+  ///     get initialState => {'count': 0};
+  ///
+  /// See: <https://reactjs.org/docs/react-without-es6.html#setting-the-initial-state>
+  /// See: <https://reactjs.org/docs/react-component.html#constructor>
+  Map get initialState => const {};
+
+  /// The context value from the [contextType] assigned to this component.
+  /// The value is passed down from the provider of the same [contextType].
+  /// You can reference [context] in any of the lifecycle methods including the render function.
+  ///
+  /// If you need multiple context values, consider using multiple consumers instead.
+  /// Read more: https://reactjs.org/docs/context.html#consuming-multiple-contexts
+  ///
+  /// This only has a value when [contextType] is set.
+  ///
+  /// __Example__:
+  ///
+  ///     var MyContext = createContext('test');
+  ///
+  ///     class MyClass extends react.Component2 {
+  ///       @override
+  ///       final contextType = MyContext;
+  ///
+  ///       render() {
+  ///         return react.span({}, [
+  ///           '${this.context}', // Outputs: 'test'
+  ///         ]);
+  ///       }
+  ///     }
+  ///
+  /// See: <https://reactjs.org/docs/context.html#classcontexttype>
+  @override
+  dynamic context;
+
+  @override
+  Map props;
+
+  @override
+  Map state;
+
+  @override
+  @Deprecated('6.0.0')
+  get _jsThis => throw _unsupportedError('_jsThis');
+  @override
+  @Deprecated('6.0.0')
+  set _jsThis(_) => throw _unsupportedError('_jsThis');
+
+  /// The JavaScript [`ReactComponent`](https://facebook.github.io/react/docs/top-level-api.html#reactdom.render)
+  /// instance of this `Component` returned by [render].
+  @override
+  ReactComponent jsThis;
+
+  /// Allows the [ReactJS `displayName` property](https://facebook.github.io/react/docs/react-component.html#displayname)
+  /// to be set for debugging purposes.
+  ///
+  /// In DDC, this will be the class name, but in dart2js it will be null unless
+  /// overridden, since using runtimeType can lead to larger dart2js output.
+  ///
+  /// This will result in the dart2js name being `ReactDartComponent2` (the
+  /// name of the proxying JS component defined in _dart_helpers.js).
+  String get displayName {
+    var value;
+    assert(() {
+      value = runtimeType.toString();
+      return true;
+    }());
+    return value;
+  }
+
+  Component2Bridge get _bridge => Component2Bridge.forComponent(this);
+
+  /// Triggers a rerender with new state obtained by shallow-merging [newState] into the current [state].
+  ///
+  /// Optionally accepts a [callback] that gets called after the component updates.
+  ///
+  /// To use a transactional `setState` callback, check out [setStateWithUpdater].
+  ///
+  /// See: <https://reactjs.org/docs/react-component.html#setstate>
+  void setState(Map newState, [SetStateCallback callback]) {
+    _bridge.setState(this, newState, callback);
+  }
+
+  /// Triggers a rerender with new state obtained by shallow-merging
+  /// the return value of [updater] into the current [state].
+  ///
+  /// Optionally accepts a [callback] that gets called after the component updates.
+  ///
+  /// See: <https://reactjs.org/docs/react-component.html#setstate>
+  void setStateWithUpdater(StateUpdaterCallback updater, [SetStateCallback callback]) {
+    _bridge.setStateWithUpdater(this, updater, callback);
+  }
+
+  /// Causes [render] to be called, skipping [shouldComponentUpdate].
+  ///
+  /// > See: <https://reactjs.org/docs/react-component.html#forceupdate>
+  void forceUpdate([SetStateCallback callback]) {
+    _bridge.forceUpdate(this, callback);
+  }
+
+  /// ReactJS lifecycle method that is invoked once, only on the client _(not on the server)_, immediately after the
+  /// initial rendering occurs.
+  ///
+  /// At this point in the lifecycle, you can access any [ref]s to the children of [rootNode].
+  ///
+  /// The [componentDidMount] method of child `Component`s is invoked _before_ that of parent `Component`.
+  ///
+  /// See: <https://facebook.github.io/react/docs/react-component.html#mounting-componentdidmount>
+  void componentDidMount() {}
+
+  /// ReactJS lifecycle method that is invoked before rendering on initial mount and on subsequent updates when [nextProps] is received.
+  ///
+  /// It should return an object to update the state, or null to update nothing (this is different from componentWillRecieveProps).
+  ///
+  /// [prevState] will be null when this lifcecyle method is called before first mount.
+  ///
+  /// This method is also effectively static, so using instance members like [props] or `ref` will not work.
+  ///
+  /// Deriving state from props should be used with caution since it can lead to more verbose implementations and less approachable by others.
+  ///
+  /// See: <https://reactjs.org/docs/react-component.html#static-getderivedstatefromprops>
+  ///
+  /// __Example__:
+  ///
+  ///     @override
+  ///     getDerivedStateFromProps(Map nextProps, Map prevState) {
+  ///       if (prevState.someMirroredValue != nextProps.someValue) {
+  ///         return {
+  ///           derivedData: computeDerivedState(nextProps),
+  ///           someMirroredValue: nextProps.someValue
+  ///         };
+  ///       }
+  ///       return null;
+  ///     }
+  ///
+  Map getDerivedStateFromProps(Map nextProps, Map prevState) => null;
+
+  /// ReactJS lifecycle method that is invoked before rendering when [nextProps] or [nextState] are being received.
+  ///
+  /// Use this as an opportunity to return `false` when you're certain that the transition to the new props and state
+  /// will not require a component update.
+  ///
+  /// See: <https://facebook.github.io/react/docs/react-component.html#updating-shouldcomponentupdate>
+  bool shouldComponentUpdate(Map nextProps, Map nextState) => true;
+
+  /// ReactJS lifecycle method that is invoked immediately after rendering
+  /// before [nextProps] and [nextState] are committed to the DOM.
+  ///
+  /// This method is not called for the initial [render].
+  ///
+  /// Use this as an opportunity to perform preparation before an update occurs.
+  ///
+  /// __Example__:
+  ///
+  ///     getSnapshotBeforeUpdate(prevProps, prevState) {
+  ///
+  ///       // Previous props / state can be analyzed and compared to this.props or
+  ///       // this.state, allowing the opportunity perform decision logic.
+  ///       // Are we adding new items to the list?
+  ///       // Capture the scroll position so we can adjust scroll later.
+  ///
+  ///       if (prevProps.list.length < props.list.length) {
+  ///
+  ///         // The return value from getSnapshotBeforeUpdate is passed into
+  ///         // componentDidUpdate's third parameter (which is new to React 16).
+  ///
+  ///         final list = _listRef;
+  ///         return list.scrollHeight - list.scrollTop;
+  ///       }
+  ///       return null;
+  ///     }
+  ///
+  ///     componentDidUpdate(prevProps, prevState, snapshot) {
+  ///       // If we have a snapshot value, we've just added new items.
+  ///       // Adjust scroll so these new items don't push the old ones out of
+  ///       // view.
+  ///       // (snapshot here is the value returned from getSnapshotBeforeUpdate)
+  ///       if (snapshot !== null) {
+  ///         final list = _listRef;
+  ///         list.scrollTop = list.scrollHeight - snapshot;
+  ///       }
+  ///     }
+  ///
+  /// See: <https://facebook.github.io/react/docs/react-component.html#getsnapshotbeforeupdate>
+  dynamic getSnapshotBeforeUpdate(Map prevProps, Map prevState) {}
+
+  /// ReactJS lifecycle method that is invoked immediately after the `Component`'s updates are flushed to the DOM.
+  ///
+  /// This method is not called for the initial [render].
+  ///
+  /// Use this as an opportunity to operate on the [rootNode] (DOM) when the `Component` has been updated as a result
+  /// of the values of [prevProps] / [prevState].
+  ///
+  /// __Note__: React 16 added a third parameter to componentDidUpdate, which
+  /// is a custom value returned in [getSnapshotBeforeUpdate]. If a specified
+  /// value is not returned in getSnapshotBeforeUpdate, the [snapshot]
+  /// parameter in componentDidUpdate will be null.
+  ///
+  /// See: <https://facebook.github.io/react/docs/react-component.html#updating-componentdidupdate>
+  void componentDidUpdate(Map prevProps, Map prevState, [dynamic snapshot]) {}
+
+  /// ReactJS lifecycle method that is invoked immediately before a `Component` is unmounted from the DOM.
+  ///
+  /// Perform any necessary cleanup in this method, such as invalidating timers or cleaning up any DOM [Element]s that
+  /// were created in [componentDidMount].
+  ///
+  /// See: <https://facebook.github.io/react/docs/react-component.html#unmounting-componentwillunmount>
+  void componentWillUnmount() {}
+
+  /// ReactJS lifecycle method that is invoked after an error is thrown by a
+  /// descendant.
+  ///
+  /// Use this method primarily for logging errors, but because it takes
+  /// place after the commit phase side-effects are permitted.
+  ///
+  /// __Note__: This method, along with [getDerivedStateFromError] will only
+  /// be called if `skipMethods` in [registerComponent2] is overridden with
+  /// a list (which can be empty). Otherwise, in order to prevent every
+  /// component from being an error boundary, [componentDidCatch] and
+  /// [getDerivedStateFromError] will be ignored.
+  ///
+  /// See: <https://facebook.github.io/react/docs/react-component.html#componentdidcatch>
+  void componentDidCatch(dynamic error, ReactErrorInfo info) {}
+
+  /// ReactJS lifecycle method that is invoked after an error is thrown by a
+  /// descendant.
+  ///
+  /// Use this method to capture the error and update component state after an
+  /// error is thrown.
+  ///
+  /// __Note__: This method, along with [componentDidCatch] will only
+  /// be called if `skipMethods` in [registerComponent2] is overridden with
+  /// a list (which can be empty). Otherwise, in order to prevent every
+  /// component from being an error boundary, [componentDidCatch] and
+  /// [getDerivedStateFromError] will be ignored.
+  ///
+  /// See: <https://reactjs.org/docs/react-component.html#static-getderivedstatefromerror>
+  Map getDerivedStateFromError(dynamic error) => null;
+
+  /// Allows usage of PropValidator functions to check the validity of a prop within the props passed to it.
+  ///
+  /// The second argument (`info`) contains metadata about the prop specified by the key.
+  /// `propName`, `componentName`, `location` and `propFullName` are available.
+  ///
+  /// When an invalid value is provided for a prop, a warning will be shown in the JavaScript console.
+  ///
+  /// For performance reasons, propTypes is only checked in development mode.
+  ///
+  /// Simple Example:
+  ///
+  /// ```
+  /// @override
+  /// get propTypes => {
+  ///   'name': (Map props, info) {
+  ///     if (props['name'].length > 20) {
+  ///       return ArgumentError('(${props['name']}) is too long. 'name' has a max length of 20 characters.');
+  ///     }
+  ///   },
+  /// };
+  /// ```
+  ///
+  /// Example of 2 props being dependent:
+  ///
+  /// ```
+  /// @override
+  /// get propTypes => {
+  ///   'someProp': (Map props, info) {
+  ///     if (props[info.propName] == true && props['anotherProp'] == null) {
+  ///       return ArgumentError('If (${props[info.propName]}) is true. You must have a value for "anotherProp".');
+  ///     }
+  ///   },
+  ///   'anotherProp': (Map props, info) {
+  ///     if (props[info.propName] != null && props['someProp'] != true) {
+  ///       return ArgumentError('You must set "someProp" to true to use $[info.propName].');
+  ///     }
+  ///   },
+  /// };
+  /// ```
+  ///
+  /// See: <https://reactjs.org/docs/typechecking-with-proptypes.html#proptypes>
+  Map<String, PropValidator<Null>> get propTypes => {};
+
+  /// Examines [props] and [state] and returns one of the following types:
+  ///
+  /// * [ReactElement] (renders a single DOM `Element`)
+  /// * [Fragment] (renders multiple elements)
+  /// * [ReactPortal] (renders children into a different DOM subtree)
+  /// * `String` / `num` (renders text nodes in the DOM)
+  /// * `bool` / `null` (renders nothing)
+  ///
+  /// This method is __required__ for class components.
+  ///
+  /// The function should be _pure_, meaning that it should not modify component [state],
+  /// it returns the same result each time it is invoked, and it does not directly interact
+  /// with browser / DOM apis.
+  ///
+  /// If you need to interact with the browser / DOM apis, perform your work in [componentDidMount]
+  /// or the other lifecycle methods instead. Keeping `render` pure makes components easier to think about.
+  ///
+  /// See: <https://reactjs.org/docs/react-component.html#render>
+  dynamic render();
+
+  // ******************************************************************************************************************
+  //
+  // Deprecated members
+  //
+  // ******************************************************************************************************************
+
+  /// Deprecated. will be removed when [Component] is removed in the `6.0.0` release.
+  ///
+  /// Replace calls to this method with either:
+  ///
+  /// - [forceUpdate] (preferred) - forces rerender and bypasses [shouldComponentUpdate]
+  /// - `setState({})` - same behavior as this method: causes rerender but goes through [shouldComponentUpdate]
+  @override
+  @Deprecated('6.0.0')
+  void redraw([SetStateCallback callback]) {
+    setState({}, callback);
+  }
+
+  // ******************************************************************************************************************
+  //
+  // Deprecated and unsupported lifecycle methods
+  //
+  //   These should all throw and be annotated with @mustCallSuper so that any consumer overrides don't silently fail.
+  //
+  // ******************************************************************************************************************
+
+  UnsupportedError _unsupportedLifecycleError(String memberName) =>
+      new UnsupportedError('Component2 drops support for the lifecycle method $memberName.'
+          ' See doc comment on Component2.$memberName for migration instructions.');
+
+  /// Invoked once before the `Component` is mounted. The return value will be used as the initial value of [state].
+  ///
+  /// See: <https://facebook.github.io/react/docs/react-component.html#getinitialstate>
+  ///
+  /// > __DEPRECATED - DO NOT USE__
+  /// >
+  /// > Use the [initialState] getter instead.
+  @mustCallSuper
+  @Deprecated('6.0.0')
+  Map getInitialState() => throw _unsupportedLifecycleError('getInitialState');
+
+  /// Invoked once and cached when [reactComponentClass] is called. Values in the mapping will be set on [props]
+  /// if that prop is not specified by the parent component.
+  ///
+  /// This method is invoked before any instances are created and thus cannot rely on [props]. In addition, be aware
+  /// that any complex objects returned by `getDefaultProps` will be shared across instances, not copied.
+  ///
+  /// See: <https://facebook.github.io/react/docs/react-component.html#getdefaultprops>
+  ///
+  /// > __DEPRECATED - DO NOT USE__
+  /// >
+  /// > Use the [defaultProps] getter instead.
+  @mustCallSuper
+  @Deprecated('6.0.0')
+  Map getDefaultProps() => throw _unsupportedLifecycleError('getDefaultProps');
+
+  /// ReactJS lifecycle method that is invoked once, both on the client and server, immediately before the initial
+  /// rendering occurs.
+  ///
+  /// If you call [setState] within this method, [render] will see the updated state and will be executed only once
+  /// despite the [state] value change.
+  ///
+  /// See: <https://facebook.github.io/react/docs/react-component.html#unsafe_componentwillmount>
+  ///
+  /// > __DEPRECATED - DO NOT USE__
+  /// >
+  /// > Use [componentDidMount] instead
+  @mustCallSuper
+  @Deprecated('6.0.0')
+  void componentWillMount() => throw _unsupportedLifecycleError('componentWillMount');
+
+  /// ReactJS lifecycle method that is invoked when a `Component` is receiving [newProps].
+  ///
+  /// This method is not called for the initial [render].
+  ///
+  /// Use this as an opportunity to react to a prop transition before [render] is called by updating the [state] using
+  /// [setState]. The old props can be accessed via [props].
+  ///
+  /// Calling [setState] within this function will not trigger an additional [render].
+  ///
+  /// See: <https://facebook.github.io/react/docs/react-component.html#unsafe_componentwillreceiveprops>
+  ///
+  /// > __DEPRECATED - DO NOT USE__
+  /// >
+  /// > This will be removed once 6.0.0 releases, switching to [Component2.getDerivedStateFromProps] is the path forward
+  /// >
+  /// > React 16 has deprecated [componentWillReceiveProps] in favor of [getDerivedStateFromProps]
+  /// >
+  /// > This will be completely removed when the JS side of it is slated for removal (ReactJS 17 / react.dart 6.0.0)
+  @mustCallSuper
+  @Deprecated('6.0.0')
+  void componentWillReceiveProps(Map newProps) => throw _unsupportedLifecycleError('componentWillReceiveProps');
+
+  /// ReactJS lifecycle method that is invoked immediately before rendering when [nextProps] or [nextState] are being
+  /// received.
+  ///
+  /// This method is not called for the initial [render].
+  ///
+  /// Use this as an opportunity to perform preparation before an update occurs.
+  ///
+  /// __Note__: Choose either this method or [componentWillUpdateWithContext]. They are both called at the same time so
+  /// using both provides no added benefit.
+  ///
+  /// See: <https://facebook.github.io/react/docs/react-component.html#unsafe_componentwillupdate>
+  ///
+  /// > __DEPRECATED - DO NOT USE__
+  /// >
+  /// > Due to the release of getSnapshotBeforeUpdate in ReactJS 16,
+  /// > componentWillUpdate is no longer the method used to check the state
+  /// > and props before a re-render. Additionally, because of the presence
+  /// > of getSnapshotBeforeUpdate, componentWillUpdate will be ignored. Use
+  /// > getSnapshotBeforeUpdate instead.
+  /// >
+  /// > This will be completely removed when the JS side of it is slated for removal (ReactJS 17 / react.dart 6.0.0)
+  @mustCallSuper
+  @Deprecated('6.0.0')
+  void componentWillUpdate(Map nextProps, Map nextState) => throw _unsupportedLifecycleError('componentWillUpdate');
+
+  /// Do not use; this is part of the legacy context API.
+  ///
+  /// See [createContext] for instructions on using the new context API.
+  ///
+  /// Will be removed when [Component] is removed in the `6.0.0` release.
+  @override
+  @mustCallSuper
+  @Deprecated('6.0.0')
+  Map<String, dynamic> getChildContext() => throw _unsupportedLifecycleError('getChildContext');
+
+  /// Do not use; this is part of the legacy context API.
+  ///
+  /// See [createContext] for instructions on using the new context API.
+  ///
+  /// Will be removed when [Component] is removed in the `6.0.0` release.
+  @override
+  @mustCallSuper
+  @Deprecated('6.0.0')
+  bool shouldComponentUpdateWithContext(Map nextProps, Map nextState, dynamic nextContext) =>
+      throw _unsupportedLifecycleError('shouldComponentUpdateWithContext');
+
+  /// Do not use; this is part of the legacy context API.
+  ///
+  /// See [createContext] for instructions on using the new context API.
+  ///
+  /// Will be removed when [Component] is removed in the `6.0.0` release.
+  @override
+  @mustCallSuper
+  @Deprecated('6.0.0')
+  void componentWillUpdateWithContext(Map nextProps, Map nextState, dynamic nextContext) =>
+      throw _unsupportedLifecycleError('componentWillUpdateWithContext');
+
+  /// Do not use; this is part of the legacy context API.
+  ///
+  /// See [createContext] for instructions on using the new context API.
+  ///
+  /// Will be removed when [Component] is removed in the `6.0.0` release.
+  @override
+  @mustCallSuper
+  @Deprecated('6.0.0')
+  void componentWillReceivePropsWithContext(Map newProps, dynamic nextContext) =>
+      throw _unsupportedLifecycleError('componentWillReceivePropsWithContext');
+
+  // ******************************************************************************************************************
+  // Other deprecated and unsupported members
+  // ******************************************************************************************************************
+
+  UnsupportedError _unsupportedError(String memberName) =>
+      new UnsupportedError('Component2 drops support for $memberName');
+
+  /// Do not use.
+  ///
+  /// Will be removed when [Component] is removed in the `6.0.0` release.
+  @override
+  @Deprecated('6.0.0')
+  void replaceState(Map newState, [SetStateCallback callback]) => throw _unsupportedError('replaceState');
+
+  /// Do not use.
+  ///
+  /// Will be removed when [Component] is removed in the `6.0.0` release.
+  @override
+  @Deprecated('6.0.0')
+  Iterable<String> get childContextKeys => throw _unsupportedError('"Legacy" Context [childContextKeys]');
+
+  /// Do not use.
+  ///
+  /// Will be removed when [Component] is removed in the `6.0.0` release.
+  @override
+  @Deprecated('6.0.0')
+  Iterable<String> get contextKeys => throw _unsupportedError('"Legacy" Context [contextKeys]');
+
+  /// Do not use.
+  ///
+  /// Will be removed when [Component] is removed in the `6.0.0` release.
+  @override
+  @Deprecated('6.0.0')
+  initComponentInternal(props, _jsRedraw, [RefMethod ref, _jsThis, context]) =>
+      throw _unsupportedError('initComponentInternal');
+
+  /// Do not use.
+  ///
+  /// Will be removed when [Component] is removed in the `6.0.0` release.
+  @override
+  @Deprecated('6.0.0')
+  initStateInternal() => throw _unsupportedError('initStateInternal');
+
+  /// Do not use.
+  ///
+  /// Will be removed when [Component] is removed in the `6.0.0` release.
+  @override
+  @Deprecated('6.0.0')
+  get nextContext => throw _unsupportedError('"Legacy" Context [nextContext]');
+  @override
+  @Deprecated('6.0.0')
+  set nextContext(_) => throw _unsupportedError('"Legacy" Context [nextContext]');
+
+  /// Do not use.
+  ///
+  /// Will be removed when [Component] is removed in the `6.0.0` release.
+  @override
+  @Deprecated('6.0.0')
+  get prevContext => throw _unsupportedError('"Legacy" Context [prevContext]');
+  @override
+  @Deprecated('6.0.0')
+  set prevContext(_) => throw _unsupportedError('"Legacy" Context [prevContext]');
+
+  /// Do not use.
+  ///
+  /// Will be removed when [Component] is removed in the `6.0.0` release.
+  @override
+  @Deprecated('6.0.0')
+  Map get prevState => throw _unsupportedError('"Legacy" Context [prevContext]');
+  set prevState(_) => throw _unsupportedError('"Legacy" Context [prevContext]');
+
+  /// Do not use.
+  ///
+  /// Will be removed when [Component] is removed in the `6.0.0` release.
+  @override
+  @Deprecated('6.0.0')
+  Map get nextState => throw _unsupportedError('nextState');
+
+  /// Do not use.
+  ///
+  /// Will be removed when [Component] is removed in the `6.0.0` release.
+  @override
+  @Deprecated('6.0.0')
+  Map get nextProps => throw _unsupportedError('nextProps');
+  set nextProps(_) => throw _unsupportedError('nextProps');
+
+  /// Do not use.
+  ///
+  /// Will be removed when [Component] is removed in the `6.0.0` release.
+  @override
+  @Deprecated('6.0.0')
+  void transferComponentState() => throw _unsupportedError('transferComponentState');
+
+  /// Do not use.
+  ///
+  /// Will be removed when [Component] is removed in the `6.0.0` release.
+  @override
+  @Deprecated('6.0.0')
+  RefMethod get ref => throw _unsupportedError('ref');
+  set ref(_) => throw _unsupportedError('ref');
+
+  /// Do not use.
+  ///
+  /// Will be removed when [Component] is removed in the `6.0.0` release.
+  @override
+  @Deprecated('6.0.0')
+  List<SetStateCallback> get setStateCallbacks => throw _unsupportedError('setStateCallbacks');
+
+  @override
+  @Deprecated('6.0.0')
+  List<StateUpdaterCallback> get transactionalSetStateCallbacks =>
+      throw _unsupportedError('transactionalSetStateCallbacks');
+
+  // ******************************************************************************************************************
+  // Private unsupported members (no need to throw since they're internal)
+  // ******************************************************************************************************************
+
+  @override
+  @Deprecated('6.0.0')
+  Map _context;
+
+  @override
+  @Deprecated('6.0.0')
+  var _jsRedraw;
+
+  @override
+  @Deprecated('6.0.0')
+  Map _nextState;
+
+  @override
+  @Deprecated('6.0.0')
+  Map _props;
+
+  @override
+  @Deprecated('6.0.0')
+  RefMethod _ref;
+
+  @override
+  @Deprecated('6.0.0')
+  List<SetStateCallback> _setStateCallbacks;
+
+  @override
+  @Deprecated('6.0.0')
+  Map _state;
+
+  @override
+  @Deprecated('6.0.0')
+  List<StateUpdaterCallback> _transactionalSetStateCallbacks;
+
+  @override
+  @Deprecated('6.0.0')
+  _initContext(context) {}
+
+  @override
+  @Deprecated('6.0.0')
+  _initProps(props) {}
+}
+
+/// Mixin that enforces consistent typing of the `snapshot` parameter
+/// returned by [Component2.getSnapshotBeforeUpdate]
+/// and passed into [Component2.componentDidUpdate].
+///
+/// __EXAMPLE__:
+///
+///     class _ParentComponent extends react.Component2
+///         with react.TypedSnapshot<bool> {
+///
+///       // Note that the return value is specified as an bool, matching the mixin
+///       // type.
+///       bool getShapshotBeforeUpdate(prevProps, prevState) {
+///         if (prevProps["foo"]) {
+///           return true;
+///         }
+///         return null;
+///       }
+///
+///       // Note that the snapshot parameter is consistently typed with the return
+///       // value of getSnapshotBeforeUpdate.
+///       void componentDidUpdate(prevProps, prevState, [bool snapshot]) {
+///         if (snapshot == true) {
+///           // Do something
+///         }
+///       }
+///
+///       /* Include other standard component logic */
+///
+///     }
+///
+/// This mixin should only be used with `Component2` or `UiComponent2`. This is not
+/// enforced via the `on` keyword because of an issue with the Dart SDK.
+///
+/// See: <https://github.com/dart-lang/sdk/issues/38098>
+mixin TypedSnapshot<TSnapshot> {
+  TSnapshot getSnapshotBeforeUpdate(Map prevProps, Map prevState);
+
+  void componentDidUpdate(Map prevProps, Map prevState, [covariant TSnapshot snapshot]);
 }
 
 /// Creates a ReactJS virtual DOM instance (`ReactElement` on the client).
@@ -684,20 +1463,8 @@ class SyntheticClipboardEvent extends SyntheticEvent {
     num timeStamp,
     String type,
     this.clipboardData,
-  ) /* Prevent formatting differences between Dart 1 and Dart 2 */ : super(
-          bubbles,
-          cancelable,
-          currentTarget,
-          defaultPrevented,
-          preventDefault,
-          stopPropagation,
-          eventPhase,
-          isTrusted,
-          nativeEvent,
-          target,
-          timeStamp,
-          type,
-        ) {}
+  ) : super(bubbles, cancelable, currentTarget, defaultPrevented, preventDefault, stopPropagation, eventPhase,
+            isTrusted, nativeEvent, target, timeStamp, type) {}
 }
 
 class SyntheticKeyboardEvent extends SyntheticEvent {
@@ -737,20 +1504,8 @@ class SyntheticKeyboardEvent extends SyntheticEvent {
     this.metaKey,
     this.repeat,
     this.shiftKey,
-  ) /* Prevent formatting differences between Dart 1 and Dart 2 */ : super(
-          bubbles,
-          cancelable,
-          currentTarget,
-          defaultPrevented,
-          preventDefault,
-          stopPropagation,
-          eventPhase,
-          isTrusted,
-          nativeEvent,
-          target,
-          timeStamp,
-          type,
-        ) {}
+  ) : super(bubbles, cancelable, currentTarget, defaultPrevented, preventDefault, stopPropagation, eventPhase,
+            isTrusted, nativeEvent, target, timeStamp, type) {}
 }
 
 class SyntheticFocusEvent extends SyntheticEvent {
@@ -770,20 +1525,8 @@ class SyntheticFocusEvent extends SyntheticEvent {
     num timeStamp,
     String type,
     this.relatedTarget,
-  ) /* Prevent formatting differences between Dart 1 and Dart 2 */ : super(
-          bubbles,
-          cancelable,
-          currentTarget,
-          defaultPrevented,
-          preventDefault,
-          stopPropagation,
-          eventPhase,
-          isTrusted,
-          nativeEvent,
-          target,
-          timeStamp,
-          type,
-        ) {}
+  ) : super(bubbles, cancelable, currentTarget, defaultPrevented, preventDefault, stopPropagation, eventPhase,
+            isTrusted, nativeEvent, target, timeStamp, type) {}
 }
 
 class SyntheticFormEvent extends SyntheticEvent {
@@ -800,20 +1543,8 @@ class SyntheticFormEvent extends SyntheticEvent {
     dynamic target,
     num timeStamp,
     String type,
-  ) /* Prevent formatting differences between Dart 1 and Dart 2 */ : super(
-          bubbles,
-          cancelable,
-          currentTarget,
-          defaultPrevented,
-          preventDefault,
-          stopPropagation,
-          eventPhase,
-          isTrusted,
-          nativeEvent,
-          target,
-          timeStamp,
-          type,
-        ) {}
+  ) : super(bubbles, cancelable, currentTarget, defaultPrevented, preventDefault, stopPropagation, eventPhase,
+            isTrusted, nativeEvent, target, timeStamp, type) {}
 }
 
 class SyntheticDataTransfer {
@@ -868,20 +1599,47 @@ class SyntheticMouseEvent extends SyntheticEvent {
     this.screenX,
     this.screenY,
     this.shiftKey,
-  ) /* Prevent formatting differences between Dart 1 and Dart 2 */ : super(
-          bubbles,
-          cancelable,
-          currentTarget,
-          defaultPrevented,
-          preventDefault,
-          stopPropagation,
-          eventPhase,
-          isTrusted,
-          nativeEvent,
-          target,
-          timeStamp,
-          type,
-        ) {}
+  ) : super(bubbles, cancelable, currentTarget, defaultPrevented, preventDefault, stopPropagation, eventPhase,
+            isTrusted, nativeEvent, target, timeStamp, type) {}
+}
+
+class SyntheticPointerEvent extends SyntheticEvent {
+  final num pointerId;
+  final num width;
+  final num height;
+  final num pressure;
+  final num tangentialPressure;
+  final num tiltX;
+  final num tiltY;
+  final num twist;
+  final String pointerType;
+  final bool isPrimary;
+
+  SyntheticPointerEvent(
+    bool bubbles,
+    bool cancelable,
+    dynamic currentTarget,
+    bool defaultPrevented,
+    dynamic preventDefault,
+    dynamic stopPropagation,
+    num eventPhase,
+    bool isTrusted,
+    dynamic nativeEvent,
+    dynamic target,
+    num timeStamp,
+    String type,
+    this.pointerId,
+    this.width,
+    this.height,
+    this.pressure,
+    this.tangentialPressure,
+    this.tiltX,
+    this.tiltY,
+    this.twist,
+    this.pointerType,
+    this.isPrimary,
+  ) : super(bubbles, cancelable, currentTarget, defaultPrevented, preventDefault, stopPropagation, eventPhase,
+            isTrusted, nativeEvent, target, timeStamp, type) {}
 }
 
 class SyntheticTouchEvent extends SyntheticEvent {
@@ -913,20 +1671,8 @@ class SyntheticTouchEvent extends SyntheticEvent {
     this.shiftKey,
     this.targetTouches,
     this.touches,
-  ) /* Prevent formatting differences between Dart 1 and Dart 2 */ : super(
-          bubbles,
-          cancelable,
-          currentTarget,
-          defaultPrevented,
-          preventDefault,
-          stopPropagation,
-          eventPhase,
-          isTrusted,
-          nativeEvent,
-          target,
-          timeStamp,
-          type,
-        ) {}
+  ) : super(bubbles, cancelable, currentTarget, defaultPrevented, preventDefault, stopPropagation, eventPhase,
+            isTrusted, nativeEvent, target, timeStamp, type) {}
 }
 
 class SyntheticTransitionEvent extends SyntheticEvent {
@@ -998,20 +1744,8 @@ class SyntheticUIEvent extends SyntheticEvent {
     String type,
     this.detail,
     this.view,
-  ) /* Prevent formatting differences between Dart 1 and Dart 2 */ : super(
-          bubbles,
-          cancelable,
-          currentTarget,
-          _defaultPrevented,
-          _preventDefault,
-          stopPropagation,
-          eventPhase,
-          isTrusted,
-          nativeEvent,
-          target,
-          timeStamp,
-          type,
-        ) {}
+  ) : super(bubbles, cancelable, currentTarget, _defaultPrevented, _preventDefault, stopPropagation, eventPhase,
+            isTrusted, nativeEvent, target, timeStamp, type) {}
 }
 
 class SyntheticWheelEvent extends SyntheticEvent {
@@ -1037,25 +1771,22 @@ class SyntheticWheelEvent extends SyntheticEvent {
     this.deltaMode,
     this.deltaY,
     this.deltaZ,
-  ) /* Prevent formatting differences between Dart 1 and Dart 2 */ : super(
-          bubbles,
-          cancelable,
-          currentTarget,
-          defaultPrevented,
-          preventDefault,
-          stopPropagation,
-          eventPhase,
-          isTrusted,
-          nativeEvent,
-          target,
-          timeStamp,
-          type,
-        ) {}
+  ) : super(bubbles, cancelable, currentTarget, defaultPrevented, preventDefault, stopPropagation, eventPhase,
+            isTrusted, nativeEvent, target, timeStamp, type) {}
 }
 
 /// Registers [componentFactory] on both client and server.
 /*ComponentRegistrar*/ Function registerComponent =
     (/*ComponentFactory*/ componentFactory, [/*Iterable<String>*/ skipMethods]) {
+  throw new Exception('setClientConfiguration must be called before registerComponent.');
+};
+
+/// Registers [componentFactory] on both client and server.
+ComponentRegistrar2 registerComponent2 = (
+  ComponentFactory<Component2> componentFactory, {
+  Iterable<String> skipMethods,
+  Component2BridgeFactory bridgeFactory,
+}) {
   throw new Exception('setClientConfiguration must be called before registerComponent.');
 };
 
@@ -1863,8 +2594,9 @@ _createDOMComponents(creator) {
 ///
 /// The arguments are assigned to global variables, and React DOM `Component`s are created by calling
 /// [_createDOMComponents] with [domCreator].
-setReactConfiguration(domCreator, customRegisterComponent) {
+void setReactConfiguration(domCreator, customRegisterComponent, {ComponentRegistrar2 customRegisterComponent2}) {
   registerComponent = customRegisterComponent;
+  registerComponent2 = customRegisterComponent2;
   // HTML Elements
   _createDOMComponents(domCreator);
 }

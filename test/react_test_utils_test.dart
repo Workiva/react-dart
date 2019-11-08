@@ -2,20 +2,34 @@
 library react_test_utils_test;
 
 import 'dart:html';
+import 'dart:js_util';
 
-import 'dart:js_util' as js_util;
 import 'package:react/react.dart';
 import 'package:react/react_dom.dart' as react_dom;
 import 'package:react/react_client.dart';
 import 'package:react/react_test_utils.dart';
 import 'package:test/test.dart';
 
-import 'test_components.dart';
+import 'test_components.dart' as component1;
+import 'test_components2.dart' as component2;
 import 'util.dart';
 
 void main() {
   setClientConfiguration();
 
+  testUtils(
+      isComponent2: false,
+      eventComponent: component1.eventComponent,
+      sampleComponent: component1.sampleComponent,
+      wrapperComponent: component1.wrapperComponent);
+  testUtils(
+      isComponent2: true,
+      eventComponent: component2.eventComponent,
+      sampleComponent: component2.sampleComponent,
+      wrapperComponent: component2.wrapperComponent);
+}
+
+testUtils({isComponent2: false, dynamic eventComponent, dynamic sampleComponent, dynamic wrapperComponent}) {
   var component;
   Element domNode;
 
@@ -24,7 +38,7 @@ void main() {
     domNode = null;
   });
 
-  group('Shallow Rendering', () {
+  group('Shallow Rendering with a Component${isComponent2 ? "2" : ""}', () {
     ReactElement content;
     ReactShallowRenderer shallowRenderer;
 
@@ -51,7 +65,7 @@ void main() {
     });
   });
 
-  group('Simulate', () {
+  group('Simulate on a Component${isComponent2 ? "2" : ""}', () {
     setUp(() {
       component = renderIntoDocument(eventComponent({}));
       domNode = react_dom.findDOMNode(component);
@@ -59,13 +73,13 @@ void main() {
     });
 
     void testEvent(void event(dynamic instanceOrNode, Map eventData), String eventName) {
+      eventName = eventName.toLowerCase();
       Map eventData;
       int fakeTimeStamp;
 
       setUp(() {
         fakeTimeStamp = eventName.hashCode;
         eventData = {
-          'type': eventName,
           'timeStamp': fakeTimeStamp,
         };
       });
@@ -100,16 +114,26 @@ void main() {
       group('dragStart', () => testEvent(Simulate.dragStart, 'dragStart'));
       group('drop', () => testEvent(Simulate.drop, 'drop'));
       group('focus', () => testEvent(Simulate.focus, 'focus'));
+      group('gotPointerCapture', () => testEvent(Simulate.gotPointerCapture, 'gotPointerCapture'));
       group('input', () => testEvent(Simulate.input, 'input'));
       group('keyDown', () => testEvent(Simulate.keyDown, 'keyDown'));
       group('keyPress', () => testEvent(Simulate.keyPress, 'keyPress'));
       group('keyUp', () => testEvent(Simulate.keyUp, 'keyUp'));
+      group('lostPointerCapture', () => testEvent(Simulate.lostPointerCapture, 'lostPointerCapture'));
       group('mouseDown', () => testEvent(Simulate.mouseDown, 'mouseDown'));
       group('mouseMove', () => testEvent(Simulate.mouseMove, 'mouseMove'));
       group('mouseOut', () => testEvent(Simulate.mouseOut, 'mouseOut'));
       group('mouseOver', () => testEvent(Simulate.mouseOver, 'mouseOver'));
       group('mouseUp', () => testEvent(Simulate.mouseUp, 'mouseUp'));
       group('paste', () => testEvent(Simulate.paste, 'paste'));
+      group('pointerCancel', () => testEvent(Simulate.pointerCancel, 'pointerCancel'));
+      group('pointerDown', () => testEvent(Simulate.pointerDown, 'pointerDown'));
+      group('pointerEnter', () => testEvent(Simulate.pointerEnter, 'pointerEnter'));
+      group('pointerLeave', () => testEvent(Simulate.pointerLeave, 'pointerLeave'));
+      group('pointerMove', () => testEvent(Simulate.pointerMove, 'pointerMove'));
+      group('pointerOver', () => testEvent(Simulate.pointerOver, 'pointerOver'));
+      group('pointerOut', () => testEvent(Simulate.pointerOut, 'pointerOut'));
+      group('pointerUp', () => testEvent(Simulate.pointerUp, 'pointerUp'));
       group('scroll', () => testEvent(Simulate.scroll, 'scroll'));
       group('submit', () => testEvent(Simulate.submit, 'submit'));
       group('touchCancel', () => testEvent(Simulate.touchCancel, 'touchCancel'));
@@ -145,27 +169,27 @@ void main() {
     });
   });
 
-  test('findRenderedDOMComponentWithClass', () {
+  test('findRenderedDOMComponentWithClass on a Component${isComponent2 ? "2" : ""}', () {
     component = renderIntoDocument(sampleComponent({}));
     var spanComponent = findRenderedDOMComponentWithClass(component, 'span1');
 
-    expect(js_util.getProperty(spanComponent, 'tagName'), equals('SPAN'));
+    expect(getProperty(spanComponent, 'tagName'), equals('SPAN'));
   });
 
-  test('findRenderedDOMComponentWithTag', () {
+  test('findRenderedDOMComponentWithTag on a Component${isComponent2 ? "2" : ""}', () {
     component = renderIntoDocument(sampleComponent({}));
     var h1Component = findRenderedDOMComponentWithTag(component, 'h1');
 
-    expect(js_util.getProperty(h1Component, 'tagName'), equals('H1'));
+    expect(getProperty(h1Component, 'tagName'), equals('H1'));
   });
 
-  test('findRenderedComponentWithTypeV2', () {
+  test('findRenderedComponentWithTypeV2 on a Component${isComponent2 ? "2" : ""}', () {
     component = renderIntoDocument(wrapperComponent({}, [sampleComponent({})]));
     var result = findRenderedComponentWithTypeV2(component, sampleComponent);
     expect(isCompositeComponentWithTypeV2(result, sampleComponent), isTrue);
   });
 
-  group('isCompositeComponent', () {
+  group('isCompositeComponent on a Component${isComponent2 ? "2" : ""}', () {
     test('returns true when element is a composite component (created with React.createClass())', () {
       component = renderIntoDocument(eventComponent({}));
 
@@ -179,7 +203,7 @@ void main() {
     });
   });
 
-  group('isCompositeComponentWithTypeV2', () {
+  group('isCompositeComponentWithTypeV2 on a Component${isComponent2 ? "2" : ""}', () {
     var renderedInstance = renderIntoDocument(sampleComponent({}));
 
     test('returns true when element is a composite component (created with React.createClass()) of the specified type',
@@ -194,7 +218,7 @@ void main() {
     });
   });
 
-  group('isDOMComponent', () {
+  group('isDOMComponent on a Component${isComponent2 ? "2" : ""}', () {
     test('returns true when argument is a DOM component', () {
       component = renderIntoDocument(sampleComponent({}));
       var h1Element = findRenderedDOMComponentWithTag(component, 'h1');
@@ -213,7 +237,7 @@ void main() {
     });
 
     test('returns false argument is not an element', () {
-      expect(isElement(js_util.newObject()), isFalse);
+      expect(isElement(newObject()), isFalse);
     });
   });
 
@@ -227,7 +251,7 @@ void main() {
     });
   });
 
-  test('scryRenderedComponentsWithTypeV2', () {
+  test('scryRenderedComponentsWithTypeV2 on a Component${isComponent2 ? "2" : ""}', () {
     component =
         renderIntoDocument(wrapperComponent({}, [sampleComponent({}), sampleComponent({}), eventComponent({})]));
 
@@ -248,8 +272,8 @@ void main() {
     var results = scryRenderedDOMComponentsWithClass(component, 'divClass');
 
     expect(results.length, 2);
-    expect(js_util.getProperty(results[0], 'tagName'), equals('DIV'));
-    expect(js_util.getProperty(results[1], 'tagName'), equals('DIV'));
+    expect(getProperty(results[0], 'tagName'), equals('DIV'));
+    expect(getProperty(results[1], 'tagName'), equals('DIV'));
   });
 
   test('scryRenderedDOMComponentsWithTag', () {
@@ -258,12 +282,12 @@ void main() {
     var results = scryRenderedDOMComponentsWithTag(component, 'div');
 
     expect(results.length, 3);
-    expect(js_util.getProperty(results[0], 'tagName'), equals('DIV'));
-    expect(js_util.getProperty(results[1], 'tagName'), equals('DIV'));
-    expect(js_util.getProperty(results[2], 'tagName'), equals('DIV'));
+    expect(getProperty(results[0], 'tagName'), equals('DIV'));
+    expect(getProperty(results[1], 'tagName'), equals('DIV'));
+    expect(getProperty(results[2], 'tagName'), equals('DIV'));
   });
 
-  test('renderIntoDocument', () {
+  test('renderIntoDocument with a Component${isComponent2 ? "2" : ""}', () {
     var reactComponent = renderIntoDocument(sampleComponent({}));
     var divElements = scryRenderedDOMComponentsWithTag(reactComponent, 'div');
     var h1Elements = scryRenderedDOMComponentsWithTag(reactComponent, 'h1');

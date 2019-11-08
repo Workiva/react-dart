@@ -1,3 +1,4 @@
+// ignore_for_file: deprecated_member_use_from_same_package
 import "dart:html";
 
 import "package:react/react_dom.dart" as react_dom;

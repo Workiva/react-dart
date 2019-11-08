@@ -6,14 +6,14 @@ import 'package:react/react.dart';
 ///
 /// * `react.Component` if it is a Dart component.
 /// * `Element` _(DOM node)_ if it is a React DOM component.
-typedef dynamic Ref(String ref);
+typedef dynamic RefMethod(String ref);
 
-/// Typedef of a transactional [Component.setState] callback.
+/// Typedef for the `updater` argument of [Component2.setStateWithUpdater].
 ///
-/// See: <https://facebook.github.io/react/docs/react-component.html#setstate>
-typedef Map TransactionalSetStateCallback(Map prevState, Map props);
+/// See: <https://reactjs.org/docs/react-component.html#setstate>
+typedef Map StateUpdaterCallback(Map prevState, Map props);
 
-/// Typedef of a non-transactional [Component.setState] callback.
+/// Typedef of a non-transactional [Component2.setState] callback.
 ///
-/// See: <https://facebook.github.io/react/docs/react-component.html#setstate>
+/// See: <https://reactjs.org/docs/react-component.html#setstate>
 typedef SetStateCallback();

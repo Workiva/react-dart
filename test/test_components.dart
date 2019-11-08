@@ -1,3 +1,4 @@
+// ignore_for_file: deprecated_member_use_from_same_package
 import 'package:react/react.dart';
 
 /// Base component for event handling classes used in test cases.
@@ -23,16 +24,26 @@ class EventComponent extends Component {
         'onDragStart': onEvent,
         'onDrop': onEvent,
         'onFocus': onEvent,
+        'onGotPointerCapture': onEvent,
         'onInput': onEvent,
         'onKeyDown': onEvent,
         'onKeyPress': onEvent,
         'onKeyUp': onEvent,
+        'onLostPointerCapture': onEvent,
         'onMouseDown': onEvent,
         'onMouseMove': onEvent,
         'onMouseOut': onEvent,
         'onMouseOver': onEvent,
         'onMouseUp': onEvent,
         'onPaste': onEvent,
+        'onPointerCancel': onEvent,
+        'onPointerDown': onEvent,
+        'onPointerEnter': onEvent,
+        'onPointerLeave': onEvent,
+        'onPointerMove': onEvent,
+        'onPointerOver': onEvent,
+        'onPointerOut': onEvent,
+        'onPointerUp': onEvent,
         'onScroll': onEvent,
         'onSubmit': onEvent,
         'onTextInput': onEvent,

@@ -1,9 +1,9 @@
 language: dart
 
-# Workaround for issue with sandboxed Chrome in containerized Travis builds.
-sudo: required
-addons:
-  chrome: stable
+dart:
+  - '2.4.1'
+  - stable
+  - dev
 
 # Re-use downloaded pub packages everywhere.
 cache:
@@ -11,26 +11,11 @@ cache:
   - $HOME/.pub-cache
   - $HOME/.dart_tool
 
-jobs:
-  include:
-    - stage: Dart 2 stable
-      dart: stable
-      script:
-        - dartanalyzer .
-        - dartfmt --line-length=120 --dry-run --set-exit-if-changed .
-        - pub run dependency_validator -i build_runner,build_test,build_web_compilers
-        - pub run test -p chrome
-        - pub run build_runner test -- -p chrome
-    - stage: Dart 2 dev
-      dart: dev
-      script:
-        - dartanalyzer .
-        - pub run test -p chrome
-        - pub run build_runner test -- -p chrome
-    - stage: Dart 1
-      dart: 1.24.3
-      before_install:
-        - sed -i '/Remove if solving times out in Dart 1/d'  pubspec.yaml
-      script:
-        - dartanalyzer .
-        - pub run test -p chrome
+before_script:
+  - dartanalyzer .
+  - dartfmt --line-length=120 --dry-run --set-exit-if-changed .
+  - pub run dependency_validator -i build_runner,build_test,build_web_compilers
+
+script:
+  - pub run build_runner test --release -- -p chrome
+  - pub run build_runner test -- -p chrome

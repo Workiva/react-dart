@@ -74,15 +74,28 @@ class Simulate {
   static void dragStart(/*[1]*/ node, [Map eventData]) => sw.Simulate.dragStart(node, _jsifyEventData(eventData));
   static void drop(/*[1]*/ node, [Map eventData]) => sw.Simulate.drop(node, _jsifyEventData(eventData));
   static void focus(/*[1]*/ node, [Map eventData]) => sw.Simulate.focus(node, _jsifyEventData(eventData));
+  static void gotPointerCapture(/*[1]*/ node, [Map eventData]) =>
+      sw.Simulate.gotPointerCapture(node, _jsifyEventData(eventData));
   static void input(/*[1]*/ node, [Map eventData]) => sw.Simulate.input(node, _jsifyEventData(eventData));
   static void keyDown(/*[1]*/ node, [Map eventData]) => sw.Simulate.keyDown(node, _jsifyEventData(eventData));
   static void keyPress(/*[1]*/ node, [Map eventData]) => sw.Simulate.keyPress(node, _jsifyEventData(eventData));
   static void keyUp(/*[1]*/ node, [Map eventData]) => sw.Simulate.keyUp(node, _jsifyEventData(eventData));
+  static void lostPointerCapture(/*[1]*/ node, [Map eventData]) =>
+      sw.Simulate.lostPointerCapture(node, _jsifyEventData(eventData));
   static void mouseDown(/*[1]*/ node, [Map eventData]) => sw.Simulate.mouseDown(node, _jsifyEventData(eventData));
   static void mouseMove(/*[1]*/ node, [Map eventData]) => sw.Simulate.mouseMove(node, _jsifyEventData(eventData));
   static void mouseOut(/*[1]*/ node, [Map eventData]) => sw.Simulate.mouseOut(node, _jsifyEventData(eventData));
   static void mouseOver(/*[1]*/ node, [Map eventData]) => sw.Simulate.mouseOver(node, _jsifyEventData(eventData));
   static void mouseUp(/*[1]*/ node, [Map eventData]) => sw.Simulate.mouseUp(node, _jsifyEventData(eventData));
+  static void pointerCancel(/*[1]*/ node, [Map eventData]) =>
+      sw.Simulate.pointerCancel(node, _jsifyEventData(eventData));
+  static void pointerDown(/*[1]*/ node, [Map eventData]) => sw.Simulate.pointerDown(node, _jsifyEventData(eventData));
+  static void pointerEnter(/*[1]*/ node, [Map eventData]) => sw.Simulate.pointerEnter(node, _jsifyEventData(eventData));
+  static void pointerLeave(/*[1]*/ node, [Map eventData]) => sw.Simulate.pointerLeave(node, _jsifyEventData(eventData));
+  static void pointerMove(/*[1]*/ node, [Map eventData]) => sw.Simulate.pointerMove(node, _jsifyEventData(eventData));
+  static void pointerOut(/*[1]*/ node, [Map eventData]) => sw.Simulate.pointerOut(node, _jsifyEventData(eventData));
+  static void pointerOver(/*[1]*/ node, [Map eventData]) => sw.Simulate.pointerOver(node, _jsifyEventData(eventData));
+  static void pointerUp(/*[1]*/ node, [Map eventData]) => sw.Simulate.pointerUp(node, _jsifyEventData(eventData));
   static void paste(/*[1]*/ node, [Map eventData]) => sw.Simulate.paste(node, _jsifyEventData(eventData));
   static void scroll(/*[1]*/ node, [Map eventData]) => sw.Simulate.scroll(node, _jsifyEventData(eventData));
   static void submit(/*[1]*/ node, [Map eventData]) => sw.Simulate.submit(node, _jsifyEventData(eventData));
