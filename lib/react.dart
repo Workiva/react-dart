@@ -670,16 +670,17 @@ abstract class Component2 implements Component {
   /// See: <https://reactjs.org/docs/react-component.html#static-getderivedstatefromprops>
   ///
   /// __Example__:
-  ///    @override
-  ///    getDerivedStateFromProps(nextProps, prevState) {
-  ///      if (prevState.someMirroredValue != nextProps.someValue) {
-  ///       return {
-  ///         derivedData: computeDerivedState(nextProps),
-  ///         someMirroredValue: nextProps.someValue
-  ///       };
-  ///      }
-  ///      return null;
-  ///    }
+  ///
+  ///     @override
+  ///     getDerivedStateFromProps(Map nextProps, Map prevState) {
+  ///       if (prevState.someMirroredValue != nextProps.someValue) {
+  ///         return {
+  ///           derivedData: computeDerivedState(nextProps),
+  ///           someMirroredValue: nextProps.someValue
+  ///         };
+  ///       }
+  ///       return null;
+  ///     }
   ///
   Map getDerivedStateFromProps(Map nextProps, Map prevState) => null;
 
