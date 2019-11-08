@@ -31,6 +31,8 @@ __[Fragments](https://reactjs.org/docs/fragments.html)__
 
 __New and improved ref API: [React.createRef](https://reactjs.org/docs/refs-and-the-dom.html#creating-refs)__
 
+__[React Redux](https://react-redux.js.org/) is now included in the JS bundles and exposed via `window.ReactRedux`.__
+
 > [Full list of 5.1.0 Changes](https://github.com/cleandart/react-dart/milestone/1?closed=1)
 
 ## [5.0.0](https://github.com/cleandart/react-dart/compare/4.9.1...5.0.0)
