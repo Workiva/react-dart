@@ -640,6 +640,9 @@ abstract class Component2 implements Component {
     _bridge.setStateWithUpdater(this, updater, callback);
   }
 
+  /// Causes [render] to be called, skipping [shouldComponentUpdate].
+  ///
+  /// > See: <https://reactjs.org/docs/react-component.html#forceupdate>
   void forceUpdate([SetStateCallback callback]) {
     _bridge.forceUpdate(this, callback);
   }
