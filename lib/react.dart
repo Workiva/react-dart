@@ -589,7 +589,11 @@ abstract class Component2 implements Component {
   Map state;
 
   @override
-  dynamic _jsThis;
+  @Deprecated('6.0.0')
+  get _jsThis => throw _unsupportedError('_jsThis');
+  @override
+  @Deprecated('6.0.0')
+  set _jsThis(_) => throw _unsupportedError('_jsThis');
 
   /// The JavaScript [`ReactComponent`](https://facebook.github.io/react/docs/top-level-api.html#reactdom.render)
   /// instance of this `Component` returned by [render].
