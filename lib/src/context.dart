@@ -7,7 +7,6 @@ library react_dart_context;
 import 'dart:js_util';
 
 import 'package:js/js.dart';
-import 'package:react/react_client/js_backed_map.dart';
 import 'package:react/react_client/react_interop.dart';
 import 'package:react/react_client.dart';
 
