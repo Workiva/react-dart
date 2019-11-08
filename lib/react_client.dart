@@ -642,6 +642,9 @@ ReactDartComponentFactoryProxy _registerComponent(
   return new ReactDartComponentFactoryProxy(reactComponentClass);
 }
 
+/// Creates ReactJS [ReactElement] instances for `JSContext` components.
+///
+/// Adds special jsifying and unjsifying of the `value` prop.
 class ReactJsContextComponentFactoryProxy extends ReactJsComponentFactoryProxy {
   /// The JS class used by this factory.
   @override
