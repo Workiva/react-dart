@@ -26,7 +26,17 @@ HookTestComponent(Map props) {
 
   return react.div({}, [
     react.button({'onClick': (_) => count.set(1)}, ['Reset']),
-    react.button({'onClick': (_) => count.setTx((prev) => prev + 1)}, ['+']),
+    react.button({
+      'onClick': (_) => count.setWithUpdater((prev) {
+        if (props['enabled']) {
+          return prev + 1;
+        } else {
+          return prev;
+        }
+      }),
+    }, [
+      '+'
+    ]),
     react.br({}),
     react.p({}, [count.value.toString() + ' is ' + evenOdd.value.toString()]),
   ]);
@@ -38,8 +48,17 @@ void main() {
   render() {
     react_dom.render(
         react.Fragment({}, [
-          react.h1({'key': 'functionComponentTestLabel'}, ['Function Component Test']),
-          hookTestFunctionComponent({'key': 'useStateTest'}, []),
+          react.h1({'key': 'functionComponentTestLabel'}, ['Function Component Tests']),
+          hookTestFunctionComponent({
+            'key': 'useStateTest',
+            'enabled': true,
+          }, []),
+          react.br({}),
+          react.h5({'key': 'useStateTestLabel-2'}, 'Disabled:'),
+          hookTestFunctionComponent({
+            'key': 'useStateTest',
+            'enabled': false,
+          }, []),
         ]),
         querySelector('#content'));
   }

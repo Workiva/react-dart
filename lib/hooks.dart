@@ -8,7 +8,7 @@ import 'package:react/react_client/react_interop.dart';
 /// The return value of [useState].
 ///
 /// The current value of the state is available via [value] and
-/// functions to update it are available via [set] and [setTx].
+/// functions to update it are available via [set] and [setWithUpdater].
 ///
 /// Note there are two rules for using Hooks (<https://reactjs.org/docs/hooks-rules.html>):
 ///
@@ -52,7 +52,7 @@ class StateHook<T> {
   /// Updates [value] to the return value of [computeNewValue].
   ///
   /// See: <https://reactjs.org/docs/hooks-reference.html#functional-updates>.
-  void setTx(T computeNewValue(T oldValue)) => _setValue(allowInterop(computeNewValue));
+  void setWithUpdater(T computeNewValue(T oldValue)) => _setValue(allowInterop(computeNewValue));
 }
 
 /// Adds local state to a [DartFunctionComponent]
@@ -69,7 +69,15 @@ class StateHook<T> {
 ///   return react.div({}, [
 ///     count.value,
 ///     react.button({'onClick': (_) => count.set(0)}, ['Reset']),
-///     react.button({'onClick': (_) => count.setTx((prev) => prev + 1)}, ['+']),
+///     react.button({
+///       'onClick': (_) => count.setWithUpdater((prev) {
+///             if (props['enabled']) {
+///               return prev + 1;
+///             } else {
+///               return prev;
+///             }
+///           }),
+///     }, ['+']),
 ///   ]);
 /// }
 /// ```
@@ -92,7 +100,7 @@ StateHook<T> useState<T>(T initialValue) => StateHook(initialValue);
 ///   return react.div({}, [
 ///     count.value,
 ///     react.button({'onClick': (_) => count.set(0)}, ['Reset']),
-///     react.button({'onClick': (_) => count.setTx((prev) => prev + 1)}, ['+']),
+///     react.button({'onClick': (_) => count.set(count.value + 1)}, ['+']),
 ///   ]);
 /// }
 /// ```
