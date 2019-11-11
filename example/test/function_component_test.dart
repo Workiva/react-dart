@@ -13,7 +13,7 @@ UseStateTestComponent(Map props) {
   return react.div({}, [
     count.value,
     react.button({'onClick': (_) => count.set(0)}, ['Reset']),
-    react.button({'onClick': (_) => count.setTx((prev) => prev + 1)}, ['+']),
+    react.button({'onClick': (_) => count.setWithUpdater((prev) => prev + 1)}, ['+']),
   ]);
 }
 

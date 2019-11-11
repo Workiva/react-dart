@@ -22,7 +22,7 @@ main() {
       DivElement textRef;
       DivElement countRef;
       ButtonElement setButtonRef;
-      ButtonElement setTxButtonRef;
+      ButtonElement setWithUpdaterButtonRef;
 
       setUpAll(() {
         var mountNode = new DivElement();
@@ -57,9 +57,9 @@ main() {
               'Set'
             ]),
             react.button({
-              'onClick': (_) => count.setTx((prev) => prev + 1),
+              'onClick': (_) => count.setWithUpdater((prev) => prev + 1),
               'ref': (ref) {
-                setTxButtonRef = ref;
+                setWithUpdaterButtonRef = ref;
               },
             }, [
               '+'
@@ -78,7 +78,7 @@ main() {
         expect(countRef.text, '0');
       });
 
-      test('Init initializes state correctly', () {
+      test('Lazy initializes state correctly', () {
         expect(textRef.text, 'initialValue');
       });
 
@@ -87,8 +87,8 @@ main() {
         expect(textRef.text, 'newValue');
       });
 
-      test('StateHook.setTx updates state correctly', () {
-        react_test_utils.Simulate.click(setTxButtonRef);
+      test('StateHook.setWithUpdater updates state correctly', () {
+        react_test_utils.Simulate.click(setWithUpdaterButtonRef);
         expect(countRef.text, '1');
       });
     });
