@@ -69,7 +69,15 @@ class StateHook<T> {
 ///   return react.div({}, [
 ///     count.value,
 ///     react.button({'onClick': (_) => count.set(0)}, ['Reset']),
-///     react.button({'onClick': (_) => count.setWithUpdater((prev) => prev + 1)}, ['+']),
+///     react.button({
+///       'onClick': (_) => count.setWithUpdater((prev) {
+///             if (props['enabled']) {
+///               return prev + 1;
+///             } else {
+///               return prev;
+///             }
+///           }),
+///     }, ['+']),
 ///   ]);
 /// }
 /// ```
@@ -92,7 +100,7 @@ StateHook<T> useState<T>(T initialValue) => StateHook(initialValue);
 ///   return react.div({}, [
 ///     count.value,
 ///     react.button({'onClick': (_) => count.set(0)}, ['Reset']),
-///     react.button({'onClick': (_) => count.setWithUpdater((prev) => prev + 1)}, ['+']),
+///     react.button({'onClick': (_) => count.set(count.value + 1)}, ['+']),
 ///   ]);
 /// }
 /// ```

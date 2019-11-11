@@ -13,7 +13,17 @@ UseStateTestComponent(Map props) {
   return react.div({}, [
     count.value,
     react.button({'onClick': (_) => count.set(0)}, ['Reset']),
-    react.button({'onClick': (_) => count.setWithUpdater((prev) => prev + 1)}, ['+']),
+    react.button({
+      'onClick': (_) => count.setWithUpdater((prev) {
+            if (props['enabled']) {
+              return prev + 1;
+            } else {
+              return prev;
+            }
+          }),
+    }, [
+      '+'
+    ]),
   ]);
 }
 
@@ -23,8 +33,18 @@ void main() {
   render() {
     react_dom.render(
         react.Fragment({}, [
+          react.h1({'key': 'functionComponentTestLabel'}, ['Function Component Tests']),
           react.h2({'key': 'useStateTestLabel'}, ['useState Hook Test']),
-          useStateTestFunctionComponent({'key': 'useStateTest'}, [])
+          useStateTestFunctionComponent({
+            'key': 'useStateTest',
+            'enabled': true,
+          }, []),
+          react.br({}),
+          react.h5({'key': 'useStateTestLabel-2'}, 'Disabled:'),
+          useStateTestFunctionComponent({
+            'key': 'useStateTest',
+            'enabled': false,
+          }, []),
         ]),
         querySelector('#content'));
   }
