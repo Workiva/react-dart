@@ -94,86 +94,81 @@ main() {
     });
 
     group('useEffect', () {
-      ReactDartFunctionComponentFactoryProxy UseStateTest;
-      DivElement textRef;
+      ReactDartFunctionComponentFactoryProxy UseEffectTest;
+      ButtonElement countButtonRef;
+      ButtonElement countDownButtonRef;
       DivElement countRef;
-      ButtonElement setButtonRef;
-      ButtonElement setTxButtonRef;
-      int countCalls;
-      int countCleanupCalls;
-      int countCallsWithDeps1;
-      int countCleanupCallsWithDeps1;
-      int countCallsWithDeps2;
-      int countCleanupCallsWithDeps2;
-      int countCallsWithEmptyDeps;
-      int countCleanupCallsWithEmptyDeps;
+      DivElement countDownRef;
+      int useEffectCallCount = 0;
+      int useEffectCleanupCallCount = 0;
+      int useEffectWithDepsCallCount = 0;
+      int useEffectCleanupWithDepsCallCount = 0;
+      int useEffectWithDepsCallCount2 = 0;
+      int useEffectCleanupWithDepsCallCount2 = 0;
+      int useEffectWithEmptyDepsCallCount = 0;
+      int useEffectCleanupWithEmptyDepsCallCount = 0;
+      DivElement mountNode;
 
-      setUpAll(() {
-        var mountNode = new DivElement();
-        countCalls = 0;
-        countCleanupCalls = 0;
-        countCallsWithDeps1 = 0;
-        countCleanupCallsWithDeps1 = 0;
-        countCallsWithDeps2 = 0;
-        countCleanupCallsWithDeps2 = 0;
-        countCallsWithEmptyDeps = 0;
-        countCleanupCallsWithEmptyDeps = 0;
-        var UseStateTest = react.registerFunctionComponent((Map props) {
+      setUpAll(() async {
+        mountNode = new DivElement();
+
+        UseEffectTest = react.registerFunctionComponent((Map props) {
           final count = useState(0);
           final countDown = useState(0);
 
           useEffect(() {
-            print('useEffect');
-            countCalls++;
+            useEffectCallCount++;
+            print('123');
             return () {
-              countCleanupCalls++;
+              useEffectCleanupCallCount++;
             };
           });
 
           useEffect(() {
-            countCallsWithDeps1++;
+            useEffectWithDepsCallCount++;
             return () {
-              countCleanupCallsWithDeps1++;
+              useEffectCleanupWithDepsCallCount++;
             };
           }, [count.value]);
 
           useEffect(() {
-            countCallsWithDeps2++;
+            useEffectWithDepsCallCount2++;
             return () {
-              countCleanupCallsWithDeps2++;
+              useEffectCleanupWithDepsCallCount2++;
             };
           }, [countDown.value]);
 
           useEffect(() {
-            countCallsWithEmptyDeps++;
+            useEffectWithEmptyDepsCallCount++;
             return () {
-              countCleanupCallsWithEmptyDeps++;
+              useEffectCleanupWithEmptyDepsCallCount++;
             };
           }, []);
 
+          print('abc');
+
           return react.div({}, [
-            count.value,
+            react.div({
+              'ref': (ref) {
+                countRef = ref;
+              },
+            }, [
+              count.value
+            ]),
             react.button({
               'onClick': (_) {
                 count.set(count.value + 1);
-                print('useEffect calls: ' + countCalls.toString());
-                print('useEffect cleanup calls: ' + countCleanupCalls.toString());
               },
               'ref': (ref) {
-                setButtonRef = ref;
+                countButtonRef = ref;
               },
             }, [
               '+'
             ]),
-            countDown.value,
+              countDown.value,
             react.button({
               'onClick': (_) {
                 countDown.set(countDown.value - 1);
-                print('useEffect calls: ' + countCalls.toString());
-                print('useEffect cleanup calls: ' + countCleanupCalls.toString());
-              },
-              'ref': (ref) {
-                setTxButtonRef = ref;
               },
             }, [
               '-'
@@ -181,37 +176,56 @@ main() {
           ]);
         });
 
-        react_dom.render(UseStateTest({}), mountNode);
-      });
+        react_dom.render(UseEffectTest({}), mountNode);
 
-      tearDownAll(() {
-        UseStateTest = null;
-        countCalls = 0;
-        countCleanupCalls = 0;
-        countCallsWithDeps1 = 0;
-        countCleanupCallsWithDeps1 = 0;
-        countCallsWithDeps2 = 0;
-        countCleanupCallsWithDeps2 = 0;
-        countCallsWithEmptyDeps = 0;
-        countCleanupCallsWithEmptyDeps = 0;
+        await pumpEventQueue();
       });
 
       test('side effect is called after the first render', () {
-        expect(countCalls, 1);
-        expect(countCleanupCalls, 0, reason: 'component has only been rendered once');
+        expect(countRef.text, '0');
+        expect(useEffectCallCount, 1);
+        expect(useEffectCleanupCallCount, 0, reason: 'component has not been unmounted');
       });
 
       test('side effect with dependencies is called after the first render', () {
-        expect(countCallsWithDeps1, 1);
-        expect(countCleanupCallsWithDeps1, 0);
+        expect(useEffectWithDepsCallCount, 1);
+        expect(useEffectCleanupWithDepsCallCount, 0, reason: 'component has not been unmounted');
 
-        expect(countCallsWithDeps2, 1);
-        expect(countCleanupCallsWithDeps2, 0);
+        expect(useEffectWithDepsCallCount2, 1);
+        expect(useEffectCleanupWithDepsCallCount2, 0, reason: 'component has not been unmounted');
       });
 
       test('side effect with empty dependency list is called after the first render', () {
-        expect(countCallsWithEmptyDeps, 1);
-        expect(countCleanupCallsWithEmptyDeps, 0);
+        expect(useEffectWithEmptyDepsCallCount, 1);
+        expect(useEffectCleanupWithEmptyDepsCallCount, 0, reason: 'component has not been unmounted');
+      });
+
+      group('after state change,', () {
+        setUpAll(() async {
+          react_test_utils.Simulate.click(countButtonRef);
+
+          await pumpEventQueue();
+        });
+
+        test('cleanup is run and side effect is called again if state is in dependency list', () {
+          expect(countRef.text, '1');
+
+          expect(useEffectCallCount, 2);
+          expect(useEffectCleanupCallCount, 1, reason: 'component has not been unmounted');
+        });
+
+        test('2', () {
+          expect(useEffectWithDepsCallCount, 2);
+          expect(useEffectCleanupWithDepsCallCount, 1, reason: 'component has not been unmounted');
+
+          expect(useEffectWithDepsCallCount2, 1);
+          expect(useEffectCleanupWithDepsCallCount2, 0, reason: 'component has not been unmounted');
+        });
+
+        test('3', () {
+          expect(useEffectWithEmptyDepsCallCount, 1);
+          expect(useEffectCleanupWithEmptyDepsCallCount, 0, reason: 'component has not been unmounted');
+        });
       });
     });
   });
