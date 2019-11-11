@@ -92,5 +92,129 @@ main() {
         expect(countRef.text, '1');
       });
     });
+
+    group('useEffect', () {
+      ReactDartFunctionComponentFactoryProxy UseStateTest;
+      DivElement textRef;
+      DivElement countRef;
+      ButtonElement setButtonRef;
+      ButtonElement setTxButtonRef;
+      int countCalls;
+      int countCleanupCalls;
+      int countCallsWithDeps1;
+      int countCleanupCallsWithDeps1;
+      int countCallsWithDeps2;
+      int countCleanupCallsWithDeps2;
+      int countCallsWithEmptyDeps;
+      int countCleanupCallsWithEmptyDeps;
+
+      setUpAll(() {
+        var mountNode = new DivElement();
+        countCalls = 0;
+        countCleanupCalls = 0;
+        countCallsWithDeps1 = 0;
+        countCleanupCallsWithDeps1 = 0;
+        countCallsWithDeps2 = 0;
+        countCleanupCallsWithDeps2 = 0;
+        countCallsWithEmptyDeps = 0;
+        countCleanupCallsWithEmptyDeps = 0;
+        var UseStateTest = react.registerFunctionComponent((Map props) {
+          final count = useState(0);
+          final countDown = useState(0);
+
+          useEffect(() {
+            print('useEffect');
+            countCalls++;
+            return () {
+              countCleanupCalls++;
+            };
+          });
+
+          useEffect(() {
+            countCallsWithDeps1++;
+            return () {
+              countCleanupCallsWithDeps1++;
+            };
+          }, [count.value]);
+
+          useEffect(() {
+            countCallsWithDeps2++;
+            return () {
+              countCleanupCallsWithDeps2++;
+            };
+          }, [countDown.value]);
+
+          useEffect(() {
+            countCallsWithEmptyDeps++;
+            return () {
+              countCleanupCallsWithEmptyDeps++;
+            };
+          }, []);
+
+          return react.div({}, [
+            count.value,
+            react.button({
+              'onClick': (_) {
+                count.set(count.value + 1);
+                print('useEffect calls: ' + countCalls.toString());
+                print('useEffect cleanup calls: ' + countCleanupCalls.toString());
+
+              },
+              'ref': (ref) {
+                setButtonRef = ref;
+              },
+            }, [
+              '+'
+            ]),
+            countDown.value,
+            react.button({
+              'onClick': (_) {
+                countDown.set(countDown.value - 1);
+                print('useEffect calls: ' + countCalls.toString());
+                print('useEffect cleanup calls: ' + countCleanupCalls.toString());
+
+              },
+              'ref': (ref) {
+                setTxButtonRef = ref;
+              },
+            }, [
+              '-'
+            ]),
+          ]);
+        });
+
+        react_dom.render(UseStateTest({}), mountNode);
+      });
+
+      tearDownAll(() {
+        UseStateTest = null;
+        countCalls = 0;
+        countCleanupCalls = 0;
+        countCallsWithDeps1 = 0;
+        countCleanupCallsWithDeps1 = 0;
+        countCallsWithDeps2 = 0;
+        countCleanupCallsWithDeps2 = 0;
+        countCallsWithEmptyDeps = 0;
+        countCleanupCallsWithEmptyDeps = 0;
+      });
+
+      test('is called on state initialization', () {
+        expect(countCalls, 1);
+        expect(countCleanupCalls, 0);
+      });
+
+      test('with dependencies is called on state initialization', () {
+        expect(countCallsWithDeps1, 1);
+        expect(countCleanupCallsWithDeps1, 0);
+
+        expect(countCallsWithDeps2, 1);
+        expect(countCleanupCallsWithDeps2, 0);
+      });
+
+      test('with empty dependency list is called on state initialization', () {
+        expect(countCallsWithEmptyDeps, 1);
+        expect(countCleanupCallsWithEmptyDeps, 0);
+      });
+    });
   });
 }

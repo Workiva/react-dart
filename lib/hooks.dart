@@ -10,7 +10,7 @@ import 'package:react/react_client/react_interop.dart';
 /// The current value of the state is available via [value] and
 /// functions to update it are available via [set] and [setTx].
 ///
-/// Note are two rules for using Hooks (<https://reactjs.org/docs/hooks-rules.html>):
+/// Note there are two rules for using Hooks (<https://reactjs.org/docs/hooks-rules.html>):
 ///
 /// * Only call Hooks at the top level.
 /// * Only call Hooks from inside a [DartFunctionComponent].
@@ -100,12 +100,46 @@ StateHook<T> useState<T>(T initialValue) => StateHook(initialValue);
 /// Learn more: <https://reactjs.org/docs/hooks-reference.html#lazy-initial-state>.
 StateHook<T> useStateLazy<T>(T init()) => StateHook.lazy(init);
 
+/// Runs [sideEffect] after every completed render of a [DartFunctionComponent].
 ///
-void useEffect(void Function() sideEffect) {
-  return React.useEffect(allowInterop(sideEffect));
-}
-
+/// If [dependencies] are given, [sideEffect] will only run if one of the [dependencies] have changed.
+/// [sideEffect] may return a cleanup function that is run before the component is re-rendered.
+///
+/// Note there are two rules for using Hooks (<https://reactjs.org/docs/hooks-rules.html>):
+///
+/// * Only call Hooks at the top level.
+/// * Only call Hooks from inside a [DartFunctionComponent].
+///
+/// __Example__:
+///
+/// ```
+/// UseEffectTestComponent(Map props) {
+///   final count = useState(1);
+///   final evenOdd = useState('even');
+///
+///   useEffect(() {
+///     if (count.value % 2 == 0) {
+///       evenOdd.set('even');
+///     } else {
+///       evenOdd.set('odd');
+///     }
+///     return () {
+///       print('count is changing...');
+///     };
+///   }, [count.value]);
+///
+///   return react.div({}, [
+///     react.p({}, [count.value.toString() + ' is ' + evenOdd.value.toString()]),
+///     react.button({'onClick': (_) => count.set(count.value + 1)}, ['+']),
+///   ]);
+/// }
+/// ```
+///
 /// See: <https://reactjs.org/docs/hooks-effect.html#tip-optimizing-performance-by-skipping-effects>.
-void useEffectConditional(void Function() sideEffect, List<Object> dependencies) {
-  return React.useEffect(allowInterop(sideEffect), dependencies);
+void useEffect(void Function() sideEffect, [List<Object> dependencies]) {
+  if(dependencies != null) {
+    return React.useEffect(allowInterop(sideEffect), dependencies);
+  } else {
+    return React.useEffect(allowInterop(sideEffect));
+  }
 }
