@@ -137,7 +137,7 @@ StateHook<T> useStateLazy<T>(T init()) => StateHook.lazy(init);
 ///
 /// See: <https://reactjs.org/docs/hooks-effect.html#tip-optimizing-performance-by-skipping-effects>.
 void useEffect(void Function() sideEffect, [List<Object> dependencies]) {
-  if(dependencies != null) {
+  if (dependencies != null) {
     return React.useEffect(allowInterop(sideEffect), dependencies);
   } else {
     return React.useEffect(allowInterop(sideEffect));

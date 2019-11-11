@@ -158,7 +158,6 @@ main() {
                 count.set(count.value + 1);
                 print('useEffect calls: ' + countCalls.toString());
                 print('useEffect cleanup calls: ' + countCleanupCalls.toString());
-
               },
               'ref': (ref) {
                 setButtonRef = ref;
@@ -172,7 +171,6 @@ main() {
                 countDown.set(countDown.value - 1);
                 print('useEffect calls: ' + countCalls.toString());
                 print('useEffect cleanup calls: ' + countCleanupCalls.toString());
-
               },
               'ref': (ref) {
                 setTxButtonRef = ref;
