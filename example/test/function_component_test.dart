@@ -28,12 +28,12 @@ HookTestComponent(Map props) {
     react.button({'onClick': (_) => count.set(1)}, ['Reset']),
     react.button({
       'onClick': (_) => count.setWithUpdater((prev) {
-        if (props['enabled']) {
-          return prev + 1;
-        } else {
-          return prev;
-        }
-      }),
+            if (props['enabled']) {
+              return prev + 1;
+            } else {
+              return prev;
+            }
+          }),
     }, [
       '+'
     ]),
