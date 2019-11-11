@@ -165,7 +165,7 @@ main() {
             }, [
               '+'
             ]),
-              countDown.value,
+            countDown.value,
             react.button({
               'onClick': (_) {
                 countDown.set(countDown.value - 1);
