@@ -111,7 +111,7 @@ StateHook<T> useStateLazy<T>(T init()) => StateHook.lazy(init);
 /// Runs [sideEffect] after every completed render of a [DartFunctionComponent].
 ///
 /// If [dependencies] are given, [sideEffect] will only run if one of the [dependencies] have changed.
-/// [sideEffect] may return a cleanup function that is run before the component is re-rendered.
+/// [sideEffect] may return a cleanup function that is run before the component unmounts or re-renders.
 ///
 /// Note there are two rules for using Hooks (<https://reactjs.org/docs/hooks-rules.html>):
 ///
@@ -144,10 +144,18 @@ StateHook<T> useStateLazy<T>(T init()) => StateHook.lazy(init);
 /// ```
 ///
 /// See: <https://reactjs.org/docs/hooks-effect.html#tip-optimizing-performance-by-skipping-effects>.
-void useEffect(void Function() sideEffect, [List<Object> dependencies]) {
+void useEffect(dynamic Function() sideEffect, [List<Object> dependencies]) {
+  var finalSideEffect = allowInterop(() {
+    var result = sideEffect();
+    if (result is Function) {
+      return allowInterop(result);
+    }
+    return null;
+  });
+
   if (dependencies != null) {
-    return React.useEffect(allowInterop(sideEffect), dependencies);
+    return React.useEffect(finalSideEffect, dependencies);
   } else {
-    return React.useEffect(allowInterop(sideEffect));
+    return React.useEffect(finalSideEffect);
   }
 }
