@@ -10,7 +10,7 @@ import 'package:react/react_client/react_interop.dart';
 /// The current value of the state is available via [value] and
 /// functions to update it are available via [set] and [setWithUpdater].
 ///
-/// Note are two rules for using Hooks (<https://reactjs.org/docs/hooks-rules.html>):
+/// Note there are two rules for using Hooks (<https://reactjs.org/docs/hooks-rules.html>):
 ///
 /// * Only call Hooks at the top level.
 /// * Only call Hooks from inside a [DartFunctionComponent].
