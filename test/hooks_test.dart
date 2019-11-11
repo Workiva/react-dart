@@ -196,12 +196,12 @@ main() {
         countCleanupCallsWithEmptyDeps = 0;
       });
 
-      test('is called on state initialization', () {
+      test('side effect is called after the first render', () {
         expect(countCalls, 1);
-        expect(countCleanupCalls, 0);
+        expect(countCleanupCalls, 0, reason: 'component has only been rendered once');
       });
 
-      test('with dependencies is called on state initialization', () {
+      test('side effect with dependencies is called after the first render', () {
         expect(countCallsWithDeps1, 1);
         expect(countCleanupCallsWithDeps1, 0);
 
@@ -209,7 +209,7 @@ main() {
         expect(countCleanupCallsWithDeps2, 0);
       });
 
-      test('with empty dependency list is called on state initialization', () {
+      test('side effect with empty dependency list is called after the first render', () {
         expect(countCallsWithEmptyDeps, 1);
         expect(countCleanupCallsWithEmptyDeps, 0);
       });
