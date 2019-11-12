@@ -1,3 +1,7 @@
+## [5.1.1](https://github.com/cleandart/react-dart/compare/5.1.0...5.1.1)
+
+- Improve the documentation for deprecated `Component2` lifecycle methods.
+
 ## [5.1.0](https://github.com/cleandart/react-dart/compare/5.0.1...5.1.0)
 
 __Full ReactJS 16.x Component Lifecycle Support__
