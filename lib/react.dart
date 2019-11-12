@@ -690,6 +690,8 @@ abstract class Component2 implements Component {
   ///
   /// > Deriving state from props should be used with caution since it can lead to more verbose implementations
   ///   that are less approachable by others.
+  /// >
+  /// > [Consider recommended alternative solutions first!](https://reactjs.org/blog/2018/06/07/you-probably-dont-need-derived-state.html#preferred-solutions)
   ///
   /// See: <https://reactjs.org/docs/react-component.html#static-getderivedstatefromprops>
   Map getDerivedStateFromProps(Map nextProps, Map prevState) => null;
