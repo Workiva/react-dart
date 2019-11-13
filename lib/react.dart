@@ -9,12 +9,14 @@ library react;
 
 import 'package:meta/meta.dart';
 import 'package:react/react_client/bridge.dart';
+import 'package:react/src/prop_validator.dart';
 import 'package:react/src/typedefs.dart';
 import 'package:react/react_client.dart';
 import 'package:react/react_client/react_interop.dart';
 import 'package:react/src/context.dart';
 
 export 'package:react/src/context.dart';
+export 'package:react/src/prop_validator.dart';
 export 'package:react/react_client/react_interop.dart' show forwardRef, createRef;
 
 typedef Error PropValidator<TProps>(
@@ -24,6 +26,7 @@ typedef Error PropValidator<TProps>(
 ///
 /// See <https://facebook.github.io/react/docs/components-and-props.html#functional-and-class-components>.
 typedef DartFunctionComponent = dynamic Function(Map props);
+
 typedef T ComponentFactory<T extends Component>();
 
 typedef ReactComponentFactoryProxy ComponentRegistrar(ComponentFactory componentFactory,
@@ -598,7 +601,11 @@ abstract class Component2 implements Component {
   Map state;
 
   @override
-  dynamic _jsThis;
+  @Deprecated('6.0.0')
+  get _jsThis => throw _unsupportedError('_jsThis');
+  @override
+  @Deprecated('6.0.0')
+  set _jsThis(_) => throw _unsupportedError('_jsThis');
 
   /// The JavaScript [`ReactComponent`](https://facebook.github.io/react/docs/top-level-api.html#reactdom.render)
   /// instance of this `Component` returned by [render].
@@ -645,6 +652,9 @@ abstract class Component2 implements Component {
     _bridge.setStateWithUpdater(this, updater, callback);
   }
 
+  /// Causes [render] to be called, skipping [shouldComponentUpdate].
+  ///
+  /// > See: <https://reactjs.org/docs/react-component.html#forceupdate>
   void forceUpdate([SetStateCallback callback]) {
     _bridge.forceUpdate(this, callback);
   }
@@ -672,16 +682,17 @@ abstract class Component2 implements Component {
   /// See: <https://reactjs.org/docs/react-component.html#static-getderivedstatefromprops>
   ///
   /// __Example__:
-  ///    @override
-  ///    getDerivedStateFromProps(nextProps, prevState) {
-  ///      if (prevState.someMirroredValue != nextProps.someValue) {
-  ///       return {
-  ///         derivedData: computeDerivedState(nextProps),
-  ///         someMirroredValue: nextProps.someValue
-  ///       };
-  ///      }
-  ///      return null;
-  ///    }
+  ///
+  ///     @override
+  ///     getDerivedStateFromProps(Map nextProps, Map prevState) {
+  ///       if (prevState.someMirroredValue != nextProps.someValue) {
+  ///         return {
+  ///           derivedData: computeDerivedState(nextProps),
+  ///           someMirroredValue: nextProps.someValue
+  ///         };
+  ///       }
+  ///       return null;
+  ///     }
   ///
   Map getDerivedStateFromProps(Map nextProps, Map prevState) => null;
 
@@ -787,50 +798,67 @@ abstract class Component2 implements Component {
   /// See: <https://reactjs.org/docs/react-component.html#static-getderivedstatefromerror>
   Map getDerivedStateFromError(dynamic error) => null;
 
-  /// Allows usage of PropValidator functions to check the validity of a prop passed to it.
+  /// Allows usage of PropValidator functions to check the validity of a prop within the props passed to it.
+  ///
+  /// The second argument (`info`) contains metadata about the prop specified by the key.
+  /// `propName`, `componentName`, `location` and `propFullName` are available.
+  ///
   /// When an invalid value is provided for a prop, a warning will be shown in the JavaScript console.
+  ///
   /// For performance reasons, propTypes is only checked in development mode.
   ///
   /// Simple Example:
   ///
-  ///       @override
-  ///       get propTypes => {
-  ///         'name': (Map props, propName, componentName, location, propFullName) {
-  ///           if (props[propName].length > 20) {
-  ///             return ArgumentError('(${props[propName]}) is too long. $propName has a max length of 20 characters.');
-  ///           }
-  ///           return null;
-  ///         },
-  ///       };
+  /// ```
+  /// @override
+  /// get propTypes => {
+  ///   'name': (Map props, info) {
+  ///     if (props['name'].length > 20) {
+  ///       return ArgumentError('(${props['name']}) is too long. 'name' has a max length of 20 characters.');
+  ///     }
+  ///   },
+  /// };
+  /// ```
   ///
   /// Example of 2 props being dependent:
-  ///       @override
-  ///       get propTypes => {
-  ///         'someProp': (Map props, propName, componentName, location, propFullName) {
-  ///           if (props[propName] == true && props['anotherProp'] == null) {
-  ///             return ArgumentError('If (${props[propName]}) is true. You must have a value for "anotherProp".');
-  ///           }
-  ///           return null;
-  ///         },
-  ///         'anotherProp': (Map props, propName, componentName, location, propFullName) {
-  ///           if (props[propName] != null && props['someProp'] != true) {
-  ///             return ArgumentError('You must set "someProp" to true to use $propName.');
-  ///           }
-  ///           return null;
-  ///         },
-  ///       };
   ///
+  /// ```
+  /// @override
+  /// get propTypes => {
+  ///   'someProp': (Map props, info) {
+  ///     if (props[info.propName] == true && props['anotherProp'] == null) {
+  ///       return ArgumentError('If (${props[info.propName]}) is true. You must have a value for "anotherProp".');
+  ///     }
+  ///   },
+  ///   'anotherProp': (Map props, info) {
+  ///     if (props[info.propName] != null && props['someProp'] != true) {
+  ///       return ArgumentError('You must set "someProp" to true to use $[info.propName].');
+  ///     }
+  ///   },
+  /// };
+  /// ```
   ///
   /// See: <https://reactjs.org/docs/typechecking-with-proptypes.html#proptypes>
   Map<String, PropValidator<Null>> get propTypes => {};
 
-  /// __Required.__
+  /// Examines [props] and [state] and returns one of the following types:
   ///
-  /// When called, it should examine [props] and [state] and return a single child [Element]. This child [Element] can
-  /// be either a virtual representation of a native DOM component (such as [DivElement]) or another composite
-  /// `Component` that you've defined yourself.
+  /// * [ReactElement] (renders a single DOM `Element`)
+  /// * [Fragment] (renders multiple elements)
+  /// * [ReactPortal] (renders children into a different DOM subtree)
+  /// * `String` / `num` (renders text nodes in the DOM)
+  /// * `bool` / `null` (renders nothing)
   ///
-  /// See: <https://facebook.github.io/react/docs/react-component.html#render>
+  /// This method is __required__ for class components.
+  ///
+  /// The function should be _pure_, meaning that it should not modify component [state],
+  /// it returns the same result each time it is invoked, and it does not directly interact
+  /// with browser / DOM apis.
+  ///
+  /// If you need to interact with the browser / DOM apis, perform your work in [componentDidMount]
+  /// or the other lifecycle methods instead. Keeping `render` pure makes components easier to think about.
+  ///
+  /// See: <https://reactjs.org/docs/react-component.html#render>
   dynamic render();
 
   // ******************************************************************************************************************
