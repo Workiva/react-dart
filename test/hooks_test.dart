@@ -168,13 +168,14 @@ main() {
         await pumpEventQueue();
       });
 
-      test('side effect is called after the first render', () {
+      test('side effect (no dependency list) is called after the first render', () {
         expect(countRef.text, '0');
+
         expect(useEffectCallCount, 1);
         expect(useEffectCleanupCallCount, 0, reason: 'component has not been unmounted or re-rendered');
       });
 
-      test('side effect with dependencies is called after the first render', () {
+      test('side effect (with dependency list) is called after the first render', () {
         expect(useEffectWithDepsCallCount, 1);
         expect(useEffectCleanupWithDepsCallCount, 0, reason: 'component has not been unmounted or re-rendered');
 
@@ -182,7 +183,7 @@ main() {
         expect(useEffectCleanupWithDepsCallCount2, 0, reason: 'component has not been unmounted or re-rendered');
       });
 
-      test('side effect with empty dependency list is called after the first render', () {
+      test('side effect (with empty dependency list) is called after the first render', () {
         expect(useEffectWithEmptyDepsCallCount, 1);
         expect(useEffectCleanupWithEmptyDepsCallCount, 0, reason: 'component has not been unmounted or re-rendered');
       });
@@ -194,26 +195,54 @@ main() {
           await pumpEventQueue();
         });
 
-        test('cleanup is run and side effect is called again with no dependency list', () {
+        test('side effect (no dependency list) is called again', () {
           expect(countRef.text, '1');
 
-          expect(useEffectCallCount, 2, reason: 'component is rendered for the second time');
-          expect(useEffectCleanupCallCount, 1, reason: 'component was re-rendered');
+          expect(useEffectCallCount, 2);
+          expect(useEffectCleanupCallCount, 1, reason: 'cleanup called before re-render');
         });
 
-        test('cleanup is run and side effect is called again if state is in dependency list', () {
-          expect(useEffectWithDepsCallCount, 2,
-              reason: 'count.value changed and component was rendered for the second time');
-          expect(useEffectCleanupWithDepsCallCount, 1, reason: 'count.value changed and component was re-rendered');
+        test('side effect (with dependency list) is called again if one of its dependencies changed', () {
+          expect(useEffectWithDepsCallCount, 2, reason: 'count.value changed');
+          expect(useEffectCleanupWithDepsCallCount, 1, reason: 'cleanup called before re-render');
+        });
 
+        test('side effect (with dependency list) is not called again if none of its dependencies changed', () {
           expect(useEffectWithDepsCallCount2, 1, reason: 'countDown.value did not change');
-          expect(useEffectCleanupWithDepsCallCount2, 0, reason: 'countDown.value did not change');
+          expect(useEffectCleanupWithDepsCallCount2, 0,
+              reason: 'cleanup not called because countDown.value did not change');
         });
 
-        test('side effect is not called with empty dependencies', () {
+        test('side effect (with empty dependency list) is not called again', () {
           expect(useEffectWithEmptyDepsCallCount, 1,
-              reason: 'the dependency list is empty so side effects only run once');
-          expect(useEffectCleanupWithEmptyDepsCallCount, 0, reason: 'component has not been unmounted or re-rendered');
+              reason: 'side effect is only called once for empty dependency list');
+          expect(useEffectCleanupWithEmptyDepsCallCount, 0, reason: 'component has not been unmounted');
+        });
+      });
+
+      group('after component is unmounted,', () {
+        setUpAll(() async {
+          react_dom.unmountComponentAtNode(mountNode);
+
+          await pumpEventQueue();
+        });
+
+        test('cleanup (no dependency list) is called', () {
+          expect(useEffectCallCount, 2, reason: 'side effect not called on unmount');
+          expect(useEffectCleanupCallCount, 2);
+        });
+
+        test('cleanup (with dependency list) is called', () {
+          expect(useEffectWithDepsCallCount, 2, reason: 'side effect not called on unmount');
+          expect(useEffectCleanupWithDepsCallCount, 2);
+
+          expect(useEffectWithDepsCallCount2, 1, reason: 'side effect not called on unmount');
+          expect(useEffectCleanupWithDepsCallCount2, 1);
+        });
+
+        test('cleanup (with empty dependency list) is called', () {
+          expect(useEffectWithEmptyDepsCallCount, 1, reason: 'side effect not called on unmount');
+          expect(useEffectCleanupWithEmptyDepsCallCount, 1);
         });
       });
     });
