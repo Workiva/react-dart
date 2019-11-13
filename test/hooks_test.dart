@@ -96,9 +96,7 @@ main() {
     group('useEffect', () {
       ReactDartFunctionComponentFactoryProxy UseEffectTest;
       ButtonElement countButtonRef;
-      ButtonElement countDownButtonRef;
       DivElement countRef;
-      DivElement countDownRef;
       int useEffectCallCount = 0;
       int useEffectCleanupCallCount = 0;
       int useEffectWithDepsCallCount = 0;
@@ -118,7 +116,6 @@ main() {
 
           useEffect(() {
             useEffectCallCount++;
-            print('123');
             return () {
               useEffectCleanupCallCount++;
             };
@@ -145,8 +142,6 @@ main() {
             };
           }, []);
 
-          print('abc');
-
           return react.div({}, [
             react.div({
               'ref': (ref) {
@@ -164,14 +159,6 @@ main() {
               },
             }, [
               '+'
-            ]),
-            countDown.value,
-            react.button({
-              'onClick': (_) {
-                countDown.set(countDown.value - 1);
-              },
-            }, [
-              '-'
             ]),
           ]);
         });
@@ -215,7 +202,8 @@ main() {
         });
 
         test('cleanup is run and side effect is called again if state is in dependency list', () {
-          expect(useEffectWithDepsCallCount, 2, reason: 'count.value changed and component was rendered for the second time');
+          expect(useEffectWithDepsCallCount, 2,
+              reason: 'count.value changed and component was rendered for the second time');
           expect(useEffectCleanupWithDepsCallCount, 1, reason: 'count.value changed and component was re-rendered');
 
           expect(useEffectWithDepsCallCount2, 1, reason: 'countDown.value did not change');
@@ -223,7 +211,8 @@ main() {
         });
 
         test('side effect is not called with empty dependencies', () {
-          expect(useEffectWithEmptyDepsCallCount, 1, reason: 'the dependency list is empty so side effects only run once');
+          expect(useEffectWithEmptyDepsCallCount, 1,
+              reason: 'the dependency list is empty so side effects only run once');
           expect(useEffectCleanupWithEmptyDepsCallCount, 0, reason: 'component has not been unmounted or re-rendered');
         });
       });
