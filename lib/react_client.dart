@@ -233,12 +233,12 @@ void _convertRefValue2(Map args, {bool convertCallbackRefValue = true}) {
 
   if (ref is Ref) {
     args['ref'] = ref.jsRef;
-  // If the ref is a callback, pass ReactJS a function that will call it
-  // with the Dart Component instance, not the ReactComponent instance.
-  //
-  // Use _CallbackRef<Null> to check arity, since parameters could be non-dynamic, and thus
-  // would fail the `is _CallbackRef<dynamic>` check.
-  // See https://github.com/dart-lang/sdk/issues/34593 for more information on arity checks.
+    // If the ref is a callback, pass ReactJS a function that will call it
+    // with the Dart Component instance, not the ReactComponent instance.
+    //
+    // Use _CallbackRef<Null> to check arity, since parameters could be non-dynamic, and thus
+    // would fail the `is _CallbackRef<dynamic>` check.
+    // See https://github.com/dart-lang/sdk/issues/34593 for more information on arity checks.
   } else if (ref is _CallbackRef<Null> && convertCallbackRefValue) {
     args['ref'] = allowInterop((dynamic instance) {
       // Call as dynamic to perform dynamic dispatch, since we can't cast to _CallbackRef<dynamic>,
@@ -778,8 +778,8 @@ class ReactJsComponentFactoryProxy extends ReactComponentFactoryProxy {
   @override
   ReactElement build(Map props, [List childrenArgs]) {
     dynamic children = _generateChildren(childrenArgs, shouldAlwaysBeList: alwaysReturnChildrenAsList);
-    JsMap convertedProps = _generateJsProps(props,
-        convertEventHandlers: shouldConvertDomProps, convertCallbackRefValue: false);
+    JsMap convertedProps =
+        _generateJsProps(props, convertEventHandlers: shouldConvertDomProps, convertCallbackRefValue: false);
     return React.createElement(type, convertedProps, children);
   }
 }

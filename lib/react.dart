@@ -19,8 +19,7 @@ export 'package:react/src/context.dart';
 export 'package:react/src/prop_validator.dart';
 export 'package:react/react_client/react_interop.dart' show forwardRef, createRef;
 
-typedef Error PropValidator<TProps>(
-    TProps props, String propName, String componentName, String location, String propFullName);
+typedef Error PropValidator<TProps>(TProps props, PropValidatorInfo info);
 
 /// A React component declared using a function that takes in [props] and returns rendered output.
 ///
