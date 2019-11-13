@@ -93,22 +93,30 @@ main() {
       });
     });
 
-    group('useEffect', () {
+    group('useEffect -', () {
       ReactDartFunctionComponentFactoryProxy UseEffectTest;
       ButtonElement countButtonRef;
       DivElement countRef;
-      int useEffectCallCount = 0;
-      int useEffectCleanupCallCount = 0;
-      int useEffectWithDepsCallCount = 0;
-      int useEffectCleanupWithDepsCallCount = 0;
-      int useEffectWithDepsCallCount2 = 0;
-      int useEffectCleanupWithDepsCallCount2 = 0;
-      int useEffectWithEmptyDepsCallCount = 0;
-      int useEffectCleanupWithEmptyDepsCallCount = 0;
       DivElement mountNode;
+      int useEffectCallCount;
+      int useEffectCleanupCallCount;
+      int useEffectWithDepsCallCount;
+      int useEffectCleanupWithDepsCallCount;
+      int useEffectWithDepsCallCount2;
+      int useEffectCleanupWithDepsCallCount2;
+      int useEffectWithEmptyDepsCallCount;
+      int useEffectCleanupWithEmptyDepsCallCount;
 
       setUpAll(() async {
         mountNode = new DivElement();
+        useEffectCallCount = 0;
+        useEffectCleanupCallCount = 0;
+        useEffectWithDepsCallCount = 0;
+        useEffectCleanupWithDepsCallCount = 0;
+        useEffectWithDepsCallCount2 = 0;
+        useEffectCleanupWithDepsCallCount2 = 0;
+        useEffectWithEmptyDepsCallCount = 0;
+        useEffectCleanupWithEmptyDepsCallCount = 0;
 
         UseEffectTest = react.registerFunctionComponent((Map props) {
           final count = useState(0);
@@ -166,6 +174,10 @@ main() {
         react_dom.render(UseEffectTest({}), mountNode);
 
         await pumpEventQueue();
+      });
+
+      tearDownAll(() {
+        UseEffectTest = null;
       });
 
       test('side effect (no dependency list) is called after the first render', () {
