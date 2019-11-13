@@ -21,7 +21,7 @@ void sharedJsFunctionTests() {
   group('JS functions:', () {
     group('markChildValidated', () {
       test('is function that does not throw when called', () {
-        expect(() => markChildValidated(js_util.newObject()), returnsNormally);
+        expect(() => markChildValidated(newObject()), returnsNormally);
       });
     });
 
