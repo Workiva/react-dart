@@ -23,7 +23,7 @@ main() {
       });
 
       group('displayName', () {
-        test('gets automaticly populated when not provided', () {
+        test('gets automatically populated when not provided', () {
           expect(FunctionFoo.displayName, '_FunctionFoo');
 
           expect(_getJsFunctionName(FunctionFoo.reactFunction), '_FunctionFoo');

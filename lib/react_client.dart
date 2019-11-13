@@ -127,8 +127,16 @@ class ReactDartComponentFactoryProxy<TComponent extends Component> extends React
 
       // If the ref is a callback, pass ReactJS a function that will call it
       // with the Dart Component instance, not the ReactComponent instance.
-      if (ref is _CallbackRef) {
-        interopProps.ref = allowInterop((ReactComponent instance) => ref(instance?.dartComponent));
+      //
+      // Use _CallbackRef<Null> to check arity, since parameters could be non-dynamic, and thus
+      // would fail the `is _CallbackRef<dynamic>` check.
+      // See https://github.com/dart-lang/sdk/issues/34593 for more information on arity checks.
+      if (ref is _CallbackRef<Null>) {
+        interopProps.ref = allowInterop((ReactComponent instance) {
+          // Call as dynamic to perform dynamic dispatch, since we can't cast to _CallbackRef<dynamic>,
+          // and since calling with non-null values will fail at runtime due to the _CallbackRef<Null> typing.
+          return (ref as dynamic)(instance?.dartComponent);
+        });
       } else if (ref is Ref) {
         interopProps.ref = ref.jsRef;
       } else {
@@ -225,10 +233,18 @@ void _convertRefValue2(Map args, {bool convertCallbackRefValue = true}) {
 
   if (ref is Ref) {
     args['ref'] = ref.jsRef;
-  } else if (ref is _CallbackRef && convertCallbackRefValue) {
+  // If the ref is a callback, pass ReactJS a function that will call it
+  // with the Dart Component instance, not the ReactComponent instance.
+  //
+  // Use _CallbackRef<Null> to check arity, since parameters could be non-dynamic, and thus
+  // would fail the `is _CallbackRef<dynamic>` check.
+  // See https://github.com/dart-lang/sdk/issues/34593 for more information on arity checks.
+  } else if (ref is _CallbackRef<Null> && convertCallbackRefValue) {
     args['ref'] = allowInterop((dynamic instance) {
-      if (instance is ReactComponent && instance.dartComponent != null) return ref(instance.dartComponent);
-      return ref(instance);
+      // Call as dynamic to perform dynamic dispatch, since we can't cast to _CallbackRef<dynamic>,
+      // and since calling with non-null values will fail at runtime due to the _CallbackRef<Null> typing.
+      if (instance is ReactComponent && instance.dartComponent != null) return (ref as dynamic)(instance.dartComponent);
+      return (ref as dynamic)(instance);
     });
   }
 }
@@ -678,6 +694,9 @@ ReactDartComponentFactoryProxy _registerComponent(
   return new ReactDartComponentFactoryProxy(reactComponentClass);
 }
 
+/// Creates ReactJS [ReactElement] instances for `JSContext` components.
+///
+/// Adds special jsifying and unjsifying of the `value` prop.
 class ReactJsContextComponentFactoryProxy extends ReactJsComponentFactoryProxy {
   /// The JS class used by this factory.
   @override
@@ -760,7 +779,7 @@ class ReactJsComponentFactoryProxy extends ReactComponentFactoryProxy {
   ReactElement build(Map props, [List childrenArgs]) {
     dynamic children = _generateChildren(childrenArgs, shouldAlwaysBeList: alwaysReturnChildrenAsList);
     JsMap convertedProps = _generateJsProps(props,
-        convertEventHandlers: shouldConvertDomProps || props['ref'] != null, convertCallbackRefValue: false);
+        convertEventHandlers: shouldConvertDomProps, convertCallbackRefValue: false);
     return React.createElement(type, convertedProps, children);
   }
 }
@@ -1050,38 +1069,72 @@ SyntheticFormEvent syntheticFormEventFactory(events.SyntheticFormEvent e) {
 }
 
 /// Wrapper for [SyntheticDataTransfer].
-SyntheticDataTransfer syntheticDataTransferFactory(events.SyntheticDataTransfer dt) {
+///
+/// [dt] is typed as Object instead of [dynamic] to avoid dynamic calls in the method body,
+/// ensuring the code is statically sound.
+SyntheticDataTransfer syntheticDataTransferFactory(Object dt) {
   if (dt == null) return null;
-  List<File> files = [];
-  if (dt.files != null) {
-    for (int i = 0; i < dt.files.length; i++) {
-      files.add(dt.files[i]);
+
+  List rawFiles;
+  List rawTypes;
+
+  String effectAllowed;
+  String dropEffect;
+
+  // Handle `dt` being either a native DOM DataTransfer object or a JS object that looks like it (events.NonNativeDataTransfer).
+  // Casting a JS object to DataTransfer fails intermittently in dart2js, and vice-versa fails intermittently in either DDC or dart2js.
+  // TODO figure out when NonNativeDataTransfer is used.
+  //
+  // Some logic here is duplicated to ensure statically-sound access of same-named members.
+  if (dt is DataTransfer) {
+    rawFiles = dt.files;
+    rawTypes = dt.types;
+
+    try {
+      // Works around a bug in IE where dragging from outside the browser fails.
+      // Trying to access this property throws the error "Unexpected call to method or property access.".
+      effectAllowed = dt.effectAllowed;
+    } catch (_) {
+      effectAllowed = 'uninitialized';
+    }
+    try {
+      // For certain types of drag events in IE (anything but ondragenter, ondragover, and ondrop), this fails.
+      // Trying to access this property throws the error "Unexpected call to method or property access.".
+      dropEffect = dt.dropEffect;
+    } catch (_) {
+      dropEffect = 'none';
+    }
+  } else {
+    // Assume it's a NonNativeDataTransfer otherwise.
+    // Perform a cast inside `else` instead of an `else if (dt is ...)` since is-checks for
+    // anonymous JS objects have undefined behavior.
+    final castedDt = dt as events.NonNativeDataTransfer;
+
+    rawFiles = castedDt.files;
+    rawTypes = castedDt.types;
+
+    try {
+      // Works around a bug in IE where dragging from outside the browser fails.
+      // Trying to access this property throws the error "Unexpected call to method or property access.".
+      effectAllowed = castedDt.effectAllowed;
+    } catch (_) {
+      effectAllowed = 'uninitialized';
+    }
+    try {
+      // For certain types of drag events in IE (anything but ondragenter, ondragover, and ondrop), this fails.
+      // Trying to access this property throws the error "Unexpected call to method or property access.".
+      dropEffect = castedDt.dropEffect;
+    } catch (_) {
+      dropEffect = 'none';
     }
   }
-  List<String> types = [];
-  if (dt.types != null) {
-    for (int i = 0; i < dt.types.length; i++) {
-      types.add(dt.types[i]);
-    }
-  }
-  var effectAllowed;
-  var dropEffect;
 
-  try {
-    // Works around a bug in IE where dragging from outside the browser fails.
-    // Trying to access this property throws the error "Unexpected call to method or property access.".
-    effectAllowed = dt.effectAllowed;
-  } catch (exception) {
-    effectAllowed = 'uninitialized';
-  }
-
-  try {
-    // For certain types of drag events in IE (anything but ondragenter, ondragover, and ondrop), this fails.
-    // Trying to access this property throws the error "Unexpected call to method or property access.".
-    dropEffect = dt.dropEffect;
-  } catch (exception) {
-    dropEffect = 'none';
-  }
+  // Copy these lists and ensure they're typed properly.
+  // todo use .cast() in Dart 2
+  final files = <File>[];
+  final types = <String>[];
+  rawFiles?.forEach(files.add);
+  rawTypes?.forEach(types.add);
 
   return new SyntheticDataTransfer(dropEffect, effectAllowed, files, types);
 }

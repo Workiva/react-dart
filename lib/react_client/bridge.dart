@@ -3,6 +3,7 @@ import 'package:meta/meta.dart';
 import 'package:react/react.dart';
 import 'package:react/react_client/js_backed_map.dart';
 import 'package:react/react_client/react_interop.dart';
+import 'package:react/src/prop_validator.dart';
 import 'package:react/src/typedefs.dart';
 
 /// A function that returns a bridge instance for use with a given [component].
@@ -47,7 +48,8 @@ abstract class Component2Bridge {
   void setState(Component2 component, Map newState, SetStateCallback callback);
   void setStateWithUpdater(Component2 component, StateUpdaterCallback stateUpdater, SetStateCallback callback);
   void forceUpdate(Component2 component, SetStateCallback callback);
-  JsMap jsifyPropTypes(Component2 component, Map propTypes);
+  JsMap jsifyPropTypes(
+      covariant Component2 component, covariant Map<String, /*PropValidator<UiProps>*/ Function> propTypes);
 }
 
 // TODO 3.1.0-wip custom adapter for over_react to avoid typedPropsFactory usages?
@@ -107,7 +109,8 @@ class Component2BridgeImpl extends Component2Bridge {
   }
 
   @override
-  JsMap jsifyPropTypes(Component2 component, Map propTypes) {
+  JsMap jsifyPropTypes(
+      covariant Component2 component, covariant Map<String, /*PropValidator<Map>*/ Function> propTypes) {
     return JsBackedMap.from(propTypes.map((propKey, validator) {
       // Wraps the propValidator methods that users provide in order to allow them to be consumable from javascript.
       dynamic handlePropValidator(
@@ -116,13 +119,20 @@ class Component2BridgeImpl extends Component2Bridge {
         String componentName,
         String location,
         String propFullName,
-        // This is a required argument of PropTypes but is usally hidden from the JS consumer.
+        // This is a required argument of PropTypes but is usually hidden from the JS consumer.
         String secret,
       ) {
         // Create a Dart consumable version of the JsMap.
         var convertedProps = JsBackedMap.fromJs(props);
         // Call the users validator with the newly wrapped props.
-        var error = validator(convertedProps, propName, componentName, location, propFullName);
+        var error = validator(
+            convertedProps,
+            PropValidatorInfo(
+              propName: propName,
+              componentName: componentName,
+              location: location,
+              propFullName: propFullName,
+            ));
         return error == null ? null : JsError(error.toString());
       }
 
