@@ -10,8 +10,9 @@ library react_client.react_interop;
 
 import 'dart:html';
 
-import 'package:meta/meta.dart';
 import 'package:js/js.dart';
+import 'package:js/js_util.dart';
+import 'package:meta/meta.dart';
 import 'package:react/react.dart';
 import 'package:react/react_client.dart' show ComponentFactory, ReactJsComponentFactoryProxy;
 import 'package:react/react_client/bridge.dart';
@@ -224,6 +225,9 @@ abstract class ReactDartComponentVersion {
     // but it lets us safely cast to ReactClass.
     if (type is ReactClass) {
       return type.dartComponentVersion;
+    }
+    if (type is Function) {
+      return getProperty(type, 'dartComponentVersion');
     }
 
     return null;
@@ -476,6 +480,11 @@ class ReactDartContextInternal {
 class JsError {
   external JsError(message);
 }
+
+/// A JS variable that can be used with Dart interop in order to force returning a JavaScript `null`.
+/// Use this if dart2js is possibly converting Dart `null` into `undefined`.
+@JS('_jsNull')
+external get jsNull;
 
 /// Throws the error passed to it from Javascript.
 /// This allows us to catch the error in dart which re-dartifies the js errors/exceptions.

@@ -283,9 +283,9 @@ class _NewContextProviderComponent extends react.Component2 {
   }
 
   render() {
-    Map provideMap = {'renderCount': this.state['renderCount']};
+    final provideMap = {'renderCount': this.state['renderCount']};
 
-    Map complexValues = {
+    final complexValues = {
       'callback': printMe,
       'dartComponent': newContextRefComponent,
       'map': {
@@ -391,6 +391,16 @@ class _NewContextTypeConsumerComponent extends react.Component2 {
       'Using Component.contextType: this.context = ${this.context}',
     ]);
   }
+}
+
+var helloGregFunctionComponent = react.registerFunctionComponent(HelloGreg);
+
+HelloGreg(Map props) {
+  var content = ['Hello Greg!'];
+  if (props['children'].isNotEmpty) {
+    content = ['Hello ' + props['children'].join(' ') + '!'];
+  }
+  return react.Fragment({}, content);
 }
 
 class _Component2TestComponent extends react.Component2 with react.TypedSnapshot<String> {

@@ -1,18 +1,24 @@
 /**
  * react-dart JS interop helpers (used by react_client.dart and react_client/js_interop_helpers.dart)
  */
+
 /// Prefix to namespace react-dart symbols
-var _reactDartSymbolPrefix = 'react-dart.';
+const _reactDartSymbolPrefix = 'react-dart.';
+
 /// A global symbol to identify javascript objects owned by react-dart context,
 /// in order to jsify and unjsify context objects correctly.
-var _reactDartContextSymbol = Symbol(_reactDartSymbolPrefix+'context');
+const _reactDartContextSymbol = Symbol(_reactDartSymbolPrefix + 'context');
 
 /// A JS side function to allow Dart to throw an error from JS in order to catch it Dart side.
 /// Used within Component2 error boundry methods to dartify the error argument.
 /// See: https://github.com/dart-lang/sdk/issues/36363
-function _throwErrorFromJS(error){
+function _throwErrorFromJS(error) {
   throw error;
 }
+
+/// A JS variable that can be used with Fart interop in order to force returning a
+/// JavaScript `null`. This prevents dart2js from possibly converting Dart `null` into `undefined`.
+const _jsNull = null;
 
 function _createReactDartComponentClass(dartInteropStatics, componentStatics, jsConfig) {
   class ReactDartComponent extends React.Component {
@@ -131,7 +137,7 @@ function _createReactDartComponentClass2(dartInteropStatics, componentStatics, j
   }
 
   // Delete methods that the user does not want to include (such as error boundary event).
-  jsConfig.skipMethods.forEach((method) => {
+  jsConfig.skipMethods.forEach(method => {
     if (ReactDartComponent2[method]) {
       delete ReactDartComponent2[method];
     } else {
@@ -165,4 +171,5 @@ export default {
   _createReactDartComponentClass2,
   _markChildValidated,
   _throwErrorFromJS,
-}
+  _jsNull,
+};

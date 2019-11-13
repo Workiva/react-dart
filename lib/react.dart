@@ -19,7 +19,15 @@ export 'package:react/src/context.dart';
 export 'package:react/src/prop_validator.dart';
 export 'package:react/react_client/react_interop.dart' show forwardRef, createRef;
 
+typedef Error PropValidator<TProps>(TProps props, PropValidatorInfo info);
+
+/// A React component declared using a function that takes in [props] and returns rendered output.
+///
+/// See <https://facebook.github.io/react/docs/components-and-props.html#functional-and-class-components>.
+typedef DartFunctionComponent = dynamic Function(Map props);
+
 typedef T ComponentFactory<T extends Component>();
+
 typedef ReactComponentFactoryProxy ComponentRegistrar(ComponentFactory componentFactory,
     [Iterable<String> skipMethods]);
 
@@ -28,6 +36,9 @@ typedef ReactDartComponentFactoryProxy2 ComponentRegistrar2(
   Iterable<String> skipMethods,
   Component2BridgeFactory bridgeFactory,
 });
+
+typedef ReactDartFunctionComponentFactoryProxy FunctionComponentRegistrar(DartFunctionComponent componentFactory,
+    {String displayName});
 
 /// Fragment component that allows the wrapping of children without the necessity of using
 /// an element that adds an additional layer to the DOM (div, span, etc).
@@ -1210,6 +1221,23 @@ mixin TypedSnapshot<TSnapshot> {
 
 /// Creates a ReactJS virtual DOM instance (`ReactElement` on the client).
 abstract class ReactComponentFactoryProxy implements Function {
+  /// The JS component factory used by this factory to build [ReactElement]s.
+  ///
+  /// Deprecated: Use [React.createElement()] instead and pass in [type] as
+  /// the first argument, followed by `props` and `children`.
+  ///
+  /// Before:
+  /// ```
+  /// YourFactoryProxy.reactComponentFactory(props, children);
+  /// ```
+  ///
+  /// After:
+  /// ```
+  /// React.createElement(YourFactoryProxy.type, props, children);
+  /// ```
+  @Deprecated('6.0.0')
+  ReactJsComponentFactory reactComponentFactory;
+
   /// The type of component created by this factory.
   get type;
 
@@ -1788,6 +1816,32 @@ ComponentRegistrar2 registerComponent2 = (
   Component2BridgeFactory bridgeFactory,
 }) {
   throw new Exception('setClientConfiguration must be called before registerComponent.');
+};
+
+/// Registers [componentFactory] on client.
+///
+/// Example:
+/// ```
+/// var myFunctionComponent = registerFunctionComponent((Map props) {
+///   return ['I am a function component', ...props.children];
+/// });
+/// ```
+///
+/// Example with display name:
+/// ```
+/// var myFunctionComponent = registerFunctionComponent((Map props) {
+///   return ['I am a function component', ...props.children];
+/// }, displayName: 'myFunctionComponent');
+/// ```
+/// or with an inferred name from the Dart function
+/// ```
+/// myDartFunctionComponent(Map props) {
+///   return ['I am a function component', ...props.children];
+/// }
+/// var myFunctionComponent = registerFunctionComponent(myDartFunctionComponent);
+/// ```
+FunctionComponentRegistrar registerFunctionComponent = (DartFunctionComponent componentFactory, {String displayName}) {
+  throw new Exception('setClientConfiguration must be called before registerFunctionComponent.');
 };
 
 /// The HTML `<a>` [AnchorElement].
@@ -2594,9 +2648,15 @@ _createDOMComponents(creator) {
 ///
 /// The arguments are assigned to global variables, and React DOM `Component`s are created by calling
 /// [_createDOMComponents] with [domCreator].
-void setReactConfiguration(domCreator, customRegisterComponent, {ComponentRegistrar2 customRegisterComponent2}) {
+void setReactConfiguration(
+  domCreator,
+  customRegisterComponent, {
+  ComponentRegistrar2 customRegisterComponent2,
+  FunctionComponentRegistrar customRegisterFunctionComponent,
+}) {
   registerComponent = customRegisterComponent;
   registerComponent2 = customRegisterComponent2;
+  registerFunctionComponent = customRegisterFunctionComponent;
   // HTML Elements
   _createDOMComponents(domCreator);
 }
