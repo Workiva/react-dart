@@ -123,7 +123,7 @@ Context createContext<TValue>([
 @JS()
 external get _reactDartContextSymbol;
 
-/// A context utility for to assist with common needs of ReactDartContext.
+/// A context utility for assisting with common needs of ReactDartContext.
 ///
 /// __For internal/advanced use only.__
 abstract class ContextHelpers {

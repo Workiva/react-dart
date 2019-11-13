@@ -24,7 +24,7 @@ main() {
     });
 
     group('- refs -', () {
-      refTests(JsFoo, verifyRefValue: (ref) {
+      refTests<ReactComponent>(JsFoo, verifyRefValue: (ref) {
         expect(isCompositeComponentWithTypeV2(ref, JsFoo), isTrue);
       });
     });

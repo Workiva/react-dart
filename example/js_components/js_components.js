@@ -1,7 +1,3 @@
-// Dart2Js has difficulty with dashes so we map it to a non-dash equivalent
-// Assigned to the window so that dart can get access to it.
-window.MaterialUI = window['material-ui'];
-
 // Lets use some of material ui's stuff in JS world
 const {
   createMuiTheme,
