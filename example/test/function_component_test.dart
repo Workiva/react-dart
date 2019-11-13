@@ -7,14 +7,14 @@ import 'package:react/react_client.dart';
 
 var useStateTestFunctionComponent = react.registerFunctionComponent(UseStateTestComponent, displayName: 'useStateTest');
 
-reducer(state, action) {
+Map reducer(Map state, Map action) {
   switch (action['type']) {
     case 'increment':
       return {'count': state['count'] + 1};
     case 'decrement':
       return {'count': state['count'] - 1};
     default:
-      return new Error();
+      return state;
   }
 }
 
@@ -23,8 +23,16 @@ UseStateTestComponent(Map props) {
 
   return react.div({}, [
     state.state['count'],
-    react.button({'onClick': (_) => state.dispatch({'type': 'increment'})}, ['+']),
-    react.button({'onClick': (_) => state.dispatch({'type': 'decrement'})}, ['-']),
+    react.button({
+      'onClick': (_) => state.dispatch({'type': 'increment'})
+    }, [
+      '+'
+    ]),
+    react.button({
+      'onClick': (_) => state.dispatch({'type': 'decrement'})
+    }, [
+      '-'
+    ]),
   ]);
 }
 
