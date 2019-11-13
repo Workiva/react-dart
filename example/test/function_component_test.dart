@@ -7,23 +7,24 @@ import 'package:react/react_client.dart';
 
 var useStateTestFunctionComponent = react.registerFunctionComponent(UseStateTestComponent, displayName: 'useStateTest');
 
+reducer(state, action) {
+  switch (action['type']) {
+    case 'increment':
+      return {'count': state['count'] + 1};
+    case 'decrement':
+      return {'count': state['count'] - 1};
+    default:
+      return new Error();
+  }
+}
+
 UseStateTestComponent(Map props) {
-  final count = useState(0);
+  final state = useReducer(reducer, {'count': 0});
 
   return react.div({}, [
-    count.value,
-    react.button({'onClick': (_) => count.set(0)}, ['Reset']),
-    react.button({
-      'onClick': (_) => count.setWithUpdater((prev) {
-            if (props['enabled']) {
-              return prev + 1;
-            } else {
-              return prev;
-            }
-          }),
-    }, [
-      '+'
-    ]),
+    state.state['count'],
+    react.button({'onClick': (_) => state.dispatch({'type': 'increment'})}, ['+']),
+    react.button({'onClick': (_) => state.dispatch({'type': 'decrement'})}, ['-']),
   ]);
 }
 
@@ -39,12 +40,12 @@ void main() {
             'key': 'useStateTest',
             'enabled': true,
           }, []),
-          react.br({}),
-          react.h5({'key': 'useStateTestLabel-2'}, 'Disabled:'),
-          useStateTestFunctionComponent({
-            'key': 'useStateTest',
-            'enabled': false,
-          }, []),
+//          react.br({}),
+//          react.h5({'key': 'useStateTestLabel-2'}, 'Disabled:'),
+//          useStateTestFunctionComponent({
+//            'key': 'useStateTest',
+//            'enabled': false,
+//          }, []),
         ]),
         querySelector('#content'));
   }
