@@ -29,7 +29,7 @@ main() {
           expect(_getJsFunctionName(FunctionFoo.reactFunction), '_FunctionFoo');
 
           expect(FunctionFoo.displayName, _getJsFunctionName(FunctionFoo.reactFunction));
-        }, tags: ['fails-on-2.4.1']);
+        }, tags: ['fails-on-241']);
 
         test('is populated by the provided argument', () {
           expect(NamedFunctionFoo.displayName, 'Bar');
