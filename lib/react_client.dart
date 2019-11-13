@@ -779,7 +779,7 @@ class ReactJsComponentFactoryProxy extends ReactComponentFactoryProxy {
   ReactElement build(Map props, [List childrenArgs]) {
     dynamic children = _generateChildren(childrenArgs, shouldAlwaysBeList: alwaysReturnChildrenAsList);
     JsMap convertedProps = _generateJsProps(props,
-        convertEventHandlers: shouldConvertDomProps || props['ref'] != null, convertCallbackRefValue: false);
+        convertEventHandlers: shouldConvertDomProps, convertCallbackRefValue: false);
     return React.createElement(type, convertedProps, children);
   }
 }
