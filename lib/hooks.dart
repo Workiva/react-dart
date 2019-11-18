@@ -108,20 +108,20 @@ StateHook<T> useState<T>(T initialValue) => StateHook(initialValue);
 /// Learn more: <https://reactjs.org/docs/hooks-reference.html#lazy-initial-state>.
 StateHook<T> useStateLazy<T>(T init()) => StateHook.lazy(init);
 
-class ReducerHook<S, A, I> {
+class ReducerHook {
   /// The first item of the pair returned by [React.userReducer].
-  S _state;
+  Map _state;
 
   /// The second item in the pair returned by [React.userReducer].
-  void Function(A) _dispatch;
+  void Function(dynamic) _dispatch;
 
-  ReducerHook(S Function(S, A) reducer, S initialState) {
+  ReducerHook(Function reducer, dynamic initialState) {
     final result = React.useReducer(allowInterop(reducer), initialState);
     _state = result[0];
     _dispatch = result[1];
   }
 
-  ReducerHook.lazy(S Function(S, A) reducer, I initialState, S Function(I) init) {
+  ReducerHook.lazy(Function reducer, dynamic initialState, Function init) {
     final result = React.useReducer(allowInterop(reducer), initialState, allowInterop(init));
     _state = result[0];
     _dispatch = result[1];
@@ -130,16 +130,101 @@ class ReducerHook<S, A, I> {
   /// The current value of the state.
   ///
   /// See: <https://reactjs.org/docs/hooks-reference.html#usestate>.
-  S get state => _state;
+  Map get state => _state;
 
   /// Updates [value] to [newValue].
   ///
   /// See: <https://reactjs.org/docs/hooks-state.html#updating-state>.
-  void dispatch(A action) => _dispatch(action);
+  void dispatch(dynamic action) => _dispatch(action);
 }
 
-ReducerHook<S, A, I> useReducer<S, A, I>(S Function(S, A) reducer, S initialState) =>
-    ReducerHook(reducer, initialState);
+///
+///
+/// __Example__:
+///
+/// ```
+/// Map reducer(Map state, Map action) {
+///   switch (action['type']) {
+///     case 'increment':
+///       return {'count': state['count'] + 1};
+///     case 'decrement':
+///       return {'count': state['count'] - 1};
+///     default:
+///       return state;
+///   }
+/// }
+///
+/// UseReducerTestComponent(Map props) {
+///   final state = useReducer(reducer, {'count': 0});
+///
+///   return react.Fragment({}, [
+///     state.state['count'],
+///     react.button({
+///       'onClick': (_) => state.dispatch({'type': 'increment'})
+///     }, [
+///       '+'
+///     ]),
+///     react.button({
+///       'onClick': (_) => state.dispatch({'type': 'decrement'})
+///     }, [
+///       '-'
+///     ]),
+///   ]);
+/// }
+/// ```
+///
+/// See: <https://reactjs.org/docs/hooks-reference.html#usereducer>.
+ReducerHook useReducer(Function reducer, dynamic initialState) => ReducerHook(reducer, initialState);
 
-ReducerHook<S, A, I> useReducerLazy<S, A, I>(S Function(S, A) reducer, I initialState, S Function(I) init) =>
+///
+///
+/// __Example__:
+///
+/// ```
+/// Map initializeCount(int initialValue) {
+///   return {'count': initialValue};
+/// }
+///
+/// Map reducer(Map state, Map action) {
+///   switch (action['type']) {
+///     case 'increment':
+///       return {'count': state['count'] + 1};
+///     case 'decrement':
+///       return {'count': state['count'] - 1};
+///     case 'reset':
+///       return initializeCount(action['payload']);
+///     default:
+///       return state;
+///   }
+/// }
+///
+/// UseReducerTestComponent(Map props) {
+///   final state = useReducerLazy(reducer, props['initialCount'], initializeCount);
+///
+///   return react.Fragment({}, [
+///     state.state['count'],
+///     react.button({
+///       'onClick': (_) => state.dispatch({'type': 'increment'})
+///     }, [
+///       '+'
+///     ]),
+///     react.button({
+///       'onClick': (_) => state.dispatch({'type': 'decrement'})
+///     }, [
+///       '-'
+///     ]),
+///     react.button({
+///       'onClick': (_) => state.dispatch({
+///         'type': 'reset',
+///         'payload': props['initialCount'],
+///       })
+///     }, [
+///       'reset'
+///     ]),
+///   ]);
+/// }
+/// ```
+///
+/// See: <https://reactjs.org/docs/hooks-reference.html#lazy-initialization>.
+ReducerHook useReducerLazy(Function reducer, dynamic initialState, Function init) =>
     ReducerHook.lazy(reducer, initialState, init);

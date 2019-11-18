@@ -5,7 +5,11 @@ import 'package:react/react.dart' as react;
 import 'package:react/react_dom.dart' as react_dom;
 import 'package:react/react_client.dart';
 
-var useStateTestFunctionComponent = react.registerFunctionComponent(UseStateTestComponent, displayName: 'useStateTest');
+var useReducerTestFunctionComponent = react.registerFunctionComponent(UseReducerTestComponent, displayName: 'useReducerTest');
+
+Map initializeCount(int initialValue) {
+  return {'count': initialValue};
+}
 
 Map reducer(Map state, Map action) {
   switch (action['type']) {
@@ -13,15 +17,17 @@ Map reducer(Map state, Map action) {
       return {'count': state['count'] + 1};
     case 'decrement':
       return {'count': state['count'] - 1};
+    case 'reset':
+      return initializeCount(action['payload']);
     default:
       return state;
   }
 }
 
-UseStateTestComponent(Map props) {
-  final state = useReducer(reducer, {'count': 0});
+UseReducerTestComponent(Map props) {
+  final state = useReducerLazy(reducer, props['initialCount'], initializeCount);
 
-  return react.div({}, [
+  return react.Fragment({}, [
     state.state['count'],
     react.button({
       'onClick': (_) => state.dispatch({'type': 'increment'})
@@ -32,6 +38,14 @@ UseStateTestComponent(Map props) {
       'onClick': (_) => state.dispatch({'type': 'decrement'})
     }, [
       '-'
+    ]),
+    react.button({
+      'onClick': (_) => state.dispatch({
+        'type': 'reset',
+        'payload': props['initialCount'],
+      })
+    }, [
+      'reset'
     ]),
   ]);
 }
@@ -44,16 +58,10 @@ void main() {
         react.Fragment({}, [
           react.h1({'key': 'functionComponentTestLabel'}, ['Function Component Tests']),
           react.h2({'key': 'useStateTestLabel'}, ['useState Hook Test']),
-          useStateTestFunctionComponent({
+          useReducerTestFunctionComponent({
             'key': 'useStateTest',
-            'enabled': true,
+            'initialCount': 10,
           }, []),
-//          react.br({}),
-//          react.h5({'key': 'useStateTestLabel-2'}, 'Disabled:'),
-//          useStateTestFunctionComponent({
-//            'key': 'useStateTest',
-//            'enabled': false,
-//          }, []),
         ]),
         querySelector('#content'));
   }
