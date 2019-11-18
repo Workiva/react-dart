@@ -133,5 +133,5 @@ StateHook<T> useStateLazy<T>(T init()) => StateHook.lazy(init);
 /// }
 /// ```
 ///
-/// Learn more:<https://reactjs.org/docs/hooks-reference.html#usecallback>.
+/// Learn more: <https://reactjs.org/docs/hooks-reference.html#usecallback>.
 Function useCallback(Function callback, List dependencies) => React.useCallback(allowInterop(callback), dependencies);
