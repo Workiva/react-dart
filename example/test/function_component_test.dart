@@ -21,20 +21,44 @@ UseStateTestComponent(Map props) {
   ]);
 }
 
-var useCallbackTestFunctionComponent = react.registerFunctionComponent(UseCallbackTestComponent, displayName: 'useCallbackTest');
+var useCallbackTestFunctionComponent =
+    react.registerFunctionComponent(UseCallbackTestComponent, displayName: 'useCallbackTest');
 
 UseCallbackTestComponent(Map props) {
   final height = useState(0);
 
   final measuredRef = useCallback((node) {
-    if(node != null) {
+    if (node != null) {
       height.set(node.getBoundingClientRect().height);
     }
   }, []);
 
   return react.div({}, [
     react.h4({'ref': measuredRef}, ['Hello, world!']),
-    react.h5({'ref': measuredRef}, ['The above header is ${height.value}px tall']),
+    react.h5({}, ['The above header is ${height.value}px tall']),
+  ]);
+}
+
+var useCallbackTestFunctionComponent2 =
+    react.registerFunctionComponent(UseCallbackTestComponent2, displayName: 'useCallbackTest2');
+
+UseCallbackTestComponent2(Map props) {
+  final count = useState(0);
+  final delta = useState(1);
+
+  var increment = useCallback((_) {
+    count.setWithUpdater((prev) => prev + delta.value);
+  }, [delta.value]);
+
+  var incrementDelta = useCallback((_) {
+    delta.setWithUpdater((prev) => prev + 1);
+  }, []);
+
+  return react.div({}, [
+    react.div({}, ['Delta is ${delta.value}']),
+    react.div({}, ['Count is ${count.value}']),
+    react.button({'onClick': increment}, ['Increment count']),
+    react.button({'onClick': incrementDelta}, ['Increment delta']),
   ]);
 }
 
@@ -53,6 +77,10 @@ void main() {
           react.h2({'key': 'useCallbackTestLabel'}, ['useCallback Hook Test']),
           useCallbackTestFunctionComponent({
             'key': 'useCallbackTest',
+          }, []),
+          react.br({}),
+          useCallbackTestFunctionComponent2({
+            'key': 'useCallbackTest2',
           }, []),
         ]),
         querySelector('#content'));
