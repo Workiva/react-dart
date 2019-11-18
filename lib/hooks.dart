@@ -108,37 +108,53 @@ StateHook<T> useState<T>(T initialValue) => StateHook(initialValue);
 /// Learn more: <https://reactjs.org/docs/hooks-reference.html#lazy-initial-state>.
 StateHook<T> useStateLazy<T>(T init()) => StateHook.lazy(init);
 
+/// The return value of [useReducer].
+///
+/// The current state is available via [state] and action dispatcher is available via [dispatch].
+///
+/// Note there are two rules for using Hooks (<https://reactjs.org/docs/hooks-rules.html>):
+///
+/// * Only call Hooks at the top level.
+/// * Only call Hooks from inside a [DartFunctionComponent].
+///
+/// Learn more: <https://reactjs.org/docs/hooks-reference.html#usereducer>.
 class ReducerHook {
   /// The first item of the pair returned by [React.userReducer].
   Map _state;
 
   /// The second item in the pair returned by [React.userReducer].
-  void Function(dynamic) _dispatch;
+  void Function(Map) _dispatch;
 
-  ReducerHook(Function reducer, dynamic initialState) {
+  ReducerHook(Map Function(Map state, Map action) reducer, Map initialState) {
     final result = React.useReducer(allowInterop(reducer), initialState);
     _state = result[0];
     _dispatch = result[1];
   }
 
-  ReducerHook.lazy(Function reducer, dynamic initialState, Function init) {
-    final result = React.useReducer(allowInterop(reducer), initialState, allowInterop(init));
+  /// Constructor for [useReducerLazy], calls lazy version of [React.useReducer] to
+  /// initialize [_state] to the return value of [init(initialArg)].
+  ///
+  /// See: <https://reactjs.org/docs/hooks-reference.html#lazy-initialization>.
+  ReducerHook.lazy(Map Function(Map state, Map action) reducer, dynamic initialArg, Function init) {
+    final result = React.useReducer(allowInterop(reducer), initialArg, allowInterop(init));
     _state = result[0];
     _dispatch = result[1];
   }
 
-  /// The current value of the state.
+  /// The current state map of the component.
   ///
-  /// See: <https://reactjs.org/docs/hooks-reference.html#usestate>.
+  /// See: <https://reactjs.org/docs/hooks-reference.html#usereducer>.
   Map get state => _state;
 
-  /// Updates [value] to [newValue].
+  /// Dispatches [action] and triggers stage changes.
   ///
-  /// See: <https://reactjs.org/docs/hooks-state.html#updating-state>.
-  void dispatch(dynamic action) => _dispatch(action);
+  /// > __Note:__ The dispatch function identity is stable and will not change on re-renders.
+  ///
+  /// See: <https://reactjs.org/docs/hooks-reference.html#usereducer>.
+  void dispatch(Map action) => _dispatch(action);
 }
 
-///
+/// Initializes state of a [DartFunctionComponent] to [initialState] and creates [dispatch] method.
 ///
 /// __Example__:
 ///
@@ -173,10 +189,11 @@ class ReducerHook {
 /// }
 /// ```
 ///
-/// See: <https://reactjs.org/docs/hooks-reference.html#usereducer>.
-ReducerHook useReducer(Function reducer, dynamic initialState) => ReducerHook(reducer, initialState);
+/// Learn more: <https://reactjs.org/docs/hooks-reference.html#usereducer>.
+ReducerHook useReducer(Map Function(Map state, Map action) reducer, Map initialState) =>
+    ReducerHook(reducer, initialState);
 
-///
+/// Initializes state of a [DartFunctionComponent] to [init(initialArg)] and creates [dispatch] method.
 ///
 /// __Example__:
 ///
@@ -225,6 +242,6 @@ ReducerHook useReducer(Function reducer, dynamic initialState) => ReducerHook(re
 /// }
 /// ```
 ///
-/// See: <https://reactjs.org/docs/hooks-reference.html#lazy-initialization>.
-ReducerHook useReducerLazy(Function reducer, dynamic initialState, Function init) =>
-    ReducerHook.lazy(reducer, initialState, init);
+/// Learn more: <https://reactjs.org/docs/hooks-reference.html#lazy-initialization>.
+ReducerHook useReducerLazy<T>(Map Function(Map state, Map action) reducer, dynamic initialArg, Function init) =>
+    ReducerHook.lazy(reducer, initialArg, init);
