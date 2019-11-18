@@ -27,13 +27,7 @@ HookTestComponent(Map props) {
   return react.div({}, [
     react.button({'onClick': (_) => count.set(1)}, ['Reset']),
     react.button({
-      'onClick': (_) => count.setWithUpdater((prev) {
-            if (props['enabled']) {
-              return prev + 1;
-            } else {
-              return prev;
-            }
-          }),
+      'onClick': (_) => count.setWithUpdater((prev) => prev + 1),
     }, [
       '+'
     ]),
@@ -52,12 +46,6 @@ void main() {
           hookTestFunctionComponent({
             'key': 'useStateTest',
             'enabled': true,
-          }, []),
-          react.br({}),
-          react.h5({'key': 'useStateTestLabel-2'}, 'Disabled:'),
-          hookTestFunctionComponent({
-            'key': 'useStateTest',
-            'enabled': false,
           }, []),
         ]),
         querySelector('#content'));
