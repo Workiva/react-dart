@@ -101,7 +101,7 @@ main() {
       ButtonElement subtractButtonRef;
       ButtonElement textButtonRef;
 
-      Map reducer(Map state, Map action) {
+      Map reducer2(Map state, Map action) {
         switch (action['type']) {
           case 'increment':
             return {...state, 'count': state['count'] + 1};
@@ -118,7 +118,7 @@ main() {
         var mountNode = new DivElement();
 
         UseReducerTest = react.registerFunctionComponent((Map props) {
-          final state = useReducer(reducer, {
+          final state = useReducer(reducer2, {
             'text': 'initialValue',
             'count': 0,
           });
