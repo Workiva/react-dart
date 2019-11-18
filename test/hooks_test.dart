@@ -104,11 +104,11 @@ main() {
       Map reducer(Map state, Map action) {
         switch (action['type']) {
           case 'increment':
-            return {'count': state['count'] + 1};
+            return {...state, 'count': state['count'] + 1};
           case 'decrement':
-            return {'count': state['count'] - 1};
+            return {...state, 'count': state['count'] - 1};
           case 'changeText':
-            return {'text': action['newText']};
+            return {...state, 'text': action['newText']};
           default:
             return state;
         }
@@ -118,7 +118,10 @@ main() {
         var mountNode = new DivElement();
 
         UseReducerTest = react.registerFunctionComponent((Map props) {
-          final state = useReducer(reducer, {'text': 'initialValue', 'count': 0,});
+          final state = useReducer(reducer, {
+            'text': 'initialValue',
+            'count': 0,
+          });
 
           return react.div({}, [
             react.div({
@@ -174,19 +177,99 @@ main() {
         expect(textRef.text, 'initialValue');
       });
 
-      test('StateHook.set updates state correctly', () {
+      test('dispatch updates states correctly', () {
         react_test_utils.Simulate.click(textButtonRef);
         expect(textRef.text, 'newValue');
-      });
 
-      test('StateHook.setWithUpdater updates state correctly', () {
         react_test_utils.Simulate.click(addButtonRef);
-        expect(countRef.text, 'a');
+        expect(countRef.text, '1');
+
+        react_test_utils.Simulate.click(subtractButtonRef);
+        expect(countRef.text, '0');
       });
 
-      test('StateHook.setWithUpdater updates state correctly', () {
-        react_test_utils.Simulate.click(subtractButtonRef);
-        expect(countRef.text, 'a');
+      group('useReducerLazy', () {
+        ButtonElement resetButtonRef;
+
+        Map initializeCount(int initialValue) {
+          return {'count': initialValue};
+        }
+
+        Map reducer(Map state, Map action) {
+          switch (action['type']) {
+            case 'increment':
+              return {...state, 'count': state['count'] + 1};
+            case 'decrement':
+              return {...state, 'count': state['count'] - 1};
+            case 'reset':
+              return initializeCount(action['payload']);
+            default:
+              return state;
+          }
+        }
+
+        setUpAll(() {
+          var mountNode = new DivElement();
+
+          UseReducerTest = react.registerFunctionComponent((Map props) {
+            final state = useReducerLazy(reducer, props['initialCount'], initializeCount);
+
+            return react.div({}, [
+              react.div({
+                'ref': (ref) {
+                  countRef = ref;
+                },
+              }, [
+                state.state['count']
+              ]),
+              react.button({
+                'onClick': (_) => state.dispatch({'type': 'reset', 'payload': props['initialCount']}),
+                'ref': (ref) {
+                  resetButtonRef = ref;
+                },
+              }, [
+                'reset'
+              ]),
+              react.button({
+                'onClick': (_) => state.dispatch({'type': 'increment'}),
+                'ref': (ref) {
+                  addButtonRef = ref;
+                },
+              }, [
+                '+'
+              ]),
+              react.button({
+                'onClick': (_) => state.dispatch({'type': 'decrement'}),
+                'ref': (ref) {
+                  subtractButtonRef = ref;
+                },
+              }, [
+                '-'
+              ]),
+            ]);
+          });
+
+          react_dom.render(UseReducerTest({'initialCount': 10}), mountNode);
+        });
+
+        tearDownAll(() {
+          UseReducerTest = null;
+        });
+
+        test('initializes state correctly', () {
+          expect(countRef.text, '10');
+        });
+
+        test('dispatch updates states correctly', () {
+          react_test_utils.Simulate.click(addButtonRef);
+          expect(countRef.text, '11');
+
+          react_test_utils.Simulate.click(resetButtonRef);
+          expect(countRef.text, '10');
+
+          react_test_utils.Simulate.click(subtractButtonRef);
+          expect(countRef.text, '9');
+        });
       });
     });
   });

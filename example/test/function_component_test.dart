@@ -37,9 +37,9 @@ Map initializeCount(int initialValue) {
 Map reducer(Map state, Map action) {
   switch (action['type']) {
     case 'increment':
-      return {'count': state['count'] + 1};
+      return {...state, 'count': state['count'] + 1};
     case 'decrement':
-      return {'count': state['count'] - 1};
+      return {...state, 'count': state['count'] - 1};
     case 'reset':
       return initializeCount(action['payload']);
     default:

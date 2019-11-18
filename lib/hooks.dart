@@ -162,9 +162,9 @@ class ReducerHook {
 /// Map reducer(Map state, Map action) {
 ///   switch (action['type']) {
 ///     case 'increment':
-///       return {'count': state['count'] + 1};
+///       return {...state, 'count': state['count'] + 1};
 ///     case 'decrement':
-///       return {'count': state['count'] - 1};
+///       return {...state, 'count': state['count'] - 1};
 ///     default:
 ///       return state;
 ///   }
@@ -205,9 +205,9 @@ ReducerHook useReducer(Map Function(Map state, Map action) reducer, Map initialS
 /// Map reducer(Map state, Map action) {
 ///   switch (action['type']) {
 ///     case 'increment':
-///       return {'count': state['count'] + 1};
+///       return {...state, 'count': state['count'] + 1};
 ///     case 'decrement':
-///       return {'count': state['count'] - 1};
+///       return {...state, 'count': state['count'] - 1};
 ///     case 'reset':
 ///       return initializeCount(action['payload']);
 ///     default:
