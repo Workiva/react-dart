@@ -14,13 +14,7 @@ UseStateTestComponent(Map props) {
     count.value,
     react.button({'onClick': (_) => count.set(0)}, ['Reset']),
     react.button({
-      'onClick': (_) => count.setWithUpdater((prev) {
-            if (props['enabled']) {
-              return prev + 1;
-            } else {
-              return prev;
-            }
-          }),
+      'onClick': (_) => count.setWithUpdater((prev) => prev + 1),
     }, [
       '+'
     ]),
@@ -83,13 +77,6 @@ void main() {
           react.h2({'key': 'useStateTestLabel'}, ['useState Hook Test']),
           useStateTestFunctionComponent({
             'key': 'useStateTest',
-            'enabled': true,
-          }, []),
-          react.br({}),
-          react.h5({'key': 'useStateTestLabel-2'}, 'Disabled:'),
-          useStateTestFunctionComponent({
-            'key': 'useStateTest2',
-            'enabled': false,
           }, []),
           react.br({}),
           react.h2({'key': 'useReducerTestLabel'}, ['useReducer Hook Test']),
