@@ -107,3 +107,10 @@ StateHook<T> useState<T>(T initialValue) => StateHook(initialValue);
 ///
 /// Learn more: <https://reactjs.org/docs/hooks-reference.html#lazy-initial-state>.
 StateHook<T> useStateLazy<T>(T init()) => StateHook.lazy(init);
+
+
+
+Function useCallback(Function callback, List dependencies) {
+  return React.useCallback(allowInterop(callback), dependencies);
+}
+
