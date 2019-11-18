@@ -5,7 +5,30 @@ import 'package:react/react.dart' as react;
 import 'package:react/react_dom.dart' as react_dom;
 import 'package:react/react_client.dart';
 
-var useReducerTestFunctionComponent = react.registerFunctionComponent(UseReducerTestComponent, displayName: 'useReducerTest');
+var useStateTestFunctionComponent = react.registerFunctionComponent(UseStateTestComponent, displayName: 'useStateTest');
+
+UseStateTestComponent(Map props) {
+  final count = useState(0);
+
+  return react.div({}, [
+    count.value,
+    react.button({'onClick': (_) => count.set(0)}, ['Reset']),
+    react.button({
+      'onClick': (_) => count.setWithUpdater((prev) {
+        if (props['enabled']) {
+          return prev + 1;
+        } else {
+          return prev;
+        }
+      }),
+    }, [
+      '+'
+    ]),
+  ]);
+}
+
+var useReducerTestFunctionComponent =
+    react.registerFunctionComponent(UseReducerTestComponent, displayName: 'useReducerTest');
 
 Map initializeCount(int initialValue) {
   return {'count': initialValue};
@@ -41,9 +64,9 @@ UseReducerTestComponent(Map props) {
     ]),
     react.button({
       'onClick': (_) => state.dispatch({
-        'type': 'reset',
-        'payload': props['initialCount'],
-      })
+            'type': 'reset',
+            'payload': props['initialCount'],
+          })
     }, [
       'reset'
     ]),
@@ -58,8 +81,20 @@ void main() {
         react.Fragment({}, [
           react.h1({'key': 'functionComponentTestLabel'}, ['Function Component Tests']),
           react.h2({'key': 'useStateTestLabel'}, ['useState Hook Test']),
-          useReducerTestFunctionComponent({
+          useStateTestFunctionComponent({
             'key': 'useStateTest',
+            'enabled': true,
+          }, []),
+          react.br({}),
+          react.h5({'key': 'useStateTestLabel-2'}, 'Disabled:'),
+          useStateTestFunctionComponent({
+            'key': 'useStateTest2',
+            'enabled': false,
+          }, []),
+          react.br({}),
+          react.h2({'key': 'useReducerTestLabel'}, ['useReducer Hook Test']),
+          useReducerTestFunctionComponent({
+            'key': 'useReducerTest',
             'initialCount': 10,
           }, []),
         ]),
