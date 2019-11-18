@@ -25,24 +25,6 @@ var useCallbackTestFunctionComponent =
     react.registerFunctionComponent(UseCallbackTestComponent, displayName: 'useCallbackTest');
 
 UseCallbackTestComponent(Map props) {
-  final height = useState(0);
-
-  final measuredRef = useCallback((node) {
-    if (node != null) {
-      height.set(node.getBoundingClientRect().height);
-    }
-  }, []);
-
-  return react.div({}, [
-    react.h4({'ref': measuredRef}, ['Hello, world!']),
-    react.h5({}, ['The above header is ${height.value}px tall']),
-  ]);
-}
-
-var useCallbackTestFunctionComponent2 =
-    react.registerFunctionComponent(UseCallbackTestComponent2, displayName: 'useCallbackTest2');
-
-UseCallbackTestComponent2(Map props) {
   final count = useState(0);
   final delta = useState(1);
 
@@ -77,10 +59,6 @@ void main() {
           react.h2({'key': 'useCallbackTestLabel'}, ['useCallback Hook Test']),
           useCallbackTestFunctionComponent({
             'key': 'useCallbackTest',
-          }, []),
-          react.br({}),
-          useCallbackTestFunctionComponent2({
-            'key': 'useCallbackTest2',
           }, []),
         ]),
         querySelector('#content'));
