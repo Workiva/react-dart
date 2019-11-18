@@ -92,5 +92,102 @@ main() {
         expect(countRef.text, '1');
       });
     });
+
+    group('useReducer -', () {
+      ReactDartFunctionComponentFactoryProxy UseReducerTest;
+      DivElement textRef;
+      DivElement countRef;
+      ButtonElement addButtonRef;
+      ButtonElement subtractButtonRef;
+      ButtonElement textButtonRef;
+
+      Map reducer(Map state, Map action) {
+        switch (action['type']) {
+          case 'increment':
+            return {'count': state['count'] + 1};
+          case 'decrement':
+            return {'count': state['count'] - 1};
+          case 'changeText':
+            return {'text': action['newText']};
+          default:
+            return state;
+        }
+      }
+
+      setUpAll(() {
+        var mountNode = new DivElement();
+
+        UseReducerTest = react.registerFunctionComponent((Map props) {
+          final state = useReducer(reducer, {'text': 'initialValue', 'count': 0,});
+
+          return react.div({}, [
+            react.div({
+              'ref': (ref) {
+                textRef = ref;
+              },
+            }, [
+              state.state['text']
+            ]),
+            react.div({
+              'ref': (ref) {
+                countRef = ref;
+              },
+            }, [
+              state.state['count']
+            ]),
+            react.button({
+              'onClick': (_) => state.dispatch({'type': 'changeText', 'newText': 'newValue'}),
+              'ref': (ref) {
+                textButtonRef = ref;
+              },
+            }, [
+              'Set'
+            ]),
+            react.button({
+              'onClick': (_) => state.dispatch({'type': 'increment'}),
+              'ref': (ref) {
+                addButtonRef = ref;
+              },
+            }, [
+              '+'
+            ]),
+            react.button({
+              'onClick': (_) => state.dispatch({'type': 'decrement'}),
+              'ref': (ref) {
+                subtractButtonRef = ref;
+              },
+            }, [
+              '-'
+            ]),
+          ]);
+        });
+
+        react_dom.render(UseReducerTest({}), mountNode);
+      });
+
+      tearDownAll(() {
+        UseReducerTest = null;
+      });
+
+      test('initializes state correctly', () {
+        expect(countRef.text, '0');
+        expect(textRef.text, 'initialValue');
+      });
+
+      test('StateHook.set updates state correctly', () {
+        react_test_utils.Simulate.click(textButtonRef);
+        expect(textRef.text, 'newValue');
+      });
+
+      test('StateHook.setWithUpdater updates state correctly', () {
+        react_test_utils.Simulate.click(addButtonRef);
+        expect(countRef.text, 'a');
+      });
+
+      test('StateHook.setWithUpdater updates state correctly', () {
+        react_test_utils.Simulate.click(subtractButtonRef);
+        expect(countRef.text, 'a');
+      });
+    });
   });
 }
