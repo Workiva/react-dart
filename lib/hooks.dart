@@ -10,10 +10,10 @@ import 'package:react/react_client/react_interop.dart';
 /// The current value of the state is available via [value] and
 /// functions to update it are available via [set] and [setWithUpdater].
 ///
-/// Note there are two rules for using Hooks (<https://reactjs.org/docs/hooks-rules.html>):
-///
-/// * Only call Hooks at the top level.
-/// * Only call Hooks from inside a [DartFunctionComponent].
+/// > __Note:__ there are two [rules for using Hooks](https://reactjs.org/docs/hooks-rules.html):
+/// >
+/// > * Only call Hooks at the top level.
+/// > * Only call Hooks from inside a [DartFunctionComponent].
 ///
 /// Learn more: <https://reactjs.org/docs/hooks-state.html>.
 class StateHook<T> {
@@ -104,10 +104,10 @@ StateHook<T> useStateLazy<T>(T init()) => StateHook.lazy(init);
 
 /// Returns a memoized version of [callback] that only changes if one of the [dependencies] has changed.
 ///
-/// Note there are two rules for using Hooks (<https://reactjs.org/docs/hooks-rules.html>):
-///
-/// * Only call Hooks at the top level.
-/// * Only call Hooks from inside a [DartFunctionComponent].
+/// > __Note:__ there are two [rules for using Hooks](https://reactjs.org/docs/hooks-rules.html):
+/// >
+/// > * Only call Hooks at the top level.
+/// > * Only call Hooks from inside a [DartFunctionComponent].
 ///
 /// __Example__:
 ///
