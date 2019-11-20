@@ -43,9 +43,9 @@ void main() {
     react_dom.render(
         react.Fragment({}, [
           react.h1({'key': 'functionComponentTestLabel'}, ['Function Component Tests']),
+          react.h2({'key': 'useStateTestLabel'}, ['useState & useEffect Hook Test']),
           hookTestFunctionComponent({
             'key': 'useStateTest',
-            'enabled': true,
           }, []),
         ]),
         querySelector('#content'));
