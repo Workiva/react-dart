@@ -1,31 +1,37 @@
 import 'dart:html';
 
+import 'package:react/hooks.dart';
 import 'package:react/react.dart' as react;
 import 'package:react/react_dom.dart' as react_dom;
 import 'package:react/react_client.dart';
 
-import 'react_test_components.dart';
+var useStateTestFunctionComponent = react.registerFunctionComponent(UseStateTestComponent, displayName: 'useStateTest');
+
+UseStateTestComponent(Map props) {
+  final count = useState(0);
+
+  return react.div({}, [
+    count.value,
+    react.button({'onClick': (_) => count.set(0)}, ['Reset']),
+    react.button({
+      'onClick': (_) => count.setWithUpdater((prev) => prev + 1),
+    }, [
+      '+'
+    ]),
+  ]);
+}
 
 void main() {
   setClientConfiguration();
-  var inputValue = 'World';
-  // TODO: replace this with hooks/useState when they are added.
+
   render() {
     react_dom.render(
         react.Fragment({}, [
-          react.input(
-            {
-              'defaultValue': inputValue,
-              'onChange': (event) {
-                inputValue = event.currentTarget.value;
-                render();
-              }
-            },
-          ),
-          react.br({}),
-          helloGregFunctionComponent({'key': 'greg'}),
-          react.br({}),
-          helloGregFunctionComponent({'key': 'not greg'}, inputValue)
+          react.h1({'key': 'functionComponentTestLabel'}, ['Function Component Tests']),
+          react.h2({'key': 'useStateTestLabel'}, ['useState Hook Test']),
+          useStateTestFunctionComponent({
+            'key': 'useStateTest',
+          }, []),
         ]),
         querySelector('#content'));
   }

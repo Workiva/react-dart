@@ -44,6 +44,9 @@ abstract class React {
   external static ReactClass get Fragment;
 
   external static JsRef createRef();
+  external static ReactClass forwardRef(Function(JsMap props, JsRef ref) wrapperFunction);
+
+  external static List<dynamic> useState(dynamic value);
 }
 
 /// Creates a [Ref] object that can be attached to a [ReactElement] via the ref prop.
@@ -108,7 +111,7 @@ class JsRef {
 ///
 /// See: <https://reactjs.org/docs/forwarding-refs.html>.
 ReactJsComponentFactoryProxy forwardRef(Function(Map props, Ref ref) wrapperFunction) {
-  var hoc = _jsForwardRef(allowInterop((JsMap props, JsRef ref) {
+  var hoc = React.forwardRef(allowInterop((JsMap props, JsRef ref) {
     final dartProps = JsBackedMap.backedBy(props);
     final dartRef = Ref.fromJs(ref);
     return wrapperFunction(dartProps, dartRef);
@@ -116,9 +119,6 @@ ReactJsComponentFactoryProxy forwardRef(Function(Map props, Ref ref) wrapperFunc
 
   return new ReactJsComponentFactoryProxy(hoc, shouldConvertDomProps: false);
 }
-
-@JS('React.forwardRef')
-external ReactClass _jsForwardRef(Function(JsMap props, JsRef ref) wrapperFunction);
 
 abstract class ReactDom {
   static Element findDOMNode(object) => ReactDOM.findDOMNode(object);

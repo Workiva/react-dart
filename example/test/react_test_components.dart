@@ -393,16 +393,6 @@ class _NewContextTypeConsumerComponent extends react.Component2 {
   }
 }
 
-var helloGregFunctionComponent = react.registerFunctionComponent(HelloGreg);
-
-HelloGreg(Map props) {
-  var content = ['Hello Greg!'];
-  if (props['children'].isNotEmpty) {
-    content = ['Hello ' + props['children'].join(' ') + '!'];
-  }
-  return react.Fragment({}, content);
-}
-
 class _Component2TestComponent extends react.Component2 with react.TypedSnapshot<String> {
   get defaultProps => {'defaultProp': true};
 
