@@ -153,3 +153,5 @@ void useEffect(dynamic Function() sideEffect, [List<Object> dependencies]) {
     return React.useEffect(finalSideEffect);
   }
 }
+
+void useDebugValue<T>(T value, [Function(T) format]) => React.useDebugValue(value, allowInterop(format));

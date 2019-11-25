@@ -48,6 +48,7 @@ abstract class React {
 
   external static List<dynamic> useState(dynamic value);
   external static void useEffect(dynamic Function() sideEffect, [List<Object> dependencies]);
+  external static void useDebugValue(dynamic value, [Function format]);
 }
 
 /// Creates a [Ref] object that can be attached to a [ReactElement] via the ref prop.
