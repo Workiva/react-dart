@@ -41,7 +41,7 @@ final ChatAPI = {
   'unsubscribeFromFriendStatus': (int id, Function handleStatusChange) => handleStatusChange({'isOnline': false}),
 };
 
-useFriendStatus(friendID) {
+StateHook useFriendStatus(friendID) {
   final isOnline = useState(false);
 
   void handleStatusChange(Map status) {
@@ -55,9 +55,9 @@ useFriendStatus(friendID) {
     };
   });
 
-  useDebugValue(isOnline.value, (isOnline) => isOnline ? 'Online' : 'Not Online');
+  useDebugValue(isOnline.value ? 'Online' : 'Not Online');
 
-  return isOnline.value;
+  return isOnline;
 }
 
 var FriendListItem = react.registerFunctionComponent(_friendListItem, displayName: 'FriendListItem');
@@ -65,7 +65,7 @@ var FriendListItem = react.registerFunctionComponent(_friendListItem, displayNam
 _friendListItem(Map props) {
   final isOnline = useFriendStatus(props['friend']['id']);
 
-  return react.li({'style': {'color': isOnline ? 'green' : 'black'}}, [props['friend']['name']]);
+  return react.li({'style': {'color': isOnline.value ? 'green' : 'black'}}, [props['friend']['name']]);
 }
 
 void main() {
@@ -79,7 +79,7 @@ void main() {
           hookTestFunctionComponent({
             'key': 'useStateTest',
           }, []),
-          react.h2({'key': 'useStateTestLabel'}, ['useDebugValue Hook Test']),
+          react.h2({'key': 'useDebugValueTestLabel'}, ['useDebugValue Hook Test']),
           FriendListItem({'friend': {'id': 1, 'name': 'user 1'}}, []),
           FriendListItem({'friend': {'id': 2, 'name': 'user 2'}}, []),
           FriendListItem({'friend': {'id': 3, 'name': 'user 3'}}, []),
