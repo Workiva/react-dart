@@ -22,6 +22,7 @@ HookTestComponent(Map props) {
     return () {
       print('count is changing...');
     };
+    /// This dependency prevents the effect from running every time [evenOdd.value] changes.
   }, [count.value]);
 
   return react.div({}, [
