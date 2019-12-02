@@ -128,6 +128,8 @@ StateHook<T> useStateLazy<T>(T init()) => StateHook.lazy(init);
 ///     return () {
 ///       print('count is changing...');
 ///     };
+///
+///     // This dependency prevents the effect from running every time [evenOdd.value] changes.
 ///   }, [count.value]);
 ///
 ///   return react.div({}, [
@@ -139,7 +141,7 @@ StateHook<T> useStateLazy<T>(T init()) => StateHook.lazy(init);
 ///
 /// See: <https://reactjs.org/docs/hooks-effect.html#tip-optimizing-performance-by-skipping-effects>.
 void useEffect(dynamic Function() sideEffect, [List<Object> dependencies]) {
-  var finalSideEffect = allowInterop(() {
+  var wrappedSideEffect = allowInterop(() {
     var result = sideEffect();
     if (result is Function) {
       return allowInterop(result);
@@ -148,8 +150,8 @@ void useEffect(dynamic Function() sideEffect, [List<Object> dependencies]) {
   });
 
   if (dependencies != null) {
-    return React.useEffect(finalSideEffect, dependencies);
+    return React.useEffect(wrappedSideEffect, dependencies);
   } else {
-    return React.useEffect(finalSideEffect);
+    return React.useEffect(wrappedSideEffect);
   }
 }

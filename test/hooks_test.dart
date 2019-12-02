@@ -70,10 +70,6 @@ main() {
         react_dom.render(UseStateTest({}), mountNode);
       });
 
-      tearDownAll(() {
-        UseStateTest = null;
-      });
-
       test('initializes state correctly', () {
         expect(countRef.text, '0');
       });
@@ -172,12 +168,6 @@ main() {
         });
 
         react_dom.render(UseEffectTest({}), mountNode);
-
-        await pumpEventQueue();
-      });
-
-      tearDownAll(() {
-        UseEffectTest = null;
       });
 
       test('side effect (no dependency list) is called after the first render', () {
@@ -203,8 +193,6 @@ main() {
       group('after state change,', () {
         setUpAll(() async {
           react_test_utils.Simulate.click(countButtonRef);
-
-          await pumpEventQueue();
         });
 
         test('side effect (no dependency list) is called again', () {
@@ -235,8 +223,6 @@ main() {
       group('after component is unmounted,', () {
         setUpAll(() async {
           react_dom.unmountComponentAtNode(mountNode);
-
-          await pumpEventQueue();
         });
 
         test('cleanup (no dependency list) is called', () {
