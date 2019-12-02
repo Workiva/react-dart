@@ -67,6 +67,29 @@ UseReducerTestComponent(Map props) {
   ]);
 }
 
+var useCallbackTestFunctionComponent =
+react.registerFunctionComponent(UseCallbackTestComponent, displayName: 'useCallbackTest');
+
+UseCallbackTestComponent(Map props) {
+  final count = useState(0);
+  final delta = useState(1);
+
+  var increment = useCallback((_) {
+    count.setWithUpdater((prev) => prev + delta.value);
+  }, [delta.value]);
+
+  var incrementDelta = useCallback((_) {
+    delta.setWithUpdater((prev) => prev + 1);
+  }, []);
+
+  return react.div({}, [
+    react.div({}, ['Delta is ${delta.value}']),
+    react.div({}, ['Count is ${count.value}']),
+    react.button({'onClick': increment}, ['Increment count']),
+    react.button({'onClick': incrementDelta}, ['Increment delta']),
+  ]);
+}
+
 void main() {
   setClientConfiguration();
 
@@ -83,6 +106,11 @@ void main() {
           useReducerTestFunctionComponent({
             'key': 'useReducerTest',
             'initialCount': 10,
+          }, []),
+          react.br({}),
+          react.h2({'key': 'useCallbackTestLabel'}, ['useCallback Hook Test']),
+          useCallbackTestFunctionComponent({
+            'key': 'useCallbackTest',
           }, []),
         ]),
         querySelector('#content'));
