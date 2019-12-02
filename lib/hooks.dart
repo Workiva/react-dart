@@ -112,14 +112,14 @@ StateHook<T> useStateLazy<T>(T init()) => StateHook.lazy(init);
 /// > * Only call Hooks from inside a [DartFunctionComponent].
 ///
 /// Learn more: <https://reactjs.org/docs/hooks-reference.html#usereducer>.
-class ReducerHook {
+class ReducerHook<TState, TActions, TInit> {
   /// The first item of the pair returned by [React.userReducer].
-  Map _state;
+  TState _state;
 
   /// The second item in the pair returned by [React.userReducer].
-  void Function(Map) _dispatch;
+  void Function(TActions) _dispatch;
 
-  ReducerHook(Map Function(Map state, Map action) reducer, Map initialState) {
+  ReducerHook(TState Function(TState state, TActions action) reducer, TState initialState) {
     final result = React.useReducer(allowInterop(reducer), initialState);
     _state = result[0];
     _dispatch = result[1];
@@ -129,7 +129,7 @@ class ReducerHook {
   /// initialize [_state] to the return value of [init(initialArg)].
   ///
   /// See: <https://reactjs.org/docs/hooks-reference.html#lazy-initialization>.
-  ReducerHook.lazy(Map Function(Map state, Map action) reducer, dynamic initialArg, Function init) {
+  ReducerHook.lazy(TState Function(TState state, TActions action) reducer, TInit initialArg, TState Function(TInit) init) {
     final result = React.useReducer(allowInterop(reducer), initialArg, allowInterop(init));
     _state = result[0];
     _dispatch = result[1];
@@ -138,14 +138,14 @@ class ReducerHook {
   /// The current state map of the component.
   ///
   /// See: <https://reactjs.org/docs/hooks-reference.html#usereducer>.
-  Map get state => _state;
+  TState get state => _state;
 
   /// Dispatches [action] and triggers stage changes.
   ///
   /// > __Note:__ The dispatch function identity is stable and will not change on re-renders.
   ///
   /// See: <https://reactjs.org/docs/hooks-reference.html#usereducer>.
-  void dispatch(Map action) => _dispatch(action);
+  void dispatch(TActions action) => _dispatch(action);
 }
 
 /// Initializes state of a [DartFunctionComponent] to [initialState] and creates [dispatch] method.
@@ -184,7 +184,7 @@ class ReducerHook {
 /// ```
 ///
 /// Learn more: <https://reactjs.org/docs/hooks-reference.html#usereducer>.
-ReducerHook useReducer(Map Function(Map state, Map action) reducer, Map initialState) =>
+ReducerHook<TState, TActions, TInit> useReducer<TState, TActions, TInit>(TState Function(TState state, TActions action) reducer, TState initialState) =>
     ReducerHook(reducer, initialState);
 
 /// Initializes state of a [DartFunctionComponent] to [init(initialArg)] and creates [dispatch] method.
@@ -237,7 +237,7 @@ ReducerHook useReducer(Map Function(Map state, Map action) reducer, Map initialS
 /// ```
 ///
 /// Learn more: <https://reactjs.org/docs/hooks-reference.html#lazy-initialization>.
-ReducerHook useReducerLazy<T>(Map Function(Map state, Map action) reducer, dynamic initialArg, Function init) =>
+ReducerHook<TState, TActions, TInit> useReducerLazy<TState, TActions, TInit>(TState Function(TState state, TActions action) reducer, TInit initialArg, TState Function(TInit) init) =>
     ReducerHook.lazy(reducer, initialArg, init);
 
 /// Returns a memoized version of [callback] that only changes if one of the [dependencies] has changed.
