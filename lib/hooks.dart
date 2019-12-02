@@ -144,7 +144,7 @@ void useEffect(dynamic Function() sideEffect, [List<Object> dependencies]) {
     if (result is Function) {
       return allowInterop(result);
     }
-    return null;
+    return jsUndefined;
   });
 
   if (dependencies != null) {
