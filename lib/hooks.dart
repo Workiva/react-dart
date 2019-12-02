@@ -210,7 +210,7 @@ ReducerHook<TState, TActions, TInit> useReducer<TState, TActions, TInit>(TState 
 /// }
 ///
 /// UseReducerTestComponent(Map props) {
-///   final state = useReducerLazy(reducer, props['initialCount'], initializeCount);
+///   final ReducerHook<Map, Map, int> state = useReducerLazy(reducer, props['initialCount'], initializeCount);
 ///
 ///   return react.Fragment({}, [
 ///     state.state['count'],
