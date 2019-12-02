@@ -68,7 +68,7 @@ UseReducerTestComponent(Map props) {
 }
 
 var useCallbackTestFunctionComponent =
-react.registerFunctionComponent(UseCallbackTestComponent, displayName: 'useCallbackTest');
+    react.registerFunctionComponent(UseCallbackTestComponent, displayName: 'useCallbackTest');
 
 UseCallbackTestComponent(Map props) {
   final count = useState(0);
