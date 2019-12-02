@@ -212,7 +212,7 @@ main() {
           var mountNode = new DivElement();
 
           UseReducerTest = react.registerFunctionComponent((Map props) {
-            final state = useReducerLazy(reducer2, props['initialCount'], initializeCount);
+            final ReducerHook<Map, Map, int> state = useReducerLazy(reducer2, props['initialCount'], initializeCount);
 
             return react.div({}, [
               react.div({
