@@ -584,9 +584,7 @@ abstract class _ReactDartInteropStatics2 {
           throwErrorFromJS(error);
         } catch (e) {
           final result = componentStatics.instanceForStaticMethods.getDerivedStateFromError(e);
-          if (result != null) {
-            return jsBackingMapOrJsCopy(result);
-          }
+          if (result != null) return jsBackingMapOrJsCopy(result);
           return null;
         }
       });

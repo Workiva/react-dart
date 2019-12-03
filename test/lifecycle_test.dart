@@ -355,6 +355,45 @@ main() {
             reason: 'applies the state returned by `getDerivedStateFromError`');
       });
 
+      test('when error lifecycle getDerivedStateFromError returns null state should not update', () {
+        final Map initialState = {
+          'originalState': true,
+        };
+        var _shouldThrow = true;
+        final Map initialProps = unmodifiableMap({
+          'initialState': (_) => initialState,
+          'getDerivedStateFromError': (_, __) => null,
+          'render': (_) {
+            if (_shouldThrow) {
+              _shouldThrow = false;
+              return components2.ErrorComponent({"key": "errorComp"});
+            }
+            return react.div({});
+          }
+        });
+
+        LifecycleTestHelper component = getDartComponent(render(components2.ErrorLifecycleTest(initialProps)));
+
+        // First render throws an error, caught by `getDerivedStateFromError`.
+        // `getDerivedStateFromError` sets state, starting the update cycle
+        // again. `componentDidCatch` also sets the state (storing error
+        // information), starting the update cycle again.
+        expect(
+            component.lifecycleCallMemberNames,
+            equals([
+              'defaultProps',
+              'initialState',
+              'getDerivedStateFromProps',
+              'render',
+              'getDerivedStateFromError',
+              'render',
+              'componentDidMount',
+              'componentDidCatch'
+            ]));
+        expect(component.state, initialState,
+            reason: 'when `getDerivedStateFromError` returns null it should not update state.');
+      });
+
       test('error lifecycle methods get passed Dartified Error/Exception when an error is thrown', () {
         var mountNode = new DivElement();
         var renderedInstance = react_dom.render(components2.SetStateTest({}), mountNode);
