@@ -249,31 +249,3 @@ class _LifecycleTest extends react.Component2 with LifecycleTestHelper {
 
   Map get defaultProps => lifecycleCall('defaultProps', defaultReturnValue: () => {'defaultProp': 'default'});
 }
-
-class _Component2ErrorTestComponent extends _LifecycleTest {
-  var _shouldThrow = true;
-  Map get initialState => {"initialState": true};
-
-  Map getDerivedStateFromError(error) {
-    return null;
-  }
-
-  void error(event) {
-    setState({"clicked": true});
-  }
-
-  void clearError(event) {
-    setState({"clicked": false, "error": null, "errored": false});
-  }
-
-  dynamic render() {
-    if (_shouldThrow) {
-      _shouldThrow = false;
-      return ErrorComponent({'key': 'ec-1', 'errored': state['errored']});
-    } else {
-      return ' ';
-    }
-  }
-}
-
-var component2ErrorTestComponent = react.registerComponent(() => new _Component2ErrorTestComponent(), ['render']);
