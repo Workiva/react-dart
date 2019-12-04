@@ -355,7 +355,7 @@ main() {
             reason: 'applies the state returned by `getDerivedStateFromError`');
       });
 
-      test('when error lifecycle getDerivedStateFromError returns null state should not update', () {
+      test('handles null return value from getDerivedStateFromError as expected', () {
         final Map initialState = {
           'originalState': true,
         };
@@ -387,12 +387,11 @@ main() {
               'componentDidCatch'
             ]));
         expect(component.state, initialState,
-            reason: 'when `getDerivedStateFromError` returns null it should not update state.');
+            reason:
+                'component.state should not update when an error is thrown within `render()` and `getDerivedStateFromError` returns null.');
       });
 
-      test(
-          'when error lifecycle getDerivedStateFromError is not implemented'
-          'and not included in skipMethods it does not throw', () {
+      test('handles unimplemented getDerivedStateFromError as expected when not included in skipMethods', () {
         final Map initialState = {
           'originalState': true,
         };
@@ -426,7 +425,8 @@ main() {
               'componentDidCatch'
             ]));
         expect(component.state, initialState,
-            reason: 'when `getDerivedStateFromError` returns null it should not update state.');
+            reason:
+                'component.state should not update when an error is thrown within `render()` and `getDerivedStateFromError` is not implemented.');
       });
 
       test('error lifecycle methods get passed Dartified Error/Exception when an error is thrown', () {
