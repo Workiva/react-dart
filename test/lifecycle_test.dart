@@ -374,10 +374,6 @@ main() {
 
         LifecycleTestHelper component = getDartComponent(render(components2.ErrorLifecycleTest(initialProps)));
 
-        // First render throws an error, caught by `getDerivedStateFromError`.
-        // `getDerivedStateFromError` sets state, starting the update cycle
-        // again. `componentDidCatch` also sets the state (storing error
-        // information), starting the update cycle again.
         expect(
             component.lifecycleCallMemberNames,
             equals([
@@ -386,6 +382,45 @@ main() {
               'getDerivedStateFromProps',
               'render',
               'getDerivedStateFromError',
+              'render',
+              'componentDidMount',
+              'componentDidCatch'
+            ]));
+        expect(component.state, initialState,
+            reason: 'when `getDerivedStateFromError` returns null it should not update state.');
+      });
+
+      test(
+          'when error lifecycle getDerivedStateFromError is not implemented'
+          'and not included in skipMethods it does not throw', () {
+        final Map initialState = {
+          'originalState': true,
+        };
+        var _shouldThrow = true;
+        final Map initialProps = unmodifiableMap({
+          'initialState': (_) => initialState,
+          'render': (_) {
+            if (_shouldThrow) {
+              _shouldThrow = false;
+              return components2.ErrorComponent({"key": "errorComp"});
+            }
+            return react.div({});
+          }
+        });
+
+        LifecycleTestHelper component;
+        expect(
+          () => component = getDartComponent(render(components2.NoGetDerivedStateFromErrorLifecycleTest(initialProps))),
+          returnsNormally,
+        );
+
+        expect(
+            component.lifecycleCallMemberNames,
+            equals([
+              'defaultProps',
+              'initialState',
+              'getDerivedStateFromProps',
+              'render',
               'render',
               'componentDidMount',
               'componentDidCatch'
