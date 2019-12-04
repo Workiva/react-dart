@@ -121,7 +121,8 @@ function _createReactDartComponentClass2(dartInteropStatics, componentStatics, j
       dartInteropStatics.handleComponentDidCatch(this.dartComponent, error, info);
     }
     static getDerivedStateFromError(error) {
-      return dartInteropStatics.handleGetDerivedStateFromError(componentStatics, error);
+      let derivedState = dartInteropStatics.handleGetDerivedStateFromError(componentStatics, error);
+      return typeof derivedState !== 'undefined' ? derivedState : null;
     }
     render() {
       var result = dartInteropStatics.handleRender(this.dartComponent, this.props, this.state, this.context);
