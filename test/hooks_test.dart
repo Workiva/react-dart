@@ -196,5 +196,88 @@ main() {
         });
       });
     });
+
+    group('useContext -', () {
+      var mountNode = DivElement();
+      _ContextProviderWrapper providerRef;
+      int currentCount = 0;
+      var TestCalculateChangedBitsContext;
+      var useContextTestFunctionComponent;
+
+      setUp(() {
+        UseContextTestComponent(Map props) {
+          final context = useContext(TestCalculateChangedBitsContext);
+          currentCount = context;
+          return react.div({'key': 'uct1'}, [
+            react.div({'key': 'uct2'}, ['useContext counter value is ${context}']),
+          ]);
+        }
+
+        TestCalculateChangedBitsContext = react.createContext(1, calculateChangedBits);
+        useContextTestFunctionComponent =
+            react.registerFunctionComponent(UseContextTestComponent, displayName: 'useContextTest');
+
+        react_dom.render(
+            ContextProviderWrapper({
+              'contextToUse': TestCalculateChangedBitsContext,
+              'mode': 'increment',
+              'ref': (ref) {
+                providerRef = ref;
+              }
+            }, [
+              useContextTestFunctionComponent({'key': 't1'},[]),
+            ]),
+            mountNode);
+      });
+
+      tearDown(() {
+        currentCount = 0;
+        TestCalculateChangedBitsContext = null;
+        useContextTestFunctionComponent = null;
+        providerRef = null;
+      });
+
+      group('updates with the correct values', () {
+        test('on first render', () {
+          expect(currentCount, 1);
+        });
+
+        test('on value updates', () {
+          providerRef.increment();
+          expect(currentCount, 2);
+          providerRef.increment();
+          expect(currentCount, 3);
+          providerRef.increment();
+          expect(currentCount, 4);
+        });
+      });
+    });
   });
+}
+
+int calculateChangedBits(currentValue, nextValue) {
+  int result = 1 << 1;
+  if (nextValue % 2 == 0) {
+    result |= 1 << 2;
+  }
+  return result;
+}
+
+ReactDartComponentFactoryProxy2 ContextProviderWrapper = react.registerComponent(() => new _ContextProviderWrapper());
+
+class _ContextProviderWrapper extends react.Component2 {
+  get initialState {
+    return {'counter': 1};
+  }
+
+  increment() {
+    this.setState({'counter': state['counter'] + 1});
+  }
+
+  render() {
+    return react.div({}, [
+      props['contextToUse']
+          .Provider({'value': props['mode'] == 'increment' ? state['counter'] : props['value']}, props['children'])
+    ]);
+  }
 }

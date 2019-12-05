@@ -135,3 +135,30 @@ StateHook<T> useStateLazy<T>(T init()) => StateHook.lazy(init);
 ///
 /// Learn more: <https://reactjs.org/docs/hooks-reference.html#usecallback>.
 Function useCallback(Function callback, List dependencies) => React.useCallback(allowInterop(callback), dependencies);
+
+/// Returns the value of the nearest [Context.Provider] for the provided [Context] object.
+///
+/// The usage is similar to that of a [Context.Consumer] in that the return type of [useContext] is dependent upon
+/// the typing of the value passed into [createContext] and [Context.Provider].
+///
+/// > __Note:__ there are two [rules for using Hooks](https://reactjs.org/docs/hooks-rules.html):
+/// >
+/// > * Only call Hooks at the top level.
+/// > * Only call Hooks from inside a [DartFunctionComponent].
+///
+/// __Example__:
+///
+/// ```
+/// Context newContext = createContext(0, calcuateChangedBits);
+///
+/// UseCallbackTestComponent(Map props) {
+///   final context = useContext(newContext);
+///
+///   return react.div({}, [
+///     react.div({}, ['The context value is $context']), // initially renders: 'The context value is 0'
+///   ]);
+/// }
+/// ```
+///
+/// Learn more: <https://reactjs.org/docs/hooks-reference.html#usecontext>.
+dynamic useContext(Context context) => ContextHelpers.unjsifyNewContext(React.useContext(context.jsThis));
