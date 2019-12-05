@@ -62,7 +62,7 @@ int calculateChangedBits(currentValue, nextValue) {
 
 var TestNewContext = react.createContext<Map>({'renderCount': 0}, calculateChangedBits);
 
-var newContextProviderComponent = react.registerComponent(() => new _NewContextProviderComponent());
+var newContextProviderComponent = react.registerComponent(() => _NewContextProviderComponent());
 
 class _NewContextProviderComponent extends react.Component2 {
   get initialState => {'renderCount': 0, 'complexMap': false};

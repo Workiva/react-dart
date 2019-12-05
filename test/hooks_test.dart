@@ -8,6 +8,7 @@ import 'dart:html';
 import "package:js/js.dart";
 import 'package:react/hooks.dart';
 import 'package:react/react.dart' as react;
+import 'package:react/react.dart';
 import 'package:react/react_client.dart';
 import 'package:react/react_dom.dart' as react_dom;
 import 'package:react/react_test_utils.dart' as react_test_utils;
@@ -201,12 +202,12 @@ main() {
       var mountNode = DivElement();
       _ContextProviderWrapper providerRef;
       int currentCount = 0;
-      var TestCalculateChangedBitsContext;
-      var useContextTestFunctionComponent;
+      Context testContext;
+      Function useContextTestFunctionComponent;
 
       setUp(() {
         UseContextTestComponent(Map props) {
-          final context = useContext(TestCalculateChangedBitsContext);
+          final context = useContext(testContext);
           currentCount = context;
           return react.div({
             'key': 'uct1'
@@ -215,13 +216,13 @@ main() {
           ]);
         }
 
-        TestCalculateChangedBitsContext = react.createContext(1, calculateChangedBits);
+        testContext = react.createContext(1, calculateChangedBits);
         useContextTestFunctionComponent =
             react.registerFunctionComponent(UseContextTestComponent, displayName: 'useContextTest');
 
         react_dom.render(
             ContextProviderWrapper({
-              'contextToUse': TestCalculateChangedBitsContext,
+              'contextToUse': testContext,
               'mode': 'increment',
               'ref': (ref) {
                 providerRef = ref;
@@ -234,7 +235,7 @@ main() {
 
       tearDown(() {
         currentCount = 0;
-        TestCalculateChangedBitsContext = null;
+        testContext = null;
         useContextTestFunctionComponent = null;
         providerRef = null;
       });
