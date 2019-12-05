@@ -187,15 +187,12 @@ main() {
 
         test('callback stays the same if state not in dependency list', () {
           react_test_utils.Simulate.click(incrementNoDepButtonRef);
-          expect(countRef.text, '3',
-              reason:
-                  'still increments by 1 because delta not in dependency list');
+          expect(countRef.text, '3', reason: 'still increments by 1 because delta not in dependency list');
         });
 
         test('callback stays the same if state not in dependency list', () {
           react_test_utils.Simulate.click(incrementWithDepButtonRef);
-          expect(countRef.text, '5',
-              reason: 'increments by 2 because delta updated');
+          expect(countRef.text, '5', reason: 'increments by 2 because delta updated');
         });
       });
     });
@@ -214,16 +211,13 @@ main() {
           return react.div({
             'key': 'uct1'
           }, [
-            react.div(
-                {'key': 'uct2'}, ['useContext counter value is ${context}']),
+            react.div({'key': 'uct2'}, ['useContext counter value is ${context}']),
           ]);
         }
 
-        TestCalculateChangedBitsContext =
-            react.createContext(1, calculateChangedBits);
-        useContextTestFunctionComponent = react.registerFunctionComponent(
-            UseContextTestComponent,
-            displayName: 'useContextTest');
+        TestCalculateChangedBitsContext = react.createContext(1, calculateChangedBits);
+        useContextTestFunctionComponent =
+            react.registerFunctionComponent(UseContextTestComponent, displayName: 'useContextTest');
 
         react_dom.render(
             ContextProviderWrapper({
@@ -271,8 +265,7 @@ int calculateChangedBits(currentValue, nextValue) {
   return result;
 }
 
-ReactDartComponentFactoryProxy2 ContextProviderWrapper =
-    react.registerComponent(() => new _ContextProviderWrapper());
+ReactDartComponentFactoryProxy2 ContextProviderWrapper = react.registerComponent(() => new _ContextProviderWrapper());
 
 class _ContextProviderWrapper extends react.Component2 {
   get initialState {
@@ -285,10 +278,8 @@ class _ContextProviderWrapper extends react.Component2 {
 
   render() {
     return react.div({}, [
-      props['contextToUse'].Provider({
-        'value':
-            props['mode'] == 'increment' ? state['counter'] : props['value']
-      }, props['children'])
+      props['contextToUse']
+          .Provider({'value': props['mode'] == 'increment' ? state['counter'] : props['value']}, props['children'])
     ]);
   }
 }
