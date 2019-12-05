@@ -5,7 +5,9 @@ import 'package:react/react.dart' as react;
 import 'package:react/react_dom.dart' as react_dom;
 import 'package:react/react_client.dart';
 
-var useStateTestFunctionComponent = react.registerFunctionComponent(UseStateTestComponent, displayName: 'useStateTest');
+var useStateTestFunctionComponent = react.registerFunctionComponent(
+    UseStateTestComponent,
+    displayName: 'useStateTest');
 
 UseStateTestComponent(Map props) {
   final count = useState(0);
@@ -22,8 +24,9 @@ UseStateTestComponent(Map props) {
   ]);
 }
 
-var useCallbackTestFunctionComponent =
-    react.registerFunctionComponent(UseCallbackTestComponent, displayName: 'useCallbackTest');
+var useCallbackTestFunctionComponent = react.registerFunctionComponent(
+    UseCallbackTestComponent,
+    displayName: 'useCallbackTest');
 
 UseCallbackTestComponent(Map props) {
   final count = useState(0);
@@ -40,18 +43,23 @@ UseCallbackTestComponent(Map props) {
   return react.div({}, [
     react.div({'key': 'ucbt1'}, ['Delta is ${delta.value}']),
     react.div({'key': 'ucbt2'}, ['Count is ${count.value}']),
-    react.button({'onClick': increment,'key': 'ucbt3'}, ['Increment count']),
-    react.button({'onClick': incrementDelta, 'key': 'ucbt4'}, ['Increment delta']),
+    react.button({'onClick': increment, 'key': 'ucbt3'}, ['Increment count']),
+    react.button(
+        {'onClick': incrementDelta, 'key': 'ucbt4'}, ['Increment delta']),
   ]);
 }
 
-var useContextTestFunctionComponent =
-    react.registerFunctionComponent(UseContextTestComponent, displayName: 'useContextTest');
+var useContextTestFunctionComponent = react.registerFunctionComponent(
+    UseContextTestComponent,
+    displayName: 'useContextTest');
 
 UseContextTestComponent(Map props) {
   final context = useContext(TestNewContext);
-  return react.div({'key': 'uct1'}, [
-    react.div({'key': 'uct2'}, ['useContext counter value is ${context['renderCount']}']),
+  return react.div({
+    'key': 'uct1'
+  }, [
+    react.div({'key': 'uct2'},
+        ['useContext counter value is ${context['renderCount']}']),
   ]);
 }
 
@@ -63,9 +71,11 @@ int calculateChangedBits(currentValue, nextValue) {
   return result;
 }
 
-var TestNewContext = react.createContext<Map>({'renderCount': 0}, calculateChangedBits);
+var TestNewContext =
+    react.createContext<Map>({'renderCount': 0}, calculateChangedBits);
 
-var newContextProviderComponent = react.registerComponent(() => new _NewContextProviderComponent());
+var newContextProviderComponent =
+    react.registerComponent(() => new _NewContextProviderComponent());
 
 class _NewContextProviderComponent extends react.Component2 {
   get initialState => {'renderCount': 0, 'complexMap': false};
@@ -95,8 +105,10 @@ class _NewContextProviderComponent extends react.Component2 {
       ),
     ]);
   }
+
   _onButtonClick(event) {
-    this.setState({'renderCount': this.state['renderCount'] + 1, 'complexMap': false});
+    this.setState(
+        {'renderCount': this.state['renderCount'] + 1, 'complexMap': false});
   }
 }
 
@@ -105,24 +117,29 @@ void main() {
 
   render() {
     react_dom.render(
-      react.Fragment({'key': 'fctf'}, [
-        react.h1({'key': 'functionComponentTestLabel'}, ['Function Component Tests']),
-        react.h2({'key': 'useStateTestLabel'}, ['useState Hook Test']),
-        useStateTestFunctionComponent({
-          'key': 'useStateTest',
-        }, []),
-        react.br({'key': 'br'}),
-        react.h2({'key': 'useCallbackTestLabel'}, ['useCallback Hook Test']),
-        useCallbackTestFunctionComponent({
-          'key': 'useCallbackTest',
-        }, []),
-        newContextProviderComponent({'key': 'provider'}, [
-          useContextTestFunctionComponent({
-            'key': 'useContextTest',
+        react.Fragment({
+          'key': 'fctf'
+        }, [
+          react.h1({'key': 'functionComponentTestLabel'},
+              ['Function Component Tests']),
+          react.h2({'key': 'useStateTestLabel'}, ['useState Hook Test']),
+          useStateTestFunctionComponent({
+            'key': 'useStateTest',
           }, []),
+          react.br({'key': 'br'}),
+          react.h2({'key': 'useCallbackTestLabel'}, ['useCallback Hook Test']),
+          useCallbackTestFunctionComponent({
+            'key': 'useCallbackTest',
+          }, []),
+          newContextProviderComponent({
+            'key': 'provider'
+          }, [
+            useContextTestFunctionComponent({
+              'key': 'useContextTest',
+            }, []),
+          ]),
         ]),
-      ]),
-    querySelector('#content'));
+        querySelector('#content'));
   }
 
   render();
