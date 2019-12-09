@@ -5,11 +5,11 @@
     "build": "./node_modules/.bin/webpack"
   },
   "dependencies": {
-    "@babel/cli": "^7.6.2",
-    "@babel/core": "^7.6.2",
-    "@babel/preset-env": "^7.6.2",
+    "@babel/cli": "^7.7.5",
+    "@babel/core": "^7.7.5",
+    "@babel/preset-env": "^7.7.6",
     "babel-loader": "^8.0.6",
-    "core-js": "^3.2.1",
+    "core-js": "^3.4.8",
     "create-react-class": "^15.6.3",
     "prop-types": "^15.7.2",
     "react": "^16.10.1",
