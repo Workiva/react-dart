@@ -1,3 +1,7 @@
+## [5.2.0](https://github.com/cleandart/react-dart/compare/5.1.1...5.2.0)
+
+- Expose `componentZone` to allow overriding the zone in which Component2 lifecycle methods are run, for testing
+
 ## [5.1.1](https://github.com/cleandart/react-dart/compare/5.1.0...5.1.1)
 
 - Improve the documentation for deprecated `Component2` lifecycle methods.
