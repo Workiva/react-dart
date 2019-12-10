@@ -62,13 +62,12 @@ dynamic listifyChildren(dynamic children) {
 /// __Example:__
 ///
 ///     test('zone test', () {
-///       currentComponentZone = Zone.current;
+///       componentZone = Zone.current;
 ///
 ///       // ... test your component
 ///     }
-///
 @visibleForTesting
-Zone currentComponentZone = Zone.root;
+Zone componentZone = Zone.root;
 
 /// Use [ReactDartComponentFactoryProxy2] instead.
 ///
@@ -490,9 +489,6 @@ final ReactDartInteropStatics _dartInteropStatics = (() {
 })();
 
 abstract class _ReactDartInteropStatics2 {
-  /// The zone in which all component lifecycle methods are run.
-  static final componentZone = currentComponentZone;
-
   static void _updatePropsAndStateWithJs(Component2 component, JsMap props, JsMap state) {
     component
       ..props = new JsBackedMap.backedBy(props)
