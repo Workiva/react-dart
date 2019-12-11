@@ -1,3 +1,8 @@
+## [5.2.1](https://github.com/cleandart/react-dart/compare/5.2.0...5.2.1)
+
+- Temporarily pin react-redux dependency to version `7.1.0` to prevent widespread test failures as a result of 
+  [`Provider` being converted into a function component with hooks](https://github.com/reduxjs/react-redux/pull/1377).
+
 ## [5.2.0](https://github.com/cleandart/react-dart/compare/5.1.1...5.2.0)
 
 - [#190] Fix null value handling in `setStateWithUpdater`
