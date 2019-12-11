@@ -1,6 +1,9 @@
 ## [5.2.0](https://github.com/cleandart/react-dart/compare/5.1.1...5.2.0)
 
-- Expose `componentZone` to allow overriding the zone in which Component2 lifecycle methods are run, for testing
+- [#190] Fix null value handling in `setStateWithUpdater`
+- [#235] Fix null value handling in `getDerivedStateFromError` interop
+- [#238] Fix js package security vulnerability
+- [#236] Expose `componentZone` to allow overriding the zone in which Component2 lifecycle methods are run, for testing
 
 ## [5.1.1](https://github.com/cleandart/react-dart/compare/5.1.0...5.1.1)
 
