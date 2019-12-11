@@ -93,10 +93,12 @@ class Component2BridgeImpl extends Component2Bridge {
   @override
   void setStateWithUpdater(Component2 component, StateUpdaterCallback stateUpdater, SetStateCallback callback) {
     final firstArg = allowInterop((JsMap jsPrevState, JsMap jsProps, [_]) {
-      return jsBackingMapOrJsCopy(stateUpdater(
+      final value = stateUpdater(
         new JsBackedMap.backedBy(jsPrevState),
         new JsBackedMap.backedBy(jsProps),
-      ));
+      );
+      if (value == null) return null;
+      return jsBackingMapOrJsCopy(value);
     });
 
     if (callback == null) {

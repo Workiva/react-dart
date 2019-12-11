@@ -1,3 +1,19 @@
+## [5.2.1](https://github.com/cleandart/react-dart/compare/5.2.0...5.2.1)
+
+- Temporarily pin react-redux dependency to version `7.1.0` to prevent widespread test failures as a result of 
+  [`Provider` being converted into a function component with hooks](https://github.com/reduxjs/react-redux/pull/1377).
+
+## [5.2.0](https://github.com/cleandart/react-dart/compare/5.1.1...5.2.0)
+
+- [#190] Fix null value handling in `setStateWithUpdater`
+- [#235] Fix null value handling in `getDerivedStateFromError` interop
+- [#238] Fix js package security vulnerability
+- [#236] Expose `componentZone` to allow overriding the zone in which Component2 lifecycle methods are run, for testing
+
+## [5.1.1](https://github.com/cleandart/react-dart/compare/5.1.0...5.1.1)
+
+- Improve the documentation for deprecated `Component2` lifecycle methods.
+
 ## [5.1.0](https://github.com/cleandart/react-dart/compare/5.0.1...5.1.0)
 
 __Full ReactJS 16.x Component Lifecycle Support__
