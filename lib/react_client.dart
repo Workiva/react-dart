@@ -206,12 +206,16 @@ dynamic _generateChildren(List childrenArgs, {bool shouldAlwaysBeList = false}) 
 
   if (childrenArgs.isEmpty) {
     if (!shouldAlwaysBeList) return null;
-    children = childrenArgs;
+    children = const [];
   } else if (childrenArgs.length == 1) {
     if (shouldAlwaysBeList) {
       final singleChild = listifyChildren(childrenArgs.single);
       if (singleChild is List) {
-        children = singleChild;
+        if (singleChild.isEmpty) {
+          children = const [];
+        } else {
+          children = singleChild;
+        }
       }
     } else {
       children = childrenArgs.single;
@@ -219,11 +223,15 @@ dynamic _generateChildren(List childrenArgs, {bool shouldAlwaysBeList = false}) 
   }
 
   if (children is Iterable && children is! List) {
-    children = children.toList(growable: false);
+    if (children.length == 1 && children.single.isEmpty) {
+      children = const [];
+    } else {
+      children = children.toList(growable: false);
+    }
   }
 
   if (children == null) {
-    children = shouldAlwaysBeList ? childrenArgs.map(listifyChildren).toList() : childrenArgs;
+    children = childrenArgs.map(listifyChildren).toList();
     markChildrenValidated(children);
   }
 

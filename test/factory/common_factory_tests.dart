@@ -32,9 +32,22 @@ void commonFactoryTests(ReactComponentFactoryProxy factory, {bool isFunctionComp
     // There are different code paths for 0, 1, 2, 3, 4, 5, 6, and 6+ arguments.
     // Test all of them.
     group('a number of variadic children:', () {
-      test('0', () {
-        final instance = factory({});
-        expect(getChildren(instance), shouldAlwaysBeList ? [] : isNull);
+      group('0', () {
+        test('', () {
+          final instance = factory({});
+          expect(getChildren(instance), shouldAlwaysBeList ? [] : isNull);
+        });
+
+        if (shouldAlwaysBeList) {
+          test('- with the same list instance returned every time', () {
+            final instance = factory({});
+            final instance2 = factory({});
+            // TODO: Why aren't these the same?
+            expect(getChildren(instance), same(getChildren(instance2)),
+                reason: 'These lists should always be identical since different instances of an '
+                    'empty list will cause React to re-render as a result of props.children "changing".');
+          });
+        }
       });
 
       test('1', () {
@@ -72,9 +85,20 @@ void commonFactoryTests(ReactComponentFactoryProxy factory, {bool isFunctionComp
       expect(getChildren(instance), equals(['one', 'two']));
     });
 
-    test('an empty List', () {
-      var instance = factory({}, []);
-      expect(getChildren(instance), equals([]));
+    group('an empty List', () {
+      test('', () {
+        var instance = factory({}, []);
+        expect(getChildren(instance), equals([]));
+      });
+
+      test('- with the same list instance returned every time', () {
+        final instance = factory({}, new Iterable.empty());
+        final instance2 = factory({}, new Iterable.empty());
+        // TODO: Why aren't these the same?
+        expect(getChildren(instance), same(getChildren(instance2)),
+            reason: 'These lists should always be identical since different instances of an '
+                'empty list will cause React to re-render as a result of props.children "changing".');
+      });
     });
 
     test('an Iterable', () {
@@ -82,9 +106,20 @@ void commonFactoryTests(ReactComponentFactoryProxy factory, {bool isFunctionComp
       expect(getChildren(instance), equals(['0', '1', '2']));
     });
 
-    test('an empty Iterable', () {
-      var instance = factory({}, new Iterable.empty());
-      expect(getChildren(instance), equals([]));
+    group('an empty Iterable', () {
+      test('', () {
+        var instance = factory({}, new Iterable.empty());
+        expect(getChildren(instance), equals([]));
+      });
+
+      test('- with the same list instance returned every time', () {
+        final instance = factory({}, new Iterable.empty());
+        final instance2 = factory({}, new Iterable.empty());
+        // TODO: Why aren't these the same?
+        expect(getChildren(instance), same(getChildren(instance2)),
+            reason: 'These lists should always be identical since different instances of an '
+                'empty list will cause React to re-render as a result of props.children "changing".');
+      });
     });
   }
 
