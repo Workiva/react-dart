@@ -1,3 +1,9 @@
+## [5.2.2](https://github.com/cleandart/react-dart/compare/5.2.1...5.2.2)
+
+- Unpin the react-redux JS dependency to allow versions `7.1.1` and higher.
+- Run over_react tests as part of the CI process to prevent another situation where changing JS dependencies 
+  regressed tightly coupled libs like `over_react_redux` (like the one that required the 5.2.1 hotfix).
+
 ## [5.2.1](https://github.com/cleandart/react-dart/compare/5.2.0...5.2.1)
 
 - Temporarily pin react-redux dependency to version `7.1.0` to prevent widespread test failures as a result of 
