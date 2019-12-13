@@ -202,7 +202,7 @@ main() {
       var mountNode = DivElement();
       _ContextProviderWrapper providerRef;
       int currentCount = 0;
-      Context testContext;
+      Context<int> testContext;
       Function useContextTestFunctionComponent;
 
       setUp(() {

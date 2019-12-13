@@ -136,7 +136,7 @@ StateHook<T> useStateLazy<T>(T init()) => StateHook.lazy(init);
 /// Learn more: <https://reactjs.org/docs/hooks-reference.html#usecallback>.
 Function useCallback(Function callback, List dependencies) => React.useCallback(allowInterop(callback), dependencies);
 
-/// Returns the value of the nearest [Context.Provider] for the provided [Context] object every time that context is
+/// Returns the value of the nearest [Context.Provider] for the provided [context] object every time that context is
 /// updated.
 ///
 /// The usage is similar to that of a [Context.Consumer] in that the return type of [useContext] is dependent upon
@@ -162,4 +162,4 @@ Function useCallback(Function callback, List dependencies) => React.useCallback(
 /// ```
 ///
 /// Learn more: <https://reactjs.org/docs/hooks-reference.html#usecontext>.
-dynamic useContext(Context context) => ContextHelpers.unjsifyNewContext(React.useContext(context.jsThis));
+T useContext<T>(Context<T> context) => ContextHelpers.unjsifyNewContext(React.useContext(context.jsThis));
