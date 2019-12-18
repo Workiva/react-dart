@@ -199,13 +199,15 @@ main() {
     });
 
     group('useContext -', () {
-      var mountNode = DivElement();
+      DivElement mountNode;
       _ContextProviderWrapper providerRef;
       int currentCount = 0;
       Context<int> testContext;
       Function useContextTestFunctionComponent;
 
       setUp(() {
+        mountNode = DivElement();
+
         UseContextTestComponent(Map props) {
           final context = useContext(testContext);
           currentCount = context;
@@ -215,10 +217,6 @@ main() {
             react.div({'key': 'uct2'}, ['useContext counter value is ${context}']),
           ]);
         }
-
-        tearDown(() {
-          mountNode = null;
-        });
 
         testContext = react.createContext(1);
         useContextTestFunctionComponent =
@@ -238,6 +236,7 @@ main() {
       });
 
       tearDown(() {
+        mountNode = null;
         currentCount = 0;
         testContext = null;
         useContextTestFunctionComponent = null;
