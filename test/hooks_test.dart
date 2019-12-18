@@ -216,7 +216,11 @@ main() {
           ]);
         }
 
-        testContext = react.createContext(1, calculateChangedBits);
+        tearDown(() {
+          mountNode = null;
+        });
+
+        testContext = react.createContext(1);
         useContextTestFunctionComponent =
             react.registerFunctionComponent(UseContextTestComponent, displayName: 'useContextTest');
 
@@ -256,14 +260,6 @@ main() {
       });
     });
   });
-}
-
-int calculateChangedBits(currentValue, nextValue) {
-  int result = 1 << 1;
-  if (nextValue % 2 == 0) {
-    result |= 1 << 2;
-  }
-  return result;
 }
 
 ReactDartComponentFactoryProxy2 ContextProviderWrapper = react.registerComponent(() => new _ContextProviderWrapper());

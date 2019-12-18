@@ -150,13 +150,13 @@ Function useCallback(Function callback, List dependencies) => React.useCallback(
 /// __Example__:
 ///
 /// ```
-/// Context newContext = createContext(0, calcuateChangedBits);
+/// Context countContext = createContext(0);
 ///
 /// UseCallbackTestComponent(Map props) {
-///   final context = useContext(newContext);
+///   final count = useContext(countContext);
 ///
 ///   return react.div({}, [
-///     react.div({}, ['The context value is $context']), // initially renders: 'The context value is 0'
+///     react.div({}, ['The count from context is $count']), // initially renders: 'The count from context is 0'
 ///   ]);
 /// }
 /// ```
