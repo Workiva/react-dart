@@ -236,6 +236,7 @@ main() {
       });
 
       tearDown(() {
+        react_dom.unmountComponentAtNode(mountNode);
         mountNode = null;
         currentCount = 0;
         testContext = null;
