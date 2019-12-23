@@ -1,12 +1,13 @@
-## [5.2.2](https://github.com/cleandart/react-dart/compare/5.2.1...5.2.2)
+## [5.3.0](https://github.com/cleandart/react-dart/compare/5.2.1...5.3.0)
 
 - Unpin the react-redux JS dependency to allow versions `7.1.1` and higher.
-- Run over_react tests as part of the CI process to prevent another situation where changing JS dependencies 
+- Run over_react tests as part of the CI process to prevent another situation where changing JS dependencies
   regressed tightly coupled libs like `over_react_redux` (like the one that required the 5.2.1 hotfix).
+- [#242] Implement StrictMode Component
 
 ## [5.2.1](https://github.com/cleandart/react-dart/compare/5.2.0...5.2.1)
 
-- Temporarily pin react-redux dependency to version `7.1.0` to prevent widespread test failures as a result of 
+- Temporarily pin react-redux dependency to version `7.1.0` to prevent widespread test failures as a result of
   [`Provider` being converted into a function component with hooks](https://github.com/reduxjs/react-redux/pull/1377).
 
 ## [5.2.0](https://github.com/cleandart/react-dart/compare/5.1.1...5.2.0)
@@ -37,7 +38,7 @@ __Full ReactJS 16.x Component Lifecycle Support__
     - <s>`componentWillUpdate`</s> => `getSnapshotBeforeUpdate` _(new)_
     - `componentDidCatch` / `getDerivedStateFromError` _(new)_
       - Adds support for [error boundaries](https://reactjs.org/docs/error-boundaries.html).
-      
+
 __[Portals](https://reactjs.org/docs/portals.html)__
 
 - _"Portals provide a first-class way to render children into a DOM node that exists outside the DOM hierarchy of the parent component."_
@@ -68,7 +69,7 @@ Pull in 4.9.2 changes that were accidentally reverted as part of 5.0.0.
   - The underlying `.js` files provided by this package are now ReactJS version 16.
   - Support for the new / updated lifecycle methods from ReactJS 16 [will be released in version `5.1.0`](https://github.com/cleandart/react-dart/milestone/1).
 
-> [Full list of 5.0.0 Changes](https://github.com/cleandart/react-dart/milestone/2?closed=1) 
+> [Full list of 5.0.0 Changes](https://github.com/cleandart/react-dart/milestone/2?closed=1)
 
 > __[Full List of Breaking Changes](https://github.com/cleandart/react-dart/pull/224)__
 
@@ -97,7 +98,7 @@ Pull in 4.9.2 changes that were accidentally reverted as part of 5.0.0.
 
 - [#181]: Remove unnecessary zoning on event handlers that interferes with testing
     - Handlers triggered by real events will now always be called in the root zone.
-    
+
       In most cases, handlers were already running in the root zone, so this should not affect behavior. See [#179] for more details.
     - When testing, you previous had to bind event handlers or callbacks triggered by event handlers to zones when using `expect` or `expectAsync`.
         ```dart
