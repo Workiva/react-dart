@@ -988,6 +988,24 @@ SyntheticKeyboardEvent syntheticKeyboardEventFactory(events.SyntheticKeyboardEve
       e.shiftKey);
 }
 
+/// Wrapper for [SyntheticCompositionEvent].
+SyntheticCompositionEvent syntheticCompositionEventFactory(events.SyntheticCompositionEvent e) {
+  return new SyntheticCompositionEvent(
+      e.bubbles,
+      e.cancelable,
+      e.currentTarget,
+      e.defaultPrevented,
+      () => e.preventDefault(),
+      () => e.stopPropagation(),
+      e.eventPhase,
+      e.isTrusted,
+      e.nativeEvent,
+      e.target,
+      e.timeStamp,
+      e.type,
+      e.data);
+}
+
 /// Wrapper for [SyntheticFocusEvent].
 SyntheticFocusEvent syntheticFocusEventFactory(events.SyntheticFocusEvent e) {
   return new SyntheticFocusEvent(

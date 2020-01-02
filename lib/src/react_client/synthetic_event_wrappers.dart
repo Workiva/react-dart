@@ -51,6 +51,12 @@ class SyntheticKeyboardEvent extends SyntheticEvent {
 
 @JS()
 @anonymous
+class SyntheticCompositionEvent extends SyntheticEvent {
+  external get data;
+}
+
+@JS()
+@anonymous
 class SyntheticFocusEvent extends SyntheticEvent {
   external EventTarget get relatedTarget;
 }
