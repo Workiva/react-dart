@@ -139,12 +139,12 @@ StateHook<T> useStateLazy<T>(T init()) => StateHook.lazy(init);
 ///
 /// See: <https://reactjs.org/docs/hooks-effect.html#tip-optimizing-performance-by-skipping-effects>.
 void useEffect(dynamic Function() sideEffect, [List<Object> dependencies]) {
+  // ignore: missing_return
   var finalSideEffect = allowInterop(() {
     var result = sideEffect();
     if (result is Function) {
       return allowInterop(result);
     }
-    return null;
   });
 
   if (dependencies != null) {
@@ -153,3 +153,8 @@ void useEffect(dynamic Function() sideEffect, [List<Object> dependencies]) {
     return React.useEffect(finalSideEffect);
   }
 }
+
+
+
+
+Ref useRef([dynamic initialValue]) => React.useRef(initialValue);

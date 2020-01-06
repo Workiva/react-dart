@@ -38,6 +38,62 @@ HookTestComponent(Map props) {
   ]);
 }
 
+var useRefTestFunctionComponent = react.registerFunctionComponent(UseRefTestComponent, displayName: 'useRefTest');
+
+UseRefTestComponent(Map props) {
+  final inputElement = useRef(null);
+
+  onButtonClick(_) {
+    inputElement.current.focus();
+  }
+
+  return react.Fragment({}, [
+    react.input({'ref': inputElement}),
+    react.button({'onClick': onButtonClick}, ['Focus the input']),
+  ]);
+}
+
+var useRefTestFunctionComponent2 = react.registerFunctionComponent(UseRefTestComponent2, displayName: 'useRefTest2');
+
+UseRefTestComponent2(Map props) {
+  final count = useState(0);
+  final prevCountRef = useRef();
+
+  useEffect(() {
+    prevCountRef.current = count.value;
+  });
+
+  final prevCount = prevCountRef.current;
+
+  return react.Fragment({}, [
+    react.p({}, ['Now: ${count.value}, before: ${prevCount}']),
+    react.button({'onClick': (_) => count.setWithUpdater((prev) => prev + 1)}, ['+']),
+  ]);
+}
+
+var useRefTestFunctionComponent3 = react.registerFunctionComponent(UseRefTestComponent3, displayName: 'useRefTest3');
+
+UseRefTestComponent3(Map props) {
+  final renderIndex = useState(1);
+  final refFromUseRef = useRef();
+  final refFromCreateRef = react.createRef();
+
+  if(refFromUseRef.current == null) {
+    refFromUseRef.current = renderIndex.value;
+  }
+
+  if(refFromCreateRef.current == null) {
+    refFromCreateRef.current = renderIndex.value;
+  }
+
+  return react.Fragment({}, [
+    react.p({}, ['Current render index: ${renderIndex.value}']),
+    react.p({}, ['refFromUseRef value: ${refFromUseRef.current}']),
+    react.p({}, ['refFromCreateRef value: ${refFromCreateRef.current}']),
+    react.button({'onClick': (_) => renderIndex.setWithUpdater((prev) => prev + 1)}, ['re-render']),
+  ]);
+}
+
 void main() {
   setClientConfiguration();
 
@@ -48,6 +104,20 @@ void main() {
           react.h2({'key': 'useStateTestLabel'}, ['useState & useEffect Hook Test']),
           hookTestFunctionComponent({
             'key': 'useStateTest',
+          }, []),
+          react.h2({'key': 'useRefTestLabel'}, ['useRef Hook Test']),
+          useRefTestFunctionComponent({
+            'key': 'useRefTest',
+          }, []),
+          react.br({}),
+          react.br({}),
+          useRefTestFunctionComponent2({
+            'key': 'useRefTest2',
+          }, []),
+          react.br({}),
+          react.br({}),
+          useRefTestFunctionComponent3({
+            'key': 'useRefTest3',
           }, []),
         ]),
         querySelector('#content'));

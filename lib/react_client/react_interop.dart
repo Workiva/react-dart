@@ -48,6 +48,7 @@ abstract class React {
 
   external static List<dynamic> useState(dynamic value);
   external static void useEffect(dynamic Function() sideEffect, [List<Object> dependencies]);
+  external static Ref useRef([dynamic initialValue]);
 }
 
 /// Creates a [Ref] object that can be attached to a [ReactElement] via the ref prop.
@@ -87,8 +88,8 @@ class Ref<T> {
   T get current {
     final jsCurrent = jsRef.current;
 
-    if (jsCurrent is! Element) {
-      final dartCurrent = (jsCurrent as ReactComponent)?.dartComponent;
+    if (jsCurrent is! Element && jsCurrent is ReactComponent) {
+      final dartCurrent = jsCurrent?.dartComponent;
 
       if (dartCurrent != null) {
         return dartCurrent as T;
@@ -96,6 +97,9 @@ class Ref<T> {
     }
     return jsCurrent;
   }
+
+  /// See: <https://reactjs.org/docs/hooks-faq.html#is-there-something-like-instance-variables>.
+  set current(dynamic value) => jsRef.current = value;
 }
 
 /// A JS ref object returned by [React.createRef].
@@ -106,6 +110,7 @@ class Ref<T> {
 @anonymous
 class JsRef {
   external dynamic get current;
+  external set current(dynamic value);
 }
 
 /// Automatically passes a [Ref] through a component to one of its children.
