@@ -102,6 +102,68 @@ StateHook<T> useState<T>(T initialValue) => StateHook(initialValue);
 /// Learn more: <https://reactjs.org/docs/hooks-reference.html#lazy-initial-state>.
 StateHook<T> useStateLazy<T>(T init()) => StateHook.lazy(init);
 
+/// Returns a memoized version of [callback] that only changes if one of the [dependencies] has changed.
+///
+/// > __Note:__ there are two [rules for using Hooks](https://reactjs.org/docs/hooks-rules.html):
+/// >
+/// > * Only call Hooks at the top level.
+/// > * Only call Hooks from inside a [DartFunctionComponent].
+///
+/// __Example__:
+///
+/// ```
+/// UseCallbackTestComponent(Map props) {
+///   final count = useState(0);
+///   final delta = useState(1);
+///
+///   var increment = useCallback((_) {
+///     count.setWithUpdater((prev) => prev + delta.value);
+///   }, [delta.value]);
+///
+///   var incrementDelta = useCallback((_) {
+///     delta.setWithUpdater((prev) => prev + 1);
+///   }, []);
+///
+///   return react.div({}, [
+///     react.div({}, ['Delta is ${delta.value}']),
+///     react.div({}, ['Count is ${count.value}']),
+///     react.button({'onClick': increment}, ['Increment count']),
+///     react.button({'onClick': incrementDelta}, ['Increment delta']),
+///   ]);
+/// }
+/// ```
+///
+/// Learn more: <https://reactjs.org/docs/hooks-reference.html#usecallback>.
+Function useCallback(Function callback, List dependencies) => React.useCallback(allowInterop(callback), dependencies);
+
+/// Returns the value of the nearest [Context.Provider] for the provided [context] object every time that context is
+/// updated.
+///
+/// The usage is similar to that of a [Context.Consumer] in that the return type of [useContext] is dependent upon
+/// the typing of the value passed into [createContext] and [Context.Provider].
+///
+/// > __Note:__ there are two [rules for using Hooks](https://reactjs.org/docs/hooks-rules.html):
+/// >
+/// > * Only call Hooks at the top level.
+/// > * Only call Hooks from inside a [DartFunctionComponent].
+///
+/// __Example__:
+///
+/// ```
+/// Context countContext = createContext(0);
+///
+/// UseCallbackTestComponent(Map props) {
+///   final count = useContext(countContext);
+///
+///   return react.div({}, [
+///     react.div({}, ['The count from context is $count']), // initially renders: 'The count from context is 0'
+///   ]);
+/// }
+/// ```
+///
+/// Learn more: <https://reactjs.org/docs/hooks-reference.html#usecontext>.
+T useContext<T>(Context<T> context) => ContextHelpers.unjsifyNewContext(React.useContext(context.jsThis));
+
 /// Runs [sideEffect] after every completed render of a [DartFunctionComponent].
 ///
 /// If [dependencies] are given, [sideEffect] will only run if one of the [dependencies] have changed.

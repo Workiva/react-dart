@@ -354,6 +354,80 @@ main() {
             reason: 'applies the state returned by `getDerivedStateFromError`');
       });
 
+      test('handles null return value from getDerivedStateFromError as expected', () {
+        final Map initialState = {
+          'originalState': true,
+        };
+        var _shouldThrow = true;
+        final Map initialProps = unmodifiableMap({
+          'initialState': (_) => initialState,
+          'getDerivedStateFromError': (_, __) => null,
+          'render': (_) {
+            if (_shouldThrow) {
+              _shouldThrow = false;
+              return components2.ErrorComponent({"key": "errorComp"});
+            }
+            return react.div({});
+          }
+        });
+
+        LifecycleTestHelper component = getDartComponent(render(components2.ErrorLifecycleTest(initialProps)));
+
+        expect(
+            component.lifecycleCallMemberNames,
+            equals([
+              'defaultProps',
+              'initialState',
+              'getDerivedStateFromProps',
+              'render',
+              'getDerivedStateFromError',
+              'render',
+              'componentDidMount',
+              'componentDidCatch'
+            ]));
+        expect(component.state, initialState,
+            reason:
+                'component.state should not update when an error is thrown within `render()` and `getDerivedStateFromError` returns null.');
+      });
+
+      test('handles unimplemented getDerivedStateFromError as expected when not included in skipMethods', () {
+        final Map initialState = {
+          'originalState': true,
+        };
+        var _shouldThrow = true;
+        final Map initialProps = unmodifiableMap({
+          'initialState': (_) => initialState,
+          'render': (_) {
+            if (_shouldThrow) {
+              _shouldThrow = false;
+              return components2.ErrorComponent({"key": "errorComp"});
+            }
+            return react.div({});
+          }
+        });
+
+        LifecycleTestHelper component;
+        expect(
+          () => component = getDartComponent(render(components2.NoGetDerivedStateFromErrorLifecycleTest(initialProps))),
+          returnsNormally,
+        );
+
+        expect(
+            component.lifecycleCallMemberNames,
+            equals([
+              'defaultProps',
+              'initialState',
+              'getDerivedStateFromProps',
+              'render',
+              'render',
+              'componentDidMount',
+              'componentDidCatch'
+            ]));
+        expect(component.state, initialState,
+            reason:
+                'component.state should not update when an error is thrown within `render()` and `getDerivedStateFromError` is not implemented.');
+      });
+
       test('error lifecycle methods get passed Dartified Error/Exception when an error is thrown', () {
         var mountNode = new DivElement();
         var renderedInstance = react_dom.render(components2.SetStateTest({}), mountNode);
@@ -957,6 +1031,7 @@ void sharedLifecycleTests<T extends react.Component>({
       Map expectedProps;
       dynamic newContext;
       Null expectedSnapshot;
+      bool updatingStateWithNull;
       LifecycleTestHelper component;
 
       setUp(() {
@@ -964,36 +1039,41 @@ void sharedLifecycleTests<T extends react.Component>({
         expectedProps = unmodifiableMap(defaultProps, initialProps, emptyChildrenProps);
         newContext = isComponent2 ? null : const {};
         expectedSnapshot = null;
+        updatingStateWithNull = false;
 
         component = getDartComponent(render(LifecycleTest(initialProps)));
         component.lifecycleCalls.clear();
       });
 
       tearDown(() {
+        var expectedState = updatingStateWithNull ? initialState : newState;
         expect(
             component.lifecycleCalls,
-            equals([
-              isComponent2 ? matchCall('getDerivedStateFromProps', args: [expectedProps, newState]) : null,
-              skipLegacyContextTests
-                  ? matchCall('shouldComponentUpdate', args: [expectedProps, newState], state: initialState)
-                  : matchCall('shouldComponentUpdateWithContext',
-                      args: [expectedProps, newState, newContext], state: initialState),
-              !isComponent2
-                  ? matchCall('componentWillUpdate', args: [expectedProps, newState], state: initialState)
-                  : null,
-              skipLegacyContextTests
-                  ? null
-                  : matchCall('componentWillUpdateWithContext',
-                      args: [expectedProps, newState, newContext], state: initialState),
-              matchCall('render', state: newState),
-              isComponent2
-                  ? matchCall('getSnapshotBeforeUpdate', args: [expectedProps, initialState], state: newState)
-                  : null,
-              isComponent2
-                  ? matchCall('componentDidUpdate',
-                      args: [expectedProps, initialState, expectedSnapshot], state: newState)
-                  : matchCall('componentDidUpdate', args: [expectedProps, initialState], state: newState),
-            ].where((matcher) => matcher != null)));
+            (updatingStateWithNull && isComponent2)
+                ? []
+                : equals([
+                    isComponent2 ? matchCall('getDerivedStateFromProps', args: [expectedProps, expectedState]) : null,
+                    skipLegacyContextTests
+                        ? matchCall('shouldComponentUpdate', args: [expectedProps, expectedState], state: initialState)
+                        : matchCall('shouldComponentUpdateWithContext',
+                            args: [expectedProps, expectedState, newContext], state: initialState),
+                    !isComponent2
+                        ? matchCall('componentWillUpdate', args: [expectedProps, expectedState], state: initialState)
+                        : null,
+                    skipLegacyContextTests
+                        ? null
+                        : matchCall('componentWillUpdateWithContext',
+                            args: [expectedProps, expectedState, newContext], state: initialState),
+                    matchCall('render', state: expectedState),
+                    isComponent2
+                        ? matchCall('getSnapshotBeforeUpdate',
+                            args: [expectedProps, initialState], state: expectedState)
+                        : null,
+                    isComponent2
+                        ? matchCall('componentDidUpdate',
+                            args: [expectedProps, initialState, expectedSnapshot], state: expectedState)
+                        : matchCall('componentDidUpdate', args: [expectedProps, initialState], state: expectedState),
+                  ].where((matcher) => matcher != null)));
       });
 
       test('setState with Map argument', () {
@@ -1009,6 +1089,39 @@ void sharedLifecycleTests<T extends react.Component>({
             'props': new Map.from(props),
           });
           return stateDelta;
+        }
+
+        void setStateCallback() => calls.add({'name': 'setStateCallback'});
+
+        if (isComponent2) {
+          (component as react.Component2).setStateWithUpdater(stateUpdater, setStateCallback);
+        } else {
+          component.setState(stateUpdater, setStateCallback);
+        }
+
+        expect(
+            calls,
+            [
+              {
+                'name': 'stateUpdater',
+                'prevState': initialState,
+                'props': expectedProps,
+              },
+              {'name': 'setStateCallback'}
+            ],
+            reason: 'updater should be called with expected arguments');
+      });
+
+      test('setStateWithUpdater argument that returns null (no re-render)', () {
+        updatingStateWithNull = true;
+        var calls = [];
+        Map stateUpdater(Map prevState, Map props) {
+          calls.add({
+            'name': 'stateUpdater',
+            'prevState': new Map.from(prevState),
+            'props': new Map.from(props),
+          });
+          return null;
         }
 
         void setStateCallback() => calls.add({'name': 'setStateCallback'});

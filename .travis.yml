@@ -1,7 +1,6 @@
 language: dart
 
 dart:
-  - '2.4.1'
   - stable
   - dev
 
@@ -17,6 +16,5 @@ before_script:
   - pub run dependency_validator -i build_runner,build_test,build_web_compilers
 
 script:
-  # TODO once production is above 2.4.1 re-check the `fails-on-2.4.1` tagged tests
-  - pub run build_runner test --release -- -p chrome -x fails-on-241
-  - pub run build_runner test -- -p chrome -x fails-on-241
+  - pub run build_runner test --release -- -p chrome
+  - pub run build_runner test -- -p chrome
