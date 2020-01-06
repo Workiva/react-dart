@@ -43,16 +43,19 @@ UseReducerTestComponent(Map props) {
   return react.Fragment({}, [
     state.state['count'],
     react.button({
+      'key': 'urt1',
       'onClick': (_) => state.dispatch({'type': 'increment'})
     }, [
       '+'
     ]),
     react.button({
+      'key': 'urt2',
       'onClick': (_) => state.dispatch({'type': 'decrement'})
     }, [
       '-'
     ]),
     react.button({
+      'key': 'urt3',
       'onClick': (_) => state.dispatch({
             'type': 'reset',
             'payload': props['initialCount'],
@@ -162,19 +165,21 @@ void main() {
           useCallbackTestFunctionComponent({
             'key': 'useCallbackTest',
           }, []),
+          react.br({'key': 'br2'}),
+          react.h2({'key': 'useContextTestLabel'}, ['useContext Hook Test']),
           newContextProviderComponent({
             'key': 'provider'
           }, [
             useContextTestFunctionComponent({
               'key': 'useContextTest',
             }, []),
-            react.br({'key': 'br2'}),
-            react.h2({'key': 'useReducerTestLabel'}, ['useReducer Hook Test']),
-            useReducerTestFunctionComponent({
-              'key': 'useReducerTest',
-              'initialCount': 10,
-            }, []),
           ]),
+          react.br({'key': 'br3'}),
+          react.h2({'key': 'useReducerTestLabel'}, ['useReducer Hook Test']),
+          useReducerTestFunctionComponent({
+            'key': 'useReducerTest',
+            'initialCount': 10,
+          }, []),
         ]),
         querySelector('#content'));
   }
