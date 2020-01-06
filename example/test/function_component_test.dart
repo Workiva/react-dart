@@ -27,7 +27,7 @@ HookTestComponent(Map props) {
   }, [count.value]);
 
   return react.div({}, [
-    react.button({'onClick': (_) => count.set(0), 'key': 'ust1'}, ['Reset']),
+    react.button({'onClick': (_) => count.set(1), 'key': 'ust1'}, ['Reset']),
     react.button({'onClick': (_) => count.setWithUpdater((prev) => prev + 1), 'key': 'ust2'}, ['+']),
     react.br({'key': 'ust3'}),
     react.p({'key': 'ust4'}, ['${count.value} is ${evenOdd.value}']),
