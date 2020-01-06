@@ -17,6 +17,9 @@ abstract class Simulate {
   external static void click(componentOrNode, [eventData]);
   external static void contextMenu(componentOrNode, [eventData]);
   external static void copy(componentOrNode, [eventData]);
+  external static void compositionEnd(componentOrNode, [eventData]);
+  external static void compositionStart(componentOrNode, [eventData]);
+  external static void compositionUpdate(componentOrNode, [eventData]);
   external static void cut(componentOrNode, [eventData]);
   external static void doubleClick(componentOrNode, [eventData]);
   external static void drag(componentOrNode, [eventData]);

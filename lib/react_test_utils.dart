@@ -63,6 +63,12 @@ class Simulate {
   static void click(/*[1]*/ node, [Map eventData]) => sw.Simulate.click(node, _jsifyEventData(eventData));
   static void contextMenu(/*[1]*/ node, [Map eventData]) => sw.Simulate.contextMenu(node, _jsifyEventData(eventData));
   static void copy(/*[1]*/ node, [Map eventData]) => sw.Simulate.copy(node, _jsifyEventData(eventData));
+  static void compositionEnd(/*[1]*/ node, [Map eventData]) =>
+      sw.Simulate.compositionEnd(node, _jsifyEventData(eventData));
+  static void compositionStart(/*[1]*/ node, [Map eventData]) =>
+      sw.Simulate.compositionStart(node, _jsifyEventData(eventData));
+  static void compositionUpdate(/*[1]*/ node, [Map eventData]) =>
+      sw.Simulate.compositionUpdate(node, _jsifyEventData(eventData));
   static void cut(/*[1]*/ node, [Map eventData]) => sw.Simulate.cut(node, _jsifyEventData(eventData));
   static void doubleClick(/*[1]*/ node, [Map eventData]) => sw.Simulate.doubleClick(node, _jsifyEventData(eventData));
   static void drag(/*[1]*/ node, [Map eventData]) => sw.Simulate.drag(node, _jsifyEventData(eventData));
