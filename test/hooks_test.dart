@@ -104,7 +104,7 @@ main() {
       int useEffectWithEmptyDepsCallCount;
       int useEffectCleanupWithEmptyDepsCallCount;
 
-      setUpAll(() async {
+      setUpAll(() {
         mountNode = new DivElement();
         useEffectCallCount = 0;
         useEffectCleanupCallCount = 0;
@@ -192,7 +192,7 @@ main() {
       });
 
       group('after state change,', () {
-        setUpAll(() async {
+        setUpAll(() {
           react_test_utils.Simulate.click(countButtonRef);
         });
 
@@ -222,7 +222,7 @@ main() {
       });
 
       group('after component is unmounted,', () {
-        setUpAll(() async {
+        setUpAll(() {
           react_dom.unmountComponentAtNode(mountNode);
         });
 

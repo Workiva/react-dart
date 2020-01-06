@@ -20,7 +20,7 @@ HookTestComponent(Map props) {
       evenOdd.set('odd');
     }
     return () {
-      print('count is changing...');
+      print('count is changing... do some cleanup if you need to');
     };
 
     /// This dependency prevents the effect from running every time [evenOdd.value] changes.
@@ -30,7 +30,7 @@ HookTestComponent(Map props) {
     react.button({'onClick': (_) => count.set(1), 'key': 'ust1'}, ['Reset']),
     react.button({'onClick': (_) => count.setWithUpdater((prev) => prev + 1), 'key': 'ust2'}, ['+']),
     react.br({'key': 'ust3'}),
-    react.p({'key': 'ust4'}, [count.value.toString() + ' is ' + evenOdd.value.toString()]),
+    react.p({'key': 'ust4'}, ['${count.value} is ${evenOdd.value}']),
   ]);
 }
 

@@ -126,14 +126,14 @@ StateHook<T> useStateLazy<T>(T init()) => StateHook.lazy(init);
 ///       evenOdd.set('odd');
 ///     }
 ///     return () {
-///       print('count is changing...');
+///       print('count is changing... do some cleanup if you need to');
 ///     };
 ///
 ///     // This dependency prevents the effect from running every time [evenOdd.value] changes.
 ///   }, [count.value]);
 ///
 ///   return react.div({}, [
-///     react.p({}, [count.value.toString() + ' is ' + evenOdd.value.toString()]),
+///     react.p({}, ['${count.value} is ${evenOdd.value}']),
 ///     react.button({'onClick': (_) => count.set(count.value + 1)}, ['+']),
 ///   ]);
 /// }
@@ -146,6 +146,8 @@ void useEffect(dynamic Function() sideEffect, [List<Object> dependencies]) {
     if (result is Function) {
       return allowInterop(result);
     }
+
+    /// When no cleanup function is returned, [sideEffect] returns undefined.
     return jsUndefined;
   });
 
