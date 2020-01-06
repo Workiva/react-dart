@@ -220,4 +220,15 @@ Function useCallback(Function callback, List dependencies) => React.useCallback(
 /// Learn more: <https://reactjs.org/docs/hooks-reference.html#usecontext>.
 T useContext<T>(Context<T> context) => ContextHelpers.unjsifyNewContext(React.useContext(context.jsThis));
 
+/// Returns a mutable [Ref] object that will persist for the full lifetime of the component.
+///
+/// The [Ref.current] property is initialized to [initialValue] and does not cause a re-render of
+/// the containing [DartFunctionComponent] when updated.
+///
+/// > __Note:__ there are two [rules for using Hooks](https://reactjs.org/docs/hooks-rules.html):
+/// >
+/// > * Only call Hooks at the top level.
+/// > * Only call Hooks from inside a [DartFunctionComponent].
+///
+/// Learn more: <https://reactjs.org/docs/hooks-reference.html#useref>.
 Ref useRef([dynamic initialValue]) => React.useRef(initialValue);
