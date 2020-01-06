@@ -112,15 +112,6 @@ class _NewContextProviderComponent extends react.Component2 {
   _onButtonClick(event) {
     this.setState({'renderCount': this.state['renderCount'] + 1, 'complexMap': false});
   }
-    react.button({'onClick': (_) => count.set(1)}, ['Reset']),
-    react.button({
-      'onClick': (_) => count.setWithUpdater((prev) => prev + 1),
-    }, [
-      '+'
-    ]),
-    react.br({}),
-    react.p({}, [count.value.toString() + ' is ' + evenOdd.value.toString()]),
-  ]);
 }
 
 var useRefTestFunctionComponent = react.registerFunctionComponent(UseRefTestComponent, displayName: 'useRefTest');
@@ -133,8 +124,8 @@ UseRefTestComponent(Map props) {
   }
 
   return react.Fragment({}, [
-    react.input({'ref': inputElement}),
-    react.button({'onClick': onButtonClick}, ['Focus the input']),
+    react.input({'key': 'urt1a', 'ref': inputElement}),
+    react.button({'key': 'urt1b', 'onClick': onButtonClick}, ['Focus the input']),
   ]);
 }
 
@@ -151,8 +142,12 @@ UseRefTestComponent2(Map props) {
   final prevCount = prevCountRef.current;
 
   return react.Fragment({}, [
-    react.p({}, ['Now: ${count.value}, before: ${prevCount}']),
-    react.button({'onClick': (_) => count.setWithUpdater((prev) => prev + 1)}, ['+']),
+    react.p({
+      'key': 'urt2a',
+    }, [
+      'Now: ${count.value}, before: ${prevCount}'
+    ]),
+    react.button({'key': 'urt2b', 'onClick': (_) => count.setWithUpdater((prev) => prev + 1)}, ['+']),
   ]);
 }
 
@@ -163,19 +158,31 @@ UseRefTestComponent3(Map props) {
   final refFromUseRef = useRef();
   final refFromCreateRef = react.createRef();
 
-  if(refFromUseRef.current == null) {
+  if (refFromUseRef.current == null) {
     refFromUseRef.current = renderIndex.value;
   }
 
-  if(refFromCreateRef.current == null) {
+  if (refFromCreateRef.current == null) {
     refFromCreateRef.current = renderIndex.value;
   }
 
   return react.Fragment({}, [
-    react.p({}, ['Current render index: ${renderIndex.value}']),
-    react.p({}, ['refFromUseRef value: ${refFromUseRef.current}']),
-    react.p({}, ['refFromCreateRef value: ${refFromCreateRef.current}']),
-    react.button({'onClick': (_) => renderIndex.setWithUpdater((prev) => prev + 1)}, ['re-render']),
+    react.p({
+      'key': 'urt3a',
+    }, [
+      'Current render index: ${renderIndex.value}'
+    ]),
+    react.p({
+      'key': 'urt3b',
+    }, [
+      'refFromUseRef value: ${refFromUseRef.current}'
+    ]),
+    react.p({
+      'key': 'urt3c',
+    }, [
+      'refFromCreateRef value: ${refFromCreateRef.current}'
+    ]),
+    react.button({'key': 'urt3d', 'onClick': (_) => renderIndex.setWithUpdater((prev) => prev + 1)}, ['re-render']),
   ]);
 }
 
@@ -184,21 +191,19 @@ void main() {
 
   render() {
     react_dom.render(
-        react.Fragment({
-          'key': 'fctf'
-        }, [
+        react.Fragment({}, [
           react.h1({'key': 'functionComponentTestLabel'}, ['Function Component Tests']),
           react.h2({'key': 'useStateTestLabel'}, ['useState & useEffect Hook Test']),
           hookTestFunctionComponent({
             'key': 'useStateTest',
           }, []),
-          react.br({'key': 'br'}),
+          react.br({'key': 'br1'}),
           react.h2({'key': 'useCallbackTestLabel'}, ['useCallback Hook Test']),
           useCallbackTestFunctionComponent({
             'key': 'useCallbackTest',
           }, []),
           newContextProviderComponent({
-            'key': 'provider'
+            'key': 'provider',
           }, [
             useContextTestFunctionComponent({
               'key': 'useContextTest',
@@ -208,13 +213,13 @@ void main() {
           useRefTestFunctionComponent({
             'key': 'useRefTest',
           }, []),
-          react.br({}),
-          react.br({}),
+          react.br({'key': 'br2'}),
+          react.br({'key': 'br3'}),
           useRefTestFunctionComponent2({
             'key': 'useRefTest2',
           }, []),
-          react.br({}),
-          react.br({}),
+          react.br({'key': 'br4'}),
+          react.br({'key': 'br5'}),
           useRefTestFunctionComponent3({
             'key': 'useRefTest3',
           }, []),

@@ -8,6 +8,7 @@ import 'dart:html';
 import "package:js/js.dart";
 import 'package:react/hooks.dart';
 import 'package:react/react.dart' as react;
+import 'package:react/react.dart';
 import 'package:react/react_client.dart';
 import 'package:react/react_dom.dart' as react_dom;
 import 'package:react/react_test_utils.dart' as react_test_utils;
@@ -258,26 +259,6 @@ main() {
         });
       });
     });
-  });
-}
-
-ReactDartComponentFactoryProxy2 ContextProviderWrapper = react.registerComponent(() => new _ContextProviderWrapper());
-
-class _ContextProviderWrapper extends react.Component2 {
-  get initialState {
-    return {'counter': 1};
-  }
-
-  increment() {
-    this.setState({'counter': state['counter'] + 1});
-  }
-
-  render() {
-    return react.div({}, [
-      props['contextToUse']
-          .Provider({'value': props['mode'] == 'increment' ? state['counter'] : props['value']}, props['children'])
-    ]);
-  }
 
     group('useEffect -', () {
       ReactDartFunctionComponentFactoryProxy UseEffectTest;
@@ -445,4 +426,23 @@ class _ContextProviderWrapper extends react.Component2 {
       });
     });
   });
+}
+
+ReactDartComponentFactoryProxy2 ContextProviderWrapper = react.registerComponent(() => new _ContextProviderWrapper());
+
+class _ContextProviderWrapper extends react.Component2 {
+  get initialState {
+    return {'counter': 1};
+  }
+
+  increment() {
+    this.setState({'counter': state['counter'] + 1});
+  }
+
+  render() {
+    return react.div({}, [
+      props['contextToUse']
+          .Provider({'value': props['mode'] == 'increment' ? state['counter'] : props['value']}, props['children'])
+    ]);
+  }
 }

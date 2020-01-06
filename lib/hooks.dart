@@ -216,7 +216,4 @@ void useEffect(dynamic Function() sideEffect, [List<Object> dependencies]) {
   }
 }
 
-
-
-
 Ref useRef([dynamic initialValue]) => React.useRef(initialValue);
