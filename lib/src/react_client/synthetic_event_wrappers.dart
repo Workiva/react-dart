@@ -52,7 +52,7 @@ class SyntheticKeyboardEvent extends SyntheticEvent {
 @JS()
 @anonymous
 class SyntheticCompositionEvent extends SyntheticEvent {
-  external get data;
+  external String get data;
 }
 
 @JS()

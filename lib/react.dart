@@ -1578,7 +1578,7 @@ class SyntheticKeyboardEvent extends SyntheticEvent {
 }
 
 class SyntheticCompositionEvent extends SyntheticEvent {
-  final data;
+  final String data;
 
   SyntheticCompositionEvent(
     bool bubbles,
