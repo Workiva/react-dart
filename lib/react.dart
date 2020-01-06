@@ -668,43 +668,55 @@ abstract class Component2 implements Component {
   /// See: <https://facebook.github.io/react/docs/react-component.html#mounting-componentdidmount>
   void componentDidMount() {}
 
-  /// ReactJS lifecycle method that is invoked before rendering on initial mount and on subsequent updates when [nextProps] is received.
+  /// ReactJS lifecycle method that is invoked before rendering when new props ([nextProps]) are received.
   ///
-  /// It should return an object to update the state, or null to update nothing (this is different from componentWillRecieveProps).
+  /// It should return a new `Map` that will be merged into the existing component [state],
+  /// or `null` to do nothing.
   ///
-  /// [prevState] will be null when this lifcecyle method is called before first mount.
+  /// __Important Caveats:__
   ///
-  /// This method is also effectively static, so using instance members like [props] or `ref` will not work.
+  /// * __Unlike [componentWillReceiveProps], this method is called before first mount, and re-renders.__
   ///
-  /// Deriving state from props should be used with caution since it can lead to more verbose implementations and less approachable by others.
+  /// * __[prevState] will be `null`__ when this lifecycle method is called before first mount.
+  ///   If you need to make use of [prevState], be sure to make your logic null-aware to avoid runtime exceptions.
   ///
-  /// See: <https://reactjs.org/docs/react-component.html#static-getderivedstatefromprops>
+  /// * __This method is effectively `static`__ _(since it is static in the JS layer)_,
+  ///   so using instance members like [props], [state] or `ref` __will not work.__
+  ///
+  ///   This is different than the [componentWillReceiveProps] method that it effectively replaces.
+  ///
+  ///   If your logic requires access to instance members - consider using [getSnapshotBeforeUpdate] instead.
   ///
   /// __Example__:
   ///
   ///     @override
   ///     getDerivedStateFromProps(Map nextProps, Map prevState) {
-  ///       if (prevState.someMirroredValue != nextProps.someValue) {
+  ///       if (prevState['someMirroredValue'] != nextProps['someValue']) {
   ///         return {
-  ///           derivedData: computeDerivedState(nextProps),
   ///           someMirroredValue: nextProps.someValue
   ///         };
   ///       }
   ///       return null;
   ///     }
   ///
+  /// > Deriving state from props should be used with caution since it can lead to more verbose implementations
+  ///   that are less approachable by others.
+  /// >
+  /// > [Consider recommended alternative solutions first!](https://reactjs.org/blog/2018/06/07/you-probably-dont-need-derived-state.html#preferred-solutions)
+  ///
+  /// See: <https://reactjs.org/docs/react-component.html#static-getderivedstatefromprops>
   Map getDerivedStateFromProps(Map nextProps, Map prevState) => null;
 
-  /// ReactJS lifecycle method that is invoked before rendering when [nextProps] or [nextState] are being received.
+  /// ReactJS lifecycle method that is invoked before rendering when [nextProps] and/or [nextState] are being received.
   ///
   /// Use this as an opportunity to return `false` when you're certain that the transition to the new props and state
   /// will not require a component update.
   ///
-  /// See: <https://facebook.github.io/react/docs/react-component.html#updating-shouldcomponentupdate>
+  /// See: <https://reactjs.org/docs/react-component.html#shouldcomponentupdate>
   bool shouldComponentUpdate(Map nextProps, Map nextState) => true;
 
-  /// ReactJS lifecycle method that is invoked immediately after rendering
-  /// before [nextProps] and [nextState] are committed to the DOM.
+  /// ReactJS lifecycle method that is invoked immediately after re-rendering
+  /// when new props and/or state values are committed.
   ///
   /// This method is not called for the initial [render].
   ///
@@ -712,28 +724,29 @@ abstract class Component2 implements Component {
   ///
   /// __Example__:
   ///
-  ///     getSnapshotBeforeUpdate(prevProps, prevState) {
-  ///
+  ///     @override
+  ///     getSnapshotBeforeUpdate(Map prevProps, Map prevState) {
   ///       // Previous props / state can be analyzed and compared to this.props or
   ///       // this.state, allowing the opportunity perform decision logic.
   ///       // Are we adding new items to the list?
   ///       // Capture the scroll position so we can adjust scroll later.
   ///
   ///       if (prevProps.list.length < props.list.length) {
-  ///
   ///         // The return value from getSnapshotBeforeUpdate is passed into
   ///         // componentDidUpdate's third parameter (which is new to React 16).
   ///
   ///         final list = _listRef;
   ///         return list.scrollHeight - list.scrollTop;
   ///       }
+  ///
   ///       return null;
   ///     }
   ///
-  ///     componentDidUpdate(prevProps, prevState, snapshot) {
+  ///     @override
+  ///     componentDidUpdate(Map prevProps, Map prevState, dynamic snapshot) {
   ///       // If we have a snapshot value, we've just added new items.
-  ///       // Adjust scroll so these new items don't push the old ones out of
-  ///       // view.
+  ///       // Adjust scroll so these new items don't push the old ones out of view.
+  ///       //
   ///       // (snapshot here is the value returned from getSnapshotBeforeUpdate)
   ///       if (snapshot !== null) {
   ///         final list = _listRef;
@@ -741,7 +754,7 @@ abstract class Component2 implements Component {
   ///       }
   ///     }
   ///
-  /// See: <https://facebook.github.io/react/docs/react-component.html#getsnapshotbeforeupdate>
+  /// See: <https://reactjs.org/docs/react-component.html#getsnapshotbeforeupdate>
   dynamic getSnapshotBeforeUpdate(Map prevProps, Map prevState) {}
 
   /// ReactJS lifecycle method that is invoked immediately after the `Component`'s updates are flushed to the DOM.
@@ -751,12 +764,12 @@ abstract class Component2 implements Component {
   /// Use this as an opportunity to operate on the [rootNode] (DOM) when the `Component` has been updated as a result
   /// of the values of [prevProps] / [prevState].
   ///
-  /// __Note__: React 16 added a third parameter to componentDidUpdate, which
-  /// is a custom value returned in [getSnapshotBeforeUpdate]. If a specified
-  /// value is not returned in getSnapshotBeforeUpdate, the [snapshot]
-  /// parameter in componentDidUpdate will be null.
+  /// __Note__: React 16 added a third parameter to `componentDidUpdate`, which
+  /// is a custom value returned from [getSnapshotBeforeUpdate]. If a
+  /// value is not returned from [getSnapshotBeforeUpdate], the [snapshot]
+  /// parameter in `componentDidUpdate` will be null.
   ///
-  /// See: <https://facebook.github.io/react/docs/react-component.html#updating-componentdidupdate>
+  /// See: <https://reactjs.org/docs/react-component.html#componentdidupdate>
   void componentDidUpdate(Map prevProps, Map prevState, [dynamic snapshot]) {}
 
   /// ReactJS lifecycle method that is invoked immediately before a `Component` is unmounted from the DOM.
@@ -764,33 +777,34 @@ abstract class Component2 implements Component {
   /// Perform any necessary cleanup in this method, such as invalidating timers or cleaning up any DOM [Element]s that
   /// were created in [componentDidMount].
   ///
-  /// See: <https://facebook.github.io/react/docs/react-component.html#unmounting-componentwillunmount>
+  /// See: <https://reactjs.org/docs/react-component.html#componentwillunmount>
   void componentWillUnmount() {}
 
-  /// ReactJS lifecycle method that is invoked after an error is thrown by a
-  /// descendant.
+  /// ReactJS lifecycle method that is invoked after an [error] is thrown by a descendant.
   ///
   /// Use this method primarily for logging errors, but because it takes
   /// place after the commit phase side-effects are permitted.
   ///
   /// __Note__: This method, along with [getDerivedStateFromError] will only
   /// be called if `skipMethods` in [registerComponent2] is overridden with
-  /// a list (which can be empty). Otherwise, in order to prevent every
-  /// component from being an error boundary, [componentDidCatch] and
+  /// a list that includes the names of these methods. Otherwise, in order to prevent every
+  /// component from being an "error boundary", [componentDidCatch] and
   /// [getDerivedStateFromError] will be ignored.
   ///
-  /// See: <https://facebook.github.io/react/docs/react-component.html#componentdidcatch>
+  /// See: <https://reactjs.org/docs/react-component.html#componentdidcatch>
   void componentDidCatch(dynamic error, ReactErrorInfo info) {}
 
-  /// ReactJS lifecycle method that is invoked after an error is thrown by a
-  /// descendant.
+  /// ReactJS lifecycle method that is invoked after an [error] is thrown by a descendant.
   ///
-  /// Use this method to capture the error and update component state after an
-  /// error is thrown.
+  /// Use this method to capture the [error] and update component [state] accordingly by
+  /// returning a new `Map` value that will be merged into the current [state].
+  ///
+  /// __This method is effectively `static`__ _(since it is static in the JS layer)_,
+  /// so using instance members like [props], [state] or `ref` __will not work.__
   ///
   /// __Note__: This method, along with [componentDidCatch] will only
   /// be called if `skipMethods` in [registerComponent2] is overridden with
-  /// a list (which can be empty). Otherwise, in order to prevent every
+  /// a list that includes the names of these methods. Otherwise, in order to prevent every
   /// component from being an error boundary, [componentDidCatch] and
   /// [getDerivedStateFromError] will be ignored.
   ///
@@ -866,12 +880,14 @@ abstract class Component2 implements Component {
   //
   // ******************************************************************************************************************
 
-  /// Deprecated. will be removed when [Component] is removed in the `6.0.0` release.
+  /// Deprecated. Will be removed when [Component] is removed in the `6.0.0` release.
   ///
   /// Replace calls to this method with either:
   ///
   /// - [forceUpdate] (preferred) - forces rerender and bypasses [shouldComponentUpdate]
   /// - `setState({})` - same behavior as this method: causes rerender but goes through [shouldComponentUpdate]
+  ///
+  /// See: <https://reactjs.org/docs/react-component.html#forceupdate>
   @override
   @Deprecated('6.0.0')
   void redraw([SetStateCallback callback]) {
@@ -916,13 +932,7 @@ abstract class Component2 implements Component {
   @Deprecated('6.0.0')
   Map getDefaultProps() => throw _unsupportedLifecycleError('getDefaultProps');
 
-  /// ReactJS lifecycle method that is invoked once, both on the client and server, immediately before the initial
-  /// rendering occurs.
-  ///
-  /// If you call [setState] within this method, [render] will see the updated state and will be executed only once
-  /// despite the [state] value change.
-  ///
-  /// See: <https://facebook.github.io/react/docs/react-component.html#unsafe_componentwillmount>
+  /// ReactJS lifecycle method that is invoked once immediately before the initial rendering occurs.
   ///
   /// > __DEPRECATED - DO NOT USE__
   /// >
@@ -931,49 +941,101 @@ abstract class Component2 implements Component {
   @Deprecated('6.0.0')
   void componentWillMount() => throw _unsupportedLifecycleError('componentWillMount');
 
-  /// ReactJS lifecycle method that is invoked when a `Component` is receiving [newProps].
-  ///
-  /// This method is not called for the initial [render].
-  ///
-  /// Use this as an opportunity to react to a prop transition before [render] is called by updating the [state] using
-  /// [setState]. The old props can be accessed via [props].
-  ///
-  /// Calling [setState] within this function will not trigger an additional [render].
-  ///
-  /// See: <https://facebook.github.io/react/docs/react-component.html#unsafe_componentwillreceiveprops>
+  /// ReactJS lifecycle method that is invoked when a `Component` is receiving new props ([nextProps]).
   ///
   /// > __DEPRECATED - DO NOT USE__
   /// >
-  /// > This will be removed once 6.0.0 releases, switching to [Component2.getDerivedStateFromProps] is the path forward
+  /// > This will be removed along with [Component] in the `6.0.0` release.
   /// >
-  /// > React 16 has deprecated [componentWillReceiveProps] in favor of [getDerivedStateFromProps]
-  /// >
-  /// > This will be completely removed when the JS side of it is slated for removal (ReactJS 17 / react.dart 6.0.0)
+  /// > Depending on your use-case, you should use [getDerivedStateFromProps] or [getSnapshotBeforeUpdate] instead.
+  /// > _(See the examples below if you're not sure which one to use)_
+  ///
+  /// __If you used `componentWillReceiveProps` to update instance [state], use [getDerivedStateFromProps]__
+  ///
+  ///     // Before
+  ///     @override
+  ///     componentWillReceiveProps(Map nextProps) {
+  ///       if (nextProps['someValueUsedToDeriveState'] != props['someValueUsedToDeriveState']) {
+  ///         setState({'someDerivedState': nextProps['someValueUsedToDeriveState']});
+  ///       }
+  ///     }
+  ///
+  ///     // After
+  ///     @override
+  ///     getDerivedStateFromProps(Map nextProps, Map prevState) {
+  ///       // NOTE: Accessing `props` is not allowed here. Change the comparison to utilize `prevState` instead.
+  ///       if (nextProps['someValueUsedToDeriveState'] != prevState['someDerivedState']) {
+  ///         // Return a new Map instead of calling `setState` directly.
+  ///         return {'someDerivedState': nextProps['someValueUsedToDeriveState']};
+  ///       }
+  ///       return null;
+  ///     }
+  ///
+  ///
+  /// __If you did not use `componentWillReceiveProps` to update instance [state], use [getSnapshotBeforeUpdate]__
+  ///
+  ///     // Before
+  ///     @override
+  ///     componentWillReceiveProps(Map nextProps) {
+  ///       if (nextProps['someValue'] > props['someValue']) {
+  ///         _someInstanceField = deriveNewValueFromNewProps(nextProps['someValue']);
+  ///       }
+  ///     }
+  ///
+  ///     // After
+  ///     @override
+  ///     getSnapshotBeforeUpdate(Map prevProps, Map prevState) {
+  ///       // NOTE: Unlike `getDerivedStateFromProps`, accessing `props` is allowed here.
+  ///       // * The reference to `nextProps` from `componentWillReceiveProps` should be updated to `props` here
+  ///       // * The reference to `props` from `componentWillReceiveProps` should be updated to `prevProps`.
+  ///       if (props['someValue'] > prevProps['someValue']) {
+  ///         _someInstanceField = deriveNewValueFromNewProps(props['someValue']);
+  ///       }
+  ///
+  ///       // NOTE: You could also return a `snapshot` value from this method for later use in `componentDidUpdate`.
+  ///     }
   @mustCallSuper
   @Deprecated('6.0.0')
-  void componentWillReceiveProps(Map newProps) => throw _unsupportedLifecycleError('componentWillReceiveProps');
+  void componentWillReceiveProps(Map nextProps) => throw _unsupportedLifecycleError('componentWillReceiveProps');
 
-  /// ReactJS lifecycle method that is invoked immediately before rendering when [nextProps] or [nextState] are being
-  /// received.
-  ///
-  /// This method is not called for the initial [render].
-  ///
-  /// Use this as an opportunity to perform preparation before an update occurs.
-  ///
-  /// __Note__: Choose either this method or [componentWillUpdateWithContext]. They are both called at the same time so
-  /// using both provides no added benefit.
-  ///
-  /// See: <https://facebook.github.io/react/docs/react-component.html#unsafe_componentwillupdate>
+  /// ReactJS lifecycle method that is invoked when a `Component` is receiving
+  /// new props ([nextProps]) and/or state ([nextState]).
   ///
   /// > __DEPRECATED - DO NOT USE__
   /// >
-  /// > Due to the release of getSnapshotBeforeUpdate in ReactJS 16,
-  /// > componentWillUpdate is no longer the method used to check the state
-  /// > and props before a re-render. Additionally, because of the presence
-  /// > of getSnapshotBeforeUpdate, componentWillUpdate will be ignored. Use
-  /// > getSnapshotBeforeUpdate instead.
+  /// > This will be removed along with [Component] in the `6.0.0` release.
   /// >
-  /// > This will be completely removed when the JS side of it is slated for removal (ReactJS 17 / react.dart 6.0.0)
+  /// > Use [getSnapshotBeforeUpdate] instead as shown in the example below.
+  ///
+  ///     // Before
+  ///     @override
+  ///     componentWillUpdate(Map nextProps, Map nextState) {
+  ///       if (nextProps['someValue'] > props['someValue']) {
+  ///         _someInstanceField = deriveNewValueFromNewProps(nextProps['someValue']);
+  ///       }
+  ///
+  ///       if (nextState['someStateValue'] != state['someStateValue']) {
+  ///         triggerSomeOtherActionOutsideOfThisComponent(nextState['someStateValue']);
+  ///       }
+  ///     }
+  ///
+  ///     // After
+  ///     @override
+  ///     getSnapshotBeforeUpdate(Map prevProps, Map prevState) {
+  ///       // * The reference to `nextProps` from `componentWillUpdate` should be updated to `props` here
+  ///       // * The reference to `props` from `componentWillUpdate` should be updated to `prevProps`.
+  ///       if (props['someValue'] > prevProps['someValue']) {
+  ///         _someInstanceField = deriveNewValueFromNewProps(props['someValue']);
+  ///       }
+  ///
+  ///       // * The reference to `nextState` from `componentWillUpdate` should be updated to `state` here
+  ///       // * The reference to `state` from `componentWillUpdate` should be updated to `prevState`.
+  ///       if (state['someStateValue'] != prevState['someStateValue']) {
+  ///         triggerSomeOtherActionOutsideOfThisComponent(state['someStateValue']);
+  ///       }
+  ///
+  ///       // NOTE: You could also return a `snapshot` value from this method for later use in `componentDidUpdate`.
+  ///     }
   @mustCallSuper
   @Deprecated('6.0.0')
   void componentWillUpdate(Map nextProps, Map nextState) => throw _unsupportedLifecycleError('componentWillUpdate');

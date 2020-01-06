@@ -189,3 +189,31 @@ void useEffect(dynamic Function() sideEffect, [List<Object> dependencies]) {
 ///
 /// Learn more: <https://reactjs.org/docs/hooks-reference.html#usecallback>.
 Function useCallback(Function callback, List dependencies) => React.useCallback(allowInterop(callback), dependencies);
+
+/// Returns the value of the nearest [Context.Provider] for the provided [context] object every time that context is
+/// updated.
+///
+/// The usage is similar to that of a [Context.Consumer] in that the return type of [useContext] is dependent upon
+/// the typing of the value passed into [createContext] and [Context.Provider].
+///
+/// > __Note:__ there are two [rules for using Hooks](https://reactjs.org/docs/hooks-rules.html):
+/// >
+/// > * Only call Hooks at the top level.
+/// > * Only call Hooks from inside a [DartFunctionComponent].
+///
+/// __Example__:
+///
+/// ```
+/// Context countContext = createContext(0);
+///
+/// UseCallbackTestComponent(Map props) {
+///   final count = useContext(countContext);
+///
+///   return react.div({}, [
+///     react.div({}, ['The count from context is $count']), // initially renders: 'The count from context is 0'
+///   ]);
+/// }
+/// ```
+///
+/// Learn more: <https://reactjs.org/docs/hooks-reference.html#usecontext>.
+T useContext<T>(Context<T> context) => ContextHelpers.unjsifyNewContext(React.useContext(context.jsThis));

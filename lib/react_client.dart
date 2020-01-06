@@ -13,6 +13,7 @@ import 'dart:js';
 import 'dart:js_util';
 
 import "package:js/js.dart";
+import 'package:meta/meta.dart';
 
 import "package:react/react.dart";
 import 'package:react/react_client/js_interop_helpers.dart';
@@ -59,6 +60,21 @@ dynamic listifyChildren(dynamic children) {
     return children;
   }
 }
+
+/// The zone in which React will call component lifecycle methods.
+///
+/// This can be used to sync a test's zone and React's component zone, ensuring that component prop callbacks and
+/// lifecycle method output all occurs within the same zone as the test.
+///
+/// __Example:__
+///
+///     test('zone test', () {
+///       componentZone = Zone.current;
+///
+///       // ... test your component
+///     }
+@visibleForTesting
+Zone componentZone = Zone.root;
 
 /// Use [ReactDartComponentFactoryProxy2] instead.
 ///
@@ -428,7 +444,8 @@ final ReactDartInteropStatics _dartInteropStatics = (() {
     var props = new UnmodifiableMapView(component.props);
 
     component.transactionalSetStateCallbacks.forEach((callback) {
-      nextState.addAll(callback(nextState, props));
+      final stateUpdates = callback(nextState, props);
+      if (stateUpdates != null) nextState.addAll(stateUpdates);
     });
     component.transactionalSetStateCallbacks.clear();
   }
@@ -524,10 +541,6 @@ final ReactDartInteropStatics _dartInteropStatics = (() {
 })();
 
 abstract class _ReactDartInteropStatics2 {
-  // TODO 3.1.0-wip expose for testing?
-  /// The zone in which all component lifecycle methods are run.
-  static final componentZone = Zone.root;
-
   static void _updatePropsAndStateWithJs(Component2 component, JsMap props, JsMap state) {
     component
       ..props = new JsBackedMap.backedBy(props)
@@ -634,7 +647,9 @@ abstract class _ReactDartInteropStatics2 {
         try {
           throwErrorFromJS(error);
         } catch (e) {
-          return jsBackingMapOrJsCopy(componentStatics.instanceForStaticMethods.getDerivedStateFromError(e));
+          final result = componentStatics.instanceForStaticMethods.getDerivedStateFromError(e);
+          if (result != null) return jsBackingMapOrJsCopy(result);
+          return null;
         }
       });
 
