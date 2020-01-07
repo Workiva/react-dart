@@ -407,6 +407,78 @@ main() {
         });
       });
     });
+
+    group('useRef -', () {
+      var mountNode = new DivElement();
+      ReactDartFunctionComponentFactoryProxy UseRefTest;
+      ButtonElement reRenderButton;
+      var noInitRef;
+      var initRef;
+      var domElementRef;
+      StateHook<int> renderIndex;
+      var refFromUseRef;
+      var refFromCreateRef;
+
+      setUpAll(() {
+        UseRefTest = react.registerFunctionComponent((Map props) {
+          noInitRef = useRef();
+          initRef = useRef(mountNode);
+          domElementRef = useRef();
+
+          renderIndex = useState(1);
+          refFromUseRef = useRef();
+          refFromCreateRef = react.createRef();
+
+          if (refFromUseRef.current == null) {
+            refFromUseRef.current = renderIndex.value;
+          }
+
+          if (refFromCreateRef.current == null) {
+            refFromCreateRef.current = renderIndex.value;
+          }
+
+          return react.Fragment({}, [
+            react.input({'ref': domElementRef}),
+            react.p({}, [renderIndex.value]),
+            react.p({}, [refFromUseRef.current]),
+            react.p({}, [refFromCreateRef.current]),
+            react.button({'ref': (ref) => reRenderButton = ref, 'onClick': (_) => renderIndex.setWithUpdater((prev) => prev + 1)}, ['re-render']),
+          ]);
+        });
+
+        react_dom.render(UseRefTest({}), mountNode);
+      });
+
+      group('correctly initializes a Ref object', () {
+        test('with current property set to null if no initial value given', () {
+          expect(noInitRef is Ref, isTrue);
+          expect(noInitRef.current, null);
+        });
+
+        test('with current property set to the initial value given', () {
+          expect(initRef is Ref, isTrue);
+          expect(initRef.current, mountNode);
+        });
+      });
+
+      group('the returned Ref', () {
+        test('can be attached to elements via the ref attribute', () {
+          expect(domElementRef.current is InputElement, isTrue);
+        });
+
+        test('will persist even after the component re-renders', () {
+          expect(renderIndex.value, 1);
+          expect(refFromUseRef.current, 1, reason: 'Ref object initially created on first render');
+          expect(refFromCreateRef.current, 1);
+
+          react_test_utils.Simulate.click(reRenderButton);
+
+          expect(renderIndex.value, 2);
+          expect(refFromUseRef.current, 1, reason: 'useRef returns the same Ref object on every render for the full lifetime of the component');
+          expect(refFromCreateRef.current, 2, reason: 'compare to createRef which creates a new Ref object on every render');
+        });
+      });
+    });
   });
 }
 
