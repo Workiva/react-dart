@@ -219,6 +219,8 @@ class _ErrorComponent extends react.Component2 {
   }
 }
 
+ReactDartComponentFactoryProxy2 ErrorLifecycleTest =
+    react.registerComponent2(() => new _LifecycleTest(), skipMethods: []);
 ReactDartComponentFactoryProxy2 LifecycleTest = react.registerComponent(() => new _LifecycleTest());
 
 class _LifecycleTest extends react.Component2 with LifecycleTestHelper {
@@ -237,6 +239,34 @@ class _LifecycleTest extends react.Component2 with LifecycleTestHelper {
   void componentDidCatch(error, info) => lifecycleCall('componentDidCatch', arguments: [error, info]);
 
   Map getDerivedStateFromError(error) => lifecycleCall('getDerivedStateFromError', arguments: [error]);
+
+  bool shouldComponentUpdate(nextProps, nextState) => lifecycleCall('shouldComponentUpdate',
+      arguments: [new Map.from(nextProps), new Map.from(nextState)], defaultReturnValue: () => true);
+
+  dynamic render() => lifecycleCall('render', defaultReturnValue: () => react.div({}));
+
+  Map get initialState => lifecycleCall('initialState', defaultReturnValue: () => {});
+
+  Map get defaultProps => lifecycleCall('defaultProps', defaultReturnValue: () => {'defaultProp': 'default'});
+}
+
+ReactDartComponentFactoryProxy2 NoGetDerivedStateFromErrorLifecycleTest =
+    react.registerComponent2(() => new _NoGetDerivedStateFromErrorLifecycleTest(), skipMethods: []);
+
+class _NoGetDerivedStateFromErrorLifecycleTest extends react.Component2 with LifecycleTestHelper {
+  void componentDidMount() => lifecycleCall('componentDidMount');
+  void componentWillUnmount() => lifecycleCall('componentWillUnmount');
+
+  Map getDerivedStateFromProps(nextProps, prevState) => lifecycleCall('getDerivedStateFromProps',
+      arguments: [new Map.from(nextProps), new Map.from(prevState)], staticProps: nextProps);
+
+  dynamic getSnapshotBeforeUpdate(prevProps, prevState) =>
+      lifecycleCall('getSnapshotBeforeUpdate', arguments: [new Map.from(prevProps), new Map.from(prevState)]);
+
+  void componentDidUpdate(prevProps, prevState, [snapshot]) =>
+      lifecycleCall('componentDidUpdate', arguments: [new Map.from(prevProps), new Map.from(prevState), snapshot]);
+
+  void componentDidCatch(error, info) => lifecycleCall('componentDidCatch', arguments: [error, info]);
 
   bool shouldComponentUpdate(nextProps, nextState) => lifecycleCall('shouldComponentUpdate',
       arguments: [new Map.from(nextProps), new Map.from(nextState)], defaultReturnValue: () => true);

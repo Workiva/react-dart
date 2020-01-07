@@ -126,12 +126,14 @@ StateHook<T> useStateLazy<T>(T init()) => StateHook.lazy(init);
 ///       evenOdd.set('odd');
 ///     }
 ///     return () {
-///       print('count is changing...');
+///       print('count is changing... do some cleanup if you need to');
 ///     };
+///
+///     // This dependency prevents the effect from running every time [evenOdd.value] changes.
 ///   }, [count.value]);
 ///
 ///   return react.div({}, [
-///     react.p({}, [count.value.toString() + ' is ' + evenOdd.value.toString()]),
+///     react.p({}, ['${count.value} is ${evenOdd.value}']),
 ///     react.button({'onClick': (_) => count.set(count.value + 1)}, ['+']),
 ///   ]);
 /// }
@@ -139,20 +141,84 @@ StateHook<T> useStateLazy<T>(T init()) => StateHook.lazy(init);
 ///
 /// See: <https://reactjs.org/docs/hooks-effect.html#tip-optimizing-performance-by-skipping-effects>.
 void useEffect(dynamic Function() sideEffect, [List<Object> dependencies]) {
-  var finalSideEffect = allowInterop(() {
+  var wrappedSideEffect = allowInterop(() {
     var result = sideEffect();
     if (result is Function) {
       return allowInterop(result);
     }
-    return null;
+
+    /// When no cleanup function is returned, [sideEffect] returns undefined.
+    return jsUndefined;
   });
 
   if (dependencies != null) {
-    return React.useEffect(finalSideEffect, dependencies);
+    return React.useEffect(wrappedSideEffect, dependencies);
   } else {
-    return React.useEffect(finalSideEffect);
+    return React.useEffect(wrappedSideEffect);
   }
 }
+
+/// Returns a memoized version of [callback] that only changes if one of the [dependencies] has changed.
+///
+/// > __Note:__ there are two [rules for using Hooks](https://reactjs.org/docs/hooks-rules.html):
+/// >
+/// > * Only call Hooks at the top level.
+/// > * Only call Hooks from inside a [DartFunctionComponent].
+///
+/// __Example__:
+///
+/// ```
+/// UseCallbackTestComponent(Map props) {
+///   final count = useState(0);
+///   final delta = useState(1);
+///
+///   var increment = useCallback((_) {
+///     count.setWithUpdater((prev) => prev + delta.value);
+///   }, [delta.value]);
+///
+///   var incrementDelta = useCallback((_) {
+///     delta.setWithUpdater((prev) => prev + 1);
+///   }, []);
+///
+///   return react.div({}, [
+///     react.div({}, ['Delta is ${delta.value}']),
+///     react.div({}, ['Count is ${count.value}']),
+///     react.button({'onClick': increment}, ['Increment count']),
+///     react.button({'onClick': incrementDelta}, ['Increment delta']),
+///   ]);
+/// }
+/// ```
+///
+/// Learn more: <https://reactjs.org/docs/hooks-reference.html#usecallback>.
+Function useCallback(Function callback, List dependencies) => React.useCallback(allowInterop(callback), dependencies);
+
+/// Returns the value of the nearest [Context.Provider] for the provided [context] object every time that context is
+/// updated.
+///
+/// The usage is similar to that of a [Context.Consumer] in that the return type of [useContext] is dependent upon
+/// the typing of the value passed into [createContext] and [Context.Provider].
+///
+/// > __Note:__ there are two [rules for using Hooks](https://reactjs.org/docs/hooks-rules.html):
+/// >
+/// > * Only call Hooks at the top level.
+/// > * Only call Hooks from inside a [DartFunctionComponent].
+///
+/// __Example__:
+///
+/// ```
+/// Context countContext = createContext(0);
+///
+/// UseCallbackTestComponent(Map props) {
+///   final count = useContext(countContext);
+///
+///   return react.div({}, [
+///     react.div({}, ['The count from context is $count']), // initially renders: 'The count from context is 0'
+///   ]);
+/// }
+/// ```
+///
+/// Learn more: <https://reactjs.org/docs/hooks-reference.html#usecontext>.
+T useContext<T>(Context<T> context) => ContextHelpers.unjsifyNewContext(React.useContext(context.jsThis));
 
 dynamic useDebugValue<T>(T value, [dynamic Function(T) format]) {
   if (format != null) {
