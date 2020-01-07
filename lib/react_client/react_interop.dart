@@ -13,6 +13,7 @@ import 'dart:html';
 import 'package:js/js.dart';
 import 'package:js/js_util.dart';
 import 'package:meta/meta.dart';
+import 'package:react/hooks.dart';
 import 'package:react/react.dart';
 import 'package:react/react_client.dart' show ComponentFactory, ReactJsComponentFactoryProxy;
 import 'package:react/react_client/bridge.dart';
@@ -50,7 +51,7 @@ abstract class React {
   external static void useEffect(dynamic Function() sideEffect, [List<Object> dependencies]);
   external static Function useCallback(Function callback, List dependencies);
   external static ReactContext useContext(ReactContext context);
-  external static Ref useRef([dynamic initialValue]);
+  external static JsRef useRef([dynamic initialValue]);
 }
 
 /// Creates a [Ref] object that can be attached to a [ReactElement] via the ref prop.
@@ -82,6 +83,11 @@ class Ref<T> {
 
   Ref() : jsRef = React.createRef();
 
+  /// Constructor for [useRef], calls [React.useRef] to initialize [current] to [initialValue].
+  ///
+  /// See: <https://reactjs.org/docs/hooks-reference.html#useref>.
+  Ref.useRefInit(dynamic initialValue) : jsRef = React.useRef(initialValue);
+
   Ref.fromJs(this.jsRef);
 
   /// A reference to the latest instance of the rendered component.
@@ -100,6 +106,8 @@ class Ref<T> {
     return jsCurrent;
   }
 
+  /// Sets the value of [current].
+  ///
   /// See: <https://reactjs.org/docs/hooks-faq.html#is-there-something-like-instance-variables>.
   set current(dynamic value) => jsRef.current = value;
 }

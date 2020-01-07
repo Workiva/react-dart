@@ -230,5 +230,22 @@ T useContext<T>(Context<T> context) => ContextHelpers.unjsifyNewContext(React.us
 /// > * Only call Hooks at the top level.
 /// > * Only call Hooks from inside a [DartFunctionComponent].
 ///
+/// __Example__:
+///
+/// ```
+/// UseRefTestComponent(Map props) {
+///   final inputElement = useRef();
+///
+///   onButtonClick(_) {
+///     inputElement.current.focus();
+///   }
+///
+///   return react.Fragment({}, [
+///     react.input({'ref': inputElement}),
+///     react.button({'onClick': onButtonClick}, ['Focus the input']),
+///   ]);
+/// }
+/// ```
+///
 /// Learn more: <https://reactjs.org/docs/hooks-reference.html#useref>.
-Ref useRef([dynamic initialValue]) => React.useRef(initialValue);
+Ref useRef([dynamic initialValue]) => new Ref.useRefInit(initialValue);
