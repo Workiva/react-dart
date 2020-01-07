@@ -442,7 +442,12 @@ main() {
             react.p({}, [renderIndex.value]),
             react.p({}, [refFromUseRef.current]),
             react.p({}, [refFromCreateRef.current]),
-            react.button({'ref': (ref) => reRenderButton = ref, 'onClick': (_) => renderIndex.setWithUpdater((prev) => prev + 1)}, ['re-render']),
+            react.button({
+              'ref': (ref) => reRenderButton = ref,
+              'onClick': (_) => renderIndex.setWithUpdater((prev) => prev + 1)
+            }, [
+              're-render'
+            ]),
           ]);
         });
 
@@ -474,8 +479,10 @@ main() {
           react_test_utils.Simulate.click(reRenderButton);
 
           expect(renderIndex.value, 2);
-          expect(refFromUseRef.current, 1, reason: 'useRef returns the same Ref object on every render for the full lifetime of the component');
-          expect(refFromCreateRef.current, 2, reason: 'compare to createRef which creates a new Ref object on every render');
+          expect(refFromUseRef.current, 1,
+              reason: 'useRef returns the same Ref object on every render for the full lifetime of the component');
+          expect(refFromCreateRef.current, 2,
+              reason: 'compare to createRef which creates a new Ref object on every render');
         });
       });
     });

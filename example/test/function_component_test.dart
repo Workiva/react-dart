@@ -128,11 +128,7 @@ UseRefTestComponent(Map props) {
   });
 
   return react.Fragment({}, [
-    react.p({
-      'key': 'urtKey1'
-    }, [
-      'Current Input: ${input.value}, Previous Input: ${prevInput}'
-    ]),
+    react.p({'key': 'urtKey1'}, ['Current Input: ${input.value}, Previous Input: ${prevInput}']),
     react.input({'key': 'urtKey2', 'ref': inputRef}),
     react.button({'key': 'urtKey3', 'onClick': (_) => input.set(inputRef.current.value)}, ['Update']),
   ]);
