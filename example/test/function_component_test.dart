@@ -37,7 +37,8 @@ HookTestComponent(Map props) {
 }
 
 final ChatAPI = {
-  'subscribeToFriendStatus': (int id, Function handleStatusChange) => handleStatusChange({'isOnline': id % 2 == 0 ? true : false}),
+  'subscribeToFriendStatus': (int id, Function handleStatusChange) =>
+      handleStatusChange({'isOnline': id % 2 == 0 ? true : false}),
   'unsubscribeFromFriendStatus': (int id, Function handleStatusChange) => handleStatusChange({'isOnline': false}),
 };
 
@@ -47,7 +48,7 @@ StateHook useFriendStatus(friendID) {
   void handleStatusChange(Map status) {
     isOnline.set(status['isOnline']);
   }
-  
+
   useEffect(() {
     ChatAPI['subscribeToFriendStatus'](friendID, handleStatusChange);
     return () {
@@ -65,7 +66,11 @@ var FriendListItem = react.registerFunctionComponent(_friendListItem, displayNam
 _friendListItem(Map props) {
   final isOnline = useFriendStatus(props['friend']['id']);
 
-  return react.li({'style': {'color': isOnline.value ? 'green' : 'black'}}, [props['friend']['name']]);
+  return react.li({
+    'style': {'color': isOnline.value ? 'green' : 'black'}
+  }, [
+    props['friend']['name']
+  ]);
 }
 
 void main() {
@@ -80,10 +85,18 @@ void main() {
             'key': 'useStateTest',
           }, []),
           react.h2({'key': 'useDebugValueTestLabel'}, ['useDebugValue Hook Test']),
-          FriendListItem({'friend': {'id': 1, 'name': 'user 1'}}, []),
-          FriendListItem({'friend': {'id': 2, 'name': 'user 2'}}, []),
-          FriendListItem({'friend': {'id': 3, 'name': 'user 3'}}, []),
-          FriendListItem({'friend': {'id': 4, 'name': 'user 4'}}, []),
+          FriendListItem({
+            'friend': {'id': 1, 'name': 'user 1'}
+          }, []),
+          FriendListItem({
+            'friend': {'id': 2, 'name': 'user 2'}
+          }, []),
+          FriendListItem({
+            'friend': {'id': 3, 'name': 'user 3'}
+          }, []),
+          FriendListItem({
+            'friend': {'id': 4, 'name': 'user 4'}
+          }, []),
         ]),
         querySelector('#content'));
   }
