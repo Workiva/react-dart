@@ -118,72 +118,23 @@ class _NewContextProviderComponent extends react.Component2 {
 var useRefTestFunctionComponent = react.registerFunctionComponent(UseRefTestComponent, displayName: 'useRefTest');
 
 UseRefTestComponent(Map props) {
-  final inputElement = useRef(null);
-
-  onButtonClick(_) {
-    inputElement.current.focus();
-  }
-
-  return react.Fragment({}, [
-    react.input({'key': 'urt1a', 'ref': inputElement}),
-    react.button({'key': 'urt1b', 'onClick': onButtonClick}, ['Focus the input']),
-  ]);
-}
-
-var useRefTestFunctionComponent2 = react.registerFunctionComponent(UseRefTestComponent2, displayName: 'useRefTest2');
-
-UseRefTestComponent2(Map props) {
-  final count = useState(0);
-  final prevCountRef = useRef();
+  final input = useState('');
+  final inputRef = useRef();
+  final prevInputRef = useRef();
+  final prevInput = prevInputRef.current;
 
   useEffect(() {
-    prevCountRef.current = count.value;
+    prevInputRef.current = input.value;
   });
 
-  final prevCount = prevCountRef.current;
-
   return react.Fragment({}, [
     react.p({
-      'key': 'urt2a',
+      'key': 'urtKey1'
     }, [
-      'Now: ${count.value}, before: ${prevCount}'
+      'Current Input: ${input.value}, Previous Input: ${prevInput}'
     ]),
-    react.button({'key': 'urt2b', 'onClick': (_) => count.setWithUpdater((prev) => prev + 1)}, ['+']),
-  ]);
-}
-
-var useRefTestFunctionComponent3 = react.registerFunctionComponent(UseRefTestComponent3, displayName: 'useRefTest3');
-
-UseRefTestComponent3(Map props) {
-  final renderIndex = useState(1);
-  final refFromUseRef = useRef();
-  final refFromCreateRef = react.createRef();
-
-  if (refFromUseRef.current == null) {
-    refFromUseRef.current = renderIndex.value;
-  }
-
-  if (refFromCreateRef.current == null) {
-    refFromCreateRef.current = renderIndex.value;
-  }
-
-  return react.Fragment({}, [
-    react.p({
-      'key': 'urt3a',
-    }, [
-      'Current render index: ${renderIndex.value}'
-    ]),
-    react.p({
-      'key': 'urt3b',
-    }, [
-      'refFromUseRef value: ${refFromUseRef.current}'
-    ]),
-    react.p({
-      'key': 'urt3c',
-    }, [
-      'refFromCreateRef value: ${refFromCreateRef.current}'
-    ]),
-    react.button({'key': 'urt3d', 'onClick': (_) => renderIndex.setWithUpdater((prev) => prev + 1)}, ['re-render']),
+    react.input({'key': 'urtKey2', 'ref': inputRef}),
+    react.button({'key': 'urtKey3', 'onClick': (_) => input.set(inputRef.current.value)}, ['Update']),
   ]);
 }
 
@@ -213,16 +164,6 @@ void main() {
           react.h2({'key': 'useRefTestLabel'}, ['useRef Hook Test']),
           useRefTestFunctionComponent({
             'key': 'useRefTest',
-          }, []),
-          react.br({'key': 'br2'}),
-          react.br({'key': 'br3'}),
-          useRefTestFunctionComponent2({
-            'key': 'useRefTest2',
-          }, []),
-          react.br({'key': 'br4'}),
-          react.br({'key': 'br5'}),
-          useRefTestFunctionComponent3({
-            'key': 'useRefTest3',
           }, []),
         ]),
         querySelector('#content'));

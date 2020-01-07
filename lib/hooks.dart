@@ -220,10 +220,12 @@ Function useCallback(Function callback, List dependencies) => React.useCallback(
 /// Learn more: <https://reactjs.org/docs/hooks-reference.html#usecontext>.
 T useContext<T>(Context<T> context) => ContextHelpers.unjsifyNewContext(React.useContext(context.jsThis));
 
-/// Returns a mutable [Ref] object that will persist for the full lifetime of the component.
+/// Returns a mutable [Ref] object with [Ref.current] property initialized to [initialValue].
 ///
-/// The [Ref.current] property is initialized to [initialValue] and does not cause a re-render of
-/// the containing [DartFunctionComponent] when updated.
+/// Changes to the [Ref.current] property do not cause the containing [DartFunctionComponent] to re-render.
+///
+/// The returned [Ref] object will persist for the full lifetime of the [DartFunctionComponent].
+/// Compare to [createRef] which returns a new [Ref] object on each render.
 ///
 /// > __Note:__ there are two [rules for using Hooks](https://reactjs.org/docs/hooks-rules.html):
 /// >
@@ -234,15 +236,19 @@ T useContext<T>(Context<T> context) => ContextHelpers.unjsifyNewContext(React.us
 ///
 /// ```
 /// UseRefTestComponent(Map props) {
-///   final inputElement = useRef();
+///   final input = useState('');
+///   final inputRef = useRef();
+///   final prevInputRef = useRef();
+///   final prevInput = prevInputRef.current;
 ///
-///   onButtonClick(_) {
-///     inputElement.current.focus();
-///   }
+///   useEffect(() {
+///     prevInputRef.current = input.value;
+///   });
 ///
 ///   return react.Fragment({}, [
-///     react.input({'ref': inputElement}),
-///     react.button({'onClick': onButtonClick}, ['Focus the input']),
+///     react.p({}, ['Current Input: ${input.value}, Previous Input: ${prevInput}']),
+///     react.input({'ref': inputRef}),
+///     react.button({'onClick': (_) => input.set(inputRef.current.value)}, ['Update']),
 ///   ]);
 /// }
 /// ```
