@@ -87,7 +87,7 @@ class Ref<T> {
   /// Constructor for [useRef], calls [React.useRef] to initialize [current] to [initialValue].
   ///
   /// See: <https://reactjs.org/docs/hooks-reference.html#useref>.
-  Ref.useRefInit(dynamic initialValue) : jsRef = React.useRef(initialValue);
+  Ref.useRefInit(T initialValue) : jsRef = React.useRef(initialValue);
 
   Ref.fromJs(this.jsRef);
 
@@ -110,7 +110,7 @@ class Ref<T> {
   /// Sets the value of [current].
   ///
   /// See: <https://reactjs.org/docs/hooks-faq.html#is-there-something-like-instance-variables>.
-  set current(dynamic value) => jsRef.current = value;
+  set current(T value) => jsRef.current = value;
 }
 
 /// A JS ref object returned by [React.createRef].

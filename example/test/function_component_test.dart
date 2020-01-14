@@ -167,19 +167,19 @@ class _NewContextProviderComponent extends react.Component2 {
 var useRefTestFunctionComponent = react.registerFunctionComponent(UseRefTestComponent, displayName: 'useRefTest');
 
 UseRefTestComponent(Map props) {
-  final input = useState('');
-  final inputRef = useRef();
-  final prevInputRef = useRef();
-  final prevInput = prevInputRef.current;
+  final inputValue = useState('');
+
+  final inputRef = useRef<InputElement>();
+  final prevInputValueRef = useRef<String>();
 
   useEffect(() {
-    prevInputRef.current = input.value;
+    prevInputValueRef.current = inputValue.value;
   });
 
   return react.Fragment({}, [
-    react.p({'key': 'urtKey1'}, ['Current Input: ${input.value}, Previous Input: ${prevInput}']),
+    react.p({'key': 'urtKey1'}, ['Current Input: ${inputValue.value}, Previous Input: ${prevInputValueRef.current}']),
     react.input({'key': 'urtKey2', 'ref': inputRef}),
-    react.button({'key': 'urtKey3', 'onClick': (_) => input.set(inputRef.current.value)}, ['Update']),
+    react.button({'key': 'urtKey3', 'onClick': (_) => inputValue.set(inputRef.current.value)}, ['Update']),
   ]);
 }
 

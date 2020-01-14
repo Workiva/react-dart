@@ -377,22 +377,22 @@ T useContext<T>(Context<T> context) => ContextHelpers.unjsifyNewContext(React.us
 ///
 /// ```
 /// UseRefTestComponent(Map props) {
-///   final input = useState('');
-///   final inputRef = useRef();
-///   final prevInputRef = useRef();
-///   final prevInput = prevInputRef.current;
+///   final inputValue = useState('');
+///
+///   final inputRef = useRef<InputElement>();
+///   final prevInputValueRef = useRef<String>();
 ///
 ///   useEffect(() {
-///     prevInputRef.current = input.value;
+///     prevInputValueRef.current = inputValue.value;
 ///   });
 ///
 ///   return react.Fragment({}, [
-///     react.p({}, ['Current Input: ${input.value}, Previous Input: ${prevInput}']),
+///     react.p({}, ['Current Input: ${inputValue.value}, Previous Input: ${prevInputValueRef.current}']),
 ///     react.input({'ref': inputRef}),
-///     react.button({'onClick': (_) => input.set(inputRef.current.value)}, ['Update']),
+///     react.button({'onClick': (_) => inputValue.set(inputRef.current.value)}, ['Update']),
 ///   ]);
 /// }
 /// ```
 ///
 /// Learn more: <https://reactjs.org/docs/hooks-reference.html#useref>.
-Ref useRef([dynamic initialValue]) => new Ref.useRefInit(initialValue);
+Ref<T> useRef<T>([T initialValue]) => Ref.useRefInit(initialValue);

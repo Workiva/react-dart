@@ -636,19 +636,19 @@ main() {
 
       group('correctly initializes a Ref object', () {
         test('with current property set to null if no initial value given', () {
-          expect(noInitRef is Ref, isTrue);
+          expect(noInitRef, isA<Ref>());
           expect(noInitRef.current, null);
         });
 
         test('with current property set to the initial value given', () {
-          expect(initRef is Ref, isTrue);
+          expect(initRef, isA<Ref>());
           expect(initRef.current, mountNode);
         });
       });
 
       group('the returned Ref', () {
         test('can be attached to elements via the ref attribute', () {
-          expect(domElementRef.current is InputElement, isTrue);
+          expect(domElementRef.current, isA<InputElement>());
         });
 
         test('will persist even after the component re-renders', () {
