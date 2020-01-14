@@ -257,4 +257,4 @@ T useContext<T>(Context<T> context) => ContextHelpers.unjsifyNewContext(React.us
 Ref useRef([dynamic initialValue]) => new Ref.useRefInit(initialValue);
 
 void useImperativeHandle(Ref ref, Function() createHandle, [List dependencies]) =>
-    ref.useImperativeHandle(allowInterop(createHandle), dependencies);
+    React.useImperativeHandle(ref.jsRef, allowInterop(createHandle), dependencies);

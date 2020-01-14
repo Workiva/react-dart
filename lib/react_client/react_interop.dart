@@ -91,9 +91,6 @@ class Ref<T> {
 
   Ref.fromJs(this.jsRef);
 
-  void useImperativeHandle(createHandle, [dependencies]) =>
-      React.useImperativeHandle(jsRef, createHandle, dependencies);
-
   /// A reference to the latest instance of the rendered component.
   ///
   /// See [createRef] for usage examples and more info.
