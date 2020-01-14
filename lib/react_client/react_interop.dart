@@ -38,17 +38,18 @@ abstract class React {
   @Deprecated('6.0.0')
   external static ReactClass createClass(ReactClassConfig reactClassConfig);
   external static ReactJsComponentFactory createFactory(type);
-
   external static ReactElement createElement(dynamic type, props, [dynamic children]);
-
-  external static bool isValidElement(dynamic object);
-  external static ReactClass get Fragment;
-
   external static JsRef createRef();
   external static ReactClass forwardRef(Function(JsMap props, JsRef ref) wrapperFunction);
 
+  external static bool isValidElement(dynamic object);
+
+  external static ReactClass get StrictMode;
+  external static ReactClass get Fragment;
+
   external static List<dynamic> useState(dynamic value);
   external static void useEffect(dynamic Function() sideEffect, [List<Object> dependencies]);
+  external static List<dynamic> useReducer(Function reducer, dynamic initialState, [Function init]);
   external static Function useCallback(Function callback, List dependencies);
   external static ReactContext useContext(ReactContext context);
   external static JsRef useRef([dynamic initialValue]);
@@ -87,7 +88,7 @@ class Ref<T> {
   /// Constructor for [useRef], calls [React.useRef] to initialize [current] to [initialValue].
   ///
   /// See: <https://reactjs.org/docs/hooks-reference.html#useref>.
-  Ref.useRefInit(dynamic initialValue) : jsRef = React.useRef(initialValue);
+  Ref.useRefInit(T initialValue) : jsRef = React.useRef(initialValue);
 
   Ref.fromJs(this.jsRef);
 
@@ -110,7 +111,7 @@ class Ref<T> {
   /// Sets the value of [current].
   ///
   /// See: <https://reactjs.org/docs/hooks-faq.html#is-there-something-like-instance-variables>.
-  set current(dynamic value) => jsRef.current = value;
+  set current(T value) => jsRef.current = value;
 }
 
 /// A JS ref object returned by [React.createRef].

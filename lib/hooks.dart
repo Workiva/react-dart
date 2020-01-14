@@ -158,6 +158,147 @@ void useEffect(dynamic Function() sideEffect, [List<Object> dependencies]) {
   }
 }
 
+/// The return value of [useReducer].
+///
+/// The current state is available via [state] and action dispatcher is available via [dispatch].
+///
+/// > __Note:__ there are two [rules for using Hooks](https://reactjs.org/docs/hooks-rules.html):
+/// >
+/// > * Only call Hooks at the top level.
+/// > * Only call Hooks from inside a [DartFunctionComponent].
+///
+/// Learn more: <https://reactjs.org/docs/hooks-reference.html#usereducer>.
+class ReducerHook<TState, TAction, TInit> {
+  /// The first item of the pair returned by [React.userReducer].
+  TState _state;
+
+  /// The second item in the pair returned by [React.userReducer].
+  void Function(TAction) _dispatch;
+
+  ReducerHook(TState Function(TState state, TAction action) reducer, TState initialState) {
+    final result = React.useReducer(allowInterop(reducer), initialState);
+    _state = result[0];
+    _dispatch = result[1];
+  }
+
+  /// Constructor for [useReducerLazy], calls lazy version of [React.useReducer] to
+  /// initialize [_state] to the return value of [init(initialArg)].
+  ///
+  /// See: <https://reactjs.org/docs/hooks-reference.html#lazy-initialization>.
+  ReducerHook.lazy(
+      TState Function(TState state, TAction action) reducer, TInit initialArg, TState Function(TInit) init) {
+    final result = React.useReducer(allowInterop(reducer), initialArg, allowInterop(init));
+    _state = result[0];
+    _dispatch = result[1];
+  }
+
+  /// The current state map of the component.
+  ///
+  /// See: <https://reactjs.org/docs/hooks-reference.html#usereducer>.
+  TState get state => _state;
+
+  /// Dispatches [action] and triggers stage changes.
+  ///
+  /// > __Note:__ The dispatch function identity is stable and will not change on re-renders.
+  ///
+  /// See: <https://reactjs.org/docs/hooks-reference.html#usereducer>.
+  void dispatch(TAction action) => _dispatch(action);
+}
+
+/// Initializes state of a [DartFunctionComponent] to [initialState] and creates [dispatch] method.
+///
+/// __Example__:
+///
+/// ```
+/// Map reducer(Map state, Map action) {
+///   switch (action['type']) {
+///     case 'increment':
+///       return {...state, 'count': state['count'] + 1};
+///     case 'decrement':
+///       return {...state, 'count': state['count'] - 1};
+///     default:
+///       return state;
+///   }
+/// }
+///
+/// UseReducerTestComponent(Map props) {
+///   final state = useReducer(reducer, {'count': 0});
+///
+///   return react.Fragment({}, [
+///     state.state['count'],
+///     react.button({
+///       'onClick': (_) => state.dispatch({'type': 'increment'})
+///     }, [
+///       '+'
+///     ]),
+///     react.button({
+///       'onClick': (_) => state.dispatch({'type': 'decrement'})
+///     }, [
+///       '-'
+///     ]),
+///   ]);
+/// }
+/// ```
+///
+/// Learn more: <https://reactjs.org/docs/hooks-reference.html#usereducer>.
+ReducerHook<TState, TAction, TInit> useReducer<TState, TAction, TInit>(
+        TState Function(TState state, TAction action) reducer, TState initialState) =>
+    ReducerHook(reducer, initialState);
+
+/// Initializes state of a [DartFunctionComponent] to [init(initialArg)] and creates [dispatch] method.
+///
+/// __Example__:
+///
+/// ```
+/// Map initializeCount(int initialValue) {
+///   return {'count': initialValue};
+/// }
+///
+/// Map reducer(Map state, Map action) {
+///   switch (action['type']) {
+///     case 'increment':
+///       return {...state, 'count': state['count'] + 1};
+///     case 'decrement':
+///       return {...state, 'count': state['count'] - 1};
+///     case 'reset':
+///       return initializeCount(action['payload']);
+///     default:
+///       return state;
+///   }
+/// }
+///
+/// UseReducerTestComponent(Map props) {
+///   final ReducerHook<Map, Map, int> state = useReducerLazy(reducer, props['initialCount'], initializeCount);
+///
+///   return react.Fragment({}, [
+///     state.state['count'],
+///     react.button({
+///       'onClick': (_) => state.dispatch({'type': 'increment'})
+///     }, [
+///       '+'
+///     ]),
+///     react.button({
+///       'onClick': (_) => state.dispatch({'type': 'decrement'})
+///     }, [
+///       '-'
+///     ]),
+///     react.button({
+///       'onClick': (_) => state.dispatch({
+///         'type': 'reset',
+///         'payload': props['initialCount'],
+///       })
+///     }, [
+///       'reset'
+///     ]),
+///   ]);
+/// }
+/// ```
+///
+/// Learn more: <https://reactjs.org/docs/hooks-reference.html#lazy-initialization>.
+ReducerHook<TState, TAction, TInit> useReducerLazy<TState, TAction, TInit>(
+        TState Function(TState state, TAction action) reducer, TInit initialArg, TState Function(TInit) init) =>
+    ReducerHook.lazy(reducer, initialArg, init);
+
 /// Returns a memoized version of [callback] that only changes if one of the [dependencies] has changed.
 ///
 /// > __Note:__ there are two [rules for using Hooks](https://reactjs.org/docs/hooks-rules.html):
@@ -236,25 +377,25 @@ T useContext<T>(Context<T> context) => ContextHelpers.unjsifyNewContext(React.us
 ///
 /// ```
 /// UseRefTestComponent(Map props) {
-///   final input = useState('');
-///   final inputRef = useRef();
-///   final prevInputRef = useRef();
-///   final prevInput = prevInputRef.current;
+///   final inputValue = useState('');
+///
+///   final inputRef = useRef<InputElement>();
+///   final prevInputValueRef = useRef<String>();
 ///
 ///   useEffect(() {
-///     prevInputRef.current = input.value;
+///     prevInputValueRef.current = inputValue.value;
 ///   });
 ///
 ///   return react.Fragment({}, [
-///     react.p({}, ['Current Input: ${input.value}, Previous Input: ${prevInput}']),
+///     react.p({}, ['Current Input: ${inputValue.value}, Previous Input: ${prevInputValueRef.current}']),
 ///     react.input({'ref': inputRef}),
-///     react.button({'onClick': (_) => input.set(inputRef.current.value)}, ['Update']),
+///     react.button({'onClick': (_) => inputValue.set(inputRef.current.value)}, ['Update']),
 ///   ]);
 /// }
 /// ```
 ///
 /// Learn more: <https://reactjs.org/docs/hooks-reference.html#useref>.
-Ref useRef([dynamic initialValue]) => new Ref.useRefInit(initialValue);
+Ref<T> useRef<T>([T initialValue]) => Ref.useRefInit(initialValue);
 
 void useImperativeHandle(Ref ref, Function() createHandle, [List dependencies]) =>
     React.useImperativeHandle(ref.jsRef, allowInterop(createHandle), dependencies);

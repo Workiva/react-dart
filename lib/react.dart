@@ -46,6 +46,13 @@ typedef ReactDartFunctionComponentFactoryProxy FunctionComponentRegistrar(DartFu
 /// See: <https://reactjs.org/docs/fragments.html>
 var Fragment = ReactJsComponentFactoryProxy(React.Fragment);
 
+/// StrictMode is a tool for highlighting potential problems in an application.
+///
+/// StrictMode does not render any visible UI. It activates additional checks and warnings for its descendants.
+///
+/// See: <https://reactjs.org/docs/strict-mode.html>
+var StrictMode = ReactJsComponentFactoryProxy(React.StrictMode);
+
 /// Top-level ReactJS [Component class](https://facebook.github.io/react/docs/react-component.html)
 /// which provides the [ReactJS Component API](https://facebook.github.io/react/docs/react-component.html#reference)
 ///
