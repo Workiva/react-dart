@@ -216,15 +216,14 @@ UseImperativeHandleTestComponent(Map props) {
   var stateEl = useRef();
 
   validate(_) {
-    final alphanumeric = RegExp(r'^[a-zA-Z]+$');
-    if (!alphanumeric.hasMatch(city.value)) {
+    if (!RegExp(r'^[a-zA-Z]+$').hasMatch(city.value)) {
       message.set('Invalid form!');
       error.set('city');
       cityEl.current['focus']();
       return;
     }
 
-    if (!alphanumeric.hasMatch(state.value)) {
+    if (!RegExp(r'^[a-zA-Z]+$').hasMatch(state.value)) {
       message.set('Invalid form!');
       error.set('state');
       stateEl.current['focus']();
@@ -236,8 +235,8 @@ UseImperativeHandleTestComponent(Map props) {
   }
 
   return react.Fragment({}, [
-    react.h1({}, ['useImperitiveHandle Example']),
     FancyInput({
+      'key': 'fancyInput1',
       'hasError': error.value == 'city',
       'placeholder': 'City',
       'value': city.value,
@@ -245,14 +244,15 @@ UseImperativeHandleTestComponent(Map props) {
       'ref': cityEl,
     }, []),
     FancyInput({
+      'key': 'fancyInput2',
       'hasError': error.value == 'state',
       'placeholder': 'State',
       'value': state.value,
       'update': state.set,
       'ref': stateEl,
     }, []),
-    react.button({'onClick': validate}, ['Validate Form']),
-    react.p({}, [message.value]),
+    react.button({'key': 'button1', 'onClick': validate}, ['Validate Form']),
+    react.p({'key': 'p1'}, [message.value]),
   ]);
 }
 

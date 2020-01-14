@@ -397,5 +397,54 @@ T useContext<T>(Context<T> context) => ContextHelpers.unjsifyNewContext(React.us
 /// Learn more: <https://reactjs.org/docs/hooks-reference.html#useref>.
 Ref<T> useRef<T>([T initialValue]) => Ref.useRefInit(initialValue);
 
+/// Customizes the instance value that is exposed to parent components when using [Ref].
+///
+/// Intended for use with [forwardRef]. In most cases, imperative code using refs should be avoided.
+///
+/// > __Note:__ there are two [rules for using Hooks](https://reactjs.org/docs/hooks-rules.html):
+/// >
+/// > * Only call Hooks at the top level.
+/// > * Only call Hooks from inside a [DartFunctionComponent].
+///
+/// __Example__:
+///
+/// ```
+/// var FancyInput = react.forwardRef((props, ref) {
+///   var inputRef = useRef<InputElement>();
+///
+///   useImperativeHandle(
+///     ref,
+///     () => ({
+///       'focus': () {
+///         inputRef.current.focus();
+///       }
+///     }),
+///   );
+///
+///   return react.input({
+///     'ref': inputRef,
+///     'value': props['value'],
+///     'onChange': (e) => props['update'](e.target.value),
+///     'placeholder': props['placeholder'],
+///   });
+/// });
+///
+/// UseImperativeHandleTestComponent(Map props) {
+///   var inputValue = useState('');
+///   var fancyInputRef = useRef();
+///
+///   return react.Fragment({}, [
+///     FancyInput({
+///       'placeholder': 'Type here...',
+///       'value': inputValue.value,
+///       'update': inputValue.set,
+///       'ref': fancyInputRef,
+///     }, []),
+///     react.button({'onClick': (_) => fancyInputRef.current['focus']()}, ['Focus Input']),
+///   ]);
+/// }
+/// ```
+///
+/// Learn more: <https://reactjs.org/docs/hooks-reference.html#useimperativehandle>.
 void useImperativeHandle(Ref ref, Function() createHandle, [List dependencies]) =>
     React.useImperativeHandle(ref.jsRef, allowInterop(createHandle), dependencies);
