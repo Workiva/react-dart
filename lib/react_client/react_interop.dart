@@ -47,6 +47,7 @@ abstract class React {
   external static ReactClass get Fragment;
 
   external static List<dynamic> useState(dynamic value);
+  external static void useEffect(dynamic Function() sideEffect, [List<Object> dependencies]);
   external static Function useCallback(Function callback, List dependencies);
   external static ReactContext useContext(ReactContext context);
 }
@@ -487,6 +488,11 @@ class JsError {
 /// Use this if dart2js is possibly converting Dart `null` into `undefined`.
 @JS('_jsNull')
 external get jsNull;
+
+/// A JS variable that can be used with Dart interop in order to force returning a JavaScript `undefined`.
+/// Use this if dart2js is possibly converting Dart `undefined` into `null`.
+@JS('_jsUndefined')
+external get jsUndefined;
 
 /// Throws the error passed to it from Javascript.
 /// This allows us to catch the error in dart which re-dartifies the js errors/exceptions.

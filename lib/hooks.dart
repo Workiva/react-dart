@@ -102,6 +102,62 @@ StateHook<T> useState<T>(T initialValue) => StateHook(initialValue);
 /// Learn more: <https://reactjs.org/docs/hooks-reference.html#lazy-initial-state>.
 StateHook<T> useStateLazy<T>(T init()) => StateHook.lazy(init);
 
+/// Runs [sideEffect] after every completed render of a [DartFunctionComponent].
+///
+/// If [dependencies] are given, [sideEffect] will only run if one of the [dependencies] have changed.
+/// [sideEffect] may return a cleanup function that is run before the component unmounts or re-renders.
+///
+/// > __Note:__ there are two [rules for using Hooks](https://reactjs.org/docs/hooks-rules.html):
+/// >
+/// > * Only call Hooks at the top level.
+/// > * Only call Hooks from inside a [DartFunctionComponent].
+///
+/// __Example__:
+///
+/// ```
+/// UseEffectTestComponent(Map props) {
+///   final count = useState(1);
+///   final evenOdd = useState('even');
+///
+///   useEffect(() {
+///     if (count.value % 2 == 0) {
+///       evenOdd.set('even');
+///     } else {
+///       evenOdd.set('odd');
+///     }
+///     return () {
+///       print('count is changing... do some cleanup if you need to');
+///     };
+///
+///     // This dependency prevents the effect from running every time [evenOdd.value] changes.
+///   }, [count.value]);
+///
+///   return react.div({}, [
+///     react.p({}, ['${count.value} is ${evenOdd.value}']),
+///     react.button({'onClick': (_) => count.set(count.value + 1)}, ['+']),
+///   ]);
+/// }
+/// ```
+///
+/// See: <https://reactjs.org/docs/hooks-effect.html#tip-optimizing-performance-by-skipping-effects>.
+void useEffect(dynamic Function() sideEffect, [List<Object> dependencies]) {
+  var wrappedSideEffect = allowInterop(() {
+    var result = sideEffect();
+    if (result is Function) {
+      return allowInterop(result);
+    }
+
+    /// When no cleanup function is returned, [sideEffect] returns undefined.
+    return jsUndefined;
+  });
+
+  if (dependencies != null) {
+    return React.useEffect(wrappedSideEffect, dependencies);
+  } else {
+    return React.useEffect(wrappedSideEffect);
+  }
+}
+
 /// Returns a memoized version of [callback] that only changes if one of the [dependencies] has changed.
 ///
 /// > __Note:__ there are two [rules for using Hooks](https://reactjs.org/docs/hooks-rules.html):

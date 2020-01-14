@@ -5,15 +5,32 @@ import 'package:react/react.dart' as react;
 import 'package:react/react_dom.dart' as react_dom;
 import 'package:react/react_client.dart';
 
-var useStateTestFunctionComponent = react.registerFunctionComponent(UseStateTestComponent, displayName: 'useStateTest');
+var hookTestFunctionComponent = react.registerFunctionComponent(HookTestComponent, displayName: 'useStateTest');
 
-UseStateTestComponent(Map props) {
-  final count = useState(0);
+HookTestComponent(Map props) {
+  final count = useState(1);
+  final evenOdd = useState('even');
+
+  useEffect(() {
+    if (count.value % 2 == 0) {
+      print('count changed to ' + count.value.toString());
+      evenOdd.set('even');
+    } else {
+      print('count changed to ' + count.value.toString());
+      evenOdd.set('odd');
+    }
+    return () {
+      print('count is changing... do some cleanup if you need to');
+    };
+
+    /// This dependency prevents the effect from running every time [evenOdd.value] changes.
+  }, [count.value]);
 
   return react.div({}, [
-    count.value,
-    react.button({'onClick': (_) => count.set(0), 'key': 'ust1'}, ['Reset']),
+    react.button({'onClick': (_) => count.set(1), 'key': 'ust1'}, ['Reset']),
     react.button({'onClick': (_) => count.setWithUpdater((prev) => prev + 1), 'key': 'ust2'}, ['+']),
+    react.br({'key': 'ust3'}),
+    react.p({'key': 'ust4'}, ['${count.value} is ${evenOdd.value}']),
   ]);
 }
 
@@ -107,8 +124,8 @@ void main() {
           'key': 'fctf'
         }, [
           react.h1({'key': 'functionComponentTestLabel'}, ['Function Component Tests']),
-          react.h2({'key': 'useStateTestLabel'}, ['useState Hook Test']),
-          useStateTestFunctionComponent({
+          react.h2({'key': 'useStateTestLabel'}, ['useState & useEffect Hook Test']),
+          hookTestFunctionComponent({
             'key': 'useStateTest',
           }, []),
           react.br({'key': 'br'}),
