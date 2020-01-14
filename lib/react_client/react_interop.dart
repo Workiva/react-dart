@@ -38,17 +38,18 @@ abstract class React {
   @Deprecated('6.0.0')
   external static ReactClass createClass(ReactClassConfig reactClassConfig);
   external static ReactJsComponentFactory createFactory(type);
-
   external static ReactElement createElement(dynamic type, props, [dynamic children]);
-
-  external static bool isValidElement(dynamic object);
-  external static ReactClass get Fragment;
-
   external static JsRef createRef();
   external static ReactClass forwardRef(Function(JsMap props, JsRef ref) wrapperFunction);
 
+  external static bool isValidElement(dynamic object);
+
+  external static ReactClass get StrictMode;
+  external static ReactClass get Fragment;
+
   external static List<dynamic> useState(dynamic value);
   external static void useEffect(dynamic Function() sideEffect, [List<Object> dependencies]);
+  external static List<dynamic> useReducer(Function reducer, dynamic initialState, [Function init]);
   external static Function useCallback(Function callback, List dependencies);
   external static ReactContext useContext(ReactContext context);
   external static JsRef useRef([dynamic initialValue]);
