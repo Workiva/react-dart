@@ -18,3 +18,4 @@ before_script:
 script:
   - pub run build_runner test --release -- -p chrome
   - pub run build_runner test -- -p chrome
+  - dart ./tool/run_consumer_tests.dart --orgName Workiva --repoName over_react --testCmd "pub run dart_dev test -P dartdevc"
