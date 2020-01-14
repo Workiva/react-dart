@@ -48,6 +48,7 @@ abstract class React {
 
   external static List<dynamic> useState(dynamic value);
   external static void useEffect(dynamic Function() sideEffect, [List<Object> dependencies]);
+  external static List<dynamic> useReducer(Function reducer, dynamic initialState, [Function init]);
   external static Function useCallback(Function callback, List dependencies);
   external static ReactContext useContext(ReactContext context);
 }
