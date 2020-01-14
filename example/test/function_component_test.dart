@@ -134,6 +134,78 @@ UseRefTestComponent(Map props) {
   ]);
 }
 
+var ElaborateInput = react.forwardRef((props, ref) {
+  var inputRef = useRef();
+
+  useImperativeHandle(
+      ref,
+      () => ({
+            'focus': () {
+              inputRef.current.focus();
+            }
+          }));
+
+  return react.input({
+    'ref': inputRef,
+    'value': props['value'],
+    'onChange': (e) => props['update'](e.target.value),
+    'placeholder': props['placeholder'],
+    'style': {'borderColor': props['hasError'] ? 'crimson' : '#999'},
+  });
+});
+
+var useImperativeHandleTestFunctionComponent =
+    react.registerFunctionComponent(UseImperativeHandleTestComponent, displayName: 'useImperativeHandleTest');
+
+UseImperativeHandleTestComponent(Map props) {
+  var city = useState('');
+  var state = useState('');
+  var error = useState('');
+  var message = useState('');
+  var cityEl = useRef();
+  var stateEl = useRef();
+
+  validate(_) {
+    final alphanumeric = RegExp(r'^[a-zA-Z]+$');
+    if (!alphanumeric.hasMatch(city.value)) {
+      message.set('Invalid form!');
+      error.set('city');
+      cityEl.current['focus']();
+      return;
+    }
+
+    if (!alphanumeric.hasMatch(state.value)) {
+      message.set('Invalid form!');
+      error.set('state');
+      stateEl.current['focus']();
+      return;
+    }
+
+    error.set('');
+    message.set('Valid form!');
+  }
+
+  return react.Fragment({}, [
+    react.h1({}, ['useImperitiveHandle Example']),
+    ElaborateInput({
+      'hasError': error.value == 'city',
+      'placeholder': 'City',
+      'value': city.value,
+      'update': city.set,
+      'ref': cityEl,
+    }, []),
+    ElaborateInput({
+      'hasError': error.value == 'state',
+      'placeholder': 'State',
+      'value': state.value,
+      'update': state.set,
+      'ref': stateEl,
+    }, []),
+    react.button({'onClick': validate}, ['Validate Form']),
+    react.p({}, [message.value]),
+  ]);
+}
+
 void main() {
   setClientConfiguration();
 
@@ -160,6 +232,10 @@ void main() {
           react.h2({'key': 'useRefTestLabel'}, ['useRef Hook Test']),
           useRefTestFunctionComponent({
             'key': 'useRefTest',
+          }, []),
+          react.h2({'key': 'useImperativeHandleTestLabel'}, ['useImperativeHandle Hook Test']),
+          useImperativeHandleTestFunctionComponent({
+            'key': 'useImperativeHandleTest',
           }, []),
         ]),
         querySelector('#content'));

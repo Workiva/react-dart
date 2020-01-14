@@ -255,3 +255,6 @@ T useContext<T>(Context<T> context) => ContextHelpers.unjsifyNewContext(React.us
 ///
 /// Learn more: <https://reactjs.org/docs/hooks-reference.html#useref>.
 Ref useRef([dynamic initialValue]) => new Ref.useRefInit(initialValue);
+
+void useImperativeHandle(Ref ref, Function() createHandle, [List dependencies]) =>
+    ref.useImperativeHandle(allowInterop(createHandle), dependencies);

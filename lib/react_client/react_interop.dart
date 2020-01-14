@@ -52,6 +52,7 @@ abstract class React {
   external static Function useCallback(Function callback, List dependencies);
   external static ReactContext useContext(ReactContext context);
   external static JsRef useRef([dynamic initialValue]);
+  external static void useImperativeHandle(JsRef ref, Function() createHandle, [List dependencies]);
 }
 
 /// Creates a [Ref] object that can be attached to a [ReactElement] via the ref prop.
@@ -89,6 +90,9 @@ class Ref<T> {
   Ref.useRefInit(dynamic initialValue) : jsRef = React.useRef(initialValue);
 
   Ref.fromJs(this.jsRef);
+
+  void useImperativeHandle(createHandle, [dependencies]) =>
+      React.useImperativeHandle(jsRef, createHandle, dependencies);
 
   /// A reference to the latest instance of the rendered component.
   ///
