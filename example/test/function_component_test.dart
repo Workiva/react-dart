@@ -134,16 +134,17 @@ UseRefTestComponent(Map props) {
   ]);
 }
 
-var ElaborateInput = react.forwardRef((props, ref) {
+var FancyInput = react.forwardRef((props, ref) {
   var inputRef = useRef();
 
   useImperativeHandle(
-      ref,
-      () => ({
-            'focus': () {
-              inputRef.current.focus();
-            }
-          }));
+    ref,
+    () => ({
+      'focus': () {
+        inputRef.current.focus();
+      }
+    }),
+  );
 
   return react.input({
     'ref': inputRef,
@@ -187,14 +188,14 @@ UseImperativeHandleTestComponent(Map props) {
 
   return react.Fragment({}, [
     react.h1({}, ['useImperitiveHandle Example']),
-    ElaborateInput({
+    FancyInput({
       'hasError': error.value == 'city',
       'placeholder': 'City',
       'value': city.value,
       'update': city.set,
       'ref': cityEl,
     }, []),
-    ElaborateInput({
+    FancyInput({
       'hasError': error.value == 'state',
       'placeholder': 'State',
       'value': state.value,
