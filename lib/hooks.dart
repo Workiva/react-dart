@@ -397,9 +397,10 @@ T useContext<T>(Context<T> context) => ContextHelpers.unjsifyNewContext(React.us
 /// Learn more: <https://reactjs.org/docs/hooks-reference.html#useref>.
 Ref<T> useRef<T>([T initialValue]) => Ref.useRefInit(initialValue);
 
-/// Customizes the instance value that is exposed to parent components when using [Ref].
+/// Customizes the [ref] value that is exposed to parent components when using [forwardRef] by setting [ref.current]
+/// to the return value of [createHandle].
 ///
-/// Intended for use with [forwardRef]. In most cases, imperative code using refs should be avoided.
+/// In most cases, imperative code using refs should be avoided.
 ///
 /// > __Note:__ there are two [rules for using Hooks](https://reactjs.org/docs/hooks-rules.html):
 /// >
@@ -409,7 +410,7 @@ Ref<T> useRef<T>([T initialValue]) => Ref.useRefInit(initialValue);
 /// __Example__:
 ///
 /// ```
-/// var FancyInput = react.forwardRef((props, ref) {
+/// var FancyInput = forwardRef((props, ref) {
 ///   var inputRef = useRef<InputElement>();
 ///
 ///   useImperativeHandle(
