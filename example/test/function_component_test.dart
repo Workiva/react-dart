@@ -1,4 +1,5 @@
 import 'dart:html';
+import 'dart:math';
 
 import 'package:react/hooks.dart';
 import 'package:react/react.dart' as react;
@@ -183,6 +184,47 @@ UseRefTestComponent(Map props) {
   ]);
 }
 
+var random = new Random();
+
+var randomUseLayoutEffectTestComponent =
+    react.registerFunctionComponent(RandomUseLayoutEffectTestComponent, displayName: 'randomUseLayoutEffectTest');
+
+RandomUseLayoutEffectTestComponent(Map props) {
+  StateHook<double> value = useState(0);
+
+  useLayoutEffect(() {
+    if (value.value == 0) {
+      value.set(10 + random.nextDouble() * 200);
+    }
+  });
+
+  return react.Fragment({}, [
+    react.h5({'key': 'randULE1'}, ['Example using useLayoutEffect:']),
+    react.div({'key': 'randULE2'}, ['value: ${value.value}']),
+    react.button({'key': 'randULE3','onClick': (_) => value.set(0)}, ['Change Value']),
+    react.br({'key': 'randULE4'}),
+  ]);
+}
+
+var randomUseEffectTestComponent =
+    react.registerFunctionComponent(RandomUseEffectTestComponent, displayName: 'randomUseEffectTest');
+
+RandomUseEffectTestComponent(Map props) {
+  StateHook<double> value = useState(0);
+
+  useEffect(() {
+    if (value.value == 0) {
+      value.set(10 + random.nextDouble() * 200);
+    }
+  });
+
+  return react.Fragment({}, [
+    react.h5({'key': 'randUE1'}, ['Example using useEffect (notice flicker):']),
+    react.div({'key': 'randUE2',}, ['value: ${value.value}']),
+    react.button({'key': 'randUE3','onClick': (_) => value.set(0)}, ['Change Value']),
+  ]);
+}
+
 void main() {
   setClientConfiguration();
 
@@ -217,6 +259,14 @@ void main() {
           react.h2({'key': 'useRefTestLabel'}, ['useRef Hook Test']),
           useRefTestFunctionComponent({
             'key': 'useRefTest',
+          }, []),
+          react.h2({'key': 'useLayoutEffectTestLabel'}, ['useLayoutEffect Hook Test']),
+          randomUseLayoutEffectTestComponent({
+            'key': 'useLayoutEffectTest',
+          }, []),
+          react.br({'key': 'br4'}),
+          randomUseEffectTestComponent({
+            'key': 'useLayoutEffectTest2',
           }, []),
         ]),
         querySelector('#content'));

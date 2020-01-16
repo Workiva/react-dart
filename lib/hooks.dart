@@ -396,3 +396,21 @@ T useContext<T>(Context<T> context) => ContextHelpers.unjsifyNewContext(React.us
 ///
 /// Learn more: <https://reactjs.org/docs/hooks-reference.html#useref>.
 Ref<T> useRef<T>([T initialValue]) => Ref.useRefInit(initialValue);
+
+void useLayoutEffect(dynamic Function() sideEffect, [List<Object> dependencies]) {
+  var wrappedSideEffect = allowInterop(() {
+    var result = sideEffect();
+    if (result is Function) {
+      return allowInterop(result);
+    }
+
+    /// When no cleanup function is returned, [sideEffect] returns undefined.
+    return jsUndefined;
+  });
+
+  if (dependencies != null) {
+    return React.useLayoutEffect(wrappedSideEffect, dependencies);
+  } else {
+    return React.useLayoutEffect(wrappedSideEffect);
+  }
+}
