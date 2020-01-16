@@ -665,8 +665,7 @@ void testEffectHook(Function effectHook) {
     });
 
     test('side effect (with empty dependency list) is not called again', () {
-      expect(useEffectWithEmptyDepsCallCount, 1,
-          reason: 'side effect is only called once for empty dependency list');
+      expect(useEffectWithEmptyDepsCallCount, 1, reason: 'side effect is only called once for empty dependency list');
       expect(useEffectCleanupWithEmptyDepsCallCount, 0, reason: 'component has not been unmounted');
     });
   });

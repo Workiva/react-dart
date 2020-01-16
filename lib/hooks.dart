@@ -393,7 +393,7 @@ T useContext<T>(Context<T> context) => ContextHelpers.unjsifyNewContext(React.us
 /// Learn more: <https://reactjs.org/docs/hooks-reference.html#useref>.
 Ref<T> useRef<T>([T initialValue]) => Ref.useRefInit(initialValue);
 
-/// Runs [sideEffect] synchronously after all DOM mutations, but before the screen is updated.
+/// Runs [sideEffect] synchronously after a [DartFunctionComponent] renders, but before the screen is updated.
 ///
 /// Compare to [useEffect] which runs [sideEffect] after the screen updates.
 /// Prefer the standard [useEffect] when possible to avoid blocking visual updates.
