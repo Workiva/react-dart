@@ -164,14 +164,31 @@ class _NewContextProviderComponent extends react.Component2 {
   }
 }
 
+var useRefTestFunctionComponent = react.registerFunctionComponent(UseRefTestComponent, displayName: 'useRefTest');
+
+UseRefTestComponent(Map props) {
+  final inputValue = useState('');
+
+  final inputRef = useRef<InputElement>();
+  final prevInputValueRef = useRef<String>();
+
+  useEffect(() {
+    prevInputValueRef.current = inputValue.value;
+  });
+
+  return react.Fragment({}, [
+    react.p({'key': 'urtKey1'}, ['Current Input: ${inputValue.value}, Previous Input: ${prevInputValueRef.current}']),
+    react.input({'key': 'urtKey2', 'ref': inputRef}),
+    react.button({'key': 'urtKey3', 'onClick': (_) => inputValue.set(inputRef.current.value)}, ['Update']),
+  ]);
+}
+
 void main() {
   setClientConfiguration();
 
   render() {
     react_dom.render(
-        react.Fragment({
-          'key': 'fctf'
-        }, [
+        react.Fragment({}, [
           react.h1({'key': 'functionComponentTestLabel'}, ['Function Component Tests']),
           react.h2({'key': 'useStateTestLabel'}, ['useState & useEffect Hook Test']),
           hookTestFunctionComponent({
@@ -185,7 +202,7 @@ void main() {
           react.br({'key': 'br2'}),
           react.h2({'key': 'useContextTestLabel'}, ['useContext Hook Test']),
           newContextProviderComponent({
-            'key': 'provider'
+            'key': 'provider',
           }, [
             useContextTestFunctionComponent({
               'key': 'useContextTest',
@@ -196,6 +213,10 @@ void main() {
           useReducerTestFunctionComponent({
             'key': 'useReducerTest',
             'initialCount': 10,
+          }, []),
+          react.h2({'key': 'useRefTestLabel'}, ['useRef Hook Test']),
+          useRefTestFunctionComponent({
+            'key': 'useRefTest',
           }, []),
         ]),
         querySelector('#content'));

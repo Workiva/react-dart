@@ -360,3 +360,39 @@ Function useCallback(Function callback, List dependencies) => React.useCallback(
 ///
 /// Learn more: <https://reactjs.org/docs/hooks-reference.html#usecontext>.
 T useContext<T>(Context<T> context) => ContextHelpers.unjsifyNewContext(React.useContext(context.jsThis));
+
+/// Returns a mutable [Ref] object with [Ref.current] property initialized to [initialValue].
+///
+/// Changes to the [Ref.current] property do not cause the containing [DartFunctionComponent] to re-render.
+///
+/// The returned [Ref] object will persist for the full lifetime of the [DartFunctionComponent].
+/// Compare to [createRef] which returns a new [Ref] object on each render.
+///
+/// > __Note:__ there are two [rules for using Hooks](https://reactjs.org/docs/hooks-rules.html):
+/// >
+/// > * Only call Hooks at the top level.
+/// > * Only call Hooks from inside a [DartFunctionComponent].
+///
+/// __Example__:
+///
+/// ```
+/// UseRefTestComponent(Map props) {
+///   final inputValue = useState('');
+///
+///   final inputRef = useRef<InputElement>();
+///   final prevInputValueRef = useRef<String>();
+///
+///   useEffect(() {
+///     prevInputValueRef.current = inputValue.value;
+///   });
+///
+///   return react.Fragment({}, [
+///     react.p({}, ['Current Input: ${inputValue.value}, Previous Input: ${prevInputValueRef.current}']),
+///     react.input({'ref': inputRef}),
+///     react.button({'onClick': (_) => inputValue.set(inputRef.current.value)}, ['Update']),
+///   ]);
+/// }
+/// ```
+///
+/// Learn more: <https://reactjs.org/docs/hooks-reference.html#useref>.
+Ref<T> useRef<T>([T initialValue]) => Ref.useRefInit(initialValue);
