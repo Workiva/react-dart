@@ -671,15 +671,15 @@ main() {
       var mountNode = new DivElement();
       ReactDartFunctionComponentFactoryProxy UseImperativeHandleTest;
       ButtonElement incrementButton;
-      ButtonElement reRenderButtonRef;
       ButtonElement reRenderButtonRef1;
-      Ref fancyCountRef;
+      ButtonElement reRenderButtonRef2;
+      Ref noDepsRef;
       Ref emptyDepsRef;
       Ref depsRef;
       StateHook<int> count;
 
       setUpAll(() {
-        var FancyCount = react.forwardRef((props, ref) {
+        var NoDepsComponent = react.forwardRef((props, ref) {
           count = useState(0);
 
           useImperativeHandle(
@@ -694,7 +694,7 @@ main() {
           return react.div({'ref': ref}, count.value);
         });
 
-        var NoDepsComponent = react.forwardRef((props, ref) {
+        var EmptyDepsComponent = react.forwardRef((props, ref) {
           var count = useState(0);
 
           useImperativeHandle(ref, () => count.value, []);
@@ -702,7 +702,7 @@ main() {
           return react.Fragment({}, [
             react.div({'ref': ref}, count.value),
             react.button({
-              'ref': (ref) => reRenderButtonRef = ref,
+              'ref': (ref) => reRenderButtonRef1 = ref,
               'onClick': (_) => count.setWithUpdater((prev) => prev + 1),
             }, []),
           ]);
@@ -716,26 +716,26 @@ main() {
           return react.Fragment({}, [
             react.div({'ref': ref}, count.value),
             react.button({
-              'ref': (ref) => reRenderButtonRef1 = ref,
+              'ref': (ref) => reRenderButtonRef2 = ref,
               'onClick': (_) => count.setWithUpdater((prev) => prev + 1),
             }, []),
           ]);
         });
 
         UseImperativeHandleTest = react.registerFunctionComponent((Map props) {
-          fancyCountRef = useRef();
+          noDepsRef = useRef();
           emptyDepsRef = useRef();
           depsRef = useRef();
 
           return react.Fragment({}, [
-            FancyCount({'ref': fancyCountRef}, []),
+            NoDepsComponent({'ref': noDepsRef}, []),
             react.button({
               'ref': (ref) => incrementButton = ref,
-              'onClick': (_) => fancyCountRef.current['increment'](),
+              'onClick': (_) => noDepsRef.current['increment'](),
             }, [
               '+'
             ]),
-            NoDepsComponent({'ref': emptyDepsRef}),
+            EmptyDepsComponent({'ref': emptyDepsRef}),
             DepsComponent({'ref': depsRef}),
           ]);
         });
@@ -744,9 +744,8 @@ main() {
       });
       group('updates `ref.current` to the return value of `createHandle()`', () {
         test('(with no dependency list)', () {
-          expect(fancyCountRef.current, isA<Map>(),
-              reason: 'useImperativeHandle overrides the existing ref.current value');
-          expect(fancyCountRef.current['increment'], isA<Function>());
+          expect(noDepsRef.current, isA<Map>(), reason: 'useImperativeHandle overrides the existing ref.current value');
+          expect(noDepsRef.current['increment'], isA<Function>());
           expect(count.value, 0);
 
           react_test_utils.Simulate.click(incrementButton);
@@ -758,7 +757,7 @@ main() {
               reason: 'useImperativeHandle overrides the existing ref.current value');
           expect(emptyDepsRef.current, 0);
 
-          react_test_utils.Simulate.click(reRenderButtonRef);
+          react_test_utils.Simulate.click(reRenderButtonRef1);
           expect(emptyDepsRef.current, 0,
               reason: 'current value does not update because count.value is not in dependency list');
         });
@@ -767,7 +766,7 @@ main() {
           expect(depsRef.current, isA<int>(), reason: 'useImperativeHandle overrides the existing ref.current value');
           expect(depsRef.current, 0);
 
-          react_test_utils.Simulate.click(reRenderButtonRef1);
+          react_test_utils.Simulate.click(reRenderButtonRef2);
           expect(depsRef.current, 1, reason: 'current value updates because count.value is in dependency list');
         });
       });

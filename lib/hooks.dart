@@ -426,17 +426,15 @@ Ref<T> useRef<T>([T initialValue]) => Ref.useRefInit(initialValue);
 ///     'ref': inputRef,
 ///     'value': props['value'],
 ///     'onChange': (e) => props['update'](e.target.value),
-///     'placeholder': props['placeholder'],
 ///   });
 /// });
 ///
 /// UseImperativeHandleTestComponent(Map props) {
-///   var inputValue = useState('');
-///   var fancyInputRef = useRef();
+///   StateHook<String> inputValue = useState('');
+///   Ref fancyInputRef = useRef();
 ///
 ///   return react.Fragment({}, [
 ///     FancyInput({
-///       'placeholder': 'Type here...',
 ///       'value': inputValue.value,
 ///       'update': inputValue.set,
 ///       'ref': fancyInputRef,

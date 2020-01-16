@@ -212,8 +212,9 @@ UseImperativeHandleTestComponent(Map props) {
   var state = useState('');
   var error = useState('');
   var message = useState('');
-  var cityEl = useRef();
-  var stateEl = useRef();
+
+  Ref cityEl = useRef();
+  Ref stateEl = useRef();
 
   validate(_) {
     if (!RegExp(r'^[a-zA-Z]+$').hasMatch(city.value)) {
