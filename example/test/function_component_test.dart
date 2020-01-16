@@ -199,10 +199,10 @@ RandomUseLayoutEffectTestComponent(Map props) {
   });
 
   return react.Fragment({}, [
-    react.h5({'key': 'randULE1'}, ['Example using useLayoutEffect:']),
-    react.div({'key': 'randULE2'}, ['value: ${value.value}']),
-    react.button({'key': 'randULE3','onClick': (_) => value.set(0)}, ['Change Value']),
-    react.br({'key': 'randULE4'}),
+    react.h5({'key': 'randomUseLayout1'}, ['Example using useLayoutEffect:']),
+    react.div({'key': 'randomUseLayout2'}, ['value: ${value.value}']),
+    react.button({'key': 'randomUseLayout3', 'onClick': (_) => value.set(0)}, ['Change Value']),
+    react.br({'key': 'randomUseLayout4'}),
   ]);
 }
 
@@ -219,9 +219,9 @@ RandomUseEffectTestComponent(Map props) {
   });
 
   return react.Fragment({}, [
-    react.h5({'key': 'randUE1'}, ['Example using useEffect (notice flicker):']),
-    react.div({'key': 'randUE2',}, ['value: ${value.value}']),
-    react.button({'key': 'randUE3','onClick': (_) => value.set(0)}, ['Change Value']),
+    react.h5({'key': 'random1'}, ['Example using useEffect (notice flicker):']),
+    react.div({'key': 'random2'}, ['value: ${value.value}']),
+    react.button({'key': 'random3', 'onClick': (_) => value.set(0)}, ['Change Value']),
   ]);
 }
 
