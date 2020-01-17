@@ -183,15 +183,13 @@ UseRefTestComponent(Map props) {
   ]);
 }
 
-var FancyInput = react.forwardRef((props, ref) {
-  var inputRef = useRef();
+final FancyInput = react.forwardRef((props, ref) {
+  final inputRef = useRef();
 
   useImperativeHandle(
     ref,
     () => ({
-      'focus': () {
-        inputRef.current.focus();
-      }
+      'focus': () => inputRef.current.focus(),
     }),
   );
 
@@ -204,14 +202,14 @@ var FancyInput = react.forwardRef((props, ref) {
   });
 });
 
-var useImperativeHandleTestFunctionComponent =
+final useImperativeHandleTestFunctionComponent =
     react.registerFunctionComponent(UseImperativeHandleTestComponent, displayName: 'useImperativeHandleTest');
 
 UseImperativeHandleTestComponent(Map props) {
-  var city = useState('');
-  var state = useState('');
-  var error = useState('');
-  var message = useState('');
+  final city = useState('');
+  final state = useState('');
+  final error = useState('');
+  final message = useState('');
 
   Ref cityEl = useRef();
   Ref stateEl = useRef();

@@ -742,6 +742,7 @@ main() {
 
         react_dom.render(UseImperativeHandleTest({}), mountNode);
       });
+
       group('updates `ref.current` to the return value of `createHandle()`', () {
         test('(with no dependency list)', () {
           expect(noDepsRef.current, isA<Map>(), reason: 'useImperativeHandle overrides the existing ref.current value');

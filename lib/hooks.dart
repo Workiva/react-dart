@@ -401,6 +401,7 @@ Ref<T> useRef<T>([T initialValue]) => Ref.useRefInit(initialValue);
 /// to the return value of [createHandle].
 ///
 /// In most cases, imperative code using refs should be avoided.
+/// For more information, see <https://reactjs.org/docs/refs-and-the-dom.html#when-to-use-refs>.
 ///
 /// > __Note:__ there are two [rules for using Hooks](https://reactjs.org/docs/hooks-rules.html):
 /// >
@@ -445,5 +446,5 @@ Ref<T> useRef<T>([T initialValue]) => Ref.useRefInit(initialValue);
 /// ```
 ///
 /// Learn more: <https://reactjs.org/docs/hooks-reference.html#useimperativehandle>.
-void useImperativeHandle(Ref ref, Function() createHandle, [List dependencies]) =>
+void useImperativeHandle(Ref ref, dynamic Function() createHandle, [List<dynamic> dependencies]) =>
     React.useImperativeHandle(ref.jsRef, allowInterop(createHandle), dependencies);
