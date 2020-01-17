@@ -184,9 +184,9 @@ UseRefTestComponent(Map props) {
   ]);
 }
 
-var random = new Random();
+final random = new Random();
 
-var randomUseLayoutEffectTestComponent =
+final randomUseLayoutEffectTestComponent =
     react.registerFunctionComponent(RandomUseLayoutEffectTestComponent, displayName: 'randomUseLayoutEffectTest');
 
 RandomUseLayoutEffectTestComponent(Map props) {
@@ -206,7 +206,7 @@ RandomUseLayoutEffectTestComponent(Map props) {
   ]);
 }
 
-var randomUseEffectTestComponent =
+final randomUseEffectTestComponent =
     react.registerFunctionComponent(RandomUseEffectTestComponent, displayName: 'randomUseEffectTest');
 
 RandomUseEffectTestComponent(Map props) {

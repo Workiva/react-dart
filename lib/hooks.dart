@@ -407,8 +407,8 @@ Ref<T> useRef<T>([T initialValue]) => Ref.useRefInit(initialValue);
 ///
 /// ```
 /// UseLayoutEffectTestComponent(Map props) {
-///   var width = useState(0);
-///   var height = useState(0);
+///   final width = useState(0);
+///   final height = useState(0);
 ///
 ///   Ref textareaRef = useRef();
 ///
@@ -427,8 +427,8 @@ Ref<T> useRef<T>([T initialValue]) => Ref.useRefInit(initialValue);
 ///
 /// Learn more: <https://reactjs.org/docs/hooks-reference.html#uselayouteffect>.
 void useLayoutEffect(dynamic Function() sideEffect, [List<Object> dependencies]) {
-  var wrappedSideEffect = allowInterop(() {
-    var result = sideEffect();
+  final wrappedSideEffect = allowInterop(() {
+    final result = sideEffect();
     if (result is Function) {
       return allowInterop(result);
     }
