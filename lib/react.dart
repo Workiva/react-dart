@@ -1451,6 +1451,29 @@ class SyntheticEvent {
   /// See: <https://developer.mozilla.org/en-US/docs/Web/API/Event/stopPropagation>
   final dynamic stopPropagation;
 
+  /// For use by react-dart internals only.
+  @protected
+  void Function() $$jsPersistDoNotSetThisOrYouWillBeFired;
+  bool _isPersistent = false;
+
+  /// Whether the event instance has been removed from the ReactJS event pool.
+  ///
+  /// > See: [persist]
+  bool get isPersistent => _isPersistent;
+
+  /// Call this method on the current event instance if you want to access the event properties in an asynchronous way.
+  ///
+  /// This will remove the synthetic event from the event pool and allow references
+  /// to the event to be retained by user code.
+  ///
+  /// See: <https://reactjs.org/docs/events.html#event-pooling>
+  void persist() {
+    if ($$jsPersistDoNotSetThisOrYouWillBeFired != null) {
+      _isPersistent = true;
+      $$jsPersistDoNotSetThisOrYouWillBeFired();
+    }
+  }
+
   /// Indicates which phase of the [Event] flow is currently being evaluated.
   ///
   /// Possible values:
