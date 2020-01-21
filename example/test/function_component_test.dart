@@ -192,8 +192,9 @@ final FancyInput = react.forwardRef((props, ref) {
       print('FancyInput: useImperativeHandle re-assigns ref.current');
       return {'focus': () => inputRef.current.focus()};
     },
-    // Because the return value of createHandle never changes, it is not necessary for ref.current
-    // to be re-set on each render so this dependency list is empty.
+
+    /// Because the return value of createHandle never changes, it is not necessary for ref.current
+    /// to be re-set on each render so this dependency list is empty.
     [],
   );
 
@@ -271,8 +272,9 @@ final FancyCounter = react.forwardRef((props, ref) {
         'decrement': () => count.setWithUpdater((prev) => prev - props['diff']),
       });
     },
-    // This dependency prevents unnecessary calls of createHandle, by only re-assigning
-    // ref.current when `props['diff']` changes.
+
+    /// This dependency prevents unnecessary calls of createHandle, by only re-assigning
+    /// ref.current when `props['diff']` changes.
     [props['diff']],
   );
 
