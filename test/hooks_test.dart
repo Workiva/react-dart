@@ -519,7 +519,7 @@ main() {
           expect(countRef.text, '3', reason: 'still increments by 1 because delta not in dependency list');
         });
 
-        test('callback stays the same if state not in dependency list', () {
+        test('callback updates if state is in dependency list', () {
           react_test_utils.Simulate.click(incrementWithDepButtonRef);
           expect(countRef.text, '5', reason: 'increments by 2 because delta updated');
         });
@@ -663,6 +663,129 @@ main() {
               reason: 'useRef returns the same Ref object on every render for the full lifetime of the component');
           expect(refFromCreateRef.current, 2,
               reason: 'compare to createRef which creates a new Ref object on every render');
+        });
+      });
+    });
+
+    group('useMemo -', () {
+      ReactDartFunctionComponentFactoryProxy UseMemoTest;
+      ButtonElement reRenderButtonRef;
+      ButtonElement incrementButtonRef;
+      int createFunctionCallCountWithDeps = 0;
+      int createFunctionCallCountNoDeps = 0;
+      int createFunctionCallCountEmptyDeps = 0;
+      int fibWithDep;
+      int fibNoDep;
+      int fibEmptyDep;
+      StateHook<int> num;
+
+      int fibonacci(int n) {
+        if (n <= 1) {
+          return 1;
+        }
+        return fibonacci(n - 1) + fibonacci(n - 2);
+      }
+
+      setUpAll(() {
+        final mountNode = new DivElement();
+
+        UseMemoTest = react.registerFunctionComponent((Map props) {
+          final reRender = useState(0);
+          num = useState(5);
+
+          fibWithDep = useMemo(
+            () {
+              createFunctionCallCountWithDeps++;
+              return fibonacci(num.value);
+            },
+            [num.value],
+          );
+
+          fibNoDep = useMemo(
+            () {
+              createFunctionCallCountNoDeps++;
+              return fibonacci(num.value);
+            },
+          );
+
+          fibEmptyDep = useMemo(
+            () {
+              createFunctionCallCountEmptyDeps++;
+              return fibonacci(num.value);
+            },
+            [],
+          );
+
+          return react.Fragment({}, [
+            react.div({}, ['With Deps: Fibonacci of ${num.value} is $fibWithDep']),
+            react.div({}, ['No Deps: Fibonacci of ${num.value} is $fibNoDep']),
+            react.div({}, ['Empty Deps: Fibonacci of ${num.value} is $fibEmptyDep']),
+            react.button(
+                {'ref': (ref) => incrementButtonRef = ref, 'onClick': (_) => num.setWithUpdater((prev) => prev + 1)},
+                ['+']),
+            react.button({
+              'ref': (ref) => reRenderButtonRef = ref,
+              'onClick': (_) => reRender.setWithUpdater((prev) => prev + 1)
+            }, [
+              're-render'
+            ]),
+          ]);
+        });
+
+        react_dom.render(UseMemoTest({}), mountNode);
+      });
+
+      test('correctly initializes memoized value', () {
+        expect(num.value, 5);
+
+        expect(fibWithDep, 8);
+        expect(fibNoDep, 8);
+        expect(fibEmptyDep, 8);
+
+        expect(createFunctionCallCountWithDeps, 1);
+        expect(createFunctionCallCountNoDeps, 1);
+        expect(createFunctionCallCountEmptyDeps, 1);
+      });
+
+      group('after depending state changes,', () {
+        setUpAll(() {
+          react_test_utils.Simulate.click(incrementButtonRef);
+        });
+
+        test('createFunction does not run if state not in dependency list', () {
+          expect(fibEmptyDep, 8);
+
+          expect(createFunctionCallCountEmptyDeps, 1, reason: 'num.value is not in dependency list');
+        });
+
+        test('createFunction re-runs if state is in dependency list or if there is no dependency list', () {
+          expect(fibWithDep, 13);
+          expect(fibNoDep, 13);
+
+          expect(createFunctionCallCountWithDeps, 2, reason: 'num.value is in dependency list');
+          expect(createFunctionCallCountNoDeps, 2,
+              reason: 'createFunction runs on every render because there is no dependency list');
+        });
+      });
+
+      group('after component re-renders,', () {
+        setUpAll(() {
+          react_test_utils.Simulate.click(reRenderButtonRef);
+        });
+
+        test('createFunction re-runs if there is no dependency list', () {
+          expect(fibNoDep, 13, reason: 'num.value stayed the same so the same value is returned');
+
+          expect(createFunctionCallCountNoDeps, 3,
+              reason: 'createFunction runs on every render because there is no dependency list');
+        });
+
+        test('createFunction does not run if there is a dependency list', () {
+          expect(fibEmptyDep, 8);
+          expect(fibWithDep, 13);
+
+          expect(createFunctionCallCountEmptyDeps, 1, reason: 'no dependency changed');
+          expect(createFunctionCallCountWithDeps, 2, reason: 'no dependency changed');
         });
       });
     });
