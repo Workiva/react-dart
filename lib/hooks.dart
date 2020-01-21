@@ -397,5 +397,35 @@ T useContext<T>(Context<T> context) => ContextHelpers.unjsifyNewContext(React.us
 /// Learn more: <https://reactjs.org/docs/hooks-reference.html#useref>.
 Ref<T> useRef<T>([T initialValue]) => Ref.useRefInit(initialValue);
 
+/// Returns a memoized version of the return value of [createFunction].
+///
+/// If one of the [dependencies] has changed, [createFunction] is run during rendering of the [DartFunctionComponent].
+/// This optimization helps to avoid expensive calculations on every render.
+///
+/// > __Note:__ there are two [rules for using Hooks](https://reactjs.org/docs/hooks-rules.html):
+/// >
+/// > * Only call Hooks at the top level.
+/// > * Only call Hooks from inside a [DartFunctionComponent].
+///
+/// __Example__:
+/// ```
+/// UseMemoTestComponent(Map props) {
+///   final num = useState(0);
+///
+///   final fib = useMemo(
+///     () => fibonacci(num.value),
+///
+///     /// This dependency prevents [fib] from being re-calculated every time the component re-renders.
+///     [num.value],
+///   );
+///
+///   return react.Fragment({}, [
+///     react.div({}, ['Fibonacci of ${num.value} is $fib']),
+///     react.button({'onClick': (_) => num.setWithUpdater((prev) => prev + 1)}, ['+']),
+///   ]);
+/// }
+/// ```
+///
+/// Learn more: <https://reactjs.org/docs/hooks-reference.html#usememo>.
 dynamic useMemo(Function createFunction, [List<dynamic> dependencies]) =>
     React.useMemo(allowInterop(createFunction), dependencies);
