@@ -230,42 +230,6 @@ UseMemoTestComponent2(Map props) {
   ]);
 }
 
-var UseMemoTest = react.registerFunctionComponent((Map props) {
-  final reRender = useState(0);
-  final num = useState(1);
-
-  final fibWithDep = useMemo(
-    () {
-      print('with dep');
-      return fibonacci(num.value);
-    },
-    [num.value],
-  );
-
-  final fibNoDep = useMemo(
-    () {
-      print('without dep');
-      return fibonacci(num.value);
-    },
-  );
-
-  final fibEmptyDep = useMemo(
-    () {
-      print('empty dep');
-      return fibonacci(num.value);
-    },
-    [],
-  );
-
-  return react.Fragment({}, [
-    react.div({}, ['With Deps: Fibonacci of ${num.value} is $fibWithDep']),
-    react.div({}, ['No Deps: Fibonacci of ${num.value} is $fibNoDep']),
-    react.div({}, ['Empty Deps: Fibonacci of ${num.value} is $fibEmptyDep']),
-    react.button({'onClick': (_) => num.setWithUpdater((prev) => prev + 1)}, ['+']),
-    react.button({'onClick': (_) => reRender.setWithUpdater((prev) => prev + 1)}, ['re-render']),
-  ]);
-});
-
 void main() {
   setClientConfiguration();
 
@@ -309,7 +273,7 @@ void main() {
           react.br({'key': 'br4'}),
           react.br({'key': 'br5'}),
           react.h6({'key': 'h62'}, ['Without useMemo (notice calculation done on every render):']),
-          UseMemoTest({
+          useMemoTestFunctionComponent2({
             'key': 'useMemoTest2',
           }, []),
         ]),

@@ -669,15 +669,19 @@ main() {
 
     group('useMemo -', () {
       ReactDartFunctionComponentFactoryProxy UseMemoTest;
+      StateHook<int> num;
       ButtonElement reRenderButtonRef;
       ButtonElement incrementButtonRef;
+
+      // Counts how many times createFunction() is called for each variation of dependencies.
       int createFunctionCallCountWithDeps = 0;
       int createFunctionCallCountNoDeps = 0;
       int createFunctionCallCountEmptyDeps = 0;
-      int fibWithDep;
-      int fibNoDep;
-      int fibEmptyDep;
-      StateHook<int> num;
+
+      // Keeps track of return value of useMemo() for each variation of dependencies.
+      int returnValueWithDep;
+      int returnValueNoDep;
+      int returnValueEmptyDep;
 
       int fibonacci(int n) {
         if (n <= 1) {
@@ -693,7 +697,7 @@ main() {
           final reRender = useState(0);
           num = useState(5);
 
-          fibWithDep = useMemo(
+          returnValueWithDep = useMemo(
             () {
               createFunctionCallCountWithDeps++;
               return fibonacci(num.value);
@@ -701,14 +705,14 @@ main() {
             [num.value],
           );
 
-          fibNoDep = useMemo(
+          returnValueNoDep = useMemo(
             () {
               createFunctionCallCountNoDeps++;
               return fibonacci(num.value);
             },
           );
 
-          fibEmptyDep = useMemo(
+          returnValueEmptyDep = useMemo(
             () {
               createFunctionCallCountEmptyDeps++;
               return fibonacci(num.value);
@@ -717,9 +721,9 @@ main() {
           );
 
           return react.Fragment({}, [
-            react.div({}, ['With Deps: Fibonacci of ${num.value} is $fibWithDep']),
-            react.div({}, ['No Deps: Fibonacci of ${num.value} is $fibNoDep']),
-            react.div({}, ['Empty Deps: Fibonacci of ${num.value} is $fibEmptyDep']),
+            react.div({}, ['With Deps: Fibonacci of ${num.value} is $returnValueWithDep']),
+            react.div({}, ['No Deps: Fibonacci of ${num.value} is $returnValueNoDep']),
+            react.div({}, ['Empty Deps: Fibonacci of ${num.value} is $returnValueEmptyDep']),
             react.button(
                 {'ref': (ref) => incrementButtonRef = ref, 'onClick': (_) => num.setWithUpdater((prev) => prev + 1)},
                 ['+']),
@@ -738,9 +742,9 @@ main() {
       test('correctly initializes memoized value', () {
         expect(num.value, 5);
 
-        expect(fibWithDep, 8);
-        expect(fibNoDep, 8);
-        expect(fibEmptyDep, 8);
+        expect(returnValueWithDep, 8);
+        expect(returnValueNoDep, 8);
+        expect(returnValueEmptyDep, 8);
 
         expect(createFunctionCallCountWithDeps, 1);
         expect(createFunctionCallCountNoDeps, 1);
@@ -753,14 +757,14 @@ main() {
         });
 
         test('createFunction does not run if state not in dependency list', () {
-          expect(fibEmptyDep, 8);
+          expect(returnValueEmptyDep, 8);
 
           expect(createFunctionCallCountEmptyDeps, 1, reason: 'num.value is not in dependency list');
         });
 
         test('createFunction re-runs if state is in dependency list or if there is no dependency list', () {
-          expect(fibWithDep, 13);
-          expect(fibNoDep, 13);
+          expect(returnValueWithDep, 13);
+          expect(returnValueNoDep, 13);
 
           expect(createFunctionCallCountWithDeps, 2, reason: 'num.value is in dependency list');
           expect(createFunctionCallCountNoDeps, 2,
@@ -774,15 +778,15 @@ main() {
         });
 
         test('createFunction re-runs if there is no dependency list', () {
-          expect(fibNoDep, 13, reason: 'num.value stayed the same so the same value is returned');
+          expect(returnValueNoDep, 13, reason: 'num.value stayed the same so the same value is returned');
 
           expect(createFunctionCallCountNoDeps, 3,
               reason: 'createFunction runs on every render because there is no dependency list');
         });
 
         test('createFunction does not run if there is a dependency list', () {
-          expect(fibEmptyDep, 8);
-          expect(fibWithDep, 13);
+          expect(returnValueEmptyDep, 8);
+          expect(returnValueWithDep, 13);
 
           expect(createFunctionCallCountEmptyDeps, 1, reason: 'no dependency changed');
           expect(createFunctionCallCountWithDeps, 2, reason: 'no dependency changed');
