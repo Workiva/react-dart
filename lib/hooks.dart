@@ -396,3 +396,6 @@ T useContext<T>(Context<T> context) => ContextHelpers.unjsifyNewContext(React.us
 ///
 /// Learn more: <https://reactjs.org/docs/hooks-reference.html#useref>.
 Ref<T> useRef<T>([T initialValue]) => Ref.useRefInit(initialValue);
+
+dynamic useMemo(Function createFunction, [List<dynamic> dependencies]) =>
+    React.useMemo(allowInterop(createFunction), dependencies);

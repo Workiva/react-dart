@@ -53,6 +53,7 @@ abstract class React {
   external static Function useCallback(Function callback, List dependencies);
   external static ReactContext useContext(ReactContext context);
   external static JsRef useRef([dynamic initialValue]);
+  external static dynamic useMemo(Function createFunction, [List<dynamic> dependencies]);
 }
 
 /// Creates a [Ref] object that can be attached to a [ReactElement] via the ref prop.
