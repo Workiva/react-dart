@@ -345,12 +345,10 @@ void main() {
             'key': 'useRefTest',
           }, []),
           react.h2({'key': 'useImperativeHandleTestLabel'}, ['useImperativeHandle Hook Test']),
-          useImperativeHandleTestFunctionComponent2({
+          useImperativeHandleTestFunctionComponent({
             'key': 'useImperativeHandleTest',
           }, []),
-          react.br({'key': 'br4'}),
-          react.br({'key': 'br5'}),
-          useImperativeHandleTestFunctionComponent({
+          useImperativeHandleTestFunctionComponent2({
             'key': 'useImperativeHandleTest2',
           }, []),
         ]),
