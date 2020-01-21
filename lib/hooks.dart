@@ -427,5 +427,5 @@ Ref<T> useRef<T>([T initialValue]) => Ref.useRefInit(initialValue);
 /// ```
 ///
 /// Learn more: <https://reactjs.org/docs/hooks-reference.html#usememo>.
-dynamic useMemo(Function createFunction, [List<dynamic> dependencies]) =>
+T useMemo<T>(T Function() createFunction, [List<dynamic> dependencies]) =>
     React.useMemo(allowInterop(createFunction), dependencies);
