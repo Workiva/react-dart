@@ -421,6 +421,9 @@ Ref<T> useRef<T>([T initialValue]) => Ref.useRefInit(initialValue);
 ///         inputRef.current.focus();
 ///       }
 ///     }),
+///     // Because the return value of [createHandle] never changes, it is not necessary for [ref.current]
+///     // to be re-set on each render so this dependency list is empty.
+///     [],
 ///   );
 ///
 ///   return react.input({

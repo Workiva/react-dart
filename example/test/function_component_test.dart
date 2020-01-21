@@ -188,9 +188,13 @@ final FancyInput = react.forwardRef((props, ref) {
 
   useImperativeHandle(
     ref,
-    () => ({
-      'focus': () => inputRef.current.focus(),
-    }),
+    () {
+      print('FancyInput: useImperativeHandle re-assigns ref.current');
+      return {'focus': () => inputRef.current.focus()};
+    },
+    // Because the return value of createHandle never changes, it is not necessary for ref.current
+    // to be re-set on each render so this dependency list is empty.
+    [],
   );
 
   return react.input({
@@ -255,6 +259,56 @@ UseImperativeHandleTestComponent(Map props) {
   ]);
 }
 
+final FancyCounter = react.forwardRef((props, ref) {
+  final count = useState(0);
+
+  useImperativeHandle(
+    ref,
+    () {
+      print('FancyCounter: useImperativeHandle re-assigns ref.current');
+      return ({
+        'increment': () => count.setWithUpdater((prev) => prev + props['diff']),
+        'decrement': () => count.setWithUpdater((prev) => prev - props['diff']),
+      });
+    },
+    // This dependency prevents unnecessary calls of createHandle, by only re-assigning
+    // ref.current when `props['diff']` changes.
+    [props['diff']],
+  );
+
+  return react.div({}, count.value);
+});
+
+final useImperativeHandleTestFunctionComponent2 =
+    react.registerFunctionComponent(UseImperativeHandleTestComponent2, displayName: 'useImperativeHandleTest2');
+
+UseImperativeHandleTestComponent2(Map props) {
+  final diff = useState(1);
+
+  Ref fancyCounterRef = useRef();
+
+  return react.Fragment({}, [
+    FancyCounter({
+      'key': 'fancyCounter1',
+      'diff': diff.value,
+      'ref': fancyCounterRef,
+    }, []),
+    react.button({
+      'key': 'button1',
+      'onClick': (_) => fancyCounterRef.current['increment'](),
+    }, [
+      'Increment by ${diff.value}'
+    ]),
+    react.button({
+      'key': 'button2',
+      'onClick': (_) => fancyCounterRef.current['decrement'](),
+    }, [
+      'Decrement by ${diff.value}'
+    ]),
+    react.button({'key': 'button3', 'onClick': (_) => diff.setWithUpdater((prev) => prev + 1)}, ['+']),
+  ]);
+}
+
 void main() {
   setClientConfiguration();
 
@@ -291,8 +345,13 @@ void main() {
             'key': 'useRefTest',
           }, []),
           react.h2({'key': 'useImperativeHandleTestLabel'}, ['useImperativeHandle Hook Test']),
-          useImperativeHandleTestFunctionComponent({
+          useImperativeHandleTestFunctionComponent2({
             'key': 'useImperativeHandleTest',
+          }, []),
+          react.br({'key': 'br4'}),
+          react.br({'key': 'br5'}),
+          useImperativeHandleTestFunctionComponent({
+            'key': 'useImperativeHandleTest2',
           }, []),
         ]),
         querySelector('#content'));
