@@ -194,21 +194,21 @@ final useMemoTestFunctionComponent = react.registerFunctionComponent(UseMemoTest
 
 UseMemoTestComponent(Map props) {
   final reRender = useState(0);
-  final num = useState(35);
+  final count = useState(35);
 
   final fib = useMemo(
     () {
       print('calculating fibonacci...');
-      return fibonacci(num.value);
+      return fibonacci(count.value);
     },
 
     /// This dependency prevents [fib] from being re-calculated every time the component re-renders.
-    [num.value],
+    [count.value],
   );
 
   return react.Fragment({}, [
-    react.div({'key': 'div'}, ['Fibonacci of ${num.value} is $fib']),
-    react.button({'key': 'button1', 'onClick': (_) => num.setWithUpdater((prev) => prev + 1)}, ['+']),
+    react.div({'key': 'div'}, ['Fibonacci of ${count.value} is $fib']),
+    react.button({'key': 'button1', 'onClick': (_) => count.setWithUpdater((prev) => prev + 1)}, ['+']),
     react.button({'key': 'button2', 'onClick': (_) => reRender.setWithUpdater((prev) => prev + 1)}, ['re-render']),
   ]);
 }
@@ -218,14 +218,14 @@ final useMemoTestFunctionComponent2 =
 
 UseMemoTestComponent2(Map props) {
   final reRender = useState(0);
-  final num = useState(35);
+  final count = useState(35);
 
   print('calculating fibonacci...');
-  final fib = fibonacci(num.value);
+  final fib = fibonacci(count.value);
 
   return react.Fragment({}, [
-    react.div({'key': 'div'}, ['Fibonacci of ${num.value} is ${fib}']),
-    react.button({'key': 'button1', 'onClick': (_) => num.setWithUpdater((prev) => prev + 1)}, ['+']),
+    react.div({'key': 'div'}, ['Fibonacci of ${count.value} is ${fib}']),
+    react.button({'key': 'button1', 'onClick': (_) => count.setWithUpdater((prev) => prev + 1)}, ['+']),
     react.button({'key': 'button2', 'onClick': (_) => reRender.setWithUpdater((prev) => prev + 1)}, ['re-render']),
   ]);
 }

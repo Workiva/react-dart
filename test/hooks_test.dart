@@ -26,7 +26,7 @@ main() {
       ButtonElement setWithUpdaterButtonRef;
 
       setUpAll(() {
-        var mountNode = new DivElement();
+        var mountNode = DivElement();
 
         UseStateTest = react.registerFunctionComponent((Map props) {
           final text = useStateLazy(() {
@@ -105,7 +105,7 @@ main() {
       int useEffectCleanupWithEmptyDepsCallCount;
 
       setUpAll(() {
-        mountNode = new DivElement();
+        mountNode = DivElement();
         useEffectCallCount = 0;
         useEffectCleanupCallCount = 0;
         useEffectWithDepsCallCount = 0;
@@ -268,7 +268,7 @@ main() {
       }
 
       setUpAll(() {
-        var mountNode = new DivElement();
+        var mountNode = DivElement();
 
         UseReducerTest = react.registerFunctionComponent((Map props) {
           final state = useReducer(reducer, {
@@ -362,7 +362,7 @@ main() {
         }
 
         setUpAll(() {
-          var mountNode = new DivElement();
+          var mountNode = DivElement();
 
           UseReducerTest = react.registerFunctionComponent((Map props) {
             final ReducerHook<Map, Map, int> state = useReducerLazy(reducer2, props['initialCount'], initializeCount);
@@ -435,7 +435,7 @@ main() {
       ButtonElement incrementDeltaButtonRef;
 
       setUpAll(() {
-        var mountNode = new DivElement();
+        var mountNode = DivElement();
 
         UseCallbackTest = react.registerFunctionComponent((Map props) {
           final count = useState(0);
@@ -589,7 +589,7 @@ main() {
     });
 
     group('useRef -', () {
-      var mountNode = new DivElement();
+      var mountNode = DivElement();
       ReactDartFunctionComponentFactoryProxy UseRefTest;
       ButtonElement reRenderButton;
       var noInitRef;
@@ -669,7 +669,7 @@ main() {
 
     group('useMemo -', () {
       ReactDartFunctionComponentFactoryProxy UseMemoTest;
-      StateHook<int> num;
+      StateHook<int> count;
       ButtonElement reRenderButtonRef;
       ButtonElement incrementButtonRef;
 
@@ -691,38 +691,38 @@ main() {
       }
 
       setUpAll(() {
-        final mountNode = new DivElement();
+        final mountNode = DivElement();
 
         UseMemoTest = react.registerFunctionComponent((Map props) {
           final reRender = useState(0);
-          num = useState(5);
+          count = useState(5);
 
           returnValueWithDeps = useMemo(
             () {
               createFunctionCallCountWithDeps++;
-              return fibonacci(num.value);
+              return fibonacci(count.value);
             },
-            [num.value],
+            [count.value],
           );
 
           returnValueNoDeps = useMemo(
             () {
               createFunctionCallCountNoDeps++;
-              return fibonacci(num.value);
+              return fibonacci(count.value);
             },
           );
 
           returnValueEmptyDeps = useMemo(
             () {
               createFunctionCallCountEmptyDeps++;
-              return fibonacci(num.value);
+              return fibonacci(count.value);
             },
             [],
           );
 
           return react.Fragment({}, [
             react.button(
-                {'ref': (ref) => incrementButtonRef = ref, 'onClick': (_) => num.setWithUpdater((prev) => prev + 1)},
+                {'ref': (ref) => incrementButtonRef = ref, 'onClick': (_) => count.setWithUpdater((prev) => prev + 1)},
                 ['+']),
             react.button({
               'ref': (ref) => reRenderButtonRef = ref,
@@ -737,7 +737,7 @@ main() {
       });
 
       test('correctly initializes memoized value', () {
-        expect(num.value, 5);
+        expect(count.value, 5);
 
         expect(returnValueWithDeps, 8);
         expect(returnValueNoDeps, 8);
@@ -756,14 +756,14 @@ main() {
         test('createFunction does not run if state not in dependency list', () {
           expect(returnValueEmptyDeps, 8);
 
-          expect(createFunctionCallCountEmptyDeps, 1, reason: 'num.value is not in dependency list');
+          expect(createFunctionCallCountEmptyDeps, 1, reason: 'count.value is not in dependency list');
         });
 
         test('createFunction re-runs if state is in dependency list or if there is no dependency list', () {
           expect(returnValueWithDeps, 13);
           expect(returnValueNoDeps, 13);
 
-          expect(createFunctionCallCountWithDeps, 2, reason: 'num.value is in dependency list');
+          expect(createFunctionCallCountWithDeps, 2, reason: 'count.value is in dependency list');
           expect(createFunctionCallCountNoDeps, 2,
               reason: 'createFunction runs on every render because there is no dependency list');
         });
@@ -775,7 +775,7 @@ main() {
         });
 
         test('createFunction re-runs if there is no dependency list', () {
-          expect(returnValueNoDeps, 13, reason: 'num.value stayed the same so the same value is returned');
+          expect(returnValueNoDeps, 13, reason: 'count.value stayed the same so the same value is returned');
 
           expect(createFunctionCallCountNoDeps, 3,
               reason: 'createFunction runs on every render because there is no dependency list');
