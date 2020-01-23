@@ -13,6 +13,7 @@ import 'dart:html';
 import 'package:js/js.dart';
 import 'package:js/js_util.dart';
 import 'package:meta/meta.dart';
+import 'package:react/hooks.dart';
 import 'package:react/react.dart';
 import 'package:react/react_client.dart' show ComponentFactory, ReactJsComponentFactoryProxy;
 import 'package:react/react_client/bridge.dart';
@@ -37,19 +38,21 @@ abstract class React {
   @Deprecated('6.0.0')
   external static ReactClass createClass(ReactClassConfig reactClassConfig);
   external static ReactJsComponentFactory createFactory(type);
-
   external static ReactElement createElement(dynamic type, props, [dynamic children]);
-
-  external static bool isValidElement(dynamic object);
-  external static ReactClass get Fragment;
-
   external static JsRef createRef();
   external static ReactClass forwardRef(Function(JsMap props, JsRef ref) wrapperFunction);
 
+  external static bool isValidElement(dynamic object);
+
+  external static ReactClass get StrictMode;
+  external static ReactClass get Fragment;
+
   external static List<dynamic> useState(dynamic value);
   external static void useEffect(dynamic Function() sideEffect, [List<Object> dependencies]);
+  external static List<dynamic> useReducer(Function reducer, dynamic initialState, [Function init]);
   external static Function useCallback(Function callback, List dependencies);
   external static ReactContext useContext(ReactContext context);
+  external static JsRef useRef([dynamic initialValue]);
   external static dynamic useDebugValue(dynamic value, [Function format]);
 }
 
@@ -82,6 +85,11 @@ class Ref<T> {
 
   Ref() : jsRef = React.createRef();
 
+  /// Constructor for [useRef], calls [React.useRef] to initialize [current] to [initialValue].
+  ///
+  /// See: <https://reactjs.org/docs/hooks-reference.html#useref>.
+  Ref.useRefInit(T initialValue) : jsRef = React.useRef(initialValue);
+
   Ref.fromJs(this.jsRef);
 
   /// A reference to the latest instance of the rendered component.
@@ -90,8 +98,8 @@ class Ref<T> {
   T get current {
     final jsCurrent = jsRef.current;
 
-    if (jsCurrent is! Element) {
-      final dartCurrent = (jsCurrent as ReactComponent)?.dartComponent;
+    if (jsCurrent is! Element && jsCurrent is ReactComponent) {
+      final dartCurrent = jsCurrent?.dartComponent;
 
       if (dartCurrent != null) {
         return dartCurrent as T;
@@ -99,6 +107,11 @@ class Ref<T> {
     }
     return jsCurrent;
   }
+
+  /// Sets the value of [current].
+  ///
+  /// See: <https://reactjs.org/docs/hooks-faq.html#is-there-something-like-instance-variables>.
+  set current(T value) => jsRef.current = value;
 }
 
 /// A JS ref object returned by [React.createRef].
@@ -109,6 +122,7 @@ class Ref<T> {
 @anonymous
 class JsRef {
   external dynamic get current;
+  external set current(dynamic value);
 }
 
 /// Automatically passes a [Ref] through a component to one of its children.

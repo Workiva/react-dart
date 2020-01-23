@@ -34,6 +34,55 @@ HookTestComponent(Map props) {
   ]);
 }
 
+var useReducerTestFunctionComponent =
+    react.registerFunctionComponent(UseReducerTestComponent, displayName: 'useReducerTest');
+
+Map initializeCount(int initialValue) {
+  return {'count': initialValue};
+}
+
+Map reducer(Map state, Map action) {
+  switch (action['type']) {
+    case 'increment':
+      return {...state, 'count': state['count'] + 1};
+    case 'decrement':
+      return {...state, 'count': state['count'] - 1};
+    case 'reset':
+      return initializeCount(action['payload']);
+    default:
+      return state;
+  }
+}
+
+UseReducerTestComponent(Map props) {
+  final ReducerHook<Map, Map, int> state = useReducerLazy(reducer, props['initialCount'], initializeCount);
+
+  return react.Fragment({}, [
+    state.state['count'],
+    react.button({
+      'key': 'urt1',
+      'onClick': (_) => state.dispatch({'type': 'increment'})
+    }, [
+      '+'
+    ]),
+    react.button({
+      'key': 'urt2',
+      'onClick': (_) => state.dispatch({'type': 'decrement'})
+    }, [
+      '-'
+    ]),
+    react.button({
+      'key': 'urt3',
+      'onClick': (_) => state.dispatch({
+            'type': 'reset',
+            'payload': props['initialCount'],
+          })
+    }, [
+      'reset'
+    ]),
+  ]);
+}
+
 var useCallbackTestFunctionComponent =
     react.registerFunctionComponent(UseCallbackTestComponent, displayName: 'useCallbackTest');
 
@@ -115,6 +164,25 @@ class _NewContextProviderComponent extends react.Component2 {
   }
 }
 
+var useRefTestFunctionComponent = react.registerFunctionComponent(UseRefTestComponent, displayName: 'useRefTest');
+
+UseRefTestComponent(Map props) {
+  final inputValue = useState('');
+
+  final inputRef = useRef<InputElement>();
+  final prevInputValueRef = useRef<String>();
+
+  useEffect(() {
+    prevInputValueRef.current = inputValue.value;
+  });
+
+  return react.Fragment({}, [
+    react.p({'key': 'urtKey1'}, ['Current Input: ${inputValue.value}, Previous Input: ${prevInputValueRef.current}']),
+    react.input({'key': 'urtKey2', 'ref': inputRef}),
+    react.button({'key': 'urtKey3', 'onClick': (_) => inputValue.set(inputRef.current.value)}, ['Update']),
+  ]);
+}
+
 final ChatAPI = {
   'subscribeToFriendStatus': (int id, Function handleStatusChange) =>
       handleStatusChange({'isOnline': id % 2 == 0 ? true : false}),
@@ -168,14 +236,26 @@ void main() {
           useCallbackTestFunctionComponent({
             'key': 'useCallbackTest',
           }, []),
+          react.br({'key': 'br2'}),
+          react.h2({'key': 'useContextTestLabel'}, ['useContext Hook Test']),
           newContextProviderComponent({
-            'key': 'provider'
+            'key': 'provider',
           }, [
             useContextTestFunctionComponent({
               'key': 'useContextTest',
             }, []),
           ]),
-          react.br({'key': 'br2'}),
+          react.br({'key': 'br3'}),
+          react.h2({'key': 'useReducerTestLabel'}, ['useReducer Hook Test']),
+          useReducerTestFunctionComponent({
+            'key': 'useReducerTest',
+            'initialCount': 10,
+          }, []),
+          react.h2({'key': 'useRefTestLabel'}, ['useRef Hook Test']),
+          useRefTestFunctionComponent({
+            'key': 'useRefTest',
+          }, []),
+          react.br({'key': 'br4'}),
           react.h2({'key': 'useDebugValueTestLabel'}, ['useDebugValue Hook Test']),
           FriendListItem({
             'friend': {'id': 1, 'name': 'user 1'}

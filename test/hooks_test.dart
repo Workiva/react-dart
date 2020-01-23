@@ -246,6 +246,186 @@ main() {
       });
     });
 
+    group('useReducer -', () {
+      ReactDartFunctionComponentFactoryProxy UseReducerTest;
+      DivElement textRef;
+      DivElement countRef;
+      ButtonElement addButtonRef;
+      ButtonElement subtractButtonRef;
+      ButtonElement textButtonRef;
+
+      Map reducer(Map state, Map action) {
+        switch (action['type']) {
+          case 'increment':
+            return {...state, 'count': state['count'] + 1};
+          case 'decrement':
+            return {...state, 'count': state['count'] - 1};
+          case 'changeText':
+            return {...state, 'text': action['newText']};
+          default:
+            return state;
+        }
+      }
+
+      setUpAll(() {
+        var mountNode = new DivElement();
+
+        UseReducerTest = react.registerFunctionComponent((Map props) {
+          final state = useReducer(reducer, {
+            'text': 'initialValue',
+            'count': 0,
+          });
+
+          return react.div({}, [
+            react.div({
+              'ref': (ref) {
+                textRef = ref;
+              },
+            }, [
+              state.state['text']
+            ]),
+            react.div({
+              'ref': (ref) {
+                countRef = ref;
+              },
+            }, [
+              state.state['count']
+            ]),
+            react.button({
+              'onClick': (_) => state.dispatch({'type': 'changeText', 'newText': 'newValue'}),
+              'ref': (ref) {
+                textButtonRef = ref;
+              },
+            }, [
+              'Set'
+            ]),
+            react.button({
+              'onClick': (_) => state.dispatch({'type': 'increment'}),
+              'ref': (ref) {
+                addButtonRef = ref;
+              },
+            }, [
+              '+'
+            ]),
+            react.button({
+              'onClick': (_) => state.dispatch({'type': 'decrement'}),
+              'ref': (ref) {
+                subtractButtonRef = ref;
+              },
+            }, [
+              '-'
+            ]),
+          ]);
+        });
+
+        react_dom.render(UseReducerTest({}), mountNode);
+      });
+
+      tearDownAll(() {
+        UseReducerTest = null;
+      });
+
+      test('initializes state correctly', () {
+        expect(countRef.text, '0');
+        expect(textRef.text, 'initialValue');
+      });
+
+      test('dispatch updates states correctly', () {
+        react_test_utils.Simulate.click(textButtonRef);
+        expect(textRef.text, 'newValue');
+
+        react_test_utils.Simulate.click(addButtonRef);
+        expect(countRef.text, '1');
+
+        react_test_utils.Simulate.click(subtractButtonRef);
+        expect(countRef.text, '0');
+      });
+
+      group('useReducerLazy', () {
+        ButtonElement resetButtonRef;
+
+        Map initializeCount(int initialValue) {
+          return {'count': initialValue};
+        }
+
+        Map reducer2(Map state, Map action) {
+          switch (action['type']) {
+            case 'increment':
+              return {...state, 'count': state['count'] + 1};
+            case 'decrement':
+              return {...state, 'count': state['count'] - 1};
+            case 'reset':
+              return initializeCount(action['payload']);
+            default:
+              return state;
+          }
+        }
+
+        setUpAll(() {
+          var mountNode = new DivElement();
+
+          UseReducerTest = react.registerFunctionComponent((Map props) {
+            final ReducerHook<Map, Map, int> state = useReducerLazy(reducer2, props['initialCount'], initializeCount);
+
+            return react.div({}, [
+              react.div({
+                'ref': (ref) {
+                  countRef = ref;
+                },
+              }, [
+                state.state['count']
+              ]),
+              react.button({
+                'onClick': (_) => state.dispatch({'type': 'reset', 'payload': props['initialCount']}),
+                'ref': (ref) {
+                  resetButtonRef = ref;
+                },
+              }, [
+                'reset'
+              ]),
+              react.button({
+                'onClick': (_) => state.dispatch({'type': 'increment'}),
+                'ref': (ref) {
+                  addButtonRef = ref;
+                },
+              }, [
+                '+'
+              ]),
+              react.button({
+                'onClick': (_) => state.dispatch({'type': 'decrement'}),
+                'ref': (ref) {
+                  subtractButtonRef = ref;
+                },
+              }, [
+                '-'
+              ]),
+            ]);
+          });
+
+          react_dom.render(UseReducerTest({'initialCount': 10}), mountNode);
+        });
+
+        tearDownAll(() {
+          UseReducerTest = null;
+        });
+
+        test('initializes state correctly', () {
+          expect(countRef.text, '10');
+        });
+
+        test('dispatch updates states correctly', () {
+          react_test_utils.Simulate.click(addButtonRef);
+          expect(countRef.text, '11');
+
+          react_test_utils.Simulate.click(resetButtonRef);
+          expect(countRef.text, '10');
+
+          react_test_utils.Simulate.click(subtractButtonRef);
+          expect(countRef.text, '9');
+        });
+      });
+    });
+
     group('useCallback -', () {
       ReactDartFunctionComponentFactoryProxy UseCallbackTest;
       DivElement deltaRef;
@@ -404,6 +584,85 @@ main() {
           expect(currentCount, 3);
           providerRef.increment();
           expect(currentCount, 4);
+        });
+      });
+    });
+
+    group('useRef -', () {
+      var mountNode = new DivElement();
+      ReactDartFunctionComponentFactoryProxy UseRefTest;
+      ButtonElement reRenderButton;
+      var noInitRef;
+      var initRef;
+      var domElementRef;
+      StateHook<int> renderIndex;
+      var refFromUseRef;
+      var refFromCreateRef;
+
+      setUpAll(() {
+        UseRefTest = react.registerFunctionComponent((Map props) {
+          noInitRef = useRef();
+          initRef = useRef(mountNode);
+          domElementRef = useRef();
+
+          renderIndex = useState(1);
+          refFromUseRef = useRef();
+          refFromCreateRef = react.createRef();
+
+          if (refFromUseRef.current == null) {
+            refFromUseRef.current = renderIndex.value;
+          }
+
+          if (refFromCreateRef.current == null) {
+            refFromCreateRef.current = renderIndex.value;
+          }
+
+          return react.Fragment({}, [
+            react.input({'ref': domElementRef}),
+            react.p({}, [renderIndex.value]),
+            react.p({}, [refFromUseRef.current]),
+            react.p({}, [refFromCreateRef.current]),
+            react.button({
+              'ref': (ref) => reRenderButton = ref,
+              'onClick': (_) => renderIndex.setWithUpdater((prev) => prev + 1)
+            }, [
+              're-render'
+            ]),
+          ]);
+        });
+
+        react_dom.render(UseRefTest({}), mountNode);
+      });
+
+      group('correctly initializes a Ref object', () {
+        test('with current property set to null if no initial value given', () {
+          expect(noInitRef, isA<Ref>());
+          expect(noInitRef.current, null);
+        });
+
+        test('with current property set to the initial value given', () {
+          expect(initRef, isA<Ref>());
+          expect(initRef.current, mountNode);
+        });
+      });
+
+      group('the returned Ref', () {
+        test('can be attached to elements via the ref attribute', () {
+          expect(domElementRef.current, isA<InputElement>());
+        });
+
+        test('will persist even after the component re-renders', () {
+          expect(renderIndex.value, 1);
+          expect(refFromUseRef.current, 1, reason: 'Ref object initially created on first render');
+          expect(refFromCreateRef.current, 1);
+
+          react_test_utils.Simulate.click(reRenderButton);
+
+          expect(renderIndex.value, 2);
+          expect(refFromUseRef.current, 1,
+              reason: 'useRef returns the same Ref object on every render for the full lifetime of the component');
+          expect(refFromCreateRef.current, 2,
+              reason: 'compare to createRef which creates a new Ref object on every render');
         });
       });
     });
