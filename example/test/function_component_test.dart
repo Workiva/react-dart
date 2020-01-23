@@ -183,6 +183,11 @@ UseRefTestComponent(Map props) {
   ]);
 }
 
+class FancyInputApi {
+  final void Function() focus;
+  FancyInputApi(this.focus);
+}
+
 final FancyInput = react.forwardRef((props, ref) {
   final inputRef = useRef();
 
@@ -190,7 +195,7 @@ final FancyInput = react.forwardRef((props, ref) {
     ref,
     () {
       print('FancyInput: useImperativeHandle re-assigns ref.current');
-      return {'focus': () => inputRef.current.focus()};
+      return FancyInputApi(() => inputRef.current.focus());
     },
 
     /// Because the return value of createHandle never changes, it is not necessary for ref.current
@@ -216,21 +221,21 @@ UseImperativeHandleTestComponent(Map props) {
   final error = useState('');
   final message = useState('');
 
-  Ref cityEl = useRef();
-  Ref stateEl = useRef();
+  Ref cityRef = useRef<FancyInputApi>();
+  Ref stateRef = useRef<FancyInputApi>();
 
   validate(_) {
     if (!RegExp(r'^[a-zA-Z]+$').hasMatch(city.value)) {
       message.set('Invalid form!');
       error.set('city');
-      cityEl.current['focus']();
+      cityRef.current.focus();
       return;
     }
 
     if (!RegExp(r'^[a-zA-Z]+$').hasMatch(state.value)) {
       message.set('Invalid form!');
       error.set('state');
-      stateEl.current['focus']();
+      stateRef.current.focus();
       return;
     }
 
@@ -245,7 +250,7 @@ UseImperativeHandleTestComponent(Map props) {
       'placeholder': 'City',
       'value': city.value,
       'update': city.set,
-      'ref': cityEl,
+      'ref': cityRef,
     }, []),
     FancyInput({
       'key': 'fancyInput2',
@@ -253,7 +258,7 @@ UseImperativeHandleTestComponent(Map props) {
       'placeholder': 'State',
       'value': state.value,
       'update': state.set,
-      'ref': stateEl,
+      'ref': stateRef,
     }, []),
     react.button({'key': 'button1', 'onClick': validate}, ['Validate Form']),
     react.p({'key': 'p1'}, [message.value]),
@@ -267,10 +272,10 @@ final FancyCounter = react.forwardRef((props, ref) {
     ref,
     () {
       print('FancyCounter: useImperativeHandle re-assigns ref.current');
-      return ({
+      return {
         'increment': () => count.setWithUpdater((prev) => prev + props['diff']),
         'decrement': () => count.setWithUpdater((prev) => prev - props['diff']),
-      });
+      };
     },
 
     /// This dependency prevents unnecessary calls of createHandle, by only re-assigning
@@ -287,7 +292,7 @@ final useImperativeHandleTestFunctionComponent2 =
 UseImperativeHandleTestComponent2(Map props) {
   final diff = useState(1);
 
-  Ref fancyCounterRef = useRef();
+  final fancyCounterRef = useRef<Map>();
 
   return react.Fragment({}, [
     FancyCounter({

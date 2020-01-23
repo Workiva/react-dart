@@ -684,11 +684,7 @@ main() {
 
           useImperativeHandle(
             ref,
-            () => ({
-              'increment': () {
-                count.setWithUpdater((prev) => prev + 1);
-              }
-            }),
+            () => {'increment': () => count.setWithUpdater((prev) => prev + 1)},
           );
 
           return react.div({'ref': ref}, count.value);

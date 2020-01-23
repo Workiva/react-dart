@@ -411,16 +411,17 @@ Ref<T> useRef<T>([T initialValue]) => Ref.useRefInit(initialValue);
 /// __Example__:
 ///
 /// ```
-/// var FancyInput = forwardRef((props, ref) {
-///   var inputRef = useRef<InputElement>();
+/// class FancyInputApi {
+///   final void Function() focus;
+///   FancyInputApi(this.focus);
+/// }
+///
+/// final FancyInput = react.forwardRef((props, ref) {
+///   final inputRef = useRef<InputElement>();
 ///
 ///   useImperativeHandle(
 ///     ref,
-///     () => ({
-///       'focus': () {
-///         inputRef.current.focus();
-///       }
-///     }),
+///     () => FancyInputApi(() => inputRef.current.focus()),
 ///
 ///     /// Because the return value of [createHandle] never changes, it is not necessary for [ref.current]
 ///     /// to be re-set on each render so this dependency list is empty.
@@ -435,8 +436,8 @@ Ref<T> useRef<T>([T initialValue]) => Ref.useRefInit(initialValue);
 /// });
 ///
 /// UseImperativeHandleTestComponent(Map props) {
-///   StateHook<String> inputValue = useState('');
-///   Ref fancyInputRef = useRef();
+///   final inputValue = useState('');
+///   final fancyInputRef = useRef<FancyInputApi>();
 ///
 ///   return react.Fragment({}, [
 ///     FancyInput({
@@ -444,7 +445,7 @@ Ref<T> useRef<T>([T initialValue]) => Ref.useRefInit(initialValue);
 ///       'update': inputValue.set,
 ///       'ref': fancyInputRef,
 ///     }, []),
-///     react.button({'onClick': (_) => fancyInputRef.current['focus']()}, ['Focus Input']),
+///     react.button({'onClick': (_) => fancyInputRef.current.focus()}, ['Focus Input']),
 ///   ]);
 /// }
 /// ```
