@@ -397,10 +397,71 @@ T useContext<T>(Context<T> context) => ContextHelpers.unjsifyNewContext(React.us
 /// Learn more: <https://reactjs.org/docs/hooks-reference.html#useref>.
 Ref<T> useRef<T>([T initialValue]) => Ref.useRefInit(initialValue);
 
-dynamic useDebugValue<T>(T value, [dynamic Function(T) format]) {
-  if (format != null) {
-    return React.useDebugValue(value, allowInterop(format));
-  } else {
-    return React.useDebugValue(value);
-  }
-}
+/// Displays [value] as a label for a custom hook in React DevTools.
+///
+/// Optionally formats [value] using [format].
+///
+/// > __Note:__ there are two [rules for using Hooks](https://reactjs.org/docs/hooks-rules.html):
+/// >
+/// > * Only call Hooks at the top level.
+/// > * Only call Hooks from inside a [DartFunctionComponent].
+///
+/// __Example__:
+///
+/// ```
+/// final ChatAPI = {
+///   'subscribeToFriendStatus': (int id, Function handleStatusChange) =>
+///       handleStatusChange({'isOnline': id % 2 == 0 ? true : false}),
+///   'unsubscribeFromFriendStatus': (int id, Function handleStatusChange) => handleStatusChange({'isOnline': false}),
+/// };
+///
+/// // Custom Hook
+/// StateHook useFriendStatus(friendID) {
+///   final isOnline = useState(false);
+///
+///   void handleStatusChange(Map status) {
+///     isOnline.set(status['isOnline']);
+///   }
+///
+///   useEffect(() {
+///     ChatAPI['subscribeToFriendStatus'](friendID, handleStatusChange);
+///     return () {
+///       ChatAPI['subscribeToFriendStatus'](friendID, handleStatusChange);
+///     };
+///   });
+///
+///   useDebugValue(isOnline.value ? 'Online' : 'Not Online');
+///
+///   return isOnline;
+/// }
+///
+/// var FriendListItem = react.registerFunctionComponent((Map props) {
+///   final isOnline = useFriendStatus(props['friend']['id']);
+///
+///   return react.li({
+///     'style': {'color': isOnline.value ? 'green' : 'black'}
+///   }, [
+///     props['friend']['name']
+///   ]);
+/// }, displayName: 'FriendListItem');
+///
+/// var UseDebugValueTestComponent = react.registerFunctionComponent(
+///     (Map props) => react.Fragment({}, [
+///           FriendListItem({
+///             'friend': {'id': 1, 'name': 'user 1'}
+///           }, []),
+///           FriendListItem({
+///             'friend': {'id': 2, 'name': 'user 2'}
+///           }, []),
+///           FriendListItem({
+///             'friend': {'id': 3, 'name': 'user 3'}
+///           }, []),
+///           FriendListItem({
+///             'friend': {'id': 4, 'name': 'user 4'}
+///           }, []),
+///         ]),
+///     displayName: 'useDebugValueTest');
+/// ```
+///
+/// Learn more: <https://reactjs.org/docs/hooks-reference.html#usedebugvalue>.
+dynamic useDebugValue<T>(T value, [dynamic Function(T) format]) => React.useDebugValue(value, allowInterop(format));
