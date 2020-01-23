@@ -184,7 +184,7 @@ UseRefTestComponent(Map props) {
   ]);
 }
 
-final random = new Random();
+final random = Random();
 
 final randomUseLayoutEffectTestComponent =
     react.registerFunctionComponent(RandomUseLayoutEffectTestComponent, displayName: 'randomUseLayoutEffectTest');

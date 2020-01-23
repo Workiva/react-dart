@@ -555,7 +555,7 @@ void testEffectHook(Function effectHook) {
   int useEffectCleanupWithEmptyDepsCallCount;
 
   setUpAll(() {
-    mountNode = new DivElement();
+    mountNode = DivElement();
     useEffectCallCount = 0;
     useEffectCleanupCallCount = 0;
     useEffectWithDepsCallCount = 0;
