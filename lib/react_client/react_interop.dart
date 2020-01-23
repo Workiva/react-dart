@@ -53,6 +53,7 @@ abstract class React {
   external static Function useCallback(Function callback, List dependencies);
   external static ReactContext useContext(ReactContext context);
   external static JsRef useRef([dynamic initialValue]);
+  external static dynamic useMemo(dynamic Function() createFunction, [List<dynamic> dependencies]);
   external static void useLayoutEffect(dynamic Function() sideEffect, [List<Object> dependencies]);
 }
 

@@ -184,6 +184,53 @@ UseRefTestComponent(Map props) {
   ]);
 }
 
+int fibonacci(int n) {
+  if (n <= 1) {
+    return 1;
+  }
+  return fibonacci(n - 1) + fibonacci(n - 2);
+}
+
+final useMemoTestFunctionComponent = react.registerFunctionComponent(UseMemoTestComponent, displayName: 'useMemoTest');
+
+UseMemoTestComponent(Map props) {
+  final reRender = useState(0);
+  final count = useState(35);
+
+  final fib = useMemo(
+    () {
+      print('calculating fibonacci...');
+      return fibonacci(count.value);
+    },
+
+    /// This dependency prevents [fib] from being re-calculated every time the component re-renders.
+    [count.value],
+  );
+
+  return react.Fragment({}, [
+    react.div({'key': 'div'}, ['Fibonacci of ${count.value} is $fib']),
+    react.button({'key': 'button1', 'onClick': (_) => count.setWithUpdater((prev) => prev + 1)}, ['+']),
+    react.button({'key': 'button2', 'onClick': (_) => reRender.setWithUpdater((prev) => prev + 1)}, ['re-render']),
+  ]);
+}
+
+final useMemoTestFunctionComponent2 =
+    react.registerFunctionComponent(UseMemoTestComponent2, displayName: 'useMemoTest2');
+
+UseMemoTestComponent2(Map props) {
+  final reRender = useState(0);
+  final count = useState(35);
+
+  print('calculating fibonacci...');
+  final fib = fibonacci(count.value);
+
+  return react.Fragment({}, [
+    react.div({'key': 'div'}, ['Fibonacci of ${count.value} is ${fib}']),
+    react.button({'key': 'button1', 'onClick': (_) => count.setWithUpdater((prev) => prev + 1)}, ['+']),
+    react.button({'key': 'button2', 'onClick': (_) => reRender.setWithUpdater((prev) => prev + 1)}, ['re-render']),
+  ]);
+}
+
 final random = Random();
 
 final randomUseLayoutEffectTestComponent =
@@ -260,11 +307,22 @@ void main() {
           useRefTestFunctionComponent({
             'key': 'useRefTest',
           }, []),
+          react.h2({'key': 'useMemoTestLabel'}, ['useMemo Hook Test']),
+          react.h6({'key': 'h61'}, ['With useMemo:']),
+          useMemoTestFunctionComponent({
+            'key': 'useMemoTest',
+          }, []),
+          react.br({'key': 'br4'}),
+          react.br({'key': 'br5'}),
+          react.h6({'key': 'h62'}, ['Without useMemo (notice calculation done on every render):']),
+          useMemoTestFunctionComponent2({
+            'key': 'useMemoTest2',
+          }, []),
           react.h2({'key': 'useLayoutEffectTestLabel'}, ['useLayoutEffect Hook Test']),
           randomUseLayoutEffectTestComponent({
             'key': 'useLayoutEffectTest',
           }, []),
-          react.br({'key': 'br4'}),
+          react.br({'key': 'br6'}),
           randomUseEffectTestComponent({
             'key': 'useLayoutEffectTest2',
           }, []),
