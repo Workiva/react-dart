@@ -18,6 +18,7 @@ import 'package:react/react.dart';
 import 'package:react/react_client.dart' show ComponentFactory, ReactJsComponentFactoryProxy;
 import 'package:react/react_client/bridge.dart';
 import 'package:react/react_client/js_backed_map.dart';
+import 'package:react/react_client/private_utils.dart';
 import 'package:react/src/react_client/dart2_interop_workaround_bindings.dart';
 
 typedef ReactElement ReactJsComponentFactory(props, children);
@@ -128,12 +129,16 @@ class JsRef {
 /// Automatically passes a [Ref] through a component to one of its children.
 ///
 /// See: <https://reactjs.org/docs/forwarding-refs.html>.
-ReactJsComponentFactoryProxy forwardRef(Function(Map props, Ref ref) wrapperFunction) {
-  var hoc = React.forwardRef(allowInterop((JsMap props, JsRef ref) {
+ReactJsComponentFactoryProxy forwardRef(Function(Map props, Ref ref) wrapperFunction,
+    {String displayName = 'Anonymous'}) {
+  final wrappedComponent = allowInterop((JsMap props, JsRef ref) {
     final dartProps = JsBackedMap.backedBy(props);
     final dartRef = Ref.fromJs(ref);
     return wrapperFunction(dartProps, dartRef);
-  }));
+  });
+  defineProperty(wrappedComponent, 'displayName', jsify({'value': displayName}));
+
+  var hoc = React.forwardRef(wrappedComponent);
 
   return new ReactJsComponentFactoryProxy(hoc, shouldConvertDomProps: false);
 }

@@ -269,6 +269,33 @@ void refTests<T>(ReactComponentFactoryProxy factory, {void verifyRefValue(dynami
     verifyRefValue(refObject.current);
   });
 
+  group('forwardRef sets displayName on the rendered component as expected', () {
+    test('when displayName argument is not passed to forwardRef', () {
+      var ForwardRefTestComponent = forwardRef((props, ref) {
+        // Extra type checking since JS refs being passed through
+        // aren't caught by built-in type checking.
+        expect(ref, isA<Ref>());
+
+        return factory({'ref': ref});
+      });
+
+      expect(getProperty(getProperty(ForwardRefTestComponent.type, 'render'), 'displayName'), 'Anonymous');
+    });
+
+    test('when displayName argument is passed to forwardRef', () {
+      var ForwardRefTestComponent = forwardRef((props, ref) {
+        // Extra type checking since JS refs being passed through
+        // aren't caught by built-in type checking.
+        expect(ref, isA<Ref>());
+
+        return factory({'ref': ref});
+      }, displayName: 'ForwardRefTestComponent');
+
+      expect(
+          getProperty(getProperty(ForwardRefTestComponent.type, 'render'), 'displayName'), 'ForwardRefTestComponent');
+    });
+  });
+
   _typedCallbackRefTests<T>(factory);
 }
 
