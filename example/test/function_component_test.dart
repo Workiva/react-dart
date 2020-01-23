@@ -189,6 +189,7 @@ final ChatAPI = {
   'unsubscribeFromFriendStatus': (int id, Function handleStatusChange) => handleStatusChange({'isOnline': false}),
 };
 
+// Custom Hook
 StateHook useFriendStatus(friendID) {
   final isOnline = useState(false);
 
@@ -208,9 +209,7 @@ StateHook useFriendStatus(friendID) {
   return isOnline;
 }
 
-var FriendListItem = react.registerFunctionComponent(_friendListItem, displayName: 'FriendListItem');
-
-_friendListItem(Map props) {
+var FriendListItem = react.registerFunctionComponent((Map props) {
   final isOnline = useFriendStatus(props['friend']['id']);
 
   return react.li({
@@ -218,7 +217,28 @@ _friendListItem(Map props) {
   }, [
     props['friend']['name']
   ]);
-}
+}, displayName: 'FriendListItem');
+
+var UseDebugValueTestComponent = react.registerFunctionComponent(
+    (Map props) => react.Fragment({}, [
+          FriendListItem({
+            'key': 'friend1',
+            'friend': {'id': 1, 'name': 'user 1'},
+          }, []),
+          FriendListItem({
+            'key': 'friend2',
+            'friend': {'id': 2, 'name': 'user 2'},
+          }, []),
+          FriendListItem({
+            'key': 'friend3',
+            'friend': {'id': 3, 'name': 'user 3'},
+          }, []),
+          FriendListItem({
+            'key': 'friend4',
+            'friend': {'id': 4, 'name': 'user 4'},
+          }, []),
+        ]),
+    displayName: 'useDebugValueTest');
 
 void main() {
   setClientConfiguration();
@@ -257,17 +277,8 @@ void main() {
           }, []),
           react.br({'key': 'br4'}),
           react.h2({'key': 'useDebugValueTestLabel'}, ['useDebugValue Hook Test']),
-          FriendListItem({
-            'friend': {'id': 1, 'name': 'user 1'}
-          }, []),
-          FriendListItem({
-            'friend': {'id': 2, 'name': 'user 2'}
-          }, []),
-          FriendListItem({
-            'friend': {'id': 3, 'name': 'user 3'}
-          }, []),
-          FriendListItem({
-            'friend': {'id': 4, 'name': 'user 4'}
+          UseDebugValueTestComponent({
+            'key': 'useDebugValueTest',
           }, []),
         ]),
         querySelector('#content'));
