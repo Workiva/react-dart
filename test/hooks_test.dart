@@ -26,7 +26,7 @@ main() {
       ButtonElement setWithUpdaterButtonRef;
 
       setUpAll(() {
-        var mountNode = new DivElement();
+        var mountNode = DivElement();
 
         UseStateTest = react.registerFunctionComponent((Map props) {
           final text = useStateLazy(() {
@@ -105,7 +105,7 @@ main() {
       int useEffectCleanupWithEmptyDepsCallCount;
 
       setUpAll(() {
-        mountNode = new DivElement();
+        mountNode = DivElement();
         useEffectCallCount = 0;
         useEffectCleanupCallCount = 0;
         useEffectWithDepsCallCount = 0;
@@ -268,7 +268,7 @@ main() {
       }
 
       setUpAll(() {
-        var mountNode = new DivElement();
+        var mountNode = DivElement();
 
         UseReducerTest = react.registerFunctionComponent((Map props) {
           final state = useReducer(reducer, {
@@ -362,7 +362,7 @@ main() {
         }
 
         setUpAll(() {
-          var mountNode = new DivElement();
+          var mountNode = DivElement();
 
           UseReducerTest = react.registerFunctionComponent((Map props) {
             final ReducerHook<Map, Map, int> state = useReducerLazy(reducer2, props['initialCount'], initializeCount);
@@ -435,7 +435,7 @@ main() {
       ButtonElement incrementDeltaButtonRef;
 
       setUpAll(() {
-        var mountNode = new DivElement();
+        var mountNode = DivElement();
 
         UseCallbackTest = react.registerFunctionComponent((Map props) {
           final count = useState(0);
@@ -519,7 +519,7 @@ main() {
           expect(countRef.text, '3', reason: 'still increments by 1 because delta not in dependency list');
         });
 
-        test('callback stays the same if state not in dependency list', () {
+        test('callback updates if state is in dependency list', () {
           react_test_utils.Simulate.click(incrementWithDepButtonRef);
           expect(countRef.text, '5', reason: 'increments by 2 because delta updated');
         });
@@ -589,7 +589,7 @@ main() {
     });
 
     group('useRef -', () {
-      var mountNode = new DivElement();
+      var mountNode = DivElement();
       ReactDartFunctionComponentFactoryProxy UseRefTest;
       ButtonElement reRenderButton;
       var noInitRef;
@@ -663,6 +663,130 @@ main() {
               reason: 'useRef returns the same Ref object on every render for the full lifetime of the component');
           expect(refFromCreateRef.current, 2,
               reason: 'compare to createRef which creates a new Ref object on every render');
+        });
+      });
+    });
+
+    group('useMemo -', () {
+      ReactDartFunctionComponentFactoryProxy UseMemoTest;
+      StateHook<int> count;
+      ButtonElement reRenderButtonRef;
+      ButtonElement incrementButtonRef;
+
+      // Count how many times createFunction() is called for each variation of dependencies.
+      int createFunctionCallCountWithDeps = 0;
+      int createFunctionCallCountNoDeps = 0;
+      int createFunctionCallCountEmptyDeps = 0;
+
+      // Keeps track of return value of useMemo() for each variation of dependencies.
+      int returnValueWithDeps;
+      int returnValueNoDeps;
+      int returnValueEmptyDeps;
+
+      int fibonacci(int n) {
+        if (n <= 1) {
+          return 1;
+        }
+        return fibonacci(n - 1) + fibonacci(n - 2);
+      }
+
+      setUpAll(() {
+        final mountNode = DivElement();
+
+        UseMemoTest = react.registerFunctionComponent((Map props) {
+          final reRender = useState(0);
+          count = useState(5);
+
+          returnValueWithDeps = useMemo(
+            () {
+              createFunctionCallCountWithDeps++;
+              return fibonacci(count.value);
+            },
+            [count.value],
+          );
+
+          returnValueNoDeps = useMemo(
+            () {
+              createFunctionCallCountNoDeps++;
+              return fibonacci(count.value);
+            },
+          );
+
+          returnValueEmptyDeps = useMemo(
+            () {
+              createFunctionCallCountEmptyDeps++;
+              return fibonacci(count.value);
+            },
+            [],
+          );
+
+          return react.Fragment({}, [
+            react.button(
+                {'ref': (ref) => incrementButtonRef = ref, 'onClick': (_) => count.setWithUpdater((prev) => prev + 1)},
+                ['+']),
+            react.button({
+              'ref': (ref) => reRenderButtonRef = ref,
+              'onClick': (_) => reRender.setWithUpdater((prev) => prev + 1)
+            }, [
+              're-render'
+            ]),
+          ]);
+        });
+
+        react_dom.render(UseMemoTest({}), mountNode);
+      });
+
+      test('correctly initializes memoized value', () {
+        expect(count.value, 5);
+
+        expect(returnValueWithDeps, 8);
+        expect(returnValueNoDeps, 8);
+        expect(returnValueEmptyDeps, 8);
+
+        expect(createFunctionCallCountWithDeps, 1);
+        expect(createFunctionCallCountNoDeps, 1);
+        expect(createFunctionCallCountEmptyDeps, 1);
+      });
+
+      group('after depending state changes,', () {
+        setUpAll(() {
+          react_test_utils.Simulate.click(incrementButtonRef);
+        });
+
+        test('createFunction does not run if state not in dependency list', () {
+          expect(returnValueEmptyDeps, 8);
+
+          expect(createFunctionCallCountEmptyDeps, 1, reason: 'count.value is not in dependency list');
+        });
+
+        test('createFunction re-runs if state is in dependency list or if there is no dependency list', () {
+          expect(returnValueWithDeps, 13);
+          expect(returnValueNoDeps, 13);
+
+          expect(createFunctionCallCountWithDeps, 2, reason: 'count.value is in dependency list');
+          expect(createFunctionCallCountNoDeps, 2,
+              reason: 'createFunction runs on every render because there is no dependency list');
+        });
+      });
+
+      group('after component re-renders,', () {
+        setUpAll(() {
+          react_test_utils.Simulate.click(reRenderButtonRef);
+        });
+
+        test('createFunction re-runs if there is no dependency list', () {
+          expect(returnValueNoDeps, 13, reason: 'count.value stayed the same so the same value is returned');
+
+          expect(createFunctionCallCountNoDeps, 3,
+              reason: 'createFunction runs on every render because there is no dependency list');
+        });
+
+        test('createFunction does not run if there is a dependency list', () {
+          expect(returnValueEmptyDeps, 8);
+          expect(returnValueWithDeps, 13);
+
+          expect(createFunctionCallCountEmptyDeps, 1, reason: 'no dependency changed');
+          expect(createFunctionCallCountWithDeps, 2, reason: 'no dependency changed');
         });
       });
     });
