@@ -410,18 +410,18 @@ Ref<T> useRef<T>([T initialValue]) => Ref.useRefInit(initialValue);
 /// __Example__:
 /// ```
 /// UseMemoTestComponent(Map props) {
-///   final num = useState(0);
+///   final count = useState(0);
 ///
 ///   final fib = useMemo(
-///     () => fibonacci(num.value),
+///     () => fibonacci(count.value),
 ///
 ///     /// This dependency prevents [fib] from being re-calculated every time the component re-renders.
-///     [num.value],
+///     [count.value],
 ///   );
 ///
 ///   return react.Fragment({}, [
-///     react.div({}, ['Fibonacci of ${num.value} is $fib']),
-///     react.button({'onClick': (_) => num.setWithUpdater((prev) => prev + 1)}, ['+']),
+///     react.div({}, ['Fibonacci of ${count.value} is $fib']),
+///     react.button({'onClick': (_) => count.setWithUpdater((prev) => prev + 1)}, ['+']),
 ///   ]);
 /// }
 /// ```
