@@ -17,6 +17,7 @@ import 'package:meta/meta.dart';
 
 import "package:react/react.dart";
 import 'package:react/react_client/js_interop_helpers.dart';
+import 'package:react/react_client/private_utils.dart';
 import 'package:react/react_client/react_interop.dart';
 import "package:react/react_dom.dart";
 import 'package:react/react_dom_server.dart';
@@ -348,9 +349,6 @@ List<String> _filterSkipMethods(List<String> methods) {
 
 @JS('Object.keys')
 external List<String> _objectKeys(Object object);
-
-@JS('Object.defineProperty')
-external void _defineProperty(dynamic object, String propertyName, JsMap descriptor);
 
 @Deprecated('6.0.0')
 InteropContextValue _jsifyContext(Map<String, dynamic> context) {
@@ -886,15 +884,12 @@ class ReactDartFunctionComponentFactoryProxy extends ReactComponentFactoryProxy 
   final JsFunctionComponent reactFunction;
 
   ReactDartFunctionComponentFactoryProxy(DartFunctionComponent dartFunctionComponent, {String displayName})
-      : this.displayName = displayName ?? _getJsFunctionName(dartFunctionComponent),
+      : this.displayName = displayName ?? getJsFunctionName(dartFunctionComponent),
         this.reactFunction = _wrapFunctionComponent(dartFunctionComponent,
-            displayName: displayName ?? _getJsFunctionName(dartFunctionComponent));
+            displayName: displayName ?? getJsFunctionName(dartFunctionComponent));
 
   @override
   JsFunctionComponent get type => reactFunction;
-
-  static String _getJsFunctionName(Function object) =>
-      getProperty(object, 'name') ?? getProperty(object, '\$static_name');
 
   /// Creates a function component from the given [dartFunctionComponent] that can be used with React.
   ///
@@ -916,7 +911,7 @@ class ReactDartFunctionComponentFactoryProxy extends ReactComponentFactoryProxy 
     JsFunctionComponent interopFunction = allowInterop(jsFunctionComponent);
     if (displayName != null) {
       // This is a work-around to display the correct name in the React DevTools.
-      _defineProperty(interopFunction, 'name', jsify({'value': displayName}));
+      defineProperty(interopFunction, 'name', jsify({'value': displayName}));
     }
     // ignore: invalid_use_of_protected_member
     setProperty(interopFunction, 'dartComponentVersion', ReactDartComponentVersion.component2);
