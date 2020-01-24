@@ -34,6 +34,64 @@ HookTestComponent(Map props) {
   ]);
 }
 
+final MemoTestDemoWrapper = react.registerComponent(() => _MemoTestDemoWrapper());
+
+class _MemoTestDemoWrapper extends react.Component2 {
+  @override
+  get initialState => {'localCount': 0, 'someKeyThatMemoShouldIgnore': 0};
+
+  @override
+  render() {
+    return react.div(
+      {'key': 'mtdw'},
+      MemoTest({
+        'localCount': this.state['localCount'],
+        'someKeyThatMemoShouldIgnore': this.state['someKeyThatMemoShouldIgnore'],
+      }),
+      react.button({
+        'type': 'button',
+        'className': 'btn btn-primary',
+        'style': {'marginRight': '10px'},
+        'onClick': (_) {
+          this.setState({'localCount': this.state['localCount'] + 1});
+        },
+      }, 'Update MemoTest props.localCount value (${this.state['localCount']})'),
+      react.button({
+        'type': 'button',
+        'className': 'btn btn-primary',
+        'onClick': (_) {
+          this.setState({'someKeyThatMemoShouldIgnore': this.state['someKeyThatMemoShouldIgnore'] + 1});
+        },
+      }, 'Update prop value that MemoTest will ignore (${this.state['someKeyThatMemoShouldIgnore']})'),
+    );
+  }
+}
+
+final MemoTest = react.memo((Map props) {
+  final context = useContext(TestNewContext);
+  return react.div(
+    {},
+    react.p(
+      {},
+      'useContext counter value: ',
+      react.strong({}, context['renderCount']),
+    ),
+    react.p(
+      {},
+      'props.localCount value: ',
+      react.strong({}, props['localCount']),
+    ),
+    react.p(
+      {},
+      'props.someKeyThatMemoShouldIgnore value: ',
+      react.strong({}, props['someKeyThatMemoShouldIgnore']),
+      ' (should never update)',
+    ),
+  );
+}, areEqual: (prevProps, nextProps) {
+  return prevProps['localCount'] == nextProps['localCount'];
+}, displayName: 'MemoTest');
+
 var useReducerTestFunctionComponent =
     react.registerFunctionComponent(UseReducerTestComponent, displayName: 'useReducerTest');
 
@@ -265,6 +323,13 @@ void main() {
           useRefTestFunctionComponent({
             'key': 'useRefTest',
           }, []),
+          react.h2({'key': 'memoTestLabel'}, ['memo Test']),
+          newContextProviderComponent(
+            {
+              'key': 'memoContextProvider',
+            },
+            MemoTestDemoWrapper({}),
+          ),
           react.h2({'key': 'useMemoTestLabel'}, ['useMemo Hook Test']),
           react.h6({'key': 'h61'}, ['With useMemo:']),
           useMemoTestFunctionComponent({

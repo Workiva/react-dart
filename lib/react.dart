@@ -17,7 +17,7 @@ import 'package:react/src/context.dart';
 
 export 'package:react/src/context.dart';
 export 'package:react/src/prop_validator.dart';
-export 'package:react/react_client/react_interop.dart' show forwardRef, createRef;
+export 'package:react/react_client/react_interop.dart' show forwardRef, createRef, memo;
 
 typedef Error PropValidator<TProps>(TProps props, PropValidatorInfo info);
 
