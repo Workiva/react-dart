@@ -1324,28 +1324,11 @@ SyntheticWheelEvent syntheticWheelEventFactory(events.SyntheticWheelEvent e) {
   );
 }
 
-dynamic _findDomNode(component) {
-  return ReactDom.findDOMNode(component is Component ? component.jsThis : component);
-}
-
-void setClientConfiguration() {
-  try {
-    // Attempt to invoke JS interop methods, which will throw if the
-    // corresponding JS functions are not available.
-    React.isValidElement(null);
-    ReactDom.findDOMNode(null);
-    createReactDartComponentClass(null, null, null);
-  } on NoSuchMethodError catch (_) {
-    throw new Exception('react.js and react_dom.js must be loaded.');
-  } catch (_) {
-    throw new Exception('Loaded react.js must include react-dart JS interop helpers.');
-  }
-
-  setReactConfiguration(_reactDom, _registerComponent,
-      customRegisterComponent2: _registerComponent2, customRegisterFunctionComponent: _registerFunctionComponent);
-  setReactDOMConfiguration(ReactDom.render, ReactDom.unmountComponentAtNode, _findDomNode);
-  // Accessing ReactDomServer.renderToString when it's not available breaks in DDC.
-  if (context['ReactDOMServer'] != null) {
-    setReactDOMServerConfiguration(ReactDomServer.renderToString, ReactDomServer.renderToStaticMarkup);
-  }
-}
+/// Method used to initialize the React environment.
+///
+/// > __DEPRECATED.__
+/// >
+/// > Environment configuration is now done by default and should not be altered. This can now be removed.
+/// > This will be removed in 6.0.0, along with other configuration setting functions.
+@Deprecated('It is not longer required and can be removed. 6.0.0')
+void setClientConfiguration() {}
