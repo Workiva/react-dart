@@ -8,7 +8,7 @@ import 'dart:js_util';
 
 import 'package:js/js.dart';
 import 'package:react/react_client/react_interop.dart';
-import 'package:react/react_client.dart';
+import 'package:react/react_client/react_proxies.dart';
 
 /// The return type of [createContext], Wraps [ReactContext] for use in Dart.
 /// Allows access to [Provider] and [Consumer] Components.
