@@ -23,6 +23,12 @@ var renderToStaticMarkup;
 /// Sets configuration based on passed functions.
 ///
 /// Passes arguments to global variables.
+///
+/// > __DEPRECATED.__
+/// >
+/// > This library no longer supports `ReactDomServer` and static markup randering.
+/// > This will be removed in 6.0.0, along with other configuration setting functions.
+@Deprecated('6.0.0')
 setReactDOMServerConfiguration(customRenderToString, customRenderToStaticMarkup) {
   renderToString = customRenderToString;
   renderToStaticMarkup = customRenderToStaticMarkup;
