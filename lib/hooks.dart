@@ -486,7 +486,7 @@ void useLayoutEffect(dynamic Function() sideEffect, [List<Object> dependencies])
 ///
 /// __Example__:
 ///
-/// ```
+/// ```dart
 /// class FancyInputApi {
 ///   final void Function() focus;
 ///   FancyInputApi(this.focus);
