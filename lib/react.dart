@@ -1903,7 +1903,8 @@ ComponentRegistrar2 registerComponent2 = validateJsApiThenReturn(() => registrat
 /// }
 /// var myFunctionComponent = registerFunctionComponent(myDartFunctionComponent);
 /// ```
-FunctionComponentRegistrar registerFunctionComponent = validateJsApiThenReturn(() => registration_utils.registerFunctionComponent);
+FunctionComponentRegistrar registerFunctionComponent =
+    validateJsApiThenReturn(() => registration_utils.registerFunctionComponent);
 
 /// The HTML `<a>` [AnchorElement].
 var a = validateJsApiThenReturn(() => ReactDomComponentFactoryProxy('a'));

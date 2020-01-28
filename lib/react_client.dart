@@ -15,8 +15,29 @@ import 'package:react/react_client/js_backed_map.dart';
 
 export 'package:react/react.dart' show ReactComponentFactoryProxy, ComponentFactory;
 export 'package:react/react_client/react_interop.dart' show ReactElement, ReactJsComponentFactory, inReactDevMode, Ref;
-export 'package:react/react_client/react_proxies.dart' show ReactDomComponentFactoryProxy, ReactJsComponentFactoryProxy, ReactDartComponentFactoryProxy, ReactDartComponentFactoryProxy2, ReactJsContextComponentFactoryProxy, ReactDartFunctionComponentFactoryProxy;
-export 'package:react/react_client/synthetic_events.dart' show syntheticEventFactory, syntheticClipboardEventFactory, syntheticKeyboardEventFactory, syntheticFocusEventFactory, syntheticFormEventFactory, syntheticDataTransferFactory, syntheticPointerEventFactory, syntheticMouseEventFactory, syntheticTouchEventFactory, syntheticTransitionEventFactory, syntheticAnimationEventFactory, syntheticUIEventFactory, syntheticWheelEventFactory;
+export 'package:react/react_client/react_proxies.dart'
+    show
+        ReactDomComponentFactoryProxy,
+        ReactJsComponentFactoryProxy,
+        ReactDartComponentFactoryProxy,
+        ReactDartComponentFactoryProxy2,
+        ReactJsContextComponentFactoryProxy,
+        ReactDartFunctionComponentFactoryProxy;
+export 'package:react/react_client/synthetic_events.dart'
+    show
+        syntheticEventFactory,
+        syntheticClipboardEventFactory,
+        syntheticKeyboardEventFactory,
+        syntheticFocusEventFactory,
+        syntheticFormEventFactory,
+        syntheticDataTransferFactory,
+        syntheticPointerEventFactory,
+        syntheticMouseEventFactory,
+        syntheticTouchEventFactory,
+        syntheticTransitionEventFactory,
+        syntheticAnimationEventFactory,
+        syntheticUIEventFactory,
+        syntheticWheelEventFactory;
 
 /// The function signature for ReactJS Function Components.
 ///

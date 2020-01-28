@@ -11,9 +11,9 @@ import 'package:react/src/react_client/utils.dart';
 /// which produces a new JS [`ReactClass` component class](https://facebook.github.io/react/docs/top-level-api.html#react.createclass).
 @Deprecated('6.0.0')
 ReactDartComponentFactoryProxy registerComponent(
-    ComponentFactory componentFactory, [
-      Iterable<String> skipMethods = const ['getDerivedStateFromError', 'componentDidCatch'],
-    ]) {
+  ComponentFactory componentFactory, [
+  Iterable<String> skipMethods = const ['getDerivedStateFromError', 'componentDidCatch'],
+]) {
   var componentInstance = componentFactory();
 
   if (componentInstance is Component2) {
@@ -30,7 +30,7 @@ ReactDartComponentFactoryProxy registerComponent(
   /// Create the JS [`ReactClass` component class](https://facebook.github.io/react/docs/top-level-api.html#react.createclass)
   /// with custom JS lifecycle methods.
   var reactComponentClass = createReactDartComponentClass(dartInteropStatics, componentStatics, jsConfig)
-  // ignore: invalid_use_of_protected_member
+    // ignore: invalid_use_of_protected_member
     ..dartComponentVersion = ReactDartComponentVersion.component
     ..displayName = componentFactory().displayName;
 
@@ -42,14 +42,13 @@ ReactDartComponentFactoryProxy registerComponent(
   return new ReactDartComponentFactoryProxy(reactComponentClass);
 }
 
-
 /// Creates and returns a new [ReactDartComponentFactoryProxy] from the provided [componentFactory]
 /// which produces a new JS [`ReactClass` component class](https://facebook.github.io/react/docs/top-level-api.html#react.createclass).
 ReactDartComponentFactoryProxy2 registerComponent2(
-    ComponentFactory<Component2> componentFactory, {
-      Iterable<String> skipMethods = const ['getDerivedStateFromError', 'componentDidCatch'],
-      Component2BridgeFactory bridgeFactory,
-    }) {
+  ComponentFactory<Component2> componentFactory, {
+  Iterable<String> skipMethods = const ['getDerivedStateFromError', 'componentDidCatch'],
+  Component2BridgeFactory bridgeFactory,
+}) {
   bridgeFactory ??= Component2BridgeImpl.bridgeFactory;
 
   final componentInstance = componentFactory();
@@ -65,7 +64,7 @@ ReactDartComponentFactoryProxy2 registerComponent2(
   final JsBackedMap defaultProps = new JsBackedMap.from(componentInstance.defaultProps);
 
   final JsMap jsPropTypes =
-  bridgeFactory(componentInstance).jsifyPropTypes(componentInstance, componentInstance.propTypes);
+      bridgeFactory(componentInstance).jsifyPropTypes(componentInstance, componentInstance.propTypes);
 
   var jsConfig2 = new JsComponentConfig2(
     defaultProps: defaultProps.jsObject,
@@ -77,8 +76,8 @@ ReactDartComponentFactoryProxy2 registerComponent2(
   /// Create the JS [`ReactClass` component class](https://facebook.github.io/react/docs/top-level-api.html#react.createclass)
   /// with custom JS lifecycle methods.
   var reactComponentClass =
-  createReactDartComponentClass2(ReactDartInteropStatics2.staticsForJs, componentStatics, jsConfig2)
-    ..displayName = componentInstance.displayName;
+      createReactDartComponentClass2(ReactDartInteropStatics2.staticsForJs, componentStatics, jsConfig2)
+        ..displayName = componentInstance.displayName;
   // ignore: invalid_use_of_protected_member
   reactComponentClass.dartComponentVersion = ReactDartComponentVersion.component2;
 
@@ -88,5 +87,5 @@ ReactDartComponentFactoryProxy2 registerComponent2(
 /// Creates and returns a new `ReactDartFunctionComponentFactoryProxy` from the provided [dartFunctionComponent]
 /// which produces a new `JsFunctionComponent`.
 ReactDartFunctionComponentFactoryProxy registerFunctionComponent(DartFunctionComponent dartFunctionComponent,
-    {String displayName}) =>
+        {String displayName}) =>
     ReactDartFunctionComponentFactoryProxy(dartFunctionComponent, displayName: displayName);

@@ -6,7 +6,7 @@ import 'package:react/src/react_client/synthetic_event_wrappers.dart' as events;
 /// Wrapper for [SyntheticEvent].
 SyntheticEvent syntheticEventFactory(events.SyntheticEvent e) {
   return new SyntheticEvent(e.bubbles, e.cancelable, e.currentTarget, e.defaultPrevented, () => e.preventDefault(),
-          () => e.stopPropagation(), e.eventPhase, e.isTrusted, e.nativeEvent, e.target, e.timeStamp, e.type);
+      () => e.stopPropagation(), e.eventPhase, e.isTrusted, e.nativeEvent, e.target, e.timeStamp, e.type);
 }
 
 /// Wrapper for [SyntheticClipboardEvent].
@@ -16,8 +16,8 @@ SyntheticClipboardEvent syntheticClipboardEventFactory(events.SyntheticClipboard
       e.cancelable,
       e.currentTarget,
       e.defaultPrevented,
-          () => e.preventDefault(),
-          () => e.stopPropagation(),
+      () => e.preventDefault(),
+      () => e.stopPropagation(),
       e.eventPhase,
       e.isTrusted,
       e.nativeEvent,
@@ -34,8 +34,8 @@ SyntheticKeyboardEvent syntheticKeyboardEventFactory(events.SyntheticKeyboardEve
       e.cancelable,
       e.currentTarget,
       e.defaultPrevented,
-          () => e.preventDefault(),
-          () => e.stopPropagation(),
+      () => e.preventDefault(),
+      () => e.stopPropagation(),
       e.eventPhase,
       e.isTrusted,
       e.nativeEvent,
@@ -62,8 +62,8 @@ SyntheticFocusEvent syntheticFocusEventFactory(events.SyntheticFocusEvent e) {
       e.cancelable,
       e.currentTarget,
       e.defaultPrevented,
-          () => e.preventDefault(),
-          () => e.stopPropagation(),
+      () => e.preventDefault(),
+      () => e.stopPropagation(),
       e.eventPhase,
       e.isTrusted,
       e.nativeEvent,
@@ -76,7 +76,7 @@ SyntheticFocusEvent syntheticFocusEventFactory(events.SyntheticFocusEvent e) {
 /// Wrapper for [SyntheticFormEvent].
 SyntheticFormEvent syntheticFormEventFactory(events.SyntheticFormEvent e) {
   return new SyntheticFormEvent(e.bubbles, e.cancelable, e.currentTarget, e.defaultPrevented, () => e.preventDefault(),
-          () => e.stopPropagation(), e.eventPhase, e.isTrusted, e.nativeEvent, e.target, e.timeStamp, e.type);
+      () => e.stopPropagation(), e.eventPhase, e.isTrusted, e.nativeEvent, e.target, e.timeStamp, e.type);
 }
 
 /// Wrapper for [SyntheticDataTransfer].
@@ -157,8 +157,8 @@ SyntheticPointerEvent syntheticPointerEventFactory(events.SyntheticPointerEvent 
     e.cancelable,
     e.currentTarget,
     e.defaultPrevented,
-        () => e.preventDefault(),
-        () => e.stopPropagation(),
+    () => e.preventDefault(),
+    () => e.stopPropagation(),
     e.eventPhase,
     e.isTrusted,
     e.nativeEvent,
@@ -186,8 +186,8 @@ SyntheticMouseEvent syntheticMouseEventFactory(events.SyntheticMouseEvent e) {
     e.cancelable,
     e.currentTarget,
     e.defaultPrevented,
-        () => e.preventDefault(),
-        () => e.stopPropagation(),
+    () => e.preventDefault(),
+    () => e.stopPropagation(),
     e.eventPhase,
     e.isTrusted,
     e.nativeEvent,
@@ -218,8 +218,8 @@ SyntheticTouchEvent syntheticTouchEventFactory(events.SyntheticTouchEvent e) {
     e.cancelable,
     e.currentTarget,
     e.defaultPrevented,
-        () => e.preventDefault(),
-        () => e.stopPropagation(),
+    () => e.preventDefault(),
+    () => e.stopPropagation(),
     e.eventPhase,
     e.isTrusted,
     e.nativeEvent,
@@ -243,8 +243,8 @@ SyntheticTransitionEvent syntheticTransitionEventFactory(events.SyntheticTransit
     e.cancelable,
     e.currentTarget,
     e.defaultPrevented,
-        () => e.preventDefault(),
-        () => e.stopPropagation(),
+    () => e.preventDefault(),
+    () => e.stopPropagation(),
     e.eventPhase,
     e.isTrusted,
     e.nativeEvent,
@@ -264,8 +264,8 @@ SyntheticAnimationEvent syntheticAnimationEventFactory(events.SyntheticAnimation
     e.cancelable,
     e.currentTarget,
     e.defaultPrevented,
-        () => e.preventDefault(),
-        () => e.stopPropagation(),
+    () => e.preventDefault(),
+    () => e.stopPropagation(),
     e.eventPhase,
     e.isTrusted,
     e.nativeEvent,
@@ -285,8 +285,8 @@ SyntheticUIEvent syntheticUIEventFactory(events.SyntheticUIEvent e) {
     e.cancelable,
     e.currentTarget,
     e.defaultPrevented,
-        () => e.preventDefault(),
-        () => e.stopPropagation(),
+    () => e.preventDefault(),
+    () => e.stopPropagation(),
     e.eventPhase,
     e.isTrusted,
     e.nativeEvent,
@@ -305,8 +305,8 @@ SyntheticWheelEvent syntheticWheelEventFactory(events.SyntheticWheelEvent e) {
     e.cancelable,
     e.currentTarget,
     e.defaultPrevented,
-        () => e.preventDefault(),
-        () => e.stopPropagation(),
+    () => e.preventDefault(),
+    () => e.stopPropagation(),
     e.eventPhase,
     e.isTrusted,
     e.nativeEvent,

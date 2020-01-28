@@ -72,10 +72,10 @@ class ReactDartComponentFactoryProxy<TComponent extends Component> extends React
 
     // [1]
     Map extendedProps = (defaultProps != null ? new Map.from(defaultProps) : {})
-    // [2]
+      // [2]
       ..addAll(props)
       ..['children'] = children
-    // [3]
+      // [3]
       ..remove('key')
       ..remove('ref');
 
@@ -154,11 +154,11 @@ class ReactJsContextComponentFactoryProxy extends ReactJsComponentFactoryProxy {
   final bool shouldConvertDomProps;
 
   ReactJsContextComponentFactoryProxy(
-      ReactClass jsClass, {
-        this.shouldConvertDomProps: true,
-        this.isConsumer: false,
-        this.isProvider: false,
-      })  : this.type = jsClass,
+    ReactClass jsClass, {
+    this.shouldConvertDomProps: true,
+    this.isConsumer: false,
+    this.isProvider: false,
+  })  : this.type = jsClass,
         this.factory = React.createFactory(jsClass),
         super(jsClass, shouldConvertDomProps: shouldConvertDomProps);
 
@@ -226,7 +226,7 @@ class ReactJsComponentFactoryProxy extends ReactComponentFactoryProxy {
   ReactElement build(Map props, [List childrenArgs]) {
     dynamic children = generateChildren(childrenArgs, shouldAlwaysBeList: alwaysReturnChildrenAsList);
     JsMap convertedProps =
-    generateJsProps(props, convertEventHandlers: shouldConvertDomProps, convertCallbackRefValue: false);
+        generateJsProps(props, convertEventHandlers: shouldConvertDomProps, convertCallbackRefValue: false);
     return React.createElement(type, convertedProps, children);
   }
 }

@@ -26,7 +26,6 @@ dynamic listifyChildren(dynamic children) {
   }
 }
 
-
 /// A mapping from converted/wrapped JS handler functions (the result of [_convertEventHandlers])
 /// to the original Dart functions (the input of [_convertEventHandlers]).
 final Expando<Function> _originalEventHandlers = new Expando();
