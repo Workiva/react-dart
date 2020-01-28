@@ -383,7 +383,7 @@ void main() {
           randomUseEffectTestComponent({
             'key': 'useLayoutEffectTest2',
           }, []),
-          react.br({'key': 'br4'}),
+          react.br({'key': 'br7'}),
           react.h2({'key': 'useDebugValueTestLabel'}, ['useDebugValue Hook Test']),
           UseDebugValueTestComponent({
             'key': 'useDebugValueTest',

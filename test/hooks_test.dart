@@ -642,6 +642,76 @@ main() {
     group('useLayoutEffect -', () {
       testEffectHook(useLayoutEffect);
     });
+
+    group('useDebugValue -', () {
+      ReactDartFunctionComponentFactoryProxy UseDebugValueTest1;
+      ReactDartFunctionComponentFactoryProxy UseDebugValueTest2;
+      StateHook<bool> isOnline1;
+      StateHook<bool> isOnline2;
+
+      StateHook useFriendStatus(friendID) {
+        final isOnline = useState(false);
+
+        useDebugValue(isOnline.value ? 'Online' : 'Not Online');
+
+        return isOnline;
+      }
+
+      StateHook useFriendStatusWithFormatFunction(friendID) {
+        final isOnline = useState(true);
+
+        useDebugValue(isOnline.value, (value) => value ? 'Online' : 'Not Online');
+
+        return isOnline;
+      }
+
+      setUpAll(() {
+        final mountNode = DivElement();
+
+        UseDebugValueTest1 = react.registerFunctionComponent((Map props) {
+          isOnline1 = useFriendStatus(props['friend']['id']);
+
+          return react.li({
+            'style': {'color': isOnline1.value ? 'green' : 'black'}
+          }, [
+            props['friend']['name']
+          ]);
+        });
+
+        UseDebugValueTest2 = react.registerFunctionComponent((Map props) {
+          isOnline2 = useFriendStatusWithFormatFunction(props['friend']['id']);
+
+          return react.li({
+            'style': {'color': isOnline2.value ? 'green' : 'black'}
+          }, [
+            props['friend']['name']
+          ]);
+        });
+
+        react_dom.render(
+            react.Fragment({}, [
+              UseDebugValueTest1({
+                'key': 'friend1',
+                'friend': {'id': 1, 'name': 'user 1'},
+              }),
+              UseDebugValueTest2({
+                'key': 'friend2',
+                'friend': {'id': 2, 'name': 'user 2'},
+              }),
+            ]),
+            mountNode);
+      });
+
+      test('does not cause errors when used', () {
+        expect(isOnline1.value, false);
+        expect(useFriendStatus, isA<Function>());
+      });
+
+      test('with format function does not cause errors when used', () {
+        expect(isOnline2.value, true);
+        expect(useFriendStatusWithFormatFunction, isA<Function>());
+      });
+    });
   });
 }
 

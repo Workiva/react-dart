@@ -62,7 +62,7 @@ class StateHook<T> {
 ///
 /// __Example__:
 ///
-/// ```
+/// ```dart
 /// UseStateTestComponent(Map props) {
 ///   final count = useState(0);
 ///
@@ -84,7 +84,7 @@ StateHook<T> useState<T>(T initialValue) => StateHook(initialValue);
 ///
 /// __Example__:
 ///
-/// ```
+/// ```dart
 /// UseStateTestComponent(Map props) {
 ///   final count = useStateLazy(() {
 ///     var initialState = someExpensiveComputation(props);
@@ -114,7 +114,7 @@ StateHook<T> useStateLazy<T>(T init()) => StateHook.lazy(init);
 ///
 /// __Example__:
 ///
-/// ```
+/// ```dart
 /// UseEffectTestComponent(Map props) {
 ///   final count = useState(1);
 ///   final evenOdd = useState('even');
@@ -205,7 +205,7 @@ class ReducerHook<TState, TAction, TInit> {
 ///
 /// __Example__:
 ///
-/// ```
+/// ```dart
 /// Map reducer(Map state, Map action) {
 ///   switch (action['type']) {
 ///     case 'increment':
@@ -245,7 +245,7 @@ ReducerHook<TState, TAction, TInit> useReducer<TState, TAction, TInit>(
 ///
 /// __Example__:
 ///
-/// ```
+/// ```dart
 /// Map initializeCount(int initialValue) {
 ///   return {'count': initialValue};
 /// }
@@ -304,7 +304,7 @@ ReducerHook<TState, TAction, TInit> useReducerLazy<TState, TAction, TInit>(
 ///
 /// __Example__:
 ///
-/// ```
+/// ```dart
 /// UseCallbackTestComponent(Map props) {
 ///   final count = useState(0);
 ///   final delta = useState(1);
@@ -342,7 +342,7 @@ Function useCallback(Function callback, List dependencies) => React.useCallback(
 ///
 /// __Example__:
 ///
-/// ```
+/// ```dart
 /// Context countContext = createContext(0);
 ///
 /// UseCallbackTestComponent(Map props) {
@@ -371,7 +371,7 @@ T useContext<T>(Context<T> context) => ContextHelpers.unjsifyNewContext(React.us
 ///
 /// __Example__:
 ///
-/// ```
+/// ```dart
 /// UseRefTestComponent(Map props) {
 ///   final inputValue = useState('');
 ///
@@ -404,7 +404,8 @@ Ref<T> useRef<T>([T initialValue]) => Ref.useRefInit(initialValue);
 /// > * Only call Hooks from inside a [DartFunctionComponent].
 ///
 /// __Example__:
-/// ```
+///
+/// ```dart
 /// UseMemoTestComponent(Map props) {
 ///   final count = useState(0);
 ///
@@ -438,7 +439,7 @@ T useMemo<T>(T Function() createFunction, [List<dynamic> dependencies]) =>
 ///
 /// __Example__:
 ///
-/// ```
+/// ```dart
 /// UseLayoutEffectTestComponent(Map props) {
 ///   final width = useState(0);
 ///   final height = useState(0);
@@ -475,7 +476,7 @@ void useLayoutEffect(dynamic Function() sideEffect, [List<Object> dependencies])
 
 /// Displays [value] as a label for a custom hook in React DevTools.
 ///
-/// Optionally formats [value] using [format].
+/// Optionally formats [value] using [format] function.
 ///
 /// > __Note:__ there are two [rules for using Hooks](https://reactjs.org/docs/hooks-rules.html):
 /// >
@@ -484,7 +485,7 @@ void useLayoutEffect(dynamic Function() sideEffect, [List<Object> dependencies])
 ///
 /// __Example__:
 ///
-/// ```
+/// ```dart
 /// final ChatAPI = {
 ///   'subscribeToFriendStatus': (int id, Function handleStatusChange) =>
 ///       handleStatusChange({'isOnline': id % 2 == 0 ? true : false}),
@@ -540,4 +541,9 @@ void useLayoutEffect(dynamic Function() sideEffect, [List<Object> dependencies])
 /// ```
 ///
 /// Learn more: <https://reactjs.org/docs/hooks-reference.html#usedebugvalue>.
-dynamic useDebugValue<T>(T value, [dynamic Function(T) format]) => React.useDebugValue(value, allowInterop(format));
+dynamic useDebugValue<T>(T value, [dynamic Function(T) format]) {
+  if (format == null) {
+    return React.useDebugValue(value);
+  }
+  return React.useDebugValue(value, allowInterop(format));
+}
