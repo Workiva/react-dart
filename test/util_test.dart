@@ -9,8 +9,6 @@ import 'util.dart';
 // ignore_for_file: invalid_use_of_protected_member
 
 void main() {
-  setClientConfiguration();
-
   group('util test', () {
     test('ReactDartComponentVersion.fromType', () {
       expect(ReactDartComponentVersion.fromType(react.div({}).type), isNull);
