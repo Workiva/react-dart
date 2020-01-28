@@ -1907,600 +1907,600 @@ FunctionComponentRegistrar registerFunctionComponent =
     validateJsApiThenReturn(() => registration_utils.registerFunctionComponent);
 
 /// The HTML `<a>` [AnchorElement].
-var a = validateJsApiThenReturn(() => ReactDomComponentFactoryProxy('a'));
+dynamic a = validateJsApiThenReturn(() => ReactDomComponentFactoryProxy('a'));
 
 /// The HTML `<abbr>` [Element].
-var abbr = validateJsApiThenReturn(() => ReactDomComponentFactoryProxy('abbr'));
+dynamic abbr = validateJsApiThenReturn(() => ReactDomComponentFactoryProxy('abbr'));
 
 /// The HTML `<address>` [Element].
-var address = validateJsApiThenReturn(() => ReactDomComponentFactoryProxy('address'));
+dynamic address = validateJsApiThenReturn(() => ReactDomComponentFactoryProxy('address'));
 
 /// The HTML `<area>` [AreaElement].
-var area = validateJsApiThenReturn(() => ReactDomComponentFactoryProxy('area'));
+dynamic area = validateJsApiThenReturn(() => ReactDomComponentFactoryProxy('area'));
 
 /// The HTML `<article>` [Element].
-var article = validateJsApiThenReturn(() => ReactDomComponentFactoryProxy('article'));
+dynamic article = validateJsApiThenReturn(() => ReactDomComponentFactoryProxy('article'));
 
 /// The HTML `<aside>` [Element].
-var aside = validateJsApiThenReturn(() => ReactDomComponentFactoryProxy('aside'));
+dynamic aside = validateJsApiThenReturn(() => ReactDomComponentFactoryProxy('aside'));
 
 /// The HTML `<audio>` [AudioElement].
-var audio = validateJsApiThenReturn(() => ReactDomComponentFactoryProxy('audio'));
+dynamic audio = validateJsApiThenReturn(() => ReactDomComponentFactoryProxy('audio'));
 
 /// The HTML `<b>` [Element].
-var b = validateJsApiThenReturn(() => ReactDomComponentFactoryProxy('b'));
+dynamic b = validateJsApiThenReturn(() => ReactDomComponentFactoryProxy('b'));
 
 /// The HTML `<base>` [BaseElement].
-var base = validateJsApiThenReturn(() => ReactDomComponentFactoryProxy('base'));
+dynamic base = validateJsApiThenReturn(() => ReactDomComponentFactoryProxy('base'));
 
 /// The HTML `<bdi>` [Element].
-var bdi = validateJsApiThenReturn(() => ReactDomComponentFactoryProxy('bdi'));
+dynamic bdi = validateJsApiThenReturn(() => ReactDomComponentFactoryProxy('bdi'));
 
 /// The HTML `<bdo>` [Element].
-var bdo = validateJsApiThenReturn(() => ReactDomComponentFactoryProxy('bdo'));
+dynamic bdo = validateJsApiThenReturn(() => ReactDomComponentFactoryProxy('bdo'));
 
 /// The HTML `<big>` [Element].
-var big = validateJsApiThenReturn(() => ReactDomComponentFactoryProxy('big'));
+dynamic big = validateJsApiThenReturn(() => ReactDomComponentFactoryProxy('big'));
 
 /// The HTML `<blockquote>` [Element].
-var blockquote = validateJsApiThenReturn(() => ReactDomComponentFactoryProxy('blockquote'));
+dynamic blockquote = validateJsApiThenReturn(() => ReactDomComponentFactoryProxy('blockquote'));
 
 /// The HTML `<body>` [BodyElement].
-var body = validateJsApiThenReturn(() => ReactDomComponentFactoryProxy('body'));
+dynamic body = validateJsApiThenReturn(() => ReactDomComponentFactoryProxy('body'));
 
 /// The HTML `<br>` [BRElement].
-var br = validateJsApiThenReturn(() => ReactDomComponentFactoryProxy('br'));
+dynamic br = validateJsApiThenReturn(() => ReactDomComponentFactoryProxy('br'));
 
 /// The HTML `<button>` [ButtonElement].
-var button = validateJsApiThenReturn(() => ReactDomComponentFactoryProxy('button'));
+dynamic button = validateJsApiThenReturn(() => ReactDomComponentFactoryProxy('button'));
 
 /// The HTML `<canvas>` [CanvasElement].
-var canvas = validateJsApiThenReturn(() => ReactDomComponentFactoryProxy('canvas'));
+dynamic canvas = validateJsApiThenReturn(() => ReactDomComponentFactoryProxy('canvas'));
 
 /// The HTML `<caption>` [Element].
-var caption = validateJsApiThenReturn(() => ReactDomComponentFactoryProxy('caption'));
+dynamic caption = validateJsApiThenReturn(() => ReactDomComponentFactoryProxy('caption'));
 
 /// The HTML `<cite>` [Element].
-var cite = validateJsApiThenReturn(() => ReactDomComponentFactoryProxy('cite'));
+dynamic cite = validateJsApiThenReturn(() => ReactDomComponentFactoryProxy('cite'));
 
 /// The HTML `<code>` [Element].
-var code = validateJsApiThenReturn(() => ReactDomComponentFactoryProxy('code'));
+dynamic code = validateJsApiThenReturn(() => ReactDomComponentFactoryProxy('code'));
 
 /// The HTML `<col>` [Element].
-var col = validateJsApiThenReturn(() => ReactDomComponentFactoryProxy('col'));
+dynamic col = validateJsApiThenReturn(() => ReactDomComponentFactoryProxy('col'));
 
 /// The HTML `<colgroup>` [Element].
-var colgroup = validateJsApiThenReturn(() => ReactDomComponentFactoryProxy('colgroup'));
+dynamic colgroup = validateJsApiThenReturn(() => ReactDomComponentFactoryProxy('colgroup'));
 
 /// The HTML `<data>` [Element].
-var data = validateJsApiThenReturn(() => ReactDomComponentFactoryProxy('data'));
+dynamic data = validateJsApiThenReturn(() => ReactDomComponentFactoryProxy('data'));
 
 /// The HTML `<datalist>` [DataListElement].
-var datalist = validateJsApiThenReturn(() => ReactDomComponentFactoryProxy('datalist'));
+dynamic datalist = validateJsApiThenReturn(() => ReactDomComponentFactoryProxy('datalist'));
 
 /// The HTML `<dd>` [Element].
-var dd = validateJsApiThenReturn(() => ReactDomComponentFactoryProxy('dd'));
+dynamic dd = validateJsApiThenReturn(() => ReactDomComponentFactoryProxy('dd'));
 
 /// The HTML `<del>` [Element].
-var del = validateJsApiThenReturn(() => ReactDomComponentFactoryProxy('del'));
+dynamic del = validateJsApiThenReturn(() => ReactDomComponentFactoryProxy('del'));
 
 /// The HTML `<details>` [DetailsElement].
-var details = validateJsApiThenReturn(() => ReactDomComponentFactoryProxy('details'));
+dynamic details = validateJsApiThenReturn(() => ReactDomComponentFactoryProxy('details'));
 
 /// The HTML `<dfn>` [Element].
-var dfn = validateJsApiThenReturn(() => ReactDomComponentFactoryProxy('dfn'));
+dynamic dfn = validateJsApiThenReturn(() => ReactDomComponentFactoryProxy('dfn'));
 
 /// The HTML `<dialog>` [DialogElement].
-var dialog = validateJsApiThenReturn(() => ReactDomComponentFactoryProxy('dialog'));
+dynamic dialog = validateJsApiThenReturn(() => ReactDomComponentFactoryProxy('dialog'));
 
 /// The HTML `<div>` [DivElement].
-var div = validateJsApiThenReturn(() => ReactDomComponentFactoryProxy('div'));
+dynamic div = validateJsApiThenReturn(() => ReactDomComponentFactoryProxy('div'));
 
 /// The HTML `<dl>` [DListElement].
-var dl = validateJsApiThenReturn(() => ReactDomComponentFactoryProxy('dl'));
+dynamic dl = validateJsApiThenReturn(() => ReactDomComponentFactoryProxy('dl'));
 
 /// The HTML `<dt>` [Element].
-var dt = validateJsApiThenReturn(() => ReactDomComponentFactoryProxy('dt'));
+dynamic dt = validateJsApiThenReturn(() => ReactDomComponentFactoryProxy('dt'));
 
 /// The HTML `<em>` [Element].
-var em = validateJsApiThenReturn(() => ReactDomComponentFactoryProxy('em'));
+dynamic em = validateJsApiThenReturn(() => ReactDomComponentFactoryProxy('em'));
 
 /// The HTML `<embed>` [EmbedElement].
-var embed = validateJsApiThenReturn(() => ReactDomComponentFactoryProxy('embed'));
+dynamic embed = validateJsApiThenReturn(() => ReactDomComponentFactoryProxy('embed'));
 
 /// The HTML `<fieldset>` [FieldSetElement].
-var fieldset = validateJsApiThenReturn(() => ReactDomComponentFactoryProxy('fieldset'));
+dynamic fieldset = validateJsApiThenReturn(() => ReactDomComponentFactoryProxy('fieldset'));
 
 /// The HTML `<figcaption>` [Element].
-var figcaption = validateJsApiThenReturn(() => ReactDomComponentFactoryProxy('figcaption'));
+dynamic figcaption = validateJsApiThenReturn(() => ReactDomComponentFactoryProxy('figcaption'));
 
 /// The HTML `<figure>` [Element].
-var figure = validateJsApiThenReturn(() => ReactDomComponentFactoryProxy('figure'));
+dynamic figure = validateJsApiThenReturn(() => ReactDomComponentFactoryProxy('figure'));
 
 /// The HTML `<footer>` [Element].
-var footer = validateJsApiThenReturn(() => ReactDomComponentFactoryProxy('footer'));
+dynamic footer = validateJsApiThenReturn(() => ReactDomComponentFactoryProxy('footer'));
 
 /// The HTML `<form>` [FormElement].
-var form = validateJsApiThenReturn(() => ReactDomComponentFactoryProxy('form'));
+dynamic form = validateJsApiThenReturn(() => ReactDomComponentFactoryProxy('form'));
 
 /// The HTML `<h1>` [HeadingElement].
-var h1 = validateJsApiThenReturn(() => ReactDomComponentFactoryProxy('h1'));
+dynamic h1 = validateJsApiThenReturn(() => ReactDomComponentFactoryProxy('h1'));
 
 /// The HTML `<h2>` [HeadingElement].
-var h2 = validateJsApiThenReturn(() => ReactDomComponentFactoryProxy('h2'));
+dynamic h2 = validateJsApiThenReturn(() => ReactDomComponentFactoryProxy('h2'));
 
 /// The HTML `<h3>` [HeadingElement].
-var h3 = validateJsApiThenReturn(() => ReactDomComponentFactoryProxy('h3'));
+dynamic h3 = validateJsApiThenReturn(() => ReactDomComponentFactoryProxy('h3'));
 
 /// The HTML `<h4>` [HeadingElement].
-var h4 = validateJsApiThenReturn(() => ReactDomComponentFactoryProxy('h4'));
+dynamic h4 = validateJsApiThenReturn(() => ReactDomComponentFactoryProxy('h4'));
 
 /// The HTML `<h5>` [HeadingElement].
-var h5 = validateJsApiThenReturn(() => ReactDomComponentFactoryProxy('h5'));
+dynamic h5 = validateJsApiThenReturn(() => ReactDomComponentFactoryProxy('h5'));
 
 /// The HTML `<h6>` [HeadingElement].
-var h6 = validateJsApiThenReturn(() => ReactDomComponentFactoryProxy('h6'));
+dynamic h6 = validateJsApiThenReturn(() => ReactDomComponentFactoryProxy('h6'));
 
 /// The HTML `<head>` [HeadElement].
-var head = validateJsApiThenReturn(() => ReactDomComponentFactoryProxy('head'));
+dynamic head = validateJsApiThenReturn(() => ReactDomComponentFactoryProxy('head'));
 
 /// The HTML `<header>` [Element].
-var header = validateJsApiThenReturn(() => ReactDomComponentFactoryProxy('header'));
+dynamic header = validateJsApiThenReturn(() => ReactDomComponentFactoryProxy('header'));
 
 /// The HTML `<hr>` [HRElement].
-var hr = validateJsApiThenReturn(() => ReactDomComponentFactoryProxy('hr'));
+dynamic hr = validateJsApiThenReturn(() => ReactDomComponentFactoryProxy('hr'));
 
 /// The HTML `<html>` [HtmlHtmlElement].
-var html = validateJsApiThenReturn(() => ReactDomComponentFactoryProxy('html'));
+dynamic html = validateJsApiThenReturn(() => ReactDomComponentFactoryProxy('html'));
 
 /// The HTML `<i>` [Element].
-var i = validateJsApiThenReturn(() => ReactDomComponentFactoryProxy('i'));
+dynamic i = validateJsApiThenReturn(() => ReactDomComponentFactoryProxy('i'));
 
 /// The HTML `<iframe>` [IFrameElement].
-var iframe = validateJsApiThenReturn(() => ReactDomComponentFactoryProxy('iframe'));
+dynamic iframe = validateJsApiThenReturn(() => ReactDomComponentFactoryProxy('iframe'));
 
 /// The HTML `<img>` [ImageElement].
-var img = validateJsApiThenReturn(() => ReactDomComponentFactoryProxy('img'));
+dynamic img = validateJsApiThenReturn(() => ReactDomComponentFactoryProxy('img'));
 
 /// The HTML `<input>` [InputElement].
-var input = validateJsApiThenReturn(() => ReactDomComponentFactoryProxy('input'));
+dynamic input = validateJsApiThenReturn(() => ReactDomComponentFactoryProxy('input'));
 
 /// The HTML `<ins>` [Element].
-var ins = validateJsApiThenReturn(() => ReactDomComponentFactoryProxy('ins'));
+dynamic ins = validateJsApiThenReturn(() => ReactDomComponentFactoryProxy('ins'));
 
 /// The HTML `<kbd>` [Element].
-var kbd = validateJsApiThenReturn(() => ReactDomComponentFactoryProxy('kbd'));
+dynamic kbd = validateJsApiThenReturn(() => ReactDomComponentFactoryProxy('kbd'));
 
 /// The HTML `<keygen>` [KeygenElement].
-var keygen = validateJsApiThenReturn(() => ReactDomComponentFactoryProxy('keygen'));
+dynamic keygen = validateJsApiThenReturn(() => ReactDomComponentFactoryProxy('keygen'));
 
 /// The HTML `<label>` [LabelElement].
-var label = validateJsApiThenReturn(() => ReactDomComponentFactoryProxy('label'));
+dynamic label = validateJsApiThenReturn(() => ReactDomComponentFactoryProxy('label'));
 
 /// The HTML `<legend>` [LegendElement].
-var legend = validateJsApiThenReturn(() => ReactDomComponentFactoryProxy('legend'));
+dynamic legend = validateJsApiThenReturn(() => ReactDomComponentFactoryProxy('legend'));
 
 /// The HTML `<li>` [LIElement].
-var li = validateJsApiThenReturn(() => ReactDomComponentFactoryProxy('li'));
+dynamic li = validateJsApiThenReturn(() => ReactDomComponentFactoryProxy('li'));
 
 /// The HTML `<link>` [LinkElement].
-var link = validateJsApiThenReturn(() => ReactDomComponentFactoryProxy('link'));
+dynamic link = validateJsApiThenReturn(() => ReactDomComponentFactoryProxy('link'));
 
 /// The HTML `<main>` [Element].
-var main = validateJsApiThenReturn(() => ReactDomComponentFactoryProxy('main'));
+dynamic main = validateJsApiThenReturn(() => ReactDomComponentFactoryProxy('main'));
 
 /// The HTML `<map>` [MapElement].
-var map = validateJsApiThenReturn(() => ReactDomComponentFactoryProxy('map'));
+dynamic map = validateJsApiThenReturn(() => ReactDomComponentFactoryProxy('map'));
 
 /// The HTML `<mark>` [Element].
-var mark = validateJsApiThenReturn(() => ReactDomComponentFactoryProxy('mark'));
+dynamic mark = validateJsApiThenReturn(() => ReactDomComponentFactoryProxy('mark'));
 
 /// The HTML `<menu>` [MenuElement].
-var menu = validateJsApiThenReturn(() => ReactDomComponentFactoryProxy('menu'));
+dynamic menu = validateJsApiThenReturn(() => ReactDomComponentFactoryProxy('menu'));
 
 /// The HTML `<menuitem>` [MenuItemElement].
-var menuitem = validateJsApiThenReturn(() => ReactDomComponentFactoryProxy('menuitem'));
+dynamic menuitem = validateJsApiThenReturn(() => ReactDomComponentFactoryProxy('menuitem'));
 
 /// The HTML `<meta>` [MetaElement].
-var meta = validateJsApiThenReturn(() => ReactDomComponentFactoryProxy('meta'));
+dynamic meta = validateJsApiThenReturn(() => ReactDomComponentFactoryProxy('meta'));
 
 /// The HTML `<meter>` [MeterElement].
-var meter = validateJsApiThenReturn(() => ReactDomComponentFactoryProxy('meter'));
+dynamic meter = validateJsApiThenReturn(() => ReactDomComponentFactoryProxy('meter'));
 
 /// The HTML `<nav>` [Element].
-var nav = validateJsApiThenReturn(() => ReactDomComponentFactoryProxy('nav'));
+dynamic nav = validateJsApiThenReturn(() => ReactDomComponentFactoryProxy('nav'));
 
 /// The HTML `<noscript>` [Element].
-var noscript = validateJsApiThenReturn(() => ReactDomComponentFactoryProxy('noscript'));
+dynamic noscript = validateJsApiThenReturn(() => ReactDomComponentFactoryProxy('noscript'));
 
 /// The HTML `<object>` [ObjectElement].
-var object = validateJsApiThenReturn(() => ReactDomComponentFactoryProxy('object'));
+dynamic object = validateJsApiThenReturn(() => ReactDomComponentFactoryProxy('object'));
 
 /// The HTML `<ol>` [OListElement].
-var ol = validateJsApiThenReturn(() => ReactDomComponentFactoryProxy('ol'));
+dynamic ol = validateJsApiThenReturn(() => ReactDomComponentFactoryProxy('ol'));
 
 /// The HTML `<optgroup>` [OptGroupElement].
-var optgroup = validateJsApiThenReturn(() => ReactDomComponentFactoryProxy('optgroup'));
+dynamic optgroup = validateJsApiThenReturn(() => ReactDomComponentFactoryProxy('optgroup'));
 
 /// The HTML `<option>` [OptionElement].
-var option = validateJsApiThenReturn(() => ReactDomComponentFactoryProxy('option'));
+dynamic option = validateJsApiThenReturn(() => ReactDomComponentFactoryProxy('option'));
 
 /// The HTML `<output>` [OutputElement].
-var output = validateJsApiThenReturn(() => ReactDomComponentFactoryProxy('output'));
+dynamic output = validateJsApiThenReturn(() => ReactDomComponentFactoryProxy('output'));
 
 /// The HTML `<p>` [ParagraphElement].
-var p = validateJsApiThenReturn(() => ReactDomComponentFactoryProxy('p'));
+dynamic p = validateJsApiThenReturn(() => ReactDomComponentFactoryProxy('p'));
 
 /// The HTML `<param>` [ParamElement].
-var param = validateJsApiThenReturn(() => ReactDomComponentFactoryProxy('param'));
+dynamic param = validateJsApiThenReturn(() => ReactDomComponentFactoryProxy('param'));
 
 /// The HTML `<picture>` [PictureElement].
-var picture = validateJsApiThenReturn(() => ReactDomComponentFactoryProxy('picture'));
+dynamic picture = validateJsApiThenReturn(() => ReactDomComponentFactoryProxy('picture'));
 
 /// The HTML `<pre>` [PreElement].
-var pre = validateJsApiThenReturn(() => ReactDomComponentFactoryProxy('pre'));
+dynamic pre = validateJsApiThenReturn(() => ReactDomComponentFactoryProxy('pre'));
 
 /// The HTML `<progress>` [ProgressElement].
-var progress = validateJsApiThenReturn(() => ReactDomComponentFactoryProxy('progress'));
+dynamic progress = validateJsApiThenReturn(() => ReactDomComponentFactoryProxy('progress'));
 
 /// The HTML `<q>` [QuoteElement].
-var q = validateJsApiThenReturn(() => ReactDomComponentFactoryProxy('q'));
+dynamic q = validateJsApiThenReturn(() => ReactDomComponentFactoryProxy('q'));
 
 /// The HTML `<rp>` [Element].
-var rp = validateJsApiThenReturn(() => ReactDomComponentFactoryProxy('rp'));
+dynamic rp = validateJsApiThenReturn(() => ReactDomComponentFactoryProxy('rp'));
 
 /// The HTML `<rt>` [Element].
-var rt = validateJsApiThenReturn(() => ReactDomComponentFactoryProxy('rt'));
+dynamic rt = validateJsApiThenReturn(() => ReactDomComponentFactoryProxy('rt'));
 
 /// The HTML `<ruby>` [Element].
-var ruby = validateJsApiThenReturn(() => ReactDomComponentFactoryProxy('ruby'));
+dynamic ruby = validateJsApiThenReturn(() => ReactDomComponentFactoryProxy('ruby'));
 
 /// The HTML `<s>` [Element].
-var s = validateJsApiThenReturn(() => ReactDomComponentFactoryProxy('s'));
+dynamic s = validateJsApiThenReturn(() => ReactDomComponentFactoryProxy('s'));
 
 /// The HTML `<samp>` [Element].
-var samp = validateJsApiThenReturn(() => ReactDomComponentFactoryProxy('samp'));
+dynamic samp = validateJsApiThenReturn(() => ReactDomComponentFactoryProxy('samp'));
 
 /// The HTML `<script>` [ScriptElement].
-var script = validateJsApiThenReturn(() => ReactDomComponentFactoryProxy('script'));
+dynamic script = validateJsApiThenReturn(() => ReactDomComponentFactoryProxy('script'));
 
 /// The HTML `<section>` [Element].
-var section = validateJsApiThenReturn(() => ReactDomComponentFactoryProxy('section'));
+dynamic section = validateJsApiThenReturn(() => ReactDomComponentFactoryProxy('section'));
 
 /// The HTML `<select>` [SelectElement].
-var select = validateJsApiThenReturn(() => ReactDomComponentFactoryProxy('select'));
+dynamic select = validateJsApiThenReturn(() => ReactDomComponentFactoryProxy('select'));
 
 /// The HTML `<small>` [Element].
-var small = validateJsApiThenReturn(() => ReactDomComponentFactoryProxy('small'));
+dynamic small = validateJsApiThenReturn(() => ReactDomComponentFactoryProxy('small'));
 
 /// The HTML `<source>` [SourceElement].
-var source = validateJsApiThenReturn(() => ReactDomComponentFactoryProxy('source'));
+dynamic source = validateJsApiThenReturn(() => ReactDomComponentFactoryProxy('source'));
 
 /// The HTML `<span>` [SpanElement].
-var span = validateJsApiThenReturn(() => ReactDomComponentFactoryProxy('span'));
+dynamic span = validateJsApiThenReturn(() => ReactDomComponentFactoryProxy('span'));
 
 /// The HTML `<strong>` [Element].
-var strong = validateJsApiThenReturn(() => ReactDomComponentFactoryProxy('strong'));
+dynamic strong = validateJsApiThenReturn(() => ReactDomComponentFactoryProxy('strong'));
 
 /// The HTML `<style>` [StyleElement].
-var style = validateJsApiThenReturn(() => ReactDomComponentFactoryProxy('style'));
+dynamic style = validateJsApiThenReturn(() => ReactDomComponentFactoryProxy('style'));
 
 /// The HTML `<sub>` [Element].
-var sub = validateJsApiThenReturn(() => ReactDomComponentFactoryProxy('sub'));
+dynamic sub = validateJsApiThenReturn(() => ReactDomComponentFactoryProxy('sub'));
 
 /// The HTML `<summary>` [Element].
-var summary = validateJsApiThenReturn(() => ReactDomComponentFactoryProxy('summary'));
+dynamic summary = validateJsApiThenReturn(() => ReactDomComponentFactoryProxy('summary'));
 
 /// The HTML `<sup>` [Element].
-var sup = validateJsApiThenReturn(() => ReactDomComponentFactoryProxy('sup'));
+dynamic sup = validateJsApiThenReturn(() => ReactDomComponentFactoryProxy('sup'));
 
 /// The HTML `<table>` [TableElement].
-var table = validateJsApiThenReturn(() => ReactDomComponentFactoryProxy('table'));
+dynamic table = validateJsApiThenReturn(() => ReactDomComponentFactoryProxy('table'));
 
 /// The HTML `<tbody>` [TableSectionElement].
-var tbody = validateJsApiThenReturn(() => ReactDomComponentFactoryProxy('tbody'));
+dynamic tbody = validateJsApiThenReturn(() => ReactDomComponentFactoryProxy('tbody'));
 
 /// The HTML `<td>` [TableCellElement].
-var td = validateJsApiThenReturn(() => ReactDomComponentFactoryProxy('td'));
+dynamic td = validateJsApiThenReturn(() => ReactDomComponentFactoryProxy('td'));
 
 /// The HTML `<textarea>` [TextAreaElement].
-var textarea = validateJsApiThenReturn(() => ReactDomComponentFactoryProxy('textarea'));
+dynamic textarea = validateJsApiThenReturn(() => ReactDomComponentFactoryProxy('textarea'));
 
 /// The HTML `<tfoot>` [TableSectionElement].
-var tfoot = validateJsApiThenReturn(() => ReactDomComponentFactoryProxy('tfoot'));
+dynamic tfoot = validateJsApiThenReturn(() => ReactDomComponentFactoryProxy('tfoot'));
 
 /// The HTML `<th>` [TableCellElement].
-var th = validateJsApiThenReturn(() => ReactDomComponentFactoryProxy('th'));
+dynamic th = validateJsApiThenReturn(() => ReactDomComponentFactoryProxy('th'));
 
 /// The HTML `<thead>` [TableSectionElement].
-var thead = validateJsApiThenReturn(() => ReactDomComponentFactoryProxy('thead'));
+dynamic thead = validateJsApiThenReturn(() => ReactDomComponentFactoryProxy('thead'));
 
 /// The HTML `<time>` [TimeInputElement].
-var time = validateJsApiThenReturn(() => ReactDomComponentFactoryProxy('time'));
+dynamic time = validateJsApiThenReturn(() => ReactDomComponentFactoryProxy('time'));
 
 /// The HTML `<title>` [TitleElement].
-var title = validateJsApiThenReturn(() => ReactDomComponentFactoryProxy('title'));
+dynamic title = validateJsApiThenReturn(() => ReactDomComponentFactoryProxy('title'));
 
 /// The HTML `<tr>` [TableRowElement].
-var tr = validateJsApiThenReturn(() => ReactDomComponentFactoryProxy('tr'));
+dynamic tr = validateJsApiThenReturn(() => ReactDomComponentFactoryProxy('tr'));
 
 /// The HTML `<track>` [TrackElement].
-var track = validateJsApiThenReturn(() => ReactDomComponentFactoryProxy('track'));
+dynamic track = validateJsApiThenReturn(() => ReactDomComponentFactoryProxy('track'));
 
 /// The HTML `<u>` [Element].
-var u = validateJsApiThenReturn(() => ReactDomComponentFactoryProxy('u'));
+dynamic u = validateJsApiThenReturn(() => ReactDomComponentFactoryProxy('u'));
 
 /// The HTML `<ul>` [UListElement].
-var ul = validateJsApiThenReturn(() => ReactDomComponentFactoryProxy('ul'));
+dynamic ul = validateJsApiThenReturn(() => ReactDomComponentFactoryProxy('ul'));
 
 /// The HTML `<var>` [Element].
 ///
 /// _Named variable because `var` is a reserved word in Dart._
-var variable = validateJsApiThenReturn(() => ReactDomComponentFactoryProxy('var'));
+dynamic variable = validateJsApiThenReturn(() => ReactDomComponentFactoryProxy('var'));
 
 /// The HTML `<video>` [VideoElement].
-var video = validateJsApiThenReturn(() => ReactDomComponentFactoryProxy('video'));
+dynamic video = validateJsApiThenReturn(() => ReactDomComponentFactoryProxy('video'));
 
 /// The HTML `<wbr>` [Element].
-var wbr = validateJsApiThenReturn(() => ReactDomComponentFactoryProxy('wbr'));
+dynamic wbr = validateJsApiThenReturn(() => ReactDomComponentFactoryProxy('wbr'));
 
 /// The SVG `<altGlyph>` [AltGlyphElement].
-var altGlyph = validateJsApiThenReturn(() => ReactDomComponentFactoryProxy('altGlyph'));
+dynamic altGlyph = validateJsApiThenReturn(() => ReactDomComponentFactoryProxy('altGlyph'));
 
 /// The SVG `<altGlyphDef>` [AltGlyphDefElement].
-var altGlyphDef = validateJsApiThenReturn(() => ReactDomComponentFactoryProxy('altGlyphDef'));
+dynamic altGlyphDef = validateJsApiThenReturn(() => ReactDomComponentFactoryProxy('altGlyphDef'));
 
 /// The SVG `<altGlyphItem>` [AltGlyphItemElement].
-var altGlyphItem = validateJsApiThenReturn(() => ReactDomComponentFactoryProxy('altGlyphItem'));
+dynamic altGlyphItem = validateJsApiThenReturn(() => ReactDomComponentFactoryProxy('altGlyphItem'));
 
 /// The SVG `<animate>` [AnimateElement].
-var animate = validateJsApiThenReturn(() => ReactDomComponentFactoryProxy('animate'));
+dynamic animate = validateJsApiThenReturn(() => ReactDomComponentFactoryProxy('animate'));
 
 /// The SVG `<animateColor>` [AnimateColorElement].
-var animateColor = validateJsApiThenReturn(() => ReactDomComponentFactoryProxy('animateColor'));
+dynamic animateColor = validateJsApiThenReturn(() => ReactDomComponentFactoryProxy('animateColor'));
 
 /// The SVG `<animateMotion>` [AnimateMotionElement].
-var animateMotion = validateJsApiThenReturn(() => ReactDomComponentFactoryProxy('animateMotion'));
+dynamic animateMotion = validateJsApiThenReturn(() => ReactDomComponentFactoryProxy('animateMotion'));
 
 /// The SVG `<animateTransform>` [AnimateTransformElement].
-var animateTransform = validateJsApiThenReturn(() => ReactDomComponentFactoryProxy('animateTransform'));
+dynamic animateTransform = validateJsApiThenReturn(() => ReactDomComponentFactoryProxy('animateTransform'));
 
 /// The SVG `<circle>` [CircleElement].
-var circle = validateJsApiThenReturn(() => ReactDomComponentFactoryProxy('circle'));
+dynamic circle = validateJsApiThenReturn(() => ReactDomComponentFactoryProxy('circle'));
 
 /// The SVG `<clipPath>` [ClipPathElement].
-var clipPath = validateJsApiThenReturn(() => ReactDomComponentFactoryProxy('clipPath'));
+dynamic clipPath = validateJsApiThenReturn(() => ReactDomComponentFactoryProxy('clipPath'));
 
 /// The SVG `<color-profile>` [ColorProfileElement].
-var colorProfile = validateJsApiThenReturn(() => ReactDomComponentFactoryProxy('color-profile'));
+dynamic colorProfile = validateJsApiThenReturn(() => ReactDomComponentFactoryProxy('color-profile'));
 
 /// The SVG `<cursor>` [CursorElement].
-var cursor = validateJsApiThenReturn(() => ReactDomComponentFactoryProxy('cursor'));
+dynamic cursor = validateJsApiThenReturn(() => ReactDomComponentFactoryProxy('cursor'));
 
 /// The SVG `<defs>` [DefsElement].
-var defs = validateJsApiThenReturn(() => ReactDomComponentFactoryProxy('defs'));
+dynamic defs = validateJsApiThenReturn(() => ReactDomComponentFactoryProxy('defs'));
 
 /// The SVG `<desc>` [DescElement].
-var desc = validateJsApiThenReturn(() => ReactDomComponentFactoryProxy('desc'));
+dynamic desc = validateJsApiThenReturn(() => ReactDomComponentFactoryProxy('desc'));
 
 /// The SVG `<discard>` [DiscardElement].
-var discard = validateJsApiThenReturn(() => ReactDomComponentFactoryProxy('discard'));
+dynamic discard = validateJsApiThenReturn(() => ReactDomComponentFactoryProxy('discard'));
 
 /// The SVG `<ellipse>` [EllipseElement].
-var ellipse = validateJsApiThenReturn(() => ReactDomComponentFactoryProxy('ellipse'));
+dynamic ellipse = validateJsApiThenReturn(() => ReactDomComponentFactoryProxy('ellipse'));
 
 /// The SVG `<feBlend>` [FeBlendElement].
-var feBlend = validateJsApiThenReturn(() => ReactDomComponentFactoryProxy('feBlend'));
+dynamic feBlend = validateJsApiThenReturn(() => ReactDomComponentFactoryProxy('feBlend'));
 
 /// The SVG `<feColorMatrix>` [FeColorMatrixElement].
-var feColorMatrix = validateJsApiThenReturn(() => ReactDomComponentFactoryProxy('feColorMatrix'));
+dynamic feColorMatrix = validateJsApiThenReturn(() => ReactDomComponentFactoryProxy('feColorMatrix'));
 
 /// The SVG `<feComponentTransfer>` [FeComponentTransferElement].
-var feComponentTransfer = validateJsApiThenReturn(() => ReactDomComponentFactoryProxy('feComponentTransfer'));
+dynamic feComponentTransfer = validateJsApiThenReturn(() => ReactDomComponentFactoryProxy('feComponentTransfer'));
 
 /// The SVG `<feComposite>` [FeCompositeElement].
-var feComposite = validateJsApiThenReturn(() => ReactDomComponentFactoryProxy('feComposite'));
+dynamic feComposite = validateJsApiThenReturn(() => ReactDomComponentFactoryProxy('feComposite'));
 
 /// The SVG `<feConvolveMatrix>` [FeConvolveMatrixElement].
-var feConvolveMatrix = validateJsApiThenReturn(() => ReactDomComponentFactoryProxy('feConvolveMatrix'));
+dynamic feConvolveMatrix = validateJsApiThenReturn(() => ReactDomComponentFactoryProxy('feConvolveMatrix'));
 
 /// The SVG `<feDiffuseLighting>` [FeDiffuseLightingElement].
-var feDiffuseLighting = validateJsApiThenReturn(() => ReactDomComponentFactoryProxy('feDiffuseLighting'));
+dynamic feDiffuseLighting = validateJsApiThenReturn(() => ReactDomComponentFactoryProxy('feDiffuseLighting'));
 
 /// The SVG `<feDisplacementMap>` [FeDisplacementMapElement].
-var feDisplacementMap = validateJsApiThenReturn(() => ReactDomComponentFactoryProxy('feDisplacementMap'));
+dynamic feDisplacementMap = validateJsApiThenReturn(() => ReactDomComponentFactoryProxy('feDisplacementMap'));
 
 /// The SVG `<feDistantLight>` [FeDistantLightElement].
-var feDistantLight = validateJsApiThenReturn(() => ReactDomComponentFactoryProxy('feDistantLight'));
+dynamic feDistantLight = validateJsApiThenReturn(() => ReactDomComponentFactoryProxy('feDistantLight'));
 
 /// The SVG `<feDropShadow>` [FeDropShadowElement].
-var feDropShadow = validateJsApiThenReturn(() => ReactDomComponentFactoryProxy('feDropShadow'));
+dynamic feDropShadow = validateJsApiThenReturn(() => ReactDomComponentFactoryProxy('feDropShadow'));
 
 /// The SVG `<feFlood>` [FeFloodElement].
-var feFlood = validateJsApiThenReturn(() => ReactDomComponentFactoryProxy('feFlood'));
+dynamic feFlood = validateJsApiThenReturn(() => ReactDomComponentFactoryProxy('feFlood'));
 
 /// The SVG `<feFuncA>` [FeFuncAElement].
-var feFuncA = validateJsApiThenReturn(() => ReactDomComponentFactoryProxy('feFuncA'));
+dynamic feFuncA = validateJsApiThenReturn(() => ReactDomComponentFactoryProxy('feFuncA'));
 
 /// The SVG `<feFuncB>` [FeFuncBElement].
-var feFuncB = validateJsApiThenReturn(() => ReactDomComponentFactoryProxy('feFuncB'));
+dynamic feFuncB = validateJsApiThenReturn(() => ReactDomComponentFactoryProxy('feFuncB'));
 
 /// The SVG `<feFuncG>` [FeFuncGElement].
-var feFuncG = validateJsApiThenReturn(() => ReactDomComponentFactoryProxy('feFuncG'));
+dynamic feFuncG = validateJsApiThenReturn(() => ReactDomComponentFactoryProxy('feFuncG'));
 
 /// The SVG `<feFuncR>` [FeFuncRElement].
-var feFuncR = validateJsApiThenReturn(() => ReactDomComponentFactoryProxy('feFuncR'));
+dynamic feFuncR = validateJsApiThenReturn(() => ReactDomComponentFactoryProxy('feFuncR'));
 
 /// The SVG `<feGaussianBlur>` [FeGaussianBlurElement].
-var feGaussianBlur = validateJsApiThenReturn(() => ReactDomComponentFactoryProxy('feGaussianBlur'));
+dynamic feGaussianBlur = validateJsApiThenReturn(() => ReactDomComponentFactoryProxy('feGaussianBlur'));
 
 /// The SVG `<feImage>` [FeImageElement].
-var feImage = validateJsApiThenReturn(() => ReactDomComponentFactoryProxy('feImage'));
+dynamic feImage = validateJsApiThenReturn(() => ReactDomComponentFactoryProxy('feImage'));
 
 /// The SVG `<feMerge>` [FeMergeElement].
-var feMerge = validateJsApiThenReturn(() => ReactDomComponentFactoryProxy('feMerge'));
+dynamic feMerge = validateJsApiThenReturn(() => ReactDomComponentFactoryProxy('feMerge'));
 
 /// The SVG `<feMergeNode>` [FeMergeNodeElement].
-var feMergeNode = validateJsApiThenReturn(() => ReactDomComponentFactoryProxy('feMergeNode'));
+dynamic feMergeNode = validateJsApiThenReturn(() => ReactDomComponentFactoryProxy('feMergeNode'));
 
 /// The SVG `<feMorphology>` [FeMorphologyElement].
-var feMorphology = validateJsApiThenReturn(() => ReactDomComponentFactoryProxy('feMorphology'));
+dynamic feMorphology = validateJsApiThenReturn(() => ReactDomComponentFactoryProxy('feMorphology'));
 
 /// The SVG `<feOffset>` [FeOffsetElement].
-var feOffset = validateJsApiThenReturn(() => ReactDomComponentFactoryProxy('feOffset'));
+dynamic feOffset = validateJsApiThenReturn(() => ReactDomComponentFactoryProxy('feOffset'));
 
 /// The SVG `<fePointLight>` [FePointLightElement].
-var fePointLight = validateJsApiThenReturn(() => ReactDomComponentFactoryProxy('fePointLight'));
+dynamic fePointLight = validateJsApiThenReturn(() => ReactDomComponentFactoryProxy('fePointLight'));
 
 /// The SVG `<feSpecularLighting>` [FeSpecularLightingElement].
-var feSpecularLighting = validateJsApiThenReturn(() => ReactDomComponentFactoryProxy('feSpecularLighting'));
+dynamic feSpecularLighting = validateJsApiThenReturn(() => ReactDomComponentFactoryProxy('feSpecularLighting'));
 
 /// The SVG `<feSpotLight>` [FeSpotLightElement].
-var feSpotLight = validateJsApiThenReturn(() => ReactDomComponentFactoryProxy('feSpotLight'));
+dynamic feSpotLight = validateJsApiThenReturn(() => ReactDomComponentFactoryProxy('feSpotLight'));
 
 /// The SVG `<feTile>` [FeTileElement].
-var feTile = validateJsApiThenReturn(() => ReactDomComponentFactoryProxy('feTile'));
+dynamic feTile = validateJsApiThenReturn(() => ReactDomComponentFactoryProxy('feTile'));
 
 /// The SVG `<feTurbulence>` [FeTurbulenceElement].
-var feTurbulence = validateJsApiThenReturn(() => ReactDomComponentFactoryProxy('feTurbulence'));
+dynamic feTurbulence = validateJsApiThenReturn(() => ReactDomComponentFactoryProxy('feTurbulence'));
 
 /// The SVG `<filter>` [FilterElement].
-var filter = validateJsApiThenReturn(() => ReactDomComponentFactoryProxy('filter'));
+dynamic filter = validateJsApiThenReturn(() => ReactDomComponentFactoryProxy('filter'));
 
 /// The SVG `<font>` [FontElement].
-var font = validateJsApiThenReturn(() => ReactDomComponentFactoryProxy('font'));
+dynamic font = validateJsApiThenReturn(() => ReactDomComponentFactoryProxy('font'));
 
 /// The SVG `<font-face>` [FontFaceElement].
-var fontFace = validateJsApiThenReturn(() => ReactDomComponentFactoryProxy('font-face'));
+dynamic fontFace = validateJsApiThenReturn(() => ReactDomComponentFactoryProxy('font-face'));
 
 /// The SVG `<font-face-format>` [FontFaceFormatElement].
-var fontFaceFormat = validateJsApiThenReturn(() => ReactDomComponentFactoryProxy('font-face-format'));
+dynamic fontFaceFormat = validateJsApiThenReturn(() => ReactDomComponentFactoryProxy('font-face-format'));
 
 /// The SVG `<font-face-name>` [FontFaceNameElement].
-var fontFaceName = validateJsApiThenReturn(() => ReactDomComponentFactoryProxy('font-face-name'));
+dynamic fontFaceName = validateJsApiThenReturn(() => ReactDomComponentFactoryProxy('font-face-name'));
 
 /// The SVG `<font-face-src>` [FontFaceSrcElement].
-var fontFaceSrc = validateJsApiThenReturn(() => ReactDomComponentFactoryProxy('font-face-src'));
+dynamic fontFaceSrc = validateJsApiThenReturn(() => ReactDomComponentFactoryProxy('font-face-src'));
 
 /// The SVG `<font-face-uri>` [FontFaceUriElement].
-var fontFaceUri = validateJsApiThenReturn(() => ReactDomComponentFactoryProxy('font-face-uri'));
+dynamic fontFaceUri = validateJsApiThenReturn(() => ReactDomComponentFactoryProxy('font-face-uri'));
 
 /// The SVG `<foreignObject>` [ForeignObjectElement].
-var foreignObject = validateJsApiThenReturn(() => ReactDomComponentFactoryProxy('foreignObject'));
+dynamic foreignObject = validateJsApiThenReturn(() => ReactDomComponentFactoryProxy('foreignObject'));
 
 /// The SVG `<g>` [GElement].
-var g = validateJsApiThenReturn(() => ReactDomComponentFactoryProxy('g'));
+dynamic g = validateJsApiThenReturn(() => ReactDomComponentFactoryProxy('g'));
 
 /// The SVG `<glyph>` [GlyphElement].
-var glyph = validateJsApiThenReturn(() => ReactDomComponentFactoryProxy('glyph'));
+dynamic glyph = validateJsApiThenReturn(() => ReactDomComponentFactoryProxy('glyph'));
 
 /// The SVG `<glyphRef>` [GlyphRefElement].
-var glyphRef = validateJsApiThenReturn(() => ReactDomComponentFactoryProxy('glyphRef'));
+dynamic glyphRef = validateJsApiThenReturn(() => ReactDomComponentFactoryProxy('glyphRef'));
 
 /// The SVG `<hatch>` [HatchElement].
-var hatch = validateJsApiThenReturn(() => ReactDomComponentFactoryProxy('hatch'));
+dynamic hatch = validateJsApiThenReturn(() => ReactDomComponentFactoryProxy('hatch'));
 
 /// The SVG `<hatchpath>` [HatchpathElement].
-var hatchpath = validateJsApiThenReturn(() => ReactDomComponentFactoryProxy('hatchpath'));
+dynamic hatchpath = validateJsApiThenReturn(() => ReactDomComponentFactoryProxy('hatchpath'));
 
 /// The SVG `<hkern>` [HkernElement].
-var hkern = validateJsApiThenReturn(() => ReactDomComponentFactoryProxy('hkern'));
+dynamic hkern = validateJsApiThenReturn(() => ReactDomComponentFactoryProxy('hkern'));
 
 /// The SVG `<image>` [ImageElement].
-var image = validateJsApiThenReturn(() => ReactDomComponentFactoryProxy('image'));
+dynamic image = validateJsApiThenReturn(() => ReactDomComponentFactoryProxy('image'));
 
 /// The SVG `<line>` [LineElement].
-var line = validateJsApiThenReturn(() => ReactDomComponentFactoryProxy('line'));
+dynamic line = validateJsApiThenReturn(() => ReactDomComponentFactoryProxy('line'));
 
 /// The SVG `<linearGradient>` [LinearGradientElement].
-var linearGradient = validateJsApiThenReturn(() => ReactDomComponentFactoryProxy('linearGradient'));
+dynamic linearGradient = validateJsApiThenReturn(() => ReactDomComponentFactoryProxy('linearGradient'));
 
 /// The SVG `<marker>` [MarkerElement].
-var marker = validateJsApiThenReturn(() => ReactDomComponentFactoryProxy('marker'));
+dynamic marker = validateJsApiThenReturn(() => ReactDomComponentFactoryProxy('marker'));
 
 /// The SVG `<mask>` [MaskElement].
-var mask = validateJsApiThenReturn(() => ReactDomComponentFactoryProxy('mask'));
+dynamic mask = validateJsApiThenReturn(() => ReactDomComponentFactoryProxy('mask'));
 
 /// The SVG `<mesh>` [MeshElement].
-var mesh = validateJsApiThenReturn(() => ReactDomComponentFactoryProxy('mesh'));
+dynamic mesh = validateJsApiThenReturn(() => ReactDomComponentFactoryProxy('mesh'));
 
 /// The SVG `<meshgradient>` [MeshgradientElement].
-var meshgradient = validateJsApiThenReturn(() => ReactDomComponentFactoryProxy('meshgradient'));
+dynamic meshgradient = validateJsApiThenReturn(() => ReactDomComponentFactoryProxy('meshgradient'));
 
 /// The SVG `<meshpatch>` [MeshpatchElement].
-var meshpatch = validateJsApiThenReturn(() => ReactDomComponentFactoryProxy('meshpatch'));
+dynamic meshpatch = validateJsApiThenReturn(() => ReactDomComponentFactoryProxy('meshpatch'));
 
 /// The SVG `<meshrow>` [MeshrowElement].
-var meshrow = validateJsApiThenReturn(() => ReactDomComponentFactoryProxy('meshrow'));
+dynamic meshrow = validateJsApiThenReturn(() => ReactDomComponentFactoryProxy('meshrow'));
 
 /// The SVG `<metadata>` [MetadataElement].
-var metadata = validateJsApiThenReturn(() => ReactDomComponentFactoryProxy('metadata'));
+dynamic metadata = validateJsApiThenReturn(() => ReactDomComponentFactoryProxy('metadata'));
 
 /// The SVG `<missing-glyph>` [MissingGlyphElement].
-var missingGlyph = validateJsApiThenReturn(() => ReactDomComponentFactoryProxy('missing-glyph'));
+dynamic missingGlyph = validateJsApiThenReturn(() => ReactDomComponentFactoryProxy('missing-glyph'));
 
 /// The SVG `<mpath>` [MpathElement].
-var mpath = validateJsApiThenReturn(() => ReactDomComponentFactoryProxy('mpath'));
+dynamic mpath = validateJsApiThenReturn(() => ReactDomComponentFactoryProxy('mpath'));
 
 /// The SVG `<path>` [PathElement].
-var path = validateJsApiThenReturn(() => ReactDomComponentFactoryProxy('path'));
+dynamic path = validateJsApiThenReturn(() => ReactDomComponentFactoryProxy('path'));
 
 /// The SVG `<pattern>` [PatternElement].
-var pattern = validateJsApiThenReturn(() => ReactDomComponentFactoryProxy('pattern'));
+dynamic pattern = validateJsApiThenReturn(() => ReactDomComponentFactoryProxy('pattern'));
 
 /// The SVG `<polygon>` [PolygonElement].
-var polygon = validateJsApiThenReturn(() => ReactDomComponentFactoryProxy('polygon'));
+dynamic polygon = validateJsApiThenReturn(() => ReactDomComponentFactoryProxy('polygon'));
 
 /// The SVG `<polyline>` [PolylineElement].
-var polyline = validateJsApiThenReturn(() => ReactDomComponentFactoryProxy('polyline'));
+dynamic polyline = validateJsApiThenReturn(() => ReactDomComponentFactoryProxy('polyline'));
 
 /// The SVG `<radialGradient>` [RadialGradientElement].
-var radialGradient = validateJsApiThenReturn(() => ReactDomComponentFactoryProxy('radialGradient'));
+dynamic radialGradient = validateJsApiThenReturn(() => ReactDomComponentFactoryProxy('radialGradient'));
 
 /// The SVG `<rect>` [RectElement].
-var rect = validateJsApiThenReturn(() => ReactDomComponentFactoryProxy('rect'));
+dynamic rect = validateJsApiThenReturn(() => ReactDomComponentFactoryProxy('rect'));
 
 /// The SVG `<set>` [SetElement].
-var svgSet = validateJsApiThenReturn(() => ReactDomComponentFactoryProxy('set'));
+dynamic svgSet = validateJsApiThenReturn(() => ReactDomComponentFactoryProxy('set'));
 
 /// The SVG `<solidcolor>` [SolidcolorElement].
-var solidcolor = validateJsApiThenReturn(() => ReactDomComponentFactoryProxy('solidcolor'));
+dynamic solidcolor = validateJsApiThenReturn(() => ReactDomComponentFactoryProxy('solidcolor'));
 
 /// The SVG `<stop>` [StopElement].
-var stop = validateJsApiThenReturn(() => ReactDomComponentFactoryProxy('stop'));
+dynamic stop = validateJsApiThenReturn(() => ReactDomComponentFactoryProxy('stop'));
 
 /// The SVG `<svg>` [SvgSvgElement].
-var svg = validateJsApiThenReturn(() => ReactDomComponentFactoryProxy('svg'));
+dynamic svg = validateJsApiThenReturn(() => ReactDomComponentFactoryProxy('svg'));
 
 /// The SVG `<switch>` [SwitchElement].
-var svgSwitch = validateJsApiThenReturn(() => ReactDomComponentFactoryProxy('switch'));
+dynamic svgSwitch = validateJsApiThenReturn(() => ReactDomComponentFactoryProxy('switch'));
 
 /// The SVG `<symbol>` [SymbolElement].
-var symbol = validateJsApiThenReturn(() => ReactDomComponentFactoryProxy('symbol'));
+dynamic symbol = validateJsApiThenReturn(() => ReactDomComponentFactoryProxy('symbol'));
 
 /// The SVG `<text>` [TextElement].
-var text = validateJsApiThenReturn(() => ReactDomComponentFactoryProxy('text'));
+dynamic text = validateJsApiThenReturn(() => ReactDomComponentFactoryProxy('text'));
 
 /// The SVG `<textPath>` [TextPathElement].
-var textPath = validateJsApiThenReturn(() => ReactDomComponentFactoryProxy('textPath'));
+dynamic textPath = validateJsApiThenReturn(() => ReactDomComponentFactoryProxy('textPath'));
 
 /// The SVG `<tref>` [TrefElement].
-var tref = validateJsApiThenReturn(() => ReactDomComponentFactoryProxy('tref'));
+dynamic tref = validateJsApiThenReturn(() => ReactDomComponentFactoryProxy('tref'));
 
 /// The SVG `<tspan>` [TSpanElement].
-var tspan = validateJsApiThenReturn(() => ReactDomComponentFactoryProxy('tspan'));
+dynamic tspan = validateJsApiThenReturn(() => ReactDomComponentFactoryProxy('tspan'));
 
 /// The SVG `<unknown>` [UnknownElement].
-var unknown = validateJsApiThenReturn(() => ReactDomComponentFactoryProxy('unknown'));
+dynamic unknown = validateJsApiThenReturn(() => ReactDomComponentFactoryProxy('unknown'));
 
 /// The SVG `<use>` [UseElement].
-var use = validateJsApiThenReturn(() => ReactDomComponentFactoryProxy('use'));
+dynamic use = validateJsApiThenReturn(() => ReactDomComponentFactoryProxy('use'));
 
 /// The SVG `<view>` [ViewElement].
-var view = validateJsApiThenReturn(() => ReactDomComponentFactoryProxy('view'));
+dynamic view = validateJsApiThenReturn(() => ReactDomComponentFactoryProxy('view'));
 
 /// The SVG `<vkern>` [VkernElement].
-var vkern = validateJsApiThenReturn(() => ReactDomComponentFactoryProxy('vkern'));
+dynamic vkern = validateJsApiThenReturn(() => ReactDomComponentFactoryProxy('vkern'));
 
 /// Create React DOM `Component`s by calling the specified [creator].
 _createDOMComponents(creator) {
