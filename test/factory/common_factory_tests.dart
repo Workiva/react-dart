@@ -6,6 +6,7 @@ import 'dart:js_util';
 
 import 'package:meta/meta.dart';
 import 'package:react/react_client/js_backed_map.dart';
+import 'package:react/react_client/utils.dart';
 import 'package:test/test.dart';
 
 import 'package:react/react_client.dart';

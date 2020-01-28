@@ -13,6 +13,7 @@ import 'package:react/src/prop_validator.dart';
 import 'package:react/src/typedefs.dart';
 import 'package:react/react_client.dart';
 import 'package:react/react_client/react_interop.dart';
+import 'package:react/react_client/react_proxies.dart';
 import 'package:react/src/context.dart';
 import 'package:react/src/react_client/utils.dart' show validateJsApiThenReturn;
 
