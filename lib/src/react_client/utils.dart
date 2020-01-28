@@ -1,6 +1,7 @@
 @JS()
 library react_client_utils;
 
+import 'dart:html';
 import 'dart:js';
 
 import 'dart:js_util';
@@ -72,6 +73,43 @@ void convertRefValue2(Map args, {bool convertCallbackRefValue = true}) {
       return (ref as dynamic)(instance);
     });
   }
+}
+
+/// Util used with [_registerComponent2] to ensure no imporant lifecycle
+/// events are skipped. This includes [shouldComponentUpdate],
+/// [componentDidUpdate], and [render] because they utilize
+/// [_updatePropsAndStateWithJs].
+///
+/// Returns the list of lifecycle events to skip, having removed the
+/// important ones. If an important lifecycle event was set for skipping, a
+/// warning is issued.
+List<String> filterSkipMethods(List<String> methods) {
+  List<String> finalList = List.from(methods);
+  bool shouldWarn = false;
+
+  if (finalList.contains('shouldComponentUpdate')) {
+    finalList.remove('shouldComponentUpdate');
+    shouldWarn = true;
+  }
+
+  if (finalList.contains('componentDidUpdate')) {
+    finalList.remove('componentDidUpdate');
+    shouldWarn = true;
+  }
+
+  if (finalList.contains('render')) {
+    finalList.remove('render');
+    shouldWarn = true;
+  }
+
+  if (shouldWarn) {
+    window.console.warn("WARNING: Crucial lifecycle methods passed into "
+        "skipMethods. shouldComponentUpdate, componentDidUpdate, and render "
+        "cannot be skipped and will still be added to the new component. Please "
+        "remove them from skipMethods.");
+  }
+
+  return finalList;
 }
 
 /// Converts a list of variadic children arguments to children that should be passed to ReactJS.

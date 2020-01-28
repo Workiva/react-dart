@@ -15,6 +15,7 @@ import 'package:react/react_client.dart';
 import 'package:react/react_client/react_interop.dart';
 import 'package:react/react_client/react_proxies.dart';
 import 'package:react/src/context.dart';
+import 'package:react/src/react_client/component_registration_utils.dart' as registration_utils;
 import 'package:react/src/react_client/utils.dart' show validateJsApiThenReturn;
 
 export 'package:react/src/context.dart';
@@ -1875,19 +1876,10 @@ class SyntheticWheelEvent extends SyntheticEvent {
 }
 
 /// Registers [componentFactory] on both client and server.
-/*ComponentRegistrar*/ Function registerComponent =
-    (/*ComponentFactory*/ componentFactory, [/*Iterable<String>*/ skipMethods]) {
-  throw new Exception('setClientConfiguration must be called before registerComponent.');
-};
+/*ComponentRegistrar*/ Function registerComponent = validateJsApiThenReturn(() => registration_utils.registerComponent);
 
 /// Registers [componentFactory] on both client and server.
-ComponentRegistrar2 registerComponent2 = (
-  ComponentFactory<Component2> componentFactory, {
-  Iterable<String> skipMethods,
-  Component2BridgeFactory bridgeFactory,
-}) {
-  throw new Exception('setClientConfiguration must be called before registerComponent.');
-};
+ComponentRegistrar2 registerComponent2 = validateJsApiThenReturn(() => registration_utils.registerComponent2);
 
 /// Registers [componentFactory] on client.
 ///
@@ -1911,9 +1903,7 @@ ComponentRegistrar2 registerComponent2 = (
 /// }
 /// var myFunctionComponent = registerFunctionComponent(myDartFunctionComponent);
 /// ```
-FunctionComponentRegistrar registerFunctionComponent = (DartFunctionComponent componentFactory, {String displayName}) {
-  throw new Exception('setClientConfiguration must be called before registerFunctionComponent.');
-};
+FunctionComponentRegistrar registerFunctionComponent = validateJsApiThenReturn(() => registration_utils.registerFunctionComponent);
 
 /// The HTML `<a>` [AnchorElement].
 var a = validateJsApiThenReturn(() => ReactDomComponentFactoryProxy('a'));

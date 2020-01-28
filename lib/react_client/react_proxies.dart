@@ -14,6 +14,19 @@ import 'package:react/react_client/js_backed_map.dart';
 import 'package:react/src/ddc_emulated_function_name_bug.dart' as ddc_emulated_function_name_bug;
 import 'package:react/src/react_client/utils.dart';
 
+/// Shared component factory proxy [build] method for components that utilize [JsBackedMap]s.
+mixin JsBackedMapComponentFactoryMixin on ReactComponentFactoryProxy {
+  @override
+  ReactElement build(Map props, [List childrenArgs = const []]) {
+    var children = generateChildren(childrenArgs, shouldAlwaysBeList: true);
+    var convertedProps = generateExtendedJsProps(props);
+    return React.createElement(type, convertedProps, children);
+  }
+
+  static JsMap generateExtendedJsProps(Map props) =>
+      generateJsProps(props, convertEventHandlers: false, wrapWithJsify: false);
+}
+
 /// Use [ReactDartComponentFactoryProxy2] instead.
 ///
 /// Will be removed when [Component] is removed in the `6.0.0` release.
@@ -300,4 +313,3 @@ class ReactDartFunctionComponentFactoryProxy extends ReactComponentFactoryProxy 
     return interopFunction;
   }
 }
-

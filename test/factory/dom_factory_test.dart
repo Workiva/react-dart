@@ -27,8 +27,8 @@ main() {
     });
 
     test('has a type corresponding to the DOM tagName', () {
-      expect((react.div as ReactDomComponentFactoryProxy).type, 'div');
-      expect((react.span as ReactDomComponentFactoryProxy).type, 'span');
+      expect((react.div).type, 'div');
+      expect((react.span).type, 'span');
     });
   });
 }
