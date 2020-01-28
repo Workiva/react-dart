@@ -151,11 +151,7 @@ void useEffect(dynamic Function() sideEffect, [List<Object> dependencies]) {
     return jsUndefined;
   });
 
-  if (dependencies != null) {
-    return React.useEffect(wrappedSideEffect, dependencies);
-  } else {
-    return React.useEffect(wrappedSideEffect);
-  }
+  return React.useEffect(wrappedSideEffect, dependencies);
 }
 
 /// The return value of [useReducer].
@@ -429,6 +425,53 @@ Ref<T> useRef<T>([T initialValue]) => Ref.useRefInit(initialValue);
 /// Learn more: <https://reactjs.org/docs/hooks-reference.html#usememo>.
 T useMemo<T>(T Function() createFunction, [List<dynamic> dependencies]) =>
     React.useMemo(allowInterop(createFunction), dependencies);
+
+/// Runs [sideEffect] synchronously after a [DartFunctionComponent] renders, but before the screen is updated.
+///
+/// Compare to [useEffect] which runs [sideEffect] after the screen updates.
+/// Prefer the standard [useEffect] when possible to avoid blocking visual updates.
+///
+/// > __Note:__ there are two [rules for using Hooks](https://reactjs.org/docs/hooks-rules.html):
+/// >
+/// > * Only call Hooks at the top level.
+/// > * Only call Hooks from inside a [DartFunctionComponent].
+///
+/// __Example__:
+///
+/// ```
+/// UseLayoutEffectTestComponent(Map props) {
+///   final width = useState(0);
+///   final height = useState(0);
+///
+///   Ref textareaRef = useRef();
+///
+///   useLayoutEffect(() {
+///     width.set(textareaRef.current.clientWidth);
+///     height.set(textareaRef.current.clientHeight);
+///   });
+///
+///   return react.Fragment({}, [
+///     react.div({}, ['textarea width: ${width.value}']),
+///     react.div({}, ['textarea height: ${height.value}']),
+///     react.textarea({'onClick': (_) => width.set(0), 'ref': textareaRef,}),
+///   ]);
+/// }
+/// ```
+///
+/// Learn more: <https://reactjs.org/docs/hooks-reference.html#uselayouteffect>.
+void useLayoutEffect(dynamic Function() sideEffect, [List<Object> dependencies]) {
+  final wrappedSideEffect = allowInterop(() {
+    final result = sideEffect();
+    if (result is Function) {
+      return allowInterop(result);
+    }
+
+    /// When no cleanup function is returned, [sideEffect] returns undefined.
+    return jsUndefined;
+  });
+
+  return React.useLayoutEffect(wrappedSideEffect, dependencies);
+}
 
 /// Displays [value] as a label for a custom hook in React DevTools.
 ///

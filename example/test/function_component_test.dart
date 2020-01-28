@@ -1,4 +1,5 @@
 import 'dart:html';
+import 'dart:math';
 
 import 'package:react/hooks.dart';
 import 'package:react/react.dart' as react;
@@ -230,6 +231,47 @@ UseMemoTestComponent2(Map props) {
   ]);
 }
 
+final random = Random();
+
+final randomUseLayoutEffectTestComponent =
+    react.registerFunctionComponent(RandomUseLayoutEffectTestComponent, displayName: 'randomUseLayoutEffectTest');
+
+RandomUseLayoutEffectTestComponent(Map props) {
+  StateHook<double> value = useState(0);
+
+  useLayoutEffect(() {
+    if (value.value == 0) {
+      value.set(10 + random.nextDouble() * 200);
+    }
+  });
+
+  return react.Fragment({}, [
+    react.h5({'key': 'randomUseLayout1'}, ['Example using useLayoutEffect:']),
+    react.div({'key': 'randomUseLayout2'}, ['value: ${value.value}']),
+    react.button({'key': 'randomUseLayout3', 'onClick': (_) => value.set(0)}, ['Change Value']),
+    react.br({'key': 'randomUseLayout4'}),
+  ]);
+}
+
+final randomUseEffectTestComponent =
+    react.registerFunctionComponent(RandomUseEffectTestComponent, displayName: 'randomUseEffectTest');
+
+RandomUseEffectTestComponent(Map props) {
+  StateHook<double> value = useState(0);
+
+  useEffect(() {
+    if (value.value == 0) {
+      value.set(10 + random.nextDouble() * 200);
+    }
+  });
+
+  return react.Fragment({}, [
+    react.h5({'key': 'random1'}, ['Example using useEffect (notice flicker):']),
+    react.div({'key': 'random2'}, ['value: ${value.value}']),
+    react.button({'key': 'random3', 'onClick': (_) => value.set(0)}, ['Change Value']),
+  ]);
+}
+
 final ChatAPI = {
   'subscribeToFriendStatus': (int id, Function handleStatusChange) =>
       handleStatusChange({'isOnline': id % 2 == 0 ? true : false}),
@@ -332,6 +374,14 @@ void main() {
           react.h6({'key': 'h62'}, ['Without useMemo (notice calculation done on every render):']),
           useMemoTestFunctionComponent2({
             'key': 'useMemoTest2',
+          }, []),
+          react.h2({'key': 'useLayoutEffectTestLabel'}, ['useLayoutEffect Hook Test']),
+          randomUseLayoutEffectTestComponent({
+            'key': 'useLayoutEffectTest',
+          }, []),
+          react.br({'key': 'br6'}),
+          randomUseEffectTestComponent({
+            'key': 'useLayoutEffectTest2',
           }, []),
           react.br({'key': 'br4'}),
           react.h2({'key': 'useDebugValueTestLabel'}, ['useDebugValue Hook Test']),
