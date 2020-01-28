@@ -125,6 +125,17 @@ JsMap generateJsProps(Map props,
   return wrapWithJsify ? jsifyAndAllowInterop(propsForJs) : propsForJs.jsObject;
 }
 
+@Deprecated('6.0.0')
+InteropContextValue jsifyContext(Map<String, dynamic> context) {
+  var interopContext = new InteropContextValue();
+  context.forEach((key, value) {
+    // ignore: argument_type_not_assignable
+    setProperty(interopContext, key, new ReactDartContextInternal(value));
+  });
+
+  return interopContext;
+}
+
 /// A wrapper around [validateJsApi] that will return the result of a callback if React is present.
 T validateJsApiThenReturn<T>(T Function() computeReturn) {
   validateJsApi();
