@@ -8,10 +8,15 @@ import 'dart:js_util';
 
 import "package:js/js.dart";
 
+import "package:react/react.dart";
 import 'package:react/react_client/js_interop_helpers.dart';
 import 'package:react/react_client/react_interop.dart';
 import 'package:react/react_client/js_backed_map.dart';
 import 'package:react/react_client/utils.dart' as react_client_utils;
+import 'package:react/src/react_client/synthetic_events.dart';
+import "package:react/src/react_client/synthetic_event_wrappers.dart" as events;
+
+import 'event_prop_key_to_event_factory.dart';
 
 @JS('Object.keys')
 external List<String> _objectKeys(Object object);
@@ -45,6 +50,24 @@ dynamic convertArgsToChildren(List childrenArgs) {
     markChildrenValidated(childrenArgs);
     return childrenArgs;
   }
+}
+
+/// Convert packed event handler into wrapper and pass it only the Dart [SyntheticEvent] object converted from the
+/// [events.SyntheticEvent] event.
+convertEventHandlers(Map args) {
+  args.forEach((propKey, value) {
+    var eventFactory = eventPropKeyToEventFactory[propKey];
+    if (eventFactory != null && value != null) {
+      // Apply allowInterop here so that the function we store in [_originalEventHandlers]
+      // is the same one we'll retrieve from the JS props.
+      var reactDartConvertedEventHandler = allowInterop((events.SyntheticEvent e, [_, __]) {
+        value(eventFactory(e));
+      });
+
+      args[propKey] = reactDartConvertedEventHandler;
+      originalEventHandlers[reactDartConvertedEventHandler] = value;
+    }
+  });
 }
 
 void convertRefValue(Map args) {
@@ -151,13 +174,13 @@ dynamic generateChildren(List childrenArgs, {bool shouldAlwaysBeList = false}) {
 
 /// Converts [props] into a [JsMap] that can be utilized with [React.createElement()].
 JsMap generateJsProps(Map props,
-    {bool convertEventHandlers = true,
+    {bool shouldConvertEventHandlers = true,
     bool convertRefValue = true,
     bool convertCallbackRefValue = true,
     bool wrapWithJsify = true}) {
   final propsForJs = JsBackedMap.from(props);
 
-  if (convertEventHandlers) react_client_utils.convertEventHandlers(propsForJs);
+  if (shouldConvertEventHandlers) convertEventHandlers(propsForJs);
   if (convertRefValue) convertRefValue2(propsForJs, convertCallbackRefValue: convertCallbackRefValue);
 
   return wrapWithJsify ? jsifyAndAllowInterop(propsForJs) : propsForJs.jsObject;

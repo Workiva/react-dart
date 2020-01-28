@@ -24,7 +24,7 @@ mixin JsBackedMapComponentFactoryMixin on ReactComponentFactoryProxy {
   }
 
   static JsMap generateExtendedJsProps(Map props) =>
-      generateJsProps(props, convertEventHandlers: false, wrapWithJsify: false);
+      generateJsProps(props, shouldConvertEventHandlers: false, wrapWithJsify: false);
 }
 
 /// Use [ReactDartComponentFactoryProxy2] instead.
@@ -138,7 +138,7 @@ class ReactDartComponentFactoryProxy2<TComponent extends Component2> extends Rea
   /// Returns a JavaScript version of the specified [props], preprocessed for consumption by ReactJS and prepared for
   /// consumption by the [react] library internals.
   static JsMap generateExtendedJsProps(Map props) =>
-      generateJsProps(props, convertEventHandlers: false, wrapWithJsify: false);
+      generateJsProps(props, shouldConvertEventHandlers: false, wrapWithJsify: false);
 }
 
 /// Creates ReactJS [ReactElement] instances for `JSContext` components.
@@ -226,7 +226,7 @@ class ReactJsComponentFactoryProxy extends ReactComponentFactoryProxy {
   ReactElement build(Map props, [List childrenArgs]) {
     dynamic children = generateChildren(childrenArgs, shouldAlwaysBeList: alwaysReturnChildrenAsList);
     JsMap convertedProps =
-        generateJsProps(props, convertEventHandlers: shouldConvertDomProps, convertCallbackRefValue: false);
+        generateJsProps(props, shouldConvertEventHandlers: shouldConvertDomProps, convertCallbackRefValue: false);
     return React.createElement(type, convertedProps, children);
   }
 }

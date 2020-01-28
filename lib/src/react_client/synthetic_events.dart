@@ -3,6 +3,10 @@ import 'dart:html';
 import 'package:react/react.dart';
 import 'package:react/src/react_client/synthetic_event_wrappers.dart' as events;
 
+/// A mapping from converted/wrapped JS handler functions (the result of [_convertEventHandlers])
+/// to the original Dart functions (the input of [_convertEventHandlers]).
+final Expando<Function> originalEventHandlers = new Expando();
+
 /// Wrapper for [SyntheticEvent].
 SyntheticEvent syntheticEventFactory(events.SyntheticEvent e) {
   return new SyntheticEvent(e.bubbles, e.cancelable, e.currentTarget, e.defaultPrevented, () => e.preventDefault(),

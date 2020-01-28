@@ -23,7 +23,7 @@ export 'package:react/react_client/react_proxies.dart'
         ReactDartComponentFactoryProxy2,
         ReactJsContextComponentFactoryProxy,
         ReactDartFunctionComponentFactoryProxy;
-export 'package:react/react_client/synthetic_events.dart'
+export 'package:react/src/react_client/synthetic_events.dart'
     show
         syntheticEventFactory,
         syntheticClipboardEventFactory,

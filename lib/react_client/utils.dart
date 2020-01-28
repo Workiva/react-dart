@@ -6,6 +6,7 @@ import "package:react/react.dart";
 import 'package:react/react_client/react_interop.dart';
 import "package:react/src/react_client/event_prop_key_to_event_factory.dart";
 import 'package:react/react_client/js_backed_map.dart';
+import 'package:react/src/react_client/synthetic_events.dart';
 import "package:react/src/react_client/synthetic_event_wrappers.dart" as events;
 
 /// Prepares [children] to be passed to the ReactJS [React.createElement] and
@@ -25,10 +26,6 @@ dynamic listifyChildren(dynamic children) {
     return children;
   }
 }
-
-/// A mapping from converted/wrapped JS handler functions (the result of [_convertEventHandlers])
-/// to the original Dart functions (the input of [_convertEventHandlers]).
-final Expando<Function> _originalEventHandlers = new Expando();
 
 /// Returns the props for a [ReactElement] or composite [ReactComponent] [instance],
 /// shallow-converted to a Dart Map for convenience.
@@ -76,23 +73,5 @@ Map unconvertJsProps(/* ReactElement|ReactComponent */ instance) {
 Function unconvertJsEventHandler(Function jsConvertedEventHandler) {
   if (jsConvertedEventHandler == null) return null;
 
-  return _originalEventHandlers[jsConvertedEventHandler];
-}
-
-/// Convert packed event handler into wrapper and pass it only the Dart [SyntheticEvent] object converted from the
-/// [events.SyntheticEvent] event.
-convertEventHandlers(Map args) {
-  args.forEach((propKey, value) {
-    var eventFactory = eventPropKeyToEventFactory[propKey];
-    if (eventFactory != null && value != null) {
-      // Apply allowInterop here so that the function we store in [_originalEventHandlers]
-      // is the same one we'll retrieve from the JS props.
-      var reactDartConvertedEventHandler = allowInterop((events.SyntheticEvent e, [_, __]) {
-        value(eventFactory(e));
-      });
-
-      args[propKey] = reactDartConvertedEventHandler;
-      _originalEventHandlers[reactDartConvertedEventHandler] = value;
-    }
-  });
+  return originalEventHandlers[jsConvertedEventHandler];
 }
