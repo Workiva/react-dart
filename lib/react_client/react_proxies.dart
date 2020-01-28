@@ -3,15 +3,17 @@ library react_client.react_proxies;
 import 'dart:js';
 import 'dart:js_util';
 
-import "package:js/js.dart";
+import 'package:js/js.dart';
 
-import "package:react/react.dart";
+import 'package:react/react.dart';
 import 'package:react/react_client.dart';
+import 'package:react/react_client/js_backed_map.dart';
 import 'package:react/react_client/react_interop.dart';
 import 'package:react/react_client/utils.dart';
+
 import 'package:react/src/context.dart';
-import 'package:react/react_client/js_backed_map.dart';
 import 'package:react/src/ddc_emulated_function_name_bug.dart' as ddc_emulated_function_name_bug;
+import 'package:react/src/typedefs.dart';
 import 'package:react/src/react_client/utils.dart';
 
 /// Shared component factory proxy [build] method for components that utilize [JsBackedMap]s.
@@ -58,7 +60,7 @@ class ReactDartComponentFactoryProxy<TComponent extends Component> extends React
   }
 
   /// Returns a JavaScript version of the specified [props], preprocessed for consumption by ReactJS and prepared for
-  /// consumption by the [react] library internals.
+  /// consumption by the `react` library internals.
   static InteropProps generateExtendedJsProps(Map props, dynamic children, {Map defaultProps}) {
     if (children == null) {
       children = [];
@@ -136,7 +138,7 @@ class ReactDartComponentFactoryProxy2<TComponent extends Component2> extends Rea
   ReactClass get type => reactClass;
 
   /// Returns a JavaScript version of the specified [props], preprocessed for consumption by ReactJS and prepared for
-  /// consumption by the [react] library internals.
+  /// consumption by the `react` library internals.
   static JsMap generateExtendedJsProps(Map props) =>
       generateJsProps(props, shouldConvertEventHandlers: false, wrapWithJsify: false);
 }
@@ -179,7 +181,7 @@ class ReactJsContextComponentFactoryProxy extends ReactJsComponentFactoryProxy {
   }
 
   /// Returns a JavaScript version of the specified [props], preprocessed for consumption by ReactJS and prepared for
-  /// consumption by the [react] library internals.
+  /// consumption by the `react` library internals.
   JsMap generateExtendedJsProps(Map props) {
     JsBackedMap propsForJs = new JsBackedMap.from(props);
 

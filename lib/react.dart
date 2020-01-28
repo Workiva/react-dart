@@ -2503,12 +2503,6 @@ var view = validateJsApiThenReturn(() => ReactDomComponentFactoryProxy('view'));
 var vkern = validateJsApiThenReturn(() => ReactDomComponentFactoryProxy('vkern'));
 
 /// Create React DOM `Component`s by calling the specified [creator].
-///
-/// > __DEPRECATED.__
-/// >
-/// > Environment configuration is now done by default and should not be altered. This can now be removed.
-/// > This will be removed in 6.0.0, along with other configuration setting functions.
-@Deprecated('6.0.0')
 _createDOMComponents(creator) {
   a = creator('a');
   abbr = creator('abbr');

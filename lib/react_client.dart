@@ -3,15 +3,7 @@
 // BSD-style license that can be found in the LICENSE file.
 
 // ignore_for_file: deprecated_member_use_from_same_package
-@JS()
 library react_client;
-
-import 'dart:async';
-
-import 'package:js/js.dart';
-import 'package:meta/meta.dart';
-
-import 'package:react/react_client/js_backed_map.dart';
 
 export 'package:react/react.dart' show ReactComponentFactoryProxy, ComponentFactory;
 export 'package:react/react_client/react_interop.dart' show ReactElement, ReactJsComponentFactory, inReactDevMode, Ref;
@@ -23,7 +15,9 @@ export 'package:react/react_client/react_proxies.dart'
         ReactDartComponentFactoryProxy2,
         ReactJsContextComponentFactoryProxy,
         ReactDartFunctionComponentFactoryProxy;
-export 'package:react/src/react_client/synthetic_events.dart'
+export 'package:react/react_client/utils.dart' show listifyChildren, unconvertJsProps, unconvertJsEventHandler;
+export 'package:react/react_client/react_zone.dart' show componentZone;
+export 'package:react/src/react_client/synthetic_event_factories.dart'
     show
         syntheticEventFactory,
         syntheticClipboardEventFactory,
@@ -38,28 +32,7 @@ export 'package:react/src/react_client/synthetic_events.dart'
         syntheticAnimationEventFactory,
         syntheticUIEventFactory,
         syntheticWheelEventFactory;
-
-/// The function signature for ReactJS Function Components.
-///
-/// - [props] will always be supplied as the first argument
-/// - [legacyContext] has been deprecated and should not be used but remains for backward compatibility and is necessary
-/// to match Dart's generated call signature based on the number of args React provides.
-typedef JsFunctionComponent = dynamic Function(JsMap props, [JsMap legacyContext]);
-
-/// The zone in which React will call component lifecycle methods.
-///
-/// This can be used to sync a test's zone and React's component zone, ensuring that component prop callbacks and
-/// lifecycle method output all occurs within the same zone as the test.
-///
-/// __Example:__
-///
-///     test('zone test', () {
-///       componentZone = Zone.current;
-///
-///       // ... test your component
-///     }
-@visibleForTesting
-Zone componentZone = Zone.root;
+export 'package:react/src/typedefs.dart' show JsFunctionComponent;
 
 /// Method used to initialize the React environment.
 ///

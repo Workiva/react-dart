@@ -6,15 +6,17 @@ import 'dart:js';
 
 import 'dart:js_util';
 
-import "package:js/js.dart";
+import 'package:js/js.dart';
 
-import "package:react/react.dart";
+import 'package:react/react.dart';
 import 'package:react/react_client/js_interop_helpers.dart';
 import 'package:react/react_client/react_interop.dart';
 import 'package:react/react_client/js_backed_map.dart';
 import 'package:react/react_client/utils.dart' as react_client_utils;
-import 'package:react/src/react_client/synthetic_events.dart';
-import "package:react/src/react_client/synthetic_event_wrappers.dart" as events;
+
+import 'package:react/src/react_client/synthetic_event_factories.dart';
+import 'package:react/src/react_client/synthetic_event_wrappers.dart' as events;
+import 'package:react/src/typedefs.dart';
 
 import 'event_prop_key_to_event_factory.dart';
 
@@ -23,11 +25,6 @@ external List<String> _objectKeys(Object object);
 
 @JS('Object.defineProperty')
 external void defineProperty(dynamic object, String propertyName, JsMap descriptor);
-
-/// The type of `Component.ref` specified as a callback.
-///
-/// See: <https://facebook.github.io/react/docs/more-about-refs.html#the-ref-callback-attribute>
-typedef CallbackRef<T>(T componentOrDomNode);
 
 /// A flag used to cache whether React is accessible.
 ///
@@ -58,7 +55,7 @@ convertEventHandlers(Map args) {
   args.forEach((propKey, value) {
     var eventFactory = eventPropKeyToEventFactory[propKey];
     if (eventFactory != null && value != null) {
-      // Apply allowInterop here so that the function we store in [_originalEventHandlers]
+      // Apply allowInterop here so that the function we store in `originalEventHandlers`
       // is the same one we'll retrieve from the JS props.
       var reactDartConvertedEventHandler = allowInterop((events.SyntheticEvent e, [_, __]) {
         value(eventFactory(e));
@@ -85,23 +82,23 @@ void convertRefValue2(Map args, {bool convertCallbackRefValue = true}) {
     // If the ref is a callback, pass ReactJS a function that will call it
     // with the Dart Component instance, not the ReactComponent instance.
     //
-    // Use _CallbackRef<Null> to check arity, since parameters could be non-dynamic, and thus
-    // would fail the `is _CallbackRef<dynamic>` check.
+    // Use CallbackRef<Null> to check arity, since parameters could be non-dynamic, and thus
+    // would fail the `is CallbackRef<dynamic>` check.
     // See https://github.com/dart-lang/sdk/issues/34593 for more information on arity checks.
   } else if (ref is CallbackRef<Null> && convertCallbackRefValue) {
     args['ref'] = allowInterop((dynamic instance) {
-      // Call as dynamic to perform dynamic dispatch, since we can't cast to _CallbackRef<dynamic>,
-      // and since calling with non-null values will fail at runtime due to the _CallbackRef<Null> typing.
+      // Call as dynamic to perform dynamic dispatch, since we can't cast to CallbackRef<dynamic>,
+      // and since calling with non-null values will fail at runtime due to the CallbackRef<Null> typing.
       if (instance is ReactComponent && instance.dartComponent != null) return (ref as dynamic)(instance.dartComponent);
       return (ref as dynamic)(instance);
     });
   }
 }
 
-/// Util used with [_registerComponent2] to ensure no imporant lifecycle
-/// events are skipped. This includes [shouldComponentUpdate],
-/// [componentDidUpdate], and [render] because they utilize
-/// [_updatePropsAndStateWithJs].
+/// Util used with `registerComponent2` to ensure no important lifecycle
+/// events are skipped. This includes `shouldComponentUpdate`,
+/// `componentDidUpdate`, and `render` because they utilize
+/// `_updatePropsAndStateWithJs`.
 ///
 /// Returns the list of lifecycle events to skip, having removed the
 /// important ones. If an important lifecycle event was set for skipping, a
@@ -172,7 +169,7 @@ dynamic generateChildren(List childrenArgs, {bool shouldAlwaysBeList = false}) {
   return children;
 }
 
-/// Converts [props] into a [JsMap] that can be utilized with [React.createElement()].
+/// Converts [props] into a [JsMap] that can be utilized with `React.createElement()`.
 JsMap generateJsProps(Map props,
     {bool shouldConvertEventHandlers = true,
     bool convertRefValue = true,
