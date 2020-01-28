@@ -4,7 +4,6 @@ import "dart:async";
 
 import "package:react/react.dart" as react;
 import "package:react/react_dom.dart" as react_dom;
-import "package:react/react_client.dart";
 
 Stopwatch stopwatch = new Stopwatch()..start();
 timeprint(message) {
@@ -76,7 +75,6 @@ class _Hello extends react.Component {
 var Hello = react.registerComponent(() => new _Hello());
 
 void main() {
-  setClientConfiguration();
   var data = [];
   for (num i = 0; i < 1000; i++) {
     data.add(["name_$i", "value_$i"]);

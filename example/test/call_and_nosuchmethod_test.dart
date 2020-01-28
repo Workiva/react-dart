@@ -3,7 +3,6 @@ import "dart:html";
 
 import "package:react/react_dom.dart" as react_dom;
 import "package:react/react.dart" as react;
-import "package:react/react_client.dart";
 
 class _CustomComponent extends react.Component {
   render() {
@@ -14,8 +13,6 @@ class _CustomComponent extends react.Component {
 var customComponent = react.registerComponent(() => new _CustomComponent());
 
 void main() {
-  setClientConfiguration();
-
   react_dom.render(
       react.div({}, [
         react.div({'key': 'noChildren'}),

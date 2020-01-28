@@ -25,8 +25,6 @@ import 'shared_type_tester.dart';
 import 'util.dart';
 
 main() {
-  setClientConfiguration();
-
   group('React Component lifecycle:', () {
     setUp(() => LifecycleTestHelper.staticLifecycleCalls = []);
     group('Component', () {
