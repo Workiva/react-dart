@@ -14,7 +14,8 @@ export 'package:react/react_client/react_proxies.dart'
         ReactDartComponentFactoryProxy,
         ReactDartComponentFactoryProxy2,
         ReactJsContextComponentFactoryProxy,
-        ReactDartFunctionComponentFactoryProxy;
+        ReactDartFunctionComponentFactoryProxy,
+        JsBackedMapComponentFactoryMixin;
 export 'package:react/react_client/utils.dart' show listifyChildren, unconvertJsProps, unconvertJsEventHandler;
 export 'package:react/react_client/react_zone.dart' show componentZone;
 export 'package:react/src/react_client/synthetic_event_factories.dart'
