@@ -7,7 +7,7 @@ library react_client;
 
 export 'package:react/react.dart' show ReactComponentFactoryProxy, ComponentFactory;
 export 'package:react/react_client/react_interop.dart' show ReactElement, ReactJsComponentFactory, inReactDevMode, Ref;
-export 'package:react/react_client/react_proxies.dart'
+export 'package:react/react_client/component_factory.dart'
     show
         ReactDomComponentFactoryProxy,
         ReactJsComponentFactoryProxy,

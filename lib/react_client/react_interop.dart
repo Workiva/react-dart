@@ -18,7 +18,7 @@ import 'package:react/react.dart';
 import 'package:react/react_client.dart' show ComponentFactory;
 import 'package:react/react_client/bridge.dart';
 import 'package:react/react_client/js_backed_map.dart';
-import 'package:react/react_client/react_proxies.dart' show ReactJsComponentFactoryProxy;
+import 'package:react/react_client/component_factory.dart' show ReactJsComponentFactoryProxy;
 import 'package:react/src/react_client/dart2_interop_workaround_bindings.dart';
 
 typedef ReactElement ReactJsComponentFactory(props, children);
