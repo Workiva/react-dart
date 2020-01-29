@@ -128,6 +128,8 @@ class JsRef {
 
 /// Automatically passes a [Ref] through a component to one of its children.
 ///
+/// __Not recommended for use with interop'd JS components. Use [forwardRefToJs] instead.__
+///
 /// __Example 1:__ Forwarding refs to DOM components
 ///
 /// _[Analogous JS Demo](https://reactjs.org/docs/forwarding-refs.html#forwarding-refs-to-dom-components)_
@@ -219,6 +221,61 @@ ReactJsComponentFactoryProxy forwardRef(Function(Map props, Ref ref) wrapperFunc
   var hoc = React.forwardRef(wrappedComponent);
 
   return new ReactJsComponentFactoryProxy(hoc, shouldConvertDomProps: false);
+}
+
+/// Shorthand convenience function to wrap a JS component that utilizes `forwardRef`.
+///
+/// __Example:__
+///
+/// ```dart
+/// // Assuming that your app includes the JS file containing the MaterialUI components...
+/// @JS()
+/// class MaterialUI {
+///   external static ReactClass get IconButton;
+/// }
+///
+/// /// This makes it so that the `ref` set on the Dart `IconButton` component
+/// /// gets passed all the way to the root node rendered by the JS `MaterialUI.IconButton` component.
+/// final IconButton = forwardRefToJsComponent(MaterialUI.IconButton);
+///
+/// void main() {
+///   setClientConfiguration();
+///   final iconButtonRootNodeRef = react.createRef<Element>();
+///
+///   react_dom.render(IconButton({'ref': iconButtonRootNodeRef}, someIcon), querySelector('#idOfSomeNodeInTheDom'));
+///
+///   // Prints the HTML rendered by the JS `MaterialUI.IconButton` component.
+///   print(iconButtonRootNodeRef.current.outerHtml);
+/// }
+/// ```
+ReactJsComponentFactoryProxy forwardRefToJs(ReactClass jsClassComponent,
+    {List<String> additionalRefPropKeys = const []}) {
+  return forwardRef((props, ref) {
+    return ReactJsComponentFactoryProxy(jsClassComponent, shouldConvertDomProps: false)({
+      ..._convertNonDefaultRefPropKeysToJs(props, additionalRefPropKeys),
+      'ref': ref,
+    }, props['children']);
+  });
+}
+
+Map _convertNonDefaultRefPropKeysToJs(Map props, List<String> additionalRefPropKeys) {
+  var propsMapToReturn = props;
+  if (additionalRefPropKeys.isNotEmpty) {
+    var propsWithConvertedRefs = {...props};
+    for (var propKey in additionalRefPropKeys) {
+      var ref = propsWithConvertedRefs[propKey];
+
+      // The default 'ref' prop key value gets converted by default
+      // by ReactJsComponentFactoryProxy, so we don't need to do it here.
+      if (propKey != 'ref' && ref is Ref) {
+        propsWithConvertedRefs[propKey] = ref.jsRef;
+      }
+    }
+
+    propsMapToReturn = propsWithConvertedRefs;
+  }
+
+  return propsMapToReturn;
 }
 
 abstract class ReactDom {
