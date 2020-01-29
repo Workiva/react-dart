@@ -15,7 +15,7 @@ import 'package:react/react_client.dart';
 import 'package:react/react_client/react_interop.dart';
 import 'package:react/react_client/component_factory.dart';
 import 'package:react/src/context.dart';
-import 'package:react/src/react_client/component_registration_utils.dart' as registration_utils;
+import 'package:react/src/react_client/component_registration.dart' as registration_utils;
 import 'package:react/src/react_client/utils.dart' show validateJsApiThenReturn;
 
 export 'package:react/src/context.dart';
