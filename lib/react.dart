@@ -2715,7 +2715,8 @@ _createDOMComponents(creator) {
 /// >
 /// > Environment configuration is now done by default and should not be altered. This can now be removed.
 /// > This will be removed in 6.0.0, along with other configuration setting functions.
-@Deprecated('Environment configuration is now done by default. You can remove this. Will be removed from this library in the 6.0.0 release.')
+@Deprecated(
+    'Environment configuration is now done by default. You can remove this. Will be removed from this library in the 6.0.0 release.')
 void setReactConfiguration(
   domCreator,
   customRegisterComponent, {
