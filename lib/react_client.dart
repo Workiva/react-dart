@@ -18,7 +18,7 @@ export 'package:react/react_client/component_factory.dart'
         JsBackedMapComponentFactoryMixin;
 export 'package:react/react_client/utils.dart' show listifyChildren, unconvertJsProps, unconvertJsEventHandler;
 export 'package:react/react_client/zone.dart' show componentZone;
-export 'package:react/src/react_client/synthetic_event_factories.dart'
+export 'package:react/src/react_client/event_factory.dart'
     show
         syntheticEventFactory,
         syntheticClipboardEventFactory,

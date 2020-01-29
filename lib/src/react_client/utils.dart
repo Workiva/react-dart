@@ -14,7 +14,7 @@ import 'package:react/react_client/react_interop.dart';
 import 'package:react/react_client/js_backed_map.dart';
 import 'package:react/react_client/utils.dart' as react_client_utils;
 
-import 'package:react/src/react_client/synthetic_event_factories.dart';
+import 'package:react/src/react_client/event_factory.dart';
 import 'package:react/src/react_client/synthetic_event_wrappers.dart' as events;
 import 'package:react/src/typedefs.dart';
 
