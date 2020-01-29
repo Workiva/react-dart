@@ -6,7 +6,7 @@ library react_dom;
 
 import 'package:react/react.dart' show Component;
 import 'package:react/react_client/react_interop.dart' show ReactDom;
-import 'package:react/src/react_client/utils.dart' show validateJsApiThenReturn;
+import 'package:react/src/react_client/private_utils.dart' show validateJsApiThenReturn;
 
 /// Renders a ReactElement into the DOM in the supplied [container] and return a reference to the [component]
 /// (or returns null for stateless components).

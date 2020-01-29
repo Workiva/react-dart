@@ -5,7 +5,7 @@ import 'package:react/react_client/react_interop.dart';
 import 'package:react/react_client/component_factory.dart';
 
 import 'package:react/src/react_client/dart_interop_statics.dart';
-import 'package:react/src/react_client/utils.dart';
+import 'package:react/src/react_client/private_utils.dart';
 
 /// Creates and returns a new [ReactDartComponentFactoryProxy] from the provided [componentFactory]
 /// which produces a new JS [`ReactClass` component class](https://facebook.github.io/react/docs/top-level-api.html#react.createclass).

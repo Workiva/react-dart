@@ -14,7 +14,7 @@ import 'package:react/react_client/utils.dart';
 import 'package:react/src/context.dart';
 import 'package:react/src/ddc_emulated_function_name_bug.dart' as ddc_emulated_function_name_bug;
 import 'package:react/src/typedefs.dart';
-import 'package:react/src/react_client/utils.dart';
+import 'package:react/src/react_client/private_utils.dart';
 
 /// Shared component factory proxy [build] method for components that utilize [JsBackedMap]s.
 mixin JsBackedMapComponentFactoryMixin on ReactComponentFactoryProxy {
