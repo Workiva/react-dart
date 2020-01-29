@@ -1,4 +1,4 @@
-library react_client.react_proxies;
+library react_client.component_factory;
 
 import 'dart:js';
 import 'dart:js_util';
