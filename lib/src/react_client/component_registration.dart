@@ -4,7 +4,7 @@ import 'package:react/react_client/js_backed_map.dart';
 import 'package:react/react_client/react_interop.dart';
 import 'package:react/react_client/component_factory.dart';
 
-import 'package:react/src/react_client/react_statics.dart';
+import 'package:react/src/react_client/dart_interop_statics.dart';
 import 'package:react/src/react_client/utils.dart';
 
 /// Creates and returns a new [ReactDartComponentFactoryProxy] from the provided [componentFactory]
