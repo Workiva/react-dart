@@ -1,4 +1,4 @@
-library react_client.react_zone;
+library react_client.zone;
 
 import 'dart:async';
 

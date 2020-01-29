@@ -17,7 +17,7 @@ export 'package:react/react_client/component_factory.dart'
         ReactDartFunctionComponentFactoryProxy,
         JsBackedMapComponentFactoryMixin;
 export 'package:react/react_client/utils.dart' show listifyChildren, unconvertJsProps, unconvertJsEventHandler;
-export 'package:react/react_client/react_zone.dart' show componentZone;
+export 'package:react/react_client/zone.dart' show componentZone;
 export 'package:react/src/react_client/synthetic_event_factories.dart'
     show
         syntheticEventFactory,
@@ -41,5 +41,5 @@ export 'package:react/src/typedefs.dart' show JsFunctionComponent;
 /// >
 /// > Environment configuration is now done by default and should not be altered. This can now be removed.
 /// > This will be removed in 6.0.0, along with other configuration setting functions.
-@Deprecated('It is not longer required and can be removed. 6.0.0')
+@Deprecated('It is no longer required and can be removed. 6.0.0')
 void setClientConfiguration() {}

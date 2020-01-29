@@ -10,7 +10,7 @@ import 'package:react/react_client/bridge.dart';
 import 'package:react/react_client/js_backed_map.dart';
 import 'package:react/react_client/js_interop_helpers.dart';
 import 'package:react/react_client/react_interop.dart';
-import 'package:react/react_client/react_zone.dart';
+import 'package:react/react_client/zone.dart';
 
 import 'package:react/src/context.dart';
 import 'package:react/src/react_client/utils.dart';
