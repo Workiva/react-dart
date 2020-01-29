@@ -37,7 +37,7 @@ dynamic _findDomNode(component) {
 /// >
 /// > Environment configuration is now done by default and should not be altered. This can now be removed.
 /// > This will be removed in 6.0.0, along with other configuration setting functions.
-@Deprecated('6.0.0')
+@Deprecated('Environment configuration is now done by default and should not be altered. This can be removed. Will be removed from this library in the 6.0.0 release.')
 setReactDOMConfiguration(Function customRender, Function customUnmountComponentAtNode, Function customFindDOMNode) {
   render = customRender;
   unmountComponentAtNode = customUnmountComponentAtNode;

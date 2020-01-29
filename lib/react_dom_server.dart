@@ -26,9 +26,9 @@ var renderToStaticMarkup;
 ///
 /// > __DEPRECATED.__
 /// >
-/// > This library no longer supports `ReactDomServer` and static markup randering.
+/// > This library no longer supports `ReactDomServer` and static markup rendering.
 /// > This will be removed in 6.0.0, along with other configuration setting functions.
-@Deprecated('6.0.0')
+@Deprecated('This library no longer supports `ReactDomServer` and static markup rendering. Will be removed from this library in the 6.0.0 release.')
 setReactDOMServerConfiguration(customRenderToString, customRenderToStaticMarkup) {
   renderToString = customRenderToString;
   renderToStaticMarkup = customRenderToStaticMarkup;

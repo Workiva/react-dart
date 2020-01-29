@@ -24,8 +24,8 @@ main() {
     });
 
     test('has a type corresponding to the DOM tagName', () {
-      expect((react.div).type, 'div');
-      expect((react.span).type, 'span');
+      expect(react.div.type, 'div');
+      expect(react.span.type, 'span');
     });
   });
 }
