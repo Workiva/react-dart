@@ -990,14 +990,17 @@ _convertEventHandlers(Map args) {
   args.forEach((propKey, value) {
     var eventFactory = eventPropKeyToEventFactory[propKey];
     if (eventFactory != null && value != null) {
-      // Apply allowInterop here so that the function we store in [_originalEventHandlers]
-      // is the same one we'll retrieve from the JS props.
-      var reactDartConvertedEventHandler = allowInterop((events.SyntheticEvent e, [_, __]) {
-        value(eventFactory(e));
-      });
+      final handlerHasAlreadyBeenConverted = unconvertJsEventHandler(value) != null;
+      if (!handlerHasAlreadyBeenConverted && !(isRawJsFunctionFromProps[value] ?? false)) {
+        // Apply allowInterop here so that the function we store in [_originalEventHandlers]
+        // is the same one we'll retrieve from the JS props.
+        var reactDartConvertedEventHandler = allowInterop((events.SyntheticEvent e, [_, __]) {
+          value(eventFactory(e));
+        });
 
-      args[propKey] = reactDartConvertedEventHandler;
-      _originalEventHandlers[reactDartConvertedEventHandler] = value;
+        args[propKey] = reactDartConvertedEventHandler;
+        _originalEventHandlers[reactDartConvertedEventHandler] = value;
+      }
     }
   });
 }

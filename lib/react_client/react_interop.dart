@@ -18,6 +18,7 @@ import 'package:react/react.dart';
 import 'package:react/react_client.dart' show ComponentFactory, ReactJsComponentFactoryProxy;
 import 'package:react/react_client/bridge.dart';
 import 'package:react/react_client/js_backed_map.dart';
+import 'package:react/react_client/js_interop_helpers.dart';
 import 'package:react/react_client/private_utils.dart';
 import 'package:react/src/react_client/dart2_interop_workaround_bindings.dart';
 
@@ -32,6 +33,7 @@ typedef dynamic JsPropValidator(
 @JS()
 abstract class React {
   external static String get version;
+  external static ReactElement cloneElement(ReactElement element, [JsMap props, dynamic children]);
   external static ReactContext createContext([
     dynamic defaultValue,
     int Function(dynamic currentValue, dynamic nextValue) calculateChangedBits,
@@ -212,11 +214,15 @@ class JsRef {
 ReactJsComponentFactoryProxy forwardRef(
   Function(Map props, Ref ref) wrapperFunction, {
   String displayName = 'Anonymous',
-  // NOTE: shouldConvertHocDomProps should only be true if forwarding refs to a JS component, NOT a Dart function component. (See: `forwardRefToJs`)
-  bool shouldConvertHocDomProps: false,
 }) {
   final wrappedComponent = allowInterop((JsMap props, JsRef ref) {
     final dartProps = JsBackedMap.backedBy(props);
+    for (var value in dartProps.values) {
+      if (value is Function) {
+        isRawJsFunctionFromProps[value] = true;
+      }
+    }
+
     final dartRef = Ref.fromJs(ref);
     return wrapperFunction(dartProps, dartRef);
   });
@@ -224,7 +230,7 @@ ReactJsComponentFactoryProxy forwardRef(
 
   var hoc = React.forwardRef(wrappedComponent);
 
-  return ReactJsComponentFactoryProxy(hoc, shouldConvertDomProps: shouldConvertHocDomProps);
+  return ReactJsComponentFactoryProxy(hoc);
 }
 
 /// Shorthand convenience function to wrap a JS component that utilizes `forwardRef`.
@@ -252,10 +258,13 @@ ReactJsComponentFactoryProxy forwardRef(
 ///   print(textFieldInputNodeRef.current.value);
 /// }
 /// ```
-ReactJsComponentFactoryProxy forwardRefToJs(ReactClass jsClassComponent,
-    {List<String> additionalRefPropKeys = const []}) {
+ReactJsComponentFactoryProxy forwardRefToJs(
+  ReactClass jsClassComponent, {
+  List<String> additionalRefPropKeys = const [],
+  String displayName,
+}) {
   // Do not convert DOM props so that the events passed into the JS component are NOT Dart `SyntheticEvent`s.
-  final jsFactoryProxy = ReactJsComponentFactoryProxy(jsClassComponent, shouldConvertDomProps: false);
+  final jsFactoryProxy = ReactJsComponentFactoryProxy(jsClassComponent);
 
   return forwardRef((props, ref) {
     return jsFactoryProxy({
@@ -263,7 +272,7 @@ ReactJsComponentFactoryProxy forwardRefToJs(ReactClass jsClassComponent,
       'ref': ref,
     }, props['children']);
     // Convert DOM props for the HOC so the consumer API callbacks that involve events receive Dart `SyntheticEvent`s.
-  }, shouldConvertHocDomProps: true);
+  }, displayName: '${displayName ?? jsClassComponent.displayName}');
 }
 
 Map _convertNonDefaultRefPropKeysToJs(Map props, List<String> additionalRefPropKeys) {

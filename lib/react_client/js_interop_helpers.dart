@@ -88,3 +88,8 @@ _convertDataTree(data) {
 
   return _convert(data);
 }
+
+/// Keeps track of functions found when converting JS props to Dart props.
+///
+/// See: [forwardRef] for usage / context.
+final isRawJsFunctionFromProps = Expando<bool>();

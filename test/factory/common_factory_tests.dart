@@ -6,6 +6,7 @@ import 'dart:js_util';
 
 import 'package:meta/meta.dart';
 import 'package:react/react_client/js_backed_map.dart';
+import 'package:react/react_client/js_interop_helpers.dart';
 import 'package:test/test.dart';
 
 import 'package:react/react_client.dart';
@@ -295,6 +296,67 @@ void refTests<T>(ReactComponentFactoryProxy factory, {void verifyRefValue(dynami
           getProperty(getProperty(ForwardRefTestComponent.type, 'render'), 'displayName'), 'ForwardRefTestComponent');
     });
   });
+
+  test('forwardRef wraps event handlers properly', () {
+    final events = {};
+    const dartInside = 'from Dart handler inside forwardRef        ';
+    const dart = 'from Dart handler set on forwardRef hoc    ';
+    const jsCloned = 'from JS handler cloned onto forwardRef hoc ';
+
+    final ForwardRefTestComponent = forwardRef((props, ref) {
+      final propsToAdd = {
+        ...props,
+        'onMouseDown': (event) => events[dartInside] = event,
+      };
+
+      if (factory is ReactDartComponentFactoryProxy) {
+        propsToAdd['forwardedRef'] = ref;
+      } else {
+        propsToAdd['ref'] = ref;
+      }
+
+      return factory(propsToAdd, props['children']);
+    });
+
+    final refObject = createRef();
+    final element = ForwardRefTestComponent({
+      'ref': refObject,
+      'onMouseUp': (event) => events[dart] = event,
+    });
+
+    final clonedElement = React.cloneElement(
+        element,
+        jsifyAndAllowInterop({
+          'onClick': (event) => events[jsCloned] = event,
+        }));
+
+    rtu.renderIntoDocument(clonedElement);
+
+    final node = react_dom.findDOMNode(refObject.current);
+
+    rtu.Simulate.mouseDown(node);
+    rtu.Simulate.mouseUp(node);
+    rtu.Simulate.click(node);
+
+    expect(
+        events,
+        {
+          dartInside: isNotNull,
+          dart: isNotNull,
+          jsCloned: isNotNull,
+        },
+        reason: 'all event handlers should have been called');
+
+    expect(
+        events,
+        {
+          dartInside: isA<react.SyntheticMouseEvent>(),
+          dart: isA<react.SyntheticMouseEvent>(),
+          jsCloned: isNot(isA<react.SyntheticMouseEvent>()),
+        },
+        reason:
+            'Dart events should be passed to Dart handlers, and JS events should be passed to handlers originating from JS');
+  }, timeout: Timeout(Duration(seconds: 1)));
 
   _typedCallbackRefTests<T>(factory);
 }
