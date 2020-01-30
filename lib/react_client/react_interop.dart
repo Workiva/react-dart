@@ -209,8 +209,12 @@ class JsRef {
 /// }
 /// ```
 /// See: <https://reactjs.org/docs/forwarding-refs.html>.
-ReactJsComponentFactoryProxy forwardRef(Function(Map props, Ref ref) wrapperFunction,
-    {String displayName = 'Anonymous'}) {
+ReactJsComponentFactoryProxy forwardRef(
+  Function(Map props, Ref ref) wrapperFunction, {
+  String displayName = 'Anonymous',
+  // NOTE: shouldConvertHocDomProps should only be true if forwarding refs to a JS component, NOT a Dart function component. (See: `forwardRefToJs`)
+  bool shouldConvertHocDomProps: false,
+}) {
   final wrappedComponent = allowInterop((JsMap props, JsRef ref) {
     final dartProps = JsBackedMap.backedBy(props);
     final dartRef = Ref.fromJs(ref);
@@ -220,7 +224,7 @@ ReactJsComponentFactoryProxy forwardRef(Function(Map props, Ref ref) wrapperFunc
 
   var hoc = React.forwardRef(wrappedComponent);
 
-  return new ReactJsComponentFactoryProxy(hoc, shouldConvertDomProps: false);
+  return ReactJsComponentFactoryProxy(hoc, shouldConvertDomProps: shouldConvertHocDomProps);
 }
 
 /// Shorthand convenience function to wrap a JS component that utilizes `forwardRef`.
@@ -231,31 +235,35 @@ ReactJsComponentFactoryProxy forwardRef(Function(Map props, Ref ref) wrapperFunc
 /// // Assuming that your app includes the JS file containing the MaterialUI components...
 /// @JS()
 /// class MaterialUI {
-///   external static ReactClass get IconButton;
+///   external static ReactClass get TextField;
 /// }
 ///
-/// /// This makes it so that the `ref` set on the Dart `IconButton` component
-/// /// gets passed all the way to the root node rendered by the JS `MaterialUI.IconButton` component.
-/// final IconButton = forwardRefToJsComponent(MaterialUI.IconButton);
+/// /// This makes it so that the `inputRef` set on the Dart `TextField` component
+/// /// gets passed all the way to the root <input> node rendered by the JS `MaterialUI.TextField` component.
+/// final TextField = forwardRefToJsComponent(MaterialUI.IconButton, additionalRefPropKeys: ['inputRef']);
 ///
 /// void main() {
 ///   setClientConfiguration();
-///   final iconButtonRootNodeRef = react.createRef<Element>();
+///   final textFieldInputNodeRef = react.createRef<TextInputElement>();
 ///
-///   react_dom.render(IconButton({'ref': iconButtonRootNodeRef}, someIcon), querySelector('#idOfSomeNodeInTheDom'));
+///   react_dom.render(TextInput({'inputRef': textFieldInputNodeRef}), querySelector('#idOfSomeNodeInTheDom'));
 ///
-///   // Prints the HTML rendered by the JS `MaterialUI.IconButton` component.
-///   print(iconButtonRootNodeRef.current.outerHtml);
+///   // Prints the value of the <input> rendered by the JS `MaterialUI.TextField` component.
+///   print(textFieldInputNodeRef.current.value);
 /// }
 /// ```
 ReactJsComponentFactoryProxy forwardRefToJs(ReactClass jsClassComponent,
     {List<String> additionalRefPropKeys = const []}) {
+  // Do not convert DOM props so that the events passed into the JS component are NOT Dart `SyntheticEvent`s.
+  final jsFactoryProxy = ReactJsComponentFactoryProxy(jsClassComponent, shouldConvertDomProps: false);
+
   return forwardRef((props, ref) {
-    return ReactJsComponentFactoryProxy(jsClassComponent, shouldConvertDomProps: false)({
+    return jsFactoryProxy({
       ..._convertNonDefaultRefPropKeysToJs(props, additionalRefPropKeys),
       'ref': ref,
     }, props['children']);
-  });
+    // Convert DOM props for the HOC so the consumer API's callbacks that involve events receive Dart `SyntheticEvent`s.
+  }, shouldConvertHocDomProps: true);
 }
 
 Map _convertNonDefaultRefPropKeysToJs(Map props, List<String> additionalRefPropKeys) {

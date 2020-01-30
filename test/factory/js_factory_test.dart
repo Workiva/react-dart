@@ -53,18 +53,33 @@ main() {
       expect(testRef.current.text, 'oh hai');
     });
 
-    test('does not convert JS SyntheticEvents to Dart SyntheticEvents', () {
+    test('wraps / unwraps DOM events as expected before passing them to the HOC / wrapped JS component', () {
       final JsFooFunction = forwardRefToJs(_JsFooFunction);
       dynamic _jsEvent;
+      dynamic _dartEvent;
       final testRef = createRef<Element>();
+
       renderIntoDocument(JsFooFunction({
         'ref': testRef,
-        'onClick': (jsEvent) {
+        'onClick': (event) {
+          _dartEvent = event;
+        },
+        'onClickJs': (jsEvent) {
           _jsEvent = jsEvent;
         }
       }));
-      Simulate.click(testRef.current);
-      expect(_jsEvent, isNot(isA<react.SyntheticMouseEvent>()));
+      final someNode = new DivElement();
+      document.body.append(someNode);
+      addTearDown(someNode.remove);
+
+      Simulate.click(testRef.current, {'relatedTarget': someNode});
+      expect(_jsEvent, isNotNull);
+      expect(_jsEvent, isNot(isA<react.SyntheticMouseEvent>()),
+          reason: 'Events on the JS side should not be Dart `SyntheticEvent`s');
+      expect(_dartEvent, isA<react.SyntheticMouseEvent>(),
+          reason: 'Events sent from the JS side back to Dart DOM prop callbacks should be Dart `SyntheticEvent`s');
+      expect((_dartEvent as react.SyntheticMouseEvent).relatedTarget, same(getProperty(_jsEvent, 'relatedTarget')),
+          reason: 'The JS and Dart events should essentially be the same object');
     });
 
     test('converts custom prop refs to Ref.jsRef when key is provided to the `additionalRefPropKeys` argument', () {

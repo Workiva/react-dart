@@ -6,6 +6,10 @@ window._JsFoo = class JsFooComponent extends React.Component {
 
 window._JsFooFunction = React.forwardRef((props, ref) => (
   React.createElement("div", {...props, 'ref': ref, 'onClick': function(event) {
+    if (props['onClickJs'] !== undefined) {
+      props['onClickJs'](event);
+    }
+
     if (props['onClick'] !== undefined) {
       props['onClick'](event);
     }
