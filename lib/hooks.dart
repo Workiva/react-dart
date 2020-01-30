@@ -476,7 +476,8 @@ void useLayoutEffect(dynamic Function() sideEffect, [List<Object> dependencies])
 
 /// Displays [value] as a label for a custom hook in React DevTools.
 ///
-/// Optionally formats [value] using [format] function.
+/// To [defer formatting](https://reactjs.org/docs/hooks-reference.html#defer-formatting-debug-values) [value] until
+/// the hooks are inspected, use optional [format] function.
 ///
 /// > __Note:__ there are two [rules for using Hooks](https://reactjs.org/docs/hooks-rules.html):
 /// >
@@ -486,14 +487,16 @@ void useLayoutEffect(dynamic Function() sideEffect, [List<Object> dependencies])
 /// __Example__:
 ///
 /// ```dart
-/// final ChatAPI = {
-///   'subscribeToFriendStatus': (int id, Function handleStatusChange) =>
-///       handleStatusChange({'isOnline': id % 2 == 0 ? true : false}),
-///   'unsubscribeFromFriendStatus': (int id, Function handleStatusChange) => handleStatusChange({'isOnline': false}),
-/// };
+/// class ChatAPI {
+///   static void subscribeToFriendStatus(int id, Function handleStatusChange) =>
+///       handleStatusChange({'isOnline': id % 2 == 0 ? true : false});
+///
+///   static void unsubscribeFromFriendStatus(int id, Function handleStatusChange) =>
+///       handleStatusChange({'isOnline': false});
+/// }
 ///
 /// // Custom Hook
-/// StateHook useFriendStatus(friendID) {
+/// StateHook useFriendStatus(int friendID) {
 ///   final isOnline = useState(false);
 ///
 ///   void handleStatusChange(Map status) {
@@ -501,18 +504,19 @@ void useLayoutEffect(dynamic Function() sideEffect, [List<Object> dependencies])
 ///   }
 ///
 ///   useEffect(() {
-///     ChatAPI['subscribeToFriendStatus'](friendID, handleStatusChange);
+///     ChatAPI.subscribeToFriendStatus(friendID, handleStatusChange);
 ///     return () {
-///       ChatAPI['subscribeToFriendStatus'](friendID, handleStatusChange);
+///       ChatAPI.unsubscribeFromFriendStatus(friendID, handleStatusChange);
 ///     };
 ///   });
 ///
-///   useDebugValue(isOnline.value ? 'Online' : 'Not Online');
+///   // Use format function to avoid unnecessarily formatting `isOnline` when the hooks aren't inspected in React DevTools.
+///   useDebugValue(isOnline.value, (isOnline) => isOnline ? 'Online' : 'Not Online');
 ///
 ///   return isOnline;
 /// }
 ///
-/// var FriendListItem = react.registerFunctionComponent((Map props) {
+/// final FriendListItem = react.registerFunctionComponent((Map props) {
 ///   final isOnline = useFriendStatus(props['friend']['id']);
 ///
 ///   return react.li({
@@ -522,7 +526,7 @@ void useLayoutEffect(dynamic Function() sideEffect, [List<Object> dependencies])
 ///   ]);
 /// }, displayName: 'FriendListItem');
 ///
-/// var UseDebugValueTestComponent = react.registerFunctionComponent(
+/// final UseDebugValueTestComponent = react.registerFunctionComponent(
 ///     (Map props) => react.Fragment({}, [
 ///           FriendListItem({
 ///             'friend': {'id': 1, 'name': 'user 1'}

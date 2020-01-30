@@ -649,7 +649,7 @@ main() {
       StateHook<bool> isOnline1;
       StateHook<bool> isOnline2;
 
-      StateHook useFriendStatus(friendID) {
+      StateHook useFriendStatus() {
         final isOnline = useState(false);
 
         useDebugValue(isOnline.value ? 'Online' : 'Not Online');
@@ -657,7 +657,7 @@ main() {
         return isOnline;
       }
 
-      StateHook useFriendStatusWithFormatFunction(friendID) {
+      StateHook useFriendStatusWithFormatFunction() {
         final isOnline = useState(true);
 
         useDebugValue(isOnline.value, (value) => value ? 'Online' : 'Not Online');
@@ -669,7 +669,7 @@ main() {
         final mountNode = DivElement();
 
         UseDebugValueTest1 = react.registerFunctionComponent((Map props) {
-          isOnline1 = useFriendStatus(props['friend']['id']);
+          isOnline1 = useFriendStatus();
 
           return react.li({
             'style': {'color': isOnline1.value ? 'green' : 'black'}
@@ -679,7 +679,7 @@ main() {
         });
 
         UseDebugValueTest2 = react.registerFunctionComponent((Map props) {
-          isOnline2 = useFriendStatusWithFormatFunction(props['friend']['id']);
+          isOnline2 = useFriendStatusWithFormatFunction();
 
           return react.li({
             'style': {'color': isOnline2.value ? 'green' : 'black'}

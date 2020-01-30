@@ -272,14 +272,16 @@ RandomUseEffectTestComponent(Map props) {
   ]);
 }
 
-final ChatAPI = {
-  'subscribeToFriendStatus': (int id, Function handleStatusChange) =>
-      handleStatusChange({'isOnline': id % 2 == 0 ? true : false}),
-  'unsubscribeFromFriendStatus': (int id, Function handleStatusChange) => handleStatusChange({'isOnline': false}),
-};
+class ChatAPI {
+  static void subscribeToFriendStatus(int id, Function handleStatusChange) =>
+      handleStatusChange({'isOnline': id % 2 == 0 ? true : false});
+
+  static void unsubscribeFromFriendStatus(int id, Function handleStatusChange) =>
+      handleStatusChange({'isOnline': false});
+}
 
 // Custom Hook
-StateHook useFriendStatus(friendID) {
+StateHook useFriendStatus(int friendID) {
   final isOnline = useState(false);
 
   void handleStatusChange(Map status) {
@@ -287,18 +289,19 @@ StateHook useFriendStatus(friendID) {
   }
 
   useEffect(() {
-    ChatAPI['subscribeToFriendStatus'](friendID, handleStatusChange);
+    ChatAPI.subscribeToFriendStatus(friendID, handleStatusChange);
     return () {
-      ChatAPI['subscribeToFriendStatus'](friendID, handleStatusChange);
+      ChatAPI.unsubscribeFromFriendStatus(friendID, handleStatusChange);
     };
   });
 
-  useDebugValue(isOnline.value ? 'Online' : 'Not Online');
+  // Use format function to avoid unnecessarily formatting `isOnline` when the hooks aren't inspected in React DevTools.
+  useDebugValue(isOnline.value, (isOnline) => isOnline ? 'Online' : 'Not Online');
 
   return isOnline;
 }
 
-var FriendListItem = react.registerFunctionComponent((Map props) {
+final FriendListItem = react.registerFunctionComponent((Map props) {
   final isOnline = useFriendStatus(props['friend']['id']);
 
   return react.li({
@@ -308,7 +311,7 @@ var FriendListItem = react.registerFunctionComponent((Map props) {
   ]);
 }, displayName: 'FriendListItem');
 
-var UseDebugValueTestComponent = react.registerFunctionComponent(
+final UseDebugValueTestComponent = react.registerFunctionComponent(
     (Map props) => react.Fragment({}, [
           FriendListItem({
             'key': 'friend1',
