@@ -42,6 +42,7 @@ abstract class React {
   external static ReactElement createElement(dynamic type, props, [dynamic children]);
   external static JsRef createRef();
   external static ReactClass forwardRef(Function(JsMap props, JsRef ref) wrapperFunction);
+  external static ReactElement cloneElement(ReactElement element, [JsMap props, dynamic child1, dynamic child2, dynamic child3, dynamic childn]);
 
   external static bool isValidElement(dynamic object);
 

@@ -6,6 +6,7 @@ import 'dart:js_util';
 
 import 'package:meta/meta.dart';
 import 'package:react/react_client/js_backed_map.dart';
+import 'package:react/react_client/js_interop_helpers.dart';
 import 'package:test/test.dart';
 
 import 'package:react/react_client.dart';
@@ -281,6 +282,49 @@ void refTests<T>(ReactComponentFactoryProxy factory, {void verifyRefValue(dynami
     expect(idValue, equals('test'), reason: 'child component should have access to parent props');
     verifyRefValue(refObject.current);
   });
+
+  test('forwardRef wraps event handlers properly', () {
+    final events = {};
+    const dartInside = 'from Dart handler inside forwardRef        ';
+    const dart =       'from Dart handler set on forwardRef hoc    ';
+    const jsCloned =   'from JS handler cloned onto forwardRef hoc ';
+
+    final ForwardRefTestComponent = forwardRef((props, ref) {
+      return factory({
+        ...props,
+        'ref': ref,
+        'onMouseDown': (event) => events[dartInside] = event,
+      });
+    });
+
+    final Ref refObject = createRef();
+    final element = ForwardRefTestComponent({
+      'ref': refObject,
+      'onMouseUp': (event) => events[dart] = event,
+    });
+
+    final clonedElement = React.cloneElement(element, jsifyAndAllowInterop({
+      'onClick': (event) => events[jsCloned] = event,
+    }));
+
+    rtu.renderIntoDocument(clonedElement);
+
+    rtu.Simulate.mouseDown(react_dom.findDOMNode(refObject.current));
+    rtu.Simulate.mouseUp(react_dom.findDOMNode(refObject.current));
+    rtu.Simulate.click(react_dom.findDOMNode(refObject.current));
+
+    expect(events, {
+      dartInside: isNotNull,
+      dart: isNotNull,
+      jsCloned: isNotNull,
+    }, reason: 'all event handlers should have been called');
+
+    expect(events, {
+      dartInside: isA<react.SyntheticMouseEvent>(),
+      dart: isA<react.SyntheticMouseEvent>(),
+      jsCloned: isNot(isA<react.SyntheticMouseEvent>()),
+    }, reason: 'Dart events should be passed to Dart handlers, and JS events should be passed to handlers originating from JS');
+  }, timeout: Timeout(Duration(seconds: 1)));
 
   group('forwardRef sets displayName on the rendered component as expected', () {
     test('when displayName argument is not passed to forwardRef', () {

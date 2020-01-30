@@ -39,6 +39,23 @@ main() {
   });
 
   group('forwardRefToJs', () {
+    group('- common factory behavior -', () {
+      final JsFooFunction = forwardRefToJs(_JsFooFunction);
+      commonFactoryTests(JsFooFunction);
+    });
+
+    group('- dom event handler wrapping -', () {
+      final JsFooFunction = forwardRefToJs(_JsFooFunction);
+      domEventHandlerWrappingTests(JsFooFunction);
+    });
+
+    group('- refs -', () {
+      final JsFooFunction = forwardRefToJs(_JsFooFunction);
+      refTests<Element>(JsFooFunction, verifyRefValue: (ref) {
+        expect(ref, isA<Element>());
+      });
+    });
+
     test('forwards the ref / arbitrary props as expected', () {
       final JsFooFunction = forwardRefToJs(_JsFooFunction);
       final testRef = createRef<Element>();
