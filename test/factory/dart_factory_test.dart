@@ -51,17 +51,12 @@ final Foo = react.registerComponent(() => new _Foo()) as ReactDartComponentFacto
 
 class _Foo extends react.Component {
   @override
-  render() => react.div({});
+  render() => react.div(props);
 }
 
 final Foo2 = react.registerComponent(() => new _Foo2()) as ReactDartComponentFactoryProxy2;
 
 class _Foo2 extends react.Component2 {
   @override
-  render() => react.div({});
+  render() => react.div(props);
 }
-
-final JsFoo = ReactJsComponentFactoryProxy(React.createClass(ReactClassConfig(
-  displayName: 'JsFoo',
-  render: allowInterop(() => react.div({})),
-)));

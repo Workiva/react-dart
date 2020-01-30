@@ -50,5 +50,5 @@ final NamedFunctionFoo = react.registerFunctionComponent(_FunctionFoo, displayNa
 final FunctionFoo = react.registerFunctionComponent(_FunctionFoo);
 
 _FunctionFoo(Map props) {
-  return react.div({});
+  return react.div(props);
 }

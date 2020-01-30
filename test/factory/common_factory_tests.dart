@@ -113,16 +113,29 @@ void commonFactoryTests(ReactComponentFactoryProxy factory, {bool isFunctionComp
 }
 
 void domEventHandlerWrappingTests(ReactComponentFactoryProxy factory) {
+  /// Renders [element] and returns the root DOM node of the component.
+  ///
+  /// This is necessary since the component we're rendering may not support refs
+  /// or have an instance associated with it, so this is the best way to get
+  /// the node we want to simulate events on.
+  Element renderAndGetRootNode(ReactElement element) {
+    final mountNode = DivElement();
+    react_dom.render(element, mountNode);
+    expect(mountNode.children, hasLength(1),
+        reason: 'expected a single rendered element, to which click handlers are attached');
+    return mountNode.children[0];
+  }
+
   setUpAll(() {
     var called = false;
 
-    var renderedInstance = rtu.renderIntoDocument(factory({
+    final node = renderAndGetRootNode(factory({
       'onClick': (_) {
         called = true;
       }
     }));
 
-    rtu.Simulate.click(react_dom.findDOMNode(renderedInstance));
+    rtu.Simulate.click(node);
 
     expect(called, isTrue,
         reason: 'this set of tests assumes that the factory '
@@ -132,21 +145,21 @@ void domEventHandlerWrappingTests(ReactComponentFactoryProxy factory) {
   test('wraps the handler with a function that converts the synthetic event', () {
     var actualEvent;
 
-    var renderedInstance = rtu.renderIntoDocument(factory({
+    final node = renderAndGetRootNode(factory({
       'onClick': (event) {
         actualEvent = event;
       }
     }));
 
-    rtu.Simulate.click(react_dom.findDOMNode(renderedInstance));
+    rtu.Simulate.click(node);
 
     expect(actualEvent, isA<react.SyntheticEvent>());
   });
 
   test('doesn\'t wrap the handler if it is null', () {
-    var renderedInstance = rtu.renderIntoDocument(factory({'onClick': null}));
+    final node = renderAndGetRootNode(factory({'onClick': null}));
 
-    expect(() => rtu.Simulate.click(react_dom.findDOMNode(renderedInstance)), returnsNormally);
+    expect(() => rtu.Simulate.click(node), returnsNormally);
   });
 
   test('stores the original function in a way that it can be retrieved from unconvertJsEventHandler', () {
@@ -164,37 +177,37 @@ void domEventHandlerWrappingTests(ReactComponentFactoryProxy factory) {
     test('(simulated event)', () {
       final testZone = Zone.current;
 
-      var renderedInstance;
+      Element node;
       // Run the ReactElement creation and rendering in a separate zone to
       // ensure the component lifecycle isn't run in the testZone, which could
       // create false positives in the `expect`.
       runZoned(() {
-        renderedInstance = rtu.renderIntoDocument(factory({
+        node = renderAndGetRootNode(factory({
           'onClick': (event) {
             expect(Zone.current, same(testZone));
           }
         }));
       });
 
-      rtu.Simulate.click(react_dom.findDOMNode(renderedInstance));
+      rtu.Simulate.click(node);
     });
 
     test('(native event)', () {
       final testZone = Zone.current;
 
-      var renderedInstance;
+      Element node;
       // Run the ReactElement creation and rendering in a separate zone to
       // ensure the component lifecycle isn't run in the testZone, which could
       // create false positives in the `expect`.
       runZoned(() {
-        renderedInstance = rtu.renderIntoDocument(factory({
+        node = renderAndGetRootNode(factory({
           'onClick': (event) {
             expect(Zone.current, same(testZone));
           }
         }));
       });
 
-      (react_dom.findDOMNode(renderedInstance) as Element).dispatchEvent(new MouseEvent('click'));
+      node.dispatchEvent(new MouseEvent('click'));
     });
   });
 }
