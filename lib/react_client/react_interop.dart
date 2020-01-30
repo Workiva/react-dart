@@ -262,7 +262,7 @@ ReactJsComponentFactoryProxy forwardRefToJs(ReactClass jsClassComponent,
       ..._convertNonDefaultRefPropKeysToJs(props, additionalRefPropKeys),
       'ref': ref,
     }, props['children']);
-    // Convert DOM props for the HOC so the consumer API's callbacks that involve events receive Dart `SyntheticEvent`s.
+    // Convert DOM props for the HOC so the consumer API callbacks that involve events receive Dart `SyntheticEvent`s.
   }, shouldConvertHocDomProps: true);
 }
 
