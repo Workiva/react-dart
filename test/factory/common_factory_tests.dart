@@ -304,18 +304,18 @@ void refTests<T>(ReactComponentFactoryProxy factory, {void verifyRefValue(dynami
   group('forwardRef wraps event handlers properly,', () {
     final isDartComponent = factory is ReactDartComponentFactoryProxy;
 
-    const dartInside = EventTestHelper.dart('onMouseDown', 'inside forwardRef');
-    const dart = EventTestHelper.dart('onMouseUp', 'set on forwardRef hoc');
-    const dartCloned = EventTestHelper.dart('onMouseLeave', 'cloned onto forwardRef hoc');
-    const jsCloned = EventTestHelper.js('onClick', 'cloned onto forwardRef hoc ');
-    const helpers = {dartInside, dart, jsCloned, dartCloned};
+    const dartInside = EventTestCase.dart('onMouseDown', 'inside forwardRef');
+    const dart = EventTestCase.dart('onMouseUp', 'set on forwardRef hoc');
+    const dartCloned = EventTestCase.dart('onMouseLeave', 'cloned onto forwardRef hoc');
+    const jsCloned = EventTestCase.js('onClick', 'cloned onto forwardRef hoc ');
+    const eventCases = {dartInside, dart, jsCloned, dartCloned};
 
     Element node;
-    Map<EventTestHelper, dynamic> events;
+    Map<EventTestCase, dynamic> events;
     Map propsFromDartRender;
 
     setUpAll(() {
-      expect(helpers.map((h) => h.eventPropKey).toSet(), hasLength(helpers.length),
+      expect(eventCases.map((h) => h.eventPropKey).toSet(), hasLength(eventCases.length),
           reason: 'test setup: each helper should have a unique event key');
 
       node = null;
@@ -362,11 +362,12 @@ void refTests<T>(ReactComponentFactoryProxy factory, {void verifyRefValue(dynami
     });
 
     group('passing Dart events to Dart handlers, and JS events to handlers originating from JS:', () {
-      for (var helper in helpers) {
-        test(helper.description, () {
-          helper.simulate(node);
-          expect(events[helper], isNotNull, reason: 'handler should have been called');
-          expect(events[helper], helper.isDart ? isA<react.SyntheticMouseEvent>() : isNot(isA<react.SyntheticMouseEvent>()));
+      for (var eventCase in eventCases) {
+        test(eventCase.description, () {
+          eventCase.simulate(node);
+          expect(events[eventCase], isNotNull, reason: 'handler should have been called');
+          expect(events[eventCase],
+              eventCase.isDart ? isA<react.SyntheticMouseEvent>() : isNot(isA<react.SyntheticMouseEvent>()));
         });
       }
     });
@@ -374,14 +375,16 @@ void refTests<T>(ReactComponentFactoryProxy factory, {void verifyRefValue(dynami
     if (isDartComponent) {
       group('in a way that the handlers are callable from within the Dart component:', () {
         setUpAll(() {
-          expect(propsFromDartRender, isNotNull, reason: 'test setup: component must pass props into props.onDartRender');
+          expect(propsFromDartRender, isNotNull,
+              reason: 'test setup: component must pass props into props.onDartRender');
         });
 
-        final dummyEvent = react.SyntheticMouseEvent(null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null);
+        final dummyEvent = react.SyntheticMouseEvent(null, null, null, null, null, null, null, null, null, null, null,
+            null, null, null, null, null, null, null, null, null, null, null, null, null, null, null);
 
-        for (var helper in helpers.where((helper) => helper.isDart)) {
-          test(helper.description, () {
-            expect(() => propsFromDartRender[helper.eventPropKey](dummyEvent), returnsNormally);
+        for (var eventCase in eventCases.where((helper) => helper.isDart)) {
+          test(eventCase.description, () {
+            expect(() => propsFromDartRender[eventCase.eventPropKey](dummyEvent), returnsNormally);
           });
         }
       });
@@ -391,14 +394,24 @@ void refTests<T>(ReactComponentFactoryProxy factory, {void verifyRefValue(dynami
   _typedCallbackRefTests<T>(factory);
 }
 
-class EventTestHelper {
+class EventTestCase {
+  /// The prop key for an arbitrary event handler that will be used to test this case.
   final String eventPropKey;
+
+  /// A description of this test case.
   final String description;
+
+  /// Whether the tested event handler is a Dart function expecting a Dart synthetic event,
+  /// as opposed to a JS function expecting a JS synthetic event.
   final bool isDart;
 
-  const EventTestHelper.dart(this.eventPropKey, String description) : isDart = true, description = 'Dart handler $description';
+  const EventTestCase.dart(this.eventPropKey, String description)
+      : isDart = true,
+        description = 'Dart handler $description';
 
-  const EventTestHelper.js(this.eventPropKey, String description) : isDart = false, description = 'JS handler $description';
+  const EventTestCase.js(this.eventPropKey, String description)
+      : isDart = false,
+        description = 'JS handler $description';
 
   String get _camelCaseEventName {
     var name = eventPropKey.replaceFirst(RegExp(r'^on'), '');
@@ -414,7 +427,6 @@ class EventTestHelper {
 
 @JS('React.addons.TestUtils.Simulate')
 external dynamic get _Simulate;
-
 
 void _typedCallbackRefTests<T>(react.ReactComponentFactoryProxy factory) {
   if (T == dynamic) {
