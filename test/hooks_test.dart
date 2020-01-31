@@ -642,6 +642,108 @@ main() {
     group('useLayoutEffect -', () {
       testEffectHook(useLayoutEffect);
     });
+
+    group('useImperativeHandle -', () {
+      var mountNode = new DivElement();
+      ReactDartFunctionComponentFactoryProxy UseImperativeHandleTest;
+      ButtonElement incrementButton;
+      ButtonElement reRenderButtonRef1;
+      ButtonElement reRenderButtonRef2;
+      Ref noDepsRef;
+      Ref emptyDepsRef;
+      Ref depsRef;
+      StateHook<int> count;
+
+      setUpAll(() {
+        var NoDepsComponent = react.forwardRef((props, ref) {
+          count = useState(0);
+
+          useImperativeHandle(
+            ref,
+            () => {'increment': () => count.setWithUpdater((prev) => prev + 1)},
+          );
+
+          return react.div({'ref': ref}, count.value);
+        });
+
+        var EmptyDepsComponent = react.forwardRef((props, ref) {
+          var count = useState(0);
+
+          useImperativeHandle(ref, () => count.value, []);
+
+          return react.Fragment({}, [
+            react.div({'ref': ref}, count.value),
+            react.button({
+              'ref': (ref) => reRenderButtonRef1 = ref,
+              'onClick': (_) => count.setWithUpdater((prev) => prev + 1),
+            }, []),
+          ]);
+        });
+
+        var DepsComponent = react.forwardRef((props, ref) {
+          var count = useState(0);
+
+          useImperativeHandle(ref, () => count.value, [count.value]);
+
+          return react.Fragment({}, [
+            react.div({'ref': ref}, count.value),
+            react.button({
+              'ref': (ref) => reRenderButtonRef2 = ref,
+              'onClick': (_) => count.setWithUpdater((prev) => prev + 1),
+            }, []),
+          ]);
+        });
+
+        UseImperativeHandleTest = react.registerFunctionComponent((Map props) {
+          noDepsRef = useRef();
+          emptyDepsRef = useRef();
+          depsRef = useRef();
+
+          return react.Fragment({}, [
+            NoDepsComponent({'ref': noDepsRef}, []),
+            react.button({
+              'ref': (ref) => incrementButton = ref,
+              'onClick': (_) => noDepsRef.current['increment'](),
+            }, [
+              '+'
+            ]),
+            EmptyDepsComponent({'ref': emptyDepsRef}),
+            DepsComponent({'ref': depsRef}),
+          ]);
+        });
+
+        react_dom.render(UseImperativeHandleTest({}), mountNode);
+      });
+
+      group('updates `ref.current` to the return value of `createHandle()`', () {
+        test('(with no dependency list)', () {
+          expect(noDepsRef.current, isA<Map>(), reason: 'useImperativeHandle overrides the existing ref.current value');
+          expect(noDepsRef.current['increment'], isA<Function>());
+          expect(count.value, 0);
+
+          react_test_utils.Simulate.click(incrementButton);
+          expect(count.value, 1);
+        });
+
+        test('(with empty dependency list)', () {
+          expect(emptyDepsRef.current, isA<int>(),
+              reason: 'useImperativeHandle overrides the existing ref.current value');
+          expect(emptyDepsRef.current, 0);
+
+          react_test_utils.Simulate.click(reRenderButtonRef1);
+          expect(emptyDepsRef.current, 0,
+              reason: 'current value does not update because count.value is not in dependency list');
+        });
+
+        test('(with non-empty dependency list)', () {
+          expect(depsRef.current, isA<int>(), reason: 'useImperativeHandle overrides the existing ref.current value');
+          expect(depsRef.current, 0);
+
+          react_test_utils.Simulate.click(reRenderButtonRef2);
+          expect(depsRef.current, 1, reason: 'current value updates because count.value is in dependency list');
+        });
+      });
+    });
   });
 }
 
