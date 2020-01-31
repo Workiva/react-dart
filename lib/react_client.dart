@@ -994,8 +994,15 @@ _convertEventHandlers(Map args) {
       if (!handlerHasAlreadyBeenConverted && !(isRawJsFunctionFromProps[value] ?? false)) {
         // Apply allowInterop here so that the function we store in [_originalEventHandlers]
         // is the same one we'll retrieve from the JS props.
-        var reactDartConvertedEventHandler = allowInterop((events.SyntheticEvent e, [_, __]) {
-          value(eventFactory(e));
+        var reactDartConvertedEventHandler = allowInterop((e, [_, __]) {
+          // To support Dart code calling converted handlers,
+          // check for Dart events and pass them through directly.
+          // Otherwise, convert the JS events like normal.
+          if (e is SyntheticEvent) {
+            value(e);
+          } else {
+            value(eventFactory(e as events.SyntheticEvent));
+          }
         });
 
         args[propKey] = reactDartConvertedEventHandler;
