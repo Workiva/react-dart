@@ -50,5 +50,6 @@ final NamedFunctionFoo = react.registerFunctionComponent(_FunctionFoo, displayNa
 final FunctionFoo = react.registerFunctionComponent(_FunctionFoo);
 
 _FunctionFoo(Map props) {
+  props['onDartRender']?.call(props);
   return react.div({});
 }

@@ -48,12 +48,18 @@ final Foo = react.registerComponent(() => new _Foo()) as ReactDartComponentFacto
 
 class _Foo extends react.Component {
   @override
-  render() => react.div({...props, 'ref': props['forwardedRef']});
+  render() {
+    props['onDartRender']?.call(props);
+    return react.div({...props, 'ref': props['forwardedRef']});
+  }
 }
 
 final Foo2 = react.registerComponent(() => new _Foo2()) as ReactDartComponentFactoryProxy2;
 
 class _Foo2 extends react.Component2 {
   @override
-  render() => react.div({...props, 'ref': props['forwardedRef']});
+  render() {
+    props['onDartRender']?.call(props);
+    return react.div({...props, 'ref': props['forwardedRef']});
+  }
 }

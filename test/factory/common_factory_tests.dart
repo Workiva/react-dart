@@ -1,9 +1,13 @@
+@JS()
+library react.test.common_factory_tests;
+
 // ignore_for_file: deprecated_member_use_from_same_package
 import 'dart:async';
 import 'dart:html';
 import 'dart:js';
 import 'dart:js_util';
 
+import 'package:js/js.dart';
 import 'package:meta/meta.dart';
 import 'package:react/react_client/js_backed_map.dart';
 import 'package:react/react_client/js_interop_helpers.dart';
@@ -297,69 +301,120 @@ void refTests<T>(ReactComponentFactoryProxy factory, {void verifyRefValue(dynami
     });
   });
 
-  test('forwardRef wraps event handlers properly', () {
-    final events = {};
-    const dartInside = 'from Dart handler inside forwardRef        ';
-    const dart = 'from Dart handler set on forwardRef hoc    ';
-    const jsCloned = 'from JS handler cloned onto forwardRef hoc ';
+  group('forwardRef wraps event handlers properly,', () {
+    final isDartComponent = factory is ReactDartComponentFactoryProxy;
 
-    final ForwardRefTestComponent = forwardRef((props, ref) {
-      final propsToAdd = {
-        ...props,
-        'onMouseDown': (event) => events[dartInside] = event,
-      };
+    const dartInside = EventTestHelper.dart('onMouseDown', 'inside forwardRef');
+    const dart = EventTestHelper.dart('onMouseUp', 'set on forwardRef hoc');
+    const dartCloned = EventTestHelper.dart('onMouseLeave', 'cloned onto forwardRef hoc');
+    const jsCloned = EventTestHelper.js('onClick', 'cloned onto forwardRef hoc ');
+    const helpers = {dartInside, dart, jsCloned, dartCloned};
 
-      if (factory is ReactDartComponentFactoryProxy) {
-        propsToAdd['forwardedRef'] = ref;
-      } else {
-        propsToAdd['ref'] = ref;
-      }
+    Element node;
+    Map<EventTestHelper, dynamic> events;
+    Map propsFromDartRender;
 
-      return factory(propsToAdd, props['children']);
-    });
+    setUpAll(() {
+      expect(helpers.map((h) => h.eventPropKey).toSet(), hasLength(helpers.length),
+          reason: 'test setup: each helper should have a unique event key');
 
-    final refObject = createRef();
-    final element = ForwardRefTestComponent({
-      'ref': refObject,
-      'onMouseUp': (event) => events[dart] = event,
-    });
+      node = null;
+      events = {};
+      propsFromDartRender = null;
 
-    final clonedElement = React.cloneElement(
+      final ForwardRefTestComponent = forwardRef((props, ref) {
+        return factory({
+          ...props,
+          'onDartRender': (p) {
+            propsFromDartRender = p;
+          },
+          dartInside.eventPropKey: (event) => events[dartInside] = event,
+          isDartComponent ? 'forwardedRef' : 'ref': ref,
+        }, props['children']);
+      });
+
+      final refObject = createRef();
+      var element = ForwardRefTestComponent({
+        'ref': refObject,
+        dart.eventPropKey: (event) => events[dart] = event,
+      });
+
+      element = React.cloneElement(
         element,
         jsifyAndAllowInterop({
-          'onClick': (event) => events[jsCloned] = event,
-        }));
+          jsCloned.eventPropKey: (event) => events[jsCloned] = event,
+        }),
+      );
 
-    rtu.renderIntoDocument(clonedElement);
+      element = React.cloneElement(
+        element,
+        // Invoke the factory corresponding to element's type
+        // to get the correct version of the handler (converted or non-converted)
+        // before passing it straight to the JS.
+        ForwardRefTestComponent({
+          dartCloned.eventPropKey: (event) => events[dartCloned] = event,
+        }).props,
+      );
 
-    final node = react_dom.findDOMNode(refObject.current);
+      rtu.renderIntoDocument(element);
 
-    rtu.Simulate.mouseDown(node);
-    rtu.Simulate.mouseUp(node);
-    rtu.Simulate.click(node);
+      node = react_dom.findDOMNode(refObject.current);
+    });
 
-    expect(
-        events,
-        {
-          dartInside: isNotNull,
-          dart: isNotNull,
-          jsCloned: isNotNull,
-        },
-        reason: 'all event handlers should have been called');
+    group('passing Dart events to Dart handlers, and JS events to handlers originating from JS:', () {
+      for (var helper in helpers) {
+        test(helper.description, () {
+          helper.simulate(node);
+          expect(events[helper], isNotNull, reason: 'handler should have been called');
+          expect(events[helper], helper.isDart ? isA<react.SyntheticMouseEvent>() : isNot(isA<react.SyntheticMouseEvent>()));
+        });
+      }
+    });
 
-    expect(
-        events,
-        {
-          dartInside: isA<react.SyntheticMouseEvent>(),
-          dart: isA<react.SyntheticMouseEvent>(),
-          jsCloned: isNot(isA<react.SyntheticMouseEvent>()),
-        },
-        reason:
-            'Dart events should be passed to Dart handlers, and JS events should be passed to handlers originating from JS');
-  }, timeout: Timeout(Duration(seconds: 1)));
+    if (isDartComponent) {
+      group('in a way that the handlers are callable from within the Dart component:', () {
+        setUpAll(() {
+          expect(propsFromDartRender, isNotNull, reason: 'test setup: component must pass props into props.onDartRender');
+        });
+
+        final dummyEvent = react.SyntheticMouseEvent(null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null);
+
+        for (var helper in helpers.where((helper) => helper.isDart)) {
+          test(helper.description, () {
+            expect(() => propsFromDartRender[helper.eventPropKey](dummyEvent), returnsNormally);
+          });
+        }
+      });
+    }
+  });
 
   _typedCallbackRefTests<T>(factory);
 }
+
+class EventTestHelper {
+  final String eventPropKey;
+  final String description;
+  final bool isDart;
+
+  const EventTestHelper.dart(this.eventPropKey, String description) : isDart = true, description = 'Dart handler $description';
+
+  const EventTestHelper.js(this.eventPropKey, String description) : isDart = false, description = 'JS handler $description';
+
+  String get _camelCaseEventName {
+    var name = eventPropKey.replaceFirst(RegExp(r'^on'), '');
+    name = name.substring(0, 1).toLowerCase() + name.substring(1);
+    return name;
+  }
+
+  void simulate(Element node) => callMethod(_Simulate, _camelCaseEventName, [node]);
+
+  @override
+  String toString() => 'EventHelper: ($eventPropKey) $description';
+}
+
+@JS('React.addons.TestUtils.Simulate')
+external dynamic get _Simulate;
+
 
 void _typedCallbackRefTests<T>(react.ReactComponentFactoryProxy factory) {
   if (T == dynamic) {
