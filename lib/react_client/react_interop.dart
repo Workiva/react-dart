@@ -219,6 +219,8 @@ ReactJsComponentFactoryProxy forwardRef(
     final dartProps = JsBackedMap.backedBy(props);
     for (var value in dartProps.values) {
       if (value is Function) {
+        // Tag functions that came straight from the JS
+        // so that we know to pass them through as-is during prop conversion.
         isRawJsFunctionFromProps[value] = true;
       }
     }

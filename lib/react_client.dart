@@ -990,6 +990,8 @@ _convertEventHandlers(Map args) {
   args.forEach((propKey, value) {
     var eventFactory = eventPropKeyToEventFactory[propKey];
     if (eventFactory != null && value != null) {
+      // Don't attempt to convert functions that have already been converted, or functions
+      // that were passed in as JS props.
       final handlerHasAlreadyBeenConverted = unconvertJsEventHandler(value) != null;
       if (!handlerHasAlreadyBeenConverted && !(isRawJsFunctionFromProps[value] ?? false)) {
         // Apply allowInterop here so that the function we store in [_originalEventHandlers]
