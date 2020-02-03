@@ -124,9 +124,9 @@ dynamic generateChildren(List childrenArgs, {bool shouldAlwaysBeList = false}) {
 /// Converts [props] into a [JsMap] that can be utilized with `React.createElement()`.
 JsMap generateJsProps(Map props,
     {bool shouldConvertEventHandlers = true,
-      bool convertRefValue = true,
-      bool convertCallbackRefValue = true,
-      bool wrapWithJsify = true}) {
+    bool convertRefValue = true,
+    bool convertCallbackRefValue = true,
+    bool wrapWithJsify = true}) {
   final propsForJs = JsBackedMap.from(props);
 
   if (shouldConvertEventHandlers) convertEventHandlers(propsForJs);
