@@ -15,8 +15,6 @@ import 'package:react/react_test_utils.dart' as react_test_utils;
 import 'package:test/test.dart';
 
 main() {
-  setClientConfiguration();
-
   group('React Hooks: ', () {
     group('useState -', () {
       ReactDartFunctionComponentFactoryProxy UseStateTest;

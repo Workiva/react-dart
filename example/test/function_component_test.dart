@@ -3,8 +3,8 @@ import 'dart:math';
 
 import 'package:react/hooks.dart';
 import 'package:react/react.dart' as react;
+import 'package:react/react_client/react_interop.dart';
 import 'package:react/react_dom.dart' as react_dom;
-import 'package:react/react_client.dart';
 
 var hookTestFunctionComponent = react.registerFunctionComponent(HookTestComponent, displayName: 'useStateTest');
 
@@ -406,8 +406,6 @@ UseImperativeHandleTestComponent2(Map props) {
 }
 
 void main() {
-  setClientConfiguration();
-
   render() {
     react_dom.render(
         react.Fragment({}, [
