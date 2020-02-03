@@ -1,3 +1,5 @@
+import 'dart:html';
+
 import 'package:react/react.dart';
 import 'package:react/react_client/bridge.dart';
 import 'package:react/react_client/js_backed_map.dart';
@@ -5,7 +7,43 @@ import 'package:react/react_client/react_interop.dart';
 import 'package:react/react_client/component_factory.dart';
 
 import 'package:react/src/react_client/dart_interop_statics.dart';
-import 'package:react/src/react_client/private_utils.dart';
+
+/// Util used with `registerComponent2` to ensure no important lifecycle
+/// events are skipped. This includes `shouldComponentUpdate`,
+/// `componentDidUpdate`, and `render` because they utilize
+/// `_updatePropsAndStateWithJs`.
+///
+/// Returns the list of lifecycle events to skip, having removed the
+/// important ones. If an important lifecycle event was set for skipping, a
+/// warning is issued.
+List<String> _filterSkipMethods(List<String> methods) {
+  List<String> finalList = List.from(methods);
+  bool shouldWarn = false;
+
+  if (finalList.contains('shouldComponentUpdate')) {
+    finalList.remove('shouldComponentUpdate');
+    shouldWarn = true;
+  }
+
+  if (finalList.contains('componentDidUpdate')) {
+    finalList.remove('componentDidUpdate');
+    shouldWarn = true;
+  }
+
+  if (finalList.contains('render')) {
+    finalList.remove('render');
+    shouldWarn = true;
+  }
+
+  if (shouldWarn) {
+    window.console.warn("WARNING: Crucial lifecycle methods passed into "
+        "skipMethods. shouldComponentUpdate, componentDidUpdate, and render "
+        "cannot be skipped and will still be added to the new component. Please "
+        "remove them from skipMethods.");
+  }
+
+  return finalList;
+}
 
 /// Creates and returns a new [ReactDartComponentFactoryProxy] from the provided [componentFactory]
 /// which produces a new JS [`ReactClass` component class](https://facebook.github.io/react/docs/top-level-api.html#react.createclass).
@@ -57,7 +95,7 @@ ReactDartComponentFactoryProxy2 registerComponent2(
     instanceForStaticMethods: componentInstance,
     bridgeFactory: bridgeFactory,
   );
-  final filteredSkipMethods = filterSkipMethods(skipMethods);
+  final filteredSkipMethods = _filterSkipMethods(skipMethods);
 
   // Cache default props and store them on the ReactClass so they can be used
   // by ReactDartComponentFactoryProxy and externally.

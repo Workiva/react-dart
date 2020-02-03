@@ -9,6 +9,9 @@ export 'package:react/react.dart' show ReactComponentFactoryProxy, ComponentFact
 export 'package:react/react_client/react_interop.dart' show ReactElement, ReactJsComponentFactory, inReactDevMode, Ref;
 export 'package:react/react_client/component_factory.dart'
     show
+        listifyChildren,
+        unconvertJsProps,
+        unconvertJsEventHandler,
         ReactDomComponentFactoryProxy,
         ReactJsComponentFactoryProxy,
         ReactDartComponentFactoryProxy,
@@ -16,7 +19,6 @@ export 'package:react/react_client/component_factory.dart'
         ReactJsContextComponentFactoryProxy,
         ReactDartFunctionComponentFactoryProxy,
         JsBackedMapComponentFactoryMixin;
-export 'package:react/react_client/utils.dart' show listifyChildren, unconvertJsProps, unconvertJsEventHandler;
 export 'package:react/react_client/zone.dart' show componentZone;
 export 'package:react/src/react_client/event_factory.dart'
     show
