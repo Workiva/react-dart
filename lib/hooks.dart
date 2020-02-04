@@ -62,7 +62,7 @@ class StateHook<T> {
 ///
 /// __Example__:
 ///
-/// ```
+/// ```dart
 /// UseStateTestComponent(Map props) {
 ///   final count = useState(0);
 ///
@@ -84,7 +84,7 @@ StateHook<T> useState<T>(T initialValue) => StateHook(initialValue);
 ///
 /// __Example__:
 ///
-/// ```
+/// ```dart
 /// UseStateTestComponent(Map props) {
 ///   final count = useStateLazy(() {
 ///     var initialState = someExpensiveComputation(props);
@@ -114,7 +114,7 @@ StateHook<T> useStateLazy<T>(T init()) => StateHook.lazy(init);
 ///
 /// __Example__:
 ///
-/// ```
+/// ```dart
 /// UseEffectTestComponent(Map props) {
 ///   final count = useState(1);
 ///   final evenOdd = useState('even');
@@ -205,7 +205,7 @@ class ReducerHook<TState, TAction, TInit> {
 ///
 /// __Example__:
 ///
-/// ```
+/// ```dart
 /// Map reducer(Map state, Map action) {
 ///   switch (action['type']) {
 ///     case 'increment':
@@ -245,7 +245,7 @@ ReducerHook<TState, TAction, TInit> useReducer<TState, TAction, TInit>(
 ///
 /// __Example__:
 ///
-/// ```
+/// ```dart
 /// Map initializeCount(int initialValue) {
 ///   return {'count': initialValue};
 /// }
@@ -304,7 +304,7 @@ ReducerHook<TState, TAction, TInit> useReducerLazy<TState, TAction, TInit>(
 ///
 /// __Example__:
 ///
-/// ```
+/// ```dart
 /// UseCallbackTestComponent(Map props) {
 ///   final count = useState(0);
 ///   final delta = useState(1);
@@ -342,7 +342,7 @@ Function useCallback(Function callback, List dependencies) => React.useCallback(
 ///
 /// __Example__:
 ///
-/// ```
+/// ```dart
 /// Context countContext = createContext(0);
 ///
 /// UseCallbackTestComponent(Map props) {
@@ -371,7 +371,7 @@ T useContext<T>(Context<T> context) => ContextHelpers.unjsifyNewContext(React.us
 ///
 /// __Example__:
 ///
-/// ```
+/// ```dart
 /// UseRefTestComponent(Map props) {
 ///   final inputValue = useState('');
 ///
@@ -404,7 +404,8 @@ Ref<T> useRef<T>([T initialValue]) => Ref.useRefInit(initialValue);
 /// > * Only call Hooks from inside a [DartFunctionComponent].
 ///
 /// __Example__:
-/// ```
+///
+/// ```dart
 /// UseMemoTestComponent(Map props) {
 ///   final count = useState(0);
 ///
@@ -438,7 +439,7 @@ T useMemo<T>(T Function() createFunction, [List<dynamic> dependencies]) =>
 ///
 /// __Example__:
 ///
-/// ```
+/// ```dart
 /// UseLayoutEffectTestComponent(Map props) {
 ///   final width = useState(0);
 ///   final height = useState(0);
@@ -529,3 +530,81 @@ void useLayoutEffect(dynamic Function() sideEffect, [List<Object> dependencies])
 /// Learn more: <https://reactjs.org/docs/hooks-reference.html#useimperativehandle>.
 void useImperativeHandle(Ref ref, dynamic Function() createHandle, [List<dynamic> dependencies]) =>
     React.useImperativeHandle(ref.jsRef, allowInterop(createHandle), dependencies);
+
+/// Displays [value] as a label for a custom hook in React DevTools.
+///
+/// To [defer formatting](https://reactjs.org/docs/hooks-reference.html#defer-formatting-debug-values) [value] until
+/// the hooks are inspected, use optional [format] function.
+///
+/// > __Note:__ there are two [rules for using Hooks](https://reactjs.org/docs/hooks-rules.html):
+/// >
+/// > * Only call Hooks at the top level.
+/// > * Only call Hooks from inside a [DartFunctionComponent].
+///
+/// __Example__:
+///
+/// ```dart
+/// class ChatAPI {
+///   static void subscribeToFriendStatus(int id, Function handleStatusChange) =>
+///       handleStatusChange({'isOnline': id % 2 == 0 ? true : false});
+///
+///   static void unsubscribeFromFriendStatus(int id, Function handleStatusChange) =>
+///       handleStatusChange({'isOnline': false});
+/// }
+///
+/// // Custom Hook
+/// StateHook useFriendStatus(int friendID) {
+///   final isOnline = useState(false);
+///
+///   void handleStatusChange(Map status) {
+///     isOnline.set(status['isOnline']);
+///   }
+///
+///   useEffect(() {
+///     ChatAPI.subscribeToFriendStatus(friendID, handleStatusChange);
+///     return () {
+///       ChatAPI.unsubscribeFromFriendStatus(friendID, handleStatusChange);
+///     };
+///   });
+///
+///   // Use format function to avoid unnecessarily formatting `isOnline` when the hooks aren't inspected in React DevTools.
+///   useDebugValue(isOnline.value, (isOnline) => isOnline ? 'Online' : 'Not Online');
+///
+///   return isOnline;
+/// }
+///
+/// final FriendListItem = react.registerFunctionComponent((Map props) {
+///   final isOnline = useFriendStatus(props['friend']['id']);
+///
+///   return react.li({
+///     'style': {'color': isOnline.value ? 'green' : 'black'}
+///   }, [
+///     props['friend']['name']
+///   ]);
+/// }, displayName: 'FriendListItem');
+///
+/// final UseDebugValueTestComponent = react.registerFunctionComponent(
+///     (Map props) => react.Fragment({}, [
+///           FriendListItem({
+///             'friend': {'id': 1, 'name': 'user 1'}
+///           }, []),
+///           FriendListItem({
+///             'friend': {'id': 2, 'name': 'user 2'}
+///           }, []),
+///           FriendListItem({
+///             'friend': {'id': 3, 'name': 'user 3'}
+///           }, []),
+///           FriendListItem({
+///             'friend': {'id': 4, 'name': 'user 4'}
+///           }, []),
+///         ]),
+///     displayName: 'useDebugValueTest');
+/// ```
+///
+/// Learn more: <https://reactjs.org/docs/hooks-reference.html#usedebugvalue>.
+dynamic useDebugValue<T>(T value, [dynamic Function(T) format]) {
+  if (format == null) {
+    return React.useDebugValue(value);
+  }
+  return React.useDebugValue(value, allowInterop(format));
+}

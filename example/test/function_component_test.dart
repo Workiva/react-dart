@@ -405,6 +405,66 @@ UseImperativeHandleTestComponent2(Map props) {
   ]);
 }
 
+class ChatAPI {
+  static void subscribeToFriendStatus(int id, Function handleStatusChange) =>
+      handleStatusChange({'isOnline': id % 2 == 0 ? true : false});
+
+  static void unsubscribeFromFriendStatus(int id, Function handleStatusChange) =>
+      handleStatusChange({'isOnline': false});
+}
+
+// Custom Hook
+StateHook useFriendStatus(int friendID) {
+  final isOnline = useState(false);
+
+  void handleStatusChange(Map status) {
+    isOnline.set(status['isOnline']);
+  }
+
+  useEffect(() {
+    ChatAPI.subscribeToFriendStatus(friendID, handleStatusChange);
+    return () {
+      ChatAPI.unsubscribeFromFriendStatus(friendID, handleStatusChange);
+    };
+  });
+
+  // Use format function to avoid unnecessarily formatting `isOnline` when the hooks aren't inspected in React DevTools.
+  useDebugValue(isOnline.value, (isOnline) => isOnline ? 'Online' : 'Not Online');
+
+  return isOnline;
+}
+
+final FriendListItem = react.registerFunctionComponent((Map props) {
+  final isOnline = useFriendStatus(props['friend']['id']);
+
+  return react.li({
+    'style': {'color': isOnline.value ? 'green' : 'black'}
+  }, [
+    props['friend']['name']
+  ]);
+}, displayName: 'FriendListItem');
+
+final UseDebugValueTestComponent = react.registerFunctionComponent(
+    (Map props) => react.Fragment({}, [
+          FriendListItem({
+            'key': 'friend1',
+            'friend': {'id': 1, 'name': 'user 1'},
+          }, []),
+          FriendListItem({
+            'key': 'friend2',
+            'friend': {'id': 2, 'name': 'user 2'},
+          }, []),
+          FriendListItem({
+            'key': 'friend3',
+            'friend': {'id': 3, 'name': 'user 3'},
+          }, []),
+          FriendListItem({
+            'key': 'friend4',
+            'friend': {'id': 4, 'name': 'user 4'},
+          }, []),
+        ]),
+    displayName: 'useDebugValueTest');
+
 void main() {
   render() {
     react_dom.render(
@@ -463,6 +523,11 @@ void main() {
           }, []),
           useImperativeHandleTestFunctionComponent2({
             'key': 'useImperativeHandleTest2',
+          }, []),
+          react.br({'key': 'br7'}),
+          react.h2({'key': 'useDebugValueTestLabel'}, ['useDebugValue Hook Test']),
+          UseDebugValueTestComponent({
+            'key': 'useDebugValueTest',
           }, []),
         ]),
         querySelector('#content'));

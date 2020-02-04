@@ -57,6 +57,8 @@ abstract class React {
   external static dynamic useMemo(dynamic Function() createFunction, [List<dynamic> dependencies]);
   external static void useLayoutEffect(dynamic Function() sideEffect, [List<Object> dependencies]);
   external static void useImperativeHandle(JsRef ref, dynamic Function() createHandle, [List<dynamic> dependencies]);
+  // NOTE: The use of generics on the `useDebugValue` interop will break the hook.
+  external static dynamic useDebugValue(dynamic value, [Function format]);
 }
 
 /// Creates a [Ref] object that can be attached to a [ReactElement] via the ref prop.
