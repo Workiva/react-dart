@@ -3,8 +3,8 @@ import 'dart:math';
 
 import 'package:react/hooks.dart';
 import 'package:react/react.dart' as react;
+import 'package:react/react_client/react_interop.dart';
 import 'package:react/react_dom.dart' as react_dom;
-import 'package:react/react_client.dart';
 
 var hookTestFunctionComponent = react.registerFunctionComponent(HookTestComponent, displayName: 'useStateTest');
 
@@ -272,6 +272,139 @@ RandomUseEffectTestComponent(Map props) {
   ]);
 }
 
+class FancyInputApi {
+  final void Function() focus;
+  FancyInputApi(this.focus);
+}
+
+final FancyInput = react.forwardRef((props, ref) {
+  final inputRef = useRef();
+
+  useImperativeHandle(
+    ref,
+    () {
+      print('FancyInput: useImperativeHandle re-assigns ref.current');
+      return FancyInputApi(() => inputRef.current.focus());
+    },
+
+    /// Because the return value of createHandle never changes, it is not necessary for ref.current
+    /// to be re-set on each render so this dependency list is empty.
+    [],
+  );
+
+  return react.input({
+    'ref': inputRef,
+    'value': props['value'],
+    'onChange': (e) => props['update'](e.target.value),
+    'placeholder': props['placeholder'],
+    'style': {'borderColor': props['hasError'] ? 'crimson' : '#999'},
+  });
+});
+
+final useImperativeHandleTestFunctionComponent =
+    react.registerFunctionComponent(UseImperativeHandleTestComponent, displayName: 'useImperativeHandleTest');
+
+UseImperativeHandleTestComponent(Map props) {
+  final city = useState('');
+  final state = useState('');
+  final error = useState('');
+  final message = useState('');
+
+  Ref cityRef = useRef<FancyInputApi>();
+  Ref stateRef = useRef<FancyInputApi>();
+
+  validate(_) {
+    if (!RegExp(r'^[a-zA-Z]+$').hasMatch(city.value)) {
+      message.set('Invalid form!');
+      error.set('city');
+      cityRef.current.focus();
+      return;
+    }
+
+    if (!RegExp(r'^[a-zA-Z]+$').hasMatch(state.value)) {
+      message.set('Invalid form!');
+      error.set('state');
+      stateRef.current.focus();
+      return;
+    }
+
+    error.set('');
+    message.set('Valid form!');
+  }
+
+  return react.Fragment({}, [
+    FancyInput({
+      'key': 'fancyInput1',
+      'hasError': error.value == 'city',
+      'placeholder': 'City',
+      'value': city.value,
+      'update': city.set,
+      'ref': cityRef,
+    }, []),
+    FancyInput({
+      'key': 'fancyInput2',
+      'hasError': error.value == 'state',
+      'placeholder': 'State',
+      'value': state.value,
+      'update': state.set,
+      'ref': stateRef,
+    }, []),
+    react.button({'key': 'button1', 'onClick': validate}, ['Validate Form']),
+    react.p({'key': 'p1'}, [message.value]),
+  ]);
+}
+
+final FancyCounter = react.forwardRef((props, ref) {
+  final count = useState(0);
+
+  useImperativeHandle(
+    ref,
+    () {
+      print('FancyCounter: useImperativeHandle re-assigns ref.current');
+      return {
+        'increment': () => count.setWithUpdater((prev) => prev + props['diff']),
+        'decrement': () => count.setWithUpdater((prev) => prev - props['diff']),
+      };
+    },
+
+    /// This dependency prevents unnecessary calls of createHandle, by only re-assigning
+    /// ref.current when `props['diff']` changes.
+    [props['diff']],
+  );
+
+  return react.div({}, count.value);
+});
+
+final useImperativeHandleTestFunctionComponent2 =
+    react.registerFunctionComponent(UseImperativeHandleTestComponent2, displayName: 'useImperativeHandleTest2');
+
+UseImperativeHandleTestComponent2(Map props) {
+  final diff = useState(1);
+
+  final fancyCounterRef = useRef<Map>();
+
+  return react.Fragment({}, [
+    FancyCounter({
+      'key': 'fancyCounter1',
+      'diff': diff.value,
+      'ref': fancyCounterRef,
+    }, []),
+    react.button({
+      'key': 'button1',
+      'onClick': (_) => fancyCounterRef.current['increment'](),
+    }, [
+      'Increment by ${diff.value}'
+    ]),
+    react.button({
+      'key': 'button2',
+      'onClick': (_) => fancyCounterRef.current['decrement'](),
+    }, [
+      'Decrement by ${diff.value}'
+    ]),
+    react.button({'key': 'button3', 'onClick': (_) => diff.setWithUpdater((prev) => prev + 1)}, ['+']),
+  ]);
+}
+
 class ChatAPI {
   static void subscribeToFriendStatus(int id, Function handleStatusChange) =>
       handleStatusChange({'isOnline': id % 2 == 0 ? true : false});
@@ -333,8 +466,6 @@ final UseDebugValueTestComponent = react.registerFunctionComponent(
     displayName: 'useDebugValueTest');
 
 void main() {
-  setClientConfiguration();
-
   render() {
     react_dom.render(
         react.Fragment({}, [
@@ -385,6 +516,13 @@ void main() {
           react.br({'key': 'br6'}),
           randomUseEffectTestComponent({
             'key': 'useLayoutEffectTest2',
+          }, []),
+          react.h2({'key': 'useImperativeHandleTestLabel'}, ['useImperativeHandle Hook Test']),
+          useImperativeHandleTestFunctionComponent({
+            'key': 'useImperativeHandleTest',
+          }, []),
+          useImperativeHandleTestFunctionComponent2({
+            'key': 'useImperativeHandleTest2',
           }, []),
           react.br({'key': 'br7'}),
           react.h2({'key': 'useDebugValueTestLabel'}, ['useDebugValue Hook Test']),

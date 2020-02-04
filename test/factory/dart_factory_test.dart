@@ -12,8 +12,6 @@ import 'package:react/react_client/react_interop.dart';
 import 'common_factory_tests.dart';
 
 main() {
-  setClientConfiguration();
-
   group('ReactDartComponentFactoryProxy', () {
     test('has a type corresponding to the backing JS class', () {
       expect(Foo.type, equals(Foo.reactClass));

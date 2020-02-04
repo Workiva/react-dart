@@ -15,9 +15,10 @@ import 'package:js/js_util.dart';
 import 'package:meta/meta.dart';
 import 'package:react/hooks.dart';
 import 'package:react/react.dart';
-import 'package:react/react_client.dart' show ComponentFactory, ReactJsComponentFactoryProxy;
+import 'package:react/react_client.dart' show ComponentFactory;
 import 'package:react/react_client/bridge.dart';
 import 'package:react/react_client/js_backed_map.dart';
+import 'package:react/react_client/component_factory.dart' show ReactJsComponentFactoryProxy;
 import 'package:react/src/react_client/dart2_interop_workaround_bindings.dart';
 
 typedef ReactElement ReactJsComponentFactory(props, children);
@@ -55,6 +56,7 @@ abstract class React {
   external static JsRef useRef([dynamic initialValue]);
   external static dynamic useMemo(dynamic Function() createFunction, [List<dynamic> dependencies]);
   external static void useLayoutEffect(dynamic Function() sideEffect, [List<Object> dependencies]);
+  external static void useImperativeHandle(JsRef ref, dynamic Function() createHandle, [List<dynamic> dependencies]);
   // NOTE: The use of generics on the `useDebugValue` interop will break the hook.
   external static dynamic useDebugValue(dynamic value, [Function format]);
 }

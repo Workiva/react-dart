@@ -474,6 +474,63 @@ void useLayoutEffect(dynamic Function() sideEffect, [List<Object> dependencies])
   return React.useLayoutEffect(wrappedSideEffect, dependencies);
 }
 
+/// Customizes the [ref] value that is exposed to parent components when using [forwardRef] by setting [ref.current]
+/// to the return value of [createHandle].
+///
+/// In most cases, imperative code using refs should be avoided.
+/// For more information, see <https://reactjs.org/docs/refs-and-the-dom.html#when-to-use-refs>.
+///
+/// > __Note:__ there are two [rules for using Hooks](https://reactjs.org/docs/hooks-rules.html):
+/// >
+/// > * Only call Hooks at the top level.
+/// > * Only call Hooks from inside a [DartFunctionComponent].
+///
+/// __Example__:
+///
+/// ```dart
+/// class FancyInputApi {
+///   final void Function() focus;
+///   FancyInputApi(this.focus);
+/// }
+///
+/// final FancyInput = react.forwardRef((props, ref) {
+///   final inputRef = useRef<InputElement>();
+///
+///   useImperativeHandle(
+///     ref,
+///     () => FancyInputApi(() => inputRef.current.focus()),
+///
+///     /// Because the return value of [createHandle] never changes, it is not necessary for [ref.current]
+///     /// to be re-set on each render so this dependency list is empty.
+///     [],
+///   );
+///
+///   return react.input({
+///     'ref': inputRef,
+///     'value': props['value'],
+///     'onChange': (e) => props['update'](e.target.value),
+///   });
+/// });
+///
+/// UseImperativeHandleTestComponent(Map props) {
+///   final inputValue = useState('');
+///   final fancyInputRef = useRef<FancyInputApi>();
+///
+///   return react.Fragment({}, [
+///     FancyInput({
+///       'value': inputValue.value,
+///       'update': inputValue.set,
+///       'ref': fancyInputRef,
+///     }, []),
+///     react.button({'onClick': (_) => fancyInputRef.current.focus()}, ['Focus Input']),
+///   ]);
+/// }
+/// ```
+///
+/// Learn more: <https://reactjs.org/docs/hooks-reference.html#useimperativehandle>.
+void useImperativeHandle(Ref ref, dynamic Function() createHandle, [List<dynamic> dependencies]) =>
+    React.useImperativeHandle(ref.jsRef, allowInterop(createHandle), dependencies);
+
 /// Displays [value] as a label for a custom hook in React DevTools.
 ///
 /// To [defer formatting](https://reactjs.org/docs/hooks-reference.html#defer-formatting-debug-values) [value] until

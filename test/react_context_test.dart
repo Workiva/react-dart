@@ -14,8 +14,6 @@ import 'package:react/react_dom.dart' as react_dom;
 import 'shared_type_tester.dart';
 
 main() {
-  setClientConfiguration();
-
   void testTypeValue(dynamic typeToTest) {
     var mountNode = new html.DivElement();
     var contextTypeRef;
