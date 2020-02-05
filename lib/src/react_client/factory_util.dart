@@ -79,7 +79,7 @@ void convertRefValue2(
 }) {
   final refKeys = ['ref', ...additionalRefPropKeys];
 
-  for (var refKey in refKeys) {
+  for (final refKey in refKeys) {
     var ref = args[refKey];
     if (ref is Ref) {
       args[refKey] = ref.jsRef;
@@ -93,8 +93,10 @@ void convertRefValue2(
       args[refKey] = allowInterop((dynamic instance) {
         // Call as dynamic to perform dynamic dispatch, since we can't cast to _CallbackRef<dynamic>,
         // and since calling with non-null values will fail at runtime due to the _CallbackRef<Null> typing.
-        if (instance is ReactComponent && instance.dartComponent != null)
+        if (instance is ReactComponent && instance.dartComponent != null) {
           return (ref as dynamic)(instance.dartComponent);
+        }
+
         return (ref as dynamic)(instance);
       });
     }
@@ -148,9 +150,10 @@ JsMap generateJsProps(Map props,
   final propsForJs = JsBackedMap.from(props);
 
   if (shouldConvertEventHandlers) convertEventHandlers(propsForJs);
-  if (convertRefValue)
+  if (convertRefValue) {
     convertRefValue2(propsForJs,
         convertCallbackRefValue: convertCallbackRefValue, additionalRefPropKeys: additionalRefPropKeys);
+  }
 
   return wrapWithJsify ? jsifyAndAllowInterop(propsForJs) : propsForJs.jsObject;
 }
