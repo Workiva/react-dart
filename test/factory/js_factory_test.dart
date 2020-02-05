@@ -16,8 +16,6 @@ import 'package:react/react_test_utils.dart';
 import 'common_factory_tests.dart';
 
 main() {
-  setClientConfiguration();
-
   group('ReactJsComponentFactoryProxy', () {
     group('- common factory behavior -', () {
       commonFactoryTests(JsFoo);

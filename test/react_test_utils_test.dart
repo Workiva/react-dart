@@ -15,8 +15,6 @@ import 'test_components2.dart' as component2;
 import 'util.dart';
 
 void main() {
-  setClientConfiguration();
-
   testUtils(
       isComponent2: false,
       eventComponent: component1.eventComponent,

@@ -3,7 +3,6 @@ import 'dart:html';
 
 import "package:react/react.dart" as react;
 import "package:react/react_dom.dart" as react_dom;
-import "package:react/react_client.dart";
 
 class _Item extends react.Component {
   componentWillReceiveProps(newProps) {
@@ -38,6 +37,5 @@ class _List extends react.Component {
 var list = react.registerComponent(() => new _List());
 
 void main() {
-  setClientConfiguration();
   react_dom.render(list({}), querySelector('#content'));
 }

@@ -2,15 +2,12 @@
 library react.bridge_test;
 
 import 'package:react/react.dart' as react;
-import 'package:react/react_client.dart';
 import 'package:react/react_client/bridge.dart';
 import 'package:test/test.dart';
 
 import '../util.dart';
 
 main() {
-  setClientConfiguration();
-
   // Test behavior that isn't functionally tested via component lifecycle tests.
   group('Component2Bridge', () {
     group('.forComponent returns the bridge used by that mounted component, which', () {
