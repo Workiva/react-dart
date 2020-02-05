@@ -236,33 +236,44 @@ JsMap _generateJsProps(Map props,
     {bool convertEventHandlers = true,
     bool convertRefValue = true,
     bool convertCallbackRefValue = true,
+    List<String> additionalRefPropKeys = const [],
     bool wrapWithJsify = true}) {
   final propsForJs = JsBackedMap.from(props);
 
   if (convertEventHandlers) _convertEventHandlers(propsForJs);
-  if (convertRefValue) _convertRefValue2(propsForJs, convertCallbackRefValue: convertCallbackRefValue);
+  if (convertRefValue)
+    _convertRefValue2(propsForJs,
+        convertCallbackRefValue: convertCallbackRefValue, additionalRefPropKeys: additionalRefPropKeys);
 
   return wrapWithJsify ? jsifyAndAllowInterop(propsForJs) : propsForJs.jsObject;
 }
 
-void _convertRefValue2(Map args, {bool convertCallbackRefValue = true}) {
-  var ref = args['ref'];
+void _convertRefValue2(
+  Map args, {
+  bool convertCallbackRefValue = true,
+  List<String> additionalRefPropKeys = const [],
+}) {
+  final refKeys = ['ref', ...additionalRefPropKeys];
 
-  if (ref is Ref) {
-    args['ref'] = ref.jsRef;
-    // If the ref is a callback, pass ReactJS a function that will call it
-    // with the Dart Component instance, not the ReactComponent instance.
-    //
-    // Use _CallbackRef<Null> to check arity, since parameters could be non-dynamic, and thus
-    // would fail the `is _CallbackRef<dynamic>` check.
-    // See https://github.com/dart-lang/sdk/issues/34593 for more information on arity checks.
-  } else if (ref is _CallbackRef<Null> && convertCallbackRefValue) {
-    args['ref'] = allowInterop((dynamic instance) {
-      // Call as dynamic to perform dynamic dispatch, since we can't cast to _CallbackRef<dynamic>,
-      // and since calling with non-null values will fail at runtime due to the _CallbackRef<Null> typing.
-      if (instance is ReactComponent && instance.dartComponent != null) return (ref as dynamic)(instance.dartComponent);
-      return (ref as dynamic)(instance);
-    });
+  for (var refKey in refKeys) {
+    var ref = args[refKey];
+    if (ref is Ref) {
+      args[refKey] = ref.jsRef;
+      // If the ref is a callback, pass ReactJS a function that will call it
+      // with the Dart Component instance, not the ReactComponent instance.
+      //
+      // Use _CallbackRef<Null> to check arity, since parameters could be non-dynamic, and thus
+      // would fail the `is _CallbackRef<dynamic>` check.
+      // See https://github.com/dart-lang/sdk/issues/34593 for more information on arity checks.
+    } else if (ref is _CallbackRef<Null> && convertCallbackRefValue) {
+      args[refKey] = allowInterop((dynamic instance) {
+        // Call as dynamic to perform dynamic dispatch, since we can't cast to _CallbackRef<dynamic>,
+        // and since calling with non-null values will fail at runtime due to the _CallbackRef<Null> typing.
+        if (instance is ReactComponent && instance.dartComponent != null)
+          return (ref as dynamic)(instance.dartComponent);
+        return (ref as dynamic)(instance);
+      });
+    }
   }
 }
 
@@ -778,10 +789,16 @@ class ReactJsComponentFactoryProxy extends ReactComponentFactoryProxy {
   /// Default: `false`
   final bool alwaysReturnChildrenAsList;
 
-  ReactJsComponentFactoryProxy(ReactClass jsClass,
-      {this.shouldConvertDomProps: true, this.alwaysReturnChildrenAsList: false})
-      : this.type = jsClass,
-        this.factory = React.createFactory(jsClass) {
+  final List<String> _additionalRefPropKeys;
+
+  ReactJsComponentFactoryProxy(
+    ReactClass jsClass, {
+    this.shouldConvertDomProps: true,
+    this.alwaysReturnChildrenAsList: false,
+    List<String> additionalRefPropKeys = const [],
+  })  : this.type = jsClass,
+        this.factory = React.createFactory(jsClass),
+        this._additionalRefPropKeys = additionalRefPropKeys {
     if (jsClass == null) {
       throw new ArgumentError('`jsClass` must not be null. '
           'Ensure that the JS component class you\'re referencing is available and being accessed correctly.');
@@ -791,8 +808,10 @@ class ReactJsComponentFactoryProxy extends ReactComponentFactoryProxy {
   @override
   ReactElement build(Map props, [List childrenArgs]) {
     dynamic children = _generateChildren(childrenArgs, shouldAlwaysBeList: alwaysReturnChildrenAsList);
-    JsMap convertedProps =
-        _generateJsProps(props, convertEventHandlers: shouldConvertDomProps, convertCallbackRefValue: false);
+    JsMap convertedProps = _generateJsProps(props,
+        convertEventHandlers: shouldConvertDomProps,
+        convertCallbackRefValue: false,
+        additionalRefPropKeys: _additionalRefPropKeys);
     return React.createElement(type, convertedProps, children);
   }
 }

@@ -266,35 +266,15 @@ ReactJsComponentFactoryProxy forwardRefToJs(
   String displayName,
 }) {
   // Do not convert DOM props so that the events passed into the JS component are NOT Dart `SyntheticEvent`s.
-  final jsFactoryProxy = ReactJsComponentFactoryProxy(jsClassComponent);
+  final jsFactoryProxy = ReactJsComponentFactoryProxy(jsClassComponent, additionalRefPropKeys: additionalRefPropKeys);
 
   return forwardRef((props, ref) {
     return jsFactoryProxy({
-      ..._convertNonDefaultRefPropKeysToJs(props, additionalRefPropKeys),
+      ...props,
       'ref': ref,
     }, props['children']);
     // Convert DOM props for the HOC so the consumer API callbacks that involve events receive Dart `SyntheticEvent`s.
   }, displayName: '${displayName ?? jsClassComponent.displayName}');
-}
-
-Map _convertNonDefaultRefPropKeysToJs(Map props, List<String> additionalRefPropKeys) {
-  var propsMapToReturn = props;
-  if (additionalRefPropKeys.isNotEmpty) {
-    var propsWithConvertedRefs = {...props};
-    for (var propKey in additionalRefPropKeys) {
-      var ref = propsWithConvertedRefs[propKey];
-
-      // The default 'ref' prop key value gets converted by default
-      // by ReactJsComponentFactoryProxy, so we don't need to do it here.
-      if (propKey != 'ref' && ref is Ref) {
-        propsWithConvertedRefs[propKey] = ref.jsRef;
-      }
-    }
-
-    propsMapToReturn = propsWithConvertedRefs;
-  }
-
-  return propsMapToReturn;
 }
 
 abstract class ReactDom {
