@@ -15,9 +15,11 @@ import 'package:js/js_util.dart';
 import 'package:meta/meta.dart';
 import 'package:react/hooks.dart';
 import 'package:react/react.dart';
-import 'package:react/react_client.dart' show ComponentFactory, ReactJsComponentFactoryProxy;
+import 'package:react/react_client.dart' show ComponentFactory;
 import 'package:react/react_client/bridge.dart';
 import 'package:react/react_client/js_backed_map.dart';
+import 'package:react/react_client/component_factory.dart' show ReactJsComponentFactoryProxy;
+import 'package:react/react_client/js_interop_helpers.dart';
 import 'package:react/react_client/private_utils.dart';
 import 'package:react/src/react_client/dart2_interop_workaround_bindings.dart';
 
@@ -32,6 +34,7 @@ typedef dynamic JsPropValidator(
 @JS()
 abstract class React {
   external static String get version;
+  external static ReactElement cloneElement(ReactElement element, [JsMap props, dynamic children]);
   external static ReactContext createContext([
     dynamic defaultValue,
     int Function(dynamic currentValue, dynamic nextValue) calculateChangedBits,
@@ -59,6 +62,10 @@ abstract class React {
   external static ReactContext useContext(ReactContext context);
   external static JsRef useRef([dynamic initialValue]);
   external static dynamic useMemo(dynamic Function() createFunction, [List<dynamic> dependencies]);
+  external static void useLayoutEffect(dynamic Function() sideEffect, [List<Object> dependencies]);
+  external static void useImperativeHandle(JsRef ref, dynamic Function() createHandle, [List<dynamic> dependencies]);
+  // NOTE: The use of generics on the `useDebugValue` interop will break the hook.
+  external static dynamic useDebugValue(dynamic value, [Function format]);
 }
 
 /// Creates a [Ref] object that can be attached to a [ReactElement] via the ref prop.
@@ -131,6 +138,8 @@ class JsRef {
 }
 
 /// Automatically passes a [Ref] through a component to one of its children.
+///
+/// __Not recommended for use with interop'd JS components. Use [forwardRefToJs] instead.__
 ///
 /// __Example 1:__ Forwarding refs to DOM components
 ///
@@ -211,10 +220,20 @@ class JsRef {
 /// }
 /// ```
 /// See: <https://reactjs.org/docs/forwarding-refs.html>.
-ReactJsComponentFactoryProxy forwardRef(Function(Map props, Ref ref) wrapperFunction,
-    {String displayName = 'Anonymous'}) {
+ReactJsComponentFactoryProxy forwardRef(
+  Function(Map props, Ref ref) wrapperFunction, {
+  String displayName = 'Anonymous',
+}) {
   final wrappedComponent = allowInterop((JsMap props, JsRef ref) {
     final dartProps = JsBackedMap.backedBy(props);
+    for (var value in dartProps.values) {
+      if (value is Function) {
+        // Tag functions that came straight from the JS
+        // so that we know to pass them through as-is during prop conversion.
+        isRawJsFunctionFromProps[value] = true;
+      }
+    }
+
     final dartRef = Ref.fromJs(ref);
     return wrapperFunction(dartProps, dartRef);
   });
@@ -222,7 +241,49 @@ ReactJsComponentFactoryProxy forwardRef(Function(Map props, Ref ref) wrapperFunc
 
   var hoc = React.forwardRef(wrappedComponent);
 
-  return new ReactJsComponentFactoryProxy(hoc, shouldConvertDomProps: false);
+  return ReactJsComponentFactoryProxy(hoc);
+}
+
+/// Shorthand convenience function to wrap a JS component that utilizes `forwardRef`.
+///
+/// __Example:__
+///
+/// ```dart
+/// // Assuming that your app includes the JS file containing the MaterialUI components...
+/// @JS()
+/// class MaterialUI {
+///   external static ReactClass get TextField;
+/// }
+///
+/// /// This makes it so that the `inputRef` set on the Dart `TextField` component
+/// /// gets passed all the way to the root <input> node rendered by the JS `MaterialUI.TextField` component.
+/// final TextField = forwardRefToJsComponent(MaterialUI.IconButton, additionalRefPropKeys: ['inputRef']);
+///
+/// void main() {
+///   setClientConfiguration();
+///   final textFieldInputNodeRef = react.createRef<TextInputElement>();
+///
+///   react_dom.render(TextInput({'inputRef': textFieldInputNodeRef}), querySelector('#idOfSomeNodeInTheDom'));
+///
+///   // Prints the value of the <input> rendered by the JS `MaterialUI.TextField` component.
+///   print(textFieldInputNodeRef.current.value);
+/// }
+/// ```
+ReactJsComponentFactoryProxy forwardRefToJs(
+  ReactClass jsClassComponent, {
+  List<String> additionalRefPropKeys = const [],
+  String displayName,
+}) {
+  // Do not convert DOM props so that the events passed into the JS component are NOT Dart `SyntheticEvent`s.
+  final jsFactoryProxy = ReactJsComponentFactoryProxy(jsClassComponent, additionalRefPropKeys: additionalRefPropKeys);
+
+  return forwardRef((props, ref) {
+    return jsFactoryProxy({
+      ...props,
+      'ref': ref,
+    }, props['children']);
+    // Convert DOM props for the HOC so the consumer API callbacks that involve events receive Dart `SyntheticEvent`s.
+  }, displayName: '${displayName ?? jsClassComponent.displayName}');
 }
 
 /// A [higher order component](https://reactjs.org/docs/higher-order-components.html) for function components

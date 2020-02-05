@@ -4,14 +4,11 @@
 
 import 'package:js/js_util.dart';
 import 'package:react/react.dart' as react;
-import 'package:react/react_client.dart';
 import 'package:test/test.dart';
 
 import 'common_factory_tests.dart';
 
 main() {
-  setClientConfiguration();
-
   group('ReactDartFunctionComponentFactoryProxy', () {
     test('has a type corresponding to the backing JS Function', () {
       expect(FunctionFoo.type, equals(FunctionFoo.reactFunction));
@@ -50,5 +47,6 @@ final NamedFunctionFoo = react.registerFunctionComponent(_FunctionFoo, displayNa
 final FunctionFoo = react.registerFunctionComponent(_FunctionFoo);
 
 _FunctionFoo(Map props) {
+  props['onDartRender']?.call(props);
   return react.div({});
 }

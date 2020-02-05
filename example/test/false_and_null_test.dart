@@ -3,7 +3,6 @@ import 'dart:html';
 
 import 'package:react/react.dart' as react;
 import 'package:react/react_dom.dart' as react_dom;
-import 'package:react/react_client.dart';
 
 class _Component extends react.Component {
   render() {
@@ -18,8 +17,6 @@ class _Component extends react.Component {
 var component = react.registerComponent(() => new _Component());
 
 void main() {
-  setClientConfiguration();
-
   var content = react.div({}, [
     react.p({}, 'Testing a dynamic return value of "null"...'),
     component({'returnValue': null, 'key': 0}),
