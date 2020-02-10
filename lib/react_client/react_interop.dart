@@ -45,6 +45,10 @@ abstract class React {
   external static ReactElement createElement(dynamic type, props, [dynamic children]);
   external static JsRef createRef();
   external static ReactClass forwardRef(Function(JsMap props, JsRef ref) wrapperFunction);
+  external static ReactClass memo(
+    dynamic Function(JsMap props, [JsMap legacyContext]) wrapperFunction, [
+    bool Function(JsMap prevProps, JsMap nextProps) areEqual,
+  ]);
 
   external static bool isValidElement(dynamic object);
 
@@ -234,6 +238,69 @@ ReactJsComponentFactoryProxy forwardRef(
   defineProperty(wrappedComponent, 'displayName', jsify({'value': displayName}));
 
   var hoc = React.forwardRef(wrappedComponent);
+
+  return ReactJsComponentFactoryProxy(hoc);
+}
+
+/// A [higher order component](https://reactjs.org/docs/higher-order-components.html) for function components
+/// that behaves similar to the way [`React.PureComponent`](https://reactjs.org/docs/react-api.html#reactpurecomponent)
+/// does for class-based components.
+///
+/// If your function component renders the same result given the same props, you can wrap it in a call to
+/// `memo` for a performance boost in some cases by memoizing the result. This means that React will skip
+/// rendering the component, and reuse the last rendered result.
+///
+/// ```dart
+/// import 'package:react/react.dart' as react;
+///
+/// final MyComponent = react.memo((props) {
+///   /* render using props */
+/// });
+/// ```
+///
+/// `memo` only affects props changes. If your function component wrapped in `memo` has a
+/// [useState] or [useContext] Hook in its implementation, it will still rerender when `state` or `context` change.
+///
+/// By default it will only shallowly compare complex objects in the props map.
+/// If you want control over the comparison, you can also provide a custom comparison
+/// function to the [areEqual] argument as shown in the example below.
+///
+/// ```dart
+/// import 'package:react/react.dart' as react;
+///
+/// final MyComponent = react.memo((props) {
+///   // render using props
+/// }, areEqual: (prevProps, nextProps) {
+///   // Do some custom comparison logic to return a bool based on prevProps / nextProps
+/// });
+/// ```
+///
+/// > __This method only exists as a performance optimization.__
+/// >
+/// > Do not rely on it to “prevent” a render, as this can lead to bugs.
+///
+/// See: <https://reactjs.org/docs/react-api.html#reactmemo>.
+ReactJsComponentFactoryProxy memo(
+  dynamic Function(Map props) wrapperFunction, {
+  bool Function(Map prevProps, Map nextProps) areEqual,
+  String displayName = 'Anonymous',
+}) {
+  final _areEqual = areEqual == null
+      ? null
+      : allowInterop((JsMap prevProps, JsMap nextProps) {
+          final dartPrevProps = JsBackedMap.backedBy(prevProps);
+          final dartNextProps = JsBackedMap.backedBy(nextProps);
+          return areEqual(dartPrevProps, dartNextProps);
+        });
+
+  final wrappedComponent = allowInterop((JsMap props, [JsMap _]) {
+    final dartProps = JsBackedMap.backedBy(props);
+    return wrapperFunction(dartProps);
+  });
+
+  defineProperty(wrappedComponent, 'displayName', jsify({'value': displayName}));
+
+  final hoc = React.memo(wrappedComponent, _areEqual);
 
   return ReactJsComponentFactoryProxy(hoc);
 }
