@@ -139,8 +139,6 @@ class JsRef {
 
 /// Automatically passes a [Ref] through a component to one of its children.
 ///
-/// __Not recommended for use with interop'd JS components. Use [forwardRefToJs] instead.__
-///
 /// __Example 1:__ Forwarding refs to DOM components
 ///
 /// _[Analogous JS Demo](https://reactjs.org/docs/forwarding-refs.html#forwarding-refs-to-dom-components)_
@@ -242,48 +240,6 @@ ReactJsComponentFactoryProxy forwardRef(
   var hoc = React.forwardRef(wrappedComponent);
 
   return ReactJsComponentFactoryProxy(hoc);
-}
-
-/// Shorthand convenience function to wrap a JS component that utilizes `forwardRef`.
-///
-/// __Example:__
-///
-/// ```dart
-/// // Assuming that your app includes the JS file containing the MaterialUI components...
-/// @JS()
-/// class MaterialUI {
-///   external static ReactClass get TextField;
-/// }
-///
-/// /// This makes it so that the `inputRef` set on the Dart `TextField` component
-/// /// gets passed all the way to the root <input> node rendered by the JS `MaterialUI.TextField` component.
-/// final TextField = forwardRefToJsComponent(MaterialUI.IconButton, additionalRefPropKeys: ['inputRef']);
-///
-/// void main() {
-///   setClientConfiguration();
-///   final textFieldInputNodeRef = react.createRef<TextInputElement>();
-///
-///   react_dom.render(TextInput({'inputRef': textFieldInputNodeRef}), querySelector('#idOfSomeNodeInTheDom'));
-///
-///   // Prints the value of the <input> rendered by the JS `MaterialUI.TextField` component.
-///   print(textFieldInputNodeRef.current.value);
-/// }
-/// ```
-ReactJsComponentFactoryProxy forwardRefToJs(
-  ReactClass jsClassComponent, {
-  List<String> additionalRefPropKeys = const [],
-  String displayName,
-}) {
-  // Do not convert DOM props so that the events passed into the JS component are NOT Dart `SyntheticEvent`s.
-  final jsFactoryProxy = ReactJsComponentFactoryProxy(jsClassComponent, additionalRefPropKeys: additionalRefPropKeys);
-
-  return forwardRef((props, ref) {
-    return jsFactoryProxy({
-      ...props,
-      'ref': ref,
-    }, props['children']);
-    // Convert DOM props for the HOC so the consumer API callbacks that involve events receive Dart `SyntheticEvent`s.
-  }, displayName: '${displayName ?? jsClassComponent.displayName}');
 }
 
 /// A [higher order component](https://reactjs.org/docs/higher-order-components.html) for function components
