@@ -19,6 +19,8 @@ import 'package:react/react_client.dart' show ComponentFactory;
 import 'package:react/react_client/bridge.dart';
 import 'package:react/react_client/js_backed_map.dart';
 import 'package:react/react_client/component_factory.dart' show ReactJsComponentFactoryProxy;
+import 'package:react/react_client/js_interop_helpers.dart';
+import 'package:react/react_client/private_utils.dart';
 import 'package:react/src/react_client/dart2_interop_workaround_bindings.dart';
 
 typedef ReactElement ReactJsComponentFactory(props, children);
@@ -32,6 +34,7 @@ typedef dynamic JsPropValidator(
 @JS()
 abstract class React {
   external static String get version;
+  external static ReactElement cloneElement(ReactElement element, [JsMap props, dynamic children]);
   external static ReactContext createContext([
     dynamic defaultValue,
     int Function(dynamic currentValue, dynamic nextValue) calculateChangedBits,
@@ -132,15 +135,107 @@ class JsRef {
 
 /// Automatically passes a [Ref] through a component to one of its children.
 ///
+/// __Example 1:__ Forwarding refs to DOM components
+///
+/// _[Analogous JS Demo](https://reactjs.org/docs/forwarding-refs.html#forwarding-refs-to-dom-components)_
+///
+/// ```dart
+/// import 'dart:html';
+/// import 'package:react/react.dart' as react;
+///
+/// // ---------- Component Definition ----------
+/// final FancyButton = react.forwardRef((props, ref) {
+///   return react.button({'ref': ref, 'className': 'FancyButton'}, 'Click me!');
+/// }, displayName: 'FancyButton');
+///
+/// // ---------- Component Consumption ----------
+/// void main() {
+///   final ref = createRef<Element>();
+///
+///   react_dom.render(FancyButton({'ref': ref}));
+///
+///   // You can now get a ref directly to the DOM button:
+///   final buttonNode = ref.current;
+/// }
+/// ```
+///
+/// __Example 2:__ Forwarding refs in higher-order components
+///
+/// _[Analogous JS Demo](https://reactjs.org/docs/forwarding-refs.html#forwarding-refs-in-higher-order-components)_
+///
+/// ```dart
+/// import 'dart:html';
+/// import 'package:react/react.dart' as react;
+/// import 'package:react/react_client.dart' show setClientConfiguration, ReactJsComponentFactoryProxy;
+/// import 'package:react/react_dom.dart' as react_dom;
+///
+/// // ---------- Component Definitions ----------
+///
+/// final FancyButton = react.forwardRef((props, ref) {
+///   return react.button({'ref': ref, 'className': 'FancyButton'}, 'Click me!');
+/// }, displayName: 'FancyButton');
+///
+/// class _LogProps extends react.Component2 {
+///   @override
+///   void componentDidUpdate(Map prevProps, _, [__]) {
+///     print('old props: $prevProps');
+///     print('new props: ${this.props}');
+///   }
+///
+///   @override
+///   render() {
+///     final propsToForward = {...props}..remove('forwardedRef');
+///
+///     // Assign the custom prop `forwardedRef` as a ref on the component passed in via `props.component`
+///     return props['component']({...propsToForward, 'ref': props['forwardedRef']}, props['children']);
+///   }
+/// }
+/// final _logPropsHoc = react.registerComponent2(() => _LogProps());
+///
+/// final LogProps = react.forwardRef((props, ref) {
+///   // Note the second param "ref" provided by react.forwardRef.
+///   // We can pass it along to LogProps as a regular prop, e.g. "forwardedRef"
+///   // And it can then be attached to the Component.
+///   return _logPropsHoc({...props, 'forwardedRef': ref});
+///   // Optional: Make the displayName more useful for the React dev tools.
+///   // See: https://reactjs.org/docs/forwarding-refs.html#displaying-a-custom-name-in-devtools
+/// }, displayName: 'LogProps(${_logPropsHoc.type.displayName})');
+///
+/// // ---------- Component Consumption ----------
+/// void main() {
+///   setClientConfiguration();
+///   final ref = react.createRef<Element>();
+///
+///   react_dom.render(LogProps({'component': FancyButton, 'ref': ref}),
+///       querySelector('#idOfSomeNodeInTheDom'));
+///
+///   // You can still get a ref directly to the DOM button:
+///   final buttonNode = ref.current;
+/// }
+/// ```
 /// See: <https://reactjs.org/docs/forwarding-refs.html>.
-ReactJsComponentFactoryProxy forwardRef(Function(Map props, Ref ref) wrapperFunction) {
-  var hoc = React.forwardRef(allowInterop((JsMap props, JsRef ref) {
+ReactJsComponentFactoryProxy forwardRef(
+  Function(Map props, Ref ref) wrapperFunction, {
+  String displayName = 'Anonymous',
+}) {
+  final wrappedComponent = allowInterop((JsMap props, JsRef ref) {
     final dartProps = JsBackedMap.backedBy(props);
+    for (var value in dartProps.values) {
+      if (value is Function) {
+        // Tag functions that came straight from the JS
+        // so that we know to pass them through as-is during prop conversion.
+        isRawJsFunctionFromProps[value] = true;
+      }
+    }
+
     final dartRef = Ref.fromJs(ref);
     return wrapperFunction(dartProps, dartRef);
-  }));
+  });
+  defineProperty(wrappedComponent, 'displayName', jsify({'value': displayName}));
 
-  return new ReactJsComponentFactoryProxy(hoc, shouldConvertDomProps: false);
+  var hoc = React.forwardRef(wrappedComponent);
+
+  return ReactJsComponentFactoryProxy(hoc);
 }
 
 abstract class ReactDom {

@@ -2,9 +2,13 @@
 @TestOn('browser')
 library js_factory_test;
 
+import 'dart:html';
+import 'dart:js_util';
+
 import 'package:js/js.dart';
 import 'package:test/test.dart';
 
+import 'package:react/react.dart' as react;
 import 'package:react/react_client.dart';
 import 'package:react/react_client/react_interop.dart';
 import 'package:react/react_test_utils.dart';
@@ -36,3 +40,6 @@ main() {
 @JS()
 external ReactClass get _JsFoo;
 final JsFoo = new ReactJsComponentFactoryProxy(_JsFoo);
+
+@JS()
+external ReactClass get _JsFooFunction;

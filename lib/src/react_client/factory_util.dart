@@ -17,9 +17,6 @@ import 'package:react/src/typedefs.dart';
 
 import 'event_prop_key_to_event_factory.dart';
 
-@JS('Object.defineProperty')
-external void defineProperty(dynamic object, String propertyName, JsMap descriptor);
-
 /// Converts a list of variadic children arguments to children that should be passed to ReactJS.
 ///
 /// Returns:
@@ -44,14 +41,26 @@ convertEventHandlers(Map args) {
   args.forEach((propKey, value) {
     var eventFactory = eventPropKeyToEventFactory[propKey];
     if (eventFactory != null && value != null) {
-      // Apply allowInterop here so that the function we store in `originalEventHandlers`
-      // is the same one we'll retrieve from the JS props.
-      var reactDartConvertedEventHandler = allowInterop((events.SyntheticEvent e, [_, __]) {
-        value(eventFactory(e));
-      });
+      // Don't attempt to convert functions that have already been converted, or functions
+      // that were passed in as JS props.
+      final handlerHasAlreadyBeenConverted = unconvertJsEventHandler(value) != null;
+      if (!handlerHasAlreadyBeenConverted && !(isRawJsFunctionFromProps[value] ?? false)) {
+        // Apply allowInterop here so that the function we store in [_originalEventHandlers]
+        // is the same one we'll retrieve from the JS props.
+        var reactDartConvertedEventHandler = allowInterop((e, [_, __]) {
+          // To support Dart code calling converted handlers,
+          // check for Dart events and pass them through directly.
+          // Otherwise, convert the JS events like normal.
+          if (e is SyntheticEvent) {
+            value(e);
+          } else {
+            value(eventFactory(e as events.SyntheticEvent));
+          }
+        });
 
-      args[propKey] = reactDartConvertedEventHandler;
-      originalEventHandlers[reactDartConvertedEventHandler] = value;
+        args[propKey] = reactDartConvertedEventHandler;
+        originalEventHandlers[reactDartConvertedEventHandler] = value;
+      }
     }
   });
 }
@@ -63,24 +72,34 @@ void convertRefValue(Map args) {
   }
 }
 
-void convertRefValue2(Map args, {bool convertCallbackRefValue = true}) {
-  var ref = args['ref'];
+void convertRefValue2(
+  Map args, {
+  bool convertCallbackRefValue = true,
+  List<String> additionalRefPropKeys = const [],
+}) {
+  final refKeys = ['ref', ...additionalRefPropKeys];
 
-  if (ref is Ref) {
-    args['ref'] = ref.jsRef;
-    // If the ref is a callback, pass ReactJS a function that will call it
-    // with the Dart Component instance, not the ReactComponent instance.
-    //
-    // Use CallbackRef<Null> to check arity, since parameters could be non-dynamic, and thus
-    // would fail the `is CallbackRef<dynamic>` check.
-    // See https://github.com/dart-lang/sdk/issues/34593 for more information on arity checks.
-  } else if (ref is CallbackRef<Null> && convertCallbackRefValue) {
-    args['ref'] = allowInterop((dynamic instance) {
-      // Call as dynamic to perform dynamic dispatch, since we can't cast to CallbackRef<dynamic>,
-      // and since calling with non-null values will fail at runtime due to the CallbackRef<Null> typing.
-      if (instance is ReactComponent && instance.dartComponent != null) return (ref as dynamic)(instance.dartComponent);
-      return (ref as dynamic)(instance);
-    });
+  for (final refKey in refKeys) {
+    var ref = args[refKey];
+    if (ref is Ref) {
+      args[refKey] = ref.jsRef;
+      // If the ref is a callback, pass ReactJS a function that will call it
+      // with the Dart Component instance, not the ReactComponent instance.
+      //
+      // Use _CallbackRef<Null> to check arity, since parameters could be non-dynamic, and thus
+      // would fail the `is _CallbackRef<dynamic>` check.
+      // See https://github.com/dart-lang/sdk/issues/34593 for more information on arity checks.
+    } else if (ref is CallbackRef<Null> && convertCallbackRefValue) {
+      args[refKey] = allowInterop((dynamic instance) {
+        // Call as dynamic to perform dynamic dispatch, since we can't cast to _CallbackRef<dynamic>,
+        // and since calling with non-null values will fail at runtime due to the _CallbackRef<Null> typing.
+        if (instance is ReactComponent && instance.dartComponent != null) {
+          return (ref as dynamic)(instance.dartComponent);
+        }
+
+        return (ref as dynamic)(instance);
+      });
+    }
   }
 }
 
@@ -126,11 +145,15 @@ JsMap generateJsProps(Map props,
     {bool shouldConvertEventHandlers = true,
     bool convertRefValue = true,
     bool convertCallbackRefValue = true,
+    List<String> additionalRefPropKeys = const [],
     bool wrapWithJsify = true}) {
   final propsForJs = JsBackedMap.from(props);
 
   if (shouldConvertEventHandlers) convertEventHandlers(propsForJs);
-  if (convertRefValue) convertRefValue2(propsForJs, convertCallbackRefValue: convertCallbackRefValue);
+  if (convertRefValue) {
+    convertRefValue2(propsForJs,
+        convertCallbackRefValue: convertCallbackRefValue, additionalRefPropKeys: additionalRefPropKeys);
+  }
 
   return wrapWithJsify ? jsifyAndAllowInterop(propsForJs) : propsForJs.jsObject;
 }

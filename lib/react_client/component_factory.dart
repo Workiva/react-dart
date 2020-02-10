@@ -8,6 +8,7 @@ import 'package:js/js.dart';
 import 'package:react/react.dart';
 import 'package:react/react_client.dart';
 import 'package:react/react_client/js_backed_map.dart';
+import 'package:react/react_client/private_utils.dart';
 import 'package:react/react_client/react_interop.dart';
 
 import 'package:react/src/context.dart';
@@ -282,10 +283,16 @@ class ReactJsComponentFactoryProxy extends ReactComponentFactoryProxy {
   /// Default: `false`
   final bool alwaysReturnChildrenAsList;
 
-  ReactJsComponentFactoryProxy(ReactClass jsClass,
-      {this.shouldConvertDomProps: true, this.alwaysReturnChildrenAsList: false})
-      : this.type = jsClass,
-        this.factory = React.createFactory(jsClass) {
+  final List<String> _additionalRefPropKeys;
+
+  ReactJsComponentFactoryProxy(
+    ReactClass jsClass, {
+    this.shouldConvertDomProps: true,
+    this.alwaysReturnChildrenAsList: false,
+    List<String> additionalRefPropKeys = const [],
+  })  : this.type = jsClass,
+        this.factory = React.createFactory(jsClass),
+        this._additionalRefPropKeys = additionalRefPropKeys {
     if (jsClass == null) {
       throw new ArgumentError('`jsClass` must not be null. '
           'Ensure that the JS component class you\'re referencing is available and being accessed correctly.');
@@ -295,8 +302,10 @@ class ReactJsComponentFactoryProxy extends ReactComponentFactoryProxy {
   @override
   ReactElement build(Map props, [List childrenArgs]) {
     dynamic children = generateChildren(childrenArgs, shouldAlwaysBeList: alwaysReturnChildrenAsList);
-    JsMap convertedProps =
-        generateJsProps(props, shouldConvertEventHandlers: shouldConvertDomProps, convertCallbackRefValue: false);
+    JsMap convertedProps = generateJsProps(props,
+        shouldConvertEventHandlers: shouldConvertDomProps,
+        convertCallbackRefValue: false,
+        additionalRefPropKeys: _additionalRefPropKeys);
     return React.createElement(type, convertedProps, children);
   }
 }
