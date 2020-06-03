@@ -789,14 +789,18 @@ ReactDartComponentFactoryProxy2 _registerComponent2(
   // by ReactDartComponentFactoryProxy and externally.
   final JsBackedMap defaultProps = new JsBackedMap.from(componentInstance.defaultProps);
 
-  final JsMap jsPropTypes =
-      bridgeFactory(componentInstance).jsifyPropTypes(componentInstance, componentInstance.propTypes);
+  JsMap jsPropTypes;
+  // Access `componentInstance.propTypes` within an assert so they get tree-shaken out of dart2js builds.
+  assert(() {
+    jsPropTypes = bridgeFactory(componentInstance).jsifyPropTypes(componentInstance, componentInstance.propTypes);
+    return true;
+  }());
 
   var jsConfig2 = new JsComponentConfig2(
     defaultProps: defaultProps.jsObject,
     contextType: componentInstance.contextType?.jsThis,
     skipMethods: filteredSkipMethods,
-    propTypes: jsPropTypes,
+    propTypes: jsPropTypes ?? JsBackedMap().jsObject,
   );
 
   /// Create the JS [`ReactClass` component class](https://facebook.github.io/react/docs/top-level-api.html#react.createclass)
