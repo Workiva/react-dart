@@ -166,10 +166,10 @@ abstract class PropTypes {
 @JS()
 @anonymous
 class ReactClass {
-  /// The cached, unmodifiable copy of [Component.defaultProps] computed in
+  /// The cached, unmodifiable copy of [Component2.defaultProps] computed in
   /// [registerComponent2].
   ///
-  /// For use in [ReactDartComponentFactoryProxy2] when creating new [ReactElement]s,
+  /// For use in `ReactDartComponentFactoryProxy2` when creating new [ReactElement]s,
   /// or for external use involving inspection of Dart prop defaults.
   external JsMap get defaultProps;
   external set defaultProps(JsMap value);

@@ -17,7 +17,7 @@ main() {
   react_dom.render(content, querySelector('#content'));
 }
 
-var IndexComponent = react.registerComponent(() => new _IndexComponent());
+var IndexComponent = react.registerComponent2(() => new _IndexComponent());
 
 class _IndexComponent extends react.Component2 {
   SimpleCustomComponent simpleRef;

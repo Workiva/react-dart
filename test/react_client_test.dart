@@ -194,7 +194,7 @@ class DartComponent2Component extends Component2 {
   }
 }
 
-ReactDartComponentFactoryProxy2 DartComponent2 = react.registerComponent(() => new DartComponent2Component());
+final DartComponent2 = react.registerComponent2(() => new DartComponent2Component());
 
 class DartComponentComponent extends Component {
   @override

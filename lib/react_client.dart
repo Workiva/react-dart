@@ -69,7 +69,7 @@ dynamic listifyChildren(dynamic children) {
 @visibleForTesting
 Zone componentZone = Zone.root;
 
-/// Use [ReactDartComponentFactoryProxy2] instead.
+/// Use [ReactDartComponentFactoryProxy2] instead by calling [registerComponent2].
 ///
 /// Will be removed when [Component] is removed in the `6.0.0` release.
 @Deprecated('6.0.0')
@@ -158,6 +158,8 @@ class ReactDartComponentFactoryProxy<TComponent extends Component> extends React
 }
 
 /// Creates ReactJS [Component2] instances for Dart components.
+///
+/// > Related: [registerComponent2]
 class ReactDartComponentFactoryProxy2<TComponent extends Component2> extends ReactComponentFactoryProxy
     implements ReactDartComponentFactoryProxy {
   /// The ReactJS class used as the type for all [ReactElement]s built by

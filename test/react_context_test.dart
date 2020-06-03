@@ -119,7 +119,7 @@ var TestCalculateChangedBitsContext = react.createContext(1, calculateChangedBit
 
 var TestContext = react.createContext();
 
-ReactDartComponentFactoryProxy2 ContextProviderWrapper = react.registerComponent(() => new _ContextProviderWrapper());
+final ContextProviderWrapper = react.registerComponent2(() => new _ContextProviderWrapper());
 
 class _ContextProviderWrapper extends react.Component2 {
   get initialState {
@@ -138,7 +138,7 @@ class _ContextProviderWrapper extends react.Component2 {
   }
 }
 
-ReactDartComponentFactoryProxy2 ContextConsumerWrapper = react.registerComponent(() => new _ContextConsumerWrapper());
+final ContextConsumerWrapper = react.registerComponent2(() => new _ContextConsumerWrapper());
 
 class _ContextConsumerWrapper extends react.Component2 {
   dynamic latestValue;
@@ -150,7 +150,7 @@ class _ContextConsumerWrapper extends react.Component2 {
   }
 }
 
-ReactDartComponentFactoryProxy2 ContextTypeComponent = react.registerComponent(() => new _ContextTypeComponent());
+final ContextTypeComponent = react.registerComponent2(() => new _ContextTypeComponent());
 
 class _ContextTypeComponent extends react.Component2 {
   var contextType = TestContext;
