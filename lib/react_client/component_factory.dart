@@ -262,7 +262,9 @@ class ReactJsContextComponentFactoryProxy extends ReactJsComponentFactoryProxy {
   }
 }
 
-/// Creates ReactJS [ReactElement] instances for components defined in the JS.
+/// Creates ReactJS [ReactElement] instances for composite components defined in the JS.
+///
+/// > Related: [ReactJsFunctionComponentFactoryProxy]
 class ReactJsComponentFactoryProxy extends ReactComponentFactoryProxy {
   /// The JS class used by this factory.
   @override
@@ -296,6 +298,56 @@ class ReactJsComponentFactoryProxy extends ReactComponentFactoryProxy {
     if (jsClass == null) {
       throw new ArgumentError('`jsClass` must not be null. '
           'Ensure that the JS component class you\'re referencing is available and being accessed correctly.');
+    }
+  }
+
+  @override
+  ReactElement build(Map props, [List childrenArgs]) {
+    dynamic children = generateChildren(childrenArgs, shouldAlwaysBeList: alwaysReturnChildrenAsList);
+    JsMap convertedProps = generateJsProps(props,
+        shouldConvertEventHandlers: shouldConvertDomProps,
+        convertCallbackRefValue: false,
+        additionalRefPropKeys: _additionalRefPropKeys);
+    return React.createElement(type, convertedProps, children);
+  }
+}
+
+/// Creates ReactJS [ReactElement] instances for function components defined in the JS.
+///
+/// > Related: [ReactJsComponentFactoryProxy]
+class ReactJsFunctionComponentFactoryProxy extends ReactComponentFactoryProxy {
+  /// The JS class used by this factory.
+  @override
+  final JsFunction type;
+
+  /// The JS component factory used by this factory to build [ReactElement]s.
+  final JsFunction factory;
+
+  /// Whether to automatically prepare props relating to bound values and event handlers
+  /// via [ReactDomComponentFactoryProxy.convertProps] for consumption by React JS DOM components.
+  ///
+  /// Useful when the JS component forwards DOM props to its rendered DOM components.
+  ///
+  /// Disable for more custom handling of these props.
+  final bool shouldConvertDomProps;
+
+  /// Whether the props.children should always be treated as a list or not.
+  /// Default: `false`
+  final bool alwaysReturnChildrenAsList;
+
+  final List<String> _additionalRefPropKeys;
+
+  ReactJsFunctionComponentFactoryProxy(
+    JsFunction jsFunction, {
+    this.shouldConvertDomProps: true,
+    this.alwaysReturnChildrenAsList: false,
+    List<String> additionalRefPropKeys = const [],
+  })  : this.type = jsFunction,
+        this.factory = jsFunction,
+        this._additionalRefPropKeys = additionalRefPropKeys {
+    if (jsFunction == null) {
+      throw new ArgumentError('`jsFunction` must not be null. '
+          'Ensure that the JS function component you\'re referencing is available and being accessed correctly.');
     }
   }
 
