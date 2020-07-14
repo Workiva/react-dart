@@ -356,11 +356,13 @@ class ReactDartFunctionComponentFactoryProxy extends ReactComponentFactoryProxy 
 
   final JsMap defaultProps;
 
-  ReactDartFunctionComponentFactoryProxy(DartFunctionComponent dartFunctionComponent, {String displayName, Map defaultProps})
+  ReactDartFunctionComponentFactoryProxy(DartFunctionComponent dartFunctionComponent,
+      {String displayName, Map defaultProps})
       : this.displayName = displayName ?? _getJsFunctionName(dartFunctionComponent),
         this.defaultProps = defaultProps != null ? JsBackedMap.from(defaultProps).jsObject : null,
         this.reactFunction = _wrapFunctionComponent(dartFunctionComponent,
-            displayName: displayName ?? _getJsFunctionName(dartFunctionComponent), defaultProps: defaultProps != null ? JsBackedMap.from(defaultProps).jsObject : null);
+            displayName: displayName ?? _getJsFunctionName(dartFunctionComponent),
+            defaultProps: defaultProps != null ? JsBackedMap.from(defaultProps).jsObject : null);
 
   @override
   JsFunctionComponent get type => reactFunction;
@@ -377,7 +379,8 @@ class ReactDartFunctionComponentFactoryProxy extends ReactComponentFactoryProxy 
   ///
   /// This will result in the dart2js name being `ReactDartComponent2` (the
   /// name of the proxying JS component defined in _dart_helpers.js).
-  static JsFunctionComponent _wrapFunctionComponent(DartFunctionComponent dartFunctionComponent, {String displayName, JsMap defaultProps}) {
+  static JsFunctionComponent _wrapFunctionComponent(DartFunctionComponent dartFunctionComponent,
+      {String displayName, JsMap defaultProps}) {
     // dart2js uses null and undefined interchangeably, meaning returning `null` from dart
     // may show up in js as `undefined`, ReactJS doesnt like that and expects a js `null` to be returned,
     // and throws if it gets `undefined`. `jsNull` is an interop variable that holds a JS `null` value
@@ -392,7 +395,7 @@ class ReactDartFunctionComponentFactoryProxy extends ReactComponentFactoryProxy 
     }
     // ignore: invalid_use_of_protected_member
     setProperty(interopFunction, 'dartComponentVersion', ReactDartComponentVersion.component2);
-    if(defaultProps != null) {
+    if (defaultProps != null) {
       (interopFunction as ReactClass).defaultProps = defaultProps;
     }
     return interopFunction;

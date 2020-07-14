@@ -93,8 +93,8 @@ final MemoTest = react.memo((Map props) {
   return prevProps['localCount'] == nextProps['localCount'];
 }, displayName: 'MemoTest');
 
-var useReducerTestFunctionComponent =
-    react.registerFunctionComponent(UseReducerTestComponent, displayName: 'useReducerTest', defaultProps: {'initialCount': 5});
+var useReducerTestFunctionComponent = react.registerFunctionComponent(UseReducerTestComponent,
+    displayName: 'useReducerTest', defaultProps: {'initialCount': 5});
 
 Map initializeCount(int initialValue) {
   return {'count': initialValue};
