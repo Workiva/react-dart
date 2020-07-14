@@ -94,7 +94,7 @@ final MemoTest = react.memo((Map props) {
 }, displayName: 'MemoTest');
 
 var useReducerTestFunctionComponent =
-    react.registerFunctionComponent(UseReducerTestComponent, displayName: 'useReducerTest');
+    react.registerFunctionComponent(UseReducerTestComponent, displayName: 'useReducerTest', defaultProps: {'initialCount': 5});
 
 Map initializeCount(int initialValue) {
   return {'count': initialValue};

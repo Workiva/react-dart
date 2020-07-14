@@ -7,6 +7,7 @@ import 'package:react/react.dart' as react;
 import 'package:test/test.dart';
 
 import 'common_factory_tests.dart';
+import '../util.dart';
 
 main() {
   group('ReactDartFunctionComponentFactoryProxy', () {
@@ -36,6 +37,22 @@ main() {
           expect(NamedFunctionFoo.displayName, _getJsFunctionName(NamedFunctionFoo.reactFunction));
         });
       });
+
+      group('defaultProps', () {
+        test('initializes default props', () {
+          final instance = FunctionFoo({});
+          final instanceProps = getProps(instance);
+
+          expect(instanceProps['defaultProp1'], 'default value');
+        });
+
+        test('is overwritten when the prop is assigned', () {
+          final instance = FunctionFoo({'defaultProp1': 'new value'});
+          final instanceProps = getProps(instance);
+
+          expect(instanceProps['defaultProp1'], 'new value');
+        });
+      });
     });
   });
 }
@@ -44,7 +61,7 @@ String _getJsFunctionName(Function object) => getProperty(object, 'name') ?? get
 
 final NamedFunctionFoo = react.registerFunctionComponent(_FunctionFoo, displayName: 'Bar');
 
-final FunctionFoo = react.registerFunctionComponent(_FunctionFoo);
+final FunctionFoo = react.registerFunctionComponent(_FunctionFoo, defaultProps: {'defaultProp1': 'default value'});
 
 _FunctionFoo(Map props) {
   props['onDartRender']?.call(props);

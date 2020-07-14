@@ -125,5 +125,5 @@ ReactDartComponentFactoryProxy2 registerComponent2(
 /// Creates and returns a new `ReactDartFunctionComponentFactoryProxy` from the provided [dartFunctionComponent]
 /// which produces a new `JsFunctionComponent`.
 ReactDartFunctionComponentFactoryProxy registerFunctionComponent(DartFunctionComponent dartFunctionComponent,
-        {String displayName}) =>
-    ReactDartFunctionComponentFactoryProxy(dartFunctionComponent, displayName: displayName);
+        {String displayName, Map defaultProps}) =>
+    ReactDartFunctionComponentFactoryProxy(dartFunctionComponent, displayName: displayName, defaultProps: defaultProps);

@@ -9,6 +9,7 @@ library react;
 
 import 'package:meta/meta.dart';
 import 'package:react/react_client/bridge.dart';
+import 'package:react/react_client/js_backed_map.dart';
 import 'package:react/src/prop_validator.dart';
 import 'package:react/src/typedefs.dart';
 import 'package:react/react_client.dart';
@@ -27,7 +28,7 @@ typedef Error PropValidator<TProps>(TProps props, PropValidatorInfo info);
 /// A React component declared using a function that takes in [props] and returns rendered output.
 ///
 /// See <https://facebook.github.io/react/docs/components-and-props.html#functional-and-class-components>.
-typedef DartFunctionComponent = dynamic Function(Map props);
+typedef DartFunctionComponent = dynamic Function(JsBackedMap props);
 
 typedef T ComponentFactory<T extends Component>();
 
@@ -41,7 +42,7 @@ typedef ReactDartComponentFactoryProxy2 ComponentRegistrar2(
 });
 
 typedef ReactDartFunctionComponentFactoryProxy FunctionComponentRegistrar(DartFunctionComponent componentFactory,
-    {String displayName});
+    {String displayName, Map defaultProps});
 
 /// Fragment component that allows the wrapping of children without the necessity of using
 /// an element that adds an additional layer to the DOM (div, span, etc).
