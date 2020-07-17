@@ -354,12 +354,12 @@ class ReactDartFunctionComponentFactoryProxy extends ReactComponentFactoryProxy 
   /// The React JS component definition of this Function Component.
   final JsFunctionComponent reactFunction;
 
-  final JsMap defaultProps;
+  final Map defaultProps;
 
   ReactDartFunctionComponentFactoryProxy(DartFunctionComponent dartFunctionComponent,
       {String displayName, Map defaultProps})
       : this.displayName = displayName ?? _getJsFunctionName(dartFunctionComponent),
-        this.defaultProps = defaultProps != null ? JsBackedMap.from(defaultProps).jsObject : null,
+        this.defaultProps = defaultProps != null ? JsBackedMap.from(defaultProps) : {},
         this.reactFunction = _wrapFunctionComponent(dartFunctionComponent,
             displayName: displayName ?? _getJsFunctionName(dartFunctionComponent),
             defaultProps: defaultProps != null ? JsBackedMap.from(defaultProps).jsObject : null);
