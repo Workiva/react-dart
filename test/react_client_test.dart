@@ -173,6 +173,47 @@ main() {
       expect(result, isNull);
     });
   });
+
+  group('registerComponent', () {
+    test('throws with printed error', () {
+      expect(() => react.registerComponent(() => ThrowsInDefaultPropsComponent()), throwsA(Error));
+      expect(() {
+        try {
+          react.registerComponent(() => ThrowsInDefaultPropsComponent());
+        } catch (_) {}
+      }, prints(contains('Error when registering Component:')));
+    });
+  });
+
+  group('registerComponent2', () {
+    test('throws with specific error when defaultProps throws', () {
+      expect(() => react.registerComponent2(() => ThrowsInDefaultPropsComponent2()), throwsA(Error));
+      expect(() {
+        try {
+          react.registerComponent2(() => ThrowsInDefaultPropsComponent2());
+        } catch (_) {}
+      }, prints(contains('Error when registering Component2 when getting defaultProps')));
+    });
+
+    test('throws with specific error when propTypes throws', () {
+      expect(() => react.registerComponent2(() => ThrowsInPropTypesComponent2()), throwsA(Error));
+      expect(() {
+        try {
+          react.registerComponent2(() => ThrowsInPropTypesComponent2());
+        } catch (_) {}
+      }, prints(contains('Error when registering Component2 when getting propTypes')));
+    });
+
+    test('throws with generic error when something else throws', () {
+      expect(() => react.registerComponent2(() => DartComponent2Component(), bridgeFactory: (component) => throw Error),
+          throwsA(Error));
+      expect(() {
+        try {
+          react.registerComponent2(() => DartComponent2Component(), bridgeFactory: (component) => throw Error);
+        } catch (_) {}
+      }, prints(contains('Error when registering Component2:')));
+    });
+  });
 }
 
 @JS()
@@ -186,6 +227,34 @@ final Function testJsComponentFactory = (() {
     return reactFactory(jsifyAndAllowInterop(props), listifyChildren(children));
   };
 })();
+
+class ThrowsInDefaultPropsComponent extends Component {
+  @override
+  Map getDefaultProps() => throw Error;
+
+  @override
+  render() {
+    return null;
+  }
+}
+
+class ThrowsInDefaultPropsComponent2 extends Component2 {
+  get defaultProps => throw Error;
+
+  @override
+  render() {
+    return null;
+  }
+}
+
+class ThrowsInPropTypesComponent2 extends Component2 {
+  get propTypes => throw Error;
+
+  @override
+  render() {
+    return null;
+  }
+}
 
 class DartComponent2Component extends Component2 {
   @override
