@@ -349,20 +349,29 @@ class ReactDomComponentFactoryProxy extends ReactComponentFactoryProxy {
 /// Creates ReactJS [Function Component] from Dart Function.
 class ReactDartFunctionComponentFactoryProxy extends ReactComponentFactoryProxy with JsBackedMapComponentFactoryMixin {
   /// The name of this function.
-  final String displayName;
+  String displayName;
 
   /// The React JS component definition of this Function Component.
-  final JsFunctionComponent reactFunction;
+  JsFunctionComponent reactFunction;
 
-  final Map defaultProps;
+  Map _defaultProps;
+
+  Map get defaultProps => _defaultProps;
+  set defaultProps(Map defaultProps) {
+    this._defaultProps = defaultProps != null ? JsBackedMap.from(defaultProps) : {};
+    if (defaultProps != null) {
+      (reactFunction as ReactClass).defaultProps = JsBackedMap.from(defaultProps).jsObject;
+    }
+  }
 
   ReactDartFunctionComponentFactoryProxy(DartFunctionComponent dartFunctionComponent,
-      {String displayName, Map defaultProps})
-      : this.displayName = displayName ?? _getJsFunctionName(dartFunctionComponent),
-        this.defaultProps = defaultProps != null ? JsBackedMap.from(defaultProps) : {},
-        this.reactFunction = _wrapFunctionComponent(dartFunctionComponent,
-            displayName: displayName ?? _getJsFunctionName(dartFunctionComponent),
-            defaultProps: defaultProps != null ? JsBackedMap.from(defaultProps).jsObject : null);
+      {String displayName, Map defaultProps}) {
+    this.displayName = displayName ?? _getJsFunctionName(dartFunctionComponent);
+    this._defaultProps = defaultProps != null ? JsBackedMap.from(defaultProps) : {};
+    this.reactFunction = _wrapFunctionComponent(dartFunctionComponent,
+        displayName: displayName ?? _getJsFunctionName(dartFunctionComponent),
+        defaultProps: defaultProps != null ? JsBackedMap.from(defaultProps).jsObject : null);
+  }
 
   @override
   JsFunctionComponent get type => reactFunction;
@@ -395,9 +404,7 @@ class ReactDartFunctionComponentFactoryProxy extends ReactComponentFactoryProxy 
     }
     // ignore: invalid_use_of_protected_member
     setProperty(interopFunction, 'dartComponentVersion', ReactDartComponentVersion.component2);
-    if (defaultProps != null) {
-      (interopFunction as ReactClass).defaultProps = defaultProps;
-    }
+    (interopFunction as ReactClass).defaultProps = defaultProps;
     return interopFunction;
   }
 }
