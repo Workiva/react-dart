@@ -656,8 +656,8 @@ ReactDartComponentFactoryProxy _registerComponent(
     reactComponentClass.dartDefaultProps = defaultProps;
 
     return new ReactDartComponentFactoryProxy(reactComponentClass);
-  } catch (e) {
-    print('Error when registering Component: $e');
+  } catch (e, stack) {
+    print('Error when registering Component: $e\n$stack');
     rethrow;
   }
 }
@@ -780,6 +780,7 @@ ReactDartComponentFactoryProxy2 _registerComponent2(
   Iterable<String> skipMethods = const ['getDerivedStateFromError', 'componentDidCatch'],
   Component2BridgeFactory bridgeFactory,
 }) {
+  bool errorPrinted = false;
   try {
     bridgeFactory ??= Component2BridgeImpl.bridgeFactory;
 
@@ -796,16 +797,18 @@ ReactDartComponentFactoryProxy2 _registerComponent2(
     JsBackedMap defaultProps;
     try {
       defaultProps = JsBackedMap.from(componentInstance.defaultProps);
-    } catch (e) {
-      print('Error when registering Component2 when getting defaultProps: $e');
+    } catch (e, stack) {
+      print('Error when registering Component2 when getting defaultProps: $e\n$stack');
+      errorPrinted = true;
       rethrow;
     }
 
     JsMap jsPropTypes;
     try {
       jsPropTypes = bridgeFactory(componentInstance).jsifyPropTypes(componentInstance, componentInstance.propTypes);
-    } catch (e) {
-      print('Error when registering Component2 when getting propTypes: $e');
+    } catch (e, stack) {
+      print('Error when registering Component2 when getting propTypes: $e\n$stack');
+      errorPrinted = true;
       rethrow;
     }
 
@@ -825,8 +828,8 @@ ReactDartComponentFactoryProxy2 _registerComponent2(
     reactComponentClass.dartComponentVersion = ReactDartComponentVersion.component2;
 
     return new ReactDartComponentFactoryProxy2(reactComponentClass);
-  } catch (e) {
-    print('Error when registering Component2: $e');
+  } catch (e, stack) {
+    if (!errorPrinted) print('Error when registering Component2: $e\n$stack');
     rethrow;
   }
 }

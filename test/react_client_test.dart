@@ -176,7 +176,7 @@ main() {
 
   group('registerComponent', () {
     test('throws with printed error', () {
-      expect(() => react.registerComponent(() => ThrowsInDefaultPropsComponent()), throwsA(Error));
+      expect(() => react.registerComponent(() => ThrowsInDefaultPropsComponent()), throwsStateError);
       expect(() {
         try {
           react.registerComponent(() => ThrowsInDefaultPropsComponent());
@@ -187,7 +187,7 @@ main() {
 
   group('registerComponent2', () {
     test('throws with specific error when defaultProps throws', () {
-      expect(() => react.registerComponent2(() => ThrowsInDefaultPropsComponent2()), throwsA(Error));
+      expect(() => react.registerComponent2(() => ThrowsInDefaultPropsComponent2()), throwsStateError);
       expect(() {
         try {
           react.registerComponent2(() => ThrowsInDefaultPropsComponent2());
@@ -196,7 +196,7 @@ main() {
     });
 
     test('throws with specific error when propTypes throws', () {
-      expect(() => react.registerComponent2(() => ThrowsInPropTypesComponent2()), throwsA(Error));
+      expect(() => react.registerComponent2(() => ThrowsInPropTypesComponent2()), throwsStateError);
       expect(() {
         try {
           react.registerComponent2(() => ThrowsInPropTypesComponent2());
@@ -205,11 +205,10 @@ main() {
     });
 
     test('throws with generic error when something else throws', () {
-      expect(() => react.registerComponent2(() => DartComponent2Component(), bridgeFactory: (component) => throw Error),
-          throwsA(Error));
+      expect(() => react.registerComponent2(() => throw StateError('bad component')), throwsStateError);
       expect(() {
         try {
-          react.registerComponent2(() => DartComponent2Component(), bridgeFactory: (component) => throw Error);
+          react.registerComponent2(() => throw StateError('bad component'));
         } catch (_) {}
       }, prints(contains('Error when registering Component2:')));
     });
@@ -230,7 +229,7 @@ final Function testJsComponentFactory = (() {
 
 class ThrowsInDefaultPropsComponent extends Component {
   @override
-  Map getDefaultProps() => throw Error;
+  Map getDefaultProps() => throw StateError('bad default props');
 
   @override
   render() {
@@ -239,7 +238,7 @@ class ThrowsInDefaultPropsComponent extends Component {
 }
 
 class ThrowsInDefaultPropsComponent2 extends Component2 {
-  get defaultProps => throw Error;
+  get defaultProps => throw StateError('bad default props');
 
   @override
   render() {
@@ -248,7 +247,7 @@ class ThrowsInDefaultPropsComponent2 extends Component2 {
 }
 
 class ThrowsInPropTypesComponent2 extends Component2 {
-  get propTypes => throw Error;
+  get propTypes => throw StateError('bad prop types');
 
   @override
   render() {
