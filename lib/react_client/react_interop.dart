@@ -91,6 +91,16 @@ class Ref<T> {
     }
     return jsCurrent;
   }
+
+  /// Used internally to combine refs https://github.com/facebook/react/issues/13029
+  @protected
+  set current(T value) {
+    if (value is Component) {
+      jsRef.current = value.jsThis;
+    } else {
+      jsRef.current = value;
+    }
+  }
 }
 
 /// A JS ref object returned by [React.createRef].
@@ -101,6 +111,10 @@ class Ref<T> {
 @anonymous
 class JsRef {
   external dynamic get current;
+
+  /// Used internally to combine refs https://github.com/facebook/react/issues/13029
+  @protected
+  external set current(dynamic value);
 }
 
 /// Automatically passes a [Ref] through a component to one of its children.

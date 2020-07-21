@@ -6,6 +6,7 @@ import 'dart:js_util';
 
 import 'package:meta/meta.dart';
 import 'package:react/react_client/js_backed_map.dart';
+import 'package:react/src/react_client/chain_refs.dart';
 import 'package:test/test.dart';
 
 import 'package:react/react_client.dart';
@@ -268,15 +269,11 @@ void refTests<T>(ReactComponentFactoryProxy factory, {void verifyRefValue(dynami
     verifyRefValue(refObject.current);
   });
 
-  _typedCallbackRefTests<T>(factory);
-}
-
-void _typedCallbackRefTests<T>(react.ReactComponentFactoryProxy factory) {
-  if (T == dynamic) {
-    throw ArgumentError('Generic parameter T must be specified');
-  }
-
   group('has functional callback refs when they are typed as', () {
+    if (T == dynamic) {
+      throw ArgumentError('Generic parameter T must be specified');
+    }
+
     test('`dynamic Function(dynamic)`', () {
       T fooRef;
       callbackRef(dynamic ref) {
@@ -298,6 +295,106 @@ void _typedCallbackRefTests<T>(react.ReactComponentFactoryProxy factory) {
           reason: 'React should not have a problem with the ref we pass it, and calling it should not throw');
       expect(fooRef, isA<T>(), reason: 'should be the correct type, not be a NativeJavaScriptObject/etc.');
     });
+  });
+
+  group('chainRefs works', () {
+    test('with two typed callback refs', () {
+      var calls = <Map>[];
+
+      rtu.renderIntoDocument(factory({
+        'ref': chainRefs(
+          (T ref) => calls.add({'name': 'ref1', 'value': ref}),
+          (T ref) => calls.add({'name': 'ref2', 'value': ref}),
+        ),
+      }));
+
+      expect(calls, [
+        {'name': 'ref1', 'value': anything},
+        {'name': 'ref2', 'value': anything},
+      ]);
+      verifyRefValue(calls[0]['value']);
+      verifyRefValue(calls[1]['value']);
+    });
+
+    test('with a typed and untyped callback refs', () {
+      var calls = <Map>[];
+
+      rtu.renderIntoDocument(factory({
+        'ref': chainRefs(
+          (T ref) => calls.add({'name': 'ref1', 'value': ref}),
+          (ref) => calls.add({'name': 'ref2', 'value': ref}),
+        ),
+      }));
+
+      expect(calls, [
+        {'name': 'ref1', 'value': anything},
+        {'name': 'ref2', 'value': anything},
+      ]);
+      verifyRefValue(calls[0]['value']);
+      verifyRefValue(calls[1]['value']);
+    });
+
+    test('with two createRef refs', () {
+      final ref1 = react.createRef<T>();
+      final ref2 = react.createRef<T>();
+
+      rtu.renderIntoDocument(factory({
+        'ref': chainRefs(ref1, ref2),
+      }));
+
+      verifyRefValue(ref1.current);
+      verifyRefValue(ref2.current);
+    });
+
+    test('with a typed callback ref and a createRef', () {
+      var callbackRefCallValues = [];
+      final refObject = react.createRef<T>();
+
+      rtu.renderIntoDocument(factory({
+        'ref': chainRefs(
+          (T ref) => callbackRefCallValues.add(ref),
+          refObject,
+        ),
+      }));
+
+      expect(callbackRefCallValues, hasLength(1));
+      verifyRefValue(callbackRefCallValues[0]);
+      verifyRefValue(refObject.current);
+    });
+
+    // Other cases tested in chainRefs's own tests
+  });
+
+  group('mergeRefList works', () {
+    test('with a list of refs, ignoring any null values', () {
+      var calls = <Map>[];
+
+      rtu.renderIntoDocument(factory({
+        'ref': chainRefList([
+          null,
+          (ref) => calls.add({'name': 'ref1', 'value': ref}),
+          null,
+          (ref) => calls.add({'name': 'ref2', 'value': ref}),
+          (ref) => calls.add({'name': 'ref3', 'value': ref}),
+          null,
+          null,
+          (ref) => calls.add({'name': 'ref4', 'value': ref}),
+        ]),
+      }));
+
+      expect(calls, [
+        {'name': 'ref1', 'value': anything},
+        {'name': 'ref2', 'value': anything},
+        {'name': 'ref3', 'value': anything},
+        {'name': 'ref4', 'value': anything},
+      ]);
+      verifyRefValue(calls[0]['value']);
+      verifyRefValue(calls[1]['value']);
+      verifyRefValue(calls[2]['value']);
+      verifyRefValue(calls[3]['value']);
+    });
+
+    // Other cases tested in mergeRefList's own tests
   });
 }
 
