@@ -31,6 +31,24 @@ SyntheticClipboardEvent syntheticClipboardEventFactory(events.SyntheticClipboard
       e.clipboardData);
 }
 
+/// Wrapper for [SyntheticCompositionEvent].
+SyntheticCompositionEvent syntheticCompositionEventFactory(events.SyntheticCompositionEvent e) {
+  return SyntheticCompositionEvent(
+      e.bubbles,
+      e.cancelable,
+      e.currentTarget,
+      e.defaultPrevented,
+          () => e.preventDefault(),
+          () => e.stopPropagation(),
+      e.eventPhase,
+      e.isTrusted,
+      e.nativeEvent,
+      e.target,
+      e.timeStamp,
+      e.type,
+      e.data);
+}
+
 /// Wrapper for [SyntheticKeyboardEvent].
 SyntheticKeyboardEvent syntheticKeyboardEventFactory(events.SyntheticKeyboardEvent e) {
   return new SyntheticKeyboardEvent(

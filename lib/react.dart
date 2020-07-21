@@ -1608,6 +1608,27 @@ class SyntheticKeyboardEvent extends SyntheticEvent {
             isTrusted, nativeEvent, target, timeStamp, type) {}
 }
 
+class SyntheticCompositionEvent extends SyntheticEvent {
+  final String data;
+
+  SyntheticCompositionEvent(
+    bool bubbles,
+    bool cancelable,
+    dynamic currentTarget,
+    bool defaultPrevented,
+    dynamic preventDefault,
+    dynamic stopPropagation,
+    num eventPhase,
+    bool isTrusted,
+    dynamic nativeEvent,
+    dynamic target,
+    num timeStamp,
+    String type,
+    this.data,
+  ) : super(bubbles, cancelable, currentTarget, defaultPrevented, preventDefault, stopPropagation, eventPhase,
+            isTrusted, nativeEvent, target, timeStamp, type) {}
+}
+
 class SyntheticFocusEvent extends SyntheticEvent {
   final /*DOMEventTarget*/ relatedTarget;
 

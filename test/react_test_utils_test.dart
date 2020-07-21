@@ -101,6 +101,9 @@ testUtils({isComponent2: false, dynamic eventComponent, dynamic sampleComponent,
       group('change', () => testEvent(Simulate.change, 'change'));
       group('click', () => testEvent(Simulate.click, 'click'));
       group('copy', () => testEvent(Simulate.copy, 'copy'));
+      group('compositionEnd', () => testEvent(Simulate.compositionEnd, 'compositionEnd'));
+      group('compositionStart', () => testEvent(Simulate.compositionStart, 'compositionStart'));
+      group('compositionUpdate', () => testEvent(Simulate.compositionUpdate, 'compositionUpdate'));
       group('cut', () => testEvent(Simulate.cut, 'cut'));
       group('doubleClick', () => testEvent(Simulate.doubleClick, 'doubleClick'));
       group('drag', () => testEvent(Simulate.drag, 'drag'));

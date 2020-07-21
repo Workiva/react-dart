@@ -24,6 +24,7 @@ export 'package:react/src/react_client/event_factory.dart'
     show
         syntheticEventFactory,
         syntheticClipboardEventFactory,
+        syntheticCompositionEventFactory,
         syntheticKeyboardEventFactory,
         syntheticFocusEventFactory,
         syntheticFormEventFactory,
