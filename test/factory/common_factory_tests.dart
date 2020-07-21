@@ -365,7 +365,7 @@ void refTests<T>(ReactComponentFactoryProxy factory, {void verifyRefValue(dynami
     // Other cases tested in chainRefs's own tests
   });
 
-  group('mergeRefList works', () {
+  group('chainRefList works', () {
     test('with a list of refs, ignoring any null values', () {
       var calls = <Map>[];
 

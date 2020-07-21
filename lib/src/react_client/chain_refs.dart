@@ -19,7 +19,7 @@ import 'package:react/react_client/react_interop.dart';
 ///   final localRef = useRef<FooComponent>();
 ///   return Foo({
 ///     ...props,
-///     'ref': mergeRefs(localRef, ref),
+///     'ref': chainRefs(localRef, ref),
 ///   });
 /// });
 /// ```
@@ -60,7 +60,7 @@ dynamic chainRefList(List<dynamic> refs) {
   // LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
   // FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER
   // DEALINGS IN THE SOFTWARE.
-  void _mergedRef(value) {
+  void _chainedRef(value) {
     for (final ref in nonNullRefs) {
       if (ref is Function) {
         ref(value);
@@ -74,7 +74,7 @@ dynamic chainRefList(List<dynamic> refs) {
     }
   }
 
-  return _mergedRef;
+  return _chainedRef;
 }
 
 void _validateChainRefsArg(dynamic ref) {
