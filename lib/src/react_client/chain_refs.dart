@@ -29,7 +29,11 @@ dynamic chainRefs(dynamic ref1, dynamic ref2) {
 
 /// Like [chainRefs], but takes in a list of [refs].
 dynamic chainRefList(List<dynamic> refs) {
-  refs.forEach(_validateChainRefsArg);
+  // Wrap in an assert so iteration doesn't take place unnecessarily
+  assert(() {
+    refs.forEach(_validateChainRefsArg);
+    return true;
+  }());
 
   final nonNullRefs = refs.where((ref) => ref != null).toList();
 
