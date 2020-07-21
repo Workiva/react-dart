@@ -57,7 +57,7 @@ main() {
         test('unsupported function types', () {
           expect(() => chainRefList([testRef, () {}]), throwsA(isA<AssertionError>()));
         });
-      });
+      }, tags: 'no-dart2js');
     });
   });
 }
