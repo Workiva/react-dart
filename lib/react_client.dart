@@ -631,32 +631,37 @@ ReactDartComponentFactoryProxy _registerComponent(
   ComponentFactory componentFactory, [
   Iterable<String> skipMethods = const ['getDerivedStateFromError', 'componentDidCatch'],
 ]) {
-  var componentInstance = componentFactory();
+  try {
+    var componentInstance = componentFactory();
 
-  if (componentInstance is Component2) {
-    return _registerComponent2(componentFactory, skipMethods: skipMethods);
+    if (componentInstance is Component2) {
+      return _registerComponent2(componentFactory, skipMethods: skipMethods);
+    }
+
+    var componentStatics = new ComponentStatics(componentFactory);
+
+    var jsConfig = new JsComponentConfig(
+      childContextKeys: componentInstance.childContextKeys,
+      contextKeys: componentInstance.contextKeys,
+    );
+
+    /// Create the JS [`ReactClass` component class](https://facebook.github.io/react/docs/top-level-api.html#react.createclass)
+    /// with custom JS lifecycle methods.
+    var reactComponentClass = createReactDartComponentClass(_dartInteropStatics, componentStatics, jsConfig)
+      // ignore: invalid_use_of_protected_member
+      ..dartComponentVersion = ReactDartComponentVersion.component
+      ..displayName = componentFactory().displayName;
+
+    // Cache default props and store them on the ReactClass so they can be used
+    // by ReactDartComponentFactoryProxy and externally.
+    final Map defaultProps = new Map.unmodifiable(componentInstance.getDefaultProps());
+    reactComponentClass.dartDefaultProps = defaultProps;
+
+    return new ReactDartComponentFactoryProxy(reactComponentClass);
+  } catch (e, stack) {
+    print('Error when registering Component: $e\n$stack');
+    rethrow;
   }
-
-  var componentStatics = new ComponentStatics(componentFactory);
-
-  var jsConfig = new JsComponentConfig(
-    childContextKeys: componentInstance.childContextKeys,
-    contextKeys: componentInstance.contextKeys,
-  );
-
-  /// Create the JS [`ReactClass` component class](https://facebook.github.io/react/docs/top-level-api.html#react.createclass)
-  /// with custom JS lifecycle methods.
-  var reactComponentClass = createReactDartComponentClass(_dartInteropStatics, componentStatics, jsConfig)
-    // ignore: invalid_use_of_protected_member
-    ..dartComponentVersion = ReactDartComponentVersion.component
-    ..displayName = componentFactory().displayName;
-
-  // Cache default props and store them on the ReactClass so they can be used
-  // by ReactDartComponentFactoryProxy and externally.
-  final Map defaultProps = new Map.unmodifiable(componentInstance.getDefaultProps());
-  reactComponentClass.dartDefaultProps = defaultProps;
-
-  return new ReactDartComponentFactoryProxy(reactComponentClass);
 }
 
 /// Creates ReactJS [ReactElement] instances for `JSContext` components.
@@ -777,26 +782,41 @@ ReactDartComponentFactoryProxy2 _registerComponent2(
   Iterable<String> skipMethods = const ['getDerivedStateFromError', 'componentDidCatch'],
   Component2BridgeFactory bridgeFactory,
 }) {
-  bridgeFactory ??= Component2BridgeImpl.bridgeFactory;
+  bool errorPrinted = false;
+  try {
+    bridgeFactory ??= Component2BridgeImpl.bridgeFactory;
 
-  final componentInstance = componentFactory();
-  final componentStatics = new ComponentStatics2(
-    componentFactory: componentFactory,
-    instanceForStaticMethods: componentInstance,
-    bridgeFactory: bridgeFactory,
-  );
-  final filteredSkipMethods = _filterSkipMethods(skipMethods);
+    final componentInstance = componentFactory();
+    final componentStatics = new ComponentStatics2(
+      componentFactory: componentFactory,
+      instanceForStaticMethods: componentInstance,
+      bridgeFactory: bridgeFactory,
+    );
+    final filteredSkipMethods = _filterSkipMethods(skipMethods);
 
-  // Cache default props and store them on the ReactClass so they can be used
-  // by ReactDartComponentFactoryProxy and externally.
-  final JsBackedMap defaultProps = new JsBackedMap.from(componentInstance.defaultProps);
+    // Cache default props and store them on the ReactClass so they can be used
+    // by ReactDartComponentFactoryProxy and externally.
+    JsBackedMap defaultProps;
+    try {
+      defaultProps = JsBackedMap.from(componentInstance.defaultProps);
+    } catch (e, stack) {
+      print('Error when registering Component2 when getting defaultProps: $e\n$stack');
+      errorPrinted = true;
+      rethrow;
+    }
 
-  JsMap jsPropTypes;
-  // Access `componentInstance.propTypes` within an assert so they get tree-shaken out of dart2js builds.
-  assert(() {
-    jsPropTypes = bridgeFactory(componentInstance).jsifyPropTypes(componentInstance, componentInstance.propTypes);
-    return true;
-  }());
+    JsMap jsPropTypes;
+    try {
+      // Access `componentInstance.propTypes` within an assert so they get tree-shaken out of dart2js builds.
+      assert(() {
+        jsPropTypes = bridgeFactory(componentInstance).jsifyPropTypes(componentInstance, componentInstance.propTypes);
+        return true;
+      }());
+    } catch (e, stack) {
+      print('Error when registering Component2 when getting propTypes: $e\n$stack');
+      errorPrinted = true;
+      rethrow;
+    }
 
   var jsConfig2 = new JsComponentConfig2(
     defaultProps: defaultProps.jsObject,
@@ -805,15 +825,19 @@ ReactDartComponentFactoryProxy2 _registerComponent2(
     propTypes: jsPropTypes ?? JsBackedMap().jsObject,
   );
 
-  /// Create the JS [`ReactClass` component class](https://facebook.github.io/react/docs/top-level-api.html#react.createclass)
-  /// with custom JS lifecycle methods.
-  var reactComponentClass =
-      createReactDartComponentClass2(_ReactDartInteropStatics2.staticsForJs, componentStatics, jsConfig2)
-        ..displayName = componentInstance.displayName;
-  // ignore: invalid_use_of_protected_member
-  reactComponentClass.dartComponentVersion = ReactDartComponentVersion.component2;
+    /// Create the JS [`ReactClass` component class](https://facebook.github.io/react/docs/top-level-api.html#react.createclass)
+    /// with custom JS lifecycle methods.
+    var reactComponentClass =
+        createReactDartComponentClass2(_ReactDartInteropStatics2.staticsForJs, componentStatics, jsConfig2)
+          ..displayName = componentInstance.displayName;
+    // ignore: invalid_use_of_protected_member
+    reactComponentClass.dartComponentVersion = ReactDartComponentVersion.component2;
 
-  return new ReactDartComponentFactoryProxy2(reactComponentClass);
+    return new ReactDartComponentFactoryProxy2(reactComponentClass);
+  } catch (e, stack) {
+    if (!errorPrinted) print('Error when registering Component2: $e\n$stack');
+    rethrow;
+  }
 }
 
 /// Creates ReactJS [ReactElement] instances for DOM components.
@@ -944,8 +968,10 @@ _convertEventHandlers(Map args) {
 
 /// Wrapper for [SyntheticEvent].
 SyntheticEvent syntheticEventFactory(events.SyntheticEvent e) {
-  return new SyntheticEvent(e.bubbles, e.cancelable, e.currentTarget, e.defaultPrevented, () => e.preventDefault(),
-      () => e.stopPropagation(), e.eventPhase, e.isTrusted, e.nativeEvent, e.target, e.timeStamp, e.type);
+  return SyntheticEvent(e.bubbles, e.cancelable, e.currentTarget, e.defaultPrevented, () => e.preventDefault(),
+      () => e.stopPropagation(), e.eventPhase, e.isTrusted, e.nativeEvent, e.target, e.timeStamp, e.type)
+    // ignore: invalid_use_of_protected_member
+    ..$$jsPersistDoNotSetThisOrYouWillBeFired = () => e.persist();
 }
 
 /// Wrapper for [SyntheticClipboardEvent].
@@ -963,7 +989,9 @@ SyntheticClipboardEvent syntheticClipboardEventFactory(events.SyntheticClipboard
       e.target,
       e.timeStamp,
       e.type,
-      e.clipboardData);
+      e.clipboardData)
+    // ignore: invalid_use_of_protected_member
+    ..$$jsPersistDoNotSetThisOrYouWillBeFired = () => e.persist();
 }
 
 /// Wrapper for [SyntheticKeyboardEvent].
@@ -991,7 +1019,9 @@ SyntheticKeyboardEvent syntheticKeyboardEventFactory(events.SyntheticKeyboardEve
       e.keyCode,
       e.metaKey,
       e.repeat,
-      e.shiftKey);
+      e.shiftKey)
+    // ignore: invalid_use_of_protected_member
+    ..$$jsPersistDoNotSetThisOrYouWillBeFired = () => e.persist();
 }
 
 /// Wrapper for [SyntheticCompositionEvent].
@@ -1009,7 +1039,9 @@ SyntheticCompositionEvent syntheticCompositionEventFactory(events.SyntheticCompo
       e.target,
       e.timeStamp,
       e.type,
-      e.data);
+      e.data)
+    // ignore: invalid_use_of_protected_member
+    ..$$jsPersistDoNotSetThisOrYouWillBeFired = () => e.persist();
 }
 
 /// Wrapper for [SyntheticFocusEvent].
@@ -1027,13 +1059,17 @@ SyntheticFocusEvent syntheticFocusEventFactory(events.SyntheticFocusEvent e) {
       e.target,
       e.timeStamp,
       e.type,
-      e.relatedTarget);
+      e.relatedTarget)
+    // ignore: invalid_use_of_protected_member
+    ..$$jsPersistDoNotSetThisOrYouWillBeFired = () => e.persist();
 }
 
 /// Wrapper for [SyntheticFormEvent].
 SyntheticFormEvent syntheticFormEventFactory(events.SyntheticFormEvent e) {
   return new SyntheticFormEvent(e.bubbles, e.cancelable, e.currentTarget, e.defaultPrevented, () => e.preventDefault(),
-      () => e.stopPropagation(), e.eventPhase, e.isTrusted, e.nativeEvent, e.target, e.timeStamp, e.type);
+      () => e.stopPropagation(), e.eventPhase, e.isTrusted, e.nativeEvent, e.target, e.timeStamp, e.type)
+    // ignore: invalid_use_of_protected_member
+    ..$$jsPersistDoNotSetThisOrYouWillBeFired = () => e.persist();
 }
 
 /// Wrapper for [SyntheticDataTransfer].
@@ -1132,7 +1168,9 @@ SyntheticPointerEvent syntheticPointerEventFactory(events.SyntheticPointerEvent 
     e.twist,
     e.pointerType,
     e.isPrimary,
-  );
+  )
+    // ignore: invalid_use_of_protected_member
+    ..$$jsPersistDoNotSetThisOrYouWillBeFired = () => e.persist();
 }
 
 /// Wrapper for [SyntheticMouseEvent].
@@ -1165,7 +1203,9 @@ SyntheticMouseEvent syntheticMouseEventFactory(events.SyntheticMouseEvent e) {
     e.screenX,
     e.screenY,
     e.shiftKey,
-  );
+  )
+    // ignore: invalid_use_of_protected_member
+    ..$$jsPersistDoNotSetThisOrYouWillBeFired = () => e.persist();
 }
 
 /// Wrapper for [SyntheticTouchEvent].
@@ -1190,7 +1230,9 @@ SyntheticTouchEvent syntheticTouchEventFactory(events.SyntheticTouchEvent e) {
     e.shiftKey,
     e.targetTouches,
     e.touches,
-  );
+  )
+    // ignore: invalid_use_of_protected_member
+    ..$$jsPersistDoNotSetThisOrYouWillBeFired = () => e.persist();
 }
 
 /// Wrapper for [SyntheticTransitionEvent].
@@ -1211,7 +1253,9 @@ SyntheticTransitionEvent syntheticTransitionEventFactory(events.SyntheticTransit
     e.propertyName,
     e.elapsedTime,
     e.pseudoElement,
-  );
+  )
+    // ignore: invalid_use_of_protected_member
+    ..$$jsPersistDoNotSetThisOrYouWillBeFired = () => e.persist();
 }
 
 /// Wrapper for [SyntheticAnimationEvent].
@@ -1232,7 +1276,9 @@ SyntheticAnimationEvent syntheticAnimationEventFactory(events.SyntheticAnimation
     e.animationName,
     e.elapsedTime,
     e.pseudoElement,
-  );
+  )
+    // ignore: invalid_use_of_protected_member
+    ..$$jsPersistDoNotSetThisOrYouWillBeFired = () => e.persist();
 }
 
 /// Wrapper for [SyntheticUIEvent].
@@ -1252,7 +1298,9 @@ SyntheticUIEvent syntheticUIEventFactory(events.SyntheticUIEvent e) {
     e.type,
     e.detail,
     e.view,
-  );
+  )
+    // ignore: invalid_use_of_protected_member
+    ..$$jsPersistDoNotSetThisOrYouWillBeFired = () => e.persist();
 }
 
 /// Wrapper for [SyntheticWheelEvent].
@@ -1274,7 +1322,9 @@ SyntheticWheelEvent syntheticWheelEventFactory(events.SyntheticWheelEvent e) {
     e.deltaMode,
     e.deltaY,
     e.deltaZ,
-  );
+  )
+    // ignore: invalid_use_of_protected_member
+    ..$$jsPersistDoNotSetThisOrYouWillBeFired = () => e.persist();
 }
 
 dynamic _findDomNode(component) {
