@@ -394,7 +394,7 @@ void refTests<T>(ReactComponentFactoryProxy factory, {void verifyRefValue(dynami
       verifyRefValue(calls[3]['value']);
     });
 
-    // Other cases tested in mergeRefList's own tests
+    // Other cases tested in chainRefList's own tests
   });
 }
 
