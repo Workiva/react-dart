@@ -10,7 +10,9 @@ final Expando<Function> originalEventHandlers = new Expando();
 /// Wrapper for [SyntheticEvent].
 SyntheticEvent syntheticEventFactory(events.SyntheticEvent e) {
   return new SyntheticEvent(e.bubbles, e.cancelable, e.currentTarget, e.defaultPrevented, () => e.preventDefault(),
-      () => e.stopPropagation(), e.eventPhase, e.isTrusted, e.nativeEvent, e.target, e.timeStamp, e.type);
+      () => e.stopPropagation(), e.eventPhase, e.isTrusted, e.nativeEvent, e.target, e.timeStamp, e.type)
+    // ignore: invalid_use_of_protected_member
+    ..$$jsPersistDoNotSetThisOrYouWillBeFired = () => e.persist();
 }
 
 /// Wrapper for [SyntheticClipboardEvent].
@@ -28,7 +30,9 @@ SyntheticClipboardEvent syntheticClipboardEventFactory(events.SyntheticClipboard
       e.target,
       e.timeStamp,
       e.type,
-      e.clipboardData);
+      e.clipboardData)
+    // ignore: invalid_use_of_protected_member
+    ..$$jsPersistDoNotSetThisOrYouWillBeFired = () => e.persist();
 }
 
 /// Wrapper for [SyntheticCompositionEvent].
@@ -46,7 +50,9 @@ SyntheticCompositionEvent syntheticCompositionEventFactory(events.SyntheticCompo
       e.target,
       e.timeStamp,
       e.type,
-      e.data);
+      e.data)
+    // ignore: invalid_use_of_protected_member
+    ..$$jsPersistDoNotSetThisOrYouWillBeFired = () => e.persist();
 }
 
 /// Wrapper for [SyntheticKeyboardEvent].
@@ -74,7 +80,9 @@ SyntheticKeyboardEvent syntheticKeyboardEventFactory(events.SyntheticKeyboardEve
       e.keyCode,
       e.metaKey,
       e.repeat,
-      e.shiftKey);
+      e.shiftKey)
+    // ignore: invalid_use_of_protected_member
+    ..$$jsPersistDoNotSetThisOrYouWillBeFired = () => e.persist();
 }
 
 /// Wrapper for [SyntheticFocusEvent].
@@ -92,13 +100,17 @@ SyntheticFocusEvent syntheticFocusEventFactory(events.SyntheticFocusEvent e) {
       e.target,
       e.timeStamp,
       e.type,
-      e.relatedTarget);
+      e.relatedTarget)
+    // ignore: invalid_use_of_protected_member
+    ..$$jsPersistDoNotSetThisOrYouWillBeFired = () => e.persist();
 }
 
 /// Wrapper for [SyntheticFormEvent].
 SyntheticFormEvent syntheticFormEventFactory(events.SyntheticFormEvent e) {
   return new SyntheticFormEvent(e.bubbles, e.cancelable, e.currentTarget, e.defaultPrevented, () => e.preventDefault(),
-      () => e.stopPropagation(), e.eventPhase, e.isTrusted, e.nativeEvent, e.target, e.timeStamp, e.type);
+      () => e.stopPropagation(), e.eventPhase, e.isTrusted, e.nativeEvent, e.target, e.timeStamp, e.type)
+    // ignore: invalid_use_of_protected_member
+    ..$$jsPersistDoNotSetThisOrYouWillBeFired = () => e.persist();
 }
 
 /// Wrapper for [SyntheticDataTransfer].
@@ -197,7 +209,9 @@ SyntheticPointerEvent syntheticPointerEventFactory(events.SyntheticPointerEvent 
     e.twist,
     e.pointerType,
     e.isPrimary,
-  );
+  )
+    // ignore: invalid_use_of_protected_member
+    ..$$jsPersistDoNotSetThisOrYouWillBeFired = () => e.persist();
 }
 
 /// Wrapper for [SyntheticMouseEvent].
@@ -230,7 +244,9 @@ SyntheticMouseEvent syntheticMouseEventFactory(events.SyntheticMouseEvent e) {
     e.screenX,
     e.screenY,
     e.shiftKey,
-  );
+  )
+    // ignore: invalid_use_of_protected_member
+    ..$$jsPersistDoNotSetThisOrYouWillBeFired = () => e.persist();
 }
 
 /// Wrapper for [SyntheticTouchEvent].
@@ -255,7 +271,9 @@ SyntheticTouchEvent syntheticTouchEventFactory(events.SyntheticTouchEvent e) {
     e.shiftKey,
     e.targetTouches,
     e.touches,
-  );
+  )
+    // ignore: invalid_use_of_protected_member
+    ..$$jsPersistDoNotSetThisOrYouWillBeFired = () => e.persist();
 }
 
 /// Wrapper for [SyntheticTransitionEvent].
@@ -276,7 +294,9 @@ SyntheticTransitionEvent syntheticTransitionEventFactory(events.SyntheticTransit
     e.propertyName,
     e.elapsedTime,
     e.pseudoElement,
-  );
+  )
+    // ignore: invalid_use_of_protected_member
+    ..$$jsPersistDoNotSetThisOrYouWillBeFired = () => e.persist();
 }
 
 /// Wrapper for [SyntheticAnimationEvent].
@@ -297,7 +317,9 @@ SyntheticAnimationEvent syntheticAnimationEventFactory(events.SyntheticAnimation
     e.animationName,
     e.elapsedTime,
     e.pseudoElement,
-  );
+  )
+    // ignore: invalid_use_of_protected_member
+    ..$$jsPersistDoNotSetThisOrYouWillBeFired = () => e.persist();
 }
 
 /// Wrapper for [SyntheticUIEvent].
@@ -317,7 +339,9 @@ SyntheticUIEvent syntheticUIEventFactory(events.SyntheticUIEvent e) {
     e.type,
     e.detail,
     e.view,
-  );
+  )
+    // ignore: invalid_use_of_protected_member
+    ..$$jsPersistDoNotSetThisOrYouWillBeFired = () => e.persist();
 }
 
 /// Wrapper for [SyntheticWheelEvent].
@@ -339,5 +363,7 @@ SyntheticWheelEvent syntheticWheelEventFactory(events.SyntheticWheelEvent e) {
     e.deltaMode,
     e.deltaY,
     e.deltaZ,
-  );
+  )
+    // ignore: invalid_use_of_protected_member
+    ..$$jsPersistDoNotSetThisOrYouWillBeFired = () => e.persist();
 }
