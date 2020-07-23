@@ -143,6 +143,41 @@ void domEventHandlerWrappingTests(ReactComponentFactoryProxy factory) {
     expect(actualEvent, isA<react.SyntheticEvent>());
   });
 
+  group('wraps the handler with a function that proxies ReactJS event "persistence" as expected', () {
+    test('when event.persist() is called', () {
+      react.SyntheticMouseEvent actualEvent;
+
+      var renderedInstance = rtu.renderIntoDocument(factory({
+        'onClick': (react.SyntheticMouseEvent event) {
+          event.persist();
+          actualEvent = event;
+        }
+      }));
+
+      rtu.Simulate.click(react_dom.findDOMNode(renderedInstance));
+
+      // ignore: invalid_use_of_protected_member
+      expect(actualEvent.$$jsPersistDoNotSetThisOrYouWillBeFired, isA<Function>());
+      expect(actualEvent.isPersistent, isTrue);
+    });
+
+    test('when event.persist() is not called', () {
+      react.SyntheticMouseEvent actualEvent;
+
+      var renderedInstance = rtu.renderIntoDocument(factory({
+        'onClick': (react.SyntheticMouseEvent event) {
+          actualEvent = event;
+        }
+      }));
+
+      rtu.Simulate.click(react_dom.findDOMNode(renderedInstance));
+
+      // ignore: invalid_use_of_protected_member
+      expect(actualEvent.$$jsPersistDoNotSetThisOrYouWillBeFired, isA<Function>());
+      expect(actualEvent.isPersistent, isFalse);
+    });
+  });
+
   test('doesn\'t wrap the handler if it is null', () {
     var renderedInstance = rtu.renderIntoDocument(factory({'onClick': null}));
 
