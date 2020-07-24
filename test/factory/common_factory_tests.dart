@@ -119,32 +119,38 @@ void commonFactoryTests(ReactComponentFactoryProxy factory, {bool isFunctionComp
 }
 
 void domEventHandlerWrappingTests(ReactComponentFactoryProxy factory) {
+  Element renderAndGetRootNode(ReactElement content) {
+    final mountNode = Element.div();
+    react_dom.render(content, mountNode);
+    return mountNode.children.single;
+  }
+
   setUpAll(() {
     var called = false;
 
-    var renderedInstance = rtu.renderIntoDocument(factory({
+    final nodeWithClickHandler = renderAndGetRootNode(factory({
       'onClick': (_) {
         called = true;
       }
     }));
 
-    rtu.Simulate.click(react_dom.findDOMNode(renderedInstance));
+    rtu.Simulate.click(nodeWithClickHandler);
 
     expect(called, isTrue,
         reason: 'this set of tests assumes that the factory '
-            'passes the click handler to the rendered DOM node');
+            'renders a single DOM node and passes props.onClick to it');
   });
 
   test('wraps the handler with a function that converts the synthetic event', () {
     var actualEvent;
 
-    var renderedInstance = rtu.renderIntoDocument(factory({
+    final nodeWithClickHandler = renderAndGetRootNode(factory({
       'onClick': (event) {
         actualEvent = event;
       }
     }));
 
-    rtu.Simulate.click(react_dom.findDOMNode(renderedInstance));
+    rtu.Simulate.click(nodeWithClickHandler);
 
     expect(actualEvent, isA<react.SyntheticEvent>());
   });
@@ -153,14 +159,14 @@ void domEventHandlerWrappingTests(ReactComponentFactoryProxy factory) {
     test('when event.persist() is called', () {
       react.SyntheticMouseEvent actualEvent;
 
-      var renderedInstance = rtu.renderIntoDocument(factory({
+      final nodeWithClickHandler = renderAndGetRootNode(factory({
         'onClick': (react.SyntheticMouseEvent event) {
           event.persist();
           actualEvent = event;
         }
       }));
 
-      rtu.Simulate.click(react_dom.findDOMNode(renderedInstance));
+      rtu.Simulate.click(nodeWithClickHandler);
 
       // ignore: invalid_use_of_protected_member
       expect(actualEvent.$$jsPersistDoNotSetThisOrYouWillBeFired, isA<Function>());
@@ -170,13 +176,13 @@ void domEventHandlerWrappingTests(ReactComponentFactoryProxy factory) {
     test('when event.persist() is not called', () {
       react.SyntheticMouseEvent actualEvent;
 
-      var renderedInstance = rtu.renderIntoDocument(factory({
+      final nodeWithClickHandler = renderAndGetRootNode(factory({
         'onClick': (react.SyntheticMouseEvent event) {
           actualEvent = event;
         }
       }));
 
-      rtu.Simulate.click(react_dom.findDOMNode(renderedInstance));
+      rtu.Simulate.click(nodeWithClickHandler);
 
       // ignore: invalid_use_of_protected_member
       expect(actualEvent.$$jsPersistDoNotSetThisOrYouWillBeFired, isA<Function>());
@@ -185,9 +191,9 @@ void domEventHandlerWrappingTests(ReactComponentFactoryProxy factory) {
   });
 
   test('doesn\'t wrap the handler if it is null', () {
-    var renderedInstance = rtu.renderIntoDocument(factory({'onClick': null}));
+    final nodeWithClickHandler = renderAndGetRootNode(factory({'onClick': null}));
 
-    expect(() => rtu.Simulate.click(react_dom.findDOMNode(renderedInstance)), returnsNormally);
+    expect(() => rtu.Simulate.click(nodeWithClickHandler), returnsNormally);
   });
 
   test('stores the original function in a way that it can be retrieved from unconvertJsEventHandler', () {
@@ -205,37 +211,37 @@ void domEventHandlerWrappingTests(ReactComponentFactoryProxy factory) {
     test('(simulated event)', () {
       final testZone = Zone.current;
 
-      var renderedInstance;
+      Element nodeWithClickHandler;
       // Run the ReactElement creation and rendering in a separate zone to
       // ensure the component lifecycle isn't run in the testZone, which could
       // create false positives in the `expect`.
       runZoned(() {
-        renderedInstance = rtu.renderIntoDocument(factory({
+        nodeWithClickHandler = renderAndGetRootNode(factory({
           'onClick': (event) {
             expect(Zone.current, same(testZone));
           }
         }));
       });
 
-      rtu.Simulate.click(react_dom.findDOMNode(renderedInstance));
+      rtu.Simulate.click(nodeWithClickHandler);
     });
 
     test('(native event)', () {
       final testZone = Zone.current;
 
-      var renderedInstance;
+      Element nodeWithClickHandler;
       // Run the ReactElement creation and rendering in a separate zone to
       // ensure the component lifecycle isn't run in the testZone, which could
       // create false positives in the `expect`.
       runZoned(() {
-        renderedInstance = rtu.renderIntoDocument(factory({
+        nodeWithClickHandler = renderAndGetRootNode(factory({
           'onClick': (event) {
             expect(Zone.current, same(testZone));
           }
         }));
       });
 
-      (react_dom.findDOMNode(renderedInstance) as Element).dispatchEvent(new MouseEvent('click'));
+      nodeWithClickHandler.dispatchEvent(new MouseEvent('click'));
     });
   });
 }
