@@ -189,9 +189,11 @@ class ReactDartComponentFactoryProxy<TComponent extends Component> extends React
 
 /// Creates ReactJS [Component2] instances for Dart components.
 class ReactDartComponentFactoryProxy2<TComponent extends Component2> extends ReactComponentFactoryProxy
-    with JsBackedMapComponentFactoryMixin
-    // ignore: deprecated_member_use_from_same_package
-    implements ReactDartComponentFactoryProxy {
+    with
+        JsBackedMapComponentFactoryMixin
+    implements
+        // ignore: deprecated_member_use_from_same_package
+        ReactDartComponentFactoryProxy {
   /// The ReactJS class used as the type for all [ReactElement]s built by
   /// this factory.
   final ReactClass reactClass;
