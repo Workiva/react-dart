@@ -16,7 +16,7 @@ import 'package:react/src/react_client/dart_interop_statics.dart';
 /// Returns the list of lifecycle events to skip, having removed the
 /// important ones. If an important lifecycle event was set for skipping, a
 /// warning is issued.
-List<String> _filterSkipMethods(List<String> methods) {
+List<String> _filterSkipMethods(Iterable<String> methods) {
   List<String> finalList = List.from(methods);
   bool shouldWarn = false;
 

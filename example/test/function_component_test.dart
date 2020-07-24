@@ -472,7 +472,7 @@ class ChatAPI {
 }
 
 // Custom Hook
-StateHook useFriendStatus(int friendID) {
+StateHook<bool> useFriendStatus(int friendID) {
   final isOnline = useState(false);
 
   void handleStatusChange(Map status) {
@@ -487,7 +487,7 @@ StateHook useFriendStatus(int friendID) {
   });
 
   // Use format function to avoid unnecessarily formatting `isOnline` when the hooks aren't inspected in React DevTools.
-  useDebugValue(isOnline.value, (isOnline) => isOnline ? 'Online' : 'Not Online');
+  useDebugValue<bool>(isOnline.value, (isOnline) => isOnline ? 'Online' : 'Not Online');
 
   return isOnline;
 }

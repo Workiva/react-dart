@@ -324,9 +324,7 @@ class ReactDomComponentFactoryProxy extends ReactComponentFactoryProxy {
   /// The JS component factory used by this factory to build [ReactElement]s.
   final Function factory;
 
-  ReactDomComponentFactoryProxy(name)
-      : this.name = name,
-        this.factory = React.createFactory(name) {
+  ReactDomComponentFactoryProxy(this.name) : this.factory = React.createFactory(name) {
     // TODO: Should we remove this once we validate that the bug is gone in Dart 2 DDC?
     if (ddc_emulated_function_name_bug.isBugPresent) {
       ddc_emulated_function_name_bug.patchName(this);
