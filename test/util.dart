@@ -65,34 +65,34 @@ class RefTestCase {
   RefTestCase._({@required this.ref, @required this.verifyRefWasUpdated});
 
   static RefTestCase untypedCallbackRefCase() {
-    final untypedCallbackRefCalls = [];
+    final calls = [];
     return RefTestCase._(
-      ref: (value) => untypedCallbackRefCalls.add(value),
-      verifyRefWasUpdated: (actualValue) => expect(untypedCallbackRefCalls, [same(actualValue)]),
+      ref: (value) => calls.add(value),
+      verifyRefWasUpdated: (actualValue) => expect(calls, [same(actualValue)]),
     );
   }
 
   static RefTestCase typedCallbackRefCase<T>() {
-    final typedCallbackRefCalls = [];
+    final calls = [];
     return RefTestCase._(
-      ref: (T value) => typedCallbackRefCalls.add(value),
-      verifyRefWasUpdated: (actualValue) => expect(typedCallbackRefCalls, [same(actualValue)]),
+      ref: (T value) => calls.add(value),
+      verifyRefWasUpdated: (actualValue) => expect(calls, [same(actualValue)]),
     );
   }
 
   static RefTestCase refObjectCase<T>() {
-    final refObjectRef = createRef<T>();
+    final ref = createRef<T>();
     return RefTestCase._(
-      ref: refObjectRef,
-      verifyRefWasUpdated: (actualValue) => expect(refObjectRef.current, same(actualValue)),
+      ref: ref,
+      verifyRefWasUpdated: (actualValue) => expect(ref.current, same(actualValue)),
     );
   }
 
-  static RefTestCase jsRefObjectCase<T>() {
-    final jsRefObjectRef = React.createRef();
+  static RefTestCase jsRefObjectCase() {
+    final ref = React.createRef();
     return RefTestCase._(
-      ref: jsRefObjectRef,
-      verifyRefWasUpdated: (actualValue) => expect(jsRefObjectRef.current, same(actualValue)),
+      ref: ref,
+      verifyRefWasUpdated: (actualValue) => expect(ref.current, same(actualValue)),
     );
   }
 
@@ -106,6 +106,6 @@ class RefTestCase {
         untypedCallbackRefCase(),
         typedCallbackRefCase<T>(),
         refObjectCase<T>(),
-        jsRefObjectCase<T>(),
+        jsRefObjectCase(),
       ];
 }
