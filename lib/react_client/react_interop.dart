@@ -110,8 +110,10 @@ class Ref<T> {
   T get current {
     final jsCurrent = jsRef.current;
 
+    // Note: this ReactComponent check will pass for many types of JS objects,
+    // so don't assume for sure that it's a ReactComponent
     if (jsCurrent is! Element && jsCurrent is ReactComponent) {
-      final dartCurrent = jsCurrent?.dartComponent;
+      final dartCurrent = jsCurrent.dartComponent;
 
       if (dartCurrent != null) {
         return dartCurrent as T;
@@ -123,7 +125,13 @@ class Ref<T> {
   /// Sets the value of [current].
   ///
   /// See: <https://reactjs.org/docs/hooks-faq.html#is-there-something-like-instance-variables>.
-  set current(T value) => jsRef.current = value;
+  set current(T value) {
+    if (value is Component) {
+      jsRef.current = value.jsThis;
+    } else {
+      jsRef.current = value;
+    }
+  }
 }
 
 /// A JS ref object returned by [React.createRef].

@@ -1,3 +1,18 @@
+## [5.4.0](https://github.com/cleandart/react-dart/compare/5.3.0...5.4.0)
+
+__New Features__
+- [#244] Add support for [HTML Composition events](https://developer.mozilla.org/en-US/docs/Web/API/CompositionEvent)
+- [#263] Add support for [`SyntheticEvent.persist()`](https://reactjs.org/docs/events.html#event-pooling) 
+
+__Fixes / Updates__
+- [#261] Stop errors thrown within the call stack of `Component.render()` from being swallowed
+- [#256] Documentation updates _(thanks @barriehadfield !!!)_
+
+__JS Dependency Updates__
+- [#255] Bump acorn from `6.4.0` to `6.4.1`
+- [#260] Bump lodash from `4.17.15` to `4.17.19`
+
+
 ## [5.3.0](https://github.com/cleandart/react-dart/compare/5.2.1...5.3.0)
 
 - Unpin the react-redux JS dependency to allow versions `7.1.1` and higher.
