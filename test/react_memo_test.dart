@@ -1,6 +1,8 @@
+@TestOn('browser')
+library react.react_memo_test;
+
 import 'dart:async';
 import 'dart:developer';
-@TestOn('browser')
 import 'dart:html';
 import 'dart:js_util';
 

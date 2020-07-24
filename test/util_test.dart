@@ -1,3 +1,6 @@
+@TestOn('browser')
+library react.util_test;
+
 import 'dart:js';
 
 import 'package:react/react_client.dart';
