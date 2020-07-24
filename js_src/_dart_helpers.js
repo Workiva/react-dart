@@ -137,16 +137,16 @@ function _createReactDartComponentClass2(dartInteropStatics, componentStatics, j
     }
   }
 
-  // Delete methods that the user does not want to include (such as error boundary event).
-  jsConfig.skipMethods.forEach(method => {
-    if (ReactDartComponent2[method]) {
-      delete ReactDartComponent2[method];
-    } else {
-      delete ReactDartComponent2.prototype[method];
-    }
-  });
-
   if (jsConfig) {
+    // Delete methods that the user does not want to include (such as error boundary event).
+    jsConfig.skipMethods.forEach(method => {
+      if (ReactDartComponent2[method]) {
+        delete ReactDartComponent2[method];
+      } else {
+        delete ReactDartComponent2.prototype[method];
+      }
+    });
+
     if (jsConfig.contextType) {
       ReactDartComponent2.contextType = jsConfig.contextType;
     }
