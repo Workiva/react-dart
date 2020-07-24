@@ -66,6 +66,7 @@ Map unconvertJsProps(/* ReactElement|ReactComponent */ instance) {
   // prop. Component2, however, does not have that but can be detected by checking whether or not the style prop is a
   // Map. Because non-Dart components will have a JS Object, it can be assumed that if the style prop is a Map then
   // it is a Dart Component.
+  // ignore: deprecated_member_use_from_same_package
   if (props['internal'] is ReactDartComponentInternal || (props['style'] != null && props['style'] is Map)) {
     throw new ArgumentError('A Dart Component cannot be passed into unconvertJsProps.');
   }
@@ -189,6 +190,7 @@ class ReactDartComponentFactoryProxy<TComponent extends Component> extends React
 /// Creates ReactJS [Component2] instances for Dart components.
 class ReactDartComponentFactoryProxy2<TComponent extends Component2> extends ReactComponentFactoryProxy
     with JsBackedMapComponentFactoryMixin
+    // ignore: deprecated_member_use_from_same_package
     implements ReactDartComponentFactoryProxy {
   /// The ReactJS class used as the type for all [ReactElement]s built by
   /// this factory.

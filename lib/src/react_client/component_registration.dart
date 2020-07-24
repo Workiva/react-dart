@@ -85,7 +85,7 @@ ReactDartComponentFactoryProxy registerComponent(
   }
 }
 
-/// Creates and returns a new [ReactDartComponentFactoryProxy] from the provided [componentFactory]
+/// Creates and returns a new factory proxy from the provided [componentFactory]
 /// which produces a new JS [`ReactClass` component class](https://facebook.github.io/react/docs/top-level-api.html#react.createclass).
 ReactDartComponentFactoryProxy2 registerComponent2(
   ComponentFactory<Component2> componentFactory, {

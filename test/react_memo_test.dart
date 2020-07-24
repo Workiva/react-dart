@@ -1,10 +1,7 @@
 @TestOn('browser')
 library react.react_memo_test;
 
-import 'dart:async';
-import 'dart:developer';
 import 'dart:html';
-import 'dart:js_util';
 
 import 'package:react/react.dart' as react;
 import 'package:react/react_client.dart';
@@ -12,8 +9,6 @@ import 'package:react/react_test_utils.dart' as rtu;
 import 'package:test/test.dart';
 
 main() {
-  setClientConfiguration();
-
   Ref<_MemoTestWrapperComponent> memoTestWrapperComponentRef;
   Ref<Element> localCountDisplayRef;
   Ref<Element> valueMemoShouldIgnoreViaAreEqualDisplayRef;

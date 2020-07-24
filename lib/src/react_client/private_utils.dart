@@ -52,7 +52,9 @@ void validateJsApi() {
     // corresponding JS functions are not available.
     React.isValidElement(null);
     ReactDom.findDOMNode(null);
+    // ignore: deprecated_member_use_from_same_package
     createReactDartComponentClass(null, null, null);
+    createReactDartComponentClass2(null, null, null);
     _isJsApiValid = true;
   } on NoSuchMethodError catch (_) {
     throw new Exception('react.js and react_dom.js must be loaded.');
