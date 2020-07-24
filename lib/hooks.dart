@@ -327,7 +327,7 @@ ReducerHook<TState, TAction, TInit> useReducerLazy<TState, TAction, TInit>(
 /// ```
 ///
 /// Learn more: <https://reactjs.org/docs/hooks-reference.html#usecallback>.
-Function useCallback(Function callback, List dependencies) => React.useCallback(allowInterop(callback), dependencies);
+T useCallback<T extends Function>(T callback, List dependencies) => React.useCallback(allowInterop(callback), dependencies);
 
 /// Returns the value of the nearest [Context.Provider] for the provided [context] object every time that context is
 /// updated.
