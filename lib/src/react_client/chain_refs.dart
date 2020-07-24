@@ -1,3 +1,4 @@
+import 'package:js/js_util.dart';
 import 'package:react/react_client/react_interop.dart';
 
 /// Returns a ref that updates both [ref1] and [ref2], effectively
@@ -29,13 +30,13 @@ dynamic chainRefs(dynamic ref1, dynamic ref2) {
 
 /// Like [chainRefs], but takes in a list of [refs].
 dynamic chainRefList(List<dynamic> refs) {
+  final nonNullRefs = refs.where((ref) => ref != null).toList(growable: false);
+
   // Wrap in an assert so iteration doesn't take place unnecessarily
   assert(() {
-    refs.forEach(_validateChainRefsArg);
+    nonNullRefs.forEach(_validateChainRefsArg);
     return true;
   }());
-
-  final nonNullRefs = refs.where((ref) => ref != null).toList();
 
   // Return null if there are no refs to chain
   if (nonNullRefs.isEmpty) return null;
@@ -82,6 +83,15 @@ dynamic chainRefList(List<dynamic> refs) {
 }
 
 void _validateChainRefsArg(dynamic ref) {
-  assert(ref is! Function || ref is Function(Null), 'callback refs must take a single argument');
-  assert(ref is! String, 'String refs cannot be chained');
+  if (ref is Function(Null) ||
+      ref is Ref ||
+      // Need to duck-type since `is JsRef` will return true for most JS objects.
+      (ref is JsRef && hasProperty(ref, 'current'))) {
+    return;
+  }
+
+  if (ref is String) throw AssertionError('String refs cannot be chained');
+  if (ref is Function) throw AssertionError('callback refs must take a single argument');
+
+  throw AssertionError('Invalid ref type: $ref');
 }

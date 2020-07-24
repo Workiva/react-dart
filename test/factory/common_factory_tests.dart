@@ -332,101 +332,26 @@ void refTests<T>(ReactComponentFactoryProxy factory, {void verifyRefValue(dynami
     });
   });
 
-  group('chainRefs works', () {
-    test('with two typed callback refs', () {
-      var calls = <Map>[];
-
-      rtu.renderIntoDocument(factory({
-        'ref': chainRefs(
-          (T ref) => calls.add({'name': 'ref1', 'value': ref}),
-          (T ref) => calls.add({'name': 'ref2', 'value': ref}),
-        ),
-      }));
-
-      expect(calls, [
-        {'name': 'ref1', 'value': anything},
-        {'name': 'ref2', 'value': anything},
-      ]);
-      verifyRefValue(calls[0]['value']);
-      verifyRefValue(calls[1]['value']);
-    });
-
-    test('with a typed and untyped callback refs', () {
-      var calls = <Map>[];
-
-      rtu.renderIntoDocument(factory({
-        'ref': chainRefs(
-          (T ref) => calls.add({'name': 'ref1', 'value': ref}),
-          (ref) => calls.add({'name': 'ref2', 'value': ref}),
-        ),
-      }));
-
-      expect(calls, [
-        {'name': 'ref1', 'value': anything},
-        {'name': 'ref2', 'value': anything},
-      ]);
-      verifyRefValue(calls[0]['value']);
-      verifyRefValue(calls[1]['value']);
-    });
-
-    test('with two createRef refs', () {
-      final ref1 = react.createRef<T>();
-      final ref2 = react.createRef<T>();
-
-      rtu.renderIntoDocument(factory({
-        'ref': chainRefs(ref1, ref2),
-      }));
-
-      verifyRefValue(ref1.current);
-      verifyRefValue(ref2.current);
-    });
-
-    test('with a typed callback ref and a createRef', () {
-      var callbackRefCallValues = [];
-      final refObject = react.createRef<T>();
-
-      rtu.renderIntoDocument(factory({
-        'ref': chainRefs(
-          (T ref) => callbackRefCallValues.add(ref),
-          refObject,
-        ),
-      }));
-
-      expect(callbackRefCallValues, hasLength(1));
-      verifyRefValue(callbackRefCallValues[0]);
-      verifyRefValue(refObject.current);
-    });
-
-    // Other cases tested in chainRefs's own tests
-  });
-
   group('chainRefList works', () {
-    test('with a list of refs, ignoring any null values', () {
-      var calls = <Map>[];
+    test('with all different types of values, ignoring null', () {
+      final testCases = RefTestCase.allChainable<T>();
 
+      T refValue;
       rtu.renderIntoDocument(factory({
         'ref': chainRefList([
-          null,
-          (ref) => calls.add({'name': 'ref1', 'value': ref}),
-          null,
-          (ref) => calls.add({'name': 'ref2', 'value': ref}),
-          (ref) => calls.add({'name': 'ref3', 'value': ref}),
+          (ref) => refValue = ref,
           null,
           null,
-          (ref) => calls.add({'name': 'ref4', 'value': ref}),
+          ...testCases.map((t) => t.ref),
         ]),
       }));
+      // Test setup check: verify refValue is correct,
+      // which we'll use below to verify refs were updated.
+      verifyRefValue(refValue);
 
-      expect(calls, [
-        {'name': 'ref1', 'value': anything},
-        {'name': 'ref2', 'value': anything},
-        {'name': 'ref3', 'value': anything},
-        {'name': 'ref4', 'value': anything},
-      ]);
-      verifyRefValue(calls[0]['value']);
-      verifyRefValue(calls[1]['value']);
-      verifyRefValue(calls[2]['value']);
-      verifyRefValue(calls[3]['value']);
+      for (final testCase in testCases) {
+        testCase.verifyRefWasUpdated(refValue);
+      }
     });
 
     // Other cases tested in chainRefList's own tests

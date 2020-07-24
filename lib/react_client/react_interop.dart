@@ -82,8 +82,10 @@ class Ref<T> {
   T get current {
     final jsCurrent = jsRef.current;
 
-    if (jsCurrent is! Element) {
-      final dartCurrent = (jsCurrent as ReactComponent)?.dartComponent;
+    // Note: this ReactComponent check will pass for many types of JS objects,
+    // so don't assume for sure that it's a ReactComponent
+    if (jsCurrent is! Element && jsCurrent is ReactComponent) {
+      final dartCurrent = jsCurrent.dartComponent;
 
       if (dartCurrent != null) {
         return dartCurrent as T;
