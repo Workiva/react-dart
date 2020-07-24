@@ -6,11 +6,12 @@ library react.test.util;
 import 'dart:js_util' show getProperty;
 
 import 'package:js/js.dart';
-import 'package:react/react_client/react_interop.dart';
-
-import 'package:react/react_test_utils.dart' as rtu;
+import 'package:meta/meta.dart';
 import 'package:react/react.dart' as react;
 import 'package:react/react_client/js_backed_map.dart';
+import 'package:react/react_client/react_interop.dart';
+import 'package:react/react_test_utils.dart' as rtu;
+import 'package:test/test.dart';
 
 @JS('Object.keys')
 external List _objectKeys(obj);
@@ -53,4 +54,58 @@ Map unmodifiableMap([Map map1, Map map2, Map map3, Map map4]) {
   if (map3 != null) merged.addAll(map3);
   if (map4 != null) merged.addAll(map4);
   return new Map.unmodifiable(merged);
+}
+
+/// A test case that can be used for consuming a specific kind of ref and verifying
+/// it was updated properly when rendered.
+class RefTestCase {
+  final dynamic ref;
+  final Function(dynamic actualValue) verifyRefWasUpdated;
+
+  RefTestCase._({@required this.ref, @required this.verifyRefWasUpdated});
+
+  static RefTestCase untypedCallbackRefCase() {
+    final calls = [];
+    return RefTestCase._(
+      ref: (value) => calls.add(value),
+      verifyRefWasUpdated: (actualValue) => expect(calls, [same(actualValue)]),
+    );
+  }
+
+  static RefTestCase typedCallbackRefCase<T>() {
+    final calls = [];
+    return RefTestCase._(
+      ref: (T value) => calls.add(value),
+      verifyRefWasUpdated: (actualValue) => expect(calls, [same(actualValue)]),
+    );
+  }
+
+  static RefTestCase refObjectCase<T>() {
+    final ref = createRef<T>();
+    return RefTestCase._(
+      ref: ref,
+      verifyRefWasUpdated: (actualValue) => expect(ref.current, same(actualValue)),
+    );
+  }
+
+  static RefTestCase jsRefObjectCase() {
+    final ref = React.createRef();
+    return RefTestCase._(
+      ref: ref,
+      verifyRefWasUpdated: (actualValue) => expect(ref.current, same(actualValue)),
+    );
+  }
+
+  /// Test cases for each of the valid, chainable ref types:
+  ///
+  /// 1. callback ref with untyped argument
+  /// 2. callback ref with typed argument
+  /// 3. createRef (Dart wrapper)
+  /// 4. createRef (JS object)
+  static List<RefTestCase> allChainable<T>() => [
+        untypedCallbackRefCase(),
+        typedCallbackRefCase<T>(),
+        refObjectCase<T>(),
+        jsRefObjectCase(),
+      ];
 }

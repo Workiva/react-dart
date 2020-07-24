@@ -30,6 +30,7 @@ import 'package:react/src/ddc_emulated_function_name_bug.dart' as ddc_emulated_f
 
 export 'package:react/react_client/react_interop.dart' show ReactElement, ReactJsComponentFactory, inReactDevMode, Ref;
 export 'package:react/react.dart' show ReactComponentFactoryProxy, ComponentFactory;
+export 'package:react/src/react_client/chain_refs.dart' show chainRefs, chainRefList;
 
 /// The type of `Component.ref` specified as a callback.
 ///

@@ -6,6 +6,7 @@ import 'dart:js_util';
 
 import 'package:meta/meta.dart';
 import 'package:react/react_client/js_backed_map.dart';
+import 'package:react/src/react_client/chain_refs.dart';
 import 'package:test/test.dart';
 
 import 'package:react/react_client.dart';
@@ -303,15 +304,11 @@ void refTests<T>(ReactComponentFactoryProxy factory, {void verifyRefValue(dynami
     verifyRefValue(refObject.current);
   });
 
-  _typedCallbackRefTests<T>(factory);
-}
-
-void _typedCallbackRefTests<T>(react.ReactComponentFactoryProxy factory) {
-  if (T == dynamic) {
-    throw ArgumentError('Generic parameter T must be specified');
-  }
-
   group('has functional callback refs when they are typed as', () {
+    if (T == dynamic) {
+      throw ArgumentError('Generic parameter T must be specified');
+    }
+
     test('`dynamic Function(dynamic)`', () {
       T fooRef;
       callbackRef(dynamic ref) {
@@ -333,6 +330,31 @@ void _typedCallbackRefTests<T>(react.ReactComponentFactoryProxy factory) {
           reason: 'React should not have a problem with the ref we pass it, and calling it should not throw');
       expect(fooRef, isA<T>(), reason: 'should be the correct type, not be a NativeJavaScriptObject/etc.');
     });
+  });
+
+  group('chainRefList works', () {
+    test('with all different types of values, ignoring null', () {
+      final testCases = RefTestCase.allChainable<T>();
+
+      T refValue;
+      rtu.renderIntoDocument(factory({
+        'ref': chainRefList([
+          (ref) => refValue = ref,
+          null,
+          null,
+          ...testCases.map((t) => t.ref),
+        ]),
+      }));
+      // Test setup check: verify refValue is correct,
+      // which we'll use below to verify refs were updated.
+      verifyRefValue(refValue);
+
+      for (final testCase in testCases) {
+        testCase.verifyRefWasUpdated(refValue);
+      }
+    });
+
+    // Other cases tested in chainRefList's own tests
   });
 }
 

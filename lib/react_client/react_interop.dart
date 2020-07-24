@@ -82,14 +82,26 @@ class Ref<T> {
   T get current {
     final jsCurrent = jsRef.current;
 
-    if (jsCurrent is! Element) {
-      final dartCurrent = (jsCurrent as ReactComponent)?.dartComponent;
+    // Note: this ReactComponent check will pass for many types of JS objects,
+    // so don't assume for sure that it's a ReactComponent
+    if (jsCurrent is! Element && jsCurrent is ReactComponent) {
+      final dartCurrent = jsCurrent.dartComponent;
 
       if (dartCurrent != null) {
         return dartCurrent as T;
       }
     }
     return jsCurrent;
+  }
+
+  /// Used internally to combine refs https://github.com/facebook/react/issues/13029
+  @protected
+  set current(T value) {
+    if (value is Component) {
+      jsRef.current = value.jsThis;
+    } else {
+      jsRef.current = value;
+    }
   }
 }
 
@@ -101,6 +113,10 @@ class Ref<T> {
 @anonymous
 class JsRef {
   external dynamic get current;
+
+  /// Used internally to combine refs https://github.com/facebook/react/issues/13029
+  @protected
+  external set current(dynamic value);
 }
 
 /// Automatically passes a [Ref] through a component to one of its children.
