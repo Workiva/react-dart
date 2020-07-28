@@ -198,6 +198,7 @@ class ReactDartComponentFactoryProxy2<TComponent extends Component2> extends Rea
   final ReactClass reactClass;
 
   /// The JS component factory used by this factory to build [ReactElement]s.
+  @Deprecated('6.0.0')
   ReactJsComponentFactory get reactComponentFactory => React.createFactory(reactClass);
 
   final Map defaultProps;
@@ -225,6 +226,7 @@ class ReactJsContextComponentFactoryProxy extends ReactJsComponentFactoryProxy {
   final bool isProvider;
   final bool shouldConvertDomProps;
 
+  @Deprecated('6.0.0')
   Function get factory => React.createFactory(type);
 
   ReactJsContextComponentFactoryProxy(
@@ -271,6 +273,7 @@ class ReactJsComponentFactoryProxy extends ReactComponentFactoryProxy {
   final ReactClass type;
 
   /// The JS component factory used by this factory to build [ReactElement]s.
+  @Deprecated('6.0.0')
   Function get factory => React.createFactory(type);
 
   /// Whether to automatically prepare props relating to bound values and event handlers
@@ -319,6 +322,7 @@ class ReactDomComponentFactoryProxy extends ReactComponentFactoryProxy {
   final String name;
 
   /// The JS component factory used by this factory to build [ReactElement]s.
+  @Deprecated('6.0.0')
   Function get factory => React.createFactory(name);
 
   ReactDomComponentFactoryProxy(this.name) {
