@@ -262,9 +262,9 @@ ReactJsComponentFactoryProxy forwardRef(
 /// ```dart
 /// import 'package:react/react.dart' as react;
 ///
-/// final MyComponent = react.memo((props) {
+/// final MyComponent = react.memo(react.registerFunctionComponent((props) {
 ///   /* render using props */
-/// });
+/// }));
 /// ```
 ///
 /// `memo` only affects props changes. If your function component wrapped in `memo` has a
@@ -277,9 +277,9 @@ ReactJsComponentFactoryProxy forwardRef(
 /// ```dart
 /// import 'package:react/react.dart' as react;
 ///
-/// final MyComponent = react.memo((props) {
+/// final MyComponent = react.memo(react.registerFunctionComponent((props) {
 ///   // render using props
-/// }, areEqual: (prevProps, nextProps) {
+/// }), areEqual: (prevProps, nextProps) {
 ///   // Do some custom comparison logic to return a bool based on prevProps / nextProps
 /// });
 /// ```
