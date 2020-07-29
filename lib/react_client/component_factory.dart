@@ -120,6 +120,7 @@ class ReactDartComponentFactoryProxy<TComponent extends Component> extends React
       : this.reactClass = reactClass,
         this.defaultProps = reactClass.dartDefaultProps;
 
+  @override
   ReactClass get type => reactClass;
 
   ReactElement build(Map props, [List childrenArgs = const []]) {
@@ -208,6 +209,7 @@ class ReactDartComponentFactoryProxy2<TComponent extends Component2> extends Rea
       : this.reactClass = reactClass,
         this.defaultProps = new JsBackedMap.fromJs(reactClass.defaultProps);
 
+  @override
   ReactClass get type => reactClass;
 
   /// Returns a JavaScript version of the specified [props], preprocessed for consumption by ReactJS and prepared for
