@@ -219,10 +219,9 @@ external Function compositeComponent();
 
 /// A factory for a JS composite component, for use in testing.
 final Function testJsComponentFactory = (() {
-  var reactFactory = React.createFactory(compositeComponent());
-
+  final type = compositeComponent();
   return ([props = const {}, children]) {
-    return reactFactory(jsifyAndAllowInterop(props), listifyChildren(children));
+    return React.createElement(type, jsifyAndAllowInterop(props), listifyChildren(children));
   };
 })();
 

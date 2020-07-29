@@ -109,6 +109,7 @@ class ReactDartComponentFactoryProxy<TComponent extends Component> extends React
   final ReactClass reactClass;
 
   /// The JS component factory used by this factory to build [ReactElement]s.
+  @Deprecated('6.0.0')
   ReactJsComponentFactory get reactComponentFactory => React.createFactory(reactClass);
 
   /// The cached Dart default props retrieved from [reactClass] that are passed
@@ -125,7 +126,7 @@ class ReactDartComponentFactoryProxy<TComponent extends Component> extends React
     var children = convertArgsToChildren(childrenArgs);
     children = listifyChildren(children);
 
-    return reactComponentFactory(generateExtendedJsProps(props, children, defaultProps: defaultProps), children);
+    return React.createElement(type, generateExtendedJsProps(props, children, defaultProps: defaultProps), children);
   }
 
   /// Returns a JavaScript version of the specified [props], preprocessed for consumption by ReactJS and prepared for
