@@ -11,15 +11,13 @@ import 'package:react/react.dart' as react;
 import 'package:react/react_client/js_backed_map.dart';
 import 'package:react/react_client/react_interop.dart';
 import 'package:react/react_test_utils.dart' as rtu;
+import 'package:react/src/js_interop_util.dart';
 import 'package:test/test.dart';
-
-@JS('Object.keys')
-external List _objectKeys(obj);
 
 Map getProps(dynamic elementOrComponent) {
   var props = elementOrComponent.props;
 
-  return new Map.fromIterable(_objectKeys(props), value: (key) => getProperty(props, key));
+  return new Map.fromIterable(objectKeys(props), value: (key) => getProperty(props, key));
 }
 
 bool isDartComponent1(ReactElement element) =>

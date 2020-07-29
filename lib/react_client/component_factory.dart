@@ -8,11 +8,11 @@ import 'package:js/js.dart';
 import 'package:react/react.dart';
 import 'package:react/react_client.dart';
 import 'package:react/react_client/js_backed_map.dart';
-import 'package:react/react_client/private_utils.dart';
 import 'package:react/react_client/react_interop.dart';
 
 import 'package:react/src/context.dart';
 import 'package:react/src/ddc_emulated_function_name_bug.dart' as ddc_emulated_function_name_bug;
+import 'package:react/src/js_interop_util.dart';
 import 'package:react/src/typedefs.dart';
 import 'package:react/src/react_client/event_factory.dart';
 import 'package:react/src/react_client/event_prop_key_to_event_factory.dart';

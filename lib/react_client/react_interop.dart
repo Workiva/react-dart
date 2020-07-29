@@ -21,7 +21,7 @@ import 'package:react/react_client/js_backed_map.dart';
 import 'package:react/react_client/component_factory.dart'
     show ReactDartFunctionComponentFactoryProxy, ReactJsComponentFactoryProxy;
 import 'package:react/react_client/js_interop_helpers.dart';
-import 'package:react/react_client/private_utils.dart';
+import 'package:react/src/js_interop_util.dart';
 import 'package:react/src/react_client/dart2_interop_workaround_bindings.dart';
 
 typedef ReactElement ReactJsComponentFactory(props, children);

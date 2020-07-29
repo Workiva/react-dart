@@ -4,11 +4,8 @@ library react_client_private_utils;
 import 'dart:js_util';
 
 import 'package:js/js.dart';
-
 import 'package:react/react_client/react_interop.dart';
-
-@JS('Object.keys')
-external List<String> _objectKeys(Object object);
+import 'package:react/src/js_interop_util.dart';
 
 /// A flag used to cache whether React is accessible.
 ///
@@ -35,7 +32,7 @@ T validateJsApiThenReturn<T>(T Function() computeReturn) {
 @Deprecated('6.0.0')
 Map<String, dynamic> unjsifyContext(InteropContextValue interopContext) {
   // TODO consider using `contextKeys` for this if perf of objectKeys is bad.
-  return new Map.fromIterable(_objectKeys(interopContext), value: (key) {
+  return new Map.fromIterable(objectKeys(interopContext), value: (key) {
     // ignore: argument_type_not_assignable
     ReactDartContextInternal internal = getProperty(interopContext, key);
     return internal?.value;
