@@ -18,7 +18,8 @@ import 'package:react/react.dart';
 import 'package:react/react_client.dart' show ComponentFactory;
 import 'package:react/react_client/bridge.dart';
 import 'package:react/react_client/js_backed_map.dart';
-import 'package:react/react_client/component_factory.dart' show ReactJsComponentFactoryProxy;
+import 'package:react/react_client/component_factory.dart'
+    show ReactDartFunctionComponentFactoryProxy, ReactJsComponentFactoryProxy;
 import 'package:react/react_client/js_interop_helpers.dart';
 import 'package:react/react_client/private_utils.dart';
 import 'package:react/src/react_client/dart2_interop_workaround_bindings.dart';
@@ -262,9 +263,9 @@ ReactJsComponentFactoryProxy forwardRef(
 /// ```dart
 /// import 'package:react/react.dart' as react;
 ///
-/// final MyComponent = react.memo((props) {
+/// final MyComponent = react.memo(react.registerFunctionComponent((props) {
 ///   /* render using props */
-/// });
+/// }));
 /// ```
 ///
 /// `memo` only affects props changes. If your function component wrapped in `memo` has a
@@ -277,9 +278,9 @@ ReactJsComponentFactoryProxy forwardRef(
 /// ```dart
 /// import 'package:react/react.dart' as react;
 ///
-/// final MyComponent = react.memo((props) {
+/// final MyComponent = react.memo(react.registerFunctionComponent((props) {
 ///   // render using props
-/// }, areEqual: (prevProps, nextProps) {
+/// }), areEqual: (prevProps, nextProps) {
 ///   // Do some custom comparison logic to return a bool based on prevProps / nextProps
 /// });
 /// ```
@@ -289,11 +290,8 @@ ReactJsComponentFactoryProxy forwardRef(
 /// > Do not rely on it to “prevent” a render, as this can lead to bugs.
 ///
 /// See: <https://reactjs.org/docs/react-api.html#reactmemo>.
-ReactJsComponentFactoryProxy memo(
-  dynamic Function(Map props) wrapperFunction, {
-  bool Function(Map prevProps, Map nextProps) areEqual,
-  String displayName = 'Anonymous',
-}) {
+ReactJsComponentFactoryProxy memo(ReactDartFunctionComponentFactoryProxy factory,
+    {bool Function(Map prevProps, Map nextProps) areEqual}) {
   final _areEqual = areEqual == null
       ? null
       : allowInterop((JsMap prevProps, JsMap nextProps) {
@@ -301,16 +299,7 @@ ReactJsComponentFactoryProxy memo(
           final dartNextProps = JsBackedMap.backedBy(nextProps);
           return areEqual(dartPrevProps, dartNextProps);
         });
-
-  final wrappedComponent = allowInterop((JsMap props, [JsMap _]) {
-    final dartProps = JsBackedMap.backedBy(props);
-    return wrapperFunction(dartProps);
-  });
-
-  defineProperty(wrappedComponent, 'displayName', jsify({'value': displayName}));
-
-  final hoc = React.memo(wrappedComponent, _areEqual);
-
+  final hoc = React.memo(factory.type, _areEqual);
   return ReactJsComponentFactoryProxy(hoc);
 }
 

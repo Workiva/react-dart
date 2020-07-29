@@ -68,7 +68,7 @@ class _MemoTestDemoWrapper extends react.Component2 {
   }
 }
 
-final MemoTest = react.memo((Map props) {
+final MemoTest = react.memo(react.registerFunctionComponent((Map props) {
   final context = useContext(TestNewContext);
   return react.div(
     {},
@@ -89,9 +89,9 @@ final MemoTest = react.memo((Map props) {
       ' (should never update)',
     ),
   );
-}, areEqual: (prevProps, nextProps) {
+}), areEqual: (prevProps, nextProps) {
   return prevProps['localCount'] == nextProps['localCount'];
-}, displayName: 'MemoTest');
+});
 
 var useReducerTestFunctionComponent =
     react.registerFunctionComponent(UseReducerTestComponent, displayName: 'useReducerTest');

@@ -16,7 +16,6 @@ main() {
 
   void renderMemoTest({
     bool testAreEqual = false,
-    String displayName,
   }) {
     expect(memoTestWrapperComponentRef, isNotNull, reason: 'test setup sanity check');
     expect(localCountDisplayRef, isNotNull, reason: 'test setup sanity check');
@@ -28,7 +27,7 @@ main() {
             return prevProps['localCount'] == nextProps['localCount'];
           };
 
-    final MemoTest = react.memo((Map props) {
+    final MemoTest = react.memo(react.registerFunctionComponent((Map props) {
       childMemoRenderCount++;
       return react.div(
         {},
@@ -41,7 +40,7 @@ main() {
           props['valueMemoShouldIgnoreViaAreEqual'],
         ),
       );
-    }, areEqual: customAreEqualFn, displayName: displayName);
+    }), areEqual: customAreEqualFn);
 
     rtu.renderIntoDocument(MemoTestWrapper({
       'ref': memoTestWrapperComponentRef,
