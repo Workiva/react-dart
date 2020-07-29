@@ -41,6 +41,7 @@ abstract class React {
   ]);
   @Deprecated('6.0.0')
   external static ReactClass createClass(ReactClassConfig reactClassConfig);
+  @Deprecated('6.0.0')
   external static ReactJsComponentFactory createFactory(type);
   external static ReactElement createElement(dynamic type, props, [dynamic children]);
   external static JsRef createRef();
