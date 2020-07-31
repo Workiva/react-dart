@@ -321,65 +321,69 @@ void refTests<T>(ReactComponentFactoryProxy factory, {void verifyRefValue(dynami
   });
 
   group('forwardRef wraps children in a list when the child a is:', () {
-      final simpleFactory = factory({
-        'id': 'test',
+    final simpleFactory = factory({
+      'id': 'test',
+    });
+
+    var ForwardRefTestComponent = forwardRef((props, ref) {
+      // Extra type checking since JS refs being passed through
+      // aren't caught by built-in type checking.
+      expect(ref, isA<Ref>());
+      expect(props['children'], isA<List>());
+
+      return factory({
+        'ref': ref,
+        'id': props['childId'],
       });
+    });
 
-      var ForwardRefTestComponent = forwardRef((props, ref) {
-        // Extra type checking since JS refs being passed through
-        // aren't caught by built-in type checking.
-        expect(ref, isA<Ref>());
-        expect(props['children'], isA<List>());
+    final Ref refObject = createRef();
 
-        return factory({
-          'ref': ref,
-          'id': props['childId'],
-        });
-      });
+    test('String', () {
+      rtu.renderIntoDocument(ForwardRefTestComponent({
+        'ref': refObject,
+        'childId': 'test',
+      }, 'a string child'));
+    });
 
-      final Ref refObject = createRef();
+    test('boolean', () {
+      rtu.renderIntoDocument(ForwardRefTestComponent({
+        'ref': refObject,
+        'childId': 'test',
+      }, true));
+    });
 
-      test('String', () {
-        rtu.renderIntoDocument(ForwardRefTestComponent({
-          'ref': refObject,
-          'childId': 'test',
-        }, 'a string child'));
-      });
+    test('null', () {
+      rtu.renderIntoDocument(ForwardRefTestComponent({
+        'ref': refObject,
+        'childId': 'test',
+      }, null));
+    });
 
-      test('boolean', () {
-        rtu.renderIntoDocument(ForwardRefTestComponent({
-          'ref': refObject,
-          'childId': 'test',
-        }, true));
-      });
+    test('List', () {
+      rtu.renderIntoDocument(ForwardRefTestComponent({
+        'ref': refObject,
+        'childId': 'test',
+      }, [
+        simpleFactory,
+        null,
+        'a string'
+      ]));
+    });
 
-      test('null', () {
-        rtu.renderIntoDocument(ForwardRefTestComponent({
-          'ref': refObject,
-          'childId': 'test',
-        }, null));
-      });
+    test('Component', () {
+      rtu.renderIntoDocument(ForwardRefTestComponent({
+        'ref': refObject,
+        'childId': 'test',
+      }, simpleFactory));
+    });
 
-      test('List', () {
-        rtu.renderIntoDocument(ForwardRefTestComponent({
-          'ref': refObject,
-          'childId': 'test',
-        }, [simpleFactory, null, 'a string']));
-      });
-
-      test('Component', () {
-        rtu.renderIntoDocument(ForwardRefTestComponent({
-          'ref': refObject,
-          'childId': 'test',
-        }, simpleFactory));
-      });
-
-      test('function', () {
-        rtu.renderIntoDocument(ForwardRefTestComponent({
-          'ref': refObject,
-          'childId': 'test',
-        }, () => simpleFactory));
-      });
+    test('function', () {
+      rtu.renderIntoDocument(ForwardRefTestComponent({
+        'ref': refObject,
+        'childId': 'test',
+      }, () => simpleFactory));
+    });
   });
 
   group('forwardRef sets displayName on the rendered component as expected', () {
