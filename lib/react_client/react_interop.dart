@@ -249,7 +249,7 @@ ReactJsComponentFactoryProxy forwardRef(
 
   var hoc = React.forwardRef(wrappedComponent);
 
-  return ReactJsComponentFactoryProxy(hoc);
+  return ReactJsComponentFactoryProxy(hoc, alwaysReturnChildrenAsList: true);
 }
 
 /// A [higher order component](https://reactjs.org/docs/higher-order-components.html) for function components
