@@ -22,7 +22,11 @@ import 'package:react/react_client/react_interop.dart';
 
 import '../util.dart';
 
-void commonFactoryTests(ReactComponentFactoryProxy factory, {bool isFunctionComponent = false}) {
+/// Runs common tests for [factory].
+///
+/// [dartComponentVersion] should be specified for all components with Dart render code in order to
+/// properly test `props.children`, forwardRef compatibility, etc.
+void commonFactoryTests(ReactComponentFactoryProxy factory, {bool isFunctionComponent = false, String dartComponentVersion}) {
   _childKeyWarningTests(
     factory,
     renderWithUniqueOwnerName: _renderWithUniqueOwnerName,
@@ -34,17 +38,22 @@ void commonFactoryTests(ReactComponentFactoryProxy factory, {bool isFunctionComp
     expect(instance.type, equals(factory.type));
   });
 
-  void sharedChildrenTests(dynamic getChildren(ReactElement instance), {@required bool shouldAlwaysBeList}) {
+  test('has a type with the expected ReactDartComponentVersion', () {
+    // ignore: invalid_use_of_protected_member
+    expect(ReactDartComponentVersion.fromType(factory.type), dartComponentVersion);
+  });
+
+  void sharedChildrenTests(dynamic getChildren(ReactElement instance), {@required bool shouldAlwaysBeList, Map props = const {}}) {
     // There are different code paths for 0, 1, 2, 3, 4, 5, 6, and 6+ arguments.
     // Test all of them.
     group('a number of variadic children:', () {
       test('0', () {
-        final instance = factory({});
+        final instance = factory({...props});
         expect(getChildren(instance), shouldAlwaysBeList ? [] : isNull);
       });
 
       test('1', () {
-        final instance = factory({}, 1);
+        final instance = factory({...props}, 1);
         expect(getChildren(instance), shouldAlwaysBeList ? [1] : 1);
       });
 
@@ -55,14 +64,14 @@ void commonFactoryTests(ReactComponentFactoryProxy factory, {bool isFunctionComp
 
         test('$childrenCount', () {
           final expectedChildren = new List.generate(childrenCount, (i) => i + 1);
-          final arguments = <dynamic>[{}]..add(expectedChildren);
+          final arguments = <dynamic>[{...props}]..add(expectedChildren);
           final instance = Function.apply(factory, arguments);
           expect(getChildren(instance), expectedChildren);
         });
       }
 
       test('$maxSupportedVariadicChildCount (and passes static analysis)', () {
-        final instance = factory({}, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23,
+        final instance = factory({...props}, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23,
             24, 25, 26, 27, 28, 29, 30, 31, 32, 33, 34, 35, 36, 37, 38, 39, 40);
         // Generate these instead of hard coding them to ensure the arguments passed into this test match maxSupportedVariadicChildCount
         final expectedChildren = new List.generate(maxSupportedVariadicChildCount, (i) => i + 1);
@@ -71,7 +80,7 @@ void commonFactoryTests(ReactComponentFactoryProxy factory, {bool isFunctionComp
     });
 
     test('a List', () {
-      var instance = factory({}, [
+      var instance = factory({...props}, [
         'one',
         'two',
       ]);
@@ -79,17 +88,17 @@ void commonFactoryTests(ReactComponentFactoryProxy factory, {bool isFunctionComp
     });
 
     test('an empty List', () {
-      var instance = factory({}, []);
+      var instance = factory({...props}, []);
       expect(getChildren(instance), equals([]));
     });
 
     test('an Iterable', () {
-      var instance = factory({}, new Iterable.generate(3, (int i) => '$i'));
+      var instance = factory({...props}, new Iterable.generate(3, (int i) => '$i'));
       expect(getChildren(instance), equals(['0', '1', '2']));
     });
 
     test('an empty Iterable', () {
-      var instance = factory({}, new Iterable.empty());
+      var instance = factory({...props}, new Iterable.empty());
       expect(getChildren(instance), equals([]));
     });
   }
@@ -103,17 +112,43 @@ void commonFactoryTests(ReactComponentFactoryProxy factory, {bool isFunctionComp
         shouldAlwaysBeList: isDartComponent2(factory({})));
   });
 
-  // Skipped for Function Components because they dont have instance members ... they are functions.
-  if (isDartComponent(factory({})) && !isFunctionComponent) {
+  if (isDartComponent(factory({}))) {
     group('passes children to the Dart component when specified as', () {
+      final notCalledSentinelValue = Object();
+      dynamic childrenFromLastRender;
+      void onDartRender(Map props) => childrenFromLastRender = props['children'];
+
       dynamic getDartChildren(ReactElement instance) {
-        // Actually render the component to provide full end-to-end coverage
-        // from ReactElement to `this.props`.
-        ReactComponent renderedInstance = rtu.renderIntoDocument(instance);
-        return renderedInstance.dartComponent.props['children'];
+        // Set to a value that won't ever be equal to children, so we can tell whether it was called.
+        childrenFromLastRender = notCalledSentinelValue;
+        rtu.renderIntoDocument(instance);
+        final children = childrenFromLastRender;
+        if (childrenFromLastRender == notCalledSentinelValue) {
+          throw StateError('onDartRender was not called when rendering `instance`. '
+              'Ensure the `props` argument are being passed to the factory.');
+        }
+        return children;
       }
 
-      sharedChildrenTests(getDartChildren, shouldAlwaysBeList: true);
+      sharedChildrenTests(getDartChildren, shouldAlwaysBeList: true, props: {'onDartRender': onDartRender});
+    });
+  }
+
+  if (isDartComponent2(factory({}))) {
+    test('executes Dart render code in the component zone', () {
+      final oldComponentZone = componentZone;
+      addTearDown(() => componentZone = oldComponentZone);
+      componentZone = Zone.current.fork();
+      expect(componentZone, isNot(Zone.current), reason: 'test setup: component zone should be different than the zone used to render it');
+
+      Zone renderZone;
+      rtu.renderIntoDocument(factory({
+        'onDartRender': (_) {
+          renderZone = Zone.current;
+        }
+      }));
+      expect(renderZone, isNotNull, reason: 'test setup: onDartRender should have been called');
+      expect(renderZone, same(componentZone));
     });
   }
 }
@@ -284,10 +319,9 @@ void refTests<T>(ReactComponentFactoryProxy factory, {void verifyRefValue(dynami
   });
 
   test('forwardRef function passes a ref through a component to one of its children', () {
+    dynamic actualRef;
     var ForwardRefTestComponent = forwardRef((props, ref) {
-      // Extra type checking since JS refs being passed through
-      // aren't caught by built-in type checking.
-      expect(ref, isA<Ref>());
+      actualRef = ref;
 
       return factory({
         'ref': ref,
@@ -301,6 +335,10 @@ void refTests<T>(ReactComponentFactoryProxy factory, {void verifyRefValue(dynami
       'ref': refObject,
       'childId': 'test',
     }));
+
+    // Extra type checking since JS refs being passed through
+    // aren't caught by built-in type checking.
+    expect(actualRef, isA<Ref>());
 
     // Props are accessed differently for DOM, Dart, and JS components.
     var idValue;
@@ -348,7 +386,6 @@ void refTests<T>(ReactComponentFactoryProxy factory, {void verifyRefValue(dynami
   });
 
   group('forwardRef wraps event handlers properly,', () {
-    final isDartComponent = factory is ReactDartComponentFactoryProxy;
 
     const dartInside = EventTestCase.dart('onMouseDown', 'inside forwardRef');
     const dart = EventTestCase.dart('onMouseUp', 'set on forwardRef hoc');
@@ -375,7 +412,7 @@ void refTests<T>(ReactComponentFactoryProxy factory, {void verifyRefValue(dynami
             propsFromDartRender = p;
           },
           dartInside.eventPropKey: (event) => events[dartInside] = event,
-          isDartComponent ? 'forwardedRef' : 'ref': ref,
+          isDartComponent(factory({})) ? 'forwardedRef' : 'ref': ref,
         }, props['children']);
       });
 
@@ -418,7 +455,7 @@ void refTests<T>(ReactComponentFactoryProxy factory, {void verifyRefValue(dynami
       }
     });
 
-    if (isDartComponent) {
+    if (isDartComponent(factory({}))) {
       group('in a way that the handlers are callable from within the Dart component:', () {
         setUpAll(() {
           expect(propsFromDartRender, isNotNull,

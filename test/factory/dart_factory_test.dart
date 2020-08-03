@@ -1,5 +1,6 @@
 // ignore_for_file: deprecated_member_use_from_same_package
 // ignore_for_file: invalid_use_of_protected_member
+import 'package:react/react_client/react_interop.dart';
 @TestOn('browser')
 import 'package:test/test.dart';
 
@@ -17,7 +18,7 @@ main() {
     group('- common factory behavior -', () {
       group('Component -', () {
         group('- common factory behavior -', () {
-          commonFactoryTests(Foo);
+          commonFactoryTests(Foo, dartComponentVersion: ReactDartComponentVersion.component);
         });
 
         group('- refs -', () {
@@ -29,7 +30,7 @@ main() {
 
       group('Component2 -', () {
         group('- common factory behavior -', () {
-          commonFactoryTests(Foo2);
+          commonFactoryTests(Foo2, dartComponentVersion: ReactDartComponentVersion.component2);
         });
 
         group('- refs -', () {

@@ -4,6 +4,7 @@
 
 import 'package:js/js_util.dart';
 import 'package:react/react.dart' as react;
+import 'package:react/react_client/react_interop.dart';
 import 'package:test/test.dart';
 
 import 'common_factory_tests.dart';
@@ -16,7 +17,11 @@ main() {
 
     group('Function Component -', () {
       group('- common factory behavior -', () {
-        commonFactoryTests(FunctionFoo, isFunctionComponent: true);
+        commonFactoryTests(
+          FunctionFoo,
+          isFunctionComponent: true,
+          dartComponentVersion: ReactDartComponentVersion.component2,
+        );
       });
 
       group('displayName', () {
@@ -38,6 +43,16 @@ main() {
       });
     });
   });
+
+  group('forwardRef', () {
+    group('- common factory behavior -', () {
+      commonFactoryTests(
+        ForwardRefTest,
+        isFunctionComponent: true,
+        dartComponentVersion: ReactDartComponentVersion.component2,
+      );
+    });
+  });
 }
 
 String _getJsFunctionName(Function object) => getProperty(object, 'name') ?? getProperty(object, '\$static_name');
@@ -50,3 +65,8 @@ _FunctionFoo(Map props) {
   props['onDartRender']?.call(props);
   return react.div({});
 }
+
+final ForwardRefTest = react.forwardRef((props, ref) {
+  props['onDartRender']?.call(props);
+  return react.div({...props, 'ref': ref});
+});
