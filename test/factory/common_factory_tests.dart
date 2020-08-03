@@ -50,12 +50,12 @@ void commonFactoryTests(ReactComponentFactoryProxy factory,
     // Test all of them.
     group('a number of variadic children:', () {
       test('0', () {
-        final instance = factory({...props});
+        final instance = factory(props);
         expect(getChildren(instance), shouldAlwaysBeList ? [] : isNull);
       });
 
       test('1', () {
-        final instance = factory({...props}, 1);
+        final instance = factory(props, 1);
         expect(getChildren(instance), shouldAlwaysBeList ? [1] : 1);
       });
 
@@ -66,17 +66,15 @@ void commonFactoryTests(ReactComponentFactoryProxy factory,
 
         test('$childrenCount', () {
           final expectedChildren = new List.generate(childrenCount, (i) => i + 1);
-          final arguments = <dynamic>[
-            {...props}
-          ]..add(expectedChildren);
+          final arguments = <dynamic>[props, ...expectedChildren];
           final instance = Function.apply(factory, arguments);
           expect(getChildren(instance), expectedChildren);
         });
       }
 
       test('$maxSupportedVariadicChildCount (and passes static analysis)', () {
-        final instance = factory({...props}, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21,
-            22, 23, 24, 25, 26, 27, 28, 29, 30, 31, 32, 33, 34, 35, 36, 37, 38, 39, 40);
+        final instance = factory(props, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22,
+            23, 24, 25, 26, 27, 28, 29, 30, 31, 32, 33, 34, 35, 36, 37, 38, 39, 40);
         // Generate these instead of hard coding them to ensure the arguments passed into this test match maxSupportedVariadicChildCount
         final expectedChildren = new List.generate(maxSupportedVariadicChildCount, (i) => i + 1);
         expect(getChildren(instance), equals(expectedChildren));
@@ -84,9 +82,7 @@ void commonFactoryTests(ReactComponentFactoryProxy factory,
     });
 
     test('a List', () {
-      var instance = factory({
-        ...props
-      }, [
+      var instance = factory(props, [
         'one',
         'two',
       ]);
@@ -94,17 +90,17 @@ void commonFactoryTests(ReactComponentFactoryProxy factory,
     });
 
     test('an empty List', () {
-      var instance = factory({...props}, []);
+      var instance = factory(props, []);
       expect(getChildren(instance), equals([]));
     });
 
     test('an Iterable', () {
-      var instance = factory({...props}, new Iterable.generate(3, (int i) => '$i'));
+      var instance = factory(props, new Iterable.generate(3, (int i) => '$i'));
       expect(getChildren(instance), equals(['0', '1', '2']));
     });
 
     test('an empty Iterable', () {
-      var instance = factory({...props}, new Iterable.empty());
+      var instance = factory(props, new Iterable.empty());
       expect(getChildren(instance), equals([]));
     });
   }
@@ -136,7 +132,13 @@ void commonFactoryTests(ReactComponentFactoryProxy factory,
         return children;
       }
 
-      sharedChildrenTests(getDartChildren, shouldAlwaysBeList: true, props: {'onDartRender': onDartRender});
+      sharedChildrenTests(
+        getDartChildren,
+        shouldAlwaysBeList: true,
+        props: Map.unmodifiable({
+          'onDartRender': onDartRender,
+        }),
+      );
     });
   }
 
