@@ -1,6 +1,7 @@
 // ignore_for_file: deprecated_member_use_from_same_package
 // ignore_for_file: invalid_use_of_protected_member
 @TestOn('browser')
+library react.dart_function_factory_test;
 
 import 'package:js/js_util.dart';
 import 'package:react/react.dart' as react;

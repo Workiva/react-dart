@@ -26,7 +26,8 @@ import '../util.dart';
 ///
 /// [dartComponentVersion] should be specified for all components with Dart render code in order to
 /// properly test `props.children`, forwardRef compatibility, etc.
-void commonFactoryTests(ReactComponentFactoryProxy factory, {bool isFunctionComponent = false, String dartComponentVersion}) {
+void commonFactoryTests(ReactComponentFactoryProxy factory,
+    {bool isFunctionComponent = false, String dartComponentVersion}) {
   _childKeyWarningTests(
     factory,
     renderWithUniqueOwnerName: _renderWithUniqueOwnerName,
@@ -43,17 +44,18 @@ void commonFactoryTests(ReactComponentFactoryProxy factory, {bool isFunctionComp
     expect(ReactDartComponentVersion.fromType(factory.type), dartComponentVersion);
   });
 
-  void sharedChildrenTests(dynamic getChildren(ReactElement instance), {@required bool shouldAlwaysBeList, Map props = const {}}) {
+  void sharedChildrenTests(dynamic getChildren(ReactElement instance),
+      {@required bool shouldAlwaysBeList, Map props = const {}}) {
     // There are different code paths for 0, 1, 2, 3, 4, 5, 6, and 6+ arguments.
     // Test all of them.
     group('a number of variadic children:', () {
       test('0', () {
-        final instance = factory({...props});
+        final instance = factory(props);
         expect(getChildren(instance), shouldAlwaysBeList ? [] : isNull);
       });
 
       test('1', () {
-        final instance = factory({...props}, 1);
+        final instance = factory(props, 1);
         expect(getChildren(instance), shouldAlwaysBeList ? [1] : 1);
       });
 
@@ -64,15 +66,15 @@ void commonFactoryTests(ReactComponentFactoryProxy factory, {bool isFunctionComp
 
         test('$childrenCount', () {
           final expectedChildren = new List.generate(childrenCount, (i) => i + 1);
-          final arguments = <dynamic>[{...props}]..add(expectedChildren);
+          final arguments = <dynamic>[props, ...expectedChildren];
           final instance = Function.apply(factory, arguments);
           expect(getChildren(instance), expectedChildren);
         });
       }
 
       test('$maxSupportedVariadicChildCount (and passes static analysis)', () {
-        final instance = factory({...props}, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23,
-            24, 25, 26, 27, 28, 29, 30, 31, 32, 33, 34, 35, 36, 37, 38, 39, 40);
+        final instance = factory(props, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22,
+            23, 24, 25, 26, 27, 28, 29, 30, 31, 32, 33, 34, 35, 36, 37, 38, 39, 40);
         // Generate these instead of hard coding them to ensure the arguments passed into this test match maxSupportedVariadicChildCount
         final expectedChildren = new List.generate(maxSupportedVariadicChildCount, (i) => i + 1);
         expect(getChildren(instance), equals(expectedChildren));
@@ -80,7 +82,7 @@ void commonFactoryTests(ReactComponentFactoryProxy factory, {bool isFunctionComp
     });
 
     test('a List', () {
-      var instance = factory({...props}, [
+      var instance = factory(props, [
         'one',
         'two',
       ]);
@@ -88,17 +90,17 @@ void commonFactoryTests(ReactComponentFactoryProxy factory, {bool isFunctionComp
     });
 
     test('an empty List', () {
-      var instance = factory({...props}, []);
+      var instance = factory(props, []);
       expect(getChildren(instance), equals([]));
     });
 
     test('an Iterable', () {
-      var instance = factory({...props}, new Iterable.generate(3, (int i) => '$i'));
+      var instance = factory(props, new Iterable.generate(3, (int i) => '$i'));
       expect(getChildren(instance), equals(['0', '1', '2']));
     });
 
     test('an empty Iterable', () {
-      var instance = factory({...props}, new Iterable.empty());
+      var instance = factory(props, new Iterable.empty());
       expect(getChildren(instance), equals([]));
     });
   }
@@ -130,7 +132,13 @@ void commonFactoryTests(ReactComponentFactoryProxy factory, {bool isFunctionComp
         return children;
       }
 
-      sharedChildrenTests(getDartChildren, shouldAlwaysBeList: true, props: {'onDartRender': onDartRender});
+      sharedChildrenTests(
+        getDartChildren,
+        shouldAlwaysBeList: true,
+        props: Map.unmodifiable({
+          'onDartRender': onDartRender,
+        }),
+      );
     });
   }
 
@@ -139,7 +147,8 @@ void commonFactoryTests(ReactComponentFactoryProxy factory, {bool isFunctionComp
       final oldComponentZone = componentZone;
       addTearDown(() => componentZone = oldComponentZone);
       componentZone = Zone.current.fork();
-      expect(componentZone, isNot(Zone.current), reason: 'test setup: component zone should be different than the zone used to render it');
+      expect(componentZone, isNot(Zone.current),
+          reason: 'test setup: component zone should be different than the zone used to render it');
 
       Zone renderZone;
       rtu.renderIntoDocument(factory({
@@ -386,7 +395,6 @@ void refTests<T>(ReactComponentFactoryProxy factory, {void verifyRefValue(dynami
   });
 
   group('forwardRef wraps event handlers properly,', () {
-
     const dartInside = EventTestCase.dart('onMouseDown', 'inside forwardRef');
     const dart = EventTestCase.dart('onMouseUp', 'set on forwardRef hoc');
     const dartCloned = EventTestCase.dart('onMouseLeave', 'cloned onto forwardRef hoc');
