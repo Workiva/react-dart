@@ -1,7 +1,9 @@
+@TestOn('browser')
+library react.dart_factory_test;
+
 // ignore_for_file: deprecated_member_use_from_same_package
 // ignore_for_file: invalid_use_of_protected_member
 import 'package:react/react_client/react_interop.dart';
-@TestOn('browser')
 import 'package:test/test.dart';
 
 import 'package:react/react.dart' as react;
