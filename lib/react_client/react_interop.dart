@@ -21,6 +21,7 @@ import 'package:react/react_client/js_backed_map.dart';
 import 'package:react/react_client/component_factory.dart'
     show ReactDartFunctionComponentFactoryProxy, ReactJsComponentFactoryProxy;
 import 'package:react/react_client/js_interop_helpers.dart';
+import 'package:react/react_client/zone.dart';
 import 'package:react/src/js_interop_util.dart';
 import 'package:react/src/react_client/dart2_interop_workaround_bindings.dart';
 
@@ -232,22 +233,24 @@ ReactJsComponentFactoryProxy forwardRef(
   Function(Map props, Ref ref) wrapperFunction, {
   String displayName = 'Anonymous',
 }) {
-  final wrappedComponent = allowInterop((JsMap props, JsRef ref) {
-    final dartProps = JsBackedMap.backedBy(props);
-    for (var value in dartProps.values) {
-      if (value is Function) {
-        // Tag functions that came straight from the JS
-        // so that we know to pass them through as-is during prop conversion.
-        isRawJsFunctionFromProps[value] = true;
-      }
-    }
+  final wrappedComponent = allowInterop((JsMap props, JsRef ref) => componentZone.run(() {
+        final dartProps = JsBackedMap.backedBy(props);
+        for (var value in dartProps.values) {
+          if (value is Function) {
+            // Tag functions that came straight from the JS
+            // so that we know to pass them through as-is during prop conversion.
+            isRawJsFunctionFromProps[value] = true;
+          }
+        }
 
-    final dartRef = Ref.fromJs(ref);
-    return wrapperFunction(dartProps, dartRef);
-  });
+        final dartRef = Ref.fromJs(ref);
+        return wrapperFunction(dartProps, dartRef);
+      }));
   defineProperty(wrappedComponent, 'displayName', jsify({'value': displayName}));
 
   var hoc = React.forwardRef(wrappedComponent);
+  // ignore: invalid_use_of_protected_member
+  setProperty(hoc, 'dartComponentVersion', ReactDartComponentVersion.component2);
 
   return ReactJsComponentFactoryProxy(hoc, alwaysReturnChildrenAsList: true);
 }
