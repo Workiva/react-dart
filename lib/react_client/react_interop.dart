@@ -303,7 +303,9 @@ ReactJsComponentFactoryProxy memo(ReactDartFunctionComponentFactoryProxy factory
           return areEqual(dartPrevProps, dartNextProps);
         });
   final hoc = React.memo(factory.type, _areEqual);
-  return ReactJsComponentFactoryProxy(hoc);
+  setProperty(hoc, 'dartComponentVersion', ReactDartComponentVersion.component2);
+
+  return ReactJsComponentFactoryProxy(hoc, alwaysReturnChildrenAsList: true);
 }
 
 abstract class ReactDom {
