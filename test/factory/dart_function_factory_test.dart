@@ -53,6 +53,16 @@ main() {
       );
     });
   });
+
+  group('memo', () {
+    group('- common factory behavior -', () {
+      commonFactoryTests(
+        MemoTest,
+        isFunctionComponent: true,
+        dartComponentVersion: ReactDartComponentVersion.component2,
+      );
+    });
+  });
 }
 
 String _getJsFunctionName(Function object) => getProperty(object, 'name') ?? getProperty(object, '\$static_name');
@@ -70,3 +80,8 @@ final ForwardRefTest = react.forwardRef((props, ref) {
   props['onDartRender']?.call(props);
   return react.div({...props, 'ref': ref});
 });
+
+final MemoTest = react.memo(react.registerFunctionComponent((props) {
+  props['onDartRender']?.call(props);
+  return react.div({...props});
+}));
