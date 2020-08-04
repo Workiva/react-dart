@@ -106,14 +106,14 @@ var aButton = button({"onClick": (SyntheticMouseEvent event) => print(event)});
 
 ### Defining custom components
 
-1. Define custom class that extends Component and implements - at a minimum - `render`.
+1. Define custom class that extends Component2 and implements - at a minimum - `render`.
 
     ```dart
     // cool_widget.dart
 
     import 'package:react/react.dart';
 
-    class CoolWidgetComponent extends Component {
+    class CoolWidgetComponent extends Component2 {
       render() => div({}, "CoolWidgetComponent");
     }
     ```
@@ -150,7 +150,7 @@ var aButton = button({"onClick": (SyntheticMouseEvent event) => print(event)});
 
 import 'package:react/react.dart';
 
-class CoolWidgetComponent extends Component {
+class CoolWidgetComponent extends Component2 {
   @override
   render() {
     return div({}, props['text']);
@@ -192,7 +192,7 @@ CoolWidgetType CoolWidget({String headline, String text, int counter}) {
   return _CoolWidget({'headline':headline, 'text':text});
 }
 
-class CoolWidgetComponent extends Component {
+class CoolWidgetComponent extends Component2 {
   String get headline => props['headline'];
   String get text => props['text'];
   int get counter => props['counter'];
@@ -232,12 +232,12 @@ void main() {
 
 #### React Component Lifecycle methods
 
-The `Component` class mirrors ReactJS' `React.Component` class, and contains all the same methods.
+The `Component2` class mirrors ReactJS' `React.Component` class, and contains all the same methods.
 
 > See: [ReactJS Lifecycle Method Documentation](https://reactjs.org/docs/react-component.html) for more information.
 
 ```dart
-class MyComponent extends Component {
+class MyComponent extends Component2 {
   @override
   void componentWillMount() {}
 
@@ -285,7 +285,7 @@ you can call top level `findDOMNode` on anything the ref returns.
 
 ```dart
 var DartComponent = registerComponent(() => new _DartComponent());
-class _DartComponent extends Component {
+class _DartComponent extends Component2 {
   @override
   render() => div({});
 
@@ -295,7 +295,7 @@ class _DartComponent extends Component {
 }
 
 var ParentComponent = registerComponent(() => new _ParentComponent());
-class _ParentComponent extends Component {
+class _ParentComponent extends Component2 {
   InputElement inputRef; // Returns the DOM node.
   _DartComponent dartComponentRef; // Returns instance of _DartComponent
 
@@ -339,7 +339,7 @@ import 'package:react/react.dart' as react;
 import 'package:react/react_dom.dart' as react_dom;
 import 'package:react/react_test_utils.dart' as react_test_utils;
 
-class MyTestComponent extends react.Component {
+class MyTestComponent extends react.Component2 {
   @override
   Map getInitialState() => {'text': 'testing...'};
 

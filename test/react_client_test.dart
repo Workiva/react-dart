@@ -172,6 +172,46 @@ main() {
       expect(result, isNull);
     });
   });
+
+  group('registerComponent', () {
+    test('throws with printed error', () {
+      expect(() => react.registerComponent(() => ThrowsInDefaultPropsComponent()), throwsStateError);
+      expect(() {
+        try {
+          react.registerComponent(() => ThrowsInDefaultPropsComponent());
+        } catch (_) {}
+      }, prints(contains('Error when registering Component:')));
+    });
+  });
+
+  group('registerComponent2', () {
+    test('throws with specific error when defaultProps throws', () {
+      expect(() => react.registerComponent2(() => ThrowsInDefaultPropsComponent2()), throwsStateError);
+      expect(() {
+        try {
+          react.registerComponent2(() => ThrowsInDefaultPropsComponent2());
+        } catch (_) {}
+      }, prints(contains('Error when registering Component2 when getting defaultProps')));
+    });
+
+    test('throws with specific error when propTypes throws', () {
+      expect(() => react.registerComponent2(() => ThrowsInPropTypesComponent2()), throwsStateError);
+      expect(() {
+        try {
+          react.registerComponent2(() => ThrowsInPropTypesComponent2());
+        } catch (_) {}
+      }, prints(contains('Error when registering Component2 when getting propTypes')));
+    });
+
+    test('throws with generic error when something else throws', () {
+      expect(() => react.registerComponent2(() => throw StateError('bad component')), throwsStateError);
+      expect(() {
+        try {
+          react.registerComponent2(() => throw StateError('bad component'));
+        } catch (_) {}
+      }, prints(contains('Error when registering Component2:')));
+    });
+  });
 }
 
 @JS()
@@ -179,12 +219,39 @@ external Function compositeComponent();
 
 /// A factory for a JS composite component, for use in testing.
 final Function testJsComponentFactory = (() {
-  var reactFactory = React.createFactory(compositeComponent());
-
+  final type = compositeComponent();
   return ([props = const {}, children]) {
-    return reactFactory(jsifyAndAllowInterop(props), listifyChildren(children));
+    return React.createElement(type, jsifyAndAllowInterop(props), listifyChildren(children));
   };
 })();
+
+class ThrowsInDefaultPropsComponent extends Component {
+  @override
+  Map getDefaultProps() => throw StateError('bad default props');
+
+  @override
+  render() {
+    return null;
+  }
+}
+
+class ThrowsInDefaultPropsComponent2 extends Component2 {
+  get defaultProps => throw StateError('bad default props');
+
+  @override
+  render() {
+    return null;
+  }
+}
+
+class ThrowsInPropTypesComponent2 extends Component2 {
+  get propTypes => throw StateError('bad prop types');
+
+  @override
+  render() {
+    return null;
+  }
+}
 
 class DartComponent2Component extends Component2 {
   @override

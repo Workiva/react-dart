@@ -9,6 +9,7 @@ library react;
 
 import 'package:meta/meta.dart';
 import 'package:react/react_client/bridge.dart';
+import 'package:react/react_client/js_backed_map.dart';
 import 'package:react/src/prop_validator.dart';
 import 'package:react/src/typedefs.dart';
 import 'package:react/react_client.dart';
@@ -27,7 +28,9 @@ typedef Error PropValidator<TProps>(TProps props, PropValidatorInfo info);
 /// A React component declared using a function that takes in [props] and returns rendered output.
 ///
 /// See <https://facebook.github.io/react/docs/components-and-props.html#functional-and-class-components>.
-typedef DartFunctionComponent = dynamic Function(Map props);
+///
+/// [props] is typed as [JsBackedMap] so that dart2js can make optimize props accesses.
+typedef DartFunctionComponent = dynamic Function(JsBackedMap props);
 
 typedef T ComponentFactory<T extends Component>();
 
@@ -1293,23 +1296,6 @@ mixin TypedSnapshot<TSnapshot> {
 
 /// Creates a ReactJS virtual DOM instance (`ReactElement` on the client).
 abstract class ReactComponentFactoryProxy implements Function {
-  /// The JS component factory used by this factory to build [ReactElement]s.
-  ///
-  /// Deprecated: Use [React.createElement()] instead and pass in [type] as
-  /// the first argument, followed by `props` and `children`.
-  ///
-  /// Before:
-  /// ```
-  /// YourFactoryProxy.reactComponentFactory(props, children);
-  /// ```
-  ///
-  /// After:
-  /// ```
-  /// React.createElement(YourFactoryProxy.type, props, children);
-  /// ```
-  @Deprecated('6.0.0')
-  ReactJsComponentFactory reactComponentFactory;
-
   /// The type of component created by this factory.
   get type;
 
@@ -1482,6 +1468,61 @@ class SyntheticEvent {
   /// See: <https://developer.mozilla.org/en-US/docs/Web/API/Event/stopPropagation>
   final dynamic stopPropagation;
 
+  /// For use by react-dart internals only.
+  @protected
+  void Function() $$jsPersistDoNotSetThisOrYouWillBeFired;
+  bool _isPersistent = false;
+
+  /// Whether the event instance has been removed from the ReactJS event pool.
+  ///
+  /// > See: [persist]
+  bool get isPersistent => _isPersistent;
+
+  /// Call this method on the current event instance if you want to access the event properties in an asynchronous way.
+  ///
+  /// This will remove the synthetic event from the event pool and allow references
+  /// to the event to be retained by user code.
+  ///
+  /// For example, `setState` callbacks are fired after a component updates as a result of the
+  /// new state being passed in - and since component updates are not guaranteed to by synchronous, any
+  /// reference to a `SyntheticEvent` within that callback could have been recycled by ReactJS internals.
+  ///
+  /// You can use `persist()` to ensure access to the event properties within the callback as shown in
+  /// the second example below.
+  ///
+  /// __Without persist()__
+  /// ```dart
+  /// void handleClick(SyntheticMouseEvent event) {
+  ///   print(event.type); // => "click"
+  ///
+  ///   setState({}, () {
+  ///     print(event.type); // => null
+  ///     print(event.isPersistent); => false
+  ///   });
+  /// }
+  /// ```
+  ///
+  /// __With persist()__
+  /// ```dart
+  /// void handleClick(SyntheticMouseEvent event) {
+  ///   print(event.type); // => "click"
+  ///   event.persist();
+  ///
+  ///   setState({}, () {
+  ///     print(event.type); // => "click"
+  ///     print(event.isPersistent); => true
+  ///   });
+  /// }
+  /// ```
+  ///
+  /// See: <https://reactjs.org/docs/events.html#event-pooling>
+  void persist() {
+    if ($$jsPersistDoNotSetThisOrYouWillBeFired != null) {
+      _isPersistent = true;
+      $$jsPersistDoNotSetThisOrYouWillBeFired();
+    }
+  }
+
   /// Indicates which phase of the [Event] flow is currently being evaluated.
   ///
   /// Possible values:
@@ -1604,6 +1645,27 @@ class SyntheticKeyboardEvent extends SyntheticEvent {
     this.metaKey,
     this.repeat,
     this.shiftKey,
+  ) : super(bubbles, cancelable, currentTarget, defaultPrevented, preventDefault, stopPropagation, eventPhase,
+            isTrusted, nativeEvent, target, timeStamp, type) {}
+}
+
+class SyntheticCompositionEvent extends SyntheticEvent {
+  final String data;
+
+  SyntheticCompositionEvent(
+    bool bubbles,
+    bool cancelable,
+    dynamic currentTarget,
+    bool defaultPrevented,
+    dynamic preventDefault,
+    dynamic stopPropagation,
+    num eventPhase,
+    bool isTrusted,
+    dynamic nativeEvent,
+    dynamic target,
+    num timeStamp,
+    String type,
+    this.data,
   ) : super(bubbles, cancelable, currentTarget, defaultPrevented, preventDefault, stopPropagation, eventPhase,
             isTrusted, nativeEvent, target, timeStamp, type) {}
 }

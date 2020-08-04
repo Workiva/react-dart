@@ -16,7 +16,7 @@ import 'package:react/src/react_client/dart_interop_statics.dart';
 /// Returns the list of lifecycle events to skip, having removed the
 /// important ones. If an important lifecycle event was set for skipping, a
 /// warning is issued.
-List<String> _filterSkipMethods(List<String> methods) {
+List<String> _filterSkipMethods(Iterable<String> methods) {
   List<String> finalList = List.from(methods);
   bool shouldWarn = false;
 
@@ -52,74 +52,98 @@ ReactDartComponentFactoryProxy registerComponent(
   ComponentFactory componentFactory, [
   Iterable<String> skipMethods = const ['getDerivedStateFromError', 'componentDidCatch'],
 ]) {
-  var componentInstance = componentFactory();
+  try {
+    var componentInstance = componentFactory();
 
-  if (componentInstance is Component2) {
-    return registerComponent2(componentFactory, skipMethods: skipMethods);
+    if (componentInstance is Component2) {
+      return registerComponent2(componentFactory, skipMethods: skipMethods);
+    }
+
+    var componentStatics = new ComponentStatics(componentFactory);
+
+    var jsConfig = new JsComponentConfig(
+      childContextKeys: componentInstance.childContextKeys,
+      contextKeys: componentInstance.contextKeys,
+    );
+
+    /// Create the JS [`ReactClass` component class](https://facebook.github.io/react/docs/top-level-api.html#react.createclass)
+    /// with custom JS lifecycle methods.
+    var reactComponentClass = createReactDartComponentClass(dartInteropStatics, componentStatics, jsConfig)
+      // ignore: invalid_use_of_protected_member
+      ..dartComponentVersion = ReactDartComponentVersion.component
+      ..displayName = componentFactory().displayName;
+
+    // Cache default props and store them on the ReactClass so they can be used
+    // by ReactDartComponentFactoryProxy and externally.
+    final Map defaultProps = new Map.unmodifiable(componentInstance.getDefaultProps());
+    reactComponentClass.dartDefaultProps = defaultProps;
+
+    return new ReactDartComponentFactoryProxy(reactComponentClass);
+  } catch (e, stack) {
+    print('Error when registering Component: $e\n$stack');
+    rethrow;
   }
-
-  var componentStatics = new ComponentStatics(componentFactory);
-
-  var jsConfig = new JsComponentConfig(
-    childContextKeys: componentInstance.childContextKeys,
-    contextKeys: componentInstance.contextKeys,
-  );
-
-  /// Create the JS [`ReactClass` component class](https://facebook.github.io/react/docs/top-level-api.html#react.createclass)
-  /// with custom JS lifecycle methods.
-  var reactComponentClass = createReactDartComponentClass(dartInteropStatics, componentStatics, jsConfig)
-    // ignore: invalid_use_of_protected_member
-    ..dartComponentVersion = ReactDartComponentVersion.component
-    ..displayName = componentFactory().displayName;
-
-  // Cache default props and store them on the ReactClass so they can be used
-  // by ReactDartComponentFactoryProxy and externally.
-  final Map defaultProps = new Map.unmodifiable(componentInstance.getDefaultProps());
-  reactComponentClass.dartDefaultProps = defaultProps;
-
-  return new ReactDartComponentFactoryProxy(reactComponentClass);
 }
 
-/// Creates and returns a new [ReactDartComponentFactoryProxy] from the provided [componentFactory]
+/// Creates and returns a new factory proxy from the provided [componentFactory]
 /// which produces a new JS [`ReactClass` component class](https://facebook.github.io/react/docs/top-level-api.html#react.createclass).
 ReactDartComponentFactoryProxy2 registerComponent2(
   ComponentFactory<Component2> componentFactory, {
   Iterable<String> skipMethods = const ['getDerivedStateFromError', 'componentDidCatch'],
   Component2BridgeFactory bridgeFactory,
 }) {
-  bridgeFactory ??= Component2BridgeImpl.bridgeFactory;
+  bool errorPrinted = false;
+  try {
+    bridgeFactory ??= Component2BridgeImpl.bridgeFactory;
 
-  final componentInstance = componentFactory();
-  final componentStatics = new ComponentStatics2(
-    componentFactory: componentFactory,
-    instanceForStaticMethods: componentInstance,
-    bridgeFactory: bridgeFactory,
-  );
-  final filteredSkipMethods = _filterSkipMethods(skipMethods);
+    final componentInstance = componentFactory();
+    final componentStatics = new ComponentStatics2(
+      componentFactory: componentFactory,
+      instanceForStaticMethods: componentInstance,
+      bridgeFactory: bridgeFactory,
+    );
+    final filteredSkipMethods = _filterSkipMethods(skipMethods);
 
-  // Cache default props and store them on the ReactClass so they can be used
-  // by ReactDartComponentFactoryProxy and externally.
-  final JsBackedMap defaultProps = new JsBackedMap.from(componentInstance.defaultProps);
+    // Cache default props and store them on the ReactClass so they can be used
+    // by ReactDartComponentFactoryProxy and externally.
+    JsBackedMap defaultProps;
+    try {
+      defaultProps = JsBackedMap.from(componentInstance.defaultProps);
+    } catch (e, stack) {
+      print('Error when registering Component2 when getting defaultProps: $e\n$stack');
+      errorPrinted = true;
+      rethrow;
+    }
 
-  final JsMap jsPropTypes =
-      bridgeFactory(componentInstance).jsifyPropTypes(componentInstance, componentInstance.propTypes);
+    JsMap jsPropTypes;
+    try {
+      jsPropTypes = bridgeFactory(componentInstance).jsifyPropTypes(componentInstance, componentInstance.propTypes);
+    } catch (e, stack) {
+      print('Error when registering Component2 when getting propTypes: $e\n$stack');
+      errorPrinted = true;
+      rethrow;
+    }
 
-  var jsConfig2 = new JsComponentConfig2(
-    defaultProps: defaultProps.jsObject,
-    contextType: componentInstance.contextType?.jsThis,
-    skipMethods: filteredSkipMethods,
-    propTypes: jsPropTypes,
-  );
+    var jsConfig2 = new JsComponentConfig2(
+      defaultProps: defaultProps.jsObject,
+      contextType: componentInstance.contextType?.jsThis,
+      skipMethods: filteredSkipMethods,
+      propTypes: jsPropTypes,
+    );
 
-  /// Create the JS [`ReactClass` component class](https://facebook.github.io/react/docs/top-level-api.html#react.createclass)
-  /// with custom JS lifecycle methods.
-  var reactComponentClass =
-      createReactDartComponentClass2(ReactDartInteropStatics2.staticsForJs, componentStatics, jsConfig2)
-        ..displayName = componentInstance.displayName;
-  // ignore: invalid_use_of_protected_member
-  reactComponentClass.dartComponentVersion = ReactDartComponentVersion.component2;
+    /// Create the JS [`ReactClass` component class](https://facebook.github.io/react/docs/top-level-api.html#react.createclass)
+    /// with custom JS lifecycle methods.
+    var reactComponentClass =
+        createReactDartComponentClass2(ReactDartInteropStatics2.staticsForJs, componentStatics, jsConfig2)
+          ..displayName = componentInstance.displayName;
+    // ignore: invalid_use_of_protected_member
+    reactComponentClass.dartComponentVersion = ReactDartComponentVersion.component2;
 
-  return new ReactDartComponentFactoryProxy2(reactComponentClass);
+    return new ReactDartComponentFactoryProxy2(reactComponentClass);
+  } catch (e, stack) {
+    if (!errorPrinted) print('Error when registering Component2: $e\n$stack');
+    rethrow;
+  }
 }
 
 /// Creates and returns a new `ReactDartFunctionComponentFactoryProxy` from the provided [dartFunctionComponent]

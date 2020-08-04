@@ -15,6 +15,11 @@ final Map<String, Function> eventPropKeyToEventFactory = (() {
     'onKeyPress': syntheticKeyboardEventFactory,
     'onKeyUp': syntheticKeyboardEventFactory,
 
+    // SyntheticCompositionEvent
+    'onCompositionStart': syntheticCompositionEventFactory,
+    'onCompositionUpdate': syntheticCompositionEventFactory,
+    'onCompositionEnd': syntheticCompositionEventFactory,
+
     // SyntheticFocusEvent
     'onFocus': syntheticFocusEventFactory,
     'onBlur': syntheticFocusEventFactory,

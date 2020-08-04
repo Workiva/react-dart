@@ -1,8 +1,7 @@
-import 'dart:async';
-import 'dart:developer';
 @TestOn('browser')
+library react.react_memo_test;
+
 import 'dart:html';
-import 'dart:js_util';
 
 import 'package:react/react.dart' as react;
 import 'package:react/react_client.dart';
@@ -10,8 +9,6 @@ import 'package:react/react_test_utils.dart' as rtu;
 import 'package:test/test.dart';
 
 main() {
-  setClientConfiguration();
-
   Ref<_MemoTestWrapperComponent> memoTestWrapperComponentRef;
   Ref<Element> localCountDisplayRef;
   Ref<Element> valueMemoShouldIgnoreViaAreEqualDisplayRef;
@@ -19,7 +16,6 @@ main() {
 
   void renderMemoTest({
     bool testAreEqual = false,
-    String displayName,
   }) {
     expect(memoTestWrapperComponentRef, isNotNull, reason: 'test setup sanity check');
     expect(localCountDisplayRef, isNotNull, reason: 'test setup sanity check');
@@ -31,7 +27,7 @@ main() {
             return prevProps['localCount'] == nextProps['localCount'];
           };
 
-    final MemoTest = react.memo((Map props) {
+    final MemoTest = react.memo(react.registerFunctionComponent((Map props) {
       childMemoRenderCount++;
       return react.div(
         {},
@@ -44,7 +40,7 @@ main() {
           props['valueMemoShouldIgnoreViaAreEqual'],
         ),
       );
-    }, areEqual: customAreEqualFn, displayName: displayName);
+    }), areEqual: customAreEqualFn);
 
     rtu.renderIntoDocument(MemoTestWrapper({
       'ref': memoTestWrapperComponentRef,

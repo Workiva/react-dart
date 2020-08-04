@@ -119,40 +119,81 @@ void commonFactoryTests(ReactComponentFactoryProxy factory, {bool isFunctionComp
 }
 
 void domEventHandlerWrappingTests(ReactComponentFactoryProxy factory) {
+  Element renderAndGetRootNode(ReactElement content) {
+    final mountNode = Element.div();
+    react_dom.render(content, mountNode);
+    return mountNode.children.single;
+  }
+
   setUpAll(() {
     var called = false;
 
-    var renderedInstance = rtu.renderIntoDocument(factory({
+    final nodeWithClickHandler = renderAndGetRootNode(factory({
       'onClick': (_) {
         called = true;
       }
     }));
 
-    rtu.Simulate.click(react_dom.findDOMNode(renderedInstance));
+    rtu.Simulate.click(nodeWithClickHandler);
 
     expect(called, isTrue,
         reason: 'this set of tests assumes that the factory '
-            'passes the click handler to the rendered DOM node');
+            'renders a single DOM node and passes props.onClick to it');
   });
 
   test('wraps the handler with a function that converts the synthetic event', () {
     var actualEvent;
 
-    var renderedInstance = rtu.renderIntoDocument(factory({
+    final nodeWithClickHandler = renderAndGetRootNode(factory({
       'onClick': (event) {
         actualEvent = event;
       }
     }));
 
-    rtu.Simulate.click(react_dom.findDOMNode(renderedInstance));
+    rtu.Simulate.click(nodeWithClickHandler);
 
     expect(actualEvent, isA<react.SyntheticEvent>());
   });
 
-  test('doesn\'t wrap the handler if it is null', () {
-    var renderedInstance = rtu.renderIntoDocument(factory({'onClick': null}));
+  group('wraps the handler with a function that proxies ReactJS event "persistence" as expected', () {
+    test('when event.persist() is called', () {
+      react.SyntheticMouseEvent actualEvent;
 
-    expect(() => rtu.Simulate.click(react_dom.findDOMNode(renderedInstance)), returnsNormally);
+      final nodeWithClickHandler = renderAndGetRootNode(factory({
+        'onClick': (react.SyntheticMouseEvent event) {
+          event.persist();
+          actualEvent = event;
+        }
+      }));
+
+      rtu.Simulate.click(nodeWithClickHandler);
+
+      // ignore: invalid_use_of_protected_member
+      expect(actualEvent.$$jsPersistDoNotSetThisOrYouWillBeFired, isA<Function>());
+      expect(actualEvent.isPersistent, isTrue);
+    });
+
+    test('when event.persist() is not called', () {
+      react.SyntheticMouseEvent actualEvent;
+
+      final nodeWithClickHandler = renderAndGetRootNode(factory({
+        'onClick': (react.SyntheticMouseEvent event) {
+          actualEvent = event;
+        }
+      }));
+
+      rtu.Simulate.click(nodeWithClickHandler);
+
+      // ignore: invalid_use_of_protected_member
+      expect(actualEvent.$$jsPersistDoNotSetThisOrYouWillBeFired, isA<Function>());
+      expect(actualEvent.isPersistent, isFalse);
+    });
+  });
+
+  test('doesn\'t wrap the handler if it is null', () {
+    final nodeWithClickHandler = renderAndGetRootNode(factory({'onClick': null}));
+
+    expect(() => rtu.Simulate.click(nodeWithClickHandler), returnsNormally);
   });
 
   test('stores the original function in a way that it can be retrieved from unconvertJsEventHandler', () {
@@ -170,42 +211,46 @@ void domEventHandlerWrappingTests(ReactComponentFactoryProxy factory) {
     test('(simulated event)', () {
       final testZone = Zone.current;
 
-      var renderedInstance;
+      Element nodeWithClickHandler;
       // Run the ReactElement creation and rendering in a separate zone to
       // ensure the component lifecycle isn't run in the testZone, which could
       // create false positives in the `expect`.
       runZoned(() {
-        renderedInstance = rtu.renderIntoDocument(factory({
+        nodeWithClickHandler = renderAndGetRootNode(factory({
           'onClick': (event) {
             expect(Zone.current, same(testZone));
           }
         }));
       });
 
-      rtu.Simulate.click(react_dom.findDOMNode(renderedInstance));
+      rtu.Simulate.click(nodeWithClickHandler);
     });
 
     test('(native event)', () {
       final testZone = Zone.current;
 
-      var renderedInstance;
+      Element nodeWithClickHandler;
       // Run the ReactElement creation and rendering in a separate zone to
       // ensure the component lifecycle isn't run in the testZone, which could
       // create false positives in the `expect`.
       runZoned(() {
-        renderedInstance = rtu.renderIntoDocument(factory({
+        nodeWithClickHandler = renderAndGetRootNode(factory({
           'onClick': (event) {
             expect(Zone.current, same(testZone));
           }
         }));
       });
 
-      (react_dom.findDOMNode(renderedInstance) as Element).dispatchEvent(new MouseEvent('click'));
+      nodeWithClickHandler.dispatchEvent(new MouseEvent('click'));
     });
   });
 }
 
 void refTests<T>(ReactComponentFactoryProxy factory, {void verifyRefValue(dynamic refValue)}) {
+  if (T == dynamic) {
+    throw ArgumentError('Generic parameter T must be specified');
+  }
+
   test('callback refs are called with the correct value', () {
     var called = false;
     var refValue;
@@ -392,48 +437,6 @@ void refTests<T>(ReactComponentFactoryProxy factory, {void verifyRefValue(dynami
     }
   });
 
-  _typedCallbackRefTests<T>(factory);
-}
-
-class EventTestCase {
-  /// The prop key for an arbitrary event handler that will be used to test this case.
-  final String eventPropKey;
-
-  /// A description of this test case.
-  final String description;
-
-  /// Whether the tested event handler is a Dart function expecting a Dart synthetic event,
-  /// as opposed to a JS function expecting a JS synthetic event.
-  final bool isDart;
-
-  const EventTestCase.dart(this.eventPropKey, String description)
-      : isDart = true,
-        description = 'Dart handler $description';
-
-  const EventTestCase.js(this.eventPropKey, String description)
-      : isDart = false,
-        description = 'JS handler $description';
-
-  String get _camelCaseEventName {
-    var name = eventPropKey.replaceFirst(RegExp(r'^on'), '');
-    name = name.substring(0, 1).toLowerCase() + name.substring(1);
-    return name;
-  }
-
-  void simulate(Element node) => callMethod(_Simulate, _camelCaseEventName, [node]);
-
-  @override
-  String toString() => 'EventHelper: ($eventPropKey) $description';
-}
-
-@JS('React.addons.TestUtils.Simulate')
-external dynamic get _Simulate;
-
-void _typedCallbackRefTests<T>(react.ReactComponentFactoryProxy factory) {
-  if (T == dynamic) {
-    throw ArgumentError('Generic parameter T must be specified');
-  }
-
   group('has functional callback refs when they are typed as', () {
     test('`dynamic Function(dynamic)`', () {
       T fooRef;
@@ -456,6 +459,31 @@ void _typedCallbackRefTests<T>(react.ReactComponentFactoryProxy factory) {
           reason: 'React should not have a problem with the ref we pass it, and calling it should not throw');
       expect(fooRef, isA<T>(), reason: 'should be the correct type, not be a NativeJavaScriptObject/etc.');
     });
+  });
+
+  group('chainRefList works', () {
+    test('with all different types of values, ignoring null', () {
+      final testCases = RefTestCase.allChainable<T>();
+
+      T refValue;
+      rtu.renderIntoDocument(factory({
+        'ref': chainRefList([
+          (ref) => refValue = ref,
+          null,
+          null,
+          ...testCases.map((t) => t.ref),
+        ]),
+      }));
+      // Test setup check: verify refValue is correct,
+      // which we'll use below to verify refs were updated.
+      verifyRefValue(refValue);
+
+      for (final testCase in testCases) {
+        testCase.verifyRefWasUpdated(refValue);
+      }
+    });
+
+    // Other cases tested in chainRefList's own tests
   });
 }
 
@@ -540,3 +568,37 @@ class _UniqueOwnerHelperComponent extends react.Component2 {
   @override
   render() => props['render']();
 }
+
+class EventTestCase {
+  /// The prop key for an arbitrary event handler that will be used to test this case.
+  final String eventPropKey;
+
+  /// A description of this test case.
+  final String description;
+
+  /// Whether the tested event handler is a Dart function expecting a Dart synthetic event,
+  /// as opposed to a JS function expecting a JS synthetic event.
+  final bool isDart;
+
+  const EventTestCase.dart(this.eventPropKey, String description)
+      : isDart = true,
+        description = 'Dart handler $description';
+
+  const EventTestCase.js(this.eventPropKey, String description)
+      : isDart = false,
+        description = 'JS handler $description';
+
+  String get _camelCaseEventName {
+    var name = eventPropKey.replaceFirst(RegExp(r'^on'), '');
+    name = name.substring(0, 1).toLowerCase() + name.substring(1);
+    return name;
+  }
+
+  void simulate(Element node) => callMethod(_Simulate, _camelCaseEventName, [node]);
+
+  @override
+  String toString() => 'EventHelper: ($eventPropKey) $description';
+}
+
+@JS('React.addons.TestUtils.Simulate')
+external dynamic get _Simulate;

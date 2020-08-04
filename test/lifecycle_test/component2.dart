@@ -140,8 +140,6 @@ class _DefaultPropsCachingTest extends react.Component2 implements DefaultPropsC
 ReactDartComponentFactoryProxy2 DefaultPropsTest = react.registerComponent(() => new _DefaultPropsTest());
 
 class _DefaultPropsTest extends react.Component2 {
-  static int getDefaultPropsCallCount = 0;
-
   Map get defaultProps => {'defaultProp': 'default'};
 
   render() => false;

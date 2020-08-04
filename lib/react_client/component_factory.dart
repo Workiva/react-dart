@@ -8,11 +8,11 @@ import 'package:js/js.dart';
 import 'package:react/react.dart';
 import 'package:react/react_client.dart';
 import 'package:react/react_client/js_backed_map.dart';
-import 'package:react/react_client/private_utils.dart';
 import 'package:react/react_client/react_interop.dart';
 
 import 'package:react/src/context.dart';
 import 'package:react/src/ddc_emulated_function_name_bug.dart' as ddc_emulated_function_name_bug;
+import 'package:react/src/js_interop_util.dart';
 import 'package:react/src/typedefs.dart';
 import 'package:react/src/react_client/event_factory.dart';
 import 'package:react/src/react_client/event_prop_key_to_event_factory.dart';
@@ -66,6 +66,7 @@ Map unconvertJsProps(/* ReactElement|ReactComponent */ instance) {
   // prop. Component2, however, does not have that but can be detected by checking whether or not the style prop is a
   // Map. Because non-Dart components will have a JS Object, it can be assumed that if the style prop is a Map then
   // it is a Dart Component.
+  // ignore: deprecated_member_use_from_same_package
   if (props['internal'] is ReactDartComponentInternal || (props['style'] != null && props['style'] is Map)) {
     throw new ArgumentError('A Dart Component cannot be passed into unconvertJsProps.');
   }
@@ -108,7 +109,8 @@ class ReactDartComponentFactoryProxy<TComponent extends Component> extends React
   final ReactClass reactClass;
 
   /// The JS component factory used by this factory to build [ReactElement]s.
-  final ReactJsComponentFactory reactComponentFactory;
+  @Deprecated('6.0.0')
+  ReactJsComponentFactory get reactComponentFactory => React.createFactory(reactClass);
 
   /// The cached Dart default props retrieved from [reactClass] that are passed
   /// into [generateExtendedJsProps] upon [ReactElement] creation.
@@ -116,16 +118,16 @@ class ReactDartComponentFactoryProxy<TComponent extends Component> extends React
 
   ReactDartComponentFactoryProxy(ReactClass reactClass)
       : this.reactClass = reactClass,
-        this.reactComponentFactory = React.createFactory(reactClass),
         this.defaultProps = reactClass.dartDefaultProps;
 
+  @override
   ReactClass get type => reactClass;
 
   ReactElement build(Map props, [List childrenArgs = const []]) {
     var children = convertArgsToChildren(childrenArgs);
     children = listifyChildren(children);
 
-    return reactComponentFactory(generateExtendedJsProps(props, children, defaultProps: defaultProps), children);
+    return React.createElement(type, generateExtendedJsProps(props, children, defaultProps: defaultProps), children);
   }
 
   /// Returns a JavaScript version of the specified [props], preprocessed for consumption by ReactJS and prepared for
@@ -188,22 +190,26 @@ class ReactDartComponentFactoryProxy<TComponent extends Component> extends React
 
 /// Creates ReactJS [Component2] instances for Dart components.
 class ReactDartComponentFactoryProxy2<TComponent extends Component2> extends ReactComponentFactoryProxy
-    with JsBackedMapComponentFactoryMixin
-    implements ReactDartComponentFactoryProxy {
+    with
+        JsBackedMapComponentFactoryMixin
+    implements
+        // ignore: deprecated_member_use_from_same_package
+        ReactDartComponentFactoryProxy {
   /// The ReactJS class used as the type for all [ReactElement]s built by
   /// this factory.
   final ReactClass reactClass;
 
   /// The JS component factory used by this factory to build [ReactElement]s.
-  final ReactJsComponentFactory reactComponentFactory;
+  @Deprecated('6.0.0')
+  ReactJsComponentFactory get reactComponentFactory => React.createFactory(reactClass);
 
   final Map defaultProps;
 
   ReactDartComponentFactoryProxy2(ReactClass reactClass)
       : this.reactClass = reactClass,
-        this.reactComponentFactory = React.createFactory(reactClass),
         this.defaultProps = new JsBackedMap.fromJs(reactClass.defaultProps);
 
+  @override
   ReactClass get type => reactClass;
 
   /// Returns a JavaScript version of the specified [props], preprocessed for consumption by ReactJS and prepared for
@@ -221,8 +227,10 @@ class ReactJsContextComponentFactoryProxy extends ReactJsComponentFactoryProxy {
   final ReactClass type;
   final bool isConsumer;
   final bool isProvider;
-  final Function factory;
   final bool shouldConvertDomProps;
+
+  @Deprecated('6.0.0')
+  Function get factory => React.createFactory(type);
 
   ReactJsContextComponentFactoryProxy(
     ReactClass jsClass, {
@@ -230,7 +238,6 @@ class ReactJsContextComponentFactoryProxy extends ReactJsComponentFactoryProxy {
     this.isConsumer: false,
     this.isProvider: false,
   })  : this.type = jsClass,
-        this.factory = React.createFactory(jsClass),
         super(jsClass, shouldConvertDomProps: shouldConvertDomProps);
 
   @override
@@ -271,7 +278,8 @@ class ReactJsComponentFactoryProxy extends ReactComponentFactoryProxy {
   final ReactClass type;
 
   /// The JS component factory used by this factory to build [ReactElement]s.
-  final Function factory;
+  @Deprecated('6.0.0')
+  Function get factory => React.createFactory(type);
 
   /// Whether to automatically prepare props relating to bound values and event handlers
   /// via [ReactDomComponentFactoryProxy.convertProps] for consumption by React JS DOM components.
@@ -293,7 +301,6 @@ class ReactJsComponentFactoryProxy extends ReactComponentFactoryProxy {
     this.alwaysReturnChildrenAsList: false,
     List<String> additionalRefPropKeys = const [],
   })  : this.type = jsClass,
-        this.factory = React.createFactory(jsClass),
         this._additionalRefPropKeys = additionalRefPropKeys {
     if (jsClass == null) {
       throw new ArgumentError('`jsClass` must not be null. '
@@ -370,11 +377,10 @@ class ReactDomComponentFactoryProxy extends ReactComponentFactoryProxy {
   final String name;
 
   /// The JS component factory used by this factory to build [ReactElement]s.
-  final Function factory;
+  @Deprecated('6.0.0')
+  Function get factory => React.createFactory(name);
 
-  ReactDomComponentFactoryProxy(name)
-      : this.name = name,
-        this.factory = React.createFactory(name) {
+  ReactDomComponentFactoryProxy(this.name) {
     // TODO: Should we remove this once we validate that the bug is gone in Dart 2 DDC?
     if (ddc_emulated_function_name_bug.isBugPresent) {
       ddc_emulated_function_name_bug.patchName(this);

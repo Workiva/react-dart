@@ -327,7 +327,8 @@ ReducerHook<TState, TAction, TInit> useReducerLazy<TState, TAction, TInit>(
 /// ```
 ///
 /// Learn more: <https://reactjs.org/docs/hooks-reference.html#usecallback>.
-Function useCallback(Function callback, List dependencies) => React.useCallback(allowInterop(callback), dependencies);
+T useCallback<T extends Function>(T callback, List dependencies) =>
+    React.useCallback(allowInterop(callback), dependencies);
 
 /// Returns the value of the nearest [Context.Provider] for the provided [context] object every time that context is
 /// updated.
@@ -355,7 +356,7 @@ Function useCallback(Function callback, List dependencies) => React.useCallback(
 /// ```
 ///
 /// Learn more: <https://reactjs.org/docs/hooks-reference.html#usecontext>.
-T useContext<T>(Context<T> context) => ContextHelpers.unjsifyNewContext(React.useContext(context.jsThis));
+T useContext<T>(Context<T> context) => ContextHelpers.unjsifyNewContext(React.useContext(context.jsThis)) as T;
 
 /// Returns a mutable [Ref] object with [Ref.current] property initialized to [initialValue].
 ///
@@ -568,7 +569,7 @@ void useImperativeHandle(Ref ref, dynamic Function() createHandle, [List<dynamic
 ///   });
 ///
 ///   // Use format function to avoid unnecessarily formatting `isOnline` when the hooks aren't inspected in React DevTools.
-///   useDebugValue(isOnline.value, (isOnline) => isOnline ? 'Online' : 'Not Online');
+///   useDebugValue<bool>(isOnline.value, (isOnline) => isOnline ? 'Online' : 'Not Online');
 ///
 ///   return isOnline;
 /// }

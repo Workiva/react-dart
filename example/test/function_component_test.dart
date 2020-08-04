@@ -68,7 +68,7 @@ class _MemoTestDemoWrapper extends react.Component2 {
   }
 }
 
-final MemoTest = react.memo((Map props) {
+final MemoTest = react.memo(react.registerFunctionComponent((Map props) {
   final context = useContext(TestNewContext);
   return react.div(
     {},
@@ -89,9 +89,9 @@ final MemoTest = react.memo((Map props) {
       ' (should never update)',
     ),
   );
-}, areEqual: (prevProps, nextProps) {
+}), areEqual: (prevProps, nextProps) {
   return prevProps['localCount'] == nextProps['localCount'];
-}, displayName: 'MemoTest');
+});
 
 var useReducerTestFunctionComponent =
     react.registerFunctionComponent(UseReducerTestComponent, displayName: 'useReducerTest');
@@ -472,7 +472,7 @@ class ChatAPI {
 }
 
 // Custom Hook
-StateHook useFriendStatus(int friendID) {
+StateHook<bool> useFriendStatus(int friendID) {
   final isOnline = useState(false);
 
   void handleStatusChange(Map status) {
@@ -487,7 +487,7 @@ StateHook useFriendStatus(int friendID) {
   });
 
   // Use format function to avoid unnecessarily formatting `isOnline` when the hooks aren't inspected in React DevTools.
-  useDebugValue(isOnline.value, (isOnline) => isOnline ? 'Online' : 'Not Online');
+  useDebugValue<bool>(isOnline.value, (isOnline) => isOnline ? 'Online' : 'Not Online');
 
   return isOnline;
 }
