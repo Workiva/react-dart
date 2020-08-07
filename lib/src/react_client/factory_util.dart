@@ -140,19 +140,26 @@ dynamic generateChildren(List childrenArgs, {bool shouldAlwaysBeList = false}) {
   return children;
 }
 
+typedef void JsPropSanitizer(JsBackedMap map);
+
 /// Converts [props] into a [JsMap] that can be utilized with `React.createElement()`.
 JsMap generateJsProps(Map props,
     {bool shouldConvertEventHandlers = true,
     bool convertRefValue = true,
     bool convertCallbackRefValue = true,
     List<String> additionalRefPropKeys = const [],
-    bool wrapWithJsify = true}) {
+    bool wrapWithJsify = true,
+    JsPropSanitizer sanitize}) {
   final propsForJs = JsBackedMap.from(props);
 
   if (shouldConvertEventHandlers) convertEventHandlers(propsForJs);
   if (convertRefValue) {
     convertRefValue2(propsForJs,
         convertCallbackRefValue: convertCallbackRefValue, additionalRefPropKeys: additionalRefPropKeys);
+  }
+
+  if (sanitize != null) {
+    sanitize(propsForJs);
   }
 
   return wrapWithJsify ? jsifyAndAllowInterop(propsForJs) : propsForJs.jsObject;

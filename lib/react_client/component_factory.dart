@@ -294,14 +294,17 @@ class ReactJsComponentFactoryProxy extends ReactComponentFactoryProxy {
   final bool alwaysReturnChildrenAsList;
 
   final List<String> _additionalRefPropKeys;
+  final JsPropSanitizer _sanitize;
 
   ReactJsComponentFactoryProxy(
     ReactClass jsClass, {
     this.shouldConvertDomProps: true,
     this.alwaysReturnChildrenAsList: false,
     List<String> additionalRefPropKeys = const [],
+    JsPropSanitizer sanitize,
   })  : this.type = jsClass,
-        this._additionalRefPropKeys = additionalRefPropKeys {
+        this._additionalRefPropKeys = additionalRefPropKeys,
+        this._sanitize = sanitize {
     if (jsClass == null) {
       throw new ArgumentError('`jsClass` must not be null. '
           'Ensure that the JS component class you\'re referencing is available and being accessed correctly.');
@@ -314,7 +317,8 @@ class ReactJsComponentFactoryProxy extends ReactComponentFactoryProxy {
     JsMap convertedProps = generateJsProps(props,
         shouldConvertEventHandlers: shouldConvertDomProps,
         convertCallbackRefValue: false,
-        additionalRefPropKeys: _additionalRefPropKeys);
+        additionalRefPropKeys: _additionalRefPropKeys,
+        sanitize: _sanitize);
     return React.createElement(type, convertedProps, children);
   }
 }
