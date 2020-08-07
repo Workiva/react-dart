@@ -140,7 +140,7 @@ dynamic generateChildren(List childrenArgs, {bool shouldAlwaysBeList = false}) {
   return children;
 }
 
-typedef void JsPropSanitizer(JsBackedMap map);
+typedef void JsPropSanitizer(JsBackedMap props);
 
 /// Converts [props] into a [JsMap] that can be utilized with `React.createElement()`.
 JsMap generateJsProps(Map props,
