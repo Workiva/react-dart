@@ -10,8 +10,6 @@ import 'package:react/react_client/react_interop.dart';
 import 'package:react/react_dom.dart' as react_dom;
 
 main() {
-  setClientConfiguration();
-
   var content = IndexComponent({});
 
   react_dom.render(content, querySelector('#content'));

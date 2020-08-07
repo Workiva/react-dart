@@ -8,7 +8,7 @@ import 'dart:js_util';
 
 import 'package:js/js.dart';
 import 'package:react/react_client/react_interop.dart';
-import 'package:react/react_client.dart';
+import 'package:react/react_client/component_factory.dart' show ReactJsContextComponentFactoryProxy;
 
 /// The return type of [createContext], Wraps [ReactContext] for use in Dart.
 /// Allows access to [Provider] and [Consumer] Components.
@@ -47,7 +47,7 @@ import 'package:react/react_client.dart';
 ///     }
 ///
 /// Learn more at: https://reactjs.org/docs/context.html
-class Context {
+class Context<T> {
   Context(this.Provider, this.Consumer, this._jsThis);
   final ReactContext _jsThis;
 
@@ -101,7 +101,7 @@ class Context {
 ///     }
 ///
 /// Learn more: https://reactjs.org/docs/context.html#reactcreatecontext
-Context createContext<TValue>([
+Context<TValue> createContext<TValue>([
   TValue defaultValue,
   int Function(TValue currentValue, TValue nextValue) calculateChangedBits,
 ]) {

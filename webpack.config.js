@@ -1,32 +1,31 @@
-const webpack = require("webpack");
-const path = require("path");
-const outputPath = path.resolve(__dirname, "lib/");
-const inputPath = path.resolve(__dirname, "js_src/");
+const webpack = require('webpack');
+const path = require('path');
+const outputPath = path.resolve(__dirname, 'lib/');
+const inputPath = path.resolve(__dirname, 'js_src/');
 
-var babelRules = [{
-  test: /\.js?$/,
-  use: {
-    loader: "babel-loader",
-    options: {
-      exclude: [
-        /node_modules/
-      ],
-      presets: [
-        [
-          "@babel/preset-env",
-          {
-            corejs: 3,
-            useBuiltIns: "usage",
-            targets: {
-                browsers: 'last 2 chrome versions, last 2 edge versions, ie 11'
-            }
-          }
-        ]
-      ],
-    }
-  }
-}];
-
+var babelRules = [
+  {
+    test: /\.js?$/,
+    use: {
+      loader: 'babel-loader',
+      options: {
+        exclude: [/node_modules/],
+        presets: [
+          [
+            '@babel/preset-env',
+            {
+              corejs: 3,
+              useBuiltIns: 'usage',
+              targets: {
+                browsers: 'last 2 chrome versions, last 2 edge versions, ie 11',
+              },
+            },
+          ],
+        ],
+      },
+    },
+  },
+];
 
 /// Helper function that generates the webpack export objects array
 ///
@@ -50,15 +49,15 @@ function createExports(exportMappings) {
       exportObject = {
         output: {
           path: outputPath,
-          filename: outputFilename
+          filename: outputFilename,
         },
         module: {
           rules: babelRules,
         },
         entry: path.resolve(inputPath, entryFilename),
-        mode: isProduction ? "production" : "development",
-        externals: [{ window: "window" }],
-        devtool: "source-map",
+        mode: isProduction ? 'production' : 'development',
+        externals: [{ window: 'window' }],
+        devtool: 'source-map',
       };
 
       // `react-redux` requires `redux` but we do not utilize the one section that it is used.
@@ -66,15 +65,15 @@ function createExports(exportMappings) {
       // and it calls `redux.bindActionCreators`.
       //
       // This line fakes any `require('redux')` calls, so that webpack will not include all of the `redux` code.
-      exportObject.externals[0]['redux'] = "window.Object";
+      exportObject.externals[0].redux = 'window.Object';
 
-      if ( !includeReact ) {
+      if (!includeReact) {
         // This forces any packages that require react as a dependacy to have the same instance of react that
         // is provided by our react js bundles.
-        exportObject.externals[0].react = "window.React";
+        exportObject.externals[0].react = 'window.React';
 
         // Re-uses React.PropTypes setup in react.js instead of including the entire lib again.
-        exportObject.externals[0]['prop-types'] = "window.React.PropTypes";
+        exportObject.externals[0]['prop-types'] = 'window.React.PropTypes';
       }
       exportObjects.push(exportObject);
     } else {
@@ -84,15 +83,13 @@ function createExports(exportMappings) {
   return exportObjects;
 }
 
-module.exports = createExports(
-    [
-      ["react.js",                "react_with_addons.js"],
-      ["react.js",                "react.js"],
-      ["react_dom.js",            "react_dom.js"],
-      ["react_dom_server.js",     "react_dom_server.js"],
-      ["react.js",                "react_prod.js"],
-      ["react_dom.js",            "react_dom_prod.js"],
-      ["react_dom_server.js",     "react_dom_server_prod.js"],
-      ["react_with_react_dom.js", "react_with_react_dom_prod.js"],
-    ]
-  );
+module.exports = createExports([
+  ['react.js', 'react_with_addons.js'],
+  ['react.js', 'react.js'],
+  ['react_dom.js', 'react_dom.js'],
+  ['react_dom_server.js', 'react_dom_server.js'],
+  ['react.js', 'react_prod.js'],
+  ['react_dom.js', 'react_dom_prod.js'],
+  ['react_dom_server.js', 'react_dom_server_prod.js'],
+  ['react_with_react_dom.js', 'react_with_react_dom_prod.js'],
+]);

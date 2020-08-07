@@ -1,0 +1,15 @@
+# Specify chrome and VM as default platforms for running all tests,
+# then let the `@TestOn()` annotations determine which suites actually run
+platforms:
+  - chrome
+  - vm
+
+presets:
+  dart2js:
+    exclude_tags: no-dart2js
+
+  dartdevc:
+    exclude_tags: no-dartdevc
+
+tags:
+  "fails-on-241":

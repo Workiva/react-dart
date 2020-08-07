@@ -11,8 +11,6 @@ import 'package:test/test.dart';
 import 'package:react/react_client.dart';
 
 main() {
-  setClientConfiguration();
-
   group('Fragment', () {
     test('renders nothing but its children', () {
       var wrappingDivRef;

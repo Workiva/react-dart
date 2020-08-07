@@ -1,13 +1,13 @@
+@TestOn('browser')
+library react.react_interop_test;
+
 import 'dart:html';
 
-import 'package:react/react_client.dart';
 import 'package:react/react_client/react_interop.dart';
 import 'package:react/react_dom.dart' as react_dom;
 import 'package:test/test.dart';
 
 main() {
-  setClientConfiguration();
-
   group('ReactDom.createPortal', () {
     group('creates a portal ReactNode that renders correctly', () {
       Element mountNode;

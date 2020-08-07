@@ -71,14 +71,10 @@ in the `main` entrypoint of your Dart application.
 ```dart
 import 'dart:html';
 
-import 'package:react/react_client.dart' as react_client;
 import 'package:react/react.dart';
 import 'package:react/react_dom.dart' as react_dom;
 
 main() {
-  // This should be called once at the beginning of the application.
-  react_client.setClientConfiguration();
-
   // Something to render... in this case a simple <div> with no props, and a string as its children.
   var component = div({}, "Hello world!");
 
@@ -137,16 +133,12 @@ var aButton = button({"onClick": (SyntheticMouseEvent event) => print(event)});
 
     import 'dart:html';
 
-    import 'package:react/react_client.dart' as react_client;
     import 'package:react/react.dart';
     import 'package:react/react_dom.dart' as react_dom;
 
     import 'cool_widget.dart';
 
     main() {
-      // This should be called once at the beginning of the application.
-      react_client.setClientConfiguration();
-
       react_dom.render(CoolWidget({}), querySelector('#react_mount_point'));
     }
     ```
@@ -173,16 +165,12 @@ var CoolWidget = registerComponent(() => new CoolWidgetComponent());
 
 import 'dart:html';
 
-import 'package:react/react_client.dart' as react_client;
 import 'package:react/react.dart';
 import 'package:react/react_dom.dart' as react_dom;
 
 import 'cool_widget.dart';
 
 main() {
-  // This should be called once at the beginning of the application.
-  react_client.setClientConfiguration();
-
   react_dom.render(CoolWidget({"text": "Something"}), querySelector('#react_mount_point'));
 }
 ```
@@ -225,16 +213,12 @@ class CoolWidgetComponent extends Component2 {
 
 import 'dart:html';
 
-import 'package:react/react_client.dart' as react_client;
 import 'package:react/react.dart';
 import 'package:react/react_dom.dart' as react_dom;
 
 import 'cool_widget.dart';
 
 void main() {
-  // This should be called once at the beginning of the application.
-  react_client.setClientConfiguration();
-
   react_dom.render(
     myComponent(
         headline: "My custom headline",
@@ -352,7 +336,6 @@ Here is an example of how to use React React.addons.TestUtils. within a Dart tes
 ```dart
 import 'package:test/test.dart';
 import 'package:react/react.dart' as react;
-import 'package:react/react_client.dart' as react_client;
 import 'package:react/react_dom.dart' as react_dom;
 import 'package:react/react_test_utils.dart' as react_test_utils;
 
@@ -372,8 +355,6 @@ class MyTestComponent extends react.Component2 {
 var myTestComponent = react.registerComponent(() => new MyTestComponent());
 
 void main() {
-  react_client.setClientConfiguration();
-
   test('should click button and set span text to "success"', () {
     var component = react_test_utils.renderIntoDocument(myTestComponent({}));
 
