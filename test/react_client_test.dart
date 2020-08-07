@@ -17,6 +17,8 @@ import 'package:react/react_client/js_interop_helpers.dart';
 import 'package:react/react_dom.dart' as react_dom;
 import 'package:react/src/react_client/event_prop_key_to_event_factory.dart';
 
+import 'util.dart';
+
 main() {
   group('unconvertJsProps', () {
     const List testChildren = const ['child1', 'child2'];
@@ -201,7 +203,7 @@ main() {
           react.registerComponent2(() => ThrowsInPropTypesComponent2());
         } catch (_) {}
       }, prints(contains('Error when registering Component2 when getting propTypes')));
-    });
+    }, tags: 'no-dart2js');
 
     test('throws with generic error when something else throws', () {
       expect(() => react.registerComponent2(() => throw StateError('bad component')), throwsStateError);
