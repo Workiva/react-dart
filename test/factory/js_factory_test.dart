@@ -1,6 +1,6 @@
 @JS()
 @TestOn('browser')
-library js_factory_test;
+library react.js_factory_test;
 
 import 'dart:html';
 

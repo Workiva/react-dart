@@ -443,7 +443,7 @@ class ReactDartFunctionComponentFactoryProxy extends ReactComponentFactoryProxy 
     // to force `null` as the return value if user returns a Dart `null`.
     // See: https://github.com/dart-lang/sdk/issues/27485
     jsFunctionComponent(JsMap jsProps, [JsMap _legacyContext]) =>
-        dartFunctionComponent(JsBackedMap.backedBy(jsProps)) ?? jsNull;
+        componentZone.run(() => dartFunctionComponent(JsBackedMap.backedBy(jsProps)) ?? jsNull);
     JsFunctionComponent interopFunction = allowInterop(jsFunctionComponent);
     if (displayName != null) {
       // This is a work-around to display the correct name in the React DevTools.
