@@ -10,3 +10,6 @@ presets:
 
   dartdevc:
     exclude_tags: no-dartdevc
+
+tags:
+  "fails-on-241":

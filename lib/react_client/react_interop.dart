@@ -10,12 +10,19 @@ library react_client.react_interop;
 
 import 'dart:html';
 
-import 'package:meta/meta.dart';
 import 'package:js/js.dart';
+import 'package:js/js_util.dart';
+import 'package:meta/meta.dart';
+import 'package:react/hooks.dart';
 import 'package:react/react.dart';
-import 'package:react/react_client.dart' show ComponentFactory, ReactJsComponentFactoryProxy;
+import 'package:react/react_client.dart' show ComponentFactory;
 import 'package:react/react_client/bridge.dart';
 import 'package:react/react_client/js_backed_map.dart';
+import 'package:react/react_client/component_factory.dart'
+    show ReactDartFunctionComponentFactoryProxy, ReactJsComponentFactoryProxy;
+import 'package:react/react_client/js_interop_helpers.dart';
+import 'package:react/react_client/zone.dart';
+import 'package:react/src/js_interop_util.dart';
 import 'package:react/src/react_client/dart2_interop_workaround_bindings.dart';
 
 typedef ReactElement ReactJsComponentFactory(props, children);
@@ -29,20 +36,39 @@ typedef dynamic JsPropValidator(
 @JS()
 abstract class React {
   external static String get version;
+  external static ReactElement cloneElement(ReactElement element, [JsMap props, dynamic children]);
   external static ReactContext createContext([
     dynamic defaultValue,
     int Function(dynamic currentValue, dynamic nextValue) calculateChangedBits,
   ]);
   @Deprecated('6.0.0')
   external static ReactClass createClass(ReactClassConfig reactClassConfig);
+  @Deprecated('6.0.0')
   external static ReactJsComponentFactory createFactory(type);
   external static ReactElement createElement(dynamic type, props, [dynamic children]);
   external static JsRef createRef();
+  external static ReactClass forwardRef(Function(JsMap props, JsRef ref) wrapperFunction);
+  external static ReactClass memo(
+    dynamic Function(JsMap props, [JsMap legacyContext]) wrapperFunction, [
+    bool Function(JsMap prevProps, JsMap nextProps) areEqual,
+  ]);
 
   external static bool isValidElement(dynamic object);
 
   external static ReactClass get StrictMode;
   external static ReactClass get Fragment;
+
+  external static List<dynamic> useState(dynamic value);
+  external static void useEffect(dynamic Function() sideEffect, [List<Object> dependencies]);
+  external static List<dynamic> useReducer(Function reducer, dynamic initialState, [Function init]);
+  external static Function useCallback(Function callback, List dependencies);
+  external static ReactContext useContext(ReactContext context);
+  external static JsRef useRef([dynamic initialValue]);
+  external static dynamic useMemo(dynamic Function() createFunction, [List<dynamic> dependencies]);
+  external static void useLayoutEffect(dynamic Function() sideEffect, [List<Object> dependencies]);
+  external static void useImperativeHandle(JsRef ref, dynamic Function() createHandle, [List<dynamic> dependencies]);
+  // NOTE: The use of generics on the `useDebugValue` interop will break the hook.
+  external static dynamic useDebugValue(dynamic value, [Function format]);
 }
 
 /// Creates a [Ref] object that can be attached to a [ReactElement] via the ref prop.
@@ -74,6 +100,11 @@ class Ref<T> {
 
   Ref() : jsRef = React.createRef();
 
+  /// Constructor for [useRef], calls [React.useRef] to initialize [current] to [initialValue].
+  ///
+  /// See: <https://reactjs.org/docs/hooks-reference.html#useref>.
+  Ref.useRefInit(T initialValue) : jsRef = React.useRef(initialValue);
+
   Ref.fromJs(this.jsRef);
 
   /// A reference to the latest instance of the rendered component.
@@ -94,8 +125,9 @@ class Ref<T> {
     return jsCurrent;
   }
 
-  /// Used internally to combine refs https://github.com/facebook/react/issues/13029
-  @protected
+  /// Sets the value of [current].
+  ///
+  /// See: <https://reactjs.org/docs/hooks-faq.html#is-there-something-like-instance-variables>.
   set current(T value) {
     if (value is Component) {
       jsRef.current = value.jsThis;
@@ -113,27 +145,168 @@ class Ref<T> {
 @anonymous
 class JsRef {
   external dynamic get current;
-
-  /// Used internally to combine refs https://github.com/facebook/react/issues/13029
-  @protected
   external set current(dynamic value);
 }
 
 /// Automatically passes a [Ref] through a component to one of its children.
 ///
+/// __Example 1:__ Forwarding refs to DOM components
+///
+/// _[Analogous JS Demo](https://reactjs.org/docs/forwarding-refs.html#forwarding-refs-to-dom-components)_
+///
+/// ```dart
+/// import 'dart:html';
+/// import 'package:react/react.dart' as react;
+///
+/// // ---------- Component Definition ----------
+/// final FancyButton = react.forwardRef((props, ref) {
+///   return react.button({'ref': ref, 'className': 'FancyButton'}, 'Click me!');
+/// }, displayName: 'FancyButton');
+///
+/// // ---------- Component Consumption ----------
+/// void main() {
+///   final ref = createRef<Element>();
+///
+///   react_dom.render(FancyButton({'ref': ref}));
+///
+///   // You can now get a ref directly to the DOM button:
+///   final buttonNode = ref.current;
+/// }
+/// ```
+///
+/// __Example 2:__ Forwarding refs in higher-order components
+///
+/// _[Analogous JS Demo](https://reactjs.org/docs/forwarding-refs.html#forwarding-refs-in-higher-order-components)_
+///
+/// ```dart
+/// import 'dart:html';
+/// import 'package:react/react.dart' as react;
+/// import 'package:react/react_client.dart' show setClientConfiguration, ReactJsComponentFactoryProxy;
+/// import 'package:react/react_dom.dart' as react_dom;
+///
+/// // ---------- Component Definitions ----------
+///
+/// final FancyButton = react.forwardRef((props, ref) {
+///   return react.button({'ref': ref, 'className': 'FancyButton'}, 'Click me!');
+/// }, displayName: 'FancyButton');
+///
+/// class _LogProps extends react.Component2 {
+///   @override
+///   void componentDidUpdate(Map prevProps, _, [__]) {
+///     print('old props: $prevProps');
+///     print('new props: ${this.props}');
+///   }
+///
+///   @override
+///   render() {
+///     final propsToForward = {...props}..remove('forwardedRef');
+///
+///     // Assign the custom prop `forwardedRef` as a ref on the component passed in via `props.component`
+///     return props['component']({...propsToForward, 'ref': props['forwardedRef']}, props['children']);
+///   }
+/// }
+/// final _logPropsHoc = react.registerComponent2(() => _LogProps());
+///
+/// final LogProps = react.forwardRef((props, ref) {
+///   // Note the second param "ref" provided by react.forwardRef.
+///   // We can pass it along to LogProps as a regular prop, e.g. "forwardedRef"
+///   // And it can then be attached to the Component.
+///   return _logPropsHoc({...props, 'forwardedRef': ref});
+///   // Optional: Make the displayName more useful for the React dev tools.
+///   // See: https://reactjs.org/docs/forwarding-refs.html#displaying-a-custom-name-in-devtools
+/// }, displayName: 'LogProps(${_logPropsHoc.type.displayName})');
+///
+/// // ---------- Component Consumption ----------
+/// void main() {
+///   setClientConfiguration();
+///   final ref = react.createRef<Element>();
+///
+///   react_dom.render(LogProps({'component': FancyButton, 'ref': ref}),
+///       querySelector('#idOfSomeNodeInTheDom'));
+///
+///   // You can still get a ref directly to the DOM button:
+///   final buttonNode = ref.current;
+/// }
+/// ```
 /// See: <https://reactjs.org/docs/forwarding-refs.html>.
-ReactJsComponentFactoryProxy forwardRef(Function(Map props, Ref ref) wrapperFunction) {
-  var hoc = _jsForwardRef(allowInterop((JsMap props, JsRef ref) {
-    final dartProps = JsBackedMap.backedBy(props);
-    final dartRef = Ref.fromJs(ref);
-    return wrapperFunction(dartProps, dartRef);
-  }));
+ReactJsComponentFactoryProxy forwardRef(
+  Function(Map props, Ref ref) wrapperFunction, {
+  String displayName = 'Anonymous',
+}) {
+  final wrappedComponent = allowInterop((JsMap props, JsRef ref) => componentZone.run(() {
+        final dartProps = JsBackedMap.backedBy(props);
+        for (var value in dartProps.values) {
+          if (value is Function) {
+            // Tag functions that came straight from the JS
+            // so that we know to pass them through as-is during prop conversion.
+            isRawJsFunctionFromProps[value] = true;
+          }
+        }
 
-  return new ReactJsComponentFactoryProxy(hoc, shouldConvertDomProps: false);
+        final dartRef = Ref.fromJs(ref);
+        return wrapperFunction(dartProps, dartRef);
+      }));
+  defineProperty(wrappedComponent, 'displayName', jsify({'value': displayName}));
+
+  var hoc = React.forwardRef(wrappedComponent);
+  // ignore: invalid_use_of_protected_member
+  setProperty(hoc, 'dartComponentVersion', ReactDartComponentVersion.component2);
+
+  return ReactJsComponentFactoryProxy(hoc, alwaysReturnChildrenAsList: true);
 }
 
-@JS('React.forwardRef')
-external ReactClass _jsForwardRef(Function(JsMap props, JsRef ref) wrapperFunction);
+/// A [higher order component](https://reactjs.org/docs/higher-order-components.html) for function components
+/// that behaves similar to the way [`React.PureComponent`](https://reactjs.org/docs/react-api.html#reactpurecomponent)
+/// does for class-based components.
+///
+/// If your function component renders the same result given the same props, you can wrap it in a call to
+/// `memo` for a performance boost in some cases by memoizing the result. This means that React will skip
+/// rendering the component, and reuse the last rendered result.
+///
+/// ```dart
+/// import 'package:react/react.dart' as react;
+///
+/// final MyComponent = react.memo(react.registerFunctionComponent((props) {
+///   /* render using props */
+/// }));
+/// ```
+///
+/// `memo` only affects props changes. If your function component wrapped in `memo` has a
+/// [useState] or [useContext] Hook in its implementation, it will still rerender when `state` or `context` change.
+///
+/// By default it will only shallowly compare complex objects in the props map.
+/// If you want control over the comparison, you can also provide a custom comparison
+/// function to the [areEqual] argument as shown in the example below.
+///
+/// ```dart
+/// import 'package:react/react.dart' as react;
+///
+/// final MyComponent = react.memo(react.registerFunctionComponent((props) {
+///   // render using props
+/// }), areEqual: (prevProps, nextProps) {
+///   // Do some custom comparison logic to return a bool based on prevProps / nextProps
+/// });
+/// ```
+///
+/// > __This method only exists as a performance optimization.__
+/// >
+/// > Do not rely on it to “prevent” a render, as this can lead to bugs.
+///
+/// See: <https://reactjs.org/docs/react-api.html#reactmemo>.
+ReactJsComponentFactoryProxy memo(ReactDartFunctionComponentFactoryProxy factory,
+    {bool Function(Map prevProps, Map nextProps) areEqual}) {
+  final _areEqual = areEqual == null
+      ? null
+      : allowInterop((JsMap prevProps, JsMap nextProps) {
+          final dartPrevProps = JsBackedMap.backedBy(prevProps);
+          final dartNextProps = JsBackedMap.backedBy(nextProps);
+          return areEqual(dartPrevProps, dartNextProps);
+        });
+  final hoc = React.memo(factory.type, _areEqual);
+  setProperty(hoc, 'dartComponentVersion', ReactDartComponentVersion.component2);
+
+  return ReactJsComponentFactoryProxy(hoc, alwaysReturnChildrenAsList: true);
+}
 
 abstract class ReactDom {
   static Element findDOMNode(object) => ReactDOM.findDOMNode(object);
@@ -240,6 +413,9 @@ abstract class ReactDartComponentVersion {
     // but it lets us safely cast to ReactClass.
     if (type is ReactClass) {
       return type.dartComponentVersion;
+    }
+    if (type is Function) {
+      return getProperty(type, 'dartComponentVersion');
     }
 
     return null;
@@ -492,6 +668,16 @@ class ReactDartContextInternal {
 class JsError {
   external JsError(message);
 }
+
+/// A JS variable that can be used with Dart interop in order to force returning a JavaScript `null`.
+/// Use this if dart2js is possibly converting Dart `null` into `undefined`.
+@JS('_jsNull')
+external get jsNull;
+
+/// A JS variable that can be used with Dart interop in order to force returning a JavaScript `undefined`.
+/// Use this if dart2js is possibly converting Dart `undefined` into `null`.
+@JS('_jsUndefined')
+external get jsUndefined;
 
 /// Throws the error passed to it from Javascript.
 /// This allows us to catch the error in dart which re-dartifies the js errors/exceptions.

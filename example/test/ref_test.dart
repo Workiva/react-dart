@@ -231,7 +231,6 @@ class _ParentComponent extends react.Component {
 
 var mountedNode = querySelector('#content');
 void main() {
-  setClientConfiguration();
   var component = ParentComponent({});
   react_dom.render(component, mountedNode);
 }

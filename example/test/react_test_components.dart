@@ -283,9 +283,9 @@ class _NewContextProviderComponent extends react.Component2 {
   }
 
   render() {
-    Map provideMap = {'renderCount': this.state['renderCount']};
+    final provideMap = {'renderCount': this.state['renderCount']};
 
-    Map complexValues = {
+    final complexValues = {
       'callback': printMe,
       'dartComponent': newContextRefComponent,
       'map': {

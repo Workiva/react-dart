@@ -1,26 +1,36 @@
+@JS()
+library react.test.common_factory_tests;
+
 // ignore_for_file: deprecated_member_use_from_same_package
 import 'dart:async';
 import 'dart:html';
 import 'dart:js';
 import 'dart:js_util';
 
+import 'package:js/js.dart';
 import 'package:meta/meta.dart';
+import 'package:react/react_client/component_factory.dart';
 import 'package:react/react_client/js_backed_map.dart';
-import 'package:react/src/react_client/chain_refs.dart';
+import 'package:react/react_client/js_interop_helpers.dart';
 import 'package:test/test.dart';
 
+import 'package:react/react.dart' as react;
 import 'package:react/react_client.dart';
 import 'package:react/react_dom.dart' as react_dom;
 import 'package:react/react_test_utils.dart' as rtu;
-import 'package:react/react.dart' as react;
 import 'package:react/react_client/react_interop.dart';
 
 import '../util.dart';
 
-void commonFactoryTests(ReactComponentFactoryProxy factory, {bool isComponent2 = false}) {
+/// Runs common tests for [factory].
+///
+/// [dartComponentVersion] should be specified for all components with Dart render code in order to
+/// properly test `props.children`, forwardRef compatibility, etc.
+void commonFactoryTests(ReactComponentFactoryProxy factory,
+    {bool isFunctionComponent = false, String dartComponentVersion}) {
   _childKeyWarningTests(
     factory,
-    renderWithUniqueOwnerName: isComponent2 ? _renderWithUniqueOwnerName2 : _renderWithUniqueOwnerName,
+    renderWithUniqueOwnerName: _renderWithUniqueOwnerName,
   );
 
   test('renders an instance with the corresponding `type`', () {
@@ -29,17 +39,23 @@ void commonFactoryTests(ReactComponentFactoryProxy factory, {bool isComponent2 =
     expect(instance.type, equals(factory.type));
   });
 
-  void sharedChildrenTests(dynamic getChildren(ReactElement instance), {@required bool shouldAlwaysBeList}) {
+  test('has a type with the expected ReactDartComponentVersion', () {
+    // ignore: invalid_use_of_protected_member
+    expect(ReactDartComponentVersion.fromType(factory.type), dartComponentVersion);
+  });
+
+  void sharedChildrenTests(dynamic getChildren(ReactElement instance),
+      {@required bool shouldAlwaysBeList, Map props = const {}}) {
     // There are different code paths for 0, 1, 2, 3, 4, 5, 6, and 6+ arguments.
     // Test all of them.
     group('a number of variadic children:', () {
       test('0', () {
-        final instance = factory({});
+        final instance = factory(props);
         expect(getChildren(instance), shouldAlwaysBeList ? [] : isNull);
       });
 
       test('1', () {
-        final instance = factory({}, 1);
+        final instance = factory(props, 1);
         expect(getChildren(instance), shouldAlwaysBeList ? [1] : 1);
       });
 
@@ -50,15 +66,15 @@ void commonFactoryTests(ReactComponentFactoryProxy factory, {bool isComponent2 =
 
         test('$childrenCount', () {
           final expectedChildren = new List.generate(childrenCount, (i) => i + 1);
-          final arguments = <dynamic>[{}]..add(expectedChildren);
+          final arguments = <dynamic>[props, ...expectedChildren];
           final instance = Function.apply(factory, arguments);
           expect(getChildren(instance), expectedChildren);
         });
       }
 
       test('$maxSupportedVariadicChildCount (and passes static analysis)', () {
-        final instance = factory({}, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23,
-            24, 25, 26, 27, 28, 29, 30, 31, 32, 33, 34, 35, 36, 37, 38, 39, 40);
+        final instance = factory(props, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22,
+            23, 24, 25, 26, 27, 28, 29, 30, 31, 32, 33, 34, 35, 36, 37, 38, 39, 40);
         // Generate these instead of hard coding them to ensure the arguments passed into this test match maxSupportedVariadicChildCount
         final expectedChildren = new List.generate(maxSupportedVariadicChildCount, (i) => i + 1);
         expect(getChildren(instance), equals(expectedChildren));
@@ -66,7 +82,7 @@ void commonFactoryTests(ReactComponentFactoryProxy factory, {bool isComponent2 =
     });
 
     test('a List', () {
-      var instance = factory({}, [
+      var instance = factory(props, [
         'one',
         'two',
       ]);
@@ -74,17 +90,17 @@ void commonFactoryTests(ReactComponentFactoryProxy factory, {bool isComponent2 =
     });
 
     test('an empty List', () {
-      var instance = factory({}, []);
+      var instance = factory(props, []);
       expect(getChildren(instance), equals([]));
     });
 
     test('an Iterable', () {
-      var instance = factory({}, new Iterable.generate(3, (int i) => '$i'));
+      var instance = factory(props, new Iterable.generate(3, (int i) => '$i'));
       expect(getChildren(instance), equals(['0', '1', '2']));
     });
 
     test('an empty Iterable', () {
-      var instance = factory({}, new Iterable.empty());
+      var instance = factory(props, new Iterable.empty());
       expect(getChildren(instance), equals([]));
     });
   }
@@ -100,45 +116,85 @@ void commonFactoryTests(ReactComponentFactoryProxy factory, {bool isComponent2 =
 
   if (isDartComponent(factory({}))) {
     group('passes children to the Dart component when specified as', () {
+      final notCalledSentinelValue = Object();
+      dynamic childrenFromLastRender;
+      void onDartRender(Map props) => childrenFromLastRender = props['children'];
+
       dynamic getDartChildren(ReactElement instance) {
-        // Actually render the component to provide full end-to-end coverage
-        // from ReactElement to `this.props`.
-        ReactComponent renderedInstance = rtu.renderIntoDocument(instance);
-        return renderedInstance.dartComponent.props['children'];
+        // Set to a value that won't ever be equal to children, so we can tell whether it was called.
+        childrenFromLastRender = notCalledSentinelValue;
+        rtu.renderIntoDocument(instance);
+        final children = childrenFromLastRender;
+        if (childrenFromLastRender == notCalledSentinelValue) {
+          throw StateError('onDartRender was not called when rendering `instance`. '
+              'Ensure the `props` argument are being passed to the factory.');
+        }
+        return children;
       }
 
-      sharedChildrenTests(getDartChildren, shouldAlwaysBeList: true);
+      sharedChildrenTests(
+        getDartChildren,
+        shouldAlwaysBeList: true,
+        props: Map.unmodifiable({
+          'onDartRender': onDartRender,
+        }),
+      );
+    });
+  }
+
+  if (isDartComponent2(factory({}))) {
+    test('executes Dart render code in the component zone', () {
+      final oldComponentZone = componentZone;
+      addTearDown(() => componentZone = oldComponentZone);
+      componentZone = Zone.current.fork();
+      expect(componentZone, isNot(Zone.current),
+          reason: 'test setup: component zone should be different than the zone used to render it');
+
+      Zone renderZone;
+      rtu.renderIntoDocument(factory({
+        'onDartRender': (_) {
+          renderZone = Zone.current;
+        }
+      }));
+      expect(renderZone, isNotNull, reason: 'test setup: onDartRender should have been called');
+      expect(renderZone, same(componentZone));
     });
   }
 }
 
 void domEventHandlerWrappingTests(ReactComponentFactoryProxy factory) {
+  Element renderAndGetRootNode(ReactElement content) {
+    final mountNode = Element.div();
+    react_dom.render(content, mountNode);
+    return mountNode.children.single;
+  }
+
   setUpAll(() {
     var called = false;
 
-    var renderedInstance = rtu.renderIntoDocument(factory({
+    final nodeWithClickHandler = renderAndGetRootNode(factory({
       'onClick': (_) {
         called = true;
       }
     }));
 
-    rtu.Simulate.click(react_dom.findDOMNode(renderedInstance));
+    rtu.Simulate.click(nodeWithClickHandler);
 
     expect(called, isTrue,
         reason: 'this set of tests assumes that the factory '
-            'passes the click handler to the rendered DOM node');
+            'renders a single DOM node and passes props.onClick to it');
   });
 
   test('wraps the handler with a function that converts the synthetic event', () {
     var actualEvent;
 
-    var renderedInstance = rtu.renderIntoDocument(factory({
+    final nodeWithClickHandler = renderAndGetRootNode(factory({
       'onClick': (event) {
         actualEvent = event;
       }
     }));
 
-    rtu.Simulate.click(react_dom.findDOMNode(renderedInstance));
+    rtu.Simulate.click(nodeWithClickHandler);
 
     expect(actualEvent, isA<react.SyntheticEvent>());
   });
@@ -147,14 +203,14 @@ void domEventHandlerWrappingTests(ReactComponentFactoryProxy factory) {
     test('when event.persist() is called', () {
       react.SyntheticMouseEvent actualEvent;
 
-      var renderedInstance = rtu.renderIntoDocument(factory({
+      final nodeWithClickHandler = renderAndGetRootNode(factory({
         'onClick': (react.SyntheticMouseEvent event) {
           event.persist();
           actualEvent = event;
         }
       }));
 
-      rtu.Simulate.click(react_dom.findDOMNode(renderedInstance));
+      rtu.Simulate.click(nodeWithClickHandler);
 
       // ignore: invalid_use_of_protected_member
       expect(actualEvent.$$jsPersistDoNotSetThisOrYouWillBeFired, isA<Function>());
@@ -164,13 +220,13 @@ void domEventHandlerWrappingTests(ReactComponentFactoryProxy factory) {
     test('when event.persist() is not called', () {
       react.SyntheticMouseEvent actualEvent;
 
-      var renderedInstance = rtu.renderIntoDocument(factory({
+      final nodeWithClickHandler = renderAndGetRootNode(factory({
         'onClick': (react.SyntheticMouseEvent event) {
           actualEvent = event;
         }
       }));
 
-      rtu.Simulate.click(react_dom.findDOMNode(renderedInstance));
+      rtu.Simulate.click(nodeWithClickHandler);
 
       // ignore: invalid_use_of_protected_member
       expect(actualEvent.$$jsPersistDoNotSetThisOrYouWillBeFired, isA<Function>());
@@ -179,9 +235,9 @@ void domEventHandlerWrappingTests(ReactComponentFactoryProxy factory) {
   });
 
   test('doesn\'t wrap the handler if it is null', () {
-    var renderedInstance = rtu.renderIntoDocument(factory({'onClick': null}));
+    final nodeWithClickHandler = renderAndGetRootNode(factory({'onClick': null}));
 
-    expect(() => rtu.Simulate.click(react_dom.findDOMNode(renderedInstance)), returnsNormally);
+    expect(() => rtu.Simulate.click(nodeWithClickHandler), returnsNormally);
   });
 
   test('stores the original function in a way that it can be retrieved from unconvertJsEventHandler', () {
@@ -199,42 +255,46 @@ void domEventHandlerWrappingTests(ReactComponentFactoryProxy factory) {
     test('(simulated event)', () {
       final testZone = Zone.current;
 
-      var renderedInstance;
+      Element nodeWithClickHandler;
       // Run the ReactElement creation and rendering in a separate zone to
       // ensure the component lifecycle isn't run in the testZone, which could
       // create false positives in the `expect`.
       runZoned(() {
-        renderedInstance = rtu.renderIntoDocument(factory({
+        nodeWithClickHandler = renderAndGetRootNode(factory({
           'onClick': (event) {
             expect(Zone.current, same(testZone));
           }
         }));
       });
 
-      rtu.Simulate.click(react_dom.findDOMNode(renderedInstance));
+      rtu.Simulate.click(nodeWithClickHandler);
     });
 
     test('(native event)', () {
       final testZone = Zone.current;
 
-      var renderedInstance;
+      Element nodeWithClickHandler;
       // Run the ReactElement creation and rendering in a separate zone to
       // ensure the component lifecycle isn't run in the testZone, which could
       // create false positives in the `expect`.
       runZoned(() {
-        renderedInstance = rtu.renderIntoDocument(factory({
+        nodeWithClickHandler = renderAndGetRootNode(factory({
           'onClick': (event) {
             expect(Zone.current, same(testZone));
           }
         }));
       });
 
-      (react_dom.findDOMNode(renderedInstance) as Element).dispatchEvent(new MouseEvent('click'));
+      nodeWithClickHandler.dispatchEvent(new MouseEvent('click'));
     });
   });
 }
 
 void refTests<T>(ReactComponentFactoryProxy factory, {void verifyRefValue(dynamic refValue)}) {
+  if (T == dynamic) {
+    throw ArgumentError('Generic parameter T must be specified');
+  }
+
   test('callback refs are called with the correct value', () {
     var called = false;
     var refValue;
@@ -251,7 +311,7 @@ void refTests<T>(ReactComponentFactoryProxy factory, {void verifyRefValue(dynami
   });
 
   test('string refs are created with the correct value', () {
-    ReactComponent renderedInstance = _renderWithOwner(() => factory({'ref': 'test'}));
+    ReactComponent renderedInstance = _renderWithStringRefSupportingOwner(() => factory({'ref': 'test'}));
 
     // ignore: deprecated_member_use_from_same_package
     verifyRefValue(renderedInstance.dartComponent.ref('test'));
@@ -268,10 +328,9 @@ void refTests<T>(ReactComponentFactoryProxy factory, {void verifyRefValue(dynami
   });
 
   test('forwardRef function passes a ref through a component to one of its children', () {
+    dynamic actualRef;
     var ForwardRefTestComponent = forwardRef((props, ref) {
-      // Extra type checking since JS refs being passed through
-      // aren't caught by built-in type checking.
-      expect(ref, isA<Ref>());
+      actualRef = ref;
 
       return factory({
         'ref': ref,
@@ -285,6 +344,10 @@ void refTests<T>(ReactComponentFactoryProxy factory, {void verifyRefValue(dynami
       'ref': refObject,
       'childId': 'test',
     }));
+
+    // Extra type checking since JS refs being passed through
+    // aren't caught by built-in type checking.
+    expect(actualRef, isA<Ref>());
 
     // Props are accessed differently for DOM, Dart, and JS components.
     var idValue;
@@ -304,11 +367,122 @@ void refTests<T>(ReactComponentFactoryProxy factory, {void verifyRefValue(dynami
     verifyRefValue(refObject.current);
   });
 
-  group('has functional callback refs when they are typed as', () {
-    if (T == dynamic) {
-      throw ArgumentError('Generic parameter T must be specified');
-    }
+  group('forwardRef sets displayName on the rendered component as expected', () {
+    test('when displayName argument is not passed to forwardRef', () {
+      var ForwardRefTestComponent = forwardRef((props, ref) {
+        // Extra type checking since JS refs being passed through
+        // aren't caught by built-in type checking.
+        expect(ref, isA<Ref>());
 
+        return factory({'ref': ref});
+      });
+
+      expect(getProperty(getProperty(ForwardRefTestComponent.type, 'render'), 'displayName'), 'Anonymous');
+    });
+
+    test('when displayName argument is passed to forwardRef', () {
+      var ForwardRefTestComponent = forwardRef((props, ref) {
+        // Extra type checking since JS refs being passed through
+        // aren't caught by built-in type checking.
+        expect(ref, isA<Ref>());
+
+        return factory({'ref': ref});
+      }, displayName: 'ForwardRefTestComponent');
+
+      expect(
+          getProperty(getProperty(ForwardRefTestComponent.type, 'render'), 'displayName'), 'ForwardRefTestComponent');
+    });
+  });
+
+  group('forwardRef wraps event handlers properly,', () {
+    const dartInside = EventTestCase.dart('onMouseDown', 'inside forwardRef');
+    const dart = EventTestCase.dart('onMouseUp', 'set on forwardRef hoc');
+    const dartCloned = EventTestCase.dart('onMouseLeave', 'cloned onto forwardRef hoc');
+    const jsCloned = EventTestCase.js('onClick', 'cloned onto forwardRef hoc ');
+    const eventCases = {dartInside, dart, jsCloned, dartCloned};
+
+    Element node;
+    Map<EventTestCase, dynamic> events;
+    Map propsFromDartRender;
+
+    setUpAll(() {
+      expect(eventCases.map((h) => h.eventPropKey).toSet(), hasLength(eventCases.length),
+          reason: 'test setup: each helper should have a unique event key');
+
+      node = null;
+      events = {};
+      propsFromDartRender = null;
+
+      final ForwardRefTestComponent = forwardRef((props, ref) {
+        return factory({
+          ...props,
+          'onDartRender': (p) {
+            propsFromDartRender = p;
+          },
+          dartInside.eventPropKey: (event) => events[dartInside] = event,
+          isDartComponent(factory({})) ? 'forwardedRef' : 'ref': ref,
+        }, props['children']);
+      });
+
+      final refObject = createRef();
+      var element = ForwardRefTestComponent({
+        'ref': refObject,
+        dart.eventPropKey: (event) => events[dart] = event,
+      });
+
+      element = React.cloneElement(
+        element,
+        jsifyAndAllowInterop({
+          jsCloned.eventPropKey: (event) => events[jsCloned] = event,
+        }),
+      );
+
+      element = React.cloneElement(
+        element,
+        // Invoke the factory corresponding to element's type
+        // to get the correct version of the handler (converted or non-converted)
+        // before passing it straight to the JS.
+        ForwardRefTestComponent({
+          dartCloned.eventPropKey: (event) => events[dartCloned] = event,
+        }).props,
+      );
+
+      rtu.renderIntoDocument(element);
+
+      node = react_dom.findDOMNode(refObject.current);
+    });
+
+    group('passing Dart events to Dart handlers, and JS events to handlers originating from JS:', () {
+      for (var eventCase in eventCases) {
+        test(eventCase.description, () {
+          eventCase.simulate(node);
+          expect(events[eventCase], isNotNull, reason: 'handler should have been called');
+          expect(events[eventCase],
+              eventCase.isDart ? isA<react.SyntheticMouseEvent>() : isNot(isA<react.SyntheticMouseEvent>()));
+        });
+      }
+    });
+
+    if (isDartComponent(factory({}))) {
+      group('in a way that the handlers are callable from within the Dart component:', () {
+        setUpAll(() {
+          expect(propsFromDartRender, isNotNull,
+              reason: 'test setup: component must pass props into props.onDartRender');
+        });
+
+        final dummyEvent = react.SyntheticMouseEvent(null, null, null, null, null, null, null, null, null, null, null,
+            null, null, null, null, null, null, null, null, null, null, null, null, null, null, null);
+
+        for (var eventCase in eventCases.where((helper) => helper.isDart)) {
+          test(eventCase.description, () {
+            expect(() => propsFromDartRender[eventCase.eventPropKey](dummyEvent), returnsNormally);
+          });
+        }
+      });
+    }
+  });
+
+  group('has functional callback refs when they are typed as', () {
     test('`dynamic Function(dynamic)`', () {
       T fooRef;
       callbackRef(dynamic ref) {
@@ -408,42 +582,68 @@ void _childKeyWarningTests(Function factory, {Function(ReactElement Function()) 
   });
 }
 
+class _StringRefOwnerOwnerHelperComponent extends react.Component {
+  @override
+  render() => props['render']();
+}
+
+/// Renders the provided [render] function with a Component owner that supports string refs,
+/// for string ref tests.
+ReactComponent _renderWithStringRefSupportingOwner(ReactElement render()) {
+  final factory =
+      react.registerComponent(() => new _StringRefOwnerOwnerHelperComponent()) as ReactDartComponentFactoryProxy;
+
+  return rtu.renderIntoDocument(factory({'render': render}));
+}
+
 int _nextFactoryId = 0;
 
-/// Renders the provided [render] function with an owner that will have a unique name.
+/// Renders the provided [render] function with a Component2 owner that will have a unique name.
 ///
 /// This prevents React JS from not printing key warnings it deems as "duplicates".
 void _renderWithUniqueOwnerName(ReactElement render()) {
-  final factory = react.registerComponent(() => new _OwnerHelperComponent()) as ReactDartComponentFactoryProxy;
+  final factory = react.registerComponent2(() => new _UniqueOwnerHelperComponent());
   factory.reactClass.displayName = 'OwnerHelperComponent_$_nextFactoryId';
   _nextFactoryId++;
 
   rtu.renderIntoDocument(factory({'render': render}));
 }
 
-_renderWithOwner(ReactElement render()) {
-  final factory = react.registerComponent(() => new _OwnerHelperComponent()) as ReactDartComponentFactoryProxy;
-
-  return rtu.renderIntoDocument(factory({'render': render}));
-}
-
-class _OwnerHelperComponent extends react.Component {
+class _UniqueOwnerHelperComponent extends react.Component2 {
   @override
   render() => props['render']();
 }
 
-/// Renders the provided [render] function with a Component2 owner that will have a unique name.
-///
-/// This prevents React JS from not printing key warnings it deems as "duplicates".
-void _renderWithUniqueOwnerName2(ReactElement render()) {
-  final factory = react.registerComponent2(() => new _OwnerHelperComponent2());
-  factory.reactClass.displayName = 'OwnerHelperComponent2_$_nextFactoryId';
-  _nextFactoryId++;
+class EventTestCase {
+  /// The prop key for an arbitrary event handler that will be used to test this case.
+  final String eventPropKey;
 
-  rtu.renderIntoDocument(factory({'render': render}));
-}
+  /// A description of this test case.
+  final String description;
 
-class _OwnerHelperComponent2 extends react.Component2 {
+  /// Whether the tested event handler is a Dart function expecting a Dart synthetic event,
+  /// as opposed to a JS function expecting a JS synthetic event.
+  final bool isDart;
+
+  const EventTestCase.dart(this.eventPropKey, String description)
+      : isDart = true,
+        description = 'Dart handler $description';
+
+  const EventTestCase.js(this.eventPropKey, String description)
+      : isDart = false,
+        description = 'JS handler $description';
+
+  String get _camelCaseEventName {
+    var name = eventPropKey.replaceFirst(RegExp(r'^on'), '');
+    name = name.substring(0, 1).toLowerCase() + name.substring(1);
+    return name;
+  }
+
+  void simulate(Element node) => callMethod(_Simulate, _camelCaseEventName, [node]);
+
   @override
-  render() => props['render']();
+  String toString() => 'EventHelper: ($eventPropKey) $description';
 }
+
+@JS('React.addons.TestUtils.Simulate')
+external dynamic get _Simulate;

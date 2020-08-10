@@ -3,7 +3,6 @@ import "dart:html";
 
 import "package:react/react.dart" as react;
 import "package:react/react_dom.dart" as react_dom;
-import "package:react/react_client.dart";
 
 customAssert(text, condition) {
   if (condition)
@@ -83,7 +82,6 @@ class SimpleComponent extends react.Component {
 var mountedNode = querySelector('#content');
 
 void main() {
-  setClientConfiguration();
   var component = simpleComponent({});
   react_dom.render(component, mountedNode);
 }
