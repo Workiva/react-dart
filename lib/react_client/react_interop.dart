@@ -300,7 +300,7 @@ ReactJsComponentFactoryProxy forwardRef(
 /// > Do not rely on it to “prevent” a render, as this can lead to bugs.
 ///
 /// See: <https://reactjs.org/docs/react-api.html#reactmemo>.
-ReactComponentFactoryProxy memo2(ReactDartFunctionComponentFactoryProxy factory,
+ReactComponentFactoryProxy memo2(ReactComponentFactoryProxy factory,
     {bool Function(Map prevProps, Map nextProps) areEqual}) {
   final _areEqual = areEqual == null
       ? null
