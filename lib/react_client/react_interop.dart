@@ -49,7 +49,7 @@ abstract class React {
   external static JsRef createRef();
   external static ReactClass forwardRef(Function(JsMap props, JsRef ref) wrapperFunction);
   external static ReactClass memo(
-    dynamic Function(JsMap props, [JsMap legacyContext]) wrapperFunction, [
+    dynamic wrapperFunction, [
     bool Function(JsMap prevProps, JsMap nextProps) areEqual,
   ]);
 
