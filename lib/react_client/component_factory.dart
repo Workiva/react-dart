@@ -403,16 +403,15 @@ class ReactDartForwardRefFunctionComponentFactoryProxy extends ReactComponentFac
   final String displayName;
 
   /// The React JS component definition of this Function Component.
-  final JsForwardRefFunctionComponent reactFunction;
+  @override
+  final ReactClass type;
 
   ReactDartForwardRefFunctionComponentFactoryProxy(DartForwardRefFunctionComponent dartFunctionComponent,
       {String displayName})
       : this.displayName = displayName ?? _getJsFunctionName(dartFunctionComponent),
-        this.reactFunction = _wrapForwardRefFunctionComponent(dartFunctionComponent,
+        this.type = _wrapForwardRefFunctionComponent(dartFunctionComponent,
             displayName: displayName ?? _getJsFunctionName(dartFunctionComponent));
 
-  @override
-  Function get type => reactFunction;
 
   /// Creates a function component from the given [dartFunctionComponent] that can be used with React.
   ///
@@ -420,7 +419,7 @@ class ReactDartForwardRefFunctionComponentFactoryProxy extends ReactComponentFac
   ///
   /// In DDC, this will be the [DartFunctionComponent] name, but in dart2js it will be null unless
   /// overridden, since using runtimeType can lead to larger dart2js output.
-  static JsForwardRefFunctionComponent _wrapForwardRefFunctionComponent(
+  static ReactClass _wrapForwardRefFunctionComponent(
       DartForwardRefFunctionComponent dartFunctionComponent,
       {String displayName}) {
     // dart2js uses null and undefined interchangeably, meaning returning `null` from dart
@@ -448,8 +447,9 @@ class ReactDartForwardRefFunctionComponentFactoryProxy extends ReactComponentFac
       // This is a work-around to display the correct name in the React DevTools.
       defineProperty(interopFunction, 'name', jsify({'value': displayName}));
     }
+    final jsForwardRefFunction = React.forwardRef(interopFunction);
     // ignore: invalid_use_of_protected_member
-    setProperty(interopFunction, 'dartComponentVersion', ReactDartComponentVersion.component2);
-    return interopFunction;
+    setProperty(jsForwardRefFunction, 'dartComponentVersion', ReactDartComponentVersion.component2);
+    return jsForwardRefFunction;
   }
 }
