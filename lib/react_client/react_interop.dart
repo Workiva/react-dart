@@ -19,7 +19,10 @@ import 'package:react/react_client.dart' show ComponentFactory;
 import 'package:react/react_client/bridge.dart';
 import 'package:react/react_client/js_backed_map.dart';
 import 'package:react/react_client/component_factory.dart'
-    show ReactDartFunctionComponentFactoryProxy, ReactJsComponentFactoryProxy;
+    show
+        ReactDartForwardRefFunctionComponentFactoryProxy,
+        ReactDartFunctionComponentFactoryProxy,
+        ReactJsComponentFactoryProxy;
 import 'package:react/react_client/js_interop_helpers.dart';
 import 'package:react/react_client/zone.dart';
 import 'package:react/src/js_interop_util.dart';
@@ -159,7 +162,7 @@ class JsRef {
 /// import 'package:react/react.dart' as react;
 ///
 /// // ---------- Component Definition ----------
-/// final FancyButton = react.forwardRef((props, ref) {
+/// final FancyButton = react.forwardRef2((props, ref) {
 ///   return react.button({'ref': ref, 'className': 'FancyButton'}, 'Click me!');
 /// }, displayName: 'FancyButton');
 ///
@@ -186,7 +189,7 @@ class JsRef {
 ///
 /// // ---------- Component Definitions ----------
 ///
-/// final FancyButton = react.forwardRef((props, ref) {
+/// final FancyButton = react.forwardRef2((props, ref) {
 ///   return react.button({'ref': ref, 'className': 'FancyButton'}, 'Click me!');
 /// }, displayName: 'FancyButton');
 ///
@@ -207,8 +210,8 @@ class JsRef {
 /// }
 /// final _logPropsHoc = react.registerComponent2(() => _LogProps());
 ///
-/// final LogProps = react.forwardRef((props, ref) {
-///   // Note the second param "ref" provided by react.forwardRef.
+/// final LogProps = react.forwardRef2((props, ref) {
+///   // Note the second param "ref" provided by react.forwardRef2.
 ///   // We can pass it along to LogProps as a regular prop, e.g. "forwardedRef"
 ///   // And it can then be attached to the Component.
 ///   return _logPropsHoc({...props, 'forwardedRef': ref});
@@ -229,6 +232,13 @@ class JsRef {
 /// }
 /// ```
 /// See: <https://reactjs.org/docs/forwarding-refs.html>.
+ReactDartForwardRefFunctionComponentFactoryProxy forwardRef2(
+  Function(Map props, Ref ref) wrapperFunction, {
+  String displayName,
+}) =>
+    ReactDartForwardRefFunctionComponentFactoryProxy(wrapperFunction, displayName: displayName);
+
+@Deprecated('Use forwardRef2')
 ReactJsComponentFactoryProxy forwardRef(
   Function(Map props, Ref ref) wrapperFunction, {
   String displayName = 'Anonymous',
