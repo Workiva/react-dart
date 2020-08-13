@@ -20,6 +20,7 @@ import 'package:react/react_dom.dart' as react_dom;
 import 'package:react/react_test_utils.dart' as rtu;
 import 'package:react/react_client/react_interop.dart';
 
+import '../shared_type_tester.dart';
 import '../util.dart';
 
 /// Runs common tests for [factory].
@@ -27,7 +28,7 @@ import '../util.dart';
 /// [dartComponentVersion] should be specified for all components with Dart render code in order to
 /// properly test `props.children`, forwardRef compatibility, etc.
 void commonFactoryTests(ReactComponentFactoryProxy factory,
-    {bool isFunctionComponent = false, String dartComponentVersion}) {
+    {bool isFunctionComponent = false, String dartComponentVersion, bool skipPropValuesTest = false}) {
   _childKeyWarningTests(
     factory,
     renderWithUniqueOwnerName: _renderWithUniqueOwnerName,
@@ -140,6 +141,36 @@ void commonFactoryTests(ReactComponentFactoryProxy factory,
         }),
       );
     });
+
+    if (!isDartComponent1(factory({}))) {
+      test('passes through props as a JsBackedMap:', () {
+        dynamic receivedProps;
+        rtu.renderIntoDocument(factory({
+          'onDartRender': (Map props) {
+            receivedProps = props;
+          }
+        }));
+
+        expect(receivedProps, isA<JsBackedMap>(), reason: 'props should be a JsBackedMap');
+      });
+    }
+
+    if (!skipPropValuesTest) {
+      group('does not convert/wrap values for interop:', () {
+        sharedTypeTests((dynamic testValue) {
+          dynamic receivedValue;
+
+          rtu.renderIntoDocument(factory({
+            'testValue': testValue,
+            'onDartRender': (Map props) {
+              receivedValue = props['testValue'];
+            }
+          }));
+
+          expect(receivedValue, same(testValue));
+        });
+      });
+    }
   }
 
   if (isDartComponent2(factory({}))) {

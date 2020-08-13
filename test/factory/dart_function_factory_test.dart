@@ -51,6 +51,17 @@ main() {
         ForwardRefTest,
         isFunctionComponent: true,
         dartComponentVersion: ReactDartComponentVersion.component2,
+        skipPropValuesTest: true,
+      );
+    });
+  });
+
+  group('forwardRef2', () {
+    group('- common factory behavior -', () {
+      commonFactoryTests(
+        ForwardRef2Test,
+        isFunctionComponent: true,
+        dartComponentVersion: ReactDartComponentVersion.component2,
       );
     });
   });
@@ -78,6 +89,11 @@ _FunctionFoo(Map props) {
 }
 
 final ForwardRefTest = react.forwardRef((props, ref) {
+  props['onDartRender']?.call(props);
+  return react.div({...props, 'ref': ref});
+});
+
+final ForwardRef2Test = react.forwardRef2((props, ref) {
   props['onDartRender']?.call(props);
   return react.div({...props, 'ref': ref});
 });
