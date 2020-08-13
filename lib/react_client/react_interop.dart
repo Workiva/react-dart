@@ -229,7 +229,7 @@ class JsRef {
 /// }
 /// ```
 /// See: <https://reactjs.org/docs/forwarding-refs.html>.
-ReactDartWrappedComponentFactoryProxy forwardRef2(
+ReactComponentFactoryProxy forwardRef2(
   Function(Map props, Ref ref) wrapperFunction, {
   String displayName,
 }) =>
@@ -300,7 +300,7 @@ ReactJsComponentFactoryProxy forwardRef(
 /// > Do not rely on it to “prevent” a render, as this can lead to bugs.
 ///
 /// See: <https://reactjs.org/docs/react-api.html#reactmemo>.
-ReactDartWrappedComponentFactoryProxy memo2(ReactDartFunctionComponentFactoryProxy factory,
+ReactComponentFactoryProxy memo2(ReactDartFunctionComponentFactoryProxy factory,
     {bool Function(Map prevProps, Map nextProps) areEqual}) {
   final _areEqual = areEqual == null
       ? null
