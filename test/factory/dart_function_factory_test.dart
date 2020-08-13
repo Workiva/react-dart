@@ -20,7 +20,6 @@ main() {
       group('- common factory behavior -', () {
         commonFactoryTests(
           FunctionFoo,
-          isFunctionComponent: true,
           dartComponentVersion: ReactDartComponentVersion.component2,
         );
       });
@@ -49,7 +48,6 @@ main() {
     group('- common factory behavior -', () {
       commonFactoryTests(
         ForwardRefTest,
-        isFunctionComponent: true,
         dartComponentVersion: ReactDartComponentVersion.component2,
         skipPropValuesTest: true,
       );
@@ -60,7 +58,6 @@ main() {
     group('- common factory behavior -', () {
       commonFactoryTests(
         ForwardRef2Test,
-        isFunctionComponent: true,
         dartComponentVersion: ReactDartComponentVersion.component2,
       );
     });
@@ -70,7 +67,6 @@ main() {
     group('- common factory behavior -', () {
       commonFactoryTests(
         MemoTest,
-        isFunctionComponent: true,
         dartComponentVersion: ReactDartComponentVersion.component2,
         skipPropValuesTest: true,
       );
@@ -81,7 +77,6 @@ main() {
     group('- common factory behavior -', () {
       commonFactoryTests(
         Memo2Test,
-        isFunctionComponent: true,
         dartComponentVersion: ReactDartComponentVersion.component2,
       );
     });
