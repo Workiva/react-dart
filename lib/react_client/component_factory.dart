@@ -437,8 +437,8 @@ class ReactDartForwardRefFunctionComponentFactoryProxy extends ReactComponentFac
             }
           }
 
-          // FIXME don't assume this is always a ref object
-          final dartRef = Ref.fromJs(ref);
+          // FIXME add tests for all cases
+          final dartRef = (ref is Function || ref == null) ? ref : Ref.fromJs(ref);
           return dartFunctionComponent(dartProps, dartRef) ?? jsNull;
         });
 
