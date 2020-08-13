@@ -19,10 +19,7 @@ import 'package:react/react_client.dart' show ComponentFactory;
 import 'package:react/react_client/bridge.dart';
 import 'package:react/react_client/js_backed_map.dart';
 import 'package:react/react_client/component_factory.dart'
-    show
-        ReactDartWrappedComponentFactoryProxy,
-        ReactDartFunctionComponentFactoryProxy,
-        ReactJsComponentFactoryProxy;
+    show ReactDartWrappedComponentFactoryProxy, ReactDartFunctionComponentFactoryProxy, ReactJsComponentFactoryProxy;
 import 'package:react/react_client/js_interop_helpers.dart';
 import 'package:react/react_client/zone.dart';
 import 'package:react/src/js_interop_util.dart';
@@ -308,10 +305,10 @@ ReactDartWrappedComponentFactoryProxy memo2(ReactDartFunctionComponentFactoryPro
   final _areEqual = areEqual == null
       ? null
       : allowInterop((JsMap prevProps, JsMap nextProps) {
-    final dartPrevProps = JsBackedMap.backedBy(prevProps);
-    final dartNextProps = JsBackedMap.backedBy(nextProps);
-    return areEqual(dartPrevProps, dartNextProps);
-  });
+          final dartPrevProps = JsBackedMap.backedBy(prevProps);
+          final dartNextProps = JsBackedMap.backedBy(nextProps);
+          return areEqual(dartPrevProps, dartNextProps);
+        });
   final hoc = React.memo(factory.type, _areEqual);
   setProperty(hoc, 'dartComponentVersion', ReactDartComponentVersion.component2);
 

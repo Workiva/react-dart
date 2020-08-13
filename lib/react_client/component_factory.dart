@@ -371,8 +371,7 @@ class ReactDartFunctionComponentFactoryProxy extends ReactComponentFactoryProxy 
 }
 
 /// A wrapper for a Dart component that's been wrapped by a JS component/HOC (e.g., [React.memo], [React.forwardRef]).
-class ReactDartWrappedComponentFactoryProxy extends ReactComponentFactoryProxy
-    with JsBackedMapComponentFactoryMixin {
+class ReactDartWrappedComponentFactoryProxy extends ReactComponentFactoryProxy with JsBackedMapComponentFactoryMixin {
   /// The React JS component definition of this Function Component.
   @override
   final ReactClass type;
@@ -424,8 +423,7 @@ ReactClass _wrapForwardRefFunctionComponent(DartForwardRefFunctionComponent dart
   // and throws if it gets `undefined`. `jsNull` is an interop variable that holds a JS `null` value
   // to force `null` as the return value if user returns a Dart `null`.
   // See: https://github.com/dart-lang/sdk/issues/27485
-  jsFunctionComponent(JsMap props, dynamic ref) =>
-      componentZone.run(() {
+  jsFunctionComponent(JsMap props, dynamic ref) => componentZone.run(() {
         final dartProps = JsBackedMap.backedBy(props);
         for (var value in dartProps.values) {
           if (value is Function) {
