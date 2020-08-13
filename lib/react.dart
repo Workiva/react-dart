@@ -21,7 +21,7 @@ import 'package:react/src/react_client/private_utils.dart' show validateJsApiThe
 
 export 'package:react/src/context.dart';
 export 'package:react/src/prop_validator.dart';
-export 'package:react/react_client/react_interop.dart' show forwardRef, forwardRef2, createRef, memo;
+export 'package:react/react_client/react_interop.dart' show forwardRef, forwardRef2, createRef, memo, memo2;
 
 typedef Error PropValidator<TProps>(TProps props, PropValidatorInfo info);
 

@@ -72,6 +72,17 @@ main() {
         MemoTest,
         isFunctionComponent: true,
         dartComponentVersion: ReactDartComponentVersion.component2,
+        skipPropValuesTest: true,
+      );
+    });
+  });
+
+  group('memo2', () {
+    group('- common factory behavior -', () {
+      commonFactoryTests(
+        Memo2Test,
+        isFunctionComponent: true,
+        dartComponentVersion: ReactDartComponentVersion.component2,
       );
     });
   });
@@ -99,6 +110,11 @@ final ForwardRef2Test = react.forwardRef2((props, ref) {
 });
 
 final MemoTest = react.memo(react.registerFunctionComponent((props) {
+  props['onDartRender']?.call(props);
+  return react.div({...props});
+}));
+
+final Memo2Test = react.memo2(react.registerFunctionComponent((props) {
   props['onDartRender']?.call(props);
   return react.div({...props});
 }));

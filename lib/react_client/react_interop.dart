@@ -20,7 +20,7 @@ import 'package:react/react_client/bridge.dart';
 import 'package:react/react_client/js_backed_map.dart';
 import 'package:react/react_client/component_factory.dart'
     show
-        ReactDartForwardRefFunctionComponentFactoryProxy,
+        ReactDartWrappedComponentFactoryProxy,
         ReactDartFunctionComponentFactoryProxy,
         ReactJsComponentFactoryProxy;
 import 'package:react/react_client/js_interop_helpers.dart';
@@ -232,11 +232,11 @@ class JsRef {
 /// }
 /// ```
 /// See: <https://reactjs.org/docs/forwarding-refs.html>.
-ReactDartForwardRefFunctionComponentFactoryProxy forwardRef2(
+ReactDartWrappedComponentFactoryProxy forwardRef2(
   Function(Map props, Ref ref) wrapperFunction, {
   String displayName,
 }) =>
-    ReactDartForwardRefFunctionComponentFactoryProxy(wrapperFunction, displayName: displayName);
+    ReactDartWrappedComponentFactoryProxy.forwardRef(wrapperFunction, displayName: displayName);
 
 @Deprecated('Use forwardRef2')
 ReactJsComponentFactoryProxy forwardRef(
@@ -276,12 +276,12 @@ ReactJsComponentFactoryProxy forwardRef(
 /// ```dart
 /// import 'package:react/react.dart' as react;
 ///
-/// final MyComponent = react.memo(react.registerFunctionComponent((props) {
+/// final MyComponent = react.memo2(react.registerFunctionComponent((props) {
 ///   /* render using props */
 /// }));
 /// ```
 ///
-/// `memo` only affects props changes. If your function component wrapped in `memo` has a
+/// `memo2` only affects props changes. If your function component wrapped in `memo2` has a
 /// [useState] or [useContext] Hook in its implementation, it will still rerender when `state` or `context` change.
 ///
 /// By default it will only shallowly compare complex objects in the props map.
@@ -291,7 +291,7 @@ ReactJsComponentFactoryProxy forwardRef(
 /// ```dart
 /// import 'package:react/react.dart' as react;
 ///
-/// final MyComponent = react.memo(react.registerFunctionComponent((props) {
+/// final MyComponent = react.memo2(react.registerFunctionComponent((props) {
 ///   // render using props
 /// }), areEqual: (prevProps, nextProps) {
 ///   // Do some custom comparison logic to return a bool based on prevProps / nextProps
@@ -303,6 +303,22 @@ ReactJsComponentFactoryProxy forwardRef(
 /// > Do not rely on it to “prevent” a render, as this can lead to bugs.
 ///
 /// See: <https://reactjs.org/docs/react-api.html#reactmemo>.
+ReactDartWrappedComponentFactoryProxy memo2(ReactDartFunctionComponentFactoryProxy factory,
+    {bool Function(Map prevProps, Map nextProps) areEqual}) {
+  final _areEqual = areEqual == null
+      ? null
+      : allowInterop((JsMap prevProps, JsMap nextProps) {
+    final dartPrevProps = JsBackedMap.backedBy(prevProps);
+    final dartNextProps = JsBackedMap.backedBy(nextProps);
+    return areEqual(dartPrevProps, dartNextProps);
+  });
+  final hoc = React.memo(factory.type, _areEqual);
+  setProperty(hoc, 'dartComponentVersion', ReactDartComponentVersion.component2);
+
+  return ReactDartWrappedComponentFactoryProxy(hoc);
+}
+
+@Deprecated('Use memo2')
 ReactJsComponentFactoryProxy memo(ReactDartFunctionComponentFactoryProxy factory,
     {bool Function(Map prevProps, Map nextProps) areEqual}) {
   final _areEqual = areEqual == null
