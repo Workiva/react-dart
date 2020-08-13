@@ -27,7 +27,7 @@ main() {
             return prevProps['localCount'] == nextProps['localCount'];
           };
 
-    final MemoTest = react.memo(react.registerFunctionComponent((Map props) {
+    final MemoTest = react.memo2(react.registerFunctionComponent((Map props) {
       childMemoRenderCount++;
       return react.div(
         {},
@@ -58,7 +58,7 @@ main() {
         reason: 'test setup sanity check');
   }
 
-  group('memo', () {
+  group('memo2', () {
     setUp(() {
       memoTestWrapperComponentRef = react.createRef<_MemoTestWrapperComponent>();
       localCountDisplayRef = react.createRef<Element>();

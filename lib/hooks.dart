@@ -475,7 +475,7 @@ void useLayoutEffect(dynamic Function() sideEffect, [List<Object> dependencies])
   return React.useLayoutEffect(wrappedSideEffect, dependencies);
 }
 
-/// Customizes the [ref] value that is exposed to parent components when using [forwardRef] by setting [ref.current]
+/// Customizes the [ref] value that is exposed to parent components when using [forwardRef2] by setting [ref.current]
 /// to the return value of [createHandle].
 ///
 /// In most cases, imperative code using refs should be avoided.
