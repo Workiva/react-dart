@@ -358,9 +358,9 @@ void refTests<T>(ReactComponentFactoryProxy factory, {void verifyRefValue(dynami
     verifyRefValue(ref.current);
   });
 
-  test('forwardRef function passes a ref through a component to one of its children', () {
+  test('forwardRef2 function passes a ref through a component to one of its children', () {
     dynamic actualRef;
-    var ForwardRefTestComponent = forwardRef((props, ref) {
+    var ForwardRefTestComponent = forwardRef2((props, ref) {
       actualRef = ref;
 
       return factory({
@@ -399,8 +399,8 @@ void refTests<T>(ReactComponentFactoryProxy factory, {void verifyRefValue(dynami
   });
 
   group('forwardRef sets displayName on the rendered component as expected', () {
-    test('when displayName argument is not passed to forwardRef', () {
-      var ForwardRefTestComponent = forwardRef((props, ref) {
+    test('when displayName argument is not passed to forwardRef2', () {
+      var ForwardRefTestComponent = forwardRef2((props, ref) {
         // Extra type checking since JS refs being passed through
         // aren't caught by built-in type checking.
         expect(ref, isA<Ref>());
@@ -411,8 +411,8 @@ void refTests<T>(ReactComponentFactoryProxy factory, {void verifyRefValue(dynami
       expect(getProperty(getProperty(ForwardRefTestComponent.type, 'render'), 'displayName'), 'Anonymous');
     });
 
-    test('when displayName argument is passed to forwardRef', () {
-      var ForwardRefTestComponent = forwardRef((props, ref) {
+    test('when displayName argument is passed to forwardRef2', () {
+      var ForwardRefTestComponent = forwardRef2((props, ref) {
         // Extra type checking since JS refs being passed through
         // aren't caught by built-in type checking.
         expect(ref, isA<Ref>());
@@ -425,7 +425,7 @@ void refTests<T>(ReactComponentFactoryProxy factory, {void verifyRefValue(dynami
     });
   });
 
-  group('forwardRef wraps event handlers properly,', () {
+  group('forwardRef2 wraps event handlers properly,', () {
     const dartInside = EventTestCase.dart('onMouseDown', 'inside forwardRef');
     const dart = EventTestCase.dart('onMouseUp', 'set on forwardRef hoc');
     const dartCloned = EventTestCase.dart('onMouseLeave', 'cloned onto forwardRef hoc');
@@ -444,7 +444,7 @@ void refTests<T>(ReactComponentFactoryProxy factory, {void verifyRefValue(dynami
       events = {};
       propsFromDartRender = null;
 
-      final ForwardRefTestComponent = forwardRef((props, ref) {
+      final ForwardRefTestComponent = forwardRef2((props, ref) {
         return factory({
           ...props,
           'onDartRender': (p) {
