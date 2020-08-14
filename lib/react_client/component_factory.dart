@@ -424,18 +424,9 @@ ReactClass _wrapForwardRefFunctionComponent(DartForwardRefFunctionComponent dart
   // to force `null` as the return value if user returns a Dart `null`.
   // See: https://github.com/dart-lang/sdk/issues/27485
   jsFunctionComponent(JsMap props, dynamic ref) => componentZone.run(() {
-        final dartProps = JsBackedMap.backedBy(props);
-        for (var value in dartProps.values) {
-          if (value is Function) {
-            // Tag functions that came straight from the JS
-            // so that we know to pass them through as-is during prop conversion.
-            isRawJsFunctionFromProps[value] = true;
-          }
-        }
-
         // FIXME add tests for all cases
         final dartRef = (ref is Function || ref == null) ? ref : Ref.fromJs(ref);
-        return dartFunctionComponent(dartProps, dartRef) ?? jsNull;
+        return dartFunctionComponent(JsBackedMap.backedBy(props), dartRef) ?? jsNull;
       });
 
   final interopFunction = allowInterop(jsFunctionComponent);
