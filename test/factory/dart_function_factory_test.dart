@@ -44,25 +44,6 @@ main() {
     });
   });
 
-  group('forwardRef', () {
-    group('- common factory behavior -', () {
-      commonFactoryTests(
-        ForwardRefTest,
-        dartComponentVersion: ReactDartComponentVersion.component2,
-        skipPropValuesTest: true,
-      );
-    });
-  });
-
-  group('forwardRef2', () {
-    group('- common factory behavior -', () {
-      commonFactoryTests(
-        ForwardRef2Test,
-        dartComponentVersion: ReactDartComponentVersion.component2,
-      );
-    });
-  });
-
   group('memo', () {
     group('- common factory behavior -', () {
       commonFactoryTests(
@@ -93,16 +74,6 @@ _FunctionFoo(Map props) {
   props['onDartRender']?.call(props);
   return react.div({});
 }
-
-final ForwardRefTest = react.forwardRef((props, ref) {
-  props['onDartRender']?.call(props);
-  return react.div({...props, 'ref': ref});
-});
-
-final ForwardRef2Test = react.forwardRef2((props, ref) {
-  props['onDartRender']?.call(props);
-  return react.div({...props, 'ref': ref});
-});
 
 final MemoTest = react.memo(react.registerFunctionComponent((props) {
   props['onDartRender']?.call(props);
