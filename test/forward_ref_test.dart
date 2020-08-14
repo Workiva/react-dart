@@ -39,18 +39,21 @@ main() {
         return actualRef;
       }
 
-      test('null', () {
-        expect(getActualRef(null), isNull);
-      });
+      group('when the ref is', () {
+        test('null', () {
+          expect(getActualRef(null), isNull);
+        });
 
-      test('callback ref', () {
-        callbackRef(ref) {}
-        expect(getActualRef(callbackRef), same(callbackRef));
-      });
+        test('a callback ref', () {
+          callbackRef(ref) {}
+          expect(getActualRef(callbackRef), same(callbackRef));
+        });
 
-      test('ref object', () {
-        final refObject = createRef();
-        expect(getActualRef(refObject), same(refObject));
+        test('a ref object', () {
+          final refObject = createRef();
+          // We create a new Ref object, so it won't be the same, but we can expect that it's backed by the same js ref.
+          expect(getActualRef(refObject), isA<Ref>().having((ref) => ref.jsRef, 'jsRef', same(refObject.jsRef)));
+        });
       });
 
       test('unless it\'s a JS ref object', () {
