@@ -230,7 +230,7 @@ class JsRef {
 /// ```
 /// See: <https://reactjs.org/docs/forwarding-refs.html>.
 ReactComponentFactoryProxy forwardRef2(
-  Function(Map props, Ref ref) wrapperFunction, {
+  Function(Map props, dynamic ref) wrapperFunction, {
   String displayName,
 }) =>
     ReactDartWrappedComponentFactoryProxy.forwardRef(wrapperFunction, displayName: displayName);

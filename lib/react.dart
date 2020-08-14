@@ -31,7 +31,7 @@ typedef Error PropValidator<TProps>(TProps props, PropValidatorInfo info);
 ///
 /// [props] is typed as [JsBackedMap] so that dart2js can make optimize props accesses.
 typedef DartFunctionComponent = dynamic Function(JsBackedMap props);
-typedef DartForwardRefFunctionComponent = dynamic Function(JsBackedMap props, Ref ref);
+typedef DartForwardRefFunctionComponent = dynamic Function(JsBackedMap props, dynamic ref);
 
 typedef T ComponentFactory<T extends Component>();
 
