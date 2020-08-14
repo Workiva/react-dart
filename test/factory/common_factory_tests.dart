@@ -216,18 +216,79 @@ void domEventHandlerWrappingTests(ReactComponentFactoryProxy factory) {
             'renders a single DOM node and passes props.onClick to it');
   });
 
-  test('wraps the handler with a function that converts the synthetic event', () {
-    var actualEvent;
+  group('wraps event handlers properly,', () {
+    const dart = EventTestCase.dart('onMouseUp', 'set on component');
+    const dartCloned = EventTestCase.dart('onMouseLeave', 'cloned onto component');
+    const jsCloned = EventTestCase.js('onClick', 'cloned onto component ');
+    const eventCases = {dart, jsCloned, dartCloned};
 
-    final nodeWithClickHandler = renderAndGetRootNode(factory({
-      'onClick': (event) {
-        actualEvent = event;
+    Element node;
+    Map<EventTestCase, dynamic> events;
+    Map propsFromDartRender;
+
+    setUpAll(() {
+      expect(eventCases.map((h) => h.eventPropKey).toSet(), hasLength(eventCases.length),
+          reason: 'test setup: each helper should have a unique event key');
+
+      node = null;
+      events = {};
+      propsFromDartRender = null;
+
+      var element = factory({
+        'onDartRender': (p) {
+          propsFromDartRender = p;
+        },
+        dart.eventPropKey: (event) => events[dart] = event,
+      });
+
+      element = React.cloneElement(
+        element,
+        jsifyAndAllowInterop({
+          jsCloned.eventPropKey: (event) => events[jsCloned] = event,
+        }),
+      );
+
+      element = React.cloneElement(
+        element,
+        // Invoke the factory corresponding to element's type
+        // to get the correct version of the handler (converted or non-converted)
+        // before passing it straight to the JS.
+        factory({
+          dartCloned.eventPropKey: (event) => events[dartCloned] = event,
+        }).props,
+      );
+
+      node = renderAndGetRootNode(element);
+    });
+
+    group('passing Dart events to Dart handlers, and JS events to handlers originating from JS:', () {
+      for (var eventCase in eventCases) {
+        test(eventCase.description, () {
+          eventCase.simulate(node);
+          expect(events[eventCase], isNotNull, reason: 'handler should have been called');
+          expect(events[eventCase],
+              eventCase.isDart ? isA<react.SyntheticMouseEvent>() : isNot(isA<react.SyntheticMouseEvent>()));
+        });
       }
-    }));
+    });
 
-    rtu.Simulate.click(nodeWithClickHandler);
+    if (isDartComponent(factory({}))) {
+      group('in a way that the handlers are callable from within the Dart component:', () {
+        setUpAll(() {
+          expect(propsFromDartRender, isNotNull,
+              reason: 'test setup: component must pass props into props.onDartRender');
+        });
 
-    expect(actualEvent, isA<react.SyntheticEvent>());
+        final dummyEvent = react.SyntheticMouseEvent(null, null, null, null, null, null, null, null, null, null, null,
+            null, null, null, null, null, null, null, null, null, null, null, null, null, null, null);
+
+        for (var eventCase in eventCases.where((helper) => helper.isDart)) {
+          test(eventCase.description, () {
+            expect(() => propsFromDartRender[eventCase.eventPropKey](dummyEvent), returnsNormally);
+          });
+        }
+      });
+    }
   });
 
   group('wraps the handler with a function that proxies ReactJS event "persistence" as expected', () {
@@ -396,95 +457,6 @@ void refTests<T>(ReactComponentFactoryProxy factory, {void verifyRefValue(dynami
 
     expect(idValue, equals('test'), reason: 'child component should have access to parent props');
     verifyRefValue(refObject.current);
-  });
-
-
-  group('forwardRef2 wraps event handlers properly,', () {
-    const dartInside = EventTestCase.dart('onMouseDown', 'inside forwardRef');
-    const dart = EventTestCase.dart('onMouseUp', 'set on forwardRef hoc');
-    const dartCloned = EventTestCase.dart('onMouseLeave', 'cloned onto forwardRef hoc');
-    const jsCloned = EventTestCase.js('onClick', 'cloned onto forwardRef hoc ');
-    const eventCases = {dartInside, dart, jsCloned, dartCloned};
-
-    Element node;
-    Map<EventTestCase, dynamic> events;
-    Map propsFromDartRender;
-
-    setUpAll(() {
-      expect(eventCases.map((h) => h.eventPropKey).toSet(), hasLength(eventCases.length),
-          reason: 'test setup: each helper should have a unique event key');
-
-      node = null;
-      events = {};
-      propsFromDartRender = null;
-
-      final ForwardRefTestComponent = forwardRef2((props, ref) {
-        return factory({
-          ...props,
-          'onDartRender': (p) {
-            propsFromDartRender = p;
-          },
-          dartInside.eventPropKey: (event) => events[dartInside] = event,
-          isDartComponent(factory({})) ? 'forwardedRef' : 'ref': ref,
-        }, props['children']);
-      });
-
-      final refObject = createRef();
-      var element = ForwardRefTestComponent({
-        'ref': refObject,
-        dart.eventPropKey: (event) => events[dart] = event,
-      });
-
-      element = React.cloneElement(
-        element,
-        jsifyAndAllowInterop({
-          jsCloned.eventPropKey: (event) => events[jsCloned] = event,
-        }),
-      );
-
-      element = React.cloneElement(
-        element,
-        // Invoke the factory corresponding to element's type
-        // to get the correct version of the handler (converted or non-converted)
-        // before passing it straight to the JS.
-        ForwardRefTestComponent({
-          dartCloned.eventPropKey: (event) => events[dartCloned] = event,
-        }).props,
-      );
-
-      rtu.renderIntoDocument(element);
-
-      node = react_dom.findDOMNode(refObject.current);
-    });
-
-    group('passing Dart events to Dart handlers, and JS events to handlers originating from JS:', () {
-      for (var eventCase in eventCases) {
-        test(eventCase.description, () {
-          eventCase.simulate(node);
-          expect(events[eventCase], isNotNull, reason: 'handler should have been called');
-          expect(events[eventCase],
-              eventCase.isDart ? isA<react.SyntheticMouseEvent>() : isNot(isA<react.SyntheticMouseEvent>()));
-        });
-      }
-    });
-
-    if (isDartComponent(factory({}))) {
-      group('in a way that the handlers are callable from within the Dart component:', () {
-        setUpAll(() {
-          expect(propsFromDartRender, isNotNull,
-              reason: 'test setup: component must pass props into props.onDartRender');
-        });
-
-        final dummyEvent = react.SyntheticMouseEvent(null, null, null, null, null, null, null, null, null, null, null,
-            null, null, null, null, null, null, null, null, null, null, null, null, null, null, null);
-
-        for (var eventCase in eventCases.where((helper) => helper.isDart)) {
-          test(eventCase.description, () {
-            expect(() => propsFromDartRender[eventCase.eventPropKey](dummyEvent), returnsNormally);
-          });
-        }
-      });
-    }
   });
 
   group('has functional callback refs when they are typed as', () {
