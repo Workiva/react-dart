@@ -11,7 +11,6 @@ import 'package:react/react_client/js_backed_map.dart';
 import 'package:react/react_client/js_interop_helpers.dart';
 import 'package:react/react_client/react_interop.dart';
 
-import 'package:react/src/react_client/event_factory.dart';
 import 'package:react/src/react_client/synthetic_event_wrappers.dart' as events;
 import 'package:react/src/typedefs.dart';
 
@@ -34,6 +33,10 @@ dynamic convertArgsToChildren(List childrenArgs) {
     return childrenArgs;
   }
 }
+
+/// A mapping from converted/wrapped JS handler functions (the result of [_convertEventHandlers])
+/// to the original Dart functions (the input of [_convertEventHandlers]).
+final Expando<Function> originalEventHandler = new Expando();
 
 /// Convert packed event handler into wrapper and pass it only the Dart [SyntheticEvent] object converted from the
 /// [events.SyntheticEvent] event.
@@ -59,7 +62,7 @@ convertEventHandlers(Map args) {
         });
 
         args[propKey] = reactDartConvertedEventHandler;
-        originalEventHandlers[reactDartConvertedEventHandler] = value;
+        originalEventHandler[reactDartConvertedEventHandler] = value;
       }
     }
   });

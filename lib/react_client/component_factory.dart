@@ -15,9 +15,10 @@ import 'package:react/src/context.dart';
 import 'package:react/src/ddc_emulated_function_name_bug.dart' as ddc_emulated_function_name_bug;
 import 'package:react/src/js_interop_util.dart';
 import 'package:react/src/typedefs.dart';
-import 'package:react/src/react_client/event_factory.dart';
 import 'package:react/src/react_client/event_prop_key_to_event_factory.dart';
 import 'package:react/src/react_client/factory_util.dart';
+
+export 'package:react/src/react_client/factory_util.dart' show unconvertJsEventHandler;
 
 /// Prepares [children] to be passed to the ReactJS [React.createElement] and
 /// the Dart [react.Component].
@@ -37,19 +38,6 @@ dynamic listifyChildren(dynamic children) {
   }
 }
 
-/// Returns the original Dart handler function that, within [_convertEventHandlers],
-/// was converted/wrapped into the function [jsConvertedEventHandler] to be passed to the JS.
-///
-/// Returns `null` if [jsConvertedEventHandler] is `null`.
-///
-/// Returns `null` if [jsConvertedEventHandler] does not represent such a function
-///
-/// Useful for chaining event handlers on DOM or JS composite [ReactElement]s.
-Function unconvertJsEventHandler(Function jsConvertedEventHandler) {
-  if (jsConvertedEventHandler == null) return null;
-
-  return originalEventHandlers[jsConvertedEventHandler];
-}
 
 /// Returns the props for a [ReactElement] or composite [ReactComponent] [instance],
 /// shallow-converted to a Dart Map for convenience.
