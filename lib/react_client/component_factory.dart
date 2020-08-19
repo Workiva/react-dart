@@ -423,11 +423,8 @@ ReactClass _wrapForwardRefFunctionComponent(DartForwardRefFunctionComponent dart
   // and throws if it gets `undefined`. `jsNull` is an interop variable that holds a JS `null` value
   // to force `null` as the return value if user returns a Dart `null`.
   // See: https://github.com/dart-lang/sdk/issues/27485
-  jsFunctionComponent(JsMap props, dynamic ref) => componentZone.run(() {
-        // FIXME add tests for all cases
-        final dartRef = (ref is Function || ref == null) ? ref : Ref.fromJs(ref);
-        return dartFunctionComponent(JsBackedMap.backedBy(props), dartRef) ?? jsNull;
-      });
+  jsFunctionComponent(JsMap props, dynamic ref) =>
+      componentZone.run(() => dartFunctionComponent(JsBackedMap.backedBy(props), toDartRef(ref)) ?? jsNull);
 
   final interopFunction = allowInterop(jsFunctionComponent);
   if (displayName != null) {

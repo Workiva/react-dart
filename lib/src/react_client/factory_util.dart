@@ -65,6 +65,24 @@ convertEventHandlers(Map args) {
   });
 }
 
+/// Returns the original Dart handler function that, within [convertEventHandlers],
+/// was converted/wrapped into the function [jsConvertedEventHandler] to be passed to the JS.
+///
+/// Returns `null` if [jsConvertedEventHandler] is `null`.
+///
+/// Returns `null` if [jsConvertedEventHandler] does not represent such a function
+///
+/// Useful for chaining event handlers on DOM or JS composite [ReactElement]s.
+Function unconvertJsEventHandler(Function jsConvertedEventHandler) {
+  if (jsConvertedEventHandler == null) return null;
+
+  return originalEventHandler[jsConvertedEventHandler];
+}
+
+/// A mapping from converted/wrapped JS handler functions (the result of [convertRefValue])
+/// to the original Dart functions (the input of [convertRefValue]).
+final Expando<Function> _originalCallbackRef = new Expando();
+
 void convertRefValue(Map args) {
   var ref = args['ref'];
   if (ref is Ref) {
@@ -90,7 +108,7 @@ void convertRefValue2(
       // would fail the `is _CallbackRef<dynamic>` check.
       // See https://github.com/dart-lang/sdk/issues/34593 for more information on arity checks.
     } else if (ref is CallbackRef<Null> && convertCallbackRefValue) {
-      args[refKey] = allowInterop((dynamic instance) {
+      final convertedRef = allowInterop((dynamic instance) {
         // Call as dynamic to perform dynamic dispatch, since we can't cast to _CallbackRef<dynamic>,
         // and since calling with non-null values will fail at runtime due to the _CallbackRef<Null> typing.
         if (instance is ReactComponent && instance.dartComponent != null) {
@@ -99,8 +117,60 @@ void convertRefValue2(
 
         return (ref as dynamic)(instance);
       });
+
+      args[refKey] = convertedRef;
+      _originalCallbackRef[convertedRef] = ref;
     }
   }
+}
+
+/// Returns the original Dart function that, within [convertRefValue2],
+/// was converted/wrapped into the function [jsConvertedCallbackRef] to be passed to the JS.
+///
+/// Returns `null` if [jsConvertedCallbackRef] is `null`.
+///
+/// Returns `null` if [jsConvertedCallbackRef] does not represent such a function
+Function _unconvertJsCallbackRef(Function jsConvertedCallbackRef) {
+  if (jsConvertedCallbackRef == null) return null;
+
+  return _originalCallbackRef[jsConvertedCallbackRef];
+}
+
+/// Returns the original Dart ref (or a wrapper equivalent to it) for a [ref] that has
+/// potentially been converted via [convertRefValue]/[convertRefValue2].
+///
+/// Returns `null` if [ref] is `null`.
+///
+/// Returns `null` if [ref] is not a ref that has been converted (e.g., a Dart ref). See [toDartRef].
+dynamic unconvertDartRef(dynamic ref) {
+  if (ref is Function) {
+    return _unconvertJsCallbackRef(ref);
+  }
+
+  // This is really more a null-check and a check for type promotion, since
+  // since `is JsRef` will return true for most JS objects.
+  // However, in this case, it's pretty safe to assume the object is a JS ref
+  // if it failed the above checks.
+  if (ref is! Ref && ref is JsRef) {
+    return Ref.fromJs(ref);
+  }
+
+  return null;
+}
+
+/// A convenience method that converts [ref] for use in Dart code if it's a converted ref from JS code,
+/// and passes through [ref] otherwise.
+///
+/// Returns the original Dart ref (or a wrapper equivalent to it) for a [ref] that has
+/// potentially been converted via [convertRefValue]/[convertRefValue2].
+///
+/// Returns `null` if [ref] is `null`.
+///
+/// In all other cases, [ref] is assumed to be a Dart ref and is passed through;
+dynamic toDartRef(dynamic ref) {
+  if (ref == null) return null;
+
+  return unconvertDartRef(ref) ?? ref;
 }
 
 /// Converts a list of variadic children arguments to children that should be passed to ReactJS.
