@@ -6,7 +6,6 @@ import 'dart:js_util';
 
 import 'package:react/react.dart' as react;
 import 'package:react/react_client/react_interop.dart';
-import 'package:react/react_test_utils.dart' as rtu;
 import 'package:test/test.dart';
 
 import 'factory/common_factory_tests.dart';
