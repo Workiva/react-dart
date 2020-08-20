@@ -43,7 +43,6 @@ main() {
   });
 }
 
-
 // ignore: deprecated_member_use_from_same_package
 final ForwardRefTest = react.forwardRef((props, ref) {
   props['onDartRender']?.call(props);

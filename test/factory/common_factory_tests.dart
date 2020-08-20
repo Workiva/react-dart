@@ -382,7 +382,8 @@ void domEventHandlerWrappingTests(ReactComponentFactoryProxy factory) {
   });
 }
 
-void refTests<T>(ReactComponentFactoryProxy factory, {
+void refTests<T>(
+  ReactComponentFactoryProxy factory, {
   @required void verifyRefValue(dynamic refValue),
   void verifyJsRefValue(dynamic refValue),
 }) {

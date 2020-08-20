@@ -37,7 +37,6 @@ dynamic listifyChildren(dynamic children) {
   }
 }
 
-
 /// Returns the props for a [ReactElement] or composite [ReactComponent] [instance],
 /// shallow-converted to a Dart Map for convenience.
 ///

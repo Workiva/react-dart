@@ -147,12 +147,12 @@ class RefTestCaseCollection<T> {
   /// 3. createRef (Dart wrapper)
   /// 4. createRef (JS object)
   List<RefTestCase> createAllCases() => [
-    createUntypedCallbackRefCase(),
-    createTypedCallbackRefCase(),
-    createRefObjectCase(),
-    if (includeJsCallbackRefCase) createJsCallbackRefCase(),
-    createJsRefObjectCase(),
-  ];
+        createUntypedCallbackRefCase(),
+        createTypedCallbackRefCase(),
+        createRefObjectCase(),
+        if (includeJsCallbackRefCase) createJsCallbackRefCase(),
+        createJsRefObjectCase(),
+      ];
 
   RefTestCase createCaseByName<T>(String name) => createAllCases().singleWhere((c) => c.name == name);
 
