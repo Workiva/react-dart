@@ -70,10 +70,18 @@ class RefTestCase {
     @required this.getCurrent,
     this.isJs = false,
   });
+}
 
-  static String _reasonMessage(String name) => '$name should have been updated';
+class RefTestCaseCollection<T> {
+  final bool includeJsCallbackRefCase;
 
-  static RefTestCase untypedCallbackRefCase() {
+  RefTestCaseCollection({this.includeJsCallbackRefCase = true}) {
+    if (T == dynamic) {
+      throw ArgumentError('Generic parameter T must be specified');
+    }
+  }
+
+  RefTestCase createUntypedCallbackRefCase() {
     const name = 'untyped callback ref';
     final calls = [];
     return RefTestCase(
@@ -84,7 +92,7 @@ class RefTestCase {
     );
   }
 
-  static RefTestCase typedCallbackRefCase<T>() {
+  RefTestCase createTypedCallbackRefCase() {
     const name = 'typed callback ref';
     final calls = [];
     return RefTestCase(
@@ -95,7 +103,7 @@ class RefTestCase {
     );
   }
 
-  static RefTestCase refObjectCase<T>() {
+  RefTestCase createRefObjectCase<T>() {
     const name = 'ref object';
     final ref = createRef<T>();
     return RefTestCase(
@@ -106,7 +114,7 @@ class RefTestCase {
     );
   }
 
-  static RefTestCase jsCallbackRefCase() {
+  RefTestCase createJsCallbackRefCase() {
     const name = 'JS callback ref';
     final calls = [];
     return RefTestCase(
@@ -118,7 +126,7 @@ class RefTestCase {
     );
   }
 
-  static RefTestCase jsRefObjectCase() {
+  RefTestCase createJsRefObjectCase() {
     const name = 'JS ref object';
     final ref = React.createRef();
     return RefTestCase(
@@ -130,37 +138,23 @@ class RefTestCase {
     );
   }
 
-  /// Test cases for each of the valid, chainable ref types:
+  static String _reasonMessage(String name) => '$name should have been updated';
+
+  /// Creates test cases for all of the valid, chainable ref types:
   ///
   /// 1. callback ref with untyped argument
   /// 2. callback ref with typed argument
   /// 3. createRef (Dart wrapper)
   /// 4. createRef (JS object)
-  static List<RefTestCase> allChainable<T>({
-    bool includeJsCallbackRefCase = true,
-  }) =>
-      allChainableAsFactories(
-        includeJsCallbackRefCase: includeJsCallbackRefCase,
-      ).map((f) => f()).toList();
-
-  static List<RefTestCase Function()> allChainableAsFactories<T>({
-    bool includeJsCallbackRefCase = true,
-  }) => [
-    () => untypedCallbackRefCase(),
-    () => typedCallbackRefCase<T>(),
-    () => refObjectCase<T>(),
-    if (includeJsCallbackRefCase) () => jsCallbackRefCase(),
-    () => jsRefObjectCase(),
+  List<RefTestCase> createAllCases() => [
+    createUntypedCallbackRefCase(),
+    createTypedCallbackRefCase(),
+    createRefObjectCase(),
+    if (includeJsCallbackRefCase) createJsCallbackRefCase(),
+    createJsRefObjectCase(),
   ];
-}
 
+  RefTestCase createCaseByName<T>(String name) => createAllCases().singleWhere((c) => c.name == name);
 
-extension RefTestCaseListHelper on Iterable<RefTestCase Function()> {
-  void forEachNamed(void Function(String name, RefTestCase Function() factory) callback) {
-    for (final factory in this) {
-      callback(factory().name, factory);
-    }
-  }
-
-  List<RefTestCase> toTestCases() => map((f) => f()).toList();
+  List<String> get allTestCaseNames => createAllCases().map((c) => c.name).toList();
 }

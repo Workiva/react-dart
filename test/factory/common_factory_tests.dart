@@ -409,20 +409,21 @@ void refTests<T>(ReactComponentFactoryProxy factory, {
   //
 
   final factoryIsDartComponent = isDartComponent(factory({}));
+  final testCaseCollection = RefTestCaseCollection<T>(
+    includeJsCallbackRefCase: !factoryIsDartComponent,
+  );
 
   group('supports all ref types:', () {
-    RefTestCase.allChainableAsFactories<T>(
-      includeJsCallbackRefCase: !factoryIsDartComponent,
-    ).forEachNamed((name, testCaseFactory) {
+    for (final name in testCaseCollection.allTestCaseNames) {
       test(name, () {
-        final testCase = testCaseFactory();
+        final testCase = testCaseCollection.createCaseByName(name);
         rtu.renderIntoDocument(factory({
           'ref': testCase.ref,
         }));
         final verifyFunction = testCase.isJs ? verifyJsRefValue : verifyRefValue;
         verifyFunction(testCase.getCurrent());
       });
-    });
+    }
 
     test('string refs', () {
       ReactComponent renderedInstance = _renderWithStringRefSupportingOwner(() => factory({'ref': 'test'}));
@@ -433,11 +434,9 @@ void refTests<T>(ReactComponentFactoryProxy factory, {
   });
 
   group('forwardRef2 function passes a ref through a component to one of its children, when the ref is a:', () {
-    RefTestCase.allChainableAsFactories<T>(
-      includeJsCallbackRefCase: !factoryIsDartComponent,
-    ).forEachNamed((name, testCaseFactory) {
+    for (final name in testCaseCollection.allTestCaseNames) {
       test(name, () {
-        final testCase = testCaseFactory();
+        final testCase = testCaseCollection.createCaseByName(name);
         var ForwardRefTestComponent = forwardRef2((props, ref) {
           return factory({'ref': ref});
         });
@@ -448,14 +447,12 @@ void refTests<T>(ReactComponentFactoryProxy factory, {
         final verifyFunction = testCase.isJs ? verifyJsRefValue : verifyRefValue;
         verifyFunction(testCase.getCurrent());
       });
-    });
+    }
   });
 
   group('chainRefList works', () {
     test('with all different types of values, ignoring null', () {
-      final testCases = RefTestCase.allChainableAsFactories<T>(
-        includeJsCallbackRefCase: !factoryIsDartComponent,
-      ).toTestCases();
+      final testCases = testCaseCollection.createAllCases();
 
       final refSpy = createRef<T>();
       rtu.renderIntoDocument(factory({
@@ -480,9 +477,7 @@ void refTests<T>(ReactComponentFactoryProxy factory, {
 
     group('when refs come from sources where they have been potentially converted:', () {
       test('ReactElement.ref', () {
-        final testCases = RefTestCase.allChainableAsFactories<T>(
-          includeJsCallbackRefCase: !factoryIsDartComponent,
-        ).toTestCases().map((testCase) {
+        final testCases = testCaseCollection.createAllCases().map((testCase) {
           return RefTestCase(
             name: testCase.name,
             ref: (factory({'ref': testCase.ref}) as ReactElement).ref,
@@ -514,11 +509,9 @@ void refTests<T>(ReactComponentFactoryProxy factory, {
       });
 
       group('forwardRef2 arg, and the ref is a', () {
-        RefTestCase.allChainableAsFactories<T>(
-          includeJsCallbackRefCase: !factoryIsDartComponent,
-        ).forEachNamed((name, testCaseFactory) {
+        for (final name in testCaseCollection.allTestCaseNames) {
           test(name, () {
-            final testCase = testCaseFactory();
+            final testCase = testCaseCollection.createCaseByName(name);
 
             final refSpy = createRef<T>();
 
@@ -544,7 +537,7 @@ void refTests<T>(ReactComponentFactoryProxy factory, {
             verifyFunction(valueToVerify);
             testCase.verifyRefWasUpdated(valueToVerify);
           });
-        });
+        }
       });
     });
 
