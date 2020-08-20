@@ -382,6 +382,15 @@ void domEventHandlerWrappingTests(ReactComponentFactoryProxy factory) {
   });
 }
 
+/// Tests that when [factory] renders, it populates refs with the correct values.
+///
+/// [verifyRefValue] will be called with the actual ref value, and should contain an `expect`
+/// that the value is of the correct type.
+///
+/// [verifyJsRefValue] is optional, and only necessary when the ref value is wrapped and will be different in Dart vs
+/// JS (e.g., react.Component vs ReactComponent for class based-components).
+/// If omitted, it defaults to [verifyRefValue].
+/// It and will be called with the actual ref value for JS refs, (e.g., JS ref objects as opposed to Dart objects)
 void refTests<T>(
   ReactComponentFactoryProxy factory, {
   @required void verifyRefValue(dynamic refValue),
@@ -401,17 +410,10 @@ void refTests<T>(
   //
   //     We don't need to support that use-case, so we won't test it.
   //
-  // [2] Passing a JS ref object directly into chainRef and setting the result as the ref on the Dart component
-  //     results in the ref being populated with the Dart component, not the JS component, so this tests will fail.
-  //
-  //     This is because the callback ref returned by chainRef will always be called with the Dart component.
-  //
-  //     We don't need to support that use-case, so we won't test it.
-  //
 
   final factoryIsDartComponent = isDartComponent(factory({}));
   final testCaseCollection = RefTestCaseCollection<T>(
-    includeJsCallbackRefCase: !factoryIsDartComponent,
+    includeJsCallbackRefCase: !factoryIsDartComponent, // [1]
   );
 
   group('supports all ref types:', () {

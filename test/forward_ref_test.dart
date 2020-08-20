@@ -1,7 +1,6 @@
 @TestOn('browser')
 library react.forward_ref_test;
 
-import 'dart:html';
 import 'dart:js_util';
 
 import 'package:react/react.dart' as react;
@@ -21,12 +20,6 @@ main() {
     });
 
     // Ref behavior is tested functionally for all factory types in commonFactoryTests
-
-    group('ref forwarding functional testing (to a div) -', () {
-      refTests<DivElement>(ForwardRef2Test, verifyRefValue: (ref) {
-        expect(ref, TypeMatcher<DivElement>());
-      });
-    });
 
     group('sets displayName on the rendered component as expected', () {
       test('unless the displayName argument is not passed to forwardRef2', () {

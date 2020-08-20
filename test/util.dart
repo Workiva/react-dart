@@ -56,11 +56,24 @@ Map unmodifiableMap([Map map1, Map map2, Map map3, Map map4]) {
 
 /// A test case that can be used for consuming a specific kind of ref and verifying
 /// it was updated properly when rendered.
+///
+/// Test cases should not be reused within a test or across multiple tests, to avoid
+/// the [ref] from being used by multiple components and its value being polluted.
 class RefTestCase {
+  /// The name of the test case.
   final String name;
+
+  /// The ref to be passed into a component.
   final dynamic ref;
+
+  /// Verifies (usually via `expect`) that the ref was updated exactly once with [actualValue].
   final Function(dynamic actualValue) verifyRefWasUpdated;
+
+  /// Returns the current value of the ref.
   final dynamic Function() getCurrent;
+
+  /// Whether the ref is a non-Dart object, such as a ref originating from outside of Dart code
+  /// or a JS-converted Dart ref.
   final bool isJs;
 
   RefTestCase({
@@ -72,6 +85,8 @@ class RefTestCase {
   });
 }
 
+/// A collection of methods that create [RefTestCase]s, combined into a class so that they can easily share a
+/// generic parameter [T] (the type of the Dart ref value).
 class RefTestCaseCollection<T> {
   final bool includeJsCallbackRefCase;
 
