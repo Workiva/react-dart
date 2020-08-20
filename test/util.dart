@@ -57,40 +57,76 @@ Map unmodifiableMap([Map map1, Map map2, Map map3, Map map4]) {
 /// A test case that can be used for consuming a specific kind of ref and verifying
 /// it was updated properly when rendered.
 class RefTestCase {
+  final String name;
   final dynamic ref;
   final Function(dynamic actualValue) verifyRefWasUpdated;
+  final dynamic Function() getCurrent;
+  final bool isJs;
 
-  RefTestCase._({@required this.ref, @required this.verifyRefWasUpdated});
+  RefTestCase({
+    @required this.name,
+    @required this.ref,
+    @required this.verifyRefWasUpdated,
+    @required this.getCurrent,
+    this.isJs = false,
+  });
+
+  static String _reasonMessage(String name) => '$name should have been updated';
 
   static RefTestCase untypedCallbackRefCase() {
+    const name = 'untyped callback ref';
     final calls = [];
-    return RefTestCase._(
+    return RefTestCase(
+      name: name,
       ref: (value) => calls.add(value),
-      verifyRefWasUpdated: (actualValue) => expect(calls, [same(actualValue)]),
+      verifyRefWasUpdated: (actualValue) => expect(calls, [same(actualValue)], reason: _reasonMessage(name)),
+      getCurrent: () => calls.single,
     );
   }
 
   static RefTestCase typedCallbackRefCase<T>() {
+    const name = 'typed callback ref';
     final calls = [];
-    return RefTestCase._(
+    return RefTestCase(
+      name: name,
       ref: (T value) => calls.add(value),
-      verifyRefWasUpdated: (actualValue) => expect(calls, [same(actualValue)]),
+      verifyRefWasUpdated: (actualValue) => expect(calls, [same(actualValue)], reason: _reasonMessage(name)),
+      getCurrent: () => calls.single,
     );
   }
 
   static RefTestCase refObjectCase<T>() {
+    const name = 'ref object';
     final ref = createRef<T>();
-    return RefTestCase._(
+    return RefTestCase(
+      name: name,
       ref: ref,
-      verifyRefWasUpdated: (actualValue) => expect(ref.current, same(actualValue)),
+      verifyRefWasUpdated: (actualValue) => expect(ref.current, same(actualValue), reason: _reasonMessage(name)),
+      getCurrent: () => ref.current,
+    );
+  }
+
+  static RefTestCase jsCallbackRefCase() {
+    const name = 'JS callback ref';
+    final calls = [];
+    return RefTestCase(
+      name: name,
+      ref: allowInterop((value) => calls.add(value)),
+      verifyRefWasUpdated: (actualValue) => expect(calls, [same(actualValue)], reason: _reasonMessage(name)),
+      getCurrent: () => calls.single,
+      isJs: true,
     );
   }
 
   static RefTestCase jsRefObjectCase() {
+    const name = 'JS ref object';
     final ref = React.createRef();
-    return RefTestCase._(
+    return RefTestCase(
+      name: name,
       ref: ref,
-      verifyRefWasUpdated: (actualValue) => expect(ref.current, same(actualValue)),
+      verifyRefWasUpdated: (actualValue) => expect(ref.current, same(actualValue), reason: _reasonMessage(name)),
+      getCurrent: () => ref.current,
+      isJs: true,
     );
   }
 
@@ -100,10 +136,31 @@ class RefTestCase {
   /// 2. callback ref with typed argument
   /// 3. createRef (Dart wrapper)
   /// 4. createRef (JS object)
-  static List<RefTestCase> allChainable<T>() => [
-        untypedCallbackRefCase(),
-        typedCallbackRefCase<T>(),
-        refObjectCase<T>(),
-        jsRefObjectCase(),
-      ];
+  static List<RefTestCase> allChainable<T>({
+    bool includeJsCallbackRefCase = true,
+  }) =>
+      allChainableAsFactories(
+        includeJsCallbackRefCase: includeJsCallbackRefCase,
+      ).map((f) => f()).toList();
+
+  static List<RefTestCase Function()> allChainableAsFactories<T>({
+    bool includeJsCallbackRefCase = true,
+  }) => [
+    () => untypedCallbackRefCase(),
+    () => typedCallbackRefCase<T>(),
+    () => refObjectCase<T>(),
+    if (includeJsCallbackRefCase) () => jsCallbackRefCase(),
+    () => jsRefObjectCase(),
+  ];
+}
+
+
+extension RefTestCaseListHelper on Iterable<RefTestCase Function()> {
+  void forEachNamed(void Function(String name, RefTestCase Function() factory) callback) {
+    for (final factory in this) {
+      callback(factory().name, factory);
+    }
+  }
+
+  List<RefTestCase> toTestCases() => map((f) => f()).toList();
 }

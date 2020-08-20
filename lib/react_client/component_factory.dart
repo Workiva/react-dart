@@ -161,10 +161,14 @@ class ReactDartComponentFactoryProxy<TComponent extends Component> extends React
       // would fail the `is CallbackRef<dynamic>` check.
       // See https://github.com/dart-lang/sdk/issues/34593 for more information on arity checks.
       if (ref is CallbackRef<Null>) {
-        interopProps.ref = allowInterop((ReactComponent instance) {
+        interopProps.ref = allowInterop((dynamic instance) {
           // Call as dynamic to perform dynamic dispatch, since we can't cast to CallbackRef<dynamic>,
           // and since calling with non-null values will fail at runtime due to the CallbackRef<Null> typing.
-          return (ref as dynamic)(instance?.dartComponent);
+          if (instance is ReactComponent && instance.dartComponent != null) {
+            return (ref as dynamic)(instance.dartComponent);
+          }
+
+          return (ref as dynamic)(instance);
         });
       } else if (ref is Ref) {
         interopProps.ref = ref.jsRef;

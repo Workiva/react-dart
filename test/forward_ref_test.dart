@@ -21,45 +21,11 @@ main() {
       );
     });
 
+    // Ref behavior is tested functionally for all factory types in commonFactoryTests
+
     group('ref forwarding functional testing (to a div) -', () {
       refTests<DivElement>(ForwardRef2Test, verifyRefValue: (ref) {
         expect(ref, TypeMatcher<DivElement>());
-      });
-    });
-
-    group('passes the ref to the function as expected without wrapping it', () {
-      dynamic getActualRef(dynamic inputRef) {
-        dynamic actualRef;
-        rtu.renderIntoDocument(ForwardRef2Test({
-          'ref': inputRef,
-          'onDartRenderWithRef': (props, ref) {
-            actualRef = ref;
-          }
-        }));
-        return actualRef;
-      }
-
-      group('when the ref is', () {
-        test('null', () {
-          expect(getActualRef(null), isNull);
-        });
-
-        test('a callback ref', () {
-          callbackRef(ref) {}
-          expect(getActualRef(callbackRef), same(callbackRef));
-        });
-
-        test('a ref object', () {
-          final refObject = createRef();
-          // We create a new Ref object, so it won't be the same, but we can expect that it's backed by the same js ref.
-          expect(getActualRef(refObject), isA<Ref>().having((ref) => ref.jsRef, 'jsRef', same(refObject.jsRef)));
-        });
-      });
-
-      test('unless it\'s a JS ref object', () {
-        final jsRefObject = React.createRef();
-        expect(getActualRef(jsRefObject), isA<Ref>().having((ref) => ref.jsRef, 'jsRef', same(jsRefObject)),
-            reason: 'should have wrapped the JS ref in the Dart interop class');
       });
     });
 
