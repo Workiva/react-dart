@@ -414,7 +414,7 @@ ReactClass _wrapForwardRefFunctionComponent(DartForwardRefFunctionComponent dart
   // to force `null` as the return value if user returns a Dart `null`.
   // See: https://github.com/dart-lang/sdk/issues/27485
   jsFunctionComponent(JsMap props, dynamic ref) =>
-      componentZone.run(() => dartFunctionComponent(JsBackedMap.backedBy(props), toDartRef(ref)) ?? jsNull);
+      componentZone.run(() => dartFunctionComponent(JsBackedMap.backedBy(props), ref) ?? jsNull);
 
   final interopFunction = allowInterop(jsFunctionComponent);
   if (displayName != null) {
