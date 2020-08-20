@@ -382,7 +382,7 @@ void domEventHandlerWrappingTests(ReactComponentFactoryProxy factory) {
   });
 }
 
-/// Tests that when [factory] renders, it populates refs with the correct values.
+/// Tests that refs work properly with [factory], including [forwardRef2] and [chainRefs] integration tests.
 ///
 /// [verifyRefValue] will be called with the actual ref value, and should contain an `expect`
 /// that the value is of the correct type.
