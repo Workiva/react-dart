@@ -37,6 +37,12 @@ main() {
   group('memo2', () {
     sharedMemoTests(react.memo2);
 
+    test('can be passed a forwardRef component (regression test)', () {
+      ReactComponentFactoryProxy factory;
+      expect(() => factory = react.memo2(react.forwardRef2((props, ref) => 'foo')), returnsNormally);
+      expect(() => rtu.renderIntoDocument(factory({})), returnsNormally);
+    });
+
     group('- common factory behavior -', () {
       final Memo2Test = react.memo2(react.registerFunctionComponent((props) {
         props['onDartRender']?.call(props);
