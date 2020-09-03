@@ -49,6 +49,7 @@ main() {
       commonFactoryTests(
         MemoTest,
         dartComponentVersion: ReactDartComponentVersion.component2,
+        // Skip this because it's broken for memo
         skipPropValuesTest: true,
       );
     });

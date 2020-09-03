@@ -29,12 +29,12 @@ typedef Error PropValidator<TProps>(TProps props, PropValidatorInfo info);
 ///
 /// See <https://facebook.github.io/react/docs/components-and-props.html#functional-and-class-components>.
 ///
-/// [props] is typed as [JsBackedMap] so that dart2js can make optimize props accesses.
+/// [props] is typed as [JsBackedMap] so that dart2js can optimize props accesses.
 typedef DartFunctionComponent = dynamic Function(JsBackedMap props);
 
 /// The callback to a React forwardRef component. See [forwardRef2] for more details.
 ///
-/// [props] is typed as [JsBackedMap] so that dart2js can make optimize props accesses.
+/// [props] is typed as [JsBackedMap] so that dart2js can optimize props accesses.
 typedef DartForwardRefFunctionComponent = dynamic Function(JsBackedMap props, dynamic ref);
 
 typedef T ComponentFactory<T extends Component>();

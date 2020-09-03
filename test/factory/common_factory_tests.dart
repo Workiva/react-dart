@@ -241,6 +241,7 @@ void domEventHandlerWrappingTests(ReactComponentFactoryProxy factory) {
         dart.eventPropKey: (event) => events[dart] = event,
       });
 
+      // Simulate a JS component cloning a handler onto a ReactElement created by a Dart component.
       element = React.cloneElement(
         element,
         jsifyAndAllowInterop({
@@ -390,7 +391,7 @@ void domEventHandlerWrappingTests(ReactComponentFactoryProxy factory) {
 /// [verifyJsRefValue] is optional, and only necessary when the ref value is wrapped and will be different in Dart vs
 /// JS (e.g., react.Component vs ReactComponent for class based-components).
 /// If omitted, it defaults to [verifyRefValue].
-/// It and will be called with the actual ref value for JS refs, (e.g., JS ref objects as opposed to Dart objects)
+/// It will be called with the actual ref value for JS refs, (e.g., JS ref objects as opposed to Dart objects)
 void refTests<T>(
   ReactComponentFactoryProxy factory, {
   @required void verifyRefValue(dynamic refValue),
