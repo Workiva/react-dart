@@ -43,26 +43,6 @@ main() {
       });
     });
   });
-
-  group('memo', () {
-    group('- common factory behavior -', () {
-      commonFactoryTests(
-        MemoTest,
-        dartComponentVersion: ReactDartComponentVersion.component2,
-        // Skip this because it's broken for memo
-        skipPropValuesTest: true,
-      );
-    });
-  });
-
-  group('memo2', () {
-    group('- common factory behavior -', () {
-      commonFactoryTests(
-        Memo2Test,
-        dartComponentVersion: ReactDartComponentVersion.component2,
-      );
-    });
-  });
 }
 
 String _getJsFunctionName(Function object) => getProperty(object, 'name') ?? getProperty(object, '\$static_name');
@@ -75,13 +55,3 @@ _FunctionFoo(Map props) {
   props['onDartRender']?.call(props);
   return react.div({});
 }
-
-final MemoTest = react.memo(react.registerFunctionComponent((props) {
-  props['onDartRender']?.call(props);
-  return react.div({...props});
-}));
-
-final Memo2Test = react.memo2(react.registerFunctionComponent((props) {
-  props['onDartRender']?.call(props);
-  return react.div({...props});
-}));
