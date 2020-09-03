@@ -529,8 +529,10 @@ void useLayoutEffect(dynamic Function() sideEffect, [List<Object> dependencies])
 /// ```
 ///
 /// Learn more: <https://reactjs.org/docs/hooks-reference.html#useimperativehandle>.
-void useImperativeHandle(Ref ref, dynamic Function() createHandle, [List<dynamic> dependencies]) =>
-    React.useImperativeHandle(ref.jsRef, allowInterop(createHandle), dependencies);
+void useImperativeHandle(Ref ref, dynamic Function() createHandle, [List<dynamic> dependencies]) {
+  if (ref == null) return;
+  React.useImperativeHandle(ref.jsRef, allowInterop(createHandle), dependencies);
+}
 
 /// Displays [value] as a label for a custom hook in React DevTools.
 ///
