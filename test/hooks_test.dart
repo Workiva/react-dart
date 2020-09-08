@@ -765,7 +765,6 @@ main() {
       group('works with all types of consumer refs -', () {
         const customRefValue = {'Am I a ref?': true};
         final factory = react.forwardRef2((props, ref) {
-          print('ref: $ref');
           useImperativeHandle(ref, () => customRefValue);
           return react.div({});
         });
