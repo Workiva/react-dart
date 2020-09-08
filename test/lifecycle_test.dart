@@ -160,7 +160,7 @@ main() {
             react_dom.render(components2.PropTypesTest({'intProp': 'test'}), mountNode);
           });
 
-          if (isDDC()) {
+          if (assertsEnabled()) {
             test('', () {
               expect(consoleErrorCalled, isTrue, reason: 'should have outputted a warning');
               expect(consoleErrorMessage, contains(expectedWarningPrefix));
@@ -173,7 +173,7 @@ main() {
           }
         });
 
-        if (isDDC()) {
+        if (assertsEnabled()) {
           test('passes validation with correct prop type', () {
             react_dom.render(components2.PropTypesTest({'intProp': 1}), mountNode);
             expect(consoleErrorCalled, isFalse, reason: 'should not have outputted a warning');
