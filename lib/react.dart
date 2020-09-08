@@ -1950,6 +1950,7 @@ class SyntheticWheelEvent extends SyntheticEvent {
 }
 
 /// Registers [componentFactory] on both client and server.
+@Deprecated('Use registerComponent2 after migrating your components from Component to Component2.')
 /*ComponentRegistrar*/ Function registerComponent = validateJsApiThenReturn(() => registration_utils.registerComponent);
 
 /// Registers [componentFactory] on both client and server.

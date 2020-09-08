@@ -530,7 +530,7 @@ void useLayoutEffect(dynamic Function() sideEffect, [List<Object> dependencies])
 ///
 /// Learn more: <https://reactjs.org/docs/hooks-reference.html#useimperativehandle>.
 void useImperativeHandle(dynamic ref, dynamic Function() createHandle, [List<dynamic> dependencies]) =>
-    // ref will be a JsRef in forwardRef2, or a Ref in forwardRef.
+    // ref will be a JsRef in forwardRef2, or a Ref in forwardRef. (Or null if no ref is provided)
     //
     // For some reason the ref argument to React.forwardRef is usually a JsRef object no matter the input ref type,
     // but according to React the ref argument to useImperativeHandle and React.forwardRef can be any ref type...

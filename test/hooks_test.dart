@@ -694,6 +694,25 @@ main() {
             ]);
           });
 
+          var NullRefComponent = react.registerFunctionComponent((props) {
+            var count = useState(0);
+            Ref someRefThatIsNotSet = props['someRefThatIsNotSet'];
+
+            useImperativeHandle(someRefThatIsNotSet, () => count.value, [count.value]);
+
+            return react.Fragment({}, [
+              react.div({'ref': someRefThatIsNotSet}, count.value),
+              react.button({
+                'ref': (ref) => reRenderButtonRef2 = ref,
+                'onClick': (_) => count.setWithUpdater((prev) => prev + 1),
+              }, []),
+            ]);
+          });
+
+          expect(() => react_dom.render(NullRefComponent({}, []), mountNode), returnsNormally,
+              reason: 'Hook should not throw if the ref is null');
+          react_dom.unmountComponentAtNode(mountNode);
+
           UseImperativeHandleTest = react.registerFunctionComponent((Map props) {
             noDepsRef = useRef();
             emptyDepsRef = useRef();

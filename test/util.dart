@@ -54,6 +54,12 @@ Map unmodifiableMap([Map map1, Map map2, Map map3, Map map4]) {
   return new Map.unmodifiable(merged);
 }
 
+bool assertsEnabled() {
+  bool assertsEnabled = false;
+  assert(assertsEnabled = true);
+  return assertsEnabled;
+}
+
 /// A test case that can be used for consuming a specific kind of ref and verifying
 /// it was updated properly when rendered.
 ///
