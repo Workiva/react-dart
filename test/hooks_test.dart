@@ -1,4 +1,3 @@
-// ignore_for_file: deprecated_member_use_from_same_package
 @TestOn('browser')
 @JS()
 library hooks_test;
@@ -13,6 +12,8 @@ import 'package:react/react_client.dart';
 import 'package:react/react_dom.dart' as react_dom;
 import 'package:react/react_test_utils.dart' as react_test_utils;
 import 'package:test/test.dart';
+
+import 'factory/common_factory_tests.dart';
 
 main() {
   group('React Hooks: ', () {
@@ -642,78 +643,78 @@ main() {
     });
 
     group('useImperativeHandle -', () {
-      var mountNode = new DivElement();
-      ReactDartFunctionComponentFactoryProxy UseImperativeHandleTest;
-      ButtonElement incrementButton;
-      ButtonElement reRenderButtonRef1;
-      ButtonElement reRenderButtonRef2;
-      Ref noDepsRef;
-      Ref emptyDepsRef;
-      Ref depsRef;
-      StateHook<int> count;
-
-      setUpAll(() {
-        var NoDepsComponent = react.forwardRef((props, ref) {
-          count = useState(0);
-
-          useImperativeHandle(
-            ref,
-            () => {'increment': () => count.setWithUpdater((prev) => prev + 1)},
-          );
-
-          return react.div({'ref': ref}, count.value);
-        });
-
-        var EmptyDepsComponent = react.forwardRef((props, ref) {
-          var count = useState(0);
-
-          useImperativeHandle(ref, () => count.value, []);
-
-          return react.Fragment({}, [
-            react.div({'ref': ref}, count.value),
-            react.button({
-              'ref': (ref) => reRenderButtonRef1 = ref,
-              'onClick': (_) => count.setWithUpdater((prev) => prev + 1),
-            }, []),
-          ]);
-        });
-
-        var DepsComponent = react.forwardRef((props, ref) {
-          var count = useState(0);
-
-          useImperativeHandle(ref, () => count.value, [count.value]);
-
-          return react.Fragment({}, [
-            react.div({'ref': ref}, count.value),
-            react.button({
-              'ref': (ref) => reRenderButtonRef2 = ref,
-              'onClick': (_) => count.setWithUpdater((prev) => prev + 1),
-            }, []),
-          ]);
-        });
-
-        UseImperativeHandleTest = react.registerFunctionComponent((Map props) {
-          noDepsRef = useRef();
-          emptyDepsRef = useRef();
-          depsRef = useRef();
-
-          return react.Fragment({}, [
-            NoDepsComponent({'ref': noDepsRef}, []),
-            react.button({
-              'ref': (ref) => incrementButton = ref,
-              'onClick': (_) => noDepsRef.current['increment'](),
-            }, [
-              '+'
-            ]),
-            EmptyDepsComponent({'ref': emptyDepsRef}),
-            DepsComponent({'ref': depsRef}),
-          ]);
-        });
-
-        react_dom.render(UseImperativeHandleTest({}), mountNode);
-      });
-
       group('updates `ref.current` to the return value of `createHandle()`', () {
+        var mountNode = new DivElement();
+        ReactDartFunctionComponentFactoryProxy UseImperativeHandleTest;
+        ButtonElement incrementButton;
+        ButtonElement reRenderButtonRef1;
+        ButtonElement reRenderButtonRef2;
+        Ref noDepsRef;
+        Ref emptyDepsRef;
+        Ref depsRef;
+        StateHook<int> count;
+
+        setUpAll(() {
+          var NoDepsComponent = react.forwardRef2((props, ref) {
+            count = useState(0);
+
+            useImperativeHandle(
+              ref,
+              () => {'increment': () => count.setWithUpdater((prev) => prev + 1)},
+            );
+
+            return react.div({'ref': ref}, count.value);
+          });
+
+          var EmptyDepsComponent = react.forwardRef2((props, ref) {
+            var count = useState(0);
+
+            useImperativeHandle(ref, () => count.value, []);
+
+            return react.Fragment({}, [
+              react.div({'ref': ref}, count.value),
+              react.button({
+                'ref': (ref) => reRenderButtonRef1 = ref,
+                'onClick': (_) => count.setWithUpdater((prev) => prev + 1),
+              }, []),
+            ]);
+          });
+
+          var DepsComponent = react.forwardRef2((props, ref) {
+            var count = useState(0);
+
+            useImperativeHandle(ref, () => count.value, [count.value]);
+
+            return react.Fragment({}, [
+              react.div({'ref': ref}, count.value),
+              react.button({
+                'ref': (ref) => reRenderButtonRef2 = ref,
+                'onClick': (_) => count.setWithUpdater((prev) => prev + 1),
+              }, []),
+            ]);
+          });
+
+          UseImperativeHandleTest = react.registerFunctionComponent((Map props) {
+            noDepsRef = useRef();
+            emptyDepsRef = useRef();
+            depsRef = useRef();
+
+            return react.Fragment({}, [
+              NoDepsComponent({'ref': noDepsRef}, []),
+              react.button({
+                'ref': (ref) => incrementButton = ref,
+                'onClick': (_) => noDepsRef.current['increment'](),
+              }, [
+                '+'
+              ]),
+              EmptyDepsComponent({'ref': emptyDepsRef}),
+              DepsComponent({'ref': depsRef}),
+            ]);
+          });
+
+          react_dom.render(UseImperativeHandleTest({}), mountNode);
+        });
+
         test('(with no dependency list)', () {
           expect(noDepsRef.current, isA<Map>(), reason: 'useImperativeHandle overrides the existing ref.current value');
           expect(noDepsRef.current['increment'], isA<Function>());
@@ -739,6 +740,19 @@ main() {
 
           react_test_utils.Simulate.click(reRenderButtonRef2);
           expect(depsRef.current, 1, reason: 'current value updates because count.value is in dependency list');
+        });
+      });
+
+      group('works with all types of consumer refs -', () {
+        const customRefValue = {'Am I a ref?': true};
+        final factory = react.forwardRef2((props, ref) {
+          print('ref: $ref');
+          useImperativeHandle(ref, () => customRefValue);
+          return react.div({});
+        });
+
+        refTests<Map>(factory, verifyRefValue: (refValue) {
+          expect(refValue, same(customRefValue));
         });
       });
     });

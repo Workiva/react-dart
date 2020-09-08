@@ -47,7 +47,7 @@ abstract class React {
   external static ReactJsComponentFactory createFactory(type);
   external static ReactElement createElement(dynamic type, props, [dynamic children]);
   external static JsRef createRef();
-  external static ReactClass forwardRef(Function(JsMap props, JsRef ref) wrapperFunction);
+  external static ReactClass forwardRef(Function(JsMap props, dynamic ref) wrapperFunction);
   external static ReactClass memo(
     dynamic wrapperFunction, [
     bool Function(JsMap prevProps, JsMap nextProps) areEqual,
@@ -66,7 +66,7 @@ abstract class React {
   external static JsRef useRef([dynamic initialValue]);
   external static dynamic useMemo(dynamic Function() createFunction, [List<dynamic> dependencies]);
   external static void useLayoutEffect(dynamic Function() sideEffect, [List<Object> dependencies]);
-  external static void useImperativeHandle(JsRef ref, dynamic Function() createHandle, [List<dynamic> dependencies]);
+  external static void useImperativeHandle(dynamic ref, dynamic Function() createHandle, [List<dynamic> dependencies]);
   // NOTE: The use of generics on the `useDebugValue` interop will break the hook.
   external static dynamic useDebugValue(dynamic value, [Function format]);
 }
@@ -230,7 +230,7 @@ class JsRef {
 /// ```
 /// See: <https://reactjs.org/docs/forwarding-refs.html>.
 ReactComponentFactoryProxy forwardRef2(
-  Function(Map props, dynamic ref) wrapperFunction, {
+  DartForwardRefFunctionComponent wrapperFunction, {
   String displayName,
 }) =>
     ReactDartWrappedComponentFactoryProxy.forwardRef(wrapperFunction, displayName: displayName);

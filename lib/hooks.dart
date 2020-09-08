@@ -475,7 +475,7 @@ void useLayoutEffect(dynamic Function() sideEffect, [List<Object> dependencies])
   return React.useLayoutEffect(wrappedSideEffect, dependencies);
 }
 
-/// Customizes the [ref] value that is exposed to parent components when using [forwardRef2] by setting [ref.current]
+/// Customizes the [ref] value that is exposed to parent components when using [forwardRef2] by setting `ref.current`
 /// to the return value of [createHandle].
 ///
 /// In most cases, imperative code using refs should be avoided.
@@ -494,7 +494,7 @@ void useLayoutEffect(dynamic Function() sideEffect, [List<Object> dependencies])
 ///   FancyInputApi(this.focus);
 /// }
 ///
-/// final FancyInput = react.forwardRef((props, ref) {
+/// final FancyInput = react.forwardRef2((props, ref) {
 ///   final inputRef = useRef<InputElement>();
 ///
 ///   useImperativeHandle(
@@ -529,8 +529,15 @@ void useLayoutEffect(dynamic Function() sideEffect, [List<Object> dependencies])
 /// ```
 ///
 /// Learn more: <https://reactjs.org/docs/hooks-reference.html#useimperativehandle>.
-void useImperativeHandle(Ref ref, dynamic Function() createHandle, [List<dynamic> dependencies]) =>
-    React.useImperativeHandle(ref.jsRef, allowInterop(createHandle), dependencies);
+void useImperativeHandle(dynamic ref, dynamic Function() createHandle, [List<dynamic> dependencies]) =>
+    // ref will be a JsRef in forwardRef2, or a Ref in forwardRef.
+    //
+    // For some reason the ref argument to React.forwardRef is usually a JsRef object no matter the input ref type,
+    // but according to React the ref argument to useImperativeHandle and React.forwardRef can be any ref type...
+    // - https://github.com/facebook/flow/blob/master@%7B2020-09-08%7D/lib/react.js#L373
+    // - https://github.com/facebook/flow/blob/master@%7B2020-09-08%7D/lib/react.js#L305
+    // and not just a ref object, so we type it as dynamic here.
+    React.useImperativeHandle(ref is Ref ? ref.jsRef : ref, allowInterop(createHandle), dependencies);
 
 /// Displays [value] as a label for a custom hook in React DevTools.
 ///

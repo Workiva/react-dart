@@ -33,8 +33,9 @@ final ReactDartInteropStatics dartInteropStatics = (() {
           var ref = getProperty(jsThis.refs, name);
           if (ref == null) return null;
           if (ref is Element) return ref;
+          if (ref is ReactComponent) return ref.dartComponent ?? ref;
 
-          return (ref as ReactComponent).dartComponent ?? ref;
+          return ref;
         };
 
         Component component = componentStatics.componentFactory()

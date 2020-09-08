@@ -35,6 +35,10 @@ typedef DartFunctionComponent = dynamic Function(JsBackedMap props);
 /// The callback to a React forwardRef component. See [forwardRef2] for more details.
 ///
 /// [props] is typed as [JsBackedMap] so that dart2js can optimize props accesses.
+///
+/// In the current JS implementation, the ref argument to [React.forwardRef] is usually a JsRef object no matter the input ref type,
+/// but according to React the ref argument can be any ref type: https://github.com/facebook/flow/blob/master@%7B2020-09-08%7D/lib/react.js#L305
+/// and not just a ref object, so we type [ref] as dynamic here.
 typedef DartForwardRefFunctionComponent = dynamic Function(JsBackedMap props, dynamic ref);
 
 typedef T ComponentFactory<T extends Component>();
