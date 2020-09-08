@@ -155,38 +155,52 @@ main() {
           context['console']['error'] = originalConsoleError;
         });
 
-        test('fails validation with incorrect prop type', () {
-          react_dom.render(components2.PropTypesTest({'intProp': 'test'}), mountNode);
-          expect(consoleErrorCalled, isTrue, reason: 'should have outputted a warning');
-          expect(consoleErrorMessage, contains(expectedWarningPrefix));
-        });
-
-        test('passes validation with correct prop type', () {
-          react_dom.render(components2.PropTypesTest({'intProp': 1}), mountNode);
-          expect(consoleErrorCalled, isFalse, reason: 'should not have outputted a warning');
-        });
-
-        test('passes through all of the expected arguments to the prop validator', () {
-          react_dom.render(components2.PropTypesTest({'intProp': 'test'}), mountNode);
-          expect(consoleErrorCalled, isTrue, reason: 'should have outputted a warning');
-          expect(
-            consoleErrorMessage,
-            contains(expectedWarningPrefix),
-            reason: 'Did the warning message change? This test will break if the format cannot be converted to json.',
-          );
-          RegExp regExp = new RegExp(r'.*?({.*}).*', multiLine: true);
-          var matches = regExp.allMatches(consoleErrorMessage);
-          expect(matches, hasLength(1), reason: 'Should have found a json structure in the error.');
-          var match = matches.elementAt(0); // => extract the first (and only) match
-          Map errorArgs = json.decode(match.group(1));
-          expect(errorArgs, {
-            'props': '{intProp: test, children: []}',
-            'propName': 'intProp',
-            'componentName': anyOf('PropTypesTestComponent', 'ReactDartComponent2'),
-            'location': 'prop',
-            'propFullName': 'null',
+        group('fails validation with incorrect prop type', () {
+          setUp(() {
+            react_dom.render(components2.PropTypesTest({'intProp': 'test'}), mountNode);
           });
+
+          if (assertsEnabled()) {
+            test('', () {
+              expect(consoleErrorCalled, isTrue, reason: 'should have outputted a warning');
+              expect(consoleErrorMessage, contains(expectedWarningPrefix));
+            });
+          } else {
+            test('unless dart2js compiler is used', () {
+              expect(consoleErrorCalled, isFalse,
+                  reason: 'propTypes should only be present when using DDC to compile JS');
+            });
+          }
         });
+
+        if (assertsEnabled()) {
+          test('passes validation with correct prop type', () {
+            react_dom.render(components2.PropTypesTest({'intProp': 1}), mountNode);
+            expect(consoleErrorCalled, isFalse, reason: 'should not have outputted a warning');
+          });
+
+          test('passes through all of the expected arguments to the prop validator', () {
+            react_dom.render(components2.PropTypesTest({'intProp': 'test'}), mountNode);
+            expect(consoleErrorCalled, isTrue, reason: 'should have outputted a warning');
+            expect(
+              consoleErrorMessage,
+              contains(expectedWarningPrefix),
+              reason: 'Did the warning message change? This test will break if the format cannot be converted to json.',
+            );
+            RegExp regExp = new RegExp(r'.*?({.*}).*', multiLine: true);
+            var matches = regExp.allMatches(consoleErrorMessage);
+            expect(matches, hasLength(1), reason: 'Should have found a json structure in the error.');
+            var match = matches.elementAt(0); // => extract the first (and only) match
+            Map errorArgs = json.decode(match.group(1));
+            expect(errorArgs, {
+              'props': '{intProp: test, children: []}',
+              'propName': 'intProp',
+              'componentName': anyOf('PropTypesTestComponent', 'ReactDartComponent2'),
+              'location': 'prop',
+              'propFullName': 'null',
+            });
+          });
+        }
       });
 
       test('updates with correct lifecycle calls when `forceUpdate` is called', () {

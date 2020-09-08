@@ -81,4 +81,4 @@ class _FragmentTestDummy extends react.Component2 {
   }
 }
 
-ReactDartComponentFactoryProxy2 FragmentTestDummy = react.registerComponent(() => new _FragmentTestDummy());
+final FragmentTestDummy = react.registerComponent2(() => new _FragmentTestDummy());

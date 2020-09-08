@@ -9,10 +9,9 @@ import 'package:react/react_client/react_interop.dart';
 
 import 'util.dart';
 
-ReactDartComponentFactoryProxy2 SetStateTest = react.registerComponent(() => new _SetStateTest(), [null]);
-ReactDartComponentFactoryProxy2 DefaultSkipMethodsTest = react.registerComponent(() => new _SetStateTest());
-ReactDartComponentFactoryProxy2 SkipMethodsTest =
-    react.registerComponent(() => new _SetStateTest(), ['getSnapshotBeforeUpdate']);
+final SetStateTest = react.registerComponent2(() => new _SetStateTest(), skipMethods: [null]);
+final DefaultSkipMethodsTest = react.registerComponent2(() => new _SetStateTest());
+final SkipMethodsTest = react.registerComponent2(() => new _SetStateTest(), skipMethods: ['getSnapshotBeforeUpdate']);
 
 class _SetStateTest extends react.Component2 with LifecycleTestHelper {
   @override
@@ -137,7 +136,7 @@ class _DefaultPropsCachingTest extends react.Component2 implements DefaultPropsC
   render() => false;
 }
 
-ReactDartComponentFactoryProxy2 DefaultPropsTest = react.registerComponent(() => new _DefaultPropsTest());
+final DefaultPropsTest = react.registerComponent2(() => new _DefaultPropsTest());
 
 class _DefaultPropsTest extends react.Component2 {
   Map get defaultProps => {'defaultProp': 'default'};
@@ -145,7 +144,7 @@ class _DefaultPropsTest extends react.Component2 {
   render() => false;
 }
 
-ReactDartComponentFactoryProxy2 PropTypesTest = react.registerComponent(() => new PropTypesTestComponent());
+final PropTypesTest = react.registerComponent2(() => new PropTypesTestComponent());
 
 class PropTypesTestComponent extends react.Component2 {
   get propTypes => {
@@ -164,7 +163,7 @@ class PropTypesTestComponent extends react.Component2 {
 
 react.Context LifecycleTestContext = react.createContext();
 
-ReactDartComponentFactoryProxy2 ContextConsumerWrapper = react.registerComponent(() => new _ContextConsumerWrapper());
+final ContextConsumerWrapper = react.registerComponent2(() => new _ContextConsumerWrapper());
 
 class _ContextConsumerWrapper extends react.Component2 with LifecycleTestHelper {
   dynamic render() {
@@ -172,7 +171,7 @@ class _ContextConsumerWrapper extends react.Component2 with LifecycleTestHelper 
   }
 }
 
-ReactDartComponentFactoryProxy2 ContextWrapper = react.registerComponent(() => new _ContextWrapper());
+final ContextWrapper = react.registerComponent2(() => new _ContextWrapper());
 
 class _ContextWrapper extends react.Component2 with LifecycleTestHelper {
   dynamic render() {
@@ -185,15 +184,14 @@ class _ContextWrapper extends react.Component2 with LifecycleTestHelper {
   }
 }
 
-ReactDartComponentFactoryProxy2 LifecycleTestWithContext =
-    react.registerComponent(() => new _LifecycleTestWithContext());
+final LifecycleTestWithContext = react.registerComponent2(() => new _LifecycleTestWithContext());
 
 class _LifecycleTestWithContext extends _LifecycleTest {
   @override
   get contextType => LifecycleTestContext;
 }
 
-ReactDartComponentFactoryProxy2 ErrorComponent = react.registerComponent(() => new _ErrorComponent());
+final ErrorComponent = react.registerComponent2(() => new _ErrorComponent());
 
 class TestDartException implements Exception {
   int code;
@@ -217,9 +215,8 @@ class _ErrorComponent extends react.Component2 {
   }
 }
 
-ReactDartComponentFactoryProxy2 ErrorLifecycleTest =
-    react.registerComponent2(() => new _LifecycleTest(), skipMethods: []);
-ReactDartComponentFactoryProxy2 LifecycleTest = react.registerComponent(() => new _LifecycleTest());
+final ErrorLifecycleTest = react.registerComponent2(() => new _LifecycleTest(), skipMethods: []);
+final LifecycleTest = react.registerComponent2(() => new _LifecycleTest());
 
 class _LifecycleTest extends react.Component2 with LifecycleTestHelper {
   void componentDidMount() => lifecycleCall('componentDidMount');
@@ -248,7 +245,7 @@ class _LifecycleTest extends react.Component2 with LifecycleTestHelper {
   Map get defaultProps => lifecycleCall('defaultProps', defaultReturnValue: () => {'defaultProp': 'default'});
 }
 
-ReactDartComponentFactoryProxy2 NoGetDerivedStateFromErrorLifecycleTest =
+final NoGetDerivedStateFromErrorLifecycleTest =
     react.registerComponent2(() => new _NoGetDerivedStateFromErrorLifecycleTest(), skipMethods: []);
 
 class _NoGetDerivedStateFromErrorLifecycleTest extends react.Component2 with LifecycleTestHelper {
