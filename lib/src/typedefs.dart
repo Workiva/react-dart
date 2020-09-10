@@ -15,6 +15,8 @@ typedef CallbackRef<T>(T componentOrDomNode);
 /// to match Dart's generated call signature based on the number of args React provides.
 typedef JsFunctionComponent = dynamic Function(JsMap props, [JsMap legacyContext]);
 
+typedef JsForwardRefFunctionComponent = dynamic Function(JsMap props, dynamic ref);
+
 /// Typedef for `react.Component.ref`, which should return one of the following specified by the provided [ref]:
 ///
 /// * `react.Component` if it is a Dart component.

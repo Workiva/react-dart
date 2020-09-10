@@ -565,24 +565,6 @@ main() {
           expect(propTypeCheck, isA<JsBackedMap>());
         });
       });
-
-      group('props are received correctly without interop interfering with the values:', () {
-        void testTypeValue(dynamic testValue) {
-          var receivedValue;
-          var receivedProps;
-
-          ReactDartFunctionComponentFactoryProxy PropsTypeTest = react.registerFunctionComponent((Map props) {
-            receivedProps = props;
-            receivedValue = props['testValue'];
-            return null;
-          });
-          react_dom.render(PropsTypeTest({'testValue': testValue}), mountNode);
-          expect(receivedProps, isA<JsBackedMap>());
-          expect(receivedValue, same(testValue));
-        }
-
-        sharedTypeTests(testTypeValue);
-      });
     });
   });
 }

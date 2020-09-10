@@ -21,7 +21,7 @@ import 'package:react/src/react_client/private_utils.dart' show validateJsApiThe
 
 export 'package:react/src/context.dart';
 export 'package:react/src/prop_validator.dart';
-export 'package:react/react_client/react_interop.dart' show forwardRef, createRef, memo;
+export 'package:react/react_client/react_interop.dart' show forwardRef, forwardRef2, createRef, memo, memo2;
 
 typedef Error PropValidator<TProps>(TProps props, PropValidatorInfo info);
 
@@ -29,8 +29,17 @@ typedef Error PropValidator<TProps>(TProps props, PropValidatorInfo info);
 ///
 /// See <https://facebook.github.io/react/docs/components-and-props.html#functional-and-class-components>.
 ///
-/// [props] is typed as [JsBackedMap] so that dart2js can make optimize props accesses.
+/// [props] is typed as [JsBackedMap] so that dart2js can optimize props accesses.
 typedef DartFunctionComponent = dynamic Function(JsBackedMap props);
+
+/// The callback to a React forwardRef component. See [forwardRef2] for more details.
+///
+/// [props] is typed as [JsBackedMap] so that dart2js can optimize props accesses.
+///
+/// In the current JS implementation, the ref argument to [React.forwardRef] is usually a JsRef object no matter the input ref type,
+/// but according to React the ref argument can be any ref type: https://github.com/facebook/flow/blob/master@%7B2020-09-08%7D/lib/react.js#L305
+/// and not just a ref object, so we type [ref] as dynamic here.
+typedef DartForwardRefFunctionComponent = dynamic Function(JsBackedMap props, dynamic ref);
 
 typedef T ComponentFactory<T extends Component>();
 
