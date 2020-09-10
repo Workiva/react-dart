@@ -131,9 +131,20 @@ function _createReactDartComponentClass2(dartInteropStatics, componentStatics, j
       return typeof derivedState !== 'undefined' ? derivedState : null;
     }
     render() {
+      // Must call checkPropTypes manually because React moved away from using the `prop-types` package.
+      // See: https://github.com/facebook/react/pull/18127
+      // React now uses its own internal cache of errors for PropTypes which broke `PropTypes.resetWarningCache()`.
+      // Solution was to use `PropTypes.checkPropTypes` directly which makes `PropTypes.resetWarningCache()` work.
+      // Solution from: https://github.com/facebook/react/issues/18251#issuecomment-609024557
+      // TODO: figure out how to get the `displayName` here...
+      React.PropTypes.checkPropTypes(jsConfig.propTypes, this.props, 'prop', this._getDisplayName());
       var result = dartInteropStatics.handleRender(this.dartComponent, this.props, this.state, this.context);
       if (typeof result === 'undefined') result = null;
       return result;
+    }
+    // Hacky workaround to get the displayName for `checkPropTypes` call.
+    _getDisplayName() {
+      return ReactDartComponent2.displayName;
     }
   }
 
@@ -152,9 +163,6 @@ function _createReactDartComponentClass2(dartInteropStatics, componentStatics, j
     }
     if (jsConfig.defaultProps) {
       ReactDartComponent2.defaultProps = jsConfig.defaultProps;
-    }
-    if (jsConfig.propTypes) {
-      ReactDartComponent2.propTypes = jsConfig.propTypes;
     }
   }
 
