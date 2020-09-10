@@ -54,56 +54,128 @@ Map unmodifiableMap([Map map1, Map map2, Map map3, Map map4]) {
   return new Map.unmodifiable(merged);
 }
 
+bool assertsEnabled() {
+  bool assertsEnabled = false;
+  assert(assertsEnabled = true);
+  return assertsEnabled;
+}
+
 /// A test case that can be used for consuming a specific kind of ref and verifying
 /// it was updated properly when rendered.
+///
+/// Test cases should not be reused within a test or across multiple tests, to avoid
+/// the [ref] from being used by multiple components and its value being polluted.
 class RefTestCase {
+  /// The name of the test case.
+  final String name;
+
+  /// The ref to be passed into a component.
   final dynamic ref;
+
+  /// Verifies (usually via `expect`) that the ref was updated exactly once with [actualValue].
   final Function(dynamic actualValue) verifyRefWasUpdated;
 
-  RefTestCase._({@required this.ref, @required this.verifyRefWasUpdated});
+  /// Returns the current value of the ref.
+  final dynamic Function() getCurrent;
 
-  static RefTestCase untypedCallbackRefCase() {
+  /// Whether the ref is a non-Dart object, such as a ref originating from outside of Dart code
+  /// or a JS-converted Dart ref.
+  final bool isJs;
+
+  RefTestCase({
+    @required this.name,
+    @required this.ref,
+    @required this.verifyRefWasUpdated,
+    @required this.getCurrent,
+    this.isJs = false,
+  });
+}
+
+/// A collection of methods that create [RefTestCase]s, combined into a class so that they can easily share a
+/// generic parameter [T] (the type of the Dart ref value).
+class RefTestCaseCollection<T> {
+  final bool includeJsCallbackRefCase;
+
+  RefTestCaseCollection({this.includeJsCallbackRefCase = true}) {
+    if (T == dynamic) {
+      throw ArgumentError('Generic parameter T must be specified');
+    }
+  }
+
+  RefTestCase createUntypedCallbackRefCase() {
+    const name = 'untyped callback ref';
     final calls = [];
-    return RefTestCase._(
+    return RefTestCase(
+      name: name,
       ref: (value) => calls.add(value),
-      verifyRefWasUpdated: (actualValue) => expect(calls, [same(actualValue)]),
+      verifyRefWasUpdated: (actualValue) => expect(calls, [same(actualValue)], reason: _reasonMessage(name)),
+      getCurrent: () => calls.single,
     );
   }
 
-  static RefTestCase typedCallbackRefCase<T>() {
+  RefTestCase createTypedCallbackRefCase() {
+    const name = 'typed callback ref';
     final calls = [];
-    return RefTestCase._(
+    return RefTestCase(
+      name: name,
       ref: (T value) => calls.add(value),
-      verifyRefWasUpdated: (actualValue) => expect(calls, [same(actualValue)]),
+      verifyRefWasUpdated: (actualValue) => expect(calls, [same(actualValue)], reason: _reasonMessage(name)),
+      getCurrent: () => calls.single,
     );
   }
 
-  static RefTestCase refObjectCase<T>() {
+  RefTestCase createRefObjectCase<T>() {
+    const name = 'ref object';
     final ref = createRef<T>();
-    return RefTestCase._(
+    return RefTestCase(
+      name: name,
       ref: ref,
-      verifyRefWasUpdated: (actualValue) => expect(ref.current, same(actualValue)),
+      verifyRefWasUpdated: (actualValue) => expect(ref.current, same(actualValue), reason: _reasonMessage(name)),
+      getCurrent: () => ref.current,
     );
   }
 
-  static RefTestCase jsRefObjectCase() {
+  RefTestCase createJsCallbackRefCase() {
+    const name = 'JS callback ref';
+    final calls = [];
+    return RefTestCase(
+      name: name,
+      ref: allowInterop((value) => calls.add(value)),
+      verifyRefWasUpdated: (actualValue) => expect(calls, [same(actualValue)], reason: _reasonMessage(name)),
+      getCurrent: () => calls.single,
+      isJs: true,
+    );
+  }
+
+  RefTestCase createJsRefObjectCase() {
+    const name = 'JS ref object';
     final ref = React.createRef();
-    return RefTestCase._(
+    return RefTestCase(
+      name: name,
       ref: ref,
-      verifyRefWasUpdated: (actualValue) => expect(ref.current, same(actualValue)),
+      verifyRefWasUpdated: (actualValue) => expect(ref.current, same(actualValue), reason: _reasonMessage(name)),
+      getCurrent: () => ref.current,
+      isJs: true,
     );
   }
 
-  /// Test cases for each of the valid, chainable ref types:
+  static String _reasonMessage(String name) => '$name should have been updated';
+
+  /// Creates test cases for all of the valid, chainable ref types:
   ///
   /// 1. callback ref with untyped argument
   /// 2. callback ref with typed argument
   /// 3. createRef (Dart wrapper)
   /// 4. createRef (JS object)
-  static List<RefTestCase> allChainable<T>() => [
-        untypedCallbackRefCase(),
-        typedCallbackRefCase<T>(),
-        refObjectCase<T>(),
-        jsRefObjectCase(),
+  List<RefTestCase> createAllCases() => [
+        createUntypedCallbackRefCase(),
+        createTypedCallbackRefCase(),
+        createRefObjectCase(),
+        if (includeJsCallbackRefCase) createJsCallbackRefCase(),
+        createJsRefObjectCase(),
       ];
+
+  RefTestCase createCaseByName<T>(String name) => createAllCases().singleWhere((c) => c.name == name);
+
+  List<String> get allTestCaseNames => createAllCases().map((c) => c.name).toList();
 }

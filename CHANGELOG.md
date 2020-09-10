@@ -1,3 +1,78 @@
+## [5.6.0](https://github.com/cleandart/react-dart/compare/5.5.1...5.6.0)
+
+- [#275] Add `forwardRef2` / `memo2` to fix _"jsification"_ of Dart props
+    - Deprecates `forwardRef` / `memo`
+- [#274] (Security update) Bump serialize-javascript JS dependency to version `3.1.0`
+
+## [5.5.1](https://github.com/cleandart/react-dart/compare/5.5.0...5.5.1)
+
+- [#258] Exclude `propTypes` from Dart2js output.
+    - Deprecate `registerComponent`.
+        - _Accidentally overlooked when `Component` was deprecated_
+- [#276] Allow null ref value in `useImperativeHandle` hook
+
+## [5.5.0](https://github.com/cleandart/react-dart/compare/5.4.0...5.5.0)
+
+__New Features__
+
+- 🎉 🎉 🎉 __Support for function components, memo and hooks!!!__ 🎉 🎉 🎉
+
+    Sooooo much work from so many amazing people made this possible, but to summarize: 
+    
+    - [#221] Add support for function components
+    - [#252] Add support for `memo` higher order component
+    - Hooks, hooks, and more hooks!
+        - [#223] useState
+        - [#233] useCallback
+        - [#237] useContext
+        - [#227] useEffect
+        - [#248] useLayoutEffect
+        - [#232] useReducer
+        - [#245] useRef
+        - [#250] useMemo
+        - [#247] useImperativeHandle
+        - [#246] useDebugValue
+
+    <p><br>It works like this...</p>
+    
+    Define the component:
+    ```dart
+    import 'package:react/react.dart' as react;
+    
+    final SomeWidget = react.registerFunctionComponent(_SomeWidget, displayName: 'SomeWidget');
+    
+    _SomeWidget(Map props) {
+      // You can use hooks in here, too!
+      
+      return react.div({}, [
+        // Some children...
+      ]);
+    }
+    ```
+    
+    Render the component _(exact same consumer API as a class-based component)_:
+    ```dart
+    import 'package:react/react_dom.dart' as react_dom;
+    import 'some_widget.dart'; // Where your component is defined
+    
+    main() {
+      final renderedWidget = SomeWidget({
+        // put some props here
+      }, [
+        // put some children here!
+      ]);
+    
+      react_dom.render(renderedWidget, querySelector('#idOfSomeNodeInTheDom'));
+    }
+    ```
+    
+    > Check out all the [function component and hooks examples](https://github.com/cleandart/react-dart/blob/c9a1211d5d77a9e354b864e99ef8f52b60eeff85/example/test/function_component_test.dart) for more information!
+        
+__Fixes / Updates__
+- [#253] Deprecate `setClientConfiguration`.
+    - It is no longer necessary - and can be removed from your implementations
+- [#273] Make `JsBackedMap.values` compatible with MSIE 11
+
 ## [5.4.0](https://github.com/cleandart/react-dart/compare/5.3.0...5.4.0)
 
 __New Features__

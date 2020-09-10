@@ -43,7 +43,8 @@ class JsBackedMap extends MapBase<dynamic, dynamic> {
 
   // Private helpers with narrower typing than we want to expose, for use in other methods
   List<dynamic> get _keys => _Object.keys(jsObject);
-  List<dynamic> get _values => _Object.values(jsObject);
+  // Use keys to access the value instead oof `Object.values` since MSIE 11 doesn't support it
+  List<dynamic> get _values => _keys.map((key) => this[key]).toList();
 
   /// Adds all key/value pairs of the JS object [jsOther] to this map.
   ///

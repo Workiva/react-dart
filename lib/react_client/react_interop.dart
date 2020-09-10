@@ -19,7 +19,7 @@ import 'package:react/react_client.dart' show ComponentFactory;
 import 'package:react/react_client/bridge.dart';
 import 'package:react/react_client/js_backed_map.dart';
 import 'package:react/react_client/component_factory.dart'
-    show ReactDartFunctionComponentFactoryProxy, ReactJsComponentFactoryProxy;
+    show ReactDartWrappedComponentFactoryProxy, ReactDartFunctionComponentFactoryProxy, ReactJsComponentFactoryProxy;
 import 'package:react/react_client/js_interop_helpers.dart';
 import 'package:react/react_client/zone.dart';
 import 'package:react/src/js_interop_util.dart';
@@ -47,9 +47,9 @@ abstract class React {
   external static ReactJsComponentFactory createFactory(type);
   external static ReactElement createElement(dynamic type, props, [dynamic children]);
   external static JsRef createRef();
-  external static ReactClass forwardRef(Function(JsMap props, JsRef ref) wrapperFunction);
+  external static ReactClass forwardRef(Function(JsMap props, dynamic ref) wrapperFunction);
   external static ReactClass memo(
-    dynamic Function(JsMap props, [JsMap legacyContext]) wrapperFunction, [
+    dynamic wrapperFunction, [
     bool Function(JsMap prevProps, JsMap nextProps) areEqual,
   ]);
 
@@ -66,7 +66,7 @@ abstract class React {
   external static JsRef useRef([dynamic initialValue]);
   external static dynamic useMemo(dynamic Function() createFunction, [List<dynamic> dependencies]);
   external static void useLayoutEffect(dynamic Function() sideEffect, [List<Object> dependencies]);
-  external static void useImperativeHandle(JsRef ref, dynamic Function() createHandle, [List<dynamic> dependencies]);
+  external static void useImperativeHandle(dynamic ref, dynamic Function() createHandle, [List<dynamic> dependencies]);
   // NOTE: The use of generics on the `useDebugValue` interop will break the hook.
   external static dynamic useDebugValue(dynamic value, [Function format]);
 }
@@ -159,7 +159,7 @@ class JsRef {
 /// import 'package:react/react.dart' as react;
 ///
 /// // ---------- Component Definition ----------
-/// final FancyButton = react.forwardRef((props, ref) {
+/// final FancyButton = react.forwardRef2((props, ref) {
 ///   return react.button({'ref': ref, 'className': 'FancyButton'}, 'Click me!');
 /// }, displayName: 'FancyButton');
 ///
@@ -186,7 +186,7 @@ class JsRef {
 ///
 /// // ---------- Component Definitions ----------
 ///
-/// final FancyButton = react.forwardRef((props, ref) {
+/// final FancyButton = react.forwardRef2((props, ref) {
 ///   return react.button({'ref': ref, 'className': 'FancyButton'}, 'Click me!');
 /// }, displayName: 'FancyButton');
 ///
@@ -207,8 +207,8 @@ class JsRef {
 /// }
 /// final _logPropsHoc = react.registerComponent2(() => _LogProps());
 ///
-/// final LogProps = react.forwardRef((props, ref) {
-///   // Note the second param "ref" provided by react.forwardRef.
+/// final LogProps = react.forwardRef2((props, ref) {
+///   // Note the second param "ref" provided by react.forwardRef2.
 ///   // We can pass it along to LogProps as a regular prop, e.g. "forwardedRef"
 ///   // And it can then be attached to the Component.
 ///   return _logPropsHoc({...props, 'forwardedRef': ref});
@@ -229,6 +229,13 @@ class JsRef {
 /// }
 /// ```
 /// See: <https://reactjs.org/docs/forwarding-refs.html>.
+ReactComponentFactoryProxy forwardRef2(
+  DartForwardRefFunctionComponent wrapperFunction, {
+  String displayName,
+}) =>
+    ReactDartWrappedComponentFactoryProxy.forwardRef(wrapperFunction, displayName: displayName);
+
+@Deprecated('Use forwardRef2')
 ReactJsComponentFactoryProxy forwardRef(
   Function(Map props, Ref ref) wrapperFunction, {
   String displayName = 'Anonymous',
@@ -266,12 +273,12 @@ ReactJsComponentFactoryProxy forwardRef(
 /// ```dart
 /// import 'package:react/react.dart' as react;
 ///
-/// final MyComponent = react.memo(react.registerFunctionComponent((props) {
+/// final MyComponent = react.memo2(react.registerFunctionComponent((props) {
 ///   /* render using props */
 /// }));
 /// ```
 ///
-/// `memo` only affects props changes. If your function component wrapped in `memo` has a
+/// `memo2` only affects props changes. If your function component wrapped in `memo2` has a
 /// [useState] or [useContext] Hook in its implementation, it will still rerender when `state` or `context` change.
 ///
 /// By default it will only shallowly compare complex objects in the props map.
@@ -281,7 +288,7 @@ ReactJsComponentFactoryProxy forwardRef(
 /// ```dart
 /// import 'package:react/react.dart' as react;
 ///
-/// final MyComponent = react.memo(react.registerFunctionComponent((props) {
+/// final MyComponent = react.memo2(react.registerFunctionComponent((props) {
 ///   // render using props
 /// }), areEqual: (prevProps, nextProps) {
 ///   // Do some custom comparison logic to return a bool based on prevProps / nextProps
@@ -293,6 +300,22 @@ ReactJsComponentFactoryProxy forwardRef(
 /// > Do not rely on it to “prevent” a render, as this can lead to bugs.
 ///
 /// See: <https://reactjs.org/docs/react-api.html#reactmemo>.
+ReactComponentFactoryProxy memo2(ReactComponentFactoryProxy factory,
+    {bool Function(Map prevProps, Map nextProps) areEqual}) {
+  final _areEqual = areEqual == null
+      ? null
+      : allowInterop((JsMap prevProps, JsMap nextProps) {
+          final dartPrevProps = JsBackedMap.backedBy(prevProps);
+          final dartNextProps = JsBackedMap.backedBy(nextProps);
+          return areEqual(dartPrevProps, dartNextProps);
+        });
+  final hoc = React.memo(factory.type, _areEqual);
+  setProperty(hoc, 'dartComponentVersion', ReactDartComponentVersion.component2);
+
+  return ReactDartWrappedComponentFactoryProxy(hoc);
+}
+
+@Deprecated('Use memo2')
 ReactJsComponentFactoryProxy memo(ReactDartFunctionComponentFactoryProxy factory,
     {bool Function(Map prevProps, Map nextProps) areEqual}) {
   final _areEqual = areEqual == null
@@ -355,10 +378,10 @@ abstract class PropTypes {
 @JS()
 @anonymous
 class ReactClass {
-  /// The cached, unmodifiable copy of [Component.defaultProps] computed in
+  /// The cached, unmodifiable copy of [Component2.defaultProps] computed in
   /// [registerComponent2].
   ///
-  /// For use in [ReactDartComponentFactoryProxy2] when creating new [ReactElement]s,
+  /// For use in `ReactDartComponentFactoryProxy2` when creating new [ReactElement]s,
   /// or for external use involving inspection of Dart prop defaults.
   external JsMap get defaultProps;
   external set defaultProps(JsMap value);

@@ -12,7 +12,10 @@ cache:
 
 before_script:
   - dartanalyzer .
-  - dartfmt --line-length=120 --dry-run --set-exit-if-changed .
+  - |
+    if [ "$TRAVIS_DART_VERSION" != "dev" ]; then
+      dartfmt --line-length=120 --dry-run --set-exit-if-changed .
+    fi
   - pub run dependency_validator -i build_runner,build_test,build_web_compilers
 
 script:

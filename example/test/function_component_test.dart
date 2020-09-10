@@ -68,7 +68,7 @@ class _MemoTestDemoWrapper extends react.Component2 {
   }
 }
 
-final MemoTest = react.memo(react.registerFunctionComponent((Map props) {
+final MemoTest = react.memo2(react.registerFunctionComponent((Map props) {
   final context = useContext(TestNewContext);
   return react.div(
     {},
@@ -335,7 +335,7 @@ class FancyInputApi {
   FancyInputApi(this.focus);
 }
 
-final FancyInput = react.forwardRef((props, ref) {
+final FancyInput = react.forwardRef2((props, ref) {
   final inputRef = useRef();
 
   useImperativeHandle(
@@ -412,7 +412,7 @@ UseImperativeHandleTestComponent(Map props) {
   ]);
 }
 
-final FancyCounter = react.forwardRef((props, ref) {
+final FancyCounter = react.forwardRef2((props, ref) {
   final count = useState(0);
 
   useImperativeHandle(

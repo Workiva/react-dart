@@ -1,5 +1,5 @@
 name: react
-version: 5.4.0
+version: 5.6.0
 authors:
   - Samuel Hapák <samuel.hapak@gmail.com>
   - Greg Littlefield <greg.littlefield@workiva.com>
@@ -12,7 +12,7 @@ authors:
 description: Bindings of the ReactJS library for building interactive interfaces.
 homepage: https://github.com/cleandart/react-dart
 environment:
-  sdk: '>=2.4.0 <3.0.0'
+  sdk: '>=2.7.0 <3.0.0'
 dependencies:
   js: ^0.6.0
   meta: ^1.1.6

@@ -77,7 +77,8 @@ main() {
       }, tags: 'no-dart2js');
 
       test('does not raise an assertion for valid input refs', () {
-        expect(() => chainRefList(RefTestCase.allChainable().map((r) => r.ref).toList()), returnsNormally);
+        final testCases = RefTestCaseCollection<Object>().createAllCases();
+        expect(() => chainRefList(testCases.map((r) => r.ref).toList()), returnsNormally);
       });
     });
   });
