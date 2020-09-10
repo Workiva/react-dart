@@ -20,6 +20,7 @@ import 'package:react/react_dom.dart' as react_dom;
 import 'package:react/react_test_utils.dart' as rtu;
 import 'package:react/react_client/react_interop.dart';
 
+import '../shared_type_tester.dart';
 import '../util.dart';
 
 /// Runs common tests for [factory].
@@ -27,7 +28,7 @@ import '../util.dart';
 /// [dartComponentVersion] should be specified for all components with Dart render code in order to
 /// properly test `props.children`, forwardRef compatibility, etc.
 void commonFactoryTests(ReactComponentFactoryProxy factory,
-    {bool isFunctionComponent = false, String dartComponentVersion}) {
+    {String dartComponentVersion, bool skipPropValuesTest = false}) {
   _childKeyWarningTests(
     factory,
     renderWithUniqueOwnerName: _renderWithUniqueOwnerName,
@@ -140,6 +141,36 @@ void commonFactoryTests(ReactComponentFactoryProxy factory,
         }),
       );
     });
+
+    if (!isDartComponent1(factory({}))) {
+      test('passes through props as a JsBackedMap:', () {
+        dynamic receivedProps;
+        rtu.renderIntoDocument(factory({
+          'onDartRender': (Map props) {
+            receivedProps = props;
+          }
+        }));
+
+        expect(receivedProps, isA<JsBackedMap>(), reason: 'props should be a JsBackedMap');
+      });
+    }
+
+    if (!skipPropValuesTest) {
+      group('does not convert/wrap values for interop:', () {
+        sharedTypeTests((dynamic testValue) {
+          dynamic receivedValue;
+
+          rtu.renderIntoDocument(factory({
+            'testValue': testValue,
+            'onDartRender': (Map props) {
+              receivedValue = props['testValue'];
+            }
+          }));
+
+          expect(receivedValue, same(testValue));
+        });
+      });
+    }
   }
 
   if (isDartComponent2(factory({}))) {
@@ -185,18 +216,80 @@ void domEventHandlerWrappingTests(ReactComponentFactoryProxy factory) {
             'renders a single DOM node and passes props.onClick to it');
   });
 
-  test('wraps the handler with a function that converts the synthetic event', () {
-    var actualEvent;
+  group('wraps event handlers properly,', () {
+    const dart = EventTestCase.dart('onMouseUp', 'set on component');
+    const dartCloned = EventTestCase.dart('onMouseLeave', 'cloned onto component');
+    const jsCloned = EventTestCase.js('onClick', 'cloned onto component ');
+    const eventCases = {dart, jsCloned, dartCloned};
 
-    final nodeWithClickHandler = renderAndGetRootNode(factory({
-      'onClick': (event) {
-        actualEvent = event;
+    Element node;
+    Map<EventTestCase, dynamic> events;
+    Map propsFromDartRender;
+
+    setUpAll(() {
+      expect(eventCases.map((h) => h.eventPropKey).toSet(), hasLength(eventCases.length),
+          reason: 'test setup: each helper should have a unique event key');
+
+      node = null;
+      events = {};
+      propsFromDartRender = null;
+
+      var element = factory({
+        'onDartRender': (p) {
+          propsFromDartRender = p;
+        },
+        dart.eventPropKey: (event) => events[dart] = event,
+      });
+
+      // Simulate a JS component cloning a handler onto a ReactElement created by a Dart component.
+      element = React.cloneElement(
+        element,
+        jsifyAndAllowInterop({
+          jsCloned.eventPropKey: (event) => events[jsCloned] = event,
+        }),
+      );
+
+      element = React.cloneElement(
+        element,
+        // Invoke the factory corresponding to element's type
+        // to get the correct version of the handler (converted or non-converted)
+        // before passing it straight to the JS.
+        factory({
+          dartCloned.eventPropKey: (event) => events[dartCloned] = event,
+        }).props,
+      );
+
+      node = renderAndGetRootNode(element);
+    });
+
+    group('passing Dart events to Dart handlers, and JS events to handlers originating from JS:', () {
+      for (var eventCase in eventCases) {
+        test(eventCase.description, () {
+          eventCase.simulate(node);
+          expect(events[eventCase], isNotNull, reason: 'handler should have been called');
+          expect(events[eventCase],
+              eventCase.isDart ? isA<react.SyntheticMouseEvent>() : isNot(isA<react.SyntheticMouseEvent>()));
+        });
       }
-    }));
+    });
 
-    rtu.Simulate.click(nodeWithClickHandler);
+    if (isDartComponent(factory({}))) {
+      group('in a way that the handlers are callable from within the Dart component:', () {
+        setUpAll(() {
+          expect(propsFromDartRender, isNotNull,
+              reason: 'test setup: component must pass props into props.onDartRender');
+        });
 
-    expect(actualEvent, isA<react.SyntheticEvent>());
+        final dummyEvent = react.SyntheticMouseEvent(null, null, null, null, null, null, null, null, null, null, null,
+            null, null, null, null, null, null, null, null, null, null, null, null, null, null, null);
+
+        for (var eventCase in eventCases.where((helper) => helper.isDart)) {
+          test(eventCase.description, () {
+            expect(() => propsFromDartRender[eventCase.eventPropKey](dummyEvent), returnsNormally);
+          });
+        }
+      });
+    }
   });
 
   group('wraps the handler with a function that proxies ReactJS event "persistence" as expected', () {
@@ -290,242 +383,187 @@ void domEventHandlerWrappingTests(ReactComponentFactoryProxy factory) {
   });
 }
 
-void refTests<T>(ReactComponentFactoryProxy factory, {void verifyRefValue(dynamic refValue)}) {
+/// Tests that refs work properly with [factory], including [forwardRef2] and [chainRefs] integration tests.
+///
+/// [verifyRefValue] will be called with the actual ref value, and should contain an `expect`
+/// that the value is of the correct type.
+///
+/// [verifyJsRefValue] is optional, and only necessary when the ref value is wrapped and will be different in Dart vs
+/// JS (e.g., react.Component vs ReactComponent for class based-components).
+/// If omitted, it defaults to [verifyRefValue].
+/// It will be called with the actual ref value for JS refs, (e.g., JS ref objects as opposed to Dart objects)
+void refTests<T>(
+  ReactComponentFactoryProxy factory, {
+  @required void verifyRefValue(dynamic refValue),
+  void verifyJsRefValue(dynamic refValue),
+}) {
   if (T == dynamic) {
     throw ArgumentError('Generic parameter T must be specified');
   }
 
-  test('callback refs are called with the correct value', () {
-    var called = false;
-    var refValue;
+  verifyJsRefValue ??= verifyRefValue;
 
-    rtu.renderIntoDocument(factory({
-      'ref': (ref) {
-        called = true;
-        refValue = ref;
-      }
-    }));
+  //
+  // [1] Setting a JS callback ref on a Dart component results in the ref being called with the Dart component,
+  //     not the JS one, so these tests will fail.
+  //
+  //     This is because the callback ref will get treated like a Dart callback when the Dart factory performs its conversion.
+  //
+  //     We don't need to support that use-case, so we won't test it.
+  //
 
-    expect(called, isTrue, reason: 'should have called the callback ref');
-    verifyRefValue(refValue);
-  });
+  final factoryIsDartComponent = isDartComponent(factory({}));
+  final testCaseCollection = RefTestCaseCollection<T>(
+    includeJsCallbackRefCase: !factoryIsDartComponent, // [1]
+  );
 
-  test('string refs are created with the correct value', () {
-    ReactComponent renderedInstance = _renderWithStringRefSupportingOwner(() => factory({'ref': 'test'}));
-
-    // ignore: deprecated_member_use_from_same_package
-    verifyRefValue(renderedInstance.dartComponent.ref('test'));
-  });
-
-  test('createRef function creates ref with correct value', () {
-    final Ref ref = createRef();
-
-    rtu.renderIntoDocument(factory({
-      'ref': ref,
-    }));
-
-    verifyRefValue(ref.current);
-  });
-
-  test('forwardRef function passes a ref through a component to one of its children', () {
-    dynamic actualRef;
-    var ForwardRefTestComponent = forwardRef((props, ref) {
-      actualRef = ref;
-
-      return factory({
-        'ref': ref,
-        'id': props['childId'],
+  group('supports all ref types:', () {
+    for (final name in testCaseCollection.allTestCaseNames) {
+      test(name, () {
+        final testCase = testCaseCollection.createCaseByName(name);
+        rtu.renderIntoDocument(factory({
+          'ref': testCase.ref,
+        }));
+        final verifyFunction = testCase.isJs ? verifyJsRefValue : verifyRefValue;
+        verifyFunction(testCase.getCurrent());
       });
-    });
-
-    final Ref refObject = createRef();
-
-    rtu.renderIntoDocument(ForwardRefTestComponent({
-      'ref': refObject,
-      'childId': 'test',
-    }));
-
-    // Extra type checking since JS refs being passed through
-    // aren't caught by built-in type checking.
-    expect(actualRef, isA<Ref>());
-
-    // Props are accessed differently for DOM, Dart, and JS components.
-    var idValue;
-    final current = refObject.current;
-    expect(current, isNotNull);
-    if (current is Element) {
-      idValue = current.id;
-    } else if (current is react.Component) {
-      idValue = current.props['id'];
-    } else if (rtu.isCompositeComponent(current)) {
-      idValue = JsBackedMap.fromJs((current as ReactComponent).props)['id'];
-    } else {
-      fail('Unknown instance type: current');
     }
 
-    expect(idValue, equals('test'), reason: 'child component should have access to parent props');
-    verifyRefValue(refObject.current);
-  });
+    test('string refs', () {
+      ReactComponent renderedInstance = _renderWithStringRefSupportingOwner(() => factory({'ref': 'test'}));
 
-  group('forwardRef sets displayName on the rendered component as expected', () {
-    test('when displayName argument is not passed to forwardRef', () {
-      var ForwardRefTestComponent = forwardRef((props, ref) {
-        // Extra type checking since JS refs being passed through
-        // aren't caught by built-in type checking.
-        expect(ref, isA<Ref>());
-
-        return factory({'ref': ref});
-      });
-
-      expect(getProperty(getProperty(ForwardRefTestComponent.type, 'render'), 'displayName'), 'Anonymous');
-    });
-
-    test('when displayName argument is passed to forwardRef', () {
-      var ForwardRefTestComponent = forwardRef((props, ref) {
-        // Extra type checking since JS refs being passed through
-        // aren't caught by built-in type checking.
-        expect(ref, isA<Ref>());
-
-        return factory({'ref': ref});
-      }, displayName: 'ForwardRefTestComponent');
-
-      expect(
-          getProperty(getProperty(ForwardRefTestComponent.type, 'render'), 'displayName'), 'ForwardRefTestComponent');
+      // ignore: deprecated_member_use_from_same_package
+      verifyRefValue(renderedInstance.dartComponent.ref('test'));
     });
   });
 
-  group('forwardRef wraps event handlers properly,', () {
-    const dartInside = EventTestCase.dart('onMouseDown', 'inside forwardRef');
-    const dart = EventTestCase.dart('onMouseUp', 'set on forwardRef hoc');
-    const dartCloned = EventTestCase.dart('onMouseLeave', 'cloned onto forwardRef hoc');
-    const jsCloned = EventTestCase.js('onClick', 'cloned onto forwardRef hoc ');
-    const eventCases = {dartInside, dart, jsCloned, dartCloned};
-
-    Element node;
-    Map<EventTestCase, dynamic> events;
-    Map propsFromDartRender;
-
-    setUpAll(() {
-      expect(eventCases.map((h) => h.eventPropKey).toSet(), hasLength(eventCases.length),
-          reason: 'test setup: each helper should have a unique event key');
-
-      node = null;
-      events = {};
-      propsFromDartRender = null;
-
-      final ForwardRefTestComponent = forwardRef((props, ref) {
-        return factory({
-          ...props,
-          'onDartRender': (p) {
-            propsFromDartRender = p;
-          },
-          dartInside.eventPropKey: (event) => events[dartInside] = event,
-          isDartComponent(factory({})) ? 'forwardedRef' : 'ref': ref,
-        }, props['children']);
-      });
-
-      final refObject = createRef();
-      var element = ForwardRefTestComponent({
-        'ref': refObject,
-        dart.eventPropKey: (event) => events[dart] = event,
-      });
-
-      element = React.cloneElement(
-        element,
-        jsifyAndAllowInterop({
-          jsCloned.eventPropKey: (event) => events[jsCloned] = event,
-        }),
-      );
-
-      element = React.cloneElement(
-        element,
-        // Invoke the factory corresponding to element's type
-        // to get the correct version of the handler (converted or non-converted)
-        // before passing it straight to the JS.
-        ForwardRefTestComponent({
-          dartCloned.eventPropKey: (event) => events[dartCloned] = event,
-        }).props,
-      );
-
-      rtu.renderIntoDocument(element);
-
-      node = react_dom.findDOMNode(refObject.current);
-    });
-
-    group('passing Dart events to Dart handlers, and JS events to handlers originating from JS:', () {
-      for (var eventCase in eventCases) {
-        test(eventCase.description, () {
-          eventCase.simulate(node);
-          expect(events[eventCase], isNotNull, reason: 'handler should have been called');
-          expect(events[eventCase],
-              eventCase.isDart ? isA<react.SyntheticMouseEvent>() : isNot(isA<react.SyntheticMouseEvent>()));
-        });
-      }
-    });
-
-    if (isDartComponent(factory({}))) {
-      group('in a way that the handlers are callable from within the Dart component:', () {
-        setUpAll(() {
-          expect(propsFromDartRender, isNotNull,
-              reason: 'test setup: component must pass props into props.onDartRender');
-        });
-
-        final dummyEvent = react.SyntheticMouseEvent(null, null, null, null, null, null, null, null, null, null, null,
-            null, null, null, null, null, null, null, null, null, null, null, null, null, null, null);
-
-        for (var eventCase in eventCases.where((helper) => helper.isDart)) {
-          test(eventCase.description, () {
-            expect(() => propsFromDartRender[eventCase.eventPropKey](dummyEvent), returnsNormally);
+  group('forwardRef function passes a ref through a component to one of its children, when the ref is a:', () {
+    for (final name in testCaseCollection.allTestCaseNames) {
+      // Callback refs don't work properly with forwardRef.
+      // This is part of why forwardRef is deprecated.
+      if (!name.contains('callback ref')) {
+        test(name, () {
+          final testCase = testCaseCollection.createCaseByName(name);
+          var ForwardRefTestComponent = forwardRef((props, ref) {
+            return factory({'ref': ref});
           });
-        }
-      });
+
+          rtu.renderIntoDocument(ForwardRefTestComponent({
+            'ref': testCase.ref,
+          }));
+          final verifyFunction = testCase.isJs ? verifyJsRefValue : verifyRefValue;
+          verifyFunction(testCase.getCurrent());
+        });
+      }
     }
   });
 
-  group('has functional callback refs when they are typed as', () {
-    test('`dynamic Function(dynamic)`', () {
-      T fooRef;
-      callbackRef(dynamic ref) {
-        fooRef = ref;
-      }
+  group('forwardRef2 function passes a ref through a component to one of its children, when the ref is a:', () {
+    for (final name in testCaseCollection.allTestCaseNames) {
+      test(name, () {
+        final testCase = testCaseCollection.createCaseByName(name);
+        var ForwardRefTestComponent = forwardRef2((props, ref) {
+          return factory({'ref': ref});
+        });
 
-      expect(() => rtu.renderIntoDocument(factory({'ref': callbackRef})), returnsNormally,
-          reason: 'React should not have a problem with the ref we pass it, and calling it should not throw');
-      expect(fooRef, isA<T>(), reason: 'should be the correct type, not be a NativeJavaScriptObject/etc.');
-    });
-
-    test('`dynamic Function(ComponentClass)`', () {
-      T fooRef;
-      callbackRef(T ref) {
-        fooRef = ref;
-      }
-
-      expect(() => rtu.renderIntoDocument(factory({'ref': callbackRef})), returnsNormally,
-          reason: 'React should not have a problem with the ref we pass it, and calling it should not throw');
-      expect(fooRef, isA<T>(), reason: 'should be the correct type, not be a NativeJavaScriptObject/etc.');
-    });
+        rtu.renderIntoDocument(ForwardRefTestComponent({
+          'ref': testCase.ref,
+        }));
+        final verifyFunction = testCase.isJs ? verifyJsRefValue : verifyRefValue;
+        verifyFunction(testCase.getCurrent());
+      });
+    }
   });
 
   group('chainRefList works', () {
     test('with all different types of values, ignoring null', () {
-      final testCases = RefTestCase.allChainable<T>();
+      final testCases = testCaseCollection.createAllCases();
 
-      T refValue;
+      final refSpy = createRef<T>();
       rtu.renderIntoDocument(factory({
         'ref': chainRefList([
-          (ref) => refValue = ref,
+          refSpy,
           null,
           null,
           ...testCases.map((t) => t.ref),
         ]),
       }));
-      // Test setup check: verify refValue is correct,
-      // which we'll use below to verify refs were updated.
-      verifyRefValue(refValue);
 
       for (final testCase in testCases) {
-        testCase.verifyRefWasUpdated(refValue);
+        final verifyFunction = testCase.isJs ? verifyJsRefValue : verifyRefValue;
+        final valueToVerify = testCase.isJs ? refSpy.jsRef.current : refSpy.current;
+
+        // Test setup check: verify refValue is correct,
+        // which we'll use below to verify refs were updated.
+        verifyFunction(valueToVerify);
+        testCase.verifyRefWasUpdated(valueToVerify);
       }
+    });
+
+    group('when refs come from sources where they have been potentially converted:', () {
+      test('ReactElement.ref', () {
+        final testCases = testCaseCollection.createAllCases().map((testCase) {
+          return RefTestCase(
+            name: testCase.name,
+            ref: (factory({'ref': testCase.ref}) as ReactElement).ref,
+            verifyRefWasUpdated: testCase.verifyRefWasUpdated,
+            getCurrent: testCase.getCurrent,
+            isJs: testCase.isJs,
+          );
+        }).toList();
+
+        final refSpy = createRef<T>();
+        rtu.renderIntoDocument(factory({
+          'ref': chainRefList([
+            refSpy,
+            null,
+            null,
+            ...testCases.map((t) => t.ref),
+          ]),
+        }));
+
+        for (final testCase in testCases) {
+          final verifyFunction = testCase.isJs ? verifyJsRefValue : verifyRefValue;
+          final valueToVerify = testCase.isJs ? refSpy.jsRef.current : refSpy.current;
+
+          // Test setup check: verify refValue is correct,
+          // which we'll use below to verify refs were updated.
+          verifyFunction(valueToVerify);
+          testCase.verifyRefWasUpdated(valueToVerify);
+        }
+      });
+
+      group('forwardRef2 arg, and the ref is a', () {
+        for (final name in testCaseCollection.allTestCaseNames) {
+          test(name, () {
+            final testCase = testCaseCollection.createCaseByName(name);
+
+            final refSpy = createRef<T>();
+
+            final wrapperFactory = react.forwardRef2((props, ref) {
+              return factory({
+                ...props,
+                'ref': chainRefList([
+                  refSpy,
+                  ref,
+                ]),
+              }, props['children']);
+            });
+
+            rtu.renderIntoDocument(wrapperFactory({
+              'ref': testCase.ref,
+            }));
+
+            final verifyFunction = testCase.isJs ? verifyJsRefValue : verifyRefValue;
+            final valueToVerify = testCase.isJs ? refSpy.jsRef.current : refSpy.current;
+
+            // Test setup check: verify refValue is correct,
+            // which we'll use below to verify refs were updated.
+            verifyFunction(valueToVerify);
+            testCase.verifyRefWasUpdated(valueToVerify);
+          });
+        }
+      });
     });
 
     // Other cases tested in chainRefList's own tests

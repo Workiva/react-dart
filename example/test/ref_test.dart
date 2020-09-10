@@ -17,7 +17,7 @@ class _ChildComponent extends react.Component {
   render() => react.span({}, "Child element with value ${somevalue}");
 }
 
-var InputComponentForm = react.forwardRef((props, ref) {
+var InputComponentForm = react.forwardRef2((props, ref) {
   return react.form({
     'key': 'inputForm',
     'className': 'form-inline'
@@ -37,7 +37,7 @@ var InputComponentForm = react.forwardRef((props, ref) {
   ]);
 });
 
-var ChildComponentForm = react.forwardRef((props, ref) {
+var ChildComponentForm = react.forwardRef2((props, ref) {
   return react.Fragment({}, [
     react.h4({'key': 'create-child-h4'}, "ChildComponent"),
     react.form({
@@ -64,7 +64,7 @@ var ChildComponentForm = react.forwardRef((props, ref) {
       }, 'Increment child value'),
     ])
   ]);
-});
+}, displayName: 'ChildComponentForm');
 
 var ParentComponent = react.registerComponent(() => new _ParentComponent());
 

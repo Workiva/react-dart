@@ -14,9 +14,10 @@ import 'package:react/src/context.dart';
 import 'package:react/src/ddc_emulated_function_name_bug.dart' as ddc_emulated_function_name_bug;
 import 'package:react/src/js_interop_util.dart';
 import 'package:react/src/typedefs.dart';
-import 'package:react/src/react_client/event_factory.dart';
 import 'package:react/src/react_client/event_prop_key_to_event_factory.dart';
 import 'package:react/src/react_client/factory_util.dart';
+
+export 'package:react/src/react_client/factory_util.dart' show unconvertJsEventHandler;
 
 /// Prepares [children] to be passed to the ReactJS [React.createElement] and
 /// the Dart [react.Component].
@@ -34,20 +35,6 @@ dynamic listifyChildren(dynamic children) {
   } else {
     return children;
   }
-}
-
-/// Returns the original Dart handler function that, within [_convertEventHandlers],
-/// was converted/wrapped into the function [jsConvertedEventHandler] to be passed to the JS.
-///
-/// Returns `null` if [jsConvertedEventHandler] is `null`.
-///
-/// Returns `null` if [jsConvertedEventHandler] does not represent such a function
-///
-/// Useful for chaining event handlers on DOM or JS composite [ReactElement]s.
-Function unconvertJsEventHandler(Function jsConvertedEventHandler) {
-  if (jsConvertedEventHandler == null) return null;
-
-  return originalEventHandlers[jsConvertedEventHandler];
 }
 
 /// Returns the props for a [ReactElement] or composite [ReactComponent] [instance],
@@ -99,7 +86,7 @@ mixin JsBackedMapComponentFactoryMixin on ReactComponentFactoryProxy {
       generateJsProps(props, shouldConvertEventHandlers: false, wrapWithJsify: false);
 }
 
-/// Use [ReactDartComponentFactoryProxy2] instead.
+/// Use [ReactDartComponentFactoryProxy2] instead by calling [registerComponent2].
 ///
 /// Will be removed when [Component] is removed in the `6.0.0` release.
 @Deprecated('6.0.0')
@@ -172,10 +159,14 @@ class ReactDartComponentFactoryProxy<TComponent extends Component> extends React
       // would fail the `is CallbackRef<dynamic>` check.
       // See https://github.com/dart-lang/sdk/issues/34593 for more information on arity checks.
       if (ref is CallbackRef<Null>) {
-        interopProps.ref = allowInterop((ReactComponent instance) {
+        interopProps.ref = allowInterop((dynamic instance) {
           // Call as dynamic to perform dynamic dispatch, since we can't cast to CallbackRef<dynamic>,
           // and since calling with non-null values will fail at runtime due to the CallbackRef<Null> typing.
-          return (ref as dynamic)(instance?.dartComponent);
+          if (instance is ReactComponent && instance.dartComponent != null) {
+            return (ref as dynamic)(instance.dartComponent);
+          }
+
+          return (ref as dynamic)(instance);
         });
       } else if (ref is Ref) {
         interopProps.ref = ref.jsRef;
@@ -189,6 +180,8 @@ class ReactDartComponentFactoryProxy<TComponent extends Component> extends React
 }
 
 /// Creates ReactJS [Component2] instances for Dart components.
+///
+/// > Related: [registerComponent2]
 class ReactDartComponentFactoryProxy2<TComponent extends Component2> extends ReactComponentFactoryProxy
     with
         JsBackedMapComponentFactoryMixin
@@ -367,34 +360,71 @@ class ReactDartFunctionComponentFactoryProxy extends ReactComponentFactoryProxy 
 
   @override
   JsFunctionComponent get type => reactFunction;
+}
 
-  static String _getJsFunctionName(Function object) =>
-      getProperty(object, 'name') ?? getProperty(object, '\$static_name');
+/// A wrapper for a Dart component that's been wrapped by a JS component/HOC (e.g., [React.memo], [React.forwardRef]).
+class ReactDartWrappedComponentFactoryProxy extends ReactComponentFactoryProxy with JsBackedMapComponentFactoryMixin {
+  /// The React JS component definition of this Function Component.
+  @override
+  final ReactClass type;
 
-  /// Creates a function component from the given [dartFunctionComponent] that can be used with React.
-  ///
-  /// [displayName] Sets the component name for debugging purposes.
-  ///
-  /// In DDC, this will be the [DartFunctionComponent] name, but in dart2js it will be null unless
-  /// overridden, since using runtimeType can lead to larger dart2js output.
-  ///
-  /// This will result in the dart2js name being `ReactDartComponent2` (the
-  /// name of the proxying JS component defined in _dart_helpers.js).
-  static JsFunctionComponent _wrapFunctionComponent(DartFunctionComponent dartFunctionComponent, {String displayName}) {
-    // dart2js uses null and undefined interchangeably, meaning returning `null` from dart
-    // may show up in js as `undefined`, ReactJS doesnt like that and expects a js `null` to be returned,
-    // and throws if it gets `undefined`. `jsNull` is an interop variable that holds a JS `null` value
-    // to force `null` as the return value if user returns a Dart `null`.
-    // See: https://github.com/dart-lang/sdk/issues/27485
-    jsFunctionComponent(JsMap jsProps, [JsMap _legacyContext]) =>
-        componentZone.run(() => dartFunctionComponent(JsBackedMap.backedBy(jsProps)) ?? jsNull);
-    JsFunctionComponent interopFunction = allowInterop(jsFunctionComponent);
-    if (displayName != null) {
-      // This is a work-around to display the correct name in the React DevTools.
-      defineProperty(interopFunction, 'name', jsify({'value': displayName}));
-    }
-    // ignore: invalid_use_of_protected_member
-    setProperty(interopFunction, 'dartComponentVersion', ReactDartComponentVersion.component2);
-    return interopFunction;
+  ReactDartWrappedComponentFactoryProxy(this.type);
+
+  ReactDartWrappedComponentFactoryProxy.forwardRef(DartForwardRefFunctionComponent dartFunctionComponent,
+      {String displayName})
+      : this.type = _wrapForwardRefFunctionComponent(dartFunctionComponent,
+            displayName: displayName ?? _getJsFunctionName(dartFunctionComponent));
+}
+
+String _getJsFunctionName(Function object) => getProperty(object, 'name') ?? getProperty(object, '\$static_name');
+
+/// Creates a function component from the given [dartFunctionComponent] that can be used with React.
+///
+/// [displayName] Sets the component name for debugging purposes.
+///
+/// In DDC, this will be the [DartFunctionComponent] name, but in dart2js it will be null unless
+/// overridden, since using runtimeType can lead to larger dart2js output.
+JsFunctionComponent _wrapFunctionComponent(DartFunctionComponent dartFunctionComponent, {String displayName}) {
+  // dart2js uses null and undefined interchangeably, meaning returning `null` from dart
+  // may show up in js as `undefined`, ReactJS doesnt like that and expects a js `null` to be returned,
+  // and throws if it gets `undefined`. `jsNull` is an interop variable that holds a JS `null` value
+  // to force `null` as the return value if user returns a Dart `null`.
+  // See: https://github.com/dart-lang/sdk/issues/27485
+  jsFunctionComponent(JsMap jsProps, [JsMap _legacyContext]) =>
+      componentZone.run(() => dartFunctionComponent(JsBackedMap.backedBy(jsProps)) ?? jsNull);
+  JsFunctionComponent interopFunction = allowInterop(jsFunctionComponent);
+  if (displayName != null) {
+    // This is a work-around to display the correct name in the React DevTools.
+    defineProperty(interopFunction, 'name', jsify({'value': displayName}));
   }
+  // ignore: invalid_use_of_protected_member
+  setProperty(interopFunction, 'dartComponentVersion', ReactDartComponentVersion.component2);
+  return interopFunction;
+}
+
+/// Creates a function component from the given [dartFunctionComponent] that can be used with React.
+///
+/// [displayName] Sets the component name for debugging purposes.
+///
+/// In DDC, this will be the [DartFunctionComponent] name, but in dart2js it will be null unless
+/// overridden, since using runtimeType can lead to larger dart2js output.
+ReactClass _wrapForwardRefFunctionComponent(DartForwardRefFunctionComponent dartFunctionComponent,
+    {String displayName}) {
+  // dart2js uses null and undefined interchangeably, meaning returning `null` from dart
+  // may show up in js as `undefined`, ReactJS doesnt like that and expects a js `null` to be returned,
+  // and throws if it gets `undefined`. `jsNull` is an interop variable that holds a JS `null` value
+  // to force `null` as the return value if user returns a Dart `null`.
+  // See: https://github.com/dart-lang/sdk/issues/27485
+  jsFunctionComponent(JsMap props, dynamic ref) =>
+      componentZone.run(() => dartFunctionComponent(JsBackedMap.backedBy(props), ref) ?? jsNull);
+
+  final interopFunction = allowInterop(jsFunctionComponent);
+  if (displayName != null) {
+    // This is a work-around to display the correct name in the React DevTools.
+    defineProperty(interopFunction, 'name', jsify({'value': displayName}));
+  }
+  final jsForwardRefFunction = React.forwardRef(interopFunction);
+  // ignore: invalid_use_of_protected_member
+  setProperty(jsForwardRefFunction, 'dartComponentVersion', ReactDartComponentVersion.component2);
+  return jsForwardRefFunction;
 }

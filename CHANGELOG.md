@@ -1,3 +1,16 @@
+## [5.6.0](https://github.com/cleandart/react-dart/compare/5.5.1...5.6.0)
+
+- [#275] Add `forwardRef2` / `memo2` to fix _"jsification"_ of Dart props
+    - Deprecates `forwardRef` / `memo`
+- [#274] (Security update) Bump serialize-javascript JS dependency to version `3.1.0`
+
+## [5.5.1](https://github.com/cleandart/react-dart/compare/5.5.0...5.5.1)
+
+- [#258] Exclude `propTypes` from Dart2js output.
+    - Deprecate `registerComponent`.
+        - _Accidentally overlooked when `Component` was deprecated_
+- [#276] Allow null ref value in `useImperativeHandle` hook
+
 ## [5.5.0](https://github.com/cleandart/react-dart/compare/5.4.0...5.5.0)
 
 __New Features__

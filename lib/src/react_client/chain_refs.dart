@@ -1,4 +1,5 @@
 import 'package:js/js_util.dart';
+import 'package:react/react.dart' as react;
 import 'package:react/react_client/react_interop.dart';
 
 /// Returns a ref that updates both [ref1] and [ref2], effectively
@@ -73,8 +74,8 @@ dynamic chainRefList(List<dynamic> refs) {
         // ignore: invalid_use_of_protected_member
         ref.current = value;
       } else {
-        // ignore: invalid_use_of_protected_member
-        (ref as JsRef).current = value;
+        // ignore: invalid_use_of_protected_member, deprecated_member_use_from_same_package
+        (ref as JsRef).current = value is react.Component ? value.jsThis : value;
       }
     }
   }
