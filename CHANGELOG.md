@@ -1,8 +1,9 @@
 ## [5.5.1](https://github.com/cleandart/react-dart/compare/5.5.0...5.5.1)
 
-- Exclude `propTypes` from Dart2js output.
-- Deprecate `registerComponent`.
-    - _Accidentally overlooked when `Component` was deprecated_
+- [#258] Exclude `propTypes` from Dart2js output.
+    - Deprecate `registerComponent`.
+        - _Accidentally overlooked when `Component` was deprecated_
+- [#276] Allow null ref value in `useImperativeHandle` hook
 
 ## [5.5.0](https://github.com/cleandart/react-dart/compare/5.4.0...5.5.0)
 
