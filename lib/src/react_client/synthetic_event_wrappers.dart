@@ -25,6 +25,8 @@ class SyntheticEvent {
   external void preventDefault();
 
   external void persist();
+
+  external bool isPersistent();
 }
 
 @JS()
