@@ -1,3 +1,7 @@
+## [5.6.1](https://github.com/cleandart/react-dart/compare/5.6.0...5.6.1)
+
+- [#280] Update React dev JS files to include a [workaround](https://github.com/dart-lang/sdk/issues/43193) to a DDC bug when using Chrome 86+ (fixed in Dart 2.9.3) 
+
 ## [5.6.0](https://github.com/cleandart/react-dart/compare/5.5.1...5.6.0)
 
 - [#275] Add `forwardRef2` / `memo2` to fix _"jsification"_ of Dart props
