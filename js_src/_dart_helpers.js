@@ -136,15 +136,10 @@ function _createReactDartComponentClass2(dartInteropStatics, componentStatics, j
       // React now uses its own internal cache of errors for PropTypes which broke `PropTypes.resetWarningCache()`.
       // Solution was to use `PropTypes.checkPropTypes` directly which makes `PropTypes.resetWarningCache()` work.
       // Solution from: https://github.com/facebook/react/issues/18251#issuecomment-609024557
-      // TODO: figure out how to get the `displayName` here...
-      React.PropTypes.checkPropTypes(jsConfig.propTypes, this.props, 'prop', this._getDisplayName());
+      React.PropTypes.checkPropTypes(jsConfig.propTypes, this.props, 'prop', ReactDartComponent2.displayName);
       var result = dartInteropStatics.handleRender(this.dartComponent, this.props, this.state, this.context);
       if (typeof result === 'undefined') result = null;
       return result;
-    }
-    // Hacky workaround to get the displayName for `checkPropTypes` call.
-    _getDisplayName() {
-      return ReactDartComponent2.displayName;
     }
   }
 
