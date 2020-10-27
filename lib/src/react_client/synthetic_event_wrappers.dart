@@ -8,7 +8,6 @@ import 'dart:html';
 import 'package:js/js.dart';
 
 @JS()
-@anonymous
 class SyntheticEvent {
   external bool get bubbles;
   external bool get cancelable;
@@ -30,13 +29,11 @@ class SyntheticEvent {
 }
 
 @JS()
-@anonymous
 class SyntheticClipboardEvent extends SyntheticEvent {
   external get clipboardData;
 }
 
 @JS()
-@anonymous
 class SyntheticKeyboardEvent extends SyntheticEvent {
   external bool get altKey;
   external String get char;
@@ -52,26 +49,22 @@ class SyntheticKeyboardEvent extends SyntheticEvent {
 }
 
 @JS()
-@anonymous
 class SyntheticCompositionEvent extends SyntheticEvent {
   external String get data;
 }
 
 @JS()
-@anonymous
 class SyntheticFocusEvent extends SyntheticEvent {
   external EventTarget get relatedTarget;
 }
 
 @JS()
-@anonymous
 class SyntheticFormEvent extends SyntheticEvent {}
 
 /// A JS object that looks like a [DataTransfer] but isn't one.
 ///
 /// See `syntheticDataTransferFactory` for more info.
 @JS()
-@anonymous
 class NonNativeDataTransfer {
   external String get dropEffect;
   external String get effectAllowed;
@@ -80,7 +73,6 @@ class NonNativeDataTransfer {
 }
 
 @JS()
-@anonymous
 class SyntheticMouseEvent extends SyntheticEvent {
   external bool get altKey;
   external num get button;
@@ -99,7 +91,6 @@ class SyntheticMouseEvent extends SyntheticEvent {
 }
 
 @JS()
-@anonymous
 class SyntheticPointerEvent extends SyntheticEvent {
   external num get pointerId;
   external num get width;
@@ -114,7 +105,6 @@ class SyntheticPointerEvent extends SyntheticEvent {
 }
 
 @JS()
-@anonymous
 class SyntheticTouchEvent extends SyntheticEvent {
   external bool get altKey;
   external TouchList get changedTouches;
@@ -126,7 +116,6 @@ class SyntheticTouchEvent extends SyntheticEvent {
 }
 
 @JS()
-@anonymous
 class SyntheticTransitionEvent extends SyntheticEvent {
   external String get propertyName;
   external num get elapsedTime;
@@ -134,7 +123,6 @@ class SyntheticTransitionEvent extends SyntheticEvent {
 }
 
 @JS()
-@anonymous
 class SyntheticAnimationEvent extends SyntheticEvent {
   external String get animationName;
   external num get elapsedTime;
@@ -142,14 +130,12 @@ class SyntheticAnimationEvent extends SyntheticEvent {
 }
 
 @JS()
-@anonymous
 class SyntheticUIEvent extends SyntheticEvent {
   external num get detail;
   external get view;
 }
 
 @JS()
-@anonymous
 class SyntheticWheelEvent extends SyntheticEvent {
   external num get deltaX;
   external num get deltaMode;
