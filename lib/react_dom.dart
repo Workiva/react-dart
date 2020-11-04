@@ -30,19 +30,3 @@ dynamic _findDomNode(component) {
   // ignore: deprecated_member_use_from_same_package
   return ReactDom.findDOMNode(component is Component ? component.jsThis : component);
 }
-
-/// Sets configuration based on passed functions.
-///
-/// Passes arguments to global variables.
-///
-/// > __DEPRECATED.__
-/// >
-/// > Environment configuration is now done by default and should not be altered. This can now be removed.
-/// > This will be removed in 6.0.0, along with other configuration setting functions.
-@Deprecated(
-    'Environment configuration is now done by default and should not be altered. This can be removed. Will be removed from this library in the 6.0.0 release.')
-setReactDOMConfiguration(Function customRender, Function customUnmountComponentAtNode, Function customFindDOMNode) {
-  render = customRender;
-  unmountComponentAtNode = customUnmountComponentAtNode;
-  findDOMNode = customFindDOMNode;
-}

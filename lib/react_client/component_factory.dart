@@ -95,10 +95,6 @@ class ReactDartComponentFactoryProxy<TComponent extends Component> extends React
   /// this factory.
   final ReactClass reactClass;
 
-  /// The JS component factory used by this factory to build [ReactElement]s.
-  @Deprecated('6.0.0')
-  ReactJsComponentFactory get reactComponentFactory => React.createFactory(reactClass);
-
   /// The cached Dart default props retrieved from [reactClass] that are passed
   /// into [generateExtendedJsProps] upon [ReactElement] creation.
   final Map defaultProps;
@@ -192,10 +188,6 @@ class ReactDartComponentFactoryProxy2<TComponent extends Component2> extends Rea
   /// this factory.
   final ReactClass reactClass;
 
-  /// The JS component factory used by this factory to build [ReactElement]s.
-  @Deprecated('6.0.0')
-  ReactJsComponentFactory get reactComponentFactory => React.createFactory(reactClass);
-
   final Map defaultProps;
 
   ReactDartComponentFactoryProxy2(ReactClass reactClass)
@@ -221,9 +213,6 @@ class ReactJsContextComponentFactoryProxy extends ReactJsComponentFactoryProxy {
   final bool isConsumer;
   final bool isProvider;
   final bool shouldConvertDomProps;
-
-  @Deprecated('6.0.0')
-  Function get factory => React.createFactory(type);
 
   ReactJsContextComponentFactoryProxy(
     ReactClass jsClass, {
@@ -267,10 +256,6 @@ class ReactJsComponentFactoryProxy extends ReactComponentFactoryProxy {
   /// The JS class used by this factory.
   @override
   final ReactClass type;
-
-  /// The JS component factory used by this factory to build [ReactElement]s.
-  @Deprecated('6.0.0')
-  Function get factory => React.createFactory(type);
 
   /// Whether to automatically prepare props relating to bound values and event handlers
   /// via [ReactDomComponentFactoryProxy.convertProps] for consumption by React JS DOM components.
@@ -316,10 +301,6 @@ class ReactDomComponentFactoryProxy extends ReactComponentFactoryProxy {
   ///
   /// E.g. `'div'`, `'a'`, `'h1'`
   final String name;
-
-  /// The JS component factory used by this factory to build [ReactElement]s.
-  @Deprecated('6.0.0')
-  Function get factory => React.createFactory(name);
 
   ReactDomComponentFactoryProxy(this.name) {
     // TODO: Should we remove this once we validate that the bug is gone in Dart 2 DDC?
