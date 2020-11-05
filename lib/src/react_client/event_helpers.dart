@@ -2,31 +2,40 @@
 
 import '../../react.dart';
 
-SyntheticEvent getEmptySyntheticEvent() => _SyntheticEventHelper.getEmptyEvent();
-SyntheticClipboardEvent getEmptyClipboardEvent() => _SyntheticEventHelper.getEmptyClipboardEvent();
-SyntheticKeyboardEvent getEmptyKeyboardEvent() => _SyntheticEventHelper.getEmptyKeyboardEvent();
-SyntheticCompositionEvent getEmptyCompositionEvent() => _SyntheticEventHelper.getEmptyCompositionEvent();
-SyntheticFocusEvent getEmptyFocusEvent() => _SyntheticEventHelper.getEmptyFocusEvent();
-SyntheticFormEvent getEmptyFormEvent() => _SyntheticEventHelper.getEmptyFormEvent();
-SyntheticMouseEvent getEmptyMouseEvent() => _SyntheticEventHelper.getEmptyMouseEvent();
-SyntheticPointerEvent getEmptyPointerEvent() => _SyntheticEventHelper.getEmptyPointerEvent();
-SyntheticTouchEvent getEmptyTouchEvent() => _SyntheticEventHelper.getEmptyTouchEvent();
-SyntheticAnimationEvent getEmptyAnimationEvent() => _SyntheticEventHelper.getEmptyAnimationEvent();
-SyntheticUIEvent getEmptyUIEvent() => _SyntheticEventHelper.getEmptyUIEvent();
-SyntheticWheelEvent getEmptyWheelEvent() => _SyntheticEventHelper.getEmptyWheelEvent();
+/// Returns an empty [SyntheticEvent] with all fields set to `null`.
+///
+/// This utility can be useful when a test just needs access to an event object,
+/// but no fields need to be set.
+SyntheticEvent getEmptySyntheticEvent() => buildSyntheticEvent();
+SyntheticClipboardEvent getEmptyClipboardEvent() => buildClipboardEvent();
+SyntheticKeyboardEvent getEmptyKeyboardEvent() => buildKeyboardEvent();
+SyntheticCompositionEvent getEmptyCompositionEvent() => buildCompositionEvent();
+SyntheticFocusEvent getEmptyFocusEvent() => buildFocusEvent();
+SyntheticFormEvent getEmptyFormEvent() => buildFormEvent();
+SyntheticMouseEvent getEmptyMouseEvent() => buildMouseEvent();
+SyntheticPointerEvent getEmptyPointerEvent() => buildPointerEvent();
+SyntheticTouchEvent getEmptyTouchEvent() => buildTouchEvent();
+SyntheticAnimationEvent getEmptyAnimationEvent() => buildAnimationEvent();
+SyntheticUIEvent getEmptyUIEvent() => buildUIEvent();
+SyntheticWheelEvent getEmptyWheelEvent() => buildWheelEvent();
 
-SyntheticEvent buildSyntheticEvent({SyntheticWheelEvent baseEvent, Map<String, dynamic> newEventProperties}) => _SyntheticEventHelper.buildEvent(baseEvent, newEventProperties);
-SyntheticClipboardEvent buildClipboardEvent({SyntheticClipboardEvent baseEvent, Map<String, dynamic> newEventProperties}) => _SyntheticEventHelper.buildClipboardEvent(baseEvent, newEventProperties);
-SyntheticKeyboardEvent buildKeyboardEvent({SyntheticKeyboardEvent baseEvent, Map<String, dynamic> newEventProperties}) => _SyntheticEventHelper.buildKeyboardEvent(baseEvent, newEventProperties);
-SyntheticCompositionEvent buildCompositionEvent({SyntheticCompositionEvent baseEvent, Map<String, dynamic> newEventProperties}) => _SyntheticEventHelper.buildCompositionEvent(baseEvent, newEventProperties);
-SyntheticFocusEvent buildFocusEvent({SyntheticFocusEvent baseEvent, Map<String, dynamic> newEventProperties}) => _SyntheticEventHelper.buildFocusEvent(baseEvent, newEventProperties);
-SyntheticFormEvent buildFormEvent({SyntheticFormEvent baseEvent, Map<String, dynamic> newEventProperties}) => _SyntheticEventHelper.buildFormEvent(baseEvent, newEventProperties);
-SyntheticMouseEvent buildMouseEvent({SyntheticMouseEvent baseEvent, Map<String, dynamic> newEventProperties}) => _SyntheticEventHelper.buildMouseEvent(baseEvent, newEventProperties);
-SyntheticPointerEvent buildPointerEvent({SyntheticPointerEvent baseEvent, Map<String, dynamic> newEventProperties}) => _SyntheticEventHelper.buildPointerEvent(baseEvent, newEventProperties);
-SyntheticTouchEvent buildTouchEvent({SyntheticTouchEvent baseEvent, Map<String, dynamic> newEventProperties}) => _SyntheticEventHelper.buildTouchEvent(baseEvent, newEventProperties);
-SyntheticAnimationEvent buildAnimationEvent({SyntheticAnimationEvent baseEvent, Map<String, dynamic> newEventProperties}) => _SyntheticEventHelper.buildAnimationEvent(baseEvent, newEventProperties);
-SyntheticUIEvent buildUIEvent({SyntheticUIEvent baseEvent, Map<String, dynamic> newEventProperties}) => _SyntheticEventHelper.buildUIEvent(baseEvent, newEventProperties);
-SyntheticWheelEvent buildWheelEvent({SyntheticWheelEvent baseEvent, Map<String, dynamic> newEventProperties}) => _SyntheticEventHelper.buildWheelEvent(baseEvent, newEventProperties);
+/// Returns a newly constructed [SyntheticEvent] instance.
+///
+/// In addition to creating empty instances (by invoking without any parameters) or completely custom instances
+/// by using [properties], this method will merge previously existing [baseEvent]s with the [properties] provided.
+/// [properties] takes precedence, and therefore can be used to override specific fields on the [baseEvent].
+SyntheticEvent buildSyntheticEvent({SyntheticWheelEvent baseEvent, Map<String, dynamic> properties}) => _SyntheticEventHelper.buildEvent(baseEvent, properties);
+SyntheticClipboardEvent buildClipboardEvent({SyntheticClipboardEvent baseEvent, Map<String, dynamic> properties}) => _SyntheticEventHelper.buildClipboardEvent(baseEvent, properties);
+SyntheticKeyboardEvent buildKeyboardEvent({SyntheticKeyboardEvent baseEvent, Map<String, dynamic> properties}) => _SyntheticEventHelper.buildKeyboardEvent(baseEvent, properties);
+SyntheticCompositionEvent buildCompositionEvent({SyntheticCompositionEvent baseEvent, Map<String, dynamic> properties}) => _SyntheticEventHelper.buildCompositionEvent(baseEvent, properties);
+SyntheticFocusEvent buildFocusEvent({SyntheticFocusEvent baseEvent, Map<String, dynamic> properties}) => _SyntheticEventHelper.buildFocusEvent(baseEvent, properties);
+SyntheticFormEvent buildFormEvent({SyntheticFormEvent baseEvent, Map<String, dynamic> properties}) => _SyntheticEventHelper.buildFormEvent(baseEvent, properties);
+SyntheticMouseEvent buildMouseEvent({SyntheticMouseEvent baseEvent, Map<String, dynamic> properties}) => _SyntheticEventHelper.buildMouseEvent(baseEvent, properties);
+SyntheticPointerEvent buildPointerEvent({SyntheticPointerEvent baseEvent, Map<String, dynamic> properties}) => _SyntheticEventHelper.buildPointerEvent(baseEvent, properties);
+SyntheticTouchEvent buildTouchEvent({SyntheticTouchEvent baseEvent, Map<String, dynamic> properties}) => _SyntheticEventHelper.buildTouchEvent(baseEvent, properties);
+SyntheticAnimationEvent buildAnimationEvent({SyntheticAnimationEvent baseEvent, Map<String, dynamic> properties}) => _SyntheticEventHelper.buildAnimationEvent(baseEvent, properties);
+SyntheticUIEvent buildUIEvent({SyntheticUIEvent baseEvent, Map<String, dynamic> properties}) => _SyntheticEventHelper.buildUIEvent(baseEvent, properties);
+SyntheticWheelEvent buildWheelEvent({SyntheticWheelEvent baseEvent, Map<String, dynamic> properties}) => _SyntheticEventHelper.buildWheelEvent(baseEvent, properties);
 
 extension SyntheticEventTypeHelpers on SyntheticEvent {
   bool get isClipboardEvent => this.tryCast<SyntheticClipboardEvent>() != null;
@@ -58,281 +67,281 @@ class _SyntheticEventHelper {
   static SyntheticUIEvent getEmptyUIEvent() => SyntheticUIEvent(null, null, null, null, () {}, () {}, null, null, null, null, 0, 'empty event', null, null);
   static SyntheticWheelEvent getEmptyWheelEvent() => SyntheticWheelEvent(null, null, null, null, () {}, () {}, null, null, null, null, 0, 'empty event', null, null, null, null);
 
-  static SyntheticEvent buildEvent(SyntheticEvent event, Map<String, dynamic> newEventFields) {
+  static SyntheticEvent buildEvent(SyntheticEvent event, Map<String, dynamic> eventProperties) {
     return SyntheticEvent(
-      newEventFields['bubbles'] ?? event?.bubbles,
-      newEventFields['cancelable'] ?? event?.cancelable,
-      newEventFields['currentTarget'] ?? event?.currentTarget,
-      newEventFields['defaultPrevented'] ?? event?.defaultPrevented,
-      newEventFields['preventDefault'] ?? event?.preventDefault,
-      newEventFields['stopPropagation'] ?? event?.stopPropagation,
-      newEventFields['eventPhase'] ?? event?.eventPhase,
-      newEventFields['isTrusted'] ?? event?.isTrusted,
-      newEventFields['nativeEvent'] ?? event?.nativeEvent,
-      newEventFields['target'] ?? event?.target,
-      newEventFields['timeStamp'] ?? event?.timeStamp,
-      newEventFields['type'] ?? event?.type,
+      eventProperties['bubbles'] ?? event?.bubbles,
+      eventProperties['cancelable'] ?? event?.cancelable,
+      eventProperties['currentTarget'] ?? event?.currentTarget,
+      eventProperties['defaultPrevented'] ?? event?.defaultPrevented,
+      eventProperties['preventDefault'] ?? event?.preventDefault,
+      eventProperties['stopPropagation'] ?? event?.stopPropagation,
+      eventProperties['eventPhase'] ?? event?.eventPhase,
+      eventProperties['isTrusted'] ?? event?.isTrusted,
+      eventProperties['nativeEvent'] ?? event?.nativeEvent,
+      eventProperties['target'] ?? event?.target,
+      eventProperties['timeStamp'] ?? event?.timeStamp,
+      eventProperties['type'] ?? event?.type,
     );
   }
 
-  static SyntheticClipboardEvent buildClipboardEvent(SyntheticClipboardEvent event, Map<String, dynamic> newEventFields) {
+  static SyntheticClipboardEvent buildClipboardEvent(SyntheticClipboardEvent event, Map<String, dynamic> eventProperties) {
     return SyntheticClipboardEvent(
-      newEventFields['bubbles'] ?? event?.bubbles,
-      newEventFields['cancelable'] ?? event?.cancelable,
-      newEventFields['currentTarget'] ?? event?.currentTarget,
-      newEventFields['defaultPrevented'] ?? event?.defaultPrevented,
-      newEventFields['preventDefault'] ?? event?.preventDefault,
-      newEventFields['stopPropagation'] ?? event?.stopPropagation,
-      newEventFields['eventPhase'] ?? event?.eventPhase,
-      newEventFields['isTrusted'] ?? event?.isTrusted,
-      newEventFields['nativeEvent'] ?? event?.nativeEvent,
-      newEventFields['target'] ?? event?.target,
-      newEventFields['timeStamp'] ?? event?.timeStamp,
-      newEventFields['type'] ?? event?.type,
-      newEventFields['clipboardData'] ?? event?.clipboardData,
+      eventProperties['bubbles'] ?? event?.bubbles,
+      eventProperties['cancelable'] ?? event?.cancelable,
+      eventProperties['currentTarget'] ?? event?.currentTarget,
+      eventProperties['defaultPrevented'] ?? event?.defaultPrevented,
+      eventProperties['preventDefault'] ?? event?.preventDefault,
+      eventProperties['stopPropagation'] ?? event?.stopPropagation,
+      eventProperties['eventPhase'] ?? event?.eventPhase,
+      eventProperties['isTrusted'] ?? event?.isTrusted,
+      eventProperties['nativeEvent'] ?? event?.nativeEvent,
+      eventProperties['target'] ?? event?.target,
+      eventProperties['timeStamp'] ?? event?.timeStamp,
+      eventProperties['type'] ?? event?.type,
+      eventProperties['clipboardData'] ?? event?.clipboardData,
     );
   }
 
-  static SyntheticKeyboardEvent buildKeyboardEvent(SyntheticKeyboardEvent event, Map<String, dynamic> newEventFields) {
+  static SyntheticKeyboardEvent buildKeyboardEvent(SyntheticKeyboardEvent event, Map<String, dynamic> eventProperties) {
     return SyntheticKeyboardEvent(
-      newEventFields['bubbles'] ?? event?.bubbles,
-      newEventFields['cancelable'] ?? event?.cancelable,
-      newEventFields['currentTarget'] ?? event?.currentTarget,
-      newEventFields['defaultPrevented'] ?? event?.defaultPrevented,
-      newEventFields['preventDefault'] ?? event?.preventDefault,
-      newEventFields['stopPropagation'] ?? event?.stopPropagation,
-      newEventFields['eventPhase'] ?? event?.eventPhase,
-      newEventFields['isTrusted'] ?? event?.isTrusted,
-      newEventFields['nativeEvent'] ?? event?.nativeEvent,
-      newEventFields['target'] ?? event?.target,
-      newEventFields['timeStamp'] ?? event?.timeStamp,
-      newEventFields['type'] ?? event?.type,
-      newEventFields['altKey'] ?? event?.altKey,
-      newEventFields['char'] ?? event?.char,
-      newEventFields['ctrlKey'] ?? event?.ctrlKey,
-      newEventFields['locale'] ?? event?.locale,
-      newEventFields['location'] ?? event?.location,
-      newEventFields['key'] ?? event?.key,
-      newEventFields['metaKey'] ?? event?.metaKey,
-      newEventFields['repeat'] ?? event?.repeat,
-      newEventFields['shiftKey'] ?? event?.shiftKey,
-      newEventFields['keyCode'] ?? event?.keyCode,
-      newEventFields['charCode'] ?? event?.charCode,
+      eventProperties['bubbles'] ?? event?.bubbles,
+      eventProperties['cancelable'] ?? event?.cancelable,
+      eventProperties['currentTarget'] ?? event?.currentTarget,
+      eventProperties['defaultPrevented'] ?? event?.defaultPrevented,
+      eventProperties['preventDefault'] ?? event?.preventDefault,
+      eventProperties['stopPropagation'] ?? event?.stopPropagation,
+      eventProperties['eventPhase'] ?? event?.eventPhase,
+      eventProperties['isTrusted'] ?? event?.isTrusted,
+      eventProperties['nativeEvent'] ?? event?.nativeEvent,
+      eventProperties['target'] ?? event?.target,
+      eventProperties['timeStamp'] ?? event?.timeStamp,
+      eventProperties['type'] ?? event?.type,
+      eventProperties['altKey'] ?? event?.altKey,
+      eventProperties['char'] ?? event?.char,
+      eventProperties['ctrlKey'] ?? event?.ctrlKey,
+      eventProperties['locale'] ?? event?.locale,
+      eventProperties['location'] ?? event?.location,
+      eventProperties['key'] ?? event?.key,
+      eventProperties['metaKey'] ?? event?.metaKey,
+      eventProperties['repeat'] ?? event?.repeat,
+      eventProperties['shiftKey'] ?? event?.shiftKey,
+      eventProperties['keyCode'] ?? event?.keyCode,
+      eventProperties['charCode'] ?? event?.charCode,
     );
   }
 
-  static SyntheticCompositionEvent buildCompositionEvent(SyntheticCompositionEvent event, Map<String, dynamic> newEventFields) {
+  static SyntheticCompositionEvent buildCompositionEvent(SyntheticCompositionEvent event, Map<String, dynamic> eventProperties) {
     return SyntheticCompositionEvent(
-      newEventFields['bubbles'] ?? event?.bubbles,
-      newEventFields['cancelable'] ?? event?.cancelable,
-      newEventFields['currentTarget'] ?? event?.currentTarget,
-      newEventFields['defaultPrevented'] ?? event?.defaultPrevented,
-      newEventFields['preventDefault'] ?? event?.preventDefault,
-      newEventFields['stopPropagation'] ?? event?.stopPropagation,
-      newEventFields['eventPhase'] ?? event?.eventPhase,
-      newEventFields['isTrusted'] ?? event?.isTrusted,
-      newEventFields['nativeEvent'] ?? event?.nativeEvent,
-      newEventFields['target'] ?? event?.target,
-      newEventFields['timeStamp'] ?? event?.timeStamp,
-      newEventFields['type'] ?? event?.type,
-      newEventFields['data'] ?? event?.data,
+      eventProperties['bubbles'] ?? event?.bubbles,
+      eventProperties['cancelable'] ?? event?.cancelable,
+      eventProperties['currentTarget'] ?? event?.currentTarget,
+      eventProperties['defaultPrevented'] ?? event?.defaultPrevented,
+      eventProperties['preventDefault'] ?? event?.preventDefault,
+      eventProperties['stopPropagation'] ?? event?.stopPropagation,
+      eventProperties['eventPhase'] ?? event?.eventPhase,
+      eventProperties['isTrusted'] ?? event?.isTrusted,
+      eventProperties['nativeEvent'] ?? event?.nativeEvent,
+      eventProperties['target'] ?? event?.target,
+      eventProperties['timeStamp'] ?? event?.timeStamp,
+      eventProperties['type'] ?? event?.type,
+      eventProperties['data'] ?? event?.data,
     );
   }
 
-  static SyntheticFocusEvent buildFocusEvent(SyntheticFocusEvent event, Map<String, dynamic> newEventFields) {
+  static SyntheticFocusEvent buildFocusEvent(SyntheticFocusEvent event, Map<String, dynamic> eventProperties) {
     return SyntheticFocusEvent(
-      newEventFields['bubbles'] ?? event?.bubbles,
-      newEventFields['cancelable'] ?? event?.cancelable,
-      newEventFields['currentTarget'] ?? event?.currentTarget,
-      newEventFields['defaultPrevented'] ?? event?.defaultPrevented,
-      newEventFields['preventDefault'] ?? event?.preventDefault,
-      newEventFields['stopPropagation'] ?? event?.stopPropagation,
-      newEventFields['eventPhase'] ?? event?.eventPhase,
-      newEventFields['isTrusted'] ?? event?.isTrusted,
-      newEventFields['nativeEvent'] ?? event?.nativeEvent,
-      newEventFields['target'] ?? event?.target,
-      newEventFields['timeStamp'] ?? event?.timeStamp,
-      newEventFields['type'] ?? event?.type,
-      newEventFields['relatedTarget'] ?? event?.relatedTarget,
+      eventProperties['bubbles'] ?? event?.bubbles,
+      eventProperties['cancelable'] ?? event?.cancelable,
+      eventProperties['currentTarget'] ?? event?.currentTarget,
+      eventProperties['defaultPrevented'] ?? event?.defaultPrevented,
+      eventProperties['preventDefault'] ?? event?.preventDefault,
+      eventProperties['stopPropagation'] ?? event?.stopPropagation,
+      eventProperties['eventPhase'] ?? event?.eventPhase,
+      eventProperties['isTrusted'] ?? event?.isTrusted,
+      eventProperties['nativeEvent'] ?? event?.nativeEvent,
+      eventProperties['target'] ?? event?.target,
+      eventProperties['timeStamp'] ?? event?.timeStamp,
+      eventProperties['type'] ?? event?.type,
+      eventProperties['relatedTarget'] ?? event?.relatedTarget,
     );
   }
 
-  static SyntheticFormEvent buildFormEvent(SyntheticFormEvent event, Map<String, dynamic> newEventFields) {
+  static SyntheticFormEvent buildFormEvent(SyntheticFormEvent event, Map<String, dynamic> eventProperties) {
     return SyntheticFormEvent(
-      newEventFields['bubbles'] ?? event?.bubbles,
-      newEventFields['cancelable'] ?? event?.cancelable,
-      newEventFields['currentTarget'] ?? event?.currentTarget,
-      newEventFields['defaultPrevented'] ?? event?.defaultPrevented,
-      newEventFields['preventDefault'] ?? event?.preventDefault,
-      newEventFields['stopPropagation'] ?? event?.stopPropagation,
-      newEventFields['eventPhase'] ?? event?.eventPhase,
-      newEventFields['isTrusted'] ?? event?.isTrusted,
-      newEventFields['nativeEvent'] ?? event?.nativeEvent,
-      newEventFields['target'] ?? event?.target,
-      newEventFields['timeStamp'] ?? event?.timeStamp,
-      newEventFields['type'] ?? event?.type,
+      eventProperties['bubbles'] ?? event?.bubbles,
+      eventProperties['cancelable'] ?? event?.cancelable,
+      eventProperties['currentTarget'] ?? event?.currentTarget,
+      eventProperties['defaultPrevented'] ?? event?.defaultPrevented,
+      eventProperties['preventDefault'] ?? event?.preventDefault,
+      eventProperties['stopPropagation'] ?? event?.stopPropagation,
+      eventProperties['eventPhase'] ?? event?.eventPhase,
+      eventProperties['isTrusted'] ?? event?.isTrusted,
+      eventProperties['nativeEvent'] ?? event?.nativeEvent,
+      eventProperties['target'] ?? event?.target,
+      eventProperties['timeStamp'] ?? event?.timeStamp,
+      eventProperties['type'] ?? event?.type,
     );
   }
 
-  static SyntheticMouseEvent buildMouseEvent(SyntheticMouseEvent event, Map<String, dynamic> newEventFields) {
+  static SyntheticMouseEvent buildMouseEvent(SyntheticMouseEvent event, Map<String, dynamic> eventProperties) {
     return SyntheticMouseEvent(
-      newEventFields['bubbles'] ?? event?.bubbles,
-      newEventFields['cancelable'] ?? event?.cancelable,
-      newEventFields['currentTarget'] ?? event?.currentTarget,
-      newEventFields['defaultPrevented'] ?? event?.defaultPrevented,
-      newEventFields['preventDefault'] ?? event?.preventDefault,
-      newEventFields['stopPropagation'] ?? event?.stopPropagation,
-      newEventFields['eventPhase'] ?? event?.eventPhase,
-      newEventFields['isTrusted'] ?? event?.isTrusted,
-      newEventFields['nativeEvent'] ?? event?.nativeEvent,
-      newEventFields['target'] ?? event?.target,
-      newEventFields['timeStamp'] ?? event?.timeStamp,
-      newEventFields['type'] ?? event?.type,
-      newEventFields['altKey'] ?? event?.altKey,
-      newEventFields['button'] ?? event?.button,
-      newEventFields['buttons'] ?? event?.buttons,
-      newEventFields['clientX'] ?? event?.clientX,
-      newEventFields['clientY'] ?? event?.clientY,
-      newEventFields['ctrlKey'] ?? event?.ctrlKey,
-      newEventFields['dataTransfer'] ?? event?.dataTransfer,
-      newEventFields['metaKey'] ?? event?.metaKey,
-      newEventFields['pageX'] ?? event?.pageX,
-      newEventFields['pageY'] ?? event?.pageY,
-      newEventFields['relatedTarget'] ?? event?.relatedTarget,
-      newEventFields['screenX'] ?? event?.screenX,
-      newEventFields['screenY'] ?? event?.screenY,
-      newEventFields['shiftKey'] ?? event?.shiftKey,
+      eventProperties['bubbles'] ?? event?.bubbles,
+      eventProperties['cancelable'] ?? event?.cancelable,
+      eventProperties['currentTarget'] ?? event?.currentTarget,
+      eventProperties['defaultPrevented'] ?? event?.defaultPrevented,
+      eventProperties['preventDefault'] ?? event?.preventDefault,
+      eventProperties['stopPropagation'] ?? event?.stopPropagation,
+      eventProperties['eventPhase'] ?? event?.eventPhase,
+      eventProperties['isTrusted'] ?? event?.isTrusted,
+      eventProperties['nativeEvent'] ?? event?.nativeEvent,
+      eventProperties['target'] ?? event?.target,
+      eventProperties['timeStamp'] ?? event?.timeStamp,
+      eventProperties['type'] ?? event?.type,
+      eventProperties['altKey'] ?? event?.altKey,
+      eventProperties['button'] ?? event?.button,
+      eventProperties['buttons'] ?? event?.buttons,
+      eventProperties['clientX'] ?? event?.clientX,
+      eventProperties['clientY'] ?? event?.clientY,
+      eventProperties['ctrlKey'] ?? event?.ctrlKey,
+      eventProperties['dataTransfer'] ?? event?.dataTransfer,
+      eventProperties['metaKey'] ?? event?.metaKey,
+      eventProperties['pageX'] ?? event?.pageX,
+      eventProperties['pageY'] ?? event?.pageY,
+      eventProperties['relatedTarget'] ?? event?.relatedTarget,
+      eventProperties['screenX'] ?? event?.screenX,
+      eventProperties['screenY'] ?? event?.screenY,
+      eventProperties['shiftKey'] ?? event?.shiftKey,
     );
   }
 
-  static SyntheticPointerEvent buildPointerEvent(SyntheticPointerEvent event, Map<String, dynamic> newEventFields) {
+  static SyntheticPointerEvent buildPointerEvent(SyntheticPointerEvent event, Map<String, dynamic> eventProperties) {
     return SyntheticPointerEvent(
-      newEventFields['bubbles'] ?? event?.bubbles,
-      newEventFields['cancelable'] ?? event?.cancelable,
-      newEventFields['currentTarget'] ?? event?.currentTarget,
-      newEventFields['defaultPrevented'] ?? event?.defaultPrevented,
-      newEventFields['preventDefault'] ?? event?.preventDefault,
-      newEventFields['stopPropagation'] ?? event?.stopPropagation,
-      newEventFields['eventPhase'] ?? event?.eventPhase,
-      newEventFields['isTrusted'] ?? event?.isTrusted,
-      newEventFields['nativeEvent'] ?? event?.nativeEvent,
-      newEventFields['target'] ?? event?.target,
-      newEventFields['timeStamp'] ?? event?.timeStamp,
-      newEventFields['type'] ?? event?.type,
-      newEventFields['pointerId'] ?? event?.pointerId,
-      newEventFields['width'] ?? event?.width,
-      newEventFields['height'] ?? event?.height,
-      newEventFields['pressure'] ?? event?.pressure,
-      newEventFields['tangentialPressure'] ?? event?.tangentialPressure,
-      newEventFields['tiltX'] ?? event?.tiltX,
-      newEventFields['tiltY'] ?? event?.tiltY,
-      newEventFields['twist'] ?? event?.twist,
-      newEventFields['pointerType'] ?? event?.pointerType,
-      newEventFields['isPrimary'] ?? event?.isPrimary,
+      eventProperties['bubbles'] ?? event?.bubbles,
+      eventProperties['cancelable'] ?? event?.cancelable,
+      eventProperties['currentTarget'] ?? event?.currentTarget,
+      eventProperties['defaultPrevented'] ?? event?.defaultPrevented,
+      eventProperties['preventDefault'] ?? event?.preventDefault,
+      eventProperties['stopPropagation'] ?? event?.stopPropagation,
+      eventProperties['eventPhase'] ?? event?.eventPhase,
+      eventProperties['isTrusted'] ?? event?.isTrusted,
+      eventProperties['nativeEvent'] ?? event?.nativeEvent,
+      eventProperties['target'] ?? event?.target,
+      eventProperties['timeStamp'] ?? event?.timeStamp,
+      eventProperties['type'] ?? event?.type,
+      eventProperties['pointerId'] ?? event?.pointerId,
+      eventProperties['width'] ?? event?.width,
+      eventProperties['height'] ?? event?.height,
+      eventProperties['pressure'] ?? event?.pressure,
+      eventProperties['tangentialPressure'] ?? event?.tangentialPressure,
+      eventProperties['tiltX'] ?? event?.tiltX,
+      eventProperties['tiltY'] ?? event?.tiltY,
+      eventProperties['twist'] ?? event?.twist,
+      eventProperties['pointerType'] ?? event?.pointerType,
+      eventProperties['isPrimary'] ?? event?.isPrimary,
     );
   }
 
-  static SyntheticTouchEvent buildTouchEvent(SyntheticTouchEvent event, Map<String, dynamic> newEventFields) {
+  static SyntheticTouchEvent buildTouchEvent(SyntheticTouchEvent event, Map<String, dynamic> eventProperties) {
     return SyntheticTouchEvent(
-      newEventFields['bubbles'] ?? event?.bubbles,
-      newEventFields['cancelable'] ?? event?.cancelable,
-      newEventFields['currentTarget'] ?? event?.currentTarget,
-      newEventFields['defaultPrevented'] ?? event?.defaultPrevented,
-      newEventFields['preventDefault'] ?? event?.preventDefault,
-      newEventFields['stopPropagation'] ?? event?.stopPropagation,
-      newEventFields['eventPhase'] ?? event?.eventPhase,
-      newEventFields['isTrusted'] ?? event?.isTrusted,
-      newEventFields['nativeEvent'] ?? event?.nativeEvent,
-      newEventFields['target'] ?? event?.target,
-      newEventFields['timeStamp'] ?? event?.timeStamp,
-      newEventFields['type'] ?? event?.type,
-      newEventFields['altKey'] ?? event?.altKey,
-      newEventFields['changedTouches'] ?? event?.changedTouches,
-      newEventFields['ctrlKey'] ?? event?.ctrlKey,
-      newEventFields['metaKey'] ?? event?.metaKey,
-      newEventFields['shiftKey'] ?? event?.shiftKey,
-      newEventFields['targetTouches'] ?? event?.targetTouches,
-      newEventFields['touches'] ?? event?.touches,
+      eventProperties['bubbles'] ?? event?.bubbles,
+      eventProperties['cancelable'] ?? event?.cancelable,
+      eventProperties['currentTarget'] ?? event?.currentTarget,
+      eventProperties['defaultPrevented'] ?? event?.defaultPrevented,
+      eventProperties['preventDefault'] ?? event?.preventDefault,
+      eventProperties['stopPropagation'] ?? event?.stopPropagation,
+      eventProperties['eventPhase'] ?? event?.eventPhase,
+      eventProperties['isTrusted'] ?? event?.isTrusted,
+      eventProperties['nativeEvent'] ?? event?.nativeEvent,
+      eventProperties['target'] ?? event?.target,
+      eventProperties['timeStamp'] ?? event?.timeStamp,
+      eventProperties['type'] ?? event?.type,
+      eventProperties['altKey'] ?? event?.altKey,
+      eventProperties['changedTouches'] ?? event?.changedTouches,
+      eventProperties['ctrlKey'] ?? event?.ctrlKey,
+      eventProperties['metaKey'] ?? event?.metaKey,
+      eventProperties['shiftKey'] ?? event?.shiftKey,
+      eventProperties['targetTouches'] ?? event?.targetTouches,
+      eventProperties['touches'] ?? event?.touches,
     );
   }
 
-  static SyntheticTransitionEvent buildTransitionEvent(SyntheticTransitionEvent event, Map<String, dynamic> newEventFields) {
+  static SyntheticTransitionEvent buildTransitionEvent(SyntheticTransitionEvent event, Map<String, dynamic> eventProperties) {
     return SyntheticTransitionEvent(
-      newEventFields['bubbles'] ?? event?.bubbles,
-      newEventFields['cancelable'] ?? event?.cancelable,
-      newEventFields['currentTarget'] ?? event?.currentTarget,
-      newEventFields['defaultPrevented'] ?? event?.defaultPrevented,
-      newEventFields['preventDefault'] ?? event?.preventDefault,
-      newEventFields['stopPropagation'] ?? event?.stopPropagation,
-      newEventFields['eventPhase'] ?? event?.eventPhase,
-      newEventFields['isTrusted'] ?? event?.isTrusted,
-      newEventFields['nativeEvent'] ?? event?.nativeEvent,
-      newEventFields['target'] ?? event?.target,
-      newEventFields['timeStamp'] ?? event?.timeStamp,
-      newEventFields['type'] ?? event?.type,
-      newEventFields['propertyName'] ?? event?.propertyName,
-      newEventFields['elapsedTime'] ?? event?.elapsedTime,
-      newEventFields['pseudoElement'] ?? event?.pseudoElement,
+      eventProperties['bubbles'] ?? event?.bubbles,
+      eventProperties['cancelable'] ?? event?.cancelable,
+      eventProperties['currentTarget'] ?? event?.currentTarget,
+      eventProperties['defaultPrevented'] ?? event?.defaultPrevented,
+      eventProperties['preventDefault'] ?? event?.preventDefault,
+      eventProperties['stopPropagation'] ?? event?.stopPropagation,
+      eventProperties['eventPhase'] ?? event?.eventPhase,
+      eventProperties['isTrusted'] ?? event?.isTrusted,
+      eventProperties['nativeEvent'] ?? event?.nativeEvent,
+      eventProperties['target'] ?? event?.target,
+      eventProperties['timeStamp'] ?? event?.timeStamp,
+      eventProperties['type'] ?? event?.type,
+      eventProperties['propertyName'] ?? event?.propertyName,
+      eventProperties['elapsedTime'] ?? event?.elapsedTime,
+      eventProperties['pseudoElement'] ?? event?.pseudoElement,
     );
   }
 
-  static SyntheticAnimationEvent buildAnimationEvent(SyntheticAnimationEvent event, Map<String, dynamic> newEventFields) {
+  static SyntheticAnimationEvent buildAnimationEvent(SyntheticAnimationEvent event, Map<String, dynamic> eventProperties) {
     return SyntheticAnimationEvent(
-      newEventFields['bubbles'] ?? event?.bubbles,
-      newEventFields['cancelable'] ?? event?.cancelable,
-      newEventFields['currentTarget'] ?? event?.currentTarget,
-      newEventFields['defaultPrevented'] ?? event?.defaultPrevented,
-      newEventFields['preventDefault'] ?? event?.preventDefault,
-      newEventFields['stopPropagation'] ?? event?.stopPropagation,
-      newEventFields['eventPhase'] ?? event?.eventPhase,
-      newEventFields['isTrusted'] ?? event?.isTrusted,
-      newEventFields['nativeEvent'] ?? event?.nativeEvent,
-      newEventFields['target'] ?? event?.target,
-      newEventFields['timeStamp'] ?? event?.timeStamp,
-      newEventFields['type'] ?? event?.type,
-      newEventFields['animationName'] ?? event?.animationName,
-      newEventFields['elapsedTime'] ?? event?.elapsedTime,
-      newEventFields['pseudoElement'] ?? event?.pseudoElement,
+      eventProperties['bubbles'] ?? event?.bubbles,
+      eventProperties['cancelable'] ?? event?.cancelable,
+      eventProperties['currentTarget'] ?? event?.currentTarget,
+      eventProperties['defaultPrevented'] ?? event?.defaultPrevented,
+      eventProperties['preventDefault'] ?? event?.preventDefault,
+      eventProperties['stopPropagation'] ?? event?.stopPropagation,
+      eventProperties['eventPhase'] ?? event?.eventPhase,
+      eventProperties['isTrusted'] ?? event?.isTrusted,
+      eventProperties['nativeEvent'] ?? event?.nativeEvent,
+      eventProperties['target'] ?? event?.target,
+      eventProperties['timeStamp'] ?? event?.timeStamp,
+      eventProperties['type'] ?? event?.type,
+      eventProperties['animationName'] ?? event?.animationName,
+      eventProperties['elapsedTime'] ?? event?.elapsedTime,
+      eventProperties['pseudoElement'] ?? event?.pseudoElement,
     );
   }
 
-  static SyntheticUIEvent buildUIEvent(SyntheticUIEvent event, Map<String, dynamic> newEventFields) {
+  static SyntheticUIEvent buildUIEvent(SyntheticUIEvent event, Map<String, dynamic> eventProperties) {
     return SyntheticUIEvent(
-      newEventFields['bubbles'] ?? event?.bubbles,
-      newEventFields['cancelable'] ?? event?.cancelable,
-      newEventFields['currentTarget'] ?? event?.currentTarget,
-      newEventFields['defaultPrevented'] ?? event?.defaultPrevented,
-      newEventFields['preventDefault'] ?? event?.preventDefault,
-      newEventFields['stopPropagation'] ?? event?.stopPropagation,
-      newEventFields['eventPhase'] ?? event?.eventPhase,
-      newEventFields['isTrusted'] ?? event?.isTrusted,
-      newEventFields['nativeEvent'] ?? event?.nativeEvent,
-      newEventFields['target'] ?? event?.target,
-      newEventFields['timeStamp'] ?? event?.timeStamp,
-      newEventFields['type'] ?? event?.type,
-      newEventFields['detail'] ?? event?.detail,
-      newEventFields['view'] ?? event?.view,
+      eventProperties['bubbles'] ?? event?.bubbles,
+      eventProperties['cancelable'] ?? event?.cancelable,
+      eventProperties['currentTarget'] ?? event?.currentTarget,
+      eventProperties['defaultPrevented'] ?? event?.defaultPrevented,
+      eventProperties['preventDefault'] ?? event?.preventDefault,
+      eventProperties['stopPropagation'] ?? event?.stopPropagation,
+      eventProperties['eventPhase'] ?? event?.eventPhase,
+      eventProperties['isTrusted'] ?? event?.isTrusted,
+      eventProperties['nativeEvent'] ?? event?.nativeEvent,
+      eventProperties['target'] ?? event?.target,
+      eventProperties['timeStamp'] ?? event?.timeStamp,
+      eventProperties['type'] ?? event?.type,
+      eventProperties['detail'] ?? event?.detail,
+      eventProperties['view'] ?? event?.view,
     );
   }
 
-  static SyntheticWheelEvent buildWheelEvent(SyntheticWheelEvent event, Map<String, dynamic> newEventFields) {
+  static SyntheticWheelEvent buildWheelEvent(SyntheticWheelEvent event, Map<String, dynamic> eventProperties) {
     return SyntheticWheelEvent(
-      newEventFields['bubbles'] ?? event?.bubbles,
-      newEventFields['cancelable'] ?? event?.cancelable,
-      newEventFields['currentTarget'] ?? event?.currentTarget,
-      newEventFields['defaultPrevented'] ?? event?.defaultPrevented,
-      newEventFields['preventDefault'] ?? event?.preventDefault,
-      newEventFields['stopPropagation'] ?? event?.stopPropagation,
-      newEventFields['eventPhase'] ?? event?.eventPhase,
-      newEventFields['isTrusted'] ?? event?.isTrusted,
-      newEventFields['nativeEvent'] ?? event?.nativeEvent,
-      newEventFields['target'] ?? event?.target,
-      newEventFields['timeStamp'] ?? event?.timeStamp,
-      newEventFields['type'] ?? event?.type,
-      newEventFields['deltaX'] ?? event?.deltaX,
-      newEventFields['deltaMode'] ?? event?.deltaMode,
-      newEventFields['deltaY'] ?? event?.deltaY,
-      newEventFields['deltaZ'] ?? event?.deltaZ,
+      eventProperties['bubbles'] ?? event?.bubbles,
+      eventProperties['cancelable'] ?? event?.cancelable,
+      eventProperties['currentTarget'] ?? event?.currentTarget,
+      eventProperties['defaultPrevented'] ?? event?.defaultPrevented,
+      eventProperties['preventDefault'] ?? event?.preventDefault,
+      eventProperties['stopPropagation'] ?? event?.stopPropagation,
+      eventProperties['eventPhase'] ?? event?.eventPhase,
+      eventProperties['isTrusted'] ?? event?.isTrusted,
+      eventProperties['nativeEvent'] ?? event?.nativeEvent,
+      eventProperties['target'] ?? event?.target,
+      eventProperties['timeStamp'] ?? event?.timeStamp,
+      eventProperties['type'] ?? event?.type,
+      eventProperties['deltaX'] ?? event?.deltaX,
+      eventProperties['deltaMode'] ?? event?.deltaMode,
+      eventProperties['deltaY'] ?? event?.deltaY,
+      eventProperties['deltaZ'] ?? event?.deltaZ,
     );
   }
 }

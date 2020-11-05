@@ -1434,7 +1434,7 @@ class NotSpecified {
 }
 
 const _syntheticEventDeprecationMessage = 'Creating events via constructors is no longer supported. ' +
-    'Use the utilities in event_helpers.dart to create new instances instead. ' +
+    'Use the event helpers in \'package:react/react_client.dart\' to create new instances instead. ' +
     'Alternatively, use the `Simulate` test APIs to create events in testing environments.';
 
 /// A cross-browser wrapper around the browser's [nativeEvent].
