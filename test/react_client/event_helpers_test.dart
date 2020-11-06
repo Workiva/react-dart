@@ -21,10 +21,10 @@ main() {
 
     void testSyntheticEventDefaults(SyntheticEvent event) {
       // Boolean defaults
-      expect(event.bubbles, isTrue);
+      expect(event.bubbles, isFalse);
       expect(event.cancelable, isTrue);
       expect(event.defaultPrevented, isFalse);
-      expect(event.isTrusted, isTrue);
+      expect(event.isTrusted, isFalse);
 
       // Other defaults
       expect(event.type, isNotNull,
@@ -45,10 +45,10 @@ main() {
 
     void testSyntheticEventBaseForMergeTests(SyntheticEvent event) {
       // Boolean defaults
-      expect(event.bubbles, isFalse);
+      expect(event.bubbles, isTrue);
       expect(event.cancelable, isFalse);
       expect(event.defaultPrevented, isTrue);
-      expect(event.isTrusted, isFalse);
+      expect(event.isTrusted, isTrue);
 
       // Other defaults
       expect(event.type, 'non-default');
@@ -68,10 +68,10 @@ main() {
 
     void testSyntheticEventBaseAfterMerge(SyntheticEvent event) {
       // Boolean defaults
-      expect(event.bubbles, isTrue);
+      expect(event.bubbles, isFalse);
       expect(event.cancelable, isTrue);
       expect(event.defaultPrevented, isFalse);
-      expect(event.isTrusted, isTrue);
+      expect(event.isTrusted, isFalse);
 
       // Other defaults
       expect(event.type, 'updated non-default');
@@ -107,14 +107,14 @@ main() {
           ..name = 'test'
           ..value = 'test value';
         final baseEvent = createSyntheticEvent(
-          bubbles: false,
+          bubbles: true,
           cancelable: false,
           currentTarget: element,
           defaultPrevented: true,
           preventDefault: null,
           stopPropagation: null,
           eventPhase: 0,
-          isTrusted: false,
+          isTrusted: true,
           nativeEvent: 'string',
           target: element,
           timeStamp: 100,
@@ -125,14 +125,14 @@ main() {
         final newElement = DivElement();
         final newEvent = createSyntheticEvent(
           baseEvent: baseEvent,
-          bubbles: true,
+          bubbles: false,
           cancelable: true,
           currentTarget: newElement,
           defaultPrevented: false,
           preventDefault: () => mergeTestCounter++,
           stopPropagation: () => mergeTestCounter++,
           eventPhase: 2,
-          isTrusted: true,
+          isTrusted: false,
           nativeEvent: 'updated string',
           target: newElement,
           timeStamp: 200,
@@ -167,14 +167,14 @@ main() {
           ..name = 'test'
           ..value = 'test value';
         final baseEvent = createSyntheticClipboardEvent(
-          bubbles: false,
+          bubbles: true,
           cancelable: false,
           currentTarget: element,
           defaultPrevented: true,
           preventDefault: null,
           stopPropagation: null,
           eventPhase: 0,
-          isTrusted: false,
+          isTrusted: true,
           nativeEvent: 'string',
           target: element,
           timeStamp: 100,
@@ -187,14 +187,14 @@ main() {
         final newElement = DivElement();
         final newEvent = createSyntheticClipboardEvent(
           baseEvent: baseEvent,
-          bubbles: true,
+          bubbles: false,
           cancelable: true,
           currentTarget: newElement,
           defaultPrevented: false,
           preventDefault: () => mergeTestCounter++,
           stopPropagation: () => mergeTestCounter++,
           eventPhase: 2,
-          isTrusted: true,
+          isTrusted: false,
           nativeEvent: 'updated string',
           target: newElement,
           timeStamp: 200,
@@ -214,15 +214,15 @@ main() {
         testSyntheticEventDefaults(e);
 
         // keyboard event properties
-        expect(e.altKey, isNull);
+        expect(e.altKey, isFalse);
         expect(e.char, isNull);
-        expect(e.ctrlKey, isNull);
+        expect(e.ctrlKey, isFalse);
         expect(e.locale, isNull);
         expect(e.location, isNull);
         expect(e.key, isNull);
-        expect(e.metaKey, isNull);
+        expect(e.metaKey, isFalse);
         expect(e.repeat, isNull);
-        expect(e.shiftKey, isNull);
+        expect(e.shiftKey, isFalse);
         expect(e.keyCode, isNull);
         expect(e.charCode, isNull);
       });
@@ -233,15 +233,15 @@ main() {
         testSyntheticEventDefaults(e);
 
         // keyboard event properties
-        expect(e.altKey, isNull);
+        expect(e.altKey, isFalse);
         expect(e.char, isNull);
-        expect(e.ctrlKey, isNull);
+        expect(e.ctrlKey, isFalse);
         expect(e.locale, isNull);
         expect(e.location, isNull);
         expect(e.key, isNull);
-        expect(e.metaKey, isNull);
+        expect(e.metaKey, isFalse);
         expect(e.repeat, isNull);
-        expect(e.shiftKey, isNull);
+        expect(e.shiftKey, isFalse);
         expect(e.keyCode, isNull);
         expect(e.charCode, isNull);
       });
@@ -251,14 +251,14 @@ main() {
           ..name = 'test'
           ..value = 'test value';
         final baseEvent = createSyntheticKeyboardEvent(
-          bubbles: false,
+          bubbles: true,
           cancelable: false,
           currentTarget: element,
           defaultPrevented: true,
           preventDefault: null,
           stopPropagation: null,
           eventPhase: 0,
-          isTrusted: false,
+          isTrusted: true,
           nativeEvent: 'string',
           target: element,
           timeStamp: 100,
@@ -271,7 +271,7 @@ main() {
           key: testString + '3',
           metaKey: true,
           repeat: true,
-          shiftKey: false,
+          shiftKey: true,
           keyCode: 2,
           charCode: 3,
         );
@@ -285,21 +285,21 @@ main() {
         expect(baseEvent.key, testString + '3');
         expect(baseEvent.metaKey, isTrue);
         expect(baseEvent.repeat, isTrue);
-        expect(baseEvent.shiftKey, isFalse);
+        expect(baseEvent.shiftKey, isTrue);
         expect(baseEvent.keyCode, 2);
         expect(baseEvent.charCode, 3);
 
         final newElement = DivElement();
         final newEvent = createSyntheticKeyboardEvent(
           baseEvent: baseEvent,
-          bubbles: true,
+          bubbles: false,
           cancelable: true,
           currentTarget: newElement,
           defaultPrevented: false,
           preventDefault: () => mergeTestCounter++,
           stopPropagation: () => mergeTestCounter++,
           eventPhase: 2,
-          isTrusted: true,
+          isTrusted: false,
           nativeEvent: 'updated string',
           target: newElement,
           timeStamp: 200,
@@ -312,7 +312,7 @@ main() {
           key: updatedTestString + '3',
           metaKey: false,
           repeat: false,
-          shiftKey: true,
+          shiftKey: false,
           keyCode: 3,
           charCode: 4,
         );
@@ -326,7 +326,7 @@ main() {
         expect(newEvent.key, updatedTestString + '3');
         expect(newEvent.metaKey, isFalse);
         expect(newEvent.repeat, isFalse);
-        expect(newEvent.shiftKey, isTrue);
+        expect(newEvent.shiftKey, isFalse);
         expect(newEvent.keyCode, 3);
         expect(newEvent.charCode, 4);
       });
@@ -356,14 +356,14 @@ main() {
           ..name = 'test'
           ..value = 'test value';
         final baseEvent = createSyntheticCompositionEvent(
-          bubbles: false,
+          bubbles: true,
           cancelable: false,
           currentTarget: element,
           defaultPrevented: true,
           preventDefault: null,
           stopPropagation: null,
           eventPhase: 0,
-          isTrusted: false,
+          isTrusted: true,
           nativeEvent: 'string',
           target: element,
           timeStamp: 100,
@@ -376,14 +376,14 @@ main() {
         final newElement = DivElement();
         final newEvent = createSyntheticCompositionEvent(
           baseEvent: baseEvent,
-          bubbles: true,
+          bubbles: false,
           cancelable: true,
           currentTarget: newElement,
           defaultPrevented: false,
           preventDefault: () => mergeTestCounter++,
           stopPropagation: () => mergeTestCounter++,
           eventPhase: 2,
-          isTrusted: true,
+          isTrusted: false,
           nativeEvent: 'updated string',
           target: newElement,
           timeStamp: 200,
@@ -412,14 +412,14 @@ main() {
           ..name = 'test'
           ..value = 'test value';
         final baseEvent = createSyntheticFocusEvent(
-          bubbles: false,
+          bubbles: true,
           cancelable: false,
           currentTarget: element,
           defaultPrevented: true,
           preventDefault: null,
           stopPropagation: null,
           eventPhase: 0,
-          isTrusted: false,
+          isTrusted: true,
           nativeEvent: 'string',
           target: element,
           timeStamp: 100,
@@ -430,14 +430,14 @@ main() {
         final newElement = DivElement();
         final newEvent = createSyntheticFocusEvent(
           baseEvent: baseEvent,
-          bubbles: true,
+          bubbles: false,
           cancelable: true,
           currentTarget: newElement,
           defaultPrevented: false,
           preventDefault: () => mergeTestCounter++,
           stopPropagation: () => mergeTestCounter++,
           eventPhase: 2,
-          isTrusted: true,
+          isTrusted: false,
           nativeEvent: 'updated string',
           target: newElement,
           timeStamp: 200,
@@ -464,14 +464,14 @@ main() {
           ..name = 'test'
           ..value = 'test value';
         final baseEvent = createSyntheticFormEvent(
-          bubbles: false,
+          bubbles: true,
           cancelable: false,
           currentTarget: element,
           defaultPrevented: true,
           preventDefault: null,
           stopPropagation: null,
           eventPhase: 0,
-          isTrusted: false,
+          isTrusted: true,
           nativeEvent: 'string',
           target: element,
           timeStamp: 100,
@@ -482,14 +482,14 @@ main() {
         final newElement = DivElement();
         final newEvent = createSyntheticFormEvent(
           baseEvent: baseEvent,
-          bubbles: true,
+          bubbles: false,
           cancelable: true,
           currentTarget: newElement,
           defaultPrevented: false,
           preventDefault: () => mergeTestCounter++,
           stopPropagation: () => mergeTestCounter++,
           eventPhase: 2,
-          isTrusted: true,
+          isTrusted: false,
           nativeEvent: 'updated string',
           target: newElement,
           timeStamp: 200,
@@ -505,40 +505,40 @@ main() {
         final e = createSyntheticMouseEvent();
         testSyntheticEventDefaults(e);
 
-        expect(e.altKey, isNull);
+        expect(e.altKey, isFalse);
         expect(e.button, isNull);
         expect(e.buttons, isNull);
         expect(e.clientX, isNull);
         expect(e.clientY, isNull);
-        expect(e.ctrlKey, isNull);
+        expect(e.ctrlKey, isFalse);
         expect(e.dataTransfer, isNull);
-        expect(e.metaKey, isNull);
+        expect(e.metaKey, isFalse);
         expect(e.pageX, isNull);
         expect(e.pageY, isNull);
         expect(e.relatedTarget, isNull);
         expect(e.screenX, isNull);
         expect(e.screenY, isNull);
-        expect(e.shiftKey, isNull);
+        expect(e.shiftKey, isFalse);
       });
 
       test('matches getEmptyMouseEvent', () {
         final e = getEmptyMouseEvent();
         testSyntheticEventDefaults(e);
 
-        expect(e.altKey, isNull);
+        expect(e.altKey, isFalse);
         expect(e.button, isNull);
         expect(e.buttons, isNull);
         expect(e.clientX, isNull);
         expect(e.clientY, isNull);
-        expect(e.ctrlKey, isNull);
+        expect(e.ctrlKey, isFalse);
         expect(e.dataTransfer, isNull);
-        expect(e.metaKey, isNull);
+        expect(e.metaKey, isFalse);
         expect(e.pageX, isNull);
         expect(e.pageY, isNull);
         expect(e.relatedTarget, isNull);
         expect(e.screenX, isNull);
         expect(e.screenY, isNull);
-        expect(e.shiftKey, isNull);
+        expect(e.shiftKey, isFalse);
       });
 
       test('merges values as expected', () {
@@ -546,26 +546,26 @@ main() {
           ..name = 'test'
           ..value = 'test value';
         final baseEvent = createSyntheticMouseEvent(
-          bubbles: false,
+          bubbles: true,
           cancelable: false,
           currentTarget: element,
           defaultPrevented: true,
           preventDefault: null,
           stopPropagation: null,
           eventPhase: 0,
-          isTrusted: false,
+          isTrusted: true,
           nativeEvent: 'string',
           target: element,
           timeStamp: 100,
           type: 'non-default',
-          altKey: false,
+          altKey: true,
           button: 1,
           buttons: 2,
           clientX: 100,
           clientY: 200,
-          ctrlKey: false,
+          ctrlKey: true,
           dataTransfer: SyntheticDataTransfer(testString, null, null, null),
-          metaKey: false,
+          metaKey: true,
           pageX: 300,
           pageY: 400,
           relatedTarget: testString,
@@ -574,14 +574,14 @@ main() {
           shiftKey: true,
         );
         testSyntheticEventBaseForMergeTests(baseEvent);
-        expect(baseEvent.altKey, isFalse);
+        expect(baseEvent.altKey, isTrue);
         expect(baseEvent.button, 1);
         expect(baseEvent.buttons, 2);
         expect(baseEvent.clientX, 100);
         expect(baseEvent.clientY, 200);
-        expect(baseEvent.ctrlKey, isFalse);
+        expect(baseEvent.ctrlKey, isTrue);
         expect(baseEvent.dataTransfer.dropEffect, testString);
-        expect(baseEvent.metaKey, isFalse);
+        expect(baseEvent.metaKey, isTrue);
         expect(baseEvent.pageX, 300);
         expect(baseEvent.pageY, 400);
         expect(baseEvent.relatedTarget, testString);
@@ -592,26 +592,26 @@ main() {
         final newElement = DivElement();
         final newEvent = createSyntheticMouseEvent(
           baseEvent: baseEvent,
-          bubbles: true,
+          bubbles: false,
           cancelable: true,
           currentTarget: newElement,
           defaultPrevented: false,
           preventDefault: () => mergeTestCounter++,
           stopPropagation: () => mergeTestCounter++,
           eventPhase: 2,
-          isTrusted: true,
+          isTrusted: false,
           nativeEvent: 'updated string',
           target: newElement,
           timeStamp: 200,
           type: 'updated non-default',
-          altKey: true,
+          altKey: false,
           button: 2,
           buttons: 3,
           clientX: 200,
           clientY: 300,
-          ctrlKey: true,
+          ctrlKey: false,
           dataTransfer: SyntheticDataTransfer(updatedTestString, null, null, null),
-          metaKey: true,
+          metaKey: false,
           pageX: 400,
           pageY: 500,
           relatedTarget: updatedTestString,
@@ -621,14 +621,14 @@ main() {
         );
 
         testSyntheticEventBaseAfterMerge(newEvent);
-        expect(newEvent.altKey, isTrue);
+        expect(newEvent.altKey, isFalse);
         expect(newEvent.button, 2);
         expect(newEvent.buttons, 3);
         expect(newEvent.clientX, 200);
         expect(newEvent.clientY, 300);
-        expect(newEvent.ctrlKey, isTrue);
+        expect(newEvent.ctrlKey, isFalse);
         expect(newEvent.dataTransfer.dropEffect, updatedTestString);
-        expect(newEvent.metaKey, isTrue);
+        expect(newEvent.metaKey, isFalse);
         expect(newEvent.pageX, 400);
         expect(newEvent.pageY, 500);
         expect(newEvent.relatedTarget, updatedTestString);
@@ -676,14 +676,14 @@ main() {
           ..name = 'test'
           ..value = 'test value';
         final baseEvent = createSyntheticPointerEvent(
-          bubbles: false,
+          bubbles: true,
           cancelable: false,
           currentTarget: element,
           defaultPrevented: true,
           preventDefault: null,
           stopPropagation: null,
           eventPhase: 0,
-          isTrusted: false,
+          isTrusted: true,
           nativeEvent: 'string',
           target: element,
           timeStamp: 100,
@@ -714,14 +714,14 @@ main() {
         final newElement = DivElement();
         final newEvent = createSyntheticPointerEvent(
           baseEvent: baseEvent,
-          bubbles: true,
+          bubbles: false,
           cancelable: true,
           currentTarget: newElement,
           defaultPrevented: false,
           preventDefault: () => mergeTestCounter++,
           stopPropagation: () => mergeTestCounter++,
           eventPhase: 2,
-          isTrusted: true,
+          isTrusted: false,
           nativeEvent: 'updated string',
           target: newElement,
           timeStamp: 200,
@@ -756,12 +756,12 @@ main() {
       test('returns normally when no parameters are provided', () {
         final e = createSyntheticTouchEvent();
         testSyntheticEventDefaults(e);
-        expect(e.altKey, isNull);
-        expect(e.altKey, isNull);
+        expect(e.altKey, isFalse);
+        expect(e.altKey, isFalse);
         expect(e.changedTouches, isNull);
-        expect(e.ctrlKey, isNull);
-        expect(e.metaKey, isNull);
-        expect(e.shiftKey, isNull);
+        expect(e.ctrlKey, isFalse);
+        expect(e.metaKey, isFalse);
+        expect(e.shiftKey, isFalse);
         expect(e.targetTouches, isNull);
         expect(e.touches, isNull);
       });
@@ -769,12 +769,12 @@ main() {
       test('matches getEmptyTouchEvent', () {
         final e = getEmptyTouchEvent();
         testSyntheticEventDefaults(e);
-        expect(e.altKey, isNull);
-        expect(e.altKey, isNull);
+        expect(e.altKey, isFalse);
+        expect(e.altKey, isFalse);
         expect(e.changedTouches, isNull);
-        expect(e.ctrlKey, isNull);
-        expect(e.metaKey, isNull);
-        expect(e.shiftKey, isNull);
+        expect(e.ctrlKey, isFalse);
+        expect(e.metaKey, isFalse);
+        expect(e.shiftKey, isFalse);
         expect(e.targetTouches, isNull);
         expect(e.touches, isNull);
       });
@@ -784,65 +784,65 @@ main() {
           ..name = 'test'
           ..value = 'test value';
         final baseEvent = createSyntheticTouchEvent(
-          bubbles: false,
+          bubbles: true,
           cancelable: false,
           currentTarget: element,
           defaultPrevented: true,
           preventDefault: null,
           stopPropagation: null,
           eventPhase: 0,
-          isTrusted: false,
+          isTrusted: true,
           nativeEvent: 'string',
           target: element,
           timeStamp: 100,
           type: 'non-default',
-          altKey: false,
+          altKey: true,
           changedTouches: testString + '1',
-          ctrlKey: false,
-          metaKey: false,
-          shiftKey: false,
+          ctrlKey: true,
+          metaKey: true,
+          shiftKey: true,
           targetTouches: testString + '2',
           touches: testString + '3',
         );
         testSyntheticEventBaseForMergeTests(baseEvent);
-        expect(baseEvent.altKey, isFalse);
+        expect(baseEvent.altKey, true);
         expect(baseEvent.changedTouches, testString + '1');
-        expect(baseEvent.ctrlKey, isFalse);
-        expect(baseEvent.metaKey, isFalse);
-        expect(baseEvent.shiftKey, isFalse);
+        expect(baseEvent.ctrlKey, true);
+        expect(baseEvent.metaKey, true);
+        expect(baseEvent.shiftKey, true);
         expect(baseEvent.targetTouches, testString + '2');
         expect(baseEvent.touches, testString + '3');
 
         final newElement = DivElement();
         final newEvent = createSyntheticTouchEvent(
           baseEvent: baseEvent,
-          bubbles: true,
+          bubbles: false,
           cancelable: true,
           currentTarget: newElement,
           defaultPrevented: false,
           preventDefault: () => mergeTestCounter++,
           stopPropagation: () => mergeTestCounter++,
           eventPhase: 2,
-          isTrusted: true,
+          isTrusted: false,
           nativeEvent: 'updated string',
           target: newElement,
           timeStamp: 200,
           type: 'updated non-default',
-          altKey: true,
+          altKey: false,
           changedTouches: updatedTestString + '1',
-          ctrlKey: true,
-          metaKey: true,
-          shiftKey: true,
+          ctrlKey: false,
+          metaKey: false,
+          shiftKey: false,
           targetTouches: updatedTestString + '2',
           touches: updatedTestString + '3',
         );
 
         testSyntheticEventBaseAfterMerge(newEvent);
-        expect(newEvent.altKey, isTrue);
+        expect(newEvent.altKey, isFalse);
         expect(newEvent.changedTouches, updatedTestString + '1');
-        expect(newEvent.ctrlKey, isTrue);
-        expect(newEvent.metaKey, isTrue);
-        expect(newEvent.shiftKey, isTrue);
+        expect(newEvent.ctrlKey, isFalse);
+        expect(newEvent.metaKey, isFalse);
+        expect(newEvent.shiftKey, isFalse);
         expect(newEvent.targetTouches, updatedTestString + '2');
         expect(newEvent.touches, updatedTestString + '3');
       });
@@ -870,14 +870,14 @@ main() {
           ..name = 'test'
           ..value = 'test value';
         final baseEvent = createSyntheticTransitionEvent(
-          bubbles: false,
+          bubbles: true,
           cancelable: false,
           currentTarget: element,
           defaultPrevented: true,
           preventDefault: null,
           stopPropagation: null,
           eventPhase: 0,
-          isTrusted: false,
+          isTrusted: true,
           nativeEvent: 'string',
           target: element,
           timeStamp: 100,
@@ -894,14 +894,14 @@ main() {
         final newElement = DivElement();
         final newEvent = createSyntheticTransitionEvent(
           baseEvent: baseEvent,
-          bubbles: true,
+          bubbles: false,
           cancelable: true,
           currentTarget: newElement,
           defaultPrevented: false,
           preventDefault: () => mergeTestCounter++,
           stopPropagation: () => mergeTestCounter++,
           eventPhase: 2,
-          isTrusted: true,
+          isTrusted: false,
           nativeEvent: 'updated string',
           target: newElement,
           timeStamp: 200,
@@ -940,14 +940,14 @@ main() {
           ..name = 'test'
           ..value = 'test value';
         final baseEvent = createSyntheticAnimationEvent(
-          bubbles: false,
+          bubbles: true,
           cancelable: false,
           currentTarget: element,
           defaultPrevented: true,
           preventDefault: null,
           stopPropagation: null,
           eventPhase: 0,
-          isTrusted: false,
+          isTrusted: true,
           nativeEvent: 'string',
           target: element,
           timeStamp: 100,
@@ -964,14 +964,14 @@ main() {
         final newElement = DivElement();
         final newEvent = createSyntheticAnimationEvent(
           baseEvent: baseEvent,
-          bubbles: true,
+          bubbles: false,
           cancelable: true,
           currentTarget: newElement,
           defaultPrevented: false,
           preventDefault: () => mergeTestCounter++,
           stopPropagation: () => mergeTestCounter++,
           eventPhase: 2,
-          isTrusted: true,
+          isTrusted: false,
           nativeEvent: 'updated string',
           target: newElement,
           timeStamp: 200,
@@ -1008,14 +1008,14 @@ main() {
           ..name = 'test'
           ..value = 'test value';
         final baseEvent = createSyntheticUIEvent(
-          bubbles: false,
+          bubbles: true,
           cancelable: false,
           currentTarget: element,
           defaultPrevented: true,
           preventDefault: null,
           stopPropagation: null,
           eventPhase: 0,
-          isTrusted: false,
+          isTrusted: true,
           nativeEvent: 'string',
           target: element,
           timeStamp: 100,
@@ -1030,14 +1030,14 @@ main() {
         final newElement = DivElement();
         final newEvent = createSyntheticUIEvent(
           baseEvent: baseEvent,
-          bubbles: true,
+          bubbles: false,
           cancelable: true,
           currentTarget: newElement,
           defaultPrevented: false,
           preventDefault: () => mergeTestCounter++,
           stopPropagation: () => mergeTestCounter++,
           eventPhase: 2,
-          isTrusted: true,
+          isTrusted: false,
           nativeEvent: 'updated string',
           target: newElement,
           timeStamp: 200,
@@ -1076,14 +1076,14 @@ main() {
           ..name = 'test'
           ..value = 'test value';
         final baseEvent = createSyntheticWheelEvent(
-          bubbles: false,
+          bubbles: true,
           cancelable: false,
           currentTarget: element,
           defaultPrevented: true,
           preventDefault: null,
           stopPropagation: null,
           eventPhase: 0,
-          isTrusted: false,
+          isTrusted: true,
           nativeEvent: 'string',
           target: element,
           timeStamp: 100,
@@ -1102,14 +1102,14 @@ main() {
         final newElement = DivElement();
         final newEvent = createSyntheticWheelEvent(
           baseEvent: baseEvent,
-          bubbles: true,
+          bubbles: false,
           cancelable: true,
           currentTarget: newElement,
           defaultPrevented: false,
           preventDefault: () => mergeTestCounter++,
           stopPropagation: () => mergeTestCounter++,
           eventPhase: 2,
-          isTrusted: true,
+          isTrusted: false,
           nativeEvent: 'updated string',
           target: newElement,
           timeStamp: 200,

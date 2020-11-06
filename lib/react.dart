@@ -1433,8 +1433,8 @@ class NotSpecified {
   const NotSpecified();
 }
 
-const _syntheticEventDeprecationMessage = 'Creating events via constructors is no longer supported. ' +
-    'Use the event helpers in \'package:react/react_client.dart\' to create new instances instead. ' +
+const _syntheticEventDeprecationMessagePrefix = 'Creating events via constructors is no longer supported. ';
+const _syntheticEventDeprecationMessagePostfix =
     'Alternatively, use the `Simulate` test APIs to create events in testing environments.';
 
 /// A cross-browser wrapper around the browser's [nativeEvent].
@@ -1588,7 +1588,9 @@ class SyntheticEvent {
   /// See: <https://developer.mozilla.org/en-US/docs/Web/API/Event/type>
   final String type;
 
-  @Deprecated(_syntheticEventDeprecationMessage)
+  @Deprecated(_syntheticEventDeprecationMessagePrefix +
+      'Use `createSyntheticEvent` instead. ' +
+      _syntheticEventDeprecationMessagePostfix)
   SyntheticEvent(
       this.bubbles,
       this.cancelable,
@@ -1607,7 +1609,9 @@ class SyntheticEvent {
 class SyntheticClipboardEvent extends SyntheticEvent {
   final clipboardData;
 
-  @Deprecated(_syntheticEventDeprecationMessage)
+  @Deprecated(_syntheticEventDeprecationMessagePrefix +
+      'Use `createSyntheticClipboardEvent` instead. ' +
+      _syntheticEventDeprecationMessagePostfix)
   SyntheticClipboardEvent(
     bool bubbles,
     bool cancelable,
@@ -1639,7 +1643,9 @@ class SyntheticKeyboardEvent extends SyntheticEvent {
   final num keyCode;
   final num charCode;
 
-  @Deprecated(_syntheticEventDeprecationMessage)
+  @Deprecated(_syntheticEventDeprecationMessagePrefix +
+      'Use `createSyntheticKeyboardEvent` instead. ' +
+      _syntheticEventDeprecationMessagePostfix)
   SyntheticKeyboardEvent(
     bool bubbles,
     bool cancelable,
@@ -1671,7 +1677,9 @@ class SyntheticKeyboardEvent extends SyntheticEvent {
 class SyntheticCompositionEvent extends SyntheticEvent {
   final String data;
 
-  @Deprecated(_syntheticEventDeprecationMessage)
+  @Deprecated(_syntheticEventDeprecationMessagePrefix +
+      'Use `createSyntheticCompositionEvent` instead. ' +
+      _syntheticEventDeprecationMessagePostfix)
   SyntheticCompositionEvent(
     bool bubbles,
     bool cancelable,
@@ -1693,7 +1701,9 @@ class SyntheticCompositionEvent extends SyntheticEvent {
 class SyntheticFocusEvent extends SyntheticEvent {
   final /*DOMEventTarget*/ relatedTarget;
 
-  @Deprecated(_syntheticEventDeprecationMessage)
+  @Deprecated(_syntheticEventDeprecationMessagePrefix +
+      'Use `createSyntheticFocusEvent` instead. ' +
+      _syntheticEventDeprecationMessagePostfix)
   SyntheticFocusEvent(
     bool bubbles,
     bool cancelable,
@@ -1713,7 +1723,9 @@ class SyntheticFocusEvent extends SyntheticEvent {
 }
 
 class SyntheticFormEvent extends SyntheticEvent {
-  @Deprecated(_syntheticEventDeprecationMessage)
+  @Deprecated(_syntheticEventDeprecationMessagePrefix +
+      'Use `createSyntheticFormEvent` instead. ' +
+      _syntheticEventDeprecationMessagePostfix)
   SyntheticFormEvent(
     bool bubbles,
     bool cancelable,
@@ -1756,7 +1768,9 @@ class SyntheticMouseEvent extends SyntheticEvent {
   final num screenY;
   final bool shiftKey;
 
-  @Deprecated(_syntheticEventDeprecationMessage)
+  @Deprecated(_syntheticEventDeprecationMessagePrefix +
+      'Use `createSyntheticMouseEvent` instead. ' +
+      _syntheticEventDeprecationMessagePostfix)
   SyntheticMouseEvent(
     bool bubbles,
     bool cancelable,
@@ -1800,7 +1814,9 @@ class SyntheticPointerEvent extends SyntheticEvent {
   final String pointerType;
   final bool isPrimary;
 
-  @Deprecated(_syntheticEventDeprecationMessage)
+  @Deprecated(_syntheticEventDeprecationMessagePrefix +
+      'Use `createSyntheticPointerEvent` instead. ' +
+      _syntheticEventDeprecationMessagePostfix)
   SyntheticPointerEvent(
     bool bubbles,
     bool cancelable,
@@ -1837,7 +1853,9 @@ class SyntheticTouchEvent extends SyntheticEvent {
   final /*DOMTouchList*/ targetTouches;
   final /*DOMTouchList*/ touches;
 
-  @Deprecated(_syntheticEventDeprecationMessage)
+  @Deprecated(_syntheticEventDeprecationMessagePrefix +
+      'Use `createSyntheticTouchEvent` instead. ' +
+      _syntheticEventDeprecationMessagePostfix)
   SyntheticTouchEvent(
     bool bubbles,
     bool cancelable,
@@ -1867,7 +1885,9 @@ class SyntheticTransitionEvent extends SyntheticEvent {
   final num elapsedTime;
   final String pseudoElement;
 
-  @Deprecated(_syntheticEventDeprecationMessage)
+  @Deprecated(_syntheticEventDeprecationMessagePrefix +
+      'Use `createSyntheticTransitionEvent` instead. ' +
+      _syntheticEventDeprecationMessagePostfix)
   SyntheticTransitionEvent(
       bubbles,
       cancelable,
@@ -1893,7 +1913,9 @@ class SyntheticAnimationEvent extends SyntheticEvent {
   final num elapsedTime;
   final String pseudoElement;
 
-  @Deprecated(_syntheticEventDeprecationMessage)
+  @Deprecated(_syntheticEventDeprecationMessagePrefix +
+      'Use `createSyntheticAnimationEvent` instead. ' +
+      _syntheticEventDeprecationMessagePostfix)
   SyntheticAnimationEvent(
       bubbles,
       cancelable,
@@ -1918,7 +1940,9 @@ class SyntheticUIEvent extends SyntheticEvent {
   final num detail;
   final /*DOMAbstractView*/ view;
 
-  @Deprecated(_syntheticEventDeprecationMessage)
+  @Deprecated(_syntheticEventDeprecationMessagePrefix +
+      'Use `createSyntheticUIEvent` instead. ' +
+      _syntheticEventDeprecationMessagePostfix)
   SyntheticUIEvent(
     bool bubbles,
     bool cancelable,
@@ -1944,7 +1968,9 @@ class SyntheticWheelEvent extends SyntheticEvent {
   final num deltaY;
   final num deltaZ;
 
-  @Deprecated(_syntheticEventDeprecationMessage)
+  @Deprecated(_syntheticEventDeprecationMessagePrefix +
+      'Use `createSyntheticWheelEvent` instead. ' +
+      _syntheticEventDeprecationMessagePostfix)
   SyntheticWheelEvent(
     bool bubbles,
     bool cancelable,
