@@ -98,10 +98,6 @@ main() {
         testSyntheticEventDefaults(createSyntheticEvent());
       });
 
-      test('matches getEmptySyntheticEvent', () {
-        testSyntheticEventDefaults(getEmptySyntheticEvent());
-      });
-
       test('merges values as expected', () {
         final element = InputElement()
           ..name = 'test'
@@ -146,15 +142,6 @@ main() {
     group('createSyntheticClipboardEvent', () {
       test('returns normally when no parameters are provided', () {
         final e = createSyntheticClipboardEvent();
-
-        testSyntheticEventDefaults(e);
-
-        // clipboard event properties
-        expect(e.clipboardData, isNull);
-      });
-
-      test('matches getEmptyClipboardEvent', () {
-        final e = getEmptyClipboardEvent();
 
         testSyntheticEventDefaults(e);
 
@@ -210,25 +197,6 @@ main() {
     group('createSyntheticKeyboardEvent', () {
       test('returns normally when no parameters are provided', () {
         final e = createSyntheticKeyboardEvent();
-
-        testSyntheticEventDefaults(e);
-
-        // keyboard event properties
-        expect(e.altKey, isFalse);
-        expect(e.char, isNull);
-        expect(e.ctrlKey, isFalse);
-        expect(e.locale, isNull);
-        expect(e.location, isNull);
-        expect(e.key, isNull);
-        expect(e.metaKey, isFalse);
-        expect(e.repeat, isNull);
-        expect(e.shiftKey, isFalse);
-        expect(e.keyCode, isNull);
-        expect(e.charCode, isNull);
-      });
-
-      test('matches getEmptyKeyboardEvent', () {
-        final e = getEmptyKeyboardEvent();
 
         testSyntheticEventDefaults(e);
 
@@ -342,15 +310,6 @@ main() {
         expect(e.data, isNull);
       });
 
-      test('matches getEmptyCompositionEvent', () {
-        final e = getEmptyCompositionEvent();
-
-        testSyntheticEventDefaults(e);
-
-        // clipboard event properties
-        expect(e.data, isNull);
-      });
-
       test('merges values as expected', () {
         final element = InputElement()
           ..name = 'test'
@@ -402,11 +361,6 @@ main() {
         testSyntheticEventDefaults(e);
       });
 
-      test('matches getEmptyFocusEvent', () {
-        final e = getEmptyFocusEvent();
-        testSyntheticEventDefaults(e);
-      });
-
       test('merges values as expected', () {
         final element = InputElement()
           ..name = 'test'
@@ -454,11 +408,6 @@ main() {
         testSyntheticEventDefaults(e);
       });
 
-      test('matches getEmptyFormEvent', () {
-        final e = getEmptyFormEvent();
-        testSyntheticEventDefaults(e);
-      });
-
       test('merges values as expected', () {
         final element = InputElement()
           ..name = 'test'
@@ -503,26 +452,6 @@ main() {
     group('createSyntheticMouseEvent', () {
       test('returns normally when no parameters are provided', () {
         final e = createSyntheticMouseEvent();
-        testSyntheticEventDefaults(e);
-
-        expect(e.altKey, isFalse);
-        expect(e.button, isNull);
-        expect(e.buttons, isNull);
-        expect(e.clientX, isNull);
-        expect(e.clientY, isNull);
-        expect(e.ctrlKey, isFalse);
-        expect(e.dataTransfer, isNull);
-        expect(e.metaKey, isFalse);
-        expect(e.pageX, isNull);
-        expect(e.pageY, isNull);
-        expect(e.relatedTarget, isNull);
-        expect(e.screenX, isNull);
-        expect(e.screenY, isNull);
-        expect(e.shiftKey, isFalse);
-      });
-
-      test('matches getEmptyMouseEvent', () {
-        final e = getEmptyMouseEvent();
         testSyntheticEventDefaults(e);
 
         expect(e.altKey, isFalse);
@@ -655,22 +584,6 @@ main() {
         expect(e.isPrimary, isNull);
       });
 
-      test('matches getEmptyPointerEvent', () {
-        final e = getEmptyPointerEvent();
-        testSyntheticEventDefaults(e);
-
-        expect(e.pointerId, isNull);
-        expect(e.width, isNull);
-        expect(e.height, isNull);
-        expect(e.pressure, isNull);
-        expect(e.tangentialPressure, isNull);
-        expect(e.tiltX, isNull);
-        expect(e.tiltY, isNull);
-        expect(e.twist, isNull);
-        expect(e.pointerType, isNull);
-        expect(e.isPrimary, isNull);
-      });
-
       test('merges values as expected', () {
         final element = InputElement()
           ..name = 'test'
@@ -766,19 +679,6 @@ main() {
         expect(e.touches, isNull);
       });
 
-      test('matches getEmptyTouchEvent', () {
-        final e = getEmptyTouchEvent();
-        testSyntheticEventDefaults(e);
-        expect(e.altKey, isFalse);
-        expect(e.altKey, isFalse);
-        expect(e.changedTouches, isNull);
-        expect(e.ctrlKey, isFalse);
-        expect(e.metaKey, isFalse);
-        expect(e.shiftKey, isFalse);
-        expect(e.targetTouches, isNull);
-        expect(e.touches, isNull);
-      });
-
       test('merges values as expected', () {
         final element = InputElement()
           ..name = 'test'
@@ -857,14 +757,6 @@ main() {
         expect(e.pseudoElement, isNull);
       });
 
-      test('matches getEmptyTransitionEvent', () {
-        final e = getEmptyTransitionEvent();
-        testSyntheticEventDefaults(e);
-        expect(e.propertyName, isNull);
-        expect(e.elapsedTime, isNull);
-        expect(e.pseudoElement, isNull);
-      });
-
       test('merges values as expected', () {
         final element = InputElement()
           ..name = 'test'
@@ -921,14 +813,6 @@ main() {
     group('createSyntheticAnimationEvent', () {
       test('returns normally when no parameters are provided', () {
         final e = createSyntheticAnimationEvent();
-        testSyntheticEventDefaults(e);
-        expect(e.animationName, isNull);
-        expect(e.elapsedTime, isNull);
-        expect(e.pseudoElement, isNull);
-      });
-
-      test('matches getEmptyAnimationEvent', () {
-        final e = getEmptyAnimationEvent();
         testSyntheticEventDefaults(e);
         expect(e.animationName, isNull);
         expect(e.elapsedTime, isNull);
@@ -996,13 +880,6 @@ main() {
         expect(e.view, isNull);
       });
 
-      test('matches getEmptyUIEvent', () {
-        final e = getEmptyUIEvent();
-        testSyntheticEventDefaults(e);
-        expect(e.detail, isNull);
-        expect(e.view, isNull);
-      });
-
       test('merges values as expected', () {
         final element = InputElement()
           ..name = 'test'
@@ -1055,15 +932,6 @@ main() {
     group('createSyntheticWheelEvent', () {
       test('returns normally when no parameters are provided', () {
         final e = createSyntheticWheelEvent();
-        testSyntheticEventDefaults(e);
-        expect(e.deltaX, isNull);
-        expect(e.deltaMode, isNull);
-        expect(e.deltaY, isNull);
-        expect(e.deltaZ, isNull);
-      });
-
-      test('matches getEmptyWheelEvent', () {
-        final e = getEmptyWheelEvent();
         testSyntheticEventDefaults(e);
         expect(e.deltaX, isNull);
         expect(e.deltaMode, isNull);
