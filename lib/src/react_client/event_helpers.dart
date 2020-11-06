@@ -2,79 +2,79 @@
 
 import '../../react.dart';
 
-/// Returns an empty [SyntheticEvent] with all non-boolean fields set to `null`.
+/// Returns an empty [SyntheticEvent] with only the defaults set.
 ///
 /// This utility can be useful when a test just needs access to an event object,
 /// but no fields need to be set.
 SyntheticEvent getEmptySyntheticEvent() => createSyntheticEvent();
 
-/// Returns an empty [SyntheticClipboardEvent] with all non-boolean fields set to `null`.
+/// Returns an empty [SyntheticClipboardEvent] with only the defaults set.
 ///
 /// This utility can be useful when a test just needs access to an event object,
 /// but no fields need to be set.
 SyntheticClipboardEvent getEmptyClipboardEvent() => createSyntheticClipboardEvent();
 
-/// Returns an empty [SyntheticKeyboardEvent] with all non-boolean fields set to `null`.
+/// Returns an empty [SyntheticKeyboardEvent] with only the defaults set.
 ///
 /// This utility can be useful when a test just needs access to an event object,
 /// but no fields need to be set.
 SyntheticKeyboardEvent getEmptyKeyboardEvent() => createSyntheticKeyboardEvent();
 
-/// Returns an empty [SyntheticCompositionEvent] with all non-boolean fields set to `null`.
+/// Returns an empty [SyntheticCompositionEvent] with only the defaults set.
 ///
 /// This utility can be useful when a test just needs access to an event object,
 /// but no fields need to be set.
 SyntheticCompositionEvent getEmptyCompositionEvent() => createSyntheticCompositionEvent();
 
-/// Returns an empty [SyntheticFocusEvent] with all non-boolean fields set to `null`.
+/// Returns an empty [SyntheticFocusEvent] with only the defaults set.
 ///
 /// This utility can be useful when a test just needs access to an event object,
 /// but no fields need to be set.
 SyntheticFocusEvent getEmptyFocusEvent() => createSyntheticFocusEvent();
 
-/// Returns an empty [SyntheticFormEvent] with all non-boolean fields set to `null`.
+/// Returns an empty [SyntheticFormEvent] with only the defaults set.
 ///
 /// This utility can be useful when a test just needs access to an event object,
 /// but no fields need to be set.
 SyntheticFormEvent getEmptyFormEvent() => createSyntheticFormEvent();
 
-/// Returns an empty [SyntheticMouseEvent] with all non-boolean fields set to `null`.
+/// Returns an empty [SyntheticMouseEvent] with only the defaults set.
 ///
 /// This utility can be useful when a test just needs access to an event object,
 /// but no fields need to be set.
 SyntheticMouseEvent getEmptyMouseEvent() => createSyntheticMouseEvent();
 
-/// Returns an empty [SyntheticPointerEvent] with all non-boolean fields set to `null`.
+/// Returns an empty [SyntheticPointerEvent] with only the defaults set.
 ///
 /// This utility can be useful when a test just needs access to an event object,
 /// but no fields need to be set.
 SyntheticPointerEvent getEmptyPointerEvent() => createSyntheticPointerEvent();
 
-/// Returns an empty [SyntheticTouchEvent] with all non-boolean fields set to `null`.
+/// Returns an empty [SyntheticTouchEvent] with only the defaults set.
 ///
 /// This utility can be useful when a test just needs access to an event object,
 /// but no fields need to be set.
 SyntheticTouchEvent getEmptyTouchEvent() => createSyntheticTouchEvent();
 
-/// Returns an empty [SyntheticTransitionEvent] with all non-boolean fields set to `null`.
+/// Returns an empty [SyntheticTransitionEvent] with only the defaults set.
 ///
 /// This utility can be useful when a test just needs access to an event object,
 /// but no fields need to be set.
 SyntheticTransitionEvent getEmptyTransitionEvent() => createSyntheticTransitionEvent();
 
-/// Returns an empty [SyntheticAnimationEvent] with all non-boolean fields set to `null`.
+/// Returns an empty [SyntheticAnimationEvent] with only the defaults set.
 ///
 /// This utility can be useful when a test just needs access to an event object,
 /// but no fields need to be set.
 SyntheticAnimationEvent getEmptyAnimationEvent() => createSyntheticAnimationEvent();
 
-/// Returns an empty [SyntheticUIEvent] with all non-boolean fields set to `null`.
+/// Returns an empty [SyntheticUIEvent] with only the defaults set.
 ///
 /// This utility can be useful when a test just needs access to an event object,
 /// but no fields need to be set.
 SyntheticUIEvent getEmptyUIEvent() => createSyntheticUIEvent();
 
-/// Returns an empty [SyntheticWheelEvent] with all non-boolean fields set to `null`.
+/// Returns an empty [SyntheticWheelEvent] with only the defaults set.
 ///
 /// This utility can be useful when a test just needs access to an event object,
 /// but no fields need to be set.
@@ -83,8 +83,8 @@ SyntheticWheelEvent getEmptyWheelEvent() => createSyntheticWheelEvent();
 /// Returns a newly constructed [SyntheticEvent] instance.
 ///
 /// In addition to creating empty instances (by invoking without any parameters) or completely custom instances
-/// by using the named parameters, this method will merge previously existing [baseEvent]s with the named parameters provided.
-/// The named parameters takes precedence, and therefore can be used to override specific fields on the [baseEvent]./// The named parameters takes precedence, and therefore can be used to override specific fields on the [baseEvent].
+/// by using the named parameters, this function will merge previously existing [baseEvent]s with the named parameters provided.
+/// The named parameters takes precedence, and therefore can be used to override specific fields on the [baseEvent].
 SyntheticEvent createSyntheticEvent({
   SyntheticEvent baseEvent,
   bool bubbles,
@@ -119,7 +119,7 @@ SyntheticEvent createSyntheticEvent({
 /// Returns a newly constructed [SyntheticClipboardEvent] instance.
 ///
 /// In addition to creating empty instances (by invoking without any parameters) or completely custom instances
-/// by using the named parameters, this method will merge previously existing [baseEvent]s with the named parameters provided.
+/// by using the named parameters, this function will merge previously existing [baseEvent]s with the named parameters provided.
 /// The named parameters takes precedence, and therefore can be used to override specific fields on the [baseEvent].
 SyntheticClipboardEvent createSyntheticClipboardEvent({
   SyntheticClipboardEvent baseEvent,
@@ -157,7 +157,7 @@ SyntheticClipboardEvent createSyntheticClipboardEvent({
 /// Returns a newly constructed [SyntheticKeyboardEvent] instance.
 ///
 /// In addition to creating empty instances (by invoking without any parameters) or completely custom instances
-/// by using the named parameters, this method will merge previously existing [baseEvent]s with the named parameters provided.
+/// by using the named parameters, this function will merge previously existing [baseEvent]s with the named parameters provided.
 /// The named parameters takes precedence, and therefore can be used to override specific fields on the [baseEvent].
 SyntheticKeyboardEvent createSyntheticKeyboardEvent({
   SyntheticKeyboardEvent baseEvent,
@@ -215,7 +215,7 @@ SyntheticKeyboardEvent createSyntheticKeyboardEvent({
 /// Returns a newly constructed [SyntheticCompositionEvent] instance.
 ///
 /// In addition to creating empty instances (by invoking without any parameters) or completely custom instances
-/// by using the named parameters, this method will merge previously existing [baseEvent]s with the named parameters provided.
+/// by using the named parameters, this function will merge previously existing [baseEvent]s with the named parameters provided.
 /// The named parameters takes precedence, and therefore can be used to override specific fields on the [baseEvent].
 SyntheticCompositionEvent createSyntheticCompositionEvent({
   SyntheticCompositionEvent baseEvent,
@@ -253,7 +253,7 @@ SyntheticCompositionEvent createSyntheticCompositionEvent({
 /// Returns a newly constructed [SyntheticFocusEvent] instance.
 ///
 /// In addition to creating empty instances (by invoking without any parameters) or completely custom instances
-/// by using the named parameters, this method will merge previously existing [baseEvent]s with the named parameters provided.
+/// by using the named parameters, this function will merge previously existing [baseEvent]s with the named parameters provided.
 /// The named parameters takes precedence, and therefore can be used to override specific fields on the [baseEvent].
 SyntheticFocusEvent createSyntheticFocusEvent({
   SyntheticFocusEvent baseEvent,
@@ -291,7 +291,7 @@ SyntheticFocusEvent createSyntheticFocusEvent({
 /// Returns a newly constructed [SyntheticFormEvent] instance.
 ///
 /// In addition to creating empty instances (by invoking without any parameters) or completely custom instances
-/// by using the named parameters, this method will merge previously existing [baseEvent]s with the named parameters provided.
+/// by using the named parameters, this function will merge previously existing [baseEvent]s with the named parameters provided.
 /// The named parameters takes precedence, and therefore can be used to override specific fields on the [baseEvent].
 SyntheticFormEvent createSyntheticFormEvent({
   SyntheticFormEvent baseEvent,
@@ -327,7 +327,7 @@ SyntheticFormEvent createSyntheticFormEvent({
 /// Returns a newly constructed [SyntheticMouseEvent] instance.
 ///
 /// In addition to creating empty instances (by invoking without any parameters) or completely custom instances
-/// by using the named parameters, this method will merge previously existing [baseEvent]s with the named parameters provided.
+/// by using the named parameters, this function will merge previously existing [baseEvent]s with the named parameters provided.
 /// The named parameters takes precedence, and therefore can be used to override specific fields on the [baseEvent].
 SyntheticMouseEvent createSyntheticMouseEvent({
   SyntheticMouseEvent baseEvent,
@@ -391,7 +391,7 @@ SyntheticMouseEvent createSyntheticMouseEvent({
 /// Returns a newly constructed [SyntheticPointerEvent] instance.
 ///
 /// In addition to creating empty instances (by invoking without any parameters) or completely custom instances
-/// by using the named parameters, this method will merge previously existing [baseEvent]s with the named parameters provided.
+/// by using the named parameters, this function will merge previously existing [baseEvent]s with the named parameters provided.
 /// The named parameters takes precedence, and therefore can be used to override specific fields on the [baseEvent].
 SyntheticPointerEvent createSyntheticPointerEvent({
   SyntheticPointerEvent baseEvent,
@@ -447,7 +447,7 @@ SyntheticPointerEvent createSyntheticPointerEvent({
 /// Returns a newly constructed [SyntheticTouchEvent] instance.
 ///
 /// In addition to creating empty instances (by invoking without any parameters) or completely custom instances
-/// by using the named parameters, this method will merge previously existing [baseEvent]s with the named parameters provided.
+/// by using the named parameters, this function will merge previously existing [baseEvent]s with the named parameters provided.
 /// The named parameters takes precedence, and therefore can be used to override specific fields on the [baseEvent].
 SyntheticTouchEvent createSyntheticTouchEvent({
   SyntheticTouchEvent baseEvent,
@@ -497,7 +497,7 @@ SyntheticTouchEvent createSyntheticTouchEvent({
 /// Returns a newly constructed [SyntheticTransitionEvent] instance.
 ///
 /// In addition to creating empty instances (by invoking without any parameters) or completely custom instances
-/// by using the named parameters, this method will merge previously existing [baseEvent]s with the named parameters provided.
+/// by using the named parameters, this function will merge previously existing [baseEvent]s with the named parameters provided.
 /// The named parameters takes precedence, and therefore can be used to override specific fields on the [baseEvent].
 SyntheticTransitionEvent createSyntheticTransitionEvent({
   SyntheticTransitionEvent baseEvent,
@@ -539,7 +539,7 @@ SyntheticTransitionEvent createSyntheticTransitionEvent({
 /// Returns a newly constructed [SyntheticAnimationEvent] instance.
 ///
 /// In addition to creating empty instances (by invoking without any parameters) or completely custom instances
-/// by using the named parameters, this method will merge previously existing [baseEvent]s with the named parameters provided.
+/// by using the named parameters, this function will merge previously existing [baseEvent]s with the named parameters provided.
 /// The named parameters takes precedence, and therefore can be used to override specific fields on the [baseEvent].
 SyntheticAnimationEvent createSyntheticAnimationEvent({
   SyntheticAnimationEvent baseEvent,
@@ -581,7 +581,7 @@ SyntheticAnimationEvent createSyntheticAnimationEvent({
 /// Returns a newly constructed [SyntheticUIEvent] instance.
 ///
 /// In addition to creating empty instances (by invoking without any parameters) or completely custom instances
-/// by using the named parameters, this method will merge previously existing [baseEvent]s with the named parameters provided.
+/// by using the named parameters, this function will merge previously existing [baseEvent]s with the named parameters provided.
 /// The named parameters takes precedence, and therefore can be used to override specific fields on the [baseEvent].
 SyntheticUIEvent createSyntheticUIEvent({
   SyntheticUIEvent baseEvent,
@@ -621,7 +621,7 @@ SyntheticUIEvent createSyntheticUIEvent({
 /// Returns a newly constructed [SyntheticWheelEvent] instance.
 ///
 /// In addition to creating empty instances (by invoking without any parameters) or completely custom instances
-/// by using the named parameters, this method will merge previously existing [baseEvent]s with the named parameters provided.
+/// by using the named parameters, this function will merge previously existing [baseEvent]s with the named parameters provided.
 /// The named parameters takes precedence, and therefore can be used to override specific fields on the [baseEvent].
 SyntheticWheelEvent createSyntheticWheelEvent({
   SyntheticWheelEvent baseEvent,
