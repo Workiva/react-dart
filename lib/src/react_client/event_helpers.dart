@@ -56,6 +56,12 @@ SyntheticPointerEvent getEmptyPointerEvent() => createSyntheticPointerEvent();
 /// but no fields need to be set.
 SyntheticTouchEvent getEmptyTouchEvent() => createSyntheticTouchEvent();
 
+/// Returns an empty [SyntheticTransitionEvent] with all non-boolean fields set to `null`.
+///
+/// This utility can be useful when a test just needs access to an event object,
+/// but no fields need to be set.
+SyntheticTransitionEvent getEmptyTransitionEvent() => createSyntheticTransitionEvent();
+
 /// Returns an empty [SyntheticAnimationEvent] with all non-boolean fields set to `null`.
 ///
 /// This utility can be useful when a test just needs access to an event object,
