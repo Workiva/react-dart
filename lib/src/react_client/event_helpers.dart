@@ -758,39 +758,206 @@ SyntheticWheelEvent createSyntheticWheelEvent({
 }
 
 extension SyntheticEventTypeHelpers on SyntheticEvent {
-  /// Returns whether this is a [SyntheticClipboardEvent].
-  bool get isClipboardEvent => this is SyntheticClipboardEvent;
+  /// Uses Duck Typing to attempt to detect if the event instance is a [SyntheticClipboardEvent].
+  ///
+  /// __NOTE:__ A field unique to this class must be non-null in order for this to return true, even
+  /// if the event instance was instantiated as a [SyntheticClipboardEvent]. For this class, this means
+  /// that one of the following fields must be non-null:
+  /// - clipboardData
+  bool get isClipboardEvent {
+    final typedThis = this as SyntheticClipboardEvent;
+    if (typedThis.clipboardData != null) return true;
 
-  /// Returns whether this is a [SyntheticKeyboardEvent].
-  bool get isKeyboardEvent => this is SyntheticKeyboardEvent;
+    return false;
+  }
 
-  /// Returns whether this is a [SyntheticCompositionEvent].
-  bool get isCompositionEvent => this is SyntheticCompositionEvent;
+  /// Uses Duck Typing to attempt to detect if the event instance is a [SyntheticKeyboardEvent].
+  ///
+  /// __NOTE:__ A field unique to this class must be non-null in order for this to return true, even
+  /// if the event instance was instantiated as a [SyntheticKeyboardEvent]. For this class, this means
+  /// that one of the following fields must be non-null:
+  /// - char
+  /// - charCode
+  /// - key
+  /// - keyCode
+  /// - locale
+  /// - location
+  /// - repeat
+  ///
+  /// The following fields __are not__ considered in type detection:
+  /// - altKey
+  /// - ctrlKey
+  /// - metaKey
+  /// - shiftKey
+  ///
+  /// TODO suggest alternative here
+  bool get isKeyboardEvent {
+    final typedThis = this as SyntheticKeyboardEvent;
 
-  /// Returns whether this is a [SyntheticFocusEvent].
-  bool get isFocusEvent => this is SyntheticFocusEvent;
+    if (typedThis.char != null) return true;
+    if (typedThis.locale != null) return true;
+    if (typedThis.location != null) return true;
+    if (typedThis.key != null) return true;
+    if (typedThis.repeat != null) return true;
+    if (typedThis.keyCode != null) return true;
+    if (typedThis.charCode != null) return true;
 
-  /// Returns whether this is a [SyntheticFormEvent].
-  bool get isFormEvent => this is SyntheticFormEvent;
+    return false;
+  }
 
-  /// Returns whether this is a [SyntheticMouseEvent].
-  bool get isMouseEvent => this is SyntheticMouseEvent;
+  /// Uses Duck Typing to attempt to detect if the event instance is a [SyntheticCompositionEvent].
+  ///
+  /// __NOTE:__ A field unique to this class must be non-null in order for this to return true, even
+  /// if the event instance was instantiated as a [SyntheticCompositionEvent]. For this class, this means
+  /// that one of the following fields must be non-null:
+  /// - data
+  bool get isCompositionEvent {
+    final typedThis = this as SyntheticCompositionEvent;
 
-  /// Returns whether this is a [SyntheticPointerEvent].
-  bool get isPointerEvent => this is SyntheticPointerEvent;
+    if (typedThis.data != null) return true;
+
+    return false;
+  }
+
+  /// Uses Duck Typing to attempt to detect if the event instance is a [SyntheticFocusEvent].
+  ///
+  /// __NOTE:__ A field unique to this class must be non-null in order for this to return true, even
+  /// if the event instance was instantiated as a [SyntheticFocusEvent]. For this class, this means
+  /// that one of the following fields must be non-null:
+  /// - relatedTarget
+  bool get isFocusEvent {
+    final typedThis = this as SyntheticFocusEvent;
+    if (typedThis.relatedTarget != null) return true;
+
+    return false;
+  }
+
+  /// Uses Duck Typing to attempt to detect if the event instance is a [SyntheticFormEvent].
+  ///
+  /// __NOTE:__ This getter is here for completeness, but because the interface for form events
+  /// is the same as that of a [SyntheticEvent] (the base for all other synthetic event types),
+  /// via Duck Typing every [SyntheticEvent] is considered a [SyntheticFormEvent].
+  bool get isFormEvent => true;
+
+  /// Uses Duck Typing to attempt to detect if the event instance is a [SyntheticMouseEvent].
+  ///
+  /// __NOTE:__ A field unique to this class must be non-null in order for this to return true, even
+  /// if the event instance was instantiated as a [SyntheticMouseEvent]. For this class, this means
+  /// that one of the following fields must be non-null:
+  /// - button
+  /// - buttons
+  /// - clientX
+  /// - clientY
+  /// - dataTransfer
+  /// - pageX
+  /// - pageY
+  /// - screenX
+  /// - screenY
+  ///
+  /// The following fields __are not__ considered in type detection:
+  /// - altKey
+  /// - ctrlKey
+  /// - metaKey
+  /// - relatedTarget
+  /// - shiftKey
+  ///
+  /// TODO suggest alternative here
+  bool get isMouseEvent {
+    final typedThis = this as SyntheticMouseEvent;
+
+    if (typedThis.button != null) return true;
+    if (typedThis.buttons != null) return true;
+    if (typedThis.clientX != null) return true;
+    if (typedThis.clientY != null) return true;
+    if (typedThis.dataTransfer != null) return true;
+    if (typedThis.pageX != null) return true;
+    if (typedThis.pageY != null) return true;
+    if (typedThis.screenX != null) return true;
+    if (typedThis.screenY != null) return true;
+
+    return false;
+  }
+
+  /// Uses Duck Typing to attempt to detect if the event instance is a [SyntheticPointerEvent].
+  ///
+  /// __NOTE:__ A field unique to this class must be non-null in order for this to return true, even
+  /// if the event instance was instantiated as a [SyntheticPointerEvent]. For this class, this means
+  /// that one of the following fields must be non-null:
+  /// - pointerId
+  /// - width
+  /// - height
+  /// - pressure
+  /// - tangentialPressure
+  /// - tiltX
+  /// - tiltY
+  /// - twist
+  /// - pointerType
+  /// - isPrimary
+  bool get isPointerEvent {
+    final typedThis = this as SyntheticPointerEvent;
+
+    if (typedThis.pointerId != null) return true;
+    if (typedThis.width != null) return true;
+    if (typedThis.height != null) return true;
+    if (typedThis.pressure != null) return true;
+    if (typedThis.tangentialPressure != null) return true;
+    if (typedThis.tiltX != null) return true;
+    if (typedThis.tiltY != null) return true;
+    if (typedThis.twist != null) return true;
+    if (typedThis.pointerType != null) return true;
+    if (typedThis.isPrimary != null) return true;
+
+    return false;
+  }
 
   /// Returns whether this is a [SyntheticTouchEvent].
-  bool get isTouchEvent => this is SyntheticTouchEvent;
+  bool get isTouchEvent {
+    final typedThis = this as SyntheticTouchEvent;
+
+    if (typedThis.changedTouches != null) return true;
+    if (typedThis.targetTouches != null) return true;
+    if (typedThis.touches != null) return true;
+
+    return false;
+  }
 
   /// Returns whether this is a [SyntheticTransitionEvent].
-  bool get isTransitionEvent => this is SyntheticTransitionEvent;
+  bool get isTransitionEvent {
+    final typedThis = this as SyntheticTransitionEvent;
+
+    if (typedThis.propertyName != null) return true;
+
+    return false;
+  }
 
   /// Returns whether this is a [SyntheticAnimationEvent].
-  bool get isAnimationEvent => this is SyntheticAnimationEvent;
+  bool get isAnimationEvent {
+    final typedThis = this as SyntheticAnimationEvent;
+
+    if (typedThis.animationName != null) return true;
+
+    return false;
+  }
 
   /// Returns whether this is a [SyntheticUIEvent].
-  bool get isUiEvent => this is SyntheticUIEvent;
+  bool get isUiEvent {
+    final typedThis = this as SyntheticUIEvent;
+
+    if (typedThis.detail != null) return true;
+    if (typedThis.view != null) return true;
+
+    return false;
+  }
 
   /// Returns whether this is a [SyntheticWheelEvent].
-  bool get isWheelEvent => this is SyntheticWheelEvent;
+  bool get isWheelEvent {
+    final typedThis = this as SyntheticWheelEvent;
+
+    if (typedThis.deltaX != null) return true;
+    if (typedThis.deltaMode != null) return true;
+    if (typedThis.deltaY != null) return true;
+    if (typedThis.deltaZ != null) return true;
+
+    return false;
+  }
 }
