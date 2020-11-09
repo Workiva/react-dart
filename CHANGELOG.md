@@ -1,3 +1,7 @@
+## [5.7.0](https://github.com/cleandart/react-dart/compare/5.6.1...5.7.0)
+
+- [#282] Add `SyntheticEvent` helpers that eliminate the need to use synthetic event class constructors. Additionally, added utilities to assist in type checking events without manually using the `is` keyword. 
+
 ## [5.6.1](https://github.com/cleandart/react-dart/compare/5.6.0...5.6.1)
 
 - [#280] Update React dev JS files to include a [workaround](https://github.com/dart-lang/sdk/issues/43193) to a DDC bug when using Chrome 86+ (fixed in Dart 2.9.3) 
