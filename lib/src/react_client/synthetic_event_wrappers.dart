@@ -62,8 +62,6 @@ class SyntheticFocusEvent extends SyntheticEvent {
 class SyntheticFormEvent extends SyntheticEvent {}
 
 /// A JS object that looks like a [DataTransfer] but isn't one.
-///
-/// See `syntheticDataTransferFactory` for more info.
 @JS()
 class NonNativeDataTransfer {
   external String get dropEffect;

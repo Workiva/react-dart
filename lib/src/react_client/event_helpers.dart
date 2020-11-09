@@ -107,6 +107,37 @@ SyntheticFormEvent fakeSyntheticFormEvent(Element element, String type) {
   }) as SyntheticFormEvent;
 }
 
+Map<String, dynamic> _wrapBaseEventPropertiesInMap({
+  SyntheticEvent baseEvent,
+  bool bubbles,
+  bool cancelable,
+  dynamic currentTarget,
+  bool defaultPrevented,
+  void Function() preventDefault,
+  void Function() stopPropagation,
+  num eventPhase,
+  bool isTrusted,
+  dynamic nativeEvent,
+  dynamic target,
+  num timeStamp,
+  String type,
+}) {
+  return {
+    'bubbles': bubbles ?? baseEvent?.bubbles ?? false,
+    'cancelable': cancelable ?? baseEvent?.cancelable ?? true,
+    'currentTarget': currentTarget ?? baseEvent?.currentTarget,
+    'defaultPrevented': defaultPrevented ?? baseEvent?.defaultPrevented ?? false,
+    'preventDefault': preventDefault ?? baseEvent?.preventDefault ?? () {},
+    'stopPropagation': stopPropagation ?? baseEvent?.stopPropagation ?? () {},
+    'eventPhase': eventPhase ?? baseEvent?.eventPhase,
+    'isTrusted': isTrusted ?? baseEvent?.isTrusted ?? false,
+    'nativeEvent': nativeEvent ?? baseEvent?.nativeEvent,
+    'target': target ?? baseEvent?.target,
+    'timeStamp': timeStamp ?? baseEvent?.timeStamp ?? 0,
+    'type': type ?? baseEvent?.type ?? 'empty event',
+  };
+}
+
 /// Returns a newly constructed [SyntheticEvent] instance.
 ///
 /// In addition to creating empty instances (by invoking without any parameters) or completely custom instances
@@ -127,20 +158,21 @@ SyntheticEvent createSyntheticEvent({
   num timeStamp,
   String type,
 }) {
-  return SyntheticEvent(
-    bubbles ?? baseEvent?.bubbles ?? false,
-    cancelable ?? baseEvent?.cancelable ?? true,
-    currentTarget ?? baseEvent?.currentTarget,
-    defaultPrevented ?? baseEvent?.defaultPrevented ?? false,
-    preventDefault ?? baseEvent?.preventDefault ?? () {},
-    stopPropagation ?? baseEvent?.stopPropagation ?? () {},
-    eventPhase ?? baseEvent?.eventPhase,
-    isTrusted ?? baseEvent?.isTrusted ?? false,
-    nativeEvent ?? baseEvent?.nativeEvent,
-    target ?? baseEvent?.target,
-    timeStamp ?? baseEvent?.timeStamp ?? 0,
-    type ?? baseEvent?.type ?? 'empty event',
-  );
+  return jsifyAndAllowInterop(_wrapBaseEventPropertiesInMap(
+    baseEvent: baseEvent,
+    bubbles: bubbles,
+    cancelable: cancelable,
+    currentTarget: currentTarget,
+    defaultPrevented: defaultPrevented,
+    preventDefault: preventDefault,
+    stopPropagation: stopPropagation,
+    eventPhase: eventPhase,
+    isTrusted: isTrusted,
+    nativeEvent: nativeEvent,
+    target: target,
+    timeStamp: timeStamp,
+    type: type,
+  )) as SyntheticEvent;
 }
 
 /// Returns a newly constructed [SyntheticClipboardEvent] instance.
@@ -164,21 +196,24 @@ SyntheticClipboardEvent createSyntheticClipboardEvent({
   String type,
   dynamic clipboardData,
 }) {
-  return SyntheticClipboardEvent(
-    bubbles ?? baseEvent?.bubbles ?? false,
-    cancelable ?? baseEvent?.cancelable ?? true,
-    currentTarget ?? baseEvent?.currentTarget,
-    defaultPrevented ?? baseEvent?.defaultPrevented ?? false,
-    preventDefault ?? baseEvent?.preventDefault ?? () {},
-    stopPropagation ?? baseEvent?.stopPropagation ?? () {},
-    eventPhase ?? baseEvent?.eventPhase,
-    isTrusted ?? baseEvent?.isTrusted ?? false,
-    nativeEvent ?? baseEvent?.nativeEvent,
-    target ?? baseEvent?.target,
-    timeStamp ?? baseEvent?.timeStamp ?? 0,
-    type ?? baseEvent?.type ?? 'empty event',
-    clipboardData ?? baseEvent?.clipboardData,
-  );
+  return jsifyAndAllowInterop({
+    ..._wrapBaseEventPropertiesInMap(
+      baseEvent: baseEvent,
+      bubbles: bubbles,
+      cancelable: cancelable,
+      currentTarget: currentTarget,
+      defaultPrevented: defaultPrevented,
+      preventDefault: preventDefault,
+      stopPropagation: stopPropagation,
+      eventPhase: eventPhase,
+      isTrusted: isTrusted,
+      nativeEvent: nativeEvent,
+      target: target,
+      timeStamp: timeStamp,
+      type: type,
+    ),
+    'clipboardData': clipboardData ?? baseEvent?.clipboardData,
+  }) as SyntheticClipboardEvent;
 }
 
 /// Returns a newly constructed [SyntheticKeyboardEvent] instance.
@@ -212,31 +247,34 @@ SyntheticKeyboardEvent createSyntheticKeyboardEvent({
   num keyCode,
   num charCode,
 }) {
-  return SyntheticKeyboardEvent(
-    bubbles ?? baseEvent?.bubbles ?? false,
-    cancelable ?? baseEvent?.cancelable ?? true,
-    currentTarget ?? baseEvent?.currentTarget,
-    defaultPrevented ?? baseEvent?.defaultPrevented ?? false,
-    preventDefault ?? baseEvent?.preventDefault ?? () {},
-    stopPropagation ?? baseEvent?.stopPropagation ?? () {},
-    eventPhase ?? baseEvent?.eventPhase,
-    isTrusted ?? baseEvent?.isTrusted ?? false,
-    nativeEvent ?? baseEvent?.nativeEvent,
-    target ?? baseEvent?.target,
-    timeStamp ?? baseEvent?.timeStamp ?? 0,
-    type ?? baseEvent?.type ?? 'empty event',
-    altKey ?? baseEvent?.altKey ?? false,
-    char ?? baseEvent?.char,
-    charCode ?? baseEvent?.charCode,
-    ctrlKey ?? baseEvent?.ctrlKey ?? false,
-    locale ?? baseEvent?.locale,
-    location ?? baseEvent?.location,
-    key ?? baseEvent?.key,
-    keyCode ?? baseEvent?.keyCode,
-    metaKey ?? baseEvent?.metaKey ?? false,
-    repeat ?? baseEvent?.repeat,
-    shiftKey ?? baseEvent?.shiftKey ?? false,
-  );
+  return jsifyAndAllowInterop({
+    ..._wrapBaseEventPropertiesInMap(
+      baseEvent: baseEvent,
+      bubbles: bubbles,
+      cancelable: cancelable,
+      currentTarget: currentTarget,
+      defaultPrevented: defaultPrevented,
+      preventDefault: preventDefault,
+      stopPropagation: stopPropagation,
+      eventPhase: eventPhase,
+      isTrusted: isTrusted,
+      nativeEvent: nativeEvent,
+      target: target,
+      timeStamp: timeStamp,
+      type: type,
+    ),
+    'altKey': altKey ?? baseEvent?.altKey ?? false,
+    'char': char ?? baseEvent?.char,
+    'charCode': charCode ?? baseEvent?.charCode,
+    'ctrlKey': ctrlKey ?? baseEvent?.ctrlKey ?? false,
+    'locale': locale ?? baseEvent?.locale,
+    'location': location ?? baseEvent?.location,
+    'key': key ?? baseEvent?.key,
+    'keyCode': keyCode ?? baseEvent?.keyCode,
+    'metaKey': metaKey ?? baseEvent?.metaKey ?? false,
+    'repeat': repeat ?? baseEvent?.repeat,
+    'shiftKey': shiftKey ?? baseEvent?.shiftKey ?? false,
+  }) as SyntheticKeyboardEvent;
 }
 
 /// Returns a newly constructed [SyntheticCompositionEvent] instance.
@@ -260,21 +298,24 @@ SyntheticCompositionEvent createSyntheticCompositionEvent({
   String type,
   String data,
 }) {
-  return SyntheticCompositionEvent(
-    bubbles ?? baseEvent?.bubbles ?? false,
-    cancelable ?? baseEvent?.cancelable ?? true,
-    currentTarget ?? baseEvent?.currentTarget,
-    defaultPrevented ?? baseEvent?.defaultPrevented ?? false,
-    preventDefault ?? baseEvent?.preventDefault ?? () {},
-    stopPropagation ?? baseEvent?.stopPropagation ?? () {},
-    eventPhase ?? baseEvent?.eventPhase,
-    isTrusted ?? baseEvent?.isTrusted ?? false,
-    nativeEvent ?? baseEvent?.nativeEvent,
-    target ?? baseEvent?.target,
-    timeStamp ?? baseEvent?.timeStamp ?? 0,
-    type ?? baseEvent?.type ?? 'empty event',
-    data ?? baseEvent?.data,
-  );
+  return jsifyAndAllowInterop({
+    ..._wrapBaseEventPropertiesInMap(
+      baseEvent: baseEvent,
+      bubbles: bubbles,
+      cancelable: cancelable,
+      currentTarget: currentTarget,
+      defaultPrevented: defaultPrevented,
+      preventDefault: preventDefault,
+      stopPropagation: stopPropagation,
+      eventPhase: eventPhase,
+      isTrusted: isTrusted,
+      nativeEvent: nativeEvent,
+      target: target,
+      timeStamp: timeStamp,
+      type: type,
+    ),
+    'data': data ?? baseEvent?.data,
+  }) as SyntheticCompositionEvent;
 }
 
 /// Returns a newly constructed [SyntheticFocusEvent] instance.
@@ -298,21 +339,24 @@ SyntheticFocusEvent createSyntheticFocusEvent({
   String type,
   /*DOMEventTarget*/ dynamic relatedTarget,
 }) {
-  return SyntheticFocusEvent(
-    bubbles ?? baseEvent?.bubbles ?? false,
-    cancelable ?? baseEvent?.cancelable ?? true,
-    currentTarget ?? baseEvent?.currentTarget,
-    defaultPrevented ?? baseEvent?.defaultPrevented ?? false,
-    preventDefault ?? baseEvent?.preventDefault ?? () {},
-    stopPropagation ?? baseEvent?.stopPropagation ?? () {},
-    eventPhase ?? baseEvent?.eventPhase,
-    isTrusted ?? baseEvent?.isTrusted ?? false,
-    nativeEvent ?? baseEvent?.nativeEvent,
-    target ?? baseEvent?.target,
-    timeStamp ?? baseEvent?.timeStamp ?? 0,
-    type ?? baseEvent?.type ?? 'empty event',
-    relatedTarget ?? baseEvent?.relatedTarget,
-  );
+  return jsifyAndAllowInterop({
+    ..._wrapBaseEventPropertiesInMap(
+      baseEvent: baseEvent,
+      bubbles: bubbles,
+      cancelable: cancelable,
+      currentTarget: currentTarget,
+      defaultPrevented: defaultPrevented,
+      preventDefault: preventDefault,
+      stopPropagation: stopPropagation,
+      eventPhase: eventPhase,
+      isTrusted: isTrusted,
+      nativeEvent: nativeEvent,
+      target: target,
+      timeStamp: timeStamp,
+      type: type,
+    ),
+    'relatedTarget': relatedTarget ?? baseEvent?.relatedTarget,
+  }) as SyntheticFocusEvent;
 }
 
 /// Returns a newly constructed [SyntheticFormEvent] instance.
@@ -335,20 +379,23 @@ SyntheticFormEvent createSyntheticFormEvent({
   num timeStamp,
   String type,
 }) {
-  return SyntheticFormEvent(
-    bubbles ?? baseEvent?.bubbles ?? false,
-    cancelable ?? baseEvent?.cancelable ?? true,
-    currentTarget ?? baseEvent?.currentTarget,
-    defaultPrevented ?? baseEvent?.defaultPrevented ?? false,
-    preventDefault ?? baseEvent?.preventDefault ?? () {},
-    stopPropagation ?? baseEvent?.stopPropagation ?? () {},
-    eventPhase ?? baseEvent?.eventPhase,
-    isTrusted ?? baseEvent?.isTrusted ?? false,
-    nativeEvent ?? baseEvent?.nativeEvent,
-    target ?? baseEvent?.target,
-    timeStamp ?? baseEvent?.timeStamp ?? 0,
-    type ?? baseEvent?.type ?? 'empty event',
-  );
+  return jsifyAndAllowInterop({
+    ..._wrapBaseEventPropertiesInMap(
+      baseEvent: baseEvent,
+      bubbles: bubbles,
+      cancelable: cancelable,
+      currentTarget: currentTarget,
+      defaultPrevented: defaultPrevented,
+      preventDefault: preventDefault,
+      stopPropagation: stopPropagation,
+      eventPhase: eventPhase,
+      isTrusted: isTrusted,
+      nativeEvent: nativeEvent,
+      target: target,
+      timeStamp: timeStamp,
+      type: type,
+    ),
+  }) as SyntheticFormEvent;
 }
 
 /// Returns a newly constructed [SyntheticMouseEvent] instance.
@@ -376,7 +423,7 @@ SyntheticMouseEvent createSyntheticMouseEvent({
   num clientX,
   num clientY,
   bool ctrlKey,
-  SyntheticDataTransfer dataTransfer,
+  NonNativeDataTransfer dataTransfer,
   bool metaKey,
   num pageX,
   num pageY,
@@ -385,34 +432,37 @@ SyntheticMouseEvent createSyntheticMouseEvent({
   num screenY,
   bool shiftKey,
 }) {
-  return SyntheticMouseEvent(
-    bubbles ?? baseEvent?.bubbles ?? false,
-    cancelable ?? baseEvent?.cancelable ?? true,
-    currentTarget ?? baseEvent?.currentTarget,
-    defaultPrevented ?? baseEvent?.defaultPrevented ?? false,
-    preventDefault ?? baseEvent?.preventDefault ?? () {},
-    stopPropagation ?? baseEvent?.stopPropagation ?? () {},
-    eventPhase ?? baseEvent?.eventPhase,
-    isTrusted ?? baseEvent?.isTrusted ?? false,
-    nativeEvent ?? baseEvent?.nativeEvent,
-    target ?? baseEvent?.target,
-    timeStamp ?? baseEvent?.timeStamp ?? 0,
-    type ?? baseEvent?.type ?? 'empty event',
-    altKey ?? baseEvent?.altKey ?? false,
-    button ?? baseEvent?.button,
-    buttons ?? baseEvent?.buttons,
-    clientX ?? baseEvent?.clientX,
-    clientY ?? baseEvent?.clientY,
-    ctrlKey ?? baseEvent?.ctrlKey ?? false,
-    dataTransfer ?? baseEvent?.dataTransfer,
-    metaKey ?? baseEvent?.metaKey ?? false,
-    pageX ?? baseEvent?.pageX,
-    pageY ?? baseEvent?.pageY,
-    relatedTarget ?? baseEvent?.relatedTarget,
-    screenX ?? baseEvent?.screenX,
-    screenY ?? baseEvent?.screenY,
-    shiftKey ?? baseEvent?.shiftKey ?? false,
-  );
+  return jsifyAndAllowInterop({
+    ..._wrapBaseEventPropertiesInMap(
+      baseEvent: baseEvent,
+      bubbles: bubbles,
+      cancelable: cancelable,
+      currentTarget: currentTarget,
+      defaultPrevented: defaultPrevented,
+      preventDefault: preventDefault,
+      stopPropagation: stopPropagation,
+      eventPhase: eventPhase,
+      isTrusted: isTrusted,
+      nativeEvent: nativeEvent,
+      target: target,
+      timeStamp: timeStamp,
+      type: type,
+    ),
+    'altKey': altKey ?? baseEvent?.altKey ?? false,
+    'button': button ?? baseEvent?.button,
+    'buttons': buttons ?? baseEvent?.buttons,
+    'clientX': clientX ?? baseEvent?.clientX,
+    'clientY': clientY ?? baseEvent?.clientY,
+    'ctrlKey': ctrlKey ?? baseEvent?.ctrlKey ?? false,
+    'dataTransfer': dataTransfer ?? baseEvent?.dataTransfer,
+    'metaKey': metaKey ?? baseEvent?.metaKey ?? false,
+    'pageX': pageX ?? baseEvent?.pageX,
+    'pageY': pageY ?? baseEvent?.pageY,
+    'relatedTarget': relatedTarget ?? baseEvent?.relatedTarget,
+    'screenX': screenX ?? baseEvent?.screenX,
+    'screenY': screenY ?? baseEvent?.screenY,
+    'shiftKey': shiftKey ?? baseEvent?.shiftKey ?? false,
+  }) as SyntheticMouseEvent;
 }
 
 /// Returns a newly constructed [SyntheticPointerEvent] instance.
@@ -445,30 +495,33 @@ SyntheticPointerEvent createSyntheticPointerEvent({
   String pointerType,
   bool isPrimary,
 }) {
-  return SyntheticPointerEvent(
-    bubbles ?? baseEvent?.bubbles ?? false,
-    cancelable ?? baseEvent?.cancelable ?? true,
-    currentTarget ?? baseEvent?.currentTarget,
-    defaultPrevented ?? baseEvent?.defaultPrevented ?? false,
-    preventDefault ?? baseEvent?.preventDefault ?? () {},
-    stopPropagation ?? baseEvent?.stopPropagation ?? () {},
-    eventPhase ?? baseEvent?.eventPhase,
-    isTrusted ?? baseEvent?.isTrusted ?? false,
-    nativeEvent ?? baseEvent?.nativeEvent,
-    target ?? baseEvent?.target,
-    timeStamp ?? baseEvent?.timeStamp ?? 0,
-    type ?? baseEvent?.type ?? 'empty event',
-    pointerId ?? baseEvent?.pointerId,
-    width ?? baseEvent?.width,
-    height ?? baseEvent?.height,
-    pressure ?? baseEvent?.pressure,
-    tangentialPressure ?? baseEvent?.tangentialPressure,
-    tiltX ?? baseEvent?.tiltX,
-    tiltY ?? baseEvent?.tiltY,
-    twist ?? baseEvent?.twist,
-    pointerType ?? baseEvent?.pointerType,
-    isPrimary ?? baseEvent?.isPrimary,
-  );
+  return jsifyAndAllowInterop({
+    ..._wrapBaseEventPropertiesInMap(
+      baseEvent: baseEvent,
+      bubbles: bubbles,
+      cancelable: cancelable,
+      currentTarget: currentTarget,
+      defaultPrevented: defaultPrevented,
+      preventDefault: preventDefault,
+      stopPropagation: stopPropagation,
+      eventPhase: eventPhase,
+      isTrusted: isTrusted,
+      nativeEvent: nativeEvent,
+      target: target,
+      timeStamp: timeStamp,
+      type: type,
+    ),
+    'pointerId': pointerId ?? baseEvent?.pointerId,
+    'width': width ?? baseEvent?.width,
+    'height': height ?? baseEvent?.height,
+    'pressure': pressure ?? baseEvent?.pressure,
+    'tangentialPressure': tangentialPressure ?? baseEvent?.tangentialPressure,
+    'tiltX': tiltX ?? baseEvent?.tiltX,
+    'tiltY': tiltY ?? baseEvent?.tiltY,
+    'twist': twist ?? baseEvent?.twist,
+    'pointerType': pointerType ?? baseEvent?.pointerType,
+    'isPrimary': isPrimary ?? baseEvent?.isPrimary,
+  }) as SyntheticPointerEvent;
 }
 
 /// Returns a newly constructed [SyntheticTouchEvent] instance.
@@ -498,27 +551,30 @@ SyntheticTouchEvent createSyntheticTouchEvent({
   /*DOMTouchList*/ dynamic targetTouches,
   /*DOMTouchList*/ dynamic touches,
 }) {
-  return SyntheticTouchEvent(
-    bubbles ?? baseEvent?.bubbles ?? false,
-    cancelable ?? baseEvent?.cancelable ?? true,
-    currentTarget ?? baseEvent?.currentTarget,
-    defaultPrevented ?? baseEvent?.defaultPrevented ?? false,
-    preventDefault ?? baseEvent?.preventDefault ?? () {},
-    stopPropagation ?? baseEvent?.stopPropagation ?? () {},
-    eventPhase ?? baseEvent?.eventPhase,
-    isTrusted ?? baseEvent?.isTrusted ?? false,
-    nativeEvent ?? baseEvent?.nativeEvent,
-    target ?? baseEvent?.target,
-    timeStamp ?? baseEvent?.timeStamp ?? 0,
-    type ?? baseEvent?.type ?? 'empty event',
-    altKey ?? baseEvent?.altKey ?? false,
-    changedTouches ?? baseEvent?.changedTouches,
-    ctrlKey ?? baseEvent?.ctrlKey ?? false,
-    metaKey ?? baseEvent?.metaKey ?? false,
-    shiftKey ?? baseEvent?.shiftKey ?? false,
-    targetTouches ?? baseEvent?.targetTouches,
-    touches ?? baseEvent?.touches,
-  );
+  return jsifyAndAllowInterop({
+    ..._wrapBaseEventPropertiesInMap(
+      baseEvent: baseEvent,
+      bubbles: bubbles,
+      cancelable: cancelable,
+      currentTarget: currentTarget,
+      defaultPrevented: defaultPrevented,
+      preventDefault: preventDefault,
+      stopPropagation: stopPropagation,
+      eventPhase: eventPhase,
+      isTrusted: isTrusted,
+      nativeEvent: nativeEvent,
+      target: target,
+      timeStamp: timeStamp,
+      type: type,
+    ),
+    'altKey': altKey ?? baseEvent?.altKey ?? false,
+    'changedTouches': changedTouches ?? baseEvent?.changedTouches,
+    'ctrlKey': ctrlKey ?? baseEvent?.ctrlKey ?? false,
+    'metaKey': metaKey ?? baseEvent?.metaKey ?? false,
+    'shiftKey': shiftKey ?? baseEvent?.shiftKey ?? false,
+    'targetTouches': targetTouches ?? baseEvent?.targetTouches,
+    'touches': touches ?? baseEvent?.touches,
+  }) as SyntheticTouchEvent;
 }
 
 /// Returns a newly constructed [SyntheticTransitionEvent] instance.
@@ -544,23 +600,26 @@ SyntheticTransitionEvent createSyntheticTransitionEvent({
   num elapsedTime,
   String pseudoElement,
 }) {
-  return SyntheticTransitionEvent(
-    bubbles ?? baseEvent?.bubbles ?? false,
-    cancelable ?? baseEvent?.cancelable ?? true,
-    currentTarget ?? baseEvent?.currentTarget,
-    defaultPrevented ?? baseEvent?.defaultPrevented ?? false,
-    preventDefault ?? baseEvent?.preventDefault ?? () {},
-    stopPropagation ?? baseEvent?.stopPropagation ?? () {},
-    eventPhase ?? baseEvent?.eventPhase,
-    isTrusted ?? baseEvent?.isTrusted ?? false,
-    nativeEvent ?? baseEvent?.nativeEvent,
-    target ?? baseEvent?.target,
-    timeStamp ?? baseEvent?.timeStamp ?? 0,
-    type ?? baseEvent?.type ?? 'empty event',
-    propertyName ?? baseEvent?.propertyName,
-    elapsedTime ?? baseEvent?.elapsedTime,
-    pseudoElement ?? baseEvent?.pseudoElement,
-  );
+  return jsifyAndAllowInterop({
+    ..._wrapBaseEventPropertiesInMap(
+      baseEvent: baseEvent,
+      bubbles: bubbles,
+      cancelable: cancelable,
+      currentTarget: currentTarget,
+      defaultPrevented: defaultPrevented,
+      preventDefault: preventDefault,
+      stopPropagation: stopPropagation,
+      eventPhase: eventPhase,
+      isTrusted: isTrusted,
+      nativeEvent: nativeEvent,
+      target: target,
+      timeStamp: timeStamp,
+      type: type,
+    ),
+    'propertyName': propertyName ?? baseEvent?.propertyName,
+    'elapsedTime': elapsedTime ?? baseEvent?.elapsedTime,
+    'pseudoElement': pseudoElement ?? baseEvent?.pseudoElement,
+  }) as SyntheticTransitionEvent;
 }
 
 /// Returns a newly constructed [SyntheticAnimationEvent] instance.
@@ -586,23 +645,26 @@ SyntheticAnimationEvent createSyntheticAnimationEvent({
   num elapsedTime,
   String pseudoElement,
 }) {
-  return SyntheticAnimationEvent(
-    bubbles ?? baseEvent?.bubbles ?? false,
-    cancelable ?? baseEvent?.cancelable ?? true,
-    currentTarget ?? baseEvent?.currentTarget,
-    defaultPrevented ?? baseEvent?.defaultPrevented ?? false,
-    preventDefault ?? baseEvent?.preventDefault ?? () {},
-    stopPropagation ?? baseEvent?.stopPropagation ?? () {},
-    eventPhase ?? baseEvent?.eventPhase,
-    isTrusted ?? baseEvent?.isTrusted ?? false,
-    nativeEvent ?? baseEvent?.nativeEvent,
-    target ?? baseEvent?.target,
-    timeStamp ?? baseEvent?.timeStamp ?? 0,
-    type ?? baseEvent?.type ?? 'empty event',
-    animationName ?? baseEvent?.animationName,
-    elapsedTime ?? baseEvent?.elapsedTime,
-    pseudoElement ?? baseEvent?.pseudoElement,
-  );
+  return jsifyAndAllowInterop({
+    ..._wrapBaseEventPropertiesInMap(
+      baseEvent: baseEvent,
+      bubbles: bubbles,
+      cancelable: cancelable,
+      currentTarget: currentTarget,
+      defaultPrevented: defaultPrevented,
+      preventDefault: preventDefault,
+      stopPropagation: stopPropagation,
+      eventPhase: eventPhase,
+      isTrusted: isTrusted,
+      nativeEvent: nativeEvent,
+      target: target,
+      timeStamp: timeStamp,
+      type: type,
+    ),
+    'animationName': animationName ?? baseEvent?.animationName,
+    'elapsedTime': elapsedTime ?? baseEvent?.elapsedTime,
+    'pseudoElement': pseudoElement ?? baseEvent?.pseudoElement,
+  }) as SyntheticAnimationEvent;
 }
 
 /// Returns a newly constructed [SyntheticUIEvent] instance.
@@ -627,22 +689,25 @@ SyntheticUIEvent createSyntheticUIEvent({
   num detail,
   /*DOMAbstractView*/ dynamic view,
 }) {
-  return SyntheticUIEvent(
-    bubbles ?? baseEvent?.bubbles ?? false,
-    cancelable ?? baseEvent?.cancelable ?? true,
-    currentTarget ?? baseEvent?.currentTarget,
-    defaultPrevented ?? baseEvent?.defaultPrevented ?? false,
-    preventDefault ?? baseEvent?.preventDefault ?? () {},
-    stopPropagation ?? baseEvent?.stopPropagation ?? () {},
-    eventPhase ?? baseEvent?.eventPhase,
-    isTrusted ?? baseEvent?.isTrusted ?? false,
-    nativeEvent ?? baseEvent?.nativeEvent,
-    target ?? baseEvent?.target,
-    timeStamp ?? baseEvent?.timeStamp ?? 0,
-    type ?? baseEvent?.type ?? 'empty event',
-    detail ?? baseEvent?.detail,
-    view ?? baseEvent?.view,
-  );
+  return jsifyAndAllowInterop({
+    ..._wrapBaseEventPropertiesInMap(
+      baseEvent: baseEvent,
+      bubbles: bubbles,
+      cancelable: cancelable,
+      currentTarget: currentTarget,
+      defaultPrevented: defaultPrevented,
+      preventDefault: preventDefault,
+      stopPropagation: stopPropagation,
+      eventPhase: eventPhase,
+      isTrusted: isTrusted,
+      nativeEvent: nativeEvent,
+      target: target,
+      timeStamp: timeStamp,
+      type: type,
+    ),
+    'detail': detail ?? baseEvent?.detail,
+    'view': view ?? baseEvent?.view,
+  }) as SyntheticUIEvent;
 }
 
 /// Returns a newly constructed [SyntheticWheelEvent] instance.
@@ -669,24 +734,27 @@ SyntheticWheelEvent createSyntheticWheelEvent({
   num deltaY,
   num deltaZ,
 }) {
-  return SyntheticWheelEvent(
-    bubbles ?? baseEvent?.bubbles ?? false,
-    cancelable ?? baseEvent?.cancelable ?? true,
-    currentTarget ?? baseEvent?.currentTarget,
-    defaultPrevented ?? baseEvent?.defaultPrevented ?? false,
-    preventDefault ?? baseEvent?.preventDefault ?? () {},
-    stopPropagation ?? baseEvent?.stopPropagation ?? () {},
-    eventPhase ?? baseEvent?.eventPhase,
-    isTrusted ?? baseEvent?.isTrusted ?? false,
-    nativeEvent ?? baseEvent?.nativeEvent,
-    target ?? baseEvent?.target,
-    timeStamp ?? baseEvent?.timeStamp ?? 0,
-    type ?? baseEvent?.type ?? 'empty event',
-    deltaX ?? baseEvent?.deltaX,
-    deltaMode ?? baseEvent?.deltaMode,
-    deltaY ?? baseEvent?.deltaY,
-    deltaZ ?? baseEvent?.deltaZ,
-  );
+  return jsifyAndAllowInterop({
+    ..._wrapBaseEventPropertiesInMap(
+      baseEvent: baseEvent,
+      bubbles: bubbles,
+      cancelable: cancelable,
+      currentTarget: currentTarget,
+      defaultPrevented: defaultPrevented,
+      preventDefault: preventDefault,
+      stopPropagation: stopPropagation,
+      eventPhase: eventPhase,
+      isTrusted: isTrusted,
+      nativeEvent: nativeEvent,
+      target: target,
+      timeStamp: timeStamp,
+      type: type,
+    ),
+    'deltaX': deltaX ?? baseEvent?.deltaX,
+    'deltaMode': deltaMode ?? baseEvent?.deltaMode,
+    'deltaY': deltaY ?? baseEvent?.deltaY,
+    'deltaZ': deltaZ ?? baseEvent?.deltaZ,
+  }) as SyntheticWheelEvent;
 }
 
 extension SyntheticEventTypeHelpers on SyntheticEvent {
