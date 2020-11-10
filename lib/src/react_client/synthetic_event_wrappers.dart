@@ -113,7 +113,7 @@ class SyntheticMouseEvent extends SyntheticEvent {
   external num get clientX;
   external num get clientY;
   external bool get ctrlKey;
-  external dynamic get dataTransfer;
+  external NonNativeDataTransfer get dataTransfer;
   external bool get metaKey;
   external num get pageX;
   external num get pageY;
