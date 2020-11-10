@@ -17,8 +17,6 @@ import 'package:react/react_client/js_interop_helpers.dart';
 import 'package:react/react_dom.dart' as react_dom;
 import 'package:react/src/react_client/event_prop_key_to_event_factory.dart';
 
-import 'util.dart';
-
 main() {
   group('unconvertJsProps', () {
     const List testChildren = const ['child1', 'child2'];
