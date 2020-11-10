@@ -1986,6 +1986,10 @@ main() {
           group('correctly returns false', () {
             commonFalseTests(createSyntheticWheelEvent, (e) => e.isWheelEvent);
           });
+
+          group('isWheelEvent', () {
+            test('returns true when the event has a necessary field', () {});
+          });
         });
       });
     });

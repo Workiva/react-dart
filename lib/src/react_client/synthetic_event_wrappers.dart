@@ -9,6 +9,11 @@ import 'package:js/js.dart';
 
 @JS()
 class SyntheticEvent {
+  /// [SyntheticEvent]s cannot be manually instantiated.
+  ///
+  /// Use `createSyntheticEvent` instead.
+  external factory SyntheticEvent._();
+
   external bool get bubbles;
   external bool get cancelable;
   external get currentTarget;
@@ -30,11 +35,21 @@ class SyntheticEvent {
 
 @JS()
 class SyntheticClipboardEvent extends SyntheticEvent {
+  /// [SyntheticClipboardEvent]s cannot be manually instantiated.
+  ///
+  /// Use `createSyntheticClipboardEvent` instead.
+  external factory SyntheticClipboardEvent._();
+
   external get clipboardData;
 }
 
 @JS()
 class SyntheticKeyboardEvent extends SyntheticEvent {
+  /// [SyntheticKeyboardEvent]s cannot be manually instantiated.
+  ///
+  /// Use `createSyntheticKeyboardEvent` instead.
+  external factory SyntheticKeyboardEvent._();
+
   external bool get altKey;
   external String get char;
   external bool get ctrlKey;
@@ -50,16 +65,31 @@ class SyntheticKeyboardEvent extends SyntheticEvent {
 
 @JS()
 class SyntheticCompositionEvent extends SyntheticEvent {
+  /// [SyntheticCompositionEvent]s cannot be manually instantiated.
+  ///
+  /// Use `createSyntheticCompositionEvent` instead.
+  external factory SyntheticCompositionEvent._();
+
   external String get data;
 }
 
 @JS()
 class SyntheticFocusEvent extends SyntheticEvent {
+  /// [SyntheticFocusEvent]s cannot be manually instantiated.
+  ///
+  /// Use `createSyntheticFocusEvent` instead.
+  external factory SyntheticFocusEvent._();
+
   external EventTarget get relatedTarget;
 }
 
 @JS()
-class SyntheticFormEvent extends SyntheticEvent {}
+class SyntheticFormEvent extends SyntheticEvent {
+  /// [SyntheticFormEvent]s cannot be manually instantiated.
+  ///
+  /// Use `createSyntheticFormEvent` instead.
+  external factory SyntheticFormEvent._();
+}
 
 /// A JS object that looks like a [DataTransfer] but isn't one.
 @JS()
@@ -72,6 +102,11 @@ class NonNativeDataTransfer {
 
 @JS()
 class SyntheticMouseEvent extends SyntheticEvent {
+  /// [SyntheticMouseEvent]s cannot be manually instantiated.
+  ///
+  /// Use `createSyntheticMouseEvent` instead.
+  external factory SyntheticMouseEvent._();
+
   external bool get altKey;
   external num get button;
   external num get buttons;
@@ -90,6 +125,11 @@ class SyntheticMouseEvent extends SyntheticEvent {
 
 @JS()
 class SyntheticPointerEvent extends SyntheticEvent {
+  /// [SyntheticPointerEvent]s cannot be manually instantiated.
+  ///
+  /// Use `createSyntheticPointerEvent` instead.
+  external factory SyntheticPointerEvent._();
+
   external num get pointerId;
   external num get width;
   external num get height;
@@ -104,6 +144,11 @@ class SyntheticPointerEvent extends SyntheticEvent {
 
 @JS()
 class SyntheticTouchEvent extends SyntheticEvent {
+  /// [SyntheticTouchEvent]s cannot be manually instantiated.
+  ///
+  /// Use `createSyntheticTouchEvent` instead.
+  external factory SyntheticTouchEvent._();
+
   external bool get altKey;
   external TouchList get changedTouches;
   external bool get ctrlKey;
@@ -115,6 +160,11 @@ class SyntheticTouchEvent extends SyntheticEvent {
 
 @JS()
 class SyntheticTransitionEvent extends SyntheticEvent {
+  /// [SyntheticTransitionEvent]s cannot be manually instantiated.
+  ///
+  /// Use `createSyntheticTransitionEvent` instead.
+  external factory SyntheticTransitionEvent._();
+
   external String get propertyName;
   external num get elapsedTime;
   external String get pseudoElement;
@@ -122,6 +172,11 @@ class SyntheticTransitionEvent extends SyntheticEvent {
 
 @JS()
 class SyntheticAnimationEvent extends SyntheticEvent {
+  /// [SyntheticAnimationEvent]s cannot be manually instantiated.
+  ///
+  /// Use `createSyntheticAnimationEvent` instead.
+  external factory SyntheticAnimationEvent._();
+
   external String get animationName;
   external num get elapsedTime;
   external String get pseudoElement;
@@ -129,12 +184,22 @@ class SyntheticAnimationEvent extends SyntheticEvent {
 
 @JS()
 class SyntheticUIEvent extends SyntheticEvent {
+  /// [SyntheticUIEvent]s cannot be manually instantiated.
+  ///
+  /// Use `createSyntheticUIEvent` instead.
+  external factory SyntheticUIEvent._();
+
   external num get detail;
   external get view;
 }
 
 @JS()
 class SyntheticWheelEvent extends SyntheticEvent {
+  /// [SyntheticWheelEvent]s cannot be manually instantiated.
+  ///
+  /// Use `createSyntheticWheelEvent` instead.
+  external factory SyntheticWheelEvent._();
+
   external num get deltaX;
   external num get deltaMode;
   external num get deltaY;
