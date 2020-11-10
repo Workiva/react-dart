@@ -847,7 +847,7 @@ main() {
   });
 }
 
-ReactDartComponentFactoryProxy2 ContextProviderWrapper = react.registerComponent(() => new _ContextProviderWrapper());
+ReactDartComponentFactoryProxy2 ContextProviderWrapper = react.registerComponent2(() => new _ContextProviderWrapper());
 
 class _ContextProviderWrapper extends react.Component2 {
   get initialState {

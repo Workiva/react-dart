@@ -4,7 +4,6 @@ library react.lifecycle_test.component2;
 
 import "package:js/js.dart";
 import 'package:react/react.dart' as react;
-import 'package:react/react_client.dart';
 import 'package:react/react_client/react_interop.dart';
 
 import 'util.dart';

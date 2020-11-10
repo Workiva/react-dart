@@ -169,7 +169,7 @@ void sharedMemoTests(MemoFunction memoFunction) {
   });
 }
 
-final MemoTestWrapper = react.registerComponent(() => _MemoTestWrapperComponent());
+final MemoTestWrapper = react.registerComponent2(() => _MemoTestWrapperComponent());
 
 class _MemoTestWrapperComponent extends react.Component2 {
   int redrawCount = 0;
