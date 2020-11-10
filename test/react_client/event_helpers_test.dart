@@ -42,8 +42,7 @@ main() {
       // Function properties
       expect(() => event.stopPropagation(), returnsNormally);
       expect(() => event.preventDefault(), returnsNormally);
-      // TODO should this still pass?
-//      expect(event.defaultPrevented, isTrue, reason: 'calling preventDefault sets the value to true.');
+      expect(event.defaultPrevented, isFalse, reason: 'The utilities here only provide an interface to grab properties off a map - there is no underlying instance for `preventDefault` to mutate');
     }
 
     void testSyntheticEventBaseForMergeTests(SyntheticEvent event) {
@@ -66,8 +65,6 @@ main() {
       // Function properties
       expect(() => event.stopPropagation(), returnsNormally, reason: 'this defaults to an empty function');
       expect(() => event.preventDefault(), returnsNormally);
-      // TODO should this still pass?
-//      expect(event.defaultPrevented, isTrue, reason: 'calling preventDefault sets the value to true.');
     }
 
     void testSyntheticEventBaseAfterMerge(SyntheticEvent event) {
