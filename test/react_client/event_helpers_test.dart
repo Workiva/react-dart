@@ -1702,6 +1702,20 @@ main() {
 
         group('correctly returns false', () {
           commonFalseTests(createSyntheticKeyboardEvent, (e) => e.isKeyboardEvent);
+
+          test('when a non-unique field is non-null', () {
+            final e1 = createSyntheticKeyboardEvent(altKey: true);
+            expect(e1.isKeyboardEvent, isFalse);
+
+            final e2 = createSyntheticKeyboardEvent(ctrlKey: true);
+            expect(e2.isKeyboardEvent, isFalse);
+
+            final e3 = createSyntheticKeyboardEvent(metaKey: true);
+            expect(e3.isKeyboardEvent, isFalse);
+
+            final e4 = createSyntheticKeyboardEvent(shiftKey: true);
+            expect(e4.isKeyboardEvent, isFalse);
+          });
         });
       });
 
@@ -1813,12 +1827,24 @@ main() {
         });
 
         group('correctly returns false', () {
-          test('when the event only has `relatedTarget` set', () {
-            final event = createSyntheticMouseEvent(relatedTarget: 'target');
-            expect(event.isMouseEvent, isFalse);
-          });
-
           commonFalseTests(createSyntheticMouseEvent, (e) => e.isMouseEvent, isEventAMouseEvent: true);
+
+          test('when a non-unique field is non-null', () {
+            final e1 = createSyntheticMouseEvent(altKey: true);
+            expect(e1.isKeyboardEvent, isFalse);
+
+            final e2 = createSyntheticMouseEvent(ctrlKey: true);
+            expect(e2.isKeyboardEvent, isFalse);
+
+            final e3 = createSyntheticMouseEvent(metaKey: true);
+            expect(e3.isKeyboardEvent, isFalse);
+
+            final e4 = createSyntheticMouseEvent(shiftKey: true);
+            expect(e4.isKeyboardEvent, isFalse);
+
+            final e5 = createSyntheticMouseEvent(relatedTarget: 'target');
+            expect(e5.isMouseEvent, isFalse);
+          });
         });
 
         group('isPointerEvent', () {
@@ -1873,6 +1899,20 @@ main() {
 
           group('correctly returns false', () {
             commonFalseTests(createSyntheticTouchEvent, (e) => e.isTouchEvent);
+
+            test('when a non-unique field is non-null', () {
+              final e1 = createSyntheticTouchEvent(altKey: true);
+              expect(e1.isKeyboardEvent, isFalse);
+
+              final e2 = createSyntheticTouchEvent(ctrlKey: true);
+              expect(e2.isKeyboardEvent, isFalse);
+
+              final e3 = createSyntheticTouchEvent(metaKey: true);
+              expect(e3.isKeyboardEvent, isFalse);
+
+              final e4 = createSyntheticTouchEvent(shiftKey: true);
+              expect(e4.isKeyboardEvent, isFalse);
+            });
           });
         });
 
@@ -1884,6 +1924,14 @@ main() {
 
           group('correctly returns false', () {
             commonFalseTests(createSyntheticTransitionEvent, (e) => e.isTransitionEvent);
+
+            test('when a non-unique field is non-null', () {
+              final e1 = createSyntheticTransitionEvent(elapsedTime: 0);
+              expect(e1.isKeyboardEvent, isFalse);
+
+              final e2 = createSyntheticTransitionEvent(pseudoElement: 'el');
+              expect(e2.isKeyboardEvent, isFalse);
+            });
           });
         });
 
@@ -1895,6 +1943,14 @@ main() {
 
           group('correctly returns false', () {
             commonFalseTests(createSyntheticAnimationEvent, (e) => e.isAnimationEvent);
+
+            test('when a non-unique field is non-null', () {
+              final e1 = createSyntheticAnimationEvent(elapsedTime: 0);
+              expect(e1.isKeyboardEvent, isFalse);
+
+              final e2 = createSyntheticAnimationEvent(pseudoElement: 'el');
+              expect(e2.isKeyboardEvent, isFalse);
+            });
           });
         });
 

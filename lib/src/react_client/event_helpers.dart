@@ -789,8 +789,6 @@ extension SyntheticEventTypeHelpers on SyntheticEvent {
   /// - ctrlKey
   /// - metaKey
   /// - shiftKey
-  ///
-  /// TODO suggest alternative here
   bool get isKeyboardEvent {
     final typedThis = this as SyntheticKeyboardEvent;
 
@@ -860,8 +858,6 @@ extension SyntheticEventTypeHelpers on SyntheticEvent {
   /// - metaKey
   /// - relatedTarget
   /// - shiftKey
-  ///
-  /// TODO suggest alternative here
   bool get isMouseEvent {
     final typedThis = this as SyntheticMouseEvent;
 
@@ -910,7 +906,20 @@ extension SyntheticEventTypeHelpers on SyntheticEvent {
     return false;
   }
 
-  /// Returns whether this is a [SyntheticTouchEvent].
+  /// Uses Duck Typing to attempt to detect if the event instance is a [SyntheticTouchEvent].
+  ///
+  /// __NOTE:__ A field unique to this class must be non-null in order for this to return true, even
+  /// if the event instance was instantiated as a [SyntheticTouchEvent]. For this class, this means
+  /// that one of the following fields must be non-null:
+  /// - changedTouches
+  /// - targetTouches
+  /// - touches
+  ///
+  /// The following fields __are not__ considered in type detection:
+  /// - altKey
+  /// - ctrlKey
+  /// - metaKey
+  /// - shiftKey
   bool get isTouchEvent {
     final typedThis = this as SyntheticTouchEvent;
 
@@ -921,7 +930,16 @@ extension SyntheticEventTypeHelpers on SyntheticEvent {
     return false;
   }
 
-  /// Returns whether this is a [SyntheticTransitionEvent].
+  /// Uses Duck Typing to attempt to detect if the event instance is a [SyntheticTransitionEvent].
+  ///
+  /// __NOTE:__ A field unique to this class must be non-null in order for this to return true, even
+  /// if the event instance was instantiated as a [SyntheticTransitionEvent]. For this class, this means
+  /// that one of the following fields must be non-null:
+  /// - propertyName
+  ///
+  /// The following fields __are not__ considered in type detection:
+  /// - elapsedTime
+  /// - pseudoElement
   bool get isTransitionEvent {
     final typedThis = this as SyntheticTransitionEvent;
 
@@ -930,7 +948,16 @@ extension SyntheticEventTypeHelpers on SyntheticEvent {
     return false;
   }
 
-  /// Returns whether this is a [SyntheticAnimationEvent].
+  /// Uses Duck Typing to attempt to detect if the event instance is a [SyntheticAnimationEvent].
+  ///
+  /// __NOTE:__ A field unique to this class must be non-null in order for this to return true, even
+  /// if the event instance was instantiated as a [SyntheticAnimationEvent]. For this class, this means
+  /// that one of the following fields must be non-null:
+  /// - animationName
+  ///
+  /// The following fields __are not__ considered in type detection:
+  /// - elapsedTime
+  /// - pseudoElement
   bool get isAnimationEvent {
     final typedThis = this as SyntheticAnimationEvent;
 
@@ -939,7 +966,13 @@ extension SyntheticEventTypeHelpers on SyntheticEvent {
     return false;
   }
 
-  /// Returns whether this is a [SyntheticUIEvent].
+  /// Uses Duck Typing to attempt to detect if the event instance is a [SyntheticUIEvent].
+  ///
+  /// __NOTE:__ A field unique to this class must be non-null in order for this to return true, even
+  /// if the event instance was instantiated as a [SyntheticUIEvent]. For this class, this means
+  /// that one of the following fields must be non-null:
+  /// - detail
+  /// - view
   bool get isUiEvent {
     final typedThis = this as SyntheticUIEvent;
 
@@ -949,7 +982,15 @@ extension SyntheticEventTypeHelpers on SyntheticEvent {
     return false;
   }
 
-  /// Returns whether this is a [SyntheticWheelEvent].
+  /// Uses Duck Typing to attempt to detect if the event instance is a [SyntheticWheelEvent].
+  ///
+  /// __NOTE:__ A field unique to this class must be non-null in order for this to return true, even
+  /// if the event instance was instantiated as a [SyntheticWheelEvent]. For this class, this means
+  /// that one of the following fields must be non-null:
+  /// - deltaX
+  /// - deltaMode
+  /// - deltaY
+  /// - deltaZ
   bool get isWheelEvent {
     final typedThis = this as SyntheticWheelEvent;
 
