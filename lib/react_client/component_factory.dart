@@ -16,6 +16,7 @@ import 'package:react/src/js_interop_util.dart';
 import 'package:react/src/typedefs.dart';
 import 'package:react/src/react_client/factory_util.dart';
 
+// ignore: deprecated_member_use_from_same_package
 export 'package:react/src/react_client/factory_util.dart' show unconvertJsEventHandler;
 
 /// Prepares [children] to be passed to the ReactJS [React.createElement] and
@@ -41,10 +42,6 @@ dynamic listifyChildren(dynamic children) {
 ///
 /// If `style` is specified in props, then it too is shallow-converted and included
 /// in the returned Map.
-///
-/// Any JS event handlers included in the props for the given [instance] will be
-/// unconverted such that the original JS handlers are returned instead of their
-/// Dart synthetic counterparts.
 Map unconvertJsProps(/* ReactElement|ReactComponent */ instance) {
   var props = Map.from(JsBackedMap.backedBy(instance.props));
 
