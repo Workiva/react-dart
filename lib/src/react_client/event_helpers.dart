@@ -3,6 +3,7 @@ library react_client.event_helpers;
 
 import 'dart:html';
 
+import 'package:js/js_util.dart';
 import 'package:react/react.dart';
 import 'package:react/react_client/js_interop_helpers.dart';
 
@@ -758,247 +759,43 @@ SyntheticWheelEvent createSyntheticWheelEvent({
 }
 
 extension SyntheticEventTypeHelpers on SyntheticEvent {
-  /// Uses Duck Typing to attempt to detect if the event instance is a [SyntheticClipboardEvent].
-  ///
-  /// __NOTE:__ A field unique to this class must be non-null in order for this to return true, even
-  /// if the event instance was instantiated as a [SyntheticClipboardEvent]. For this class, this means
-  /// that one of the following fields must be non-null:
-  /// - clipboardData
-  bool get isClipboardEvent {
-    final typedThis = this as SyntheticClipboardEvent;
-    if (typedThis.clipboardData != null) return true;
+  /// Uses Duck Typing to detect if the event instance is a [SyntheticClipboardEvent].
+  bool get isClipboardEvent => hasProperty(this, 'clipboardData');
 
-    return false;
-  }
+  /// Uses Duck Typing to detect if the event instance is a [SyntheticKeyboardEvent].
+  bool get isKeyboardEvent => hasProperty(this, 'key');
 
-  /// Uses Duck Typing to attempt to detect if the event instance is a [SyntheticKeyboardEvent].
-  ///
-  /// __NOTE:__ A field unique to this class must be non-null in order for this to return true, even
-  /// if the event instance was instantiated as a [SyntheticKeyboardEvent]. For this class, this means
-  /// that one of the following fields must be non-null:
-  /// - char
-  /// - charCode
-  /// - key
-  /// - keyCode
-  /// - locale
-  /// - location
-  /// - repeat
-  ///
-  /// The following fields __are not__ considered in type detection:
-  /// - altKey
-  /// - ctrlKey
-  /// - metaKey
-  /// - shiftKey
-  bool get isKeyboardEvent {
-    final typedThis = this as SyntheticKeyboardEvent;
+  /// Uses Duck Typing to detect if the event instance is a [SyntheticCompositionEvent].
+  bool get isCompositionEvent => hasProperty(this, 'data');
 
-    if (typedThis.char != null) return true;
-    if (typedThis.locale != null) return true;
-    if (typedThis.location != null) return true;
-    if (typedThis.key != null) return true;
-    if (typedThis.repeat != null) return true;
-    if (typedThis.keyCode != null) return true;
-    if (typedThis.charCode != null) return true;
+  /// Uses Duck Typing to detect if the event instance is a [SyntheticFocusEvent].
+  bool get isFocusEvent => hasProperty(this, 'relatedTarget') && !hasProperty(this, 'button');
 
-    return false;
-  }
-
-  /// Uses Duck Typing to attempt to detect if the event instance is a [SyntheticCompositionEvent].
-  ///
-  /// __NOTE:__ A field unique to this class must be non-null in order for this to return true, even
-  /// if the event instance was instantiated as a [SyntheticCompositionEvent]. For this class, this means
-  /// that one of the following fields must be non-null:
-  /// - data
-  bool get isCompositionEvent {
-    final typedThis = this as SyntheticCompositionEvent;
-
-    if (typedThis.data != null) return true;
-
-    return false;
-  }
-
-  /// Uses Duck Typing to attempt to detect if the event instance is a [SyntheticFocusEvent].
-  ///
-  /// __NOTE:__ A field unique to this class must be non-null in order for this to return true, even
-  /// if the event instance was instantiated as a [SyntheticFocusEvent]. For this class, this means
-  /// that one of the following fields must be non-null:
-  /// - relatedTarget
-  bool get isFocusEvent {
-    final typedThis = this as SyntheticFocusEvent;
-    if (typedThis.relatedTarget != null) return true;
-
-    return false;
-  }
-
-  /// Uses Duck Typing to attempt to detect if the event instance is a [SyntheticFormEvent].
+  /// Uses Duck Typing to detect if the event instance is a [SyntheticFormEvent].
   ///
   /// __NOTE:__ This getter is here for completeness, but because the interface for form events
   /// is the same as that of a [SyntheticEvent] (the base for all other synthetic event types),
   /// via Duck Typing every [SyntheticEvent] is considered a [SyntheticFormEvent].
   bool get isFormEvent => true;
 
-  /// Uses Duck Typing to attempt to detect if the event instance is a [SyntheticMouseEvent].
-  ///
-  /// __NOTE:__ A field unique to this class must be non-null in order for this to return true, even
-  /// if the event instance was instantiated as a [SyntheticMouseEvent]. For this class, this means
-  /// that one of the following fields must be non-null:
-  /// - button
-  /// - buttons
-  /// - clientX
-  /// - clientY
-  /// - dataTransfer
-  /// - pageX
-  /// - pageY
-  /// - screenX
-  /// - screenY
-  ///
-  /// The following fields __are not__ considered in type detection:
-  /// - altKey
-  /// - ctrlKey
-  /// - metaKey
-  /// - relatedTarget
-  /// - shiftKey
-  bool get isMouseEvent {
-    final typedThis = this as SyntheticMouseEvent;
+  /// Uses Duck Typing to detect if the event instance is a [SyntheticMouseEvent].
+  bool get isMouseEvent => hasProperty(this, 'button');
 
-    if (typedThis.button != null) return true;
-    if (typedThis.buttons != null) return true;
-    if (typedThis.clientX != null) return true;
-    if (typedThis.clientY != null) return true;
-    if (typedThis.dataTransfer != null) return true;
-    if (typedThis.pageX != null) return true;
-    if (typedThis.pageY != null) return true;
-    if (typedThis.screenX != null) return true;
-    if (typedThis.screenY != null) return true;
+  /// Uses Duck Typing to detect if the event instance is a [SyntheticPointerEvent].
+  bool get isPointerEvent => hasProperty(this, 'pointerId');
 
-    return false;
-  }
+  /// Uses Duck Typing to detect if the event instance is a [SyntheticTouchEvent].
+  bool get isTouchEvent => hasProperty(this, 'targetTouches');
 
-  /// Uses Duck Typing to attempt to detect if the event instance is a [SyntheticPointerEvent].
-  ///
-  /// __NOTE:__ A field unique to this class must be non-null in order for this to return true, even
-  /// if the event instance was instantiated as a [SyntheticPointerEvent]. For this class, this means
-  /// that one of the following fields must be non-null:
-  /// - pointerId
-  /// - width
-  /// - height
-  /// - pressure
-  /// - tangentialPressure
-  /// - tiltX
-  /// - tiltY
-  /// - twist
-  /// - pointerType
-  /// - isPrimary
-  bool get isPointerEvent {
-    final typedThis = this as SyntheticPointerEvent;
+  /// Uses Duck Typing to detect if the event instance is a [SyntheticTransitionEvent].
+  bool get isTransitionEvent => hasProperty(this, 'propertyName');
 
-    if (typedThis.pointerId != null) return true;
-    if (typedThis.width != null) return true;
-    if (typedThis.height != null) return true;
-    if (typedThis.pressure != null) return true;
-    if (typedThis.tangentialPressure != null) return true;
-    if (typedThis.tiltX != null) return true;
-    if (typedThis.tiltY != null) return true;
-    if (typedThis.twist != null) return true;
-    if (typedThis.pointerType != null) return true;
-    if (typedThis.isPrimary != null) return true;
+  /// Uses Duck Typing to detect if the event instance is a [SyntheticAnimationEvent].
+  bool get isAnimationEvent => hasProperty(this, 'animationName');
 
-    return false;
-  }
+  /// Uses Duck Typing to detect if the event instance is a [SyntheticUIEvent].
+  bool get isUiEvent => hasProperty(this, 'detail');
 
-  /// Uses Duck Typing to attempt to detect if the event instance is a [SyntheticTouchEvent].
-  ///
-  /// __NOTE:__ A field unique to this class must be non-null in order for this to return true, even
-  /// if the event instance was instantiated as a [SyntheticTouchEvent]. For this class, this means
-  /// that one of the following fields must be non-null:
-  /// - changedTouches
-  /// - targetTouches
-  /// - touches
-  ///
-  /// The following fields __are not__ considered in type detection:
-  /// - altKey
-  /// - ctrlKey
-  /// - metaKey
-  /// - shiftKey
-  bool get isTouchEvent {
-    final typedThis = this as SyntheticTouchEvent;
-
-    if (typedThis.changedTouches != null) return true;
-    if (typedThis.targetTouches != null) return true;
-    if (typedThis.touches != null) return true;
-
-    return false;
-  }
-
-  /// Uses Duck Typing to attempt to detect if the event instance is a [SyntheticTransitionEvent].
-  ///
-  /// __NOTE:__ A field unique to this class must be non-null in order for this to return true, even
-  /// if the event instance was instantiated as a [SyntheticTransitionEvent]. For this class, this means
-  /// that one of the following fields must be non-null:
-  /// - propertyName
-  ///
-  /// The following fields __are not__ considered in type detection:
-  /// - elapsedTime
-  /// - pseudoElement
-  bool get isTransitionEvent {
-    final typedThis = this as SyntheticTransitionEvent;
-
-    if (typedThis.propertyName != null) return true;
-
-    return false;
-  }
-
-  /// Uses Duck Typing to attempt to detect if the event instance is a [SyntheticAnimationEvent].
-  ///
-  /// __NOTE:__ A field unique to this class must be non-null in order for this to return true, even
-  /// if the event instance was instantiated as a [SyntheticAnimationEvent]. For this class, this means
-  /// that one of the following fields must be non-null:
-  /// - animationName
-  ///
-  /// The following fields __are not__ considered in type detection:
-  /// - elapsedTime
-  /// - pseudoElement
-  bool get isAnimationEvent {
-    final typedThis = this as SyntheticAnimationEvent;
-
-    if (typedThis.animationName != null) return true;
-
-    return false;
-  }
-
-  /// Uses Duck Typing to attempt to detect if the event instance is a [SyntheticUIEvent].
-  ///
-  /// __NOTE:__ A field unique to this class must be non-null in order for this to return true, even
-  /// if the event instance was instantiated as a [SyntheticUIEvent]. For this class, this means
-  /// that one of the following fields must be non-null:
-  /// - detail
-  /// - view
-  bool get isUiEvent {
-    final typedThis = this as SyntheticUIEvent;
-
-    if (typedThis.detail != null) return true;
-    if (typedThis.view != null) return true;
-
-    return false;
-  }
-
-  /// Uses Duck Typing to attempt to detect if the event instance is a [SyntheticWheelEvent].
-  ///
-  /// __NOTE:__ A field unique to this class must be non-null in order for this to return true, even
-  /// if the event instance was instantiated as a [SyntheticWheelEvent]. For this class, this means
-  /// that one of the following fields must be non-null:
-  /// - deltaX
-  /// - deltaMode
-  /// - deltaY
-  /// - deltaZ
-  bool get isWheelEvent {
-    final typedThis = this as SyntheticWheelEvent;
-
-    if (typedThis.deltaX != null) return true;
-    if (typedThis.deltaMode != null) return true;
-    if (typedThis.deltaY != null) return true;
-    if (typedThis.deltaZ != null) return true;
-
-    return false;
-  }
+  /// Uses Duck Typing to detect if the event instance is a [SyntheticWheelEvent].
+  bool get isWheelEvent => hasProperty(this, 'deltaX');
 }
