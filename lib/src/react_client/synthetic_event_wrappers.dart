@@ -4,8 +4,10 @@
 @JS()
 library react_client.synthetic_event_wrappers;
 
+// ignore_for_file: deprecated_member_use_from_same_package
 import 'dart:html';
 import 'package:js/js.dart';
+import 'package:react/src/react_client/synthetic_data_transfer.dart';
 
 /// A cross-browser wrapper around the browser's [nativeEvent].
 ///
@@ -289,9 +291,30 @@ class SyntheticFormEvent extends SyntheticEvent {
 /// A JS object that looks like a [DataTransfer] but isn't one.
 @JS()
 class NonNativeDataTransfer {
+  /// Gets the type of drag-and-drop operation currently selected or sets the operation to a new type.
+  ///
+  /// The value must be `none`, `copy`, `link` or `move`.
+  ///
+  /// See <https://developer.mozilla.org/en-US/docs/Web/API/DataTransfer/dropEffect>
   external String get dropEffect;
+
+  /// Provides all of the types of operations that are possible.
+  ///
+  /// Must be one of `none`, `copy`, `copyLink`, `copyMove`, `link`, `linkMove`, `move`, `all` or `uninitialized`.
+  ///
+  /// See <https://developer.mozilla.org/en-US/docs/Web/API/DataTransfer/effectAllowed>
   external String get effectAllowed;
+
+  /// Contains a list of all the local files available on the data transfer.
+  ///
+  /// If the drag operation doesn't involve dragging files, this property is an empty list.
+  ///
+  /// See <https://developer.mozilla.org/en-US/docs/Web/API/DataTransfer/files>
   external List<File> get files;
+
+  /// Gives the formats that were set in the `dragstart` event.
+  ///
+  /// See <https://developer.mozilla.org/en-US/docs/Web/API/DataTransfer/types>
   external List<String> get types;
 }
 
@@ -335,8 +358,11 @@ class SyntheticMouseEvent extends SyntheticEvent {
   /// See <https://developer.mozilla.org/en-US/docs/Web/API/MouseEvent/ctrlKey>
   external bool get ctrlKey;
 
-  /// TODO is this still here?
-  external NonNativeDataTransfer get dataTransfer;
+  /// The data that is transferred during a drag and drop interaction.
+  ///
+  /// See <https://developer.mozilla.org/en-US/docs/Web/API/DragEvent/dataTransfer>
+  @Deprecated('This field can return inconsistent results between dart2js and ddc. Use `wrappedDataTransfer` instead.')
+  external get dataTransfer;
 
   /// Returns `true` if the `meta` key was down when the mouse event was fired.
   ///
@@ -372,6 +398,12 @@ class SyntheticMouseEvent extends SyntheticEvent {
   ///
   /// See <https://developer.mozilla.org/en-US/docs/Web/API/MouseEvent/shiftKey>
   external bool get shiftKey;
+}
+
+extension DataTransferHelper on SyntheticMouseEvent {
+  /// Wraps [dataTransfer] in a Dart object, detecting if it is a DOM [DataTransfer] object or a
+  /// JS object that looks like it.
+  SyntheticDataTransfer get wrappedDataTransfer => syntheticDataTransferFactory(dataTransfer);
 }
 
 /// A [SyntheticEvent] wrapper that is specifically backed by a [PointerEvent].
