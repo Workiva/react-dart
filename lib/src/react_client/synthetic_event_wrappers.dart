@@ -140,11 +140,13 @@ class SyntheticEvent {
   /// ```
   ///
   /// See: <https://reactjs.org/docs/events.html#event-pooling>
+  @Deprecated('The modern event system does not use pooling. This does nothing.')
   external void persist();
 
   /// Whether the event instance has been removed from the ReactJS event pool.
   ///
   /// > See: [persist]
+  @Deprecated('The modern event system does not use pooling. This always returns true.')
   external bool isPersistent();
 }
 
@@ -275,7 +277,7 @@ class SyntheticFocusEvent extends SyntheticEvent {
   external EventTarget get relatedTarget;
 }
 
-// TODO remove this in it's own commit
+// TODO remove this?
 @JS()
 class SyntheticFormEvent extends SyntheticEvent {
   /// [SyntheticFormEvent]s cannot be manually instantiated.
