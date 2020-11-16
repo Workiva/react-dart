@@ -400,12 +400,6 @@ class SyntheticMouseEvent extends SyntheticEvent {
   external bool get shiftKey;
 }
 
-extension DataTransferHelper on SyntheticMouseEvent {
-  /// Wraps [dataTransfer] in a Dart object, detecting if it is a DOM [DataTransfer] object or a
-  /// JS object that looks like it.
-  SyntheticDataTransfer get wrappedDataTransfer => syntheticDataTransferFactory(dataTransfer);
-}
-
 /// A [SyntheticEvent] wrapper that is specifically backed by a [PointerEvent].
 ///
 /// See <https://developer.mozilla.org/en-US/docs/Web/API/PointerEvent>

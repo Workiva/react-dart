@@ -1,10 +1,15 @@
 @TestOn('browser')
 library react.event_helpers_test;
 
+import 'dart:developer';
 import 'dart:html';
 
+import 'package:js/js_util.dart';
 import 'package:react/react.dart';
+import 'package:react/react_client.dart';
 import 'package:react/react_client/js_interop_helpers.dart';
+import 'package:react/react_dom.dart';
+import 'package:react/react_test_utils.dart';
 import 'package:react/src/react_client/event_helpers.dart';
 import 'package:test/test.dart';
 import 'package:mockito/mockito.dart';
@@ -2060,6 +2065,90 @@ main() {
 
           group('correctly returns false', () {
             commonFalseTests((e) => e.isWheelEvent, SyntheticEventType.SyntheticWheelEvent);
+          });
+        });
+      });
+    });
+
+    group('DataTransferHelper', () {
+      group('wrappedDataTransfer', () {
+        SyntheticMouseEvent event;
+
+        tearDown(() {
+          event = null;
+        });
+
+        Element renderAndGetRootNode() {
+          final mountNode = Element.div();
+          final content = div({'onDrag': (e) => event = e, 'draggable': true}, []);
+          render(content, mountNode);
+          return mountNode.children.single;
+        }
+
+        group('detects an anonymous JS object correctly', () {
+          test('when all fields are filled out', () {
+            final files = [File([], 'name1'), File([], 'name2'), File([], 'name3')];
+
+            final eventData = {
+              'dataTransfer': {
+                'files': files,
+                'types': ['d', 'e', 'f'],
+                'effectAllowed': 'none',
+                'dropEffect': 'move',
+              }
+            };
+
+            final node = renderAndGetRootNode();
+            Simulate.drag(node, eventData);
+
+            final dataTransfer = event.wrappedDataTransfer;
+
+            expect(dataTransfer, isNotNull);
+
+            final fileNames = dataTransfer.files.map((file) => (file as File).name);
+
+            expect(fileNames, containsAll(['name1', 'name2', 'name3']));
+            expect(dataTransfer.types, containsAll(['d', 'e', 'f']));
+            expect(dataTransfer.effectAllowed, 'none');
+            expect(dataTransfer.dropEffect, 'move');
+          });
+
+          test('when none of the fields are filled out', () {
+            final eventData = {'dataTransfer': {}};
+
+            final node = renderAndGetRootNode();
+            Simulate.drag(node, eventData);
+
+            final dataTransfer = event.wrappedDataTransfer;
+
+            expect(dataTransfer, isNotNull);
+            expect(dataTransfer.files, isNotNull);
+            expect(dataTransfer.files, isEmpty);
+            expect(dataTransfer.types, isNotNull);
+            expect(dataTransfer.types, isEmpty);
+            expect(dataTransfer.effectAllowed, null);
+            expect(dataTransfer.dropEffect, null);
+          });
+        });
+
+        group('detects a DataTransfer object correctly', () {
+          test('when none of the fields are filled out', () {
+            final eventData = {
+              'dataTransfer': DataTransfer(),
+            };
+
+            final node = renderAndGetRootNode();
+            Simulate.drag(node, eventData);
+
+            final dataTransfer = event.wrappedDataTransfer;
+
+            expect(dataTransfer, isNotNull);
+            expect(dataTransfer.files, isNotNull);
+            expect(dataTransfer.files, isEmpty);
+            expect(dataTransfer.types, isNotNull);
+            expect(dataTransfer.types, isEmpty);
+            expect(dataTransfer.effectAllowed, 'none');
+            expect(dataTransfer.dropEffect, 'none');
           });
         });
       });

@@ -6,6 +6,7 @@ import 'dart:html';
 import 'package:js/js_util.dart';
 import 'package:react/react.dart';
 import 'package:react/react_client/js_interop_helpers.dart';
+import 'package:react/src/react_client/synthetic_data_transfer.dart';
 
 /// Helper util that wraps a native [KeyboardEvent] in a [SyntheticKeyboardEvent].
 ///
@@ -798,4 +799,10 @@ extension SyntheticEventTypeHelpers on SyntheticEvent {
 
   /// Uses Duck Typing to detect if the event instance is a [SyntheticWheelEvent].
   bool get isWheelEvent => hasProperty(this, 'deltaX');
+}
+
+extension DataTransferHelper on SyntheticMouseEvent {
+  /// Wraps [dataTransfer] in a Dart object, detecting if it is a DOM [DataTransfer] object or a
+  /// JS object that looks like it.
+  SyntheticDataTransfer get wrappedDataTransfer => syntheticDataTransferFactory(dataTransfer);
 }
