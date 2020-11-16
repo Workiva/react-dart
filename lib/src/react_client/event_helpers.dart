@@ -4,9 +4,10 @@ library react_client.event_helpers;
 import 'dart:html';
 
 import 'package:js/js_util.dart';
-import 'package:react/react.dart';
+import 'package:react/react.dart' as rd;
 import 'package:react/react_client/js_interop_helpers.dart';
 import 'package:react/src/react_client/synthetic_data_transfer.dart';
+import 'package:react/src/react_client/synthetic_event_wrappers.dart';
 
 /// Helper util that wraps a native [KeyboardEvent] in a [SyntheticKeyboardEvent].
 ///
@@ -425,7 +426,7 @@ SyntheticMouseEvent createSyntheticMouseEvent({
   num clientX,
   num clientY,
   bool ctrlKey,
-  NonNativeDataTransfer dataTransfer,
+  dynamic dataTransfer,
   bool metaKey,
   num pageX,
   num pageY,
@@ -456,6 +457,7 @@ SyntheticMouseEvent createSyntheticMouseEvent({
     'clientX': clientX ?? baseEvent?.clientX,
     'clientY': clientY ?? baseEvent?.clientY,
     'ctrlKey': ctrlKey ?? baseEvent?.ctrlKey ?? false,
+    // This can be ignored - it's a false positive analyzer error (see https://github.com/dart-lang/sdk/issues/43339)
     'dataTransfer': dataTransfer ?? baseEvent?.dataTransfer,
     'metaKey': metaKey ?? baseEvent?.metaKey ?? false,
     'pageX': pageX ?? baseEvent?.pageX,
@@ -802,7 +804,8 @@ extension SyntheticEventTypeHelpers on SyntheticEvent {
 }
 
 extension DataTransferHelper on SyntheticMouseEvent {
-  /// Wraps [dataTransfer] in a Dart object, detecting if it is a DOM [DataTransfer] object or a
-  /// JS object that looks like it.
-  SyntheticDataTransfer get wrappedDataTransfer => syntheticDataTransferFactory(dataTransfer);
+  /// The data that is transferred during a drag and drop interaction.
+  ///
+  /// See <https://developer.mozilla.org/en-US/docs/Web/API/DragEvent/dataTransfer>
+  SyntheticDataTransfer get dataTransfer => syntheticDataTransferFactory(getProperty(this, 'dataTransfer'));
 }

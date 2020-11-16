@@ -7,7 +7,6 @@ library react_client.synthetic_event_wrappers;
 // ignore_for_file: deprecated_member_use_from_same_package
 import 'dart:html';
 import 'package:js/js.dart';
-import 'package:react/src/react_client/synthetic_data_transfer.dart';
 
 /// A cross-browser wrapper around the browser's [nativeEvent].
 ///
@@ -357,12 +356,6 @@ class SyntheticMouseEvent extends SyntheticEvent {
   ///
   /// See <https://developer.mozilla.org/en-US/docs/Web/API/MouseEvent/ctrlKey>
   external bool get ctrlKey;
-
-  /// The data that is transferred during a drag and drop interaction.
-  ///
-  /// See <https://developer.mozilla.org/en-US/docs/Web/API/DragEvent/dataTransfer>
-  @Deprecated('This field can return inconsistent results between dart2js and ddc. Use `wrappedDataTransfer` instead.')
-  external get dataTransfer;
 
   /// Returns `true` if the `meta` key was down when the mouse event was fired.
   ///

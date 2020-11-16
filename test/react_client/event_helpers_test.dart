@@ -837,7 +837,7 @@ main() {
             clientX: 100,
             clientY: 200,
             ctrlKey: true,
-            dataTransfer: jsifyAndAllowInterop({'dropEffect': testString}) as NonNativeDataTransfer,
+            dataTransfer: jsifyAndAllowInterop({'dropEffect': testString}),
             metaKey: true,
             pageX: 300,
             pageY: 400,
@@ -883,7 +883,7 @@ main() {
             clientX: 200,
             clientY: 300,
             ctrlKey: false,
-            dataTransfer: jsifyAndAllowInterop({'dropEffect': updatedTestString}) as NonNativeDataTransfer,
+            dataTransfer: jsifyAndAllowInterop({'dropEffect': updatedTestString}),
             metaKey: false,
             pageX: 400,
             pageY: 500,
@@ -933,7 +933,7 @@ main() {
             clientX: 100,
             clientY: 200,
             ctrlKey: true,
-            dataTransfer: jsifyAndAllowInterop({'dropEffect': testString}) as NonNativeDataTransfer,
+            dataTransfer: jsifyAndAllowInterop({'dropEffect': testString}),
             metaKey: true,
             pageX: 300,
             pageY: 400,
@@ -2071,7 +2071,7 @@ main() {
     });
 
     group('DataTransferHelper', () {
-      group('wrappedDataTransfer', () {
+      group('dataTransfer', () {
         SyntheticMouseEvent event;
 
         tearDown(() {
@@ -2101,7 +2101,7 @@ main() {
             final node = renderAndGetRootNode();
             Simulate.drag(node, eventData);
 
-            final dataTransfer = event.wrappedDataTransfer;
+            final dataTransfer = event.dataTransfer;
 
             expect(dataTransfer, isNotNull);
 
@@ -2119,7 +2119,7 @@ main() {
             final node = renderAndGetRootNode();
             Simulate.drag(node, eventData);
 
-            final dataTransfer = event.wrappedDataTransfer;
+            final dataTransfer = event.dataTransfer;
 
             expect(dataTransfer, isNotNull);
             expect(dataTransfer.files, isNotNull);
@@ -2140,7 +2140,7 @@ main() {
             final node = renderAndGetRootNode();
             Simulate.drag(node, eventData);
 
-            final dataTransfer = event.wrappedDataTransfer;
+            final dataTransfer = event.dataTransfer;
 
             expect(dataTransfer, isNotNull);
             expect(dataTransfer.files, isNotNull);

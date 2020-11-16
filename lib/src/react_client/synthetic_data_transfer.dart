@@ -44,6 +44,11 @@ class SyntheticDataTransfer {
 SyntheticDataTransfer syntheticDataTransferFactory(Object dt) {
   if (dt == null) return null;
 
+  // `SyntheticDataTransfer` is possible because `createSyntheticMouseEvent` can take in an event that already
+  // exists and save it's `dataTransfer` property to the new event object. When that happens, `dataTransfer` is
+  // already a `SyntheticDataTransfer` event and should just be returned.
+  if (dt is SyntheticDataTransfer) return dt;
+
   List rawFiles;
   List rawTypes;
 
