@@ -279,7 +279,7 @@ class SyntheticFocusEvent extends SyntheticEvent {
   external EventTarget get relatedTarget;
 }
 
-// TODO remove this?
+/// A [SyntheticEvent] wrapper that represents a form event.
 @JS()
 class SyntheticFormEvent extends SyntheticEvent {
   /// [SyntheticFormEvent]s cannot be manually instantiated.
