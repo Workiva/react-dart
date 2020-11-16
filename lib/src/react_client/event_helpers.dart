@@ -4,7 +4,6 @@ library react_client.event_helpers;
 import 'dart:html';
 
 import 'package:js/js_util.dart';
-import 'package:react/react.dart' as rd;
 import 'package:react/react_client/js_interop_helpers.dart';
 import 'package:react/src/react_client/synthetic_data_transfer.dart';
 import 'package:react/src/react_client/synthetic_event_wrappers.dart';
@@ -457,7 +456,6 @@ SyntheticMouseEvent createSyntheticMouseEvent({
     'clientX': clientX ?? baseEvent?.clientX,
     'clientY': clientY ?? baseEvent?.clientY,
     'ctrlKey': ctrlKey ?? baseEvent?.ctrlKey ?? false,
-    // This can be ignored - it's a false positive analyzer error (see https://github.com/dart-lang/sdk/issues/43339)
     'dataTransfer': dataTransfer ?? baseEvent?.dataTransfer,
     'metaKey': metaKey ?? baseEvent?.metaKey ?? false,
     'pageX': pageX ?? baseEvent?.pageX,
