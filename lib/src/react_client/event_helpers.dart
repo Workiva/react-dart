@@ -794,6 +794,14 @@ extension SyntheticEventTypeHelpers on SyntheticEvent {
   bool get isWheelEvent => hasProperty(this, 'deltaX');
 }
 
+extension SyntheticEventHelper on SyntheticEvent {
+  /// Whether the event instance has been removed from the ReactJS event pool.
+  ///
+  /// > See: [persist]
+  @Deprecated('The modern event system does not use pooling. This always returns true.')
+  bool get isPersistent => true;
+}
+
 extension DataTransferHelper on SyntheticMouseEvent {
   /// The data that is transferred during a drag and drop interaction.
   ///

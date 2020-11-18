@@ -143,12 +143,6 @@ class SyntheticEvent {
   /// See: <https://reactjs.org/docs/events.html#event-pooling>
   @Deprecated('The modern event system does not use pooling. This does nothing.')
   external void persist();
-
-  /// Whether the event instance has been removed from the ReactJS event pool.
-  ///
-  /// > See: [persist]
-  @Deprecated('The modern event system does not use pooling. This always returns true.')
-  bool get isPersistent => true;
 }
 
 /// A [SyntheticEvent] wrapper that is specifically backed by a [ClipboardEvent].
