@@ -772,13 +772,6 @@ extension SyntheticEventTypeHelpers on SyntheticEvent {
   /// Uses Duck Typing to detect if the event instance is a [SyntheticFocusEvent].
   bool get isFocusEvent => hasProperty(this, 'relatedTarget') && !hasProperty(this, 'button');
 
-  /// Uses Duck Typing to detect if the event instance is a [SyntheticFormEvent].
-  ///
-  /// __NOTE:__ This getter is here for completeness, but because the interface for form events
-  /// is the same as that of a [SyntheticEvent] (the base for all other synthetic event types),
-  /// via Duck Typing every [SyntheticEvent] is considered a [SyntheticFormEvent].
-  bool get isFormEvent => true;
-
   /// Uses Duck Typing to detect if the event instance is a [SyntheticMouseEvent].
   bool get isMouseEvent => hasProperty(this, 'button');
 

@@ -1654,74 +1654,31 @@ main() {
           // A little verbose, but this tests that every `eventTypeTester` only returns `true` for the event type being passed in.
           //
           // The complexity comes in because there's always 1 `expect` that should return `true`, which is the actual `currentEventTypeBeingTested`.
-          // Then, on top of that, if the `currentEventTypeBeingTested` is a `SyntheticFormEvent`, every `expect` should return true. This is why
-          // every event is wrapped in a set with the `SyntheticFormEvent` enum property.
           test('when the event is a different type', () {
-            Set<SyntheticEventType> eventToTestWithFormEvent(SyntheticEventType eventToTest) =>
-                {eventToTest, SyntheticEventType.syntheticFormEvent};
-
-            expect(
-                eventTypeTester(createSyntheticClipboardEvent()),
-                eventToTestWithFormEvent(SyntheticEventType.syntheticClipboardEvent)
-                        .contains(currentEventTypeBeingTested)
-                    ? isTrue
-                    : isFalse);
-            expect(
-                eventTypeTester(createSyntheticKeyboardEvent()),
-                eventToTestWithFormEvent(SyntheticEventType.syntheticKeyboardEvent)
-                        .contains(currentEventTypeBeingTested)
-                    ? isTrue
-                    : isFalse);
-            expect(
-                eventTypeTester(createSyntheticCompositionEvent()),
-                eventToTestWithFormEvent(SyntheticEventType.syntheticCompositionEvent)
-                        .contains(currentEventTypeBeingTested)
-                    ? isTrue
-                    : isFalse);
-            expect(
-                eventTypeTester(createSyntheticFocusEvent()),
-                eventToTestWithFormEvent(SyntheticEventType.syntheticFocusEvent).contains(currentEventTypeBeingTested)
-                    ? isTrue
-                    : isFalse);
+            expect(eventTypeTester(createSyntheticClipboardEvent()),
+                currentEventTypeBeingTested == SyntheticEventType.syntheticClipboardEvent ? isTrue : isFalse);
+            expect(eventTypeTester(createSyntheticKeyboardEvent()),
+                currentEventTypeBeingTested == SyntheticEventType.syntheticKeyboardEvent ? isTrue : isFalse);
+            expect(eventTypeTester(createSyntheticCompositionEvent()),
+                currentEventTypeBeingTested == SyntheticEventType.syntheticCompositionEvent ? isTrue : isFalse);
+            expect(eventTypeTester(createSyntheticFocusEvent()),
+                currentEventTypeBeingTested == SyntheticEventType.syntheticFocusEvent ? isTrue : isFalse);
             expect(eventTypeTester(createSyntheticFormEvent()),
                 currentEventTypeBeingTested == SyntheticEventType.syntheticFormEvent ? isTrue : isFalse);
-            expect(
-                eventTypeTester(createSyntheticMouseEvent()),
-                eventToTestWithFormEvent(SyntheticEventType.syntheticMouseEvent).contains(currentEventTypeBeingTested)
-                    ? isTrue
-                    : isFalse);
-            expect(
-                eventTypeTester(createSyntheticPointerEvent()),
-                eventToTestWithFormEvent(SyntheticEventType.syntheticPointerEvent).contains(currentEventTypeBeingTested)
-                    ? isTrue
-                    : isFalse);
-            expect(
-                eventTypeTester(createSyntheticTouchEvent()),
-                eventToTestWithFormEvent(SyntheticEventType.syntheticTouchEvent).contains(currentEventTypeBeingTested)
-                    ? isTrue
-                    : isFalse);
-            expect(
-                eventTypeTester(createSyntheticTransitionEvent()),
-                eventToTestWithFormEvent(SyntheticEventType.syntheticTransitionEvent)
-                        .contains(currentEventTypeBeingTested)
-                    ? isTrue
-                    : isFalse);
-            expect(
-                eventTypeTester(createSyntheticAnimationEvent()),
-                eventToTestWithFormEvent(SyntheticEventType.syntheticAnimationEvent)
-                        .contains(currentEventTypeBeingTested)
-                    ? isTrue
-                    : isFalse);
-            expect(
-                eventTypeTester(createSyntheticUIEvent()),
-                eventToTestWithFormEvent(SyntheticEventType.syntheticUIEvent).contains(currentEventTypeBeingTested)
-                    ? isTrue
-                    : isFalse);
-            expect(
-                eventTypeTester(createSyntheticWheelEvent()),
-                eventToTestWithFormEvent(SyntheticEventType.syntheticWheelEvent).contains(currentEventTypeBeingTested)
-                    ? isTrue
-                    : isFalse);
+            expect(eventTypeTester(createSyntheticMouseEvent()),
+                currentEventTypeBeingTested == SyntheticEventType.syntheticMouseEvent ? isTrue : isFalse);
+            expect(eventTypeTester(createSyntheticPointerEvent()),
+                currentEventTypeBeingTested == SyntheticEventType.syntheticPointerEvent ? isTrue : isFalse);
+            expect(eventTypeTester(createSyntheticTouchEvent()),
+                currentEventTypeBeingTested == SyntheticEventType.syntheticTouchEvent ? isTrue : isFalse);
+            expect(eventTypeTester(createSyntheticTransitionEvent()),
+                currentEventTypeBeingTested == SyntheticEventType.syntheticTransitionEvent ? isTrue : isFalse);
+            expect(eventTypeTester(createSyntheticAnimationEvent()),
+                currentEventTypeBeingTested == SyntheticEventType.syntheticAnimationEvent ? isTrue : isFalse);
+            expect(eventTypeTester(createSyntheticUIEvent()),
+                currentEventTypeBeingTested == SyntheticEventType.syntheticUIEvent ? isTrue : isFalse);
+            expect(eventTypeTester(createSyntheticWheelEvent()),
+                currentEventTypeBeingTested == SyntheticEventType.syntheticWheelEvent ? isTrue : isFalse);
           });
 
           test('when the event is the base class', () {
@@ -1819,55 +1776,6 @@ main() {
 
         group('correctly returns false', () {
           commonFalseTests((e) => e.isFocusEvent, SyntheticEventType.syntheticFocusEvent);
-        });
-      });
-
-      group('isFormEvent', () {
-        group('returns true when', () {
-          test('returns true for any synthetic event type', () {
-            final e1 = createSyntheticEvent();
-            expect(e1.isFormEvent, isTrue);
-
-            final e2 = createSyntheticClipboardEvent();
-            expect(e2.isFormEvent, isTrue);
-
-            final e3 = createSyntheticKeyboardEvent();
-            expect(e3.isFormEvent, isTrue);
-
-            final e4 = createSyntheticCompositionEvent();
-            expect(e4.isFormEvent, isTrue);
-
-            final e5 = createSyntheticFocusEvent();
-            expect(e5.isFormEvent, isTrue);
-
-            final e6 = createSyntheticFormEvent();
-            expect(e6.isFormEvent, isTrue);
-
-            final e7 = createSyntheticMouseEvent();
-            expect(e7.isFormEvent, isTrue);
-
-            final e8 = createSyntheticPointerEvent();
-            expect(e8.isFormEvent, isTrue);
-
-            final e9 = createSyntheticTouchEvent();
-            expect(e9.isFormEvent, isTrue);
-
-            final e10 = createSyntheticTransitionEvent();
-            expect(e10.isFormEvent, isTrue);
-
-            final e11 = createSyntheticAnimationEvent();
-            expect(e11.isFormEvent, isTrue);
-
-            final e12 = createSyntheticUIEvent();
-            expect(e12.isFormEvent, isTrue);
-
-            final e13 = createSyntheticWheelEvent();
-            expect(e13.isFormEvent, isTrue);
-          });
-        });
-
-        group('correctly returns false', () {
-          commonFalseTests((e) => e.isFormEvent, SyntheticEventType.syntheticFormEvent);
         });
       });
 
