@@ -528,9 +528,9 @@ class SyntheticTransitionEvent extends SyntheticEvent {
   /// See <https://developer.mozilla.org/en-US/docs/Web/API/TransitionEvent/elapsedTime>
   external num get elapsedTime;
 
-  /// A [String], starting with `::`, containing the name of the pseudo-element the animation runs on.
+  /// Contains the name of the pseudo-element the animation runs on.
   ///
-  /// If the transition doesn't run on a pseudo-element but on the element, an empty string: `''`.
+  /// Starts with `::`. If the transition doesn't run on a pseudo-element but on the element, an empty string: `''`.
   ///
   /// See <https://developer.mozilla.org/en-US/docs/Web/API/TransitionEvent/pseudoElement>
   external String get pseudoElement;
@@ -560,9 +560,9 @@ class SyntheticAnimationEvent extends SyntheticEvent {
   /// See <https://developer.mozilla.org/en-US/docs/Web/API/AnimationEvent/elapsedTime>
   external num get elapsedTime;
 
-  /// A [String], starting with '::', containing the name of the pseudo-element the animation runs on.
+  /// Contains the name of the pseudo-element the animation runs on.
   ///
-  /// If the animation doesn't run on a pseudo-element but on the element, an empty string: ''.
+  /// Starts with `::`. If the animation doesn't run on a pseudo-element but on the element, an empty string: ''.
   ///
   /// See <https://developer.mozilla.org/en-US/docs/Web/API/AnimationEvent/pseudoElement>
   external String get pseudoElement;
