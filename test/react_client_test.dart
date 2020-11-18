@@ -149,7 +149,7 @@ main() {
         for (final key in knownEventKeys) {
           expect(jsProps[key], isNotNull, reason: 'JS event handler prop should not be null');
           expect(jsProps[key], anyOf(same(originalHandlers[key]), same(allowInterop(originalHandlers[key]))),
-              reason: 'JS event handler prop was not unconverted');
+              reason: 'JS event handler should be the original or original wrapped in allowInterop');
         }
       });
 

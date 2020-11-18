@@ -1,12 +1,9 @@
 @TestOn('browser')
 library react.event_helpers_test;
 
-import 'dart:developer';
 import 'dart:html';
 
-import 'package:js/js_util.dart';
 import 'package:react/react.dart';
-import 'package:react/react_client.dart';
 import 'package:react/react_client/js_interop_helpers.dart';
 import 'package:react/react_dom.dart';
 import 'package:react/react_test_utils.dart';
@@ -1661,75 +1658,75 @@ main() {
           // every event is wrapped in a set with the `SyntheticFormEvent` enum property.
           test('when the event is a different type', () {
             Set<SyntheticEventType> eventToTestWithFormEvent(SyntheticEventType eventToTest) =>
-                {eventToTest, SyntheticEventType.SyntheticFormEvent};
+                {eventToTest, SyntheticEventType.syntheticFormEvent};
 
             expect(
                 eventTypeTester(createSyntheticClipboardEvent()),
-                eventToTestWithFormEvent(SyntheticEventType.SyntheticClipboardEvent)
+                eventToTestWithFormEvent(SyntheticEventType.syntheticClipboardEvent)
                         .contains(currentEventTypeBeingTested)
                     ? isTrue
                     : isFalse);
             expect(
                 eventTypeTester(createSyntheticKeyboardEvent()),
-                eventToTestWithFormEvent(SyntheticEventType.SyntheticKeyboardEvent)
+                eventToTestWithFormEvent(SyntheticEventType.syntheticKeyboardEvent)
                         .contains(currentEventTypeBeingTested)
                     ? isTrue
                     : isFalse);
             expect(
                 eventTypeTester(createSyntheticCompositionEvent()),
-                eventToTestWithFormEvent(SyntheticEventType.SyntheticCompositionEvent)
+                eventToTestWithFormEvent(SyntheticEventType.syntheticCompositionEvent)
                         .contains(currentEventTypeBeingTested)
                     ? isTrue
                     : isFalse);
             expect(
                 eventTypeTester(createSyntheticFocusEvent()),
-                eventToTestWithFormEvent(SyntheticEventType.SyntheticFocusEvent).contains(currentEventTypeBeingTested)
+                eventToTestWithFormEvent(SyntheticEventType.syntheticFocusEvent).contains(currentEventTypeBeingTested)
                     ? isTrue
                     : isFalse);
             expect(eventTypeTester(createSyntheticFormEvent()),
-                currentEventTypeBeingTested == SyntheticEventType.SyntheticFormEvent ? isTrue : isFalse);
+                currentEventTypeBeingTested == SyntheticEventType.syntheticFormEvent ? isTrue : isFalse);
             expect(
                 eventTypeTester(createSyntheticMouseEvent()),
-                eventToTestWithFormEvent(SyntheticEventType.SyntheticMouseEvent).contains(currentEventTypeBeingTested)
+                eventToTestWithFormEvent(SyntheticEventType.syntheticMouseEvent).contains(currentEventTypeBeingTested)
                     ? isTrue
                     : isFalse);
             expect(
                 eventTypeTester(createSyntheticPointerEvent()),
-                eventToTestWithFormEvent(SyntheticEventType.SyntheticPointerEvent).contains(currentEventTypeBeingTested)
+                eventToTestWithFormEvent(SyntheticEventType.syntheticPointerEvent).contains(currentEventTypeBeingTested)
                     ? isTrue
                     : isFalse);
             expect(
                 eventTypeTester(createSyntheticTouchEvent()),
-                eventToTestWithFormEvent(SyntheticEventType.SyntheticTouchEvent).contains(currentEventTypeBeingTested)
+                eventToTestWithFormEvent(SyntheticEventType.syntheticTouchEvent).contains(currentEventTypeBeingTested)
                     ? isTrue
                     : isFalse);
             expect(
                 eventTypeTester(createSyntheticTransitionEvent()),
-                eventToTestWithFormEvent(SyntheticEventType.SyntheticTransitionEvent)
+                eventToTestWithFormEvent(SyntheticEventType.syntheticTransitionEvent)
                         .contains(currentEventTypeBeingTested)
                     ? isTrue
                     : isFalse);
             expect(
                 eventTypeTester(createSyntheticAnimationEvent()),
-                eventToTestWithFormEvent(SyntheticEventType.SyntheticAnimationEvent)
+                eventToTestWithFormEvent(SyntheticEventType.syntheticAnimationEvent)
                         .contains(currentEventTypeBeingTested)
                     ? isTrue
                     : isFalse);
             expect(
                 eventTypeTester(createSyntheticUIEvent()),
-                eventToTestWithFormEvent(SyntheticEventType.SyntheticUIEvent).contains(currentEventTypeBeingTested)
+                eventToTestWithFormEvent(SyntheticEventType.syntheticUIEvent).contains(currentEventTypeBeingTested)
                     ? isTrue
                     : isFalse);
             expect(
                 eventTypeTester(createSyntheticWheelEvent()),
-                eventToTestWithFormEvent(SyntheticEventType.SyntheticWheelEvent).contains(currentEventTypeBeingTested)
+                eventToTestWithFormEvent(SyntheticEventType.syntheticWheelEvent).contains(currentEventTypeBeingTested)
                     ? isTrue
                     : isFalse);
           });
 
           test('when the event is the base class', () {
             expect(eventTypeTester(createSyntheticEvent()),
-                currentEventTypeBeingTested == SyntheticEventType.SyntheticFormEvent ? isTrue : isFalse,
+                currentEventTypeBeingTested == SyntheticEventType.syntheticFormEvent ? isTrue : isFalse,
                 reason: 'The `SyntheticEvent` base class is considered a Form Event via Duck Typing.');
           });
         });
@@ -1749,7 +1746,7 @@ main() {
         });
 
         group('correctly returns false', () {
-          commonFalseTests((e) => e.isClipboardEvent, SyntheticEventType.SyntheticClipboardEvent);
+          commonFalseTests((e) => e.isClipboardEvent, SyntheticEventType.syntheticClipboardEvent);
         });
       });
 
@@ -1785,7 +1782,7 @@ main() {
         });
 
         group('correctly returns false', () {
-          commonFalseTests((e) => e.isKeyboardEvent, SyntheticEventType.SyntheticKeyboardEvent);
+          commonFalseTests((e) => e.isKeyboardEvent, SyntheticEventType.syntheticKeyboardEvent);
         });
       });
 
@@ -1803,7 +1800,7 @@ main() {
         });
 
         group('correctly returns false', () {
-          commonFalseTests((e) => e.isCompositionEvent, SyntheticEventType.SyntheticCompositionEvent);
+          commonFalseTests((e) => e.isCompositionEvent, SyntheticEventType.syntheticCompositionEvent);
         });
       });
 
@@ -1821,7 +1818,7 @@ main() {
         });
 
         group('correctly returns false', () {
-          commonFalseTests((e) => e.isFocusEvent, SyntheticEventType.SyntheticFocusEvent);
+          commonFalseTests((e) => e.isFocusEvent, SyntheticEventType.syntheticFocusEvent);
         });
       });
 
@@ -1870,7 +1867,7 @@ main() {
         });
 
         group('correctly returns false', () {
-          commonFalseTests((e) => e.isFormEvent, SyntheticEventType.SyntheticFormEvent);
+          commonFalseTests((e) => e.isFormEvent, SyntheticEventType.syntheticFormEvent);
         });
       });
 
@@ -1912,7 +1909,7 @@ main() {
         });
 
         group('correctly returns false', () {
-          commonFalseTests((e) => e.isMouseEvent, SyntheticEventType.SyntheticMouseEvent);
+          commonFalseTests((e) => e.isMouseEvent, SyntheticEventType.syntheticMouseEvent);
         });
 
         group('isPointerEvent', () {
@@ -1956,7 +1953,7 @@ main() {
           });
 
           group('correctly returns false', () {
-            commonFalseTests((e) => e.isPointerEvent, SyntheticEventType.SyntheticPointerEvent);
+            commonFalseTests((e) => e.isPointerEvent, SyntheticEventType.syntheticPointerEvent);
           });
         });
 
@@ -1980,7 +1977,7 @@ main() {
           });
 
           group('correctly returns false', () {
-            commonFalseTests((e) => e.isTouchEvent, SyntheticEventType.SyntheticTouchEvent);
+            commonFalseTests((e) => e.isTouchEvent, SyntheticEventType.syntheticTouchEvent);
           });
         });
 
@@ -1998,7 +1995,7 @@ main() {
           });
 
           group('correctly returns false', () {
-            commonFalseTests((e) => e.isTransitionEvent, SyntheticEventType.SyntheticTransitionEvent);
+            commonFalseTests((e) => e.isTransitionEvent, SyntheticEventType.syntheticTransitionEvent);
           });
         });
 
@@ -2016,7 +2013,7 @@ main() {
           });
 
           group('correctly returns false', () {
-            commonFalseTests((e) => e.isAnimationEvent, SyntheticEventType.SyntheticAnimationEvent);
+            commonFalseTests((e) => e.isAnimationEvent, SyntheticEventType.syntheticAnimationEvent);
           });
         });
 
@@ -2037,7 +2034,7 @@ main() {
           });
 
           group('correctly returns false', () {
-            commonFalseTests((e) => e.isUiEvent, SyntheticEventType.SyntheticUIEvent);
+            commonFalseTests((e) => e.isUiEvent, SyntheticEventType.syntheticUIEvent);
           });
         });
 
@@ -2064,7 +2061,7 @@ main() {
           });
 
           group('correctly returns false', () {
-            commonFalseTests((e) => e.isWheelEvent, SyntheticEventType.SyntheticWheelEvent);
+            commonFalseTests((e) => e.isWheelEvent, SyntheticEventType.syntheticWheelEvent);
           });
         });
       });
@@ -2163,16 +2160,16 @@ class MockKeyboardEvent extends Mock implements KeyboardEvent {}
 class MockMouseEvent extends Mock implements MouseEvent {}
 
 enum SyntheticEventType {
-  SyntheticClipboardEvent,
-  SyntheticKeyboardEvent,
-  SyntheticCompositionEvent,
-  SyntheticFocusEvent,
-  SyntheticFormEvent,
-  SyntheticMouseEvent,
-  SyntheticPointerEvent,
-  SyntheticTouchEvent,
-  SyntheticTransitionEvent,
-  SyntheticAnimationEvent,
-  SyntheticUIEvent,
-  SyntheticWheelEvent
+  syntheticClipboardEvent,
+  syntheticKeyboardEvent,
+  syntheticCompositionEvent,
+  syntheticFocusEvent,
+  syntheticFormEvent,
+  syntheticMouseEvent,
+  syntheticPointerEvent,
+  syntheticTouchEvent,
+  syntheticTransitionEvent,
+  syntheticAnimationEvent,
+  syntheticUIEvent,
+  syntheticWheelEvent
 }

@@ -148,7 +148,7 @@ class SyntheticEvent {
   ///
   /// > See: [persist]
   @Deprecated('The modern event system does not use pooling. This always returns true.')
-  external bool isPersistent();
+  bool get isPersistent => true;
 }
 
 /// A [SyntheticEvent] wrapper that is specifically backed by a [ClipboardEvent].
@@ -275,7 +275,7 @@ class SyntheticFocusEvent extends SyntheticEvent {
   /// In some cases (such as when tabbing in or out a page), this property may be set to `null` for security reasons.
   ///
   /// See <https://developer.mozilla.org/en-US/docs/Web/API/FocusEvent/relatedTarget>
-  external EventTarget get relatedTarget;
+  external dynamic get relatedTarget;
 }
 
 /// A [SyntheticEvent] wrapper that represents a form event.
@@ -478,7 +478,7 @@ class SyntheticTouchEvent extends SyntheticEvent {
   /// previous touch event and this one.
   ///
   /// See <https://developer.mozilla.org/en-US/docs/Web/API/TouchEvent/changedTouches>
-  external TouchList get changedTouches;
+  external List<Touch> get changedTouches;
 
   /// A value indicating whether or not the control key was down when the touch event was fired.
   ///
@@ -499,13 +499,13 @@ class SyntheticTouchEvent extends SyntheticEvent {
   /// started on the same element that is the target of the event.
   ///
   /// See <https://developer.mozilla.org/en-US/docs/Web/API/TouchEvent/targetTouches>
-  external TouchList get targetTouches;
+  external List<Touch> get targetTouches;
 
   /// All the `Touch` objects representing all current points of contact with the surface, regardless
   /// of target or changed status.
   ///
   /// See <https://developer.mozilla.org/en-US/docs/Web/API/TouchEvent/touches>
-  external TouchList get touches;
+  external List<Touch> get touches;
 }
 
 /// A [SyntheticEvent] wrapper that is specifically backed by a [TransitionEvent].

@@ -309,7 +309,7 @@ void domEventHandlerWrappingTests(ReactComponentFactoryProxy factory) {
     }));
 
     rtu.Simulate.click(nodeWithClickHandler);
-    expect(actualEvent.isPersistent(), isA<bool>());
+    expect(actualEvent.isPersistent, isA<bool>());
   });
 
   test('doesn\'t wrap the handler if it is null', () {

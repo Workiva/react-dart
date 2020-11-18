@@ -45,7 +45,7 @@ SyntheticDataTransfer syntheticDataTransferFactory(Object dt) {
   if (dt == null) return null;
 
   // `SyntheticDataTransfer` is possible because `createSyntheticMouseEvent` can take in an event that already
-  // exists and save it's `dataTransfer` property to the new event object. When that happens, `dataTransfer` is
+  // exists and save its `dataTransfer` property to the new event object. When that happens, `dataTransfer` is
   // already a `SyntheticDataTransfer` event and should just be returned.
   if (dt is SyntheticDataTransfer) return dt;
 
@@ -104,9 +104,8 @@ SyntheticDataTransfer syntheticDataTransferFactory(Object dt) {
   }
 
   // Copy these lists and ensure they're typed properly.
-  // todo use .cast() in Dart 2
-  final files = <File>[];
-  final types = <String>[];
+  final files = [].cast<File>();
+  final types = [].cast<String>();
   rawFiles?.forEach(files.add);
   rawTypes?.forEach(types.add);
 
