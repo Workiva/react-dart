@@ -14,9 +14,9 @@ import 'package:react/src/context.dart';
 import 'package:react/src/ddc_emulated_function_name_bug.dart' as ddc_emulated_function_name_bug;
 import 'package:react/src/js_interop_util.dart';
 import 'package:react/src/typedefs.dart';
-import 'package:react/src/react_client/event_prop_key_to_event_factory.dart';
 import 'package:react/src/react_client/factory_util.dart';
 
+// ignore: deprecated_member_use_from_same_package
 export 'package:react/src/react_client/factory_util.dart' show unconvertJsEventHandler;
 
 /// Prepares [children] to be passed to the ReactJS [React.createElement] and
@@ -42,10 +42,6 @@ dynamic listifyChildren(dynamic children) {
 ///
 /// If `style` is specified in props, then it too is shallow-converted and included
 /// in the returned Map.
-///
-/// Any JS event handlers included in the props for the given [instance] will be
-/// unconverted such that the original JS handlers are returned instead of their
-/// Dart synthetic counterparts.
 Map unconvertJsProps(/* ReactElement|ReactComponent */ instance) {
   var props = Map.from(JsBackedMap.backedBy(instance.props));
 
@@ -57,12 +53,6 @@ Map unconvertJsProps(/* ReactElement|ReactComponent */ instance) {
   if (props['internal'] is ReactDartComponentInternal || (props['style'] != null && props['style'] is Map)) {
     throw new ArgumentError('A Dart Component cannot be passed into unconvertJsProps.');
   }
-
-  eventPropKeyToEventFactory.keys.forEach((key) {
-    if (props.containsKey(key)) {
-      props[key] = unconvertJsEventHandler(props[key]) ?? props[key];
-    }
-  });
 
   // Convert the nested style map so it can be read by Dart code.
   var style = props['style'];
@@ -82,8 +72,7 @@ mixin JsBackedMapComponentFactoryMixin on ReactComponentFactoryProxy {
     return React.createElement(type, convertedProps, children);
   }
 
-  static JsMap generateExtendedJsProps(Map props) =>
-      generateJsProps(props, shouldConvertEventHandlers: false, wrapWithJsify: false);
+  static JsMap generateExtendedJsProps(Map props) => generateJsProps(props, wrapWithJsify: false);
 }
 
 /// Use [ReactDartComponentFactoryProxy2] instead by calling [registerComponent2].
@@ -199,8 +188,7 @@ class ReactDartComponentFactoryProxy2<TComponent extends Component2> extends Rea
 
   /// Returns a JavaScript version of the specified [props], preprocessed for consumption by ReactJS and prepared for
   /// consumption by the `react` library internals.
-  static JsMap generateExtendedJsProps(Map props) =>
-      generateJsProps(props, shouldConvertEventHandlers: false, wrapWithJsify: false);
+  static JsMap generateExtendedJsProps(Map props) => generateJsProps(props, wrapWithJsify: false);
 }
 
 /// Creates ReactJS [ReactElement] instances for `JSContext` components.
@@ -287,10 +275,8 @@ class ReactJsComponentFactoryProxy extends ReactComponentFactoryProxy {
   @override
   ReactElement build(Map props, [List childrenArgs]) {
     dynamic children = generateChildren(childrenArgs, shouldAlwaysBeList: alwaysReturnChildrenAsList);
-    JsMap convertedProps = generateJsProps(props,
-        shouldConvertEventHandlers: shouldConvertDomProps,
-        convertCallbackRefValue: false,
-        additionalRefPropKeys: _additionalRefPropKeys);
+    JsMap convertedProps =
+        generateJsProps(props, convertCallbackRefValue: false, additionalRefPropKeys: _additionalRefPropKeys);
     return React.createElement(type, convertedProps, children);
   }
 }
@@ -321,7 +307,6 @@ class ReactDomComponentFactoryProxy extends ReactComponentFactoryProxy {
 
   /// Performs special handling of certain props for consumption by ReactJS DOM components.
   static void convertProps(Map props) {
-    convertEventHandlers(props);
     convertRefValue(props);
   }
 }
