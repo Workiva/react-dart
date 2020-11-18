@@ -759,7 +759,13 @@ SyntheticWheelEvent createSyntheticWheelEvent({
   }) as SyntheticWheelEvent;
 }
 
-extension SyntheticEventTypeHelpers on SyntheticEvent {
+extension SyntheticEventHelper on SyntheticEvent {
+  /// Whether the event instance has been removed from the ReactJS event pool.
+  ///
+  /// > See: [persist]
+  @Deprecated('The modern event system does not use pooling. This always returns true.')
+  bool get isPersistent => true;
+
   /// Uses Duck Typing to detect if the event instance is a [SyntheticClipboardEvent].
   bool get isClipboardEvent => hasProperty(this, 'clipboardData');
 
@@ -792,14 +798,6 @@ extension SyntheticEventTypeHelpers on SyntheticEvent {
 
   /// Uses Duck Typing to detect if the event instance is a [SyntheticWheelEvent].
   bool get isWheelEvent => hasProperty(this, 'deltaX');
-}
-
-extension SyntheticEventHelper on SyntheticEvent {
-  /// Whether the event instance has been removed from the ReactJS event pool.
-  ///
-  /// > See: [persist]
-  @Deprecated('The modern event system does not use pooling. This always returns true.')
-  bool get isPersistent => true;
 }
 
 extension DataTransferHelper on SyntheticMouseEvent {
