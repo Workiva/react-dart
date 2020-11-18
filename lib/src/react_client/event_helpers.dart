@@ -759,7 +759,7 @@ SyntheticWheelEvent createSyntheticWheelEvent({
   }) as SyntheticWheelEvent;
 }
 
-extension SyntheticEventHelper on SyntheticEvent {
+extension SyntheticEventTypeHelpers on SyntheticEvent {
   /// Whether the event instance has been removed from the ReactJS event pool.
   ///
   /// > See: [persist]
