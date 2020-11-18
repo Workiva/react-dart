@@ -104,10 +104,8 @@ SyntheticDataTransfer syntheticDataTransferFactory(Object dt) {
   }
 
   // Copy these lists and ensure they're typed properly.
-  final files = [].cast<File>();
-  final types = [].cast<String>();
-  rawFiles?.forEach(files.add);
-  rawTypes?.forEach(types.add);
+  final files = <File>[...?rawFiles];
+  final types = <String>[...?rawTypes];
 
   return new SyntheticDataTransfer(dropEffect, effectAllowed, files, types);
 }
