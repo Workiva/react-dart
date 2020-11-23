@@ -598,6 +598,7 @@ extension SyntheticEventTypeHelpers on SyntheticEvent {
   bool get isFocusEvent => this is SyntheticFocusEvent;
 
   /// Returns whether this is a [SyntheticFormEvent].
+  @Deprecated('Check the event \'type\' property instead. This will be removed in v6.0.0.')
   bool get isFormEvent => this is SyntheticFormEvent;
 
   /// Returns whether this is a [SyntheticMouseEvent].
