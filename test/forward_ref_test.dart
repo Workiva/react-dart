@@ -1,6 +1,7 @@
 @TestOn('browser')
 library react.forward_ref_test;
 
+// ignore_for_file: deprecated_member_use_from_same_package
 import 'dart:js_util';
 
 import 'package:react/react.dart' as react;

@@ -8,7 +8,6 @@ import 'package:js/js.dart';
 import 'package:test/test.dart';
 
 import 'package:react/react.dart' as react;
-import 'package:react/react_client.dart';
 import 'package:react/react_dom.dart' as react_dom;
 
 import 'shared_type_tester.dart';
