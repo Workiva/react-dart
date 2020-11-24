@@ -760,6 +760,8 @@ SyntheticWheelEvent createSyntheticWheelEvent({
 }
 
 extension SyntheticEventTypeHelpers on SyntheticEvent {
+  bool _checkEventType(List<String> types) => hasProperty(this, 'type') && types.any((t) => this.type.contains(t));
+
   /// Whether the event instance has been removed from the ReactJS event pool.
   ///
   /// > See: [persist]
@@ -767,37 +769,41 @@ extension SyntheticEventTypeHelpers on SyntheticEvent {
   bool get isPersistent => true;
 
   /// Uses Duck Typing to detect if the event instance is a [SyntheticClipboardEvent].
-  bool get isClipboardEvent => hasProperty(this, 'clipboardData');
+  bool get isClipboardEvent => hasProperty(this, 'clipboardData') || _checkEventType(['copy', 'paste', 'cut']);
 
   /// Uses Duck Typing to detect if the event instance is a [SyntheticKeyboardEvent].
-  bool get isKeyboardEvent => hasProperty(this, 'key');
+  bool get isKeyboardEvent => hasProperty(this, 'key') || _checkEventType(['key']);
 
   /// Uses Duck Typing to detect if the event instance is a [SyntheticCompositionEvent].
-  bool get isCompositionEvent => hasProperty(this, 'data');
+  bool get isCompositionEvent => hasProperty(this, 'data') || _checkEventType(['composition']);
 
   /// Uses Duck Typing to detect if the event instance is a [SyntheticFocusEvent].
-  bool get isFocusEvent => hasProperty(this, 'relatedTarget') && !hasProperty(this, 'button');
+  bool get isFocusEvent =>
+      (hasProperty(this, 'relatedTarget') && !hasProperty(this, 'button')) || _checkEventType(['focus', 'blur']);
+
+  /// Uses Duck Typing to detect if the event instance is a [SyntheticFormEvent].
+  bool get isFormEvent => _checkEventType(['submit', 'input', 'change']);
 
   /// Uses Duck Typing to detect if the event instance is a [SyntheticMouseEvent].
-  bool get isMouseEvent => hasProperty(this, 'button');
+  bool get isMouseEvent => hasProperty(this, 'button') || _checkEventType(['mouse', 'click', 'drag', 'drop']);
 
   /// Uses Duck Typing to detect if the event instance is a [SyntheticPointerEvent].
-  bool get isPointerEvent => hasProperty(this, 'pointerId');
+  bool get isPointerEvent => hasProperty(this, 'pointerId') || _checkEventType(['pointer']);
 
   /// Uses Duck Typing to detect if the event instance is a [SyntheticTouchEvent].
-  bool get isTouchEvent => hasProperty(this, 'targetTouches');
+  bool get isTouchEvent => hasProperty(this, 'targetTouches') || _checkEventType(['touch']);
 
   /// Uses Duck Typing to detect if the event instance is a [SyntheticTransitionEvent].
-  bool get isTransitionEvent => hasProperty(this, 'propertyName');
+  bool get isTransitionEvent => hasProperty(this, 'propertyName') || _checkEventType(['transition']);
 
   /// Uses Duck Typing to detect if the event instance is a [SyntheticAnimationEvent].
-  bool get isAnimationEvent => hasProperty(this, 'animationName');
+  bool get isAnimationEvent => hasProperty(this, 'animationName') || _checkEventType(['animation']);
 
   /// Uses Duck Typing to detect if the event instance is a [SyntheticUIEvent].
-  bool get isUiEvent => hasProperty(this, 'detail');
+  bool get isUiEvent => hasProperty(this, 'detail') || _checkEventType(['scroll']);
 
   /// Uses Duck Typing to detect if the event instance is a [SyntheticWheelEvent].
-  bool get isWheelEvent => hasProperty(this, 'deltaX');
+  bool get isWheelEvent => hasProperty(this, 'deltaX') || _checkEventType(['wheel']);
 }
 
 extension DataTransferHelper on SyntheticMouseEvent {
