@@ -1,6 +1,8 @@
 language: dart
 
 dart:
+  # We need 2.9.2 this to verify the Chrome MemoryInfo workaround: https://github.com/cleandart/react-dart/pull/280
+  # TODO remove the workaround as well as this config once SDK lower bound is >=2.9.3
   - 2.9.2
   - stable
   - dev
@@ -14,7 +16,7 @@ cache:
 before_script:
   - dartanalyzer .
   - |
-    if [ "$TRAVIS_DART_VERSION" != "dev" ]; then
+    if [ "$TRAVIS_DART_VERSION" == "stable" ]; then
       dartfmt --line-length=120 --dry-run --set-exit-if-changed .
     fi
   - pub run dependency_validator -i build_runner,build_test,build_web_compilers
