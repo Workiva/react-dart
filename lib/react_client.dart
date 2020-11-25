@@ -44,6 +44,6 @@ export 'package:react/src/typedefs.dart' show JsFunctionComponent;
 /// > __DEPRECATED.__
 /// >
 /// > Environment configuration is now done by default and should not be altered. This can now be removed.
-/// > This will be removed in 6.0.0, along with other configuration setting functions.
-@Deprecated('It is not longer required and can be removed. Will be removed from this library in the 6.0.0 release.')
+/// > This will be removed in 7.0.0, along with other configuration setting functions.
+@Deprecated('It is not longer required and can be removed. Will be removed from this library in the 7.0.0 release.')
 void setClientConfiguration() {}
