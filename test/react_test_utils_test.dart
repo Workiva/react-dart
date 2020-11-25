@@ -100,7 +100,6 @@ testUtils({isComponent2: false, dynamic eventComponent, dynamic sampleComponent,
           eventHandlerName: (e) => capturedEvent = e,
         }));
         event(react_dom.findDOMNode(component), eventData);
-        print('type ${(capturedEvent as SyntheticAnimationEvent).type}');
         expectEventType(capturedEvent);
       });
     }
