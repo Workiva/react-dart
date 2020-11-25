@@ -70,8 +70,11 @@ testUtils({isComponent2: false, dynamic eventComponent, dynamic sampleComponent,
       expect(domNode.text, equals(''));
     });
 
-    void testEvent(void event(dynamic instanceOrNode, Map eventData), String eventName,
-        [void expectEventType(SyntheticEvent e)]) {
+    void testEvent(
+      void event(dynamic instanceOrNode, Map eventData),
+      String eventName,
+      void expectEventType(SyntheticEvent e),
+    ) {
       final eventHandlerName = 'on${eventName[0].toUpperCase() + eventName.substring(1)}';
       eventName = eventName.toLowerCase();
       Map eventData;
@@ -107,74 +110,87 @@ testUtils({isComponent2: false, dynamic eventComponent, dynamic sampleComponent,
     }
 
     group('event', () {
-      group('animationEnd',
-          () => testEvent(Simulate.animationEnd, 'animationEnd', (e) => expect(e.isAnimationEvent, isTrue)));
+      void Function(SyntheticEvent) _expectEventType<T>() {
+        return (SyntheticEvent event) {
+          expect(event.isClipboardEvent, T == SyntheticClipboardEvent);
+          expect(event.isKeyboardEvent, T == SyntheticKeyboardEvent);
+          expect(event.isCompositionEvent, T == SyntheticCompositionEvent);
+          expect(event.isFocusEvent, T == SyntheticFocusEvent);
+          expect(event.isMouseEvent, T == SyntheticMouseEvent);
+          expect(event.isPointerEvent, T == SyntheticPointerEvent);
+          expect(event.isTouchEvent, T == SyntheticTouchEvent);
+          expect(event.isTransitionEvent, T == SyntheticTransitionEvent);
+          expect(event.isAnimationEvent, T == SyntheticAnimationEvent);
+          expect(event.isUiEvent, T == SyntheticUIEvent);
+          expect(event.isWheelEvent, T == SyntheticWheelEvent);
+        };
+      }
+
+      final expectClipboardEvent = _expectEventType<SyntheticClipboardEvent>();
+      final expectKeyboardEvent = _expectEventType<SyntheticKeyboardEvent>();
+      final expectCompositionEvent = _expectEventType<SyntheticCompositionEvent>();
+      final expectFocusEvent = _expectEventType<SyntheticFocusEvent>();
+      final expectFormEvent = _expectEventType<SyntheticFormEvent>();
+      final expectMouseEvent = _expectEventType<SyntheticMouseEvent>();
+      final expectPointerEvent = _expectEventType<SyntheticPointerEvent>();
+      final expectTouchEvent = _expectEventType<SyntheticTouchEvent>();
+      final expectTransitionEvent = _expectEventType<SyntheticTransitionEvent>();
+      final expectAnimationEvent = _expectEventType<SyntheticAnimationEvent>();
+      final expectUiEvent = _expectEventType<SyntheticUIEvent>();
+      final expectWheelEvent = _expectEventType<SyntheticWheelEvent>();
+
+      group('animationEnd', () => testEvent(Simulate.animationEnd, 'animationEnd', expectAnimationEvent));
+      group('animationIteration',
+          () => testEvent(Simulate.animationIteration, 'animationIteration', expectAnimationEvent));
+      group('animationStart', () => testEvent(Simulate.animationStart, 'animationStart', expectAnimationEvent));
+      group('blur', () => testEvent(Simulate.blur, 'blur', expectFocusEvent));
+      group('change', () => testEvent(Simulate.change, 'change', expectFormEvent));
+      group('click', () => testEvent(Simulate.click, 'click', expectMouseEvent));
+      group('copy', () => testEvent(Simulate.copy, 'copy', expectClipboardEvent));
+      group('compositionEnd', () => testEvent(Simulate.compositionEnd, 'compositionEnd', expectCompositionEvent));
+      group('compositionStart', () => testEvent(Simulate.compositionStart, 'compositionStart', expectCompositionEvent));
+      group('compositionUpdate',
+          () => testEvent(Simulate.compositionUpdate, 'compositionUpdate', expectCompositionEvent));
+      group('cut', () => testEvent(Simulate.cut, 'cut', expectClipboardEvent));
+      group('doubleClick', () => testEvent(Simulate.doubleClick, 'doubleClick', expectMouseEvent));
+      group('drag', () => testEvent(Simulate.drag, 'drag', expectMouseEvent));
+      group('dragEnd', () => testEvent(Simulate.dragEnd, 'dragEnd', expectMouseEvent));
+      group('dragEnter', () => testEvent(Simulate.dragEnter, 'dragEnter', expectMouseEvent));
+      group('dragExit', () => testEvent(Simulate.dragExit, 'dragExit', expectMouseEvent));
+      group('dragLeave', () => testEvent(Simulate.dragLeave, 'dragLeave', expectMouseEvent));
+      group('dragOver', () => testEvent(Simulate.dragOver, 'dragOver', expectMouseEvent));
+      group('dragStart', () => testEvent(Simulate.dragStart, 'dragStart', expectMouseEvent));
+      group('drop', () => testEvent(Simulate.drop, 'drop', expectMouseEvent));
+      group('focus', () => testEvent(Simulate.focus, 'focus', expectFocusEvent));
+      group('gotPointerCapture', () => testEvent(Simulate.gotPointerCapture, 'gotPointerCapture', expectPointerEvent));
+      group('input', () => testEvent(Simulate.input, 'input', expectFormEvent));
+      group('keyDown', () => testEvent(Simulate.keyDown, 'keyDown', expectKeyboardEvent));
+      group('keyPress', () => testEvent(Simulate.keyPress, 'keyPress', expectKeyboardEvent));
+      group('keyUp', () => testEvent(Simulate.keyUp, 'keyUp', expectKeyboardEvent));
       group(
-          'animationIteration',
-          () =>
-              testEvent(Simulate.animationIteration, 'animationIteration', (e) => expect(e.isAnimationEvent, isTrue)));
-      group('animationStart',
-          () => testEvent(Simulate.animationStart, 'animationStart', (e) => expect(e.isAnimationEvent, isTrue)));
-      group('blur', () => testEvent(Simulate.blur, 'blur', (e) => expect(e.isFocusEvent, isTrue)));
-      group('change', () => testEvent(Simulate.change, 'change'));
-      group('click', () => testEvent(Simulate.click, 'click', (e) => expect(e.isMouseEvent, isTrue)));
-      group('copy', () => testEvent(Simulate.copy, 'copy', (e) => expect(e.isClipboardEvent, isTrue)));
-      group('compositionEnd',
-          () => testEvent(Simulate.compositionEnd, 'compositionEnd', (e) => expect(e.isCompositionEvent, isTrue)));
-      group('compositionStart',
-          () => testEvent(Simulate.compositionStart, 'compositionStart', (e) => expect(e.isCompositionEvent, isTrue)));
-      group(
-          'compositionUpdate',
-          () =>
-              testEvent(Simulate.compositionUpdate, 'compositionUpdate', (e) => expect(e.isCompositionEvent, isTrue)));
-      group('cut', () => testEvent(Simulate.cut, 'cut', (e) => expect(e.isClipboardEvent, isTrue)));
-      group('doubleClick', () => testEvent(Simulate.doubleClick, 'doubleClick', (e) => expect(e.isMouseEvent, isTrue)));
-      group('drag', () => testEvent(Simulate.drag, 'drag', (e) => expect(e.isMouseEvent, isTrue)));
-      group('dragEnd', () => testEvent(Simulate.dragEnd, 'dragEnd', (e) => expect(e.isMouseEvent, isTrue)));
-      group('dragEnter', () => testEvent(Simulate.dragEnter, 'dragEnter', (e) => expect(e.isMouseEvent, isTrue)));
-      group('dragExit', () => testEvent(Simulate.dragExit, 'dragExit', (e) => expect(e.isMouseEvent, isTrue)));
-      group('dragLeave', () => testEvent(Simulate.dragLeave, 'dragLeave', (e) => expect(e.isMouseEvent, isTrue)));
-      group('dragOver', () => testEvent(Simulate.dragOver, 'dragOver', (e) => expect(e.isMouseEvent, isTrue)));
-      group('dragStart', () => testEvent(Simulate.dragStart, 'dragStart', (e) => expect(e.isMouseEvent, isTrue)));
-      group('drop', () => testEvent(Simulate.drop, 'drop', (e) => expect(e.isMouseEvent, isTrue)));
-      group('focus', () => testEvent(Simulate.focus, 'focus', (e) => expect(e.isFocusEvent, isTrue)));
-      group('gotPointerCapture',
-          () => testEvent(Simulate.gotPointerCapture, 'gotPointerCapture', (e) => expect(e.isPointerEvent, isTrue)));
-      group('input', () => testEvent(Simulate.input, 'input'));
-      group('keyDown', () => testEvent(Simulate.keyDown, 'keyDown', (e) => expect(e.isKeyboardEvent, isTrue)));
-      group('keyPress', () => testEvent(Simulate.keyPress, 'keyPress', (e) => expect(e.isKeyboardEvent, isTrue)));
-      group('keyUp', () => testEvent(Simulate.keyUp, 'keyUp', (e) => expect(e.isKeyboardEvent, isTrue)));
-      group('lostPointerCapture',
-          () => testEvent(Simulate.lostPointerCapture, 'lostPointerCapture', (e) => expect(e.isPointerEvent, isTrue)));
-      group('mouseDown', () => testEvent(Simulate.mouseDown, 'mouseDown', (e) => expect(e.isMouseEvent, isTrue)));
-      group('mouseMove', () => testEvent(Simulate.mouseMove, 'mouseMove', (e) => expect(e.isMouseEvent, isTrue)));
-      group('mouseOut', () => testEvent(Simulate.mouseOut, 'mouseOut', (e) => expect(e.isMouseEvent, isTrue)));
-      group('mouseOver', () => testEvent(Simulate.mouseOver, 'mouseOver', (e) => expect(e.isMouseEvent, isTrue)));
-      group('mouseUp', () => testEvent(Simulate.mouseUp, 'mouseUp', (e) => expect(e.isMouseEvent, isTrue)));
-      group('paste', () => testEvent(Simulate.paste, 'paste', (e) => expect(e.isClipboardEvent, isTrue)));
-      group('pointerCancel',
-          () => testEvent(Simulate.pointerCancel, 'pointerCancel', (e) => expect(e.isPointerEvent, isTrue)));
-      group(
-          'pointerDown', () => testEvent(Simulate.pointerDown, 'pointerDown', (e) => expect(e.isPointerEvent, isTrue)));
-      group('pointerEnter',
-          () => testEvent(Simulate.pointerEnter, 'pointerEnter', (e) => expect(e.isPointerEvent, isTrue)));
-      group('pointerLeave',
-          () => testEvent(Simulate.pointerLeave, 'pointerLeave', (e) => expect(e.isPointerEvent, isTrue)));
-      group(
-          'pointerMove', () => testEvent(Simulate.pointerMove, 'pointerMove', (e) => expect(e.isPointerEvent, isTrue)));
-      group(
-          'pointerOver', () => testEvent(Simulate.pointerOver, 'pointerOver', (e) => expect(e.isPointerEvent, isTrue)));
-      group('pointerOut', () => testEvent(Simulate.pointerOut, 'pointerOut', (e) => expect(e.isPointerEvent, isTrue)));
-      group('pointerUp', () => testEvent(Simulate.pointerUp, 'pointerUp', (e) => expect(e.isPointerEvent, isTrue)));
-      group('scroll', () => testEvent(Simulate.scroll, 'scroll', (e) => expect(e.isUiEvent, isTrue)));
-      group('submit', () => testEvent(Simulate.submit, 'submit'));
-      group('touchCancel', () => testEvent(Simulate.touchCancel, 'touchCancel', (e) => expect(e.isTouchEvent, isTrue)));
-      group('touchEnd', () => testEvent(Simulate.touchEnd, 'touchEnd', (e) => expect(e.isTouchEvent, isTrue)));
-      group('touchMove', () => testEvent(Simulate.touchMove, 'touchMove', (e) => expect(e.isTouchEvent, isTrue)));
-      group('touchStart', () => testEvent(Simulate.touchStart, 'touchStart', (e) => expect(e.isTouchEvent, isTrue)));
-      group('transitionEnd',
-          () => testEvent(Simulate.transitionEnd, 'transitionEnd', (e) => expect(e.isTransitionEvent, isTrue)));
-      group('wheel', () => testEvent(Simulate.wheel, 'wheel', (e) => expect(e.isWheelEvent, isTrue)));
+          'lostPointerCapture', () => testEvent(Simulate.lostPointerCapture, 'lostPointerCapture', expectPointerEvent));
+      group('mouseDown', () => testEvent(Simulate.mouseDown, 'mouseDown', expectMouseEvent));
+      group('mouseMove', () => testEvent(Simulate.mouseMove, 'mouseMove', expectMouseEvent));
+      group('mouseOut', () => testEvent(Simulate.mouseOut, 'mouseOut', expectMouseEvent));
+      group('mouseOver', () => testEvent(Simulate.mouseOver, 'mouseOver', expectMouseEvent));
+      group('mouseUp', () => testEvent(Simulate.mouseUp, 'mouseUp', expectMouseEvent));
+      group('paste', () => testEvent(Simulate.paste, 'paste', expectClipboardEvent));
+      group('pointerCancel', () => testEvent(Simulate.pointerCancel, 'pointerCancel', expectPointerEvent));
+      group('pointerDown', () => testEvent(Simulate.pointerDown, 'pointerDown', expectPointerEvent));
+      group('pointerEnter', () => testEvent(Simulate.pointerEnter, 'pointerEnter', expectPointerEvent));
+      group('pointerLeave', () => testEvent(Simulate.pointerLeave, 'pointerLeave', expectPointerEvent));
+      group('pointerMove', () => testEvent(Simulate.pointerMove, 'pointerMove', expectPointerEvent));
+      group('pointerOver', () => testEvent(Simulate.pointerOver, 'pointerOver', expectPointerEvent));
+      group('pointerOut', () => testEvent(Simulate.pointerOut, 'pointerOut', expectPointerEvent));
+      group('pointerUp', () => testEvent(Simulate.pointerUp, 'pointerUp', expectPointerEvent));
+      group('scroll', () => testEvent(Simulate.scroll, 'scroll', expectUiEvent));
+      group('submit', () => testEvent(Simulate.submit, 'submit', expectFormEvent));
+      group('touchCancel', () => testEvent(Simulate.touchCancel, 'touchCancel', expectTouchEvent));
+      group('touchEnd', () => testEvent(Simulate.touchEnd, 'touchEnd', expectTouchEvent));
+      group('touchMove', () => testEvent(Simulate.touchMove, 'touchMove', expectTouchEvent));
+      group('touchStart', () => testEvent(Simulate.touchStart, 'touchStart', expectTouchEvent));
+      group('transitionEnd', () => testEvent(Simulate.transitionEnd, 'transitionEnd', expectTransitionEvent));
+      group('wheel', () => testEvent(Simulate.wheel, 'wheel', expectWheelEvent));
     });
 
     test('passes in and jsifies eventData properly', () {
