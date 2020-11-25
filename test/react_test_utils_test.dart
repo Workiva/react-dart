@@ -70,8 +70,8 @@ testUtils({isComponent2: false, dynamic eventComponent, dynamic sampleComponent,
       expect(domNode.text, equals(''));
     });
 
-    void testEvent(
-        void event(dynamic instanceOrNode, Map eventData), String eventName, void expectEventType(SyntheticEvent e)) {
+    void testEvent(void event(dynamic instanceOrNode, Map eventData), String eventName,
+        [void expectEventType(SyntheticEvent e)]) {
       final eventHandlerName = 'on${eventName[0].toUpperCase() + eventName.substring(1)}';
       eventName = eventName.toLowerCase();
       Map eventData;
@@ -94,14 +94,16 @@ testUtils({isComponent2: false, dynamic eventComponent, dynamic sampleComponent,
         expect(domNode.text, equals('$eventName $fakeTimeStamp'));
       });
 
-      test('with correct type', () {
-        SyntheticEvent capturedEvent;
-        final component = renderIntoDocument(div({
-          eventHandlerName: (e) => capturedEvent = e,
-        }));
-        event(react_dom.findDOMNode(component), eventData);
-        expectEventType(capturedEvent);
-      });
+      if (expectEventType != null) {
+        test('with correct type', () {
+          SyntheticEvent capturedEvent;
+          final component = renderIntoDocument(div({
+            eventHandlerName: (e) => capturedEvent = e,
+          }));
+          event(react_dom.findDOMNode(component), eventData);
+          expectEventType(capturedEvent);
+        });
+      }
     }
 
     group('event', () {
@@ -114,7 +116,7 @@ testUtils({isComponent2: false, dynamic eventComponent, dynamic sampleComponent,
       group('animationStart',
           () => testEvent(Simulate.animationStart, 'animationStart', (e) => expect(e.isAnimationEvent, isTrue)));
       group('blur', () => testEvent(Simulate.blur, 'blur', (e) => expect(e.isFocusEvent, isTrue)));
-      group('change', () => testEvent(Simulate.change, 'change', (e) => expect(e.isFormEvent, isTrue)));
+      group('change', () => testEvent(Simulate.change, 'change'));
       group('click', () => testEvent(Simulate.click, 'click', (e) => expect(e.isMouseEvent, isTrue)));
       group('copy', () => testEvent(Simulate.copy, 'copy', (e) => expect(e.isClipboardEvent, isTrue)));
       group('compositionEnd',
@@ -138,7 +140,7 @@ testUtils({isComponent2: false, dynamic eventComponent, dynamic sampleComponent,
       group('focus', () => testEvent(Simulate.focus, 'focus', (e) => expect(e.isFocusEvent, isTrue)));
       group('gotPointerCapture',
           () => testEvent(Simulate.gotPointerCapture, 'gotPointerCapture', (e) => expect(e.isPointerEvent, isTrue)));
-      group('input', () => testEvent(Simulate.input, 'input', (e) => expect(e.isFormEvent, isTrue)));
+      group('input', () => testEvent(Simulate.input, 'input'));
       group('keyDown', () => testEvent(Simulate.keyDown, 'keyDown', (e) => expect(e.isKeyboardEvent, isTrue)));
       group('keyPress', () => testEvent(Simulate.keyPress, 'keyPress', (e) => expect(e.isKeyboardEvent, isTrue)));
       group('keyUp', () => testEvent(Simulate.keyUp, 'keyUp', (e) => expect(e.isKeyboardEvent, isTrue)));
@@ -165,7 +167,7 @@ testUtils({isComponent2: false, dynamic eventComponent, dynamic sampleComponent,
       group('pointerOut', () => testEvent(Simulate.pointerOut, 'pointerOut', (e) => expect(e.isPointerEvent, isTrue)));
       group('pointerUp', () => testEvent(Simulate.pointerUp, 'pointerUp', (e) => expect(e.isPointerEvent, isTrue)));
       group('scroll', () => testEvent(Simulate.scroll, 'scroll', (e) => expect(e.isUiEvent, isTrue)));
-      group('submit', () => testEvent(Simulate.submit, 'submit', (e) => expect(e.isFormEvent, isTrue)));
+      group('submit', () => testEvent(Simulate.submit, 'submit'));
       group('touchCancel', () => testEvent(Simulate.touchCancel, 'touchCancel', (e) => expect(e.isTouchEvent, isTrue)));
       group('touchEnd', () => testEvent(Simulate.touchEnd, 'touchEnd', (e) => expect(e.isTouchEvent, isTrue)));
       group('touchMove', () => testEvent(Simulate.touchMove, 'touchMove', (e) => expect(e.isTouchEvent, isTrue)));
