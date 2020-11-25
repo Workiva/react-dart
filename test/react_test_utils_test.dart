@@ -10,6 +10,7 @@ import 'package:react/react_client.dart';
 import 'package:react/react_test_utils.dart';
 import 'package:test/test.dart';
 
+import 'react_client/event_helpers_test.dart';
 import 'test_components.dart' as component1;
 import 'test_components2.dart' as component2;
 import 'util.dart';
@@ -110,34 +111,34 @@ testUtils({isComponent2: false, dynamic eventComponent, dynamic sampleComponent,
     }
 
     group('event', () {
-      void Function(SyntheticEvent) _expectEventType<T>() {
+      void Function(SyntheticEvent) _expectEventType(SyntheticEventType type) {
         return (SyntheticEvent event) {
-          expect(event.isClipboardEvent, T == SyntheticClipboardEvent);
-          expect(event.isKeyboardEvent, T == SyntheticKeyboardEvent);
-          expect(event.isCompositionEvent, T == SyntheticCompositionEvent);
-          expect(event.isFocusEvent, T == SyntheticFocusEvent);
-          expect(event.isMouseEvent, T == SyntheticMouseEvent);
-          expect(event.isPointerEvent, T == SyntheticPointerEvent);
-          expect(event.isTouchEvent, T == SyntheticTouchEvent);
-          expect(event.isTransitionEvent, T == SyntheticTransitionEvent);
-          expect(event.isAnimationEvent, T == SyntheticAnimationEvent);
-          expect(event.isUiEvent, T == SyntheticUIEvent);
-          expect(event.isWheelEvent, T == SyntheticWheelEvent);
+          expect(event.isClipboardEvent, type == SyntheticEventType.syntheticClipboardEvent);
+          expect(event.isKeyboardEvent, type == SyntheticEventType.syntheticKeyboardEvent);
+          expect(event.isCompositionEvent, type == SyntheticEventType.syntheticCompositionEvent);
+          expect(event.isFocusEvent, type == SyntheticEventType.syntheticFocusEvent);
+          expect(event.isMouseEvent, type == SyntheticEventType.syntheticMouseEvent);
+          expect(event.isPointerEvent, type == SyntheticEventType.syntheticPointerEvent);
+          expect(event.isTouchEvent, type == SyntheticEventType.syntheticTouchEvent);
+          expect(event.isTransitionEvent, type == SyntheticEventType.syntheticTransitionEvent);
+          expect(event.isAnimationEvent, type == SyntheticEventType.syntheticAnimationEvent);
+          expect(event.isUiEvent, type == SyntheticEventType.syntheticUIEvent);
+          expect(event.isWheelEvent, type == SyntheticEventType.syntheticWheelEvent);
         };
       }
 
-      final expectClipboardEvent = _expectEventType<SyntheticClipboardEvent>();
-      final expectKeyboardEvent = _expectEventType<SyntheticKeyboardEvent>();
-      final expectCompositionEvent = _expectEventType<SyntheticCompositionEvent>();
-      final expectFocusEvent = _expectEventType<SyntheticFocusEvent>();
-      final expectFormEvent = _expectEventType<SyntheticFormEvent>();
-      final expectMouseEvent = _expectEventType<SyntheticMouseEvent>();
-      final expectPointerEvent = _expectEventType<SyntheticPointerEvent>();
-      final expectTouchEvent = _expectEventType<SyntheticTouchEvent>();
-      final expectTransitionEvent = _expectEventType<SyntheticTransitionEvent>();
-      final expectAnimationEvent = _expectEventType<SyntheticAnimationEvent>();
-      final expectUiEvent = _expectEventType<SyntheticUIEvent>();
-      final expectWheelEvent = _expectEventType<SyntheticWheelEvent>();
+      final expectClipboardEvent = _expectEventType(SyntheticEventType.syntheticClipboardEvent);
+      final expectKeyboardEvent = _expectEventType(SyntheticEventType.syntheticKeyboardEvent);
+      final expectCompositionEvent = _expectEventType(SyntheticEventType.syntheticCompositionEvent);
+      final expectFocusEvent = _expectEventType(SyntheticEventType.syntheticFocusEvent);
+      final expectFormEvent = _expectEventType(SyntheticEventType.syntheticFormEvent);
+      final expectMouseEvent = _expectEventType(SyntheticEventType.syntheticMouseEvent);
+      final expectPointerEvent = _expectEventType(SyntheticEventType.syntheticPointerEvent);
+      final expectTouchEvent = _expectEventType(SyntheticEventType.syntheticTouchEvent);
+      final expectTransitionEvent = _expectEventType(SyntheticEventType.syntheticTransitionEvent);
+      final expectAnimationEvent = _expectEventType(SyntheticEventType.syntheticAnimationEvent);
+      final expectUiEvent = _expectEventType(SyntheticEventType.syntheticUIEvent);
+      final expectWheelEvent = _expectEventType(SyntheticEventType.syntheticWheelEvent);
 
       group('animationEnd', () => testEvent(Simulate.animationEnd, 'animationEnd', expectAnimationEvent));
       group('animationIteration',
