@@ -96,7 +96,7 @@ class SyntheticEvent {
   /// Prevents further propagation of the current event.
   ///
   /// See: <https://developer.mozilla.org/en-US/docs/Web/API/Event/stopPropagation>
-  external void stopPropagation();
+  external dynamic get stopPropagation;
 
   /// Cancels the [Event] if it is [cancelable], without stopping further propagation of the event.
   ///
@@ -369,7 +369,7 @@ class SyntheticMouseEvent extends SyntheticEvent {
   /// The secondary target for this event, if there is one.
   ///
   /// See <https://developer.mozilla.org/en-US/docs/Web/API/MouseEvent/relatedTarget>
-  external EventTarget get relatedTarget;
+  external dynamic get relatedTarget;
 
   /// The X coordinate of the mouse pointer in global (screen) coordinates.
   ///
