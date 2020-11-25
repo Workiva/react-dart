@@ -41,9 +41,9 @@ abstract class React {
     dynamic defaultValue,
     int Function(dynamic currentValue, dynamic nextValue) calculateChangedBits,
   ]);
-  @Deprecated('6.0.0')
+  @Deprecated('7.0.0')
   external static ReactClass createClass(ReactClassConfig reactClassConfig);
-  @Deprecated('6.0.0')
+  @Deprecated('7.0.0')
   external static ReactJsComponentFactory createFactory(type);
   external static ReactElement createElement(dynamic type, props, [dynamic children]);
   external static JsRef createRef();
@@ -397,9 +397,9 @@ class ReactClass {
   ///
   /// For use in [ReactDartComponentFactoryProxy] when creating new [ReactElement]s,
   /// or for external use involving inspection of Dart prop defaults.
-  @Deprecated('6.0.0')
+  @Deprecated('7.0.0`')
   external Map get dartDefaultProps;
-  @Deprecated('6.0.0')
+  @Deprecated('7.0.0`')
   external set dartDefaultProps(Map value);
 
   /// A string to distinguish between different Dart component implementations / base classes.
@@ -451,8 +451,8 @@ abstract class ReactDartComponentVersion {
 ///
 /// > __DEPRECATED.__
 /// >
-/// > Will be removed alongside [React.createClass] in the `6.0.0` release.
-@Deprecated('6.0.0')
+/// > Will be removed alongside [React.createClass] in the `7.0.0` release.
+@Deprecated('7.0.0')
 @JS()
 @anonymous
 class ReactClassConfig {
@@ -559,7 +559,7 @@ class ReactPortal {
 @JS()
 @anonymous
 class ReactComponent {
-  // TODO: Cast as Component2 in 6.0.0
+  // TODO: Cast as Component2 in 7.0.0
   external Component get dartComponent;
   // TODO how to make this JsMap without breaking stuff?
   external InteropProps get props;
@@ -587,8 +587,8 @@ class ReactComponent {
 /// > This API was never stable in any version of ReactJS, and was replaced with a new, incompatible context API
 /// > in ReactJS 16 that is exposed via the [Component2] class.
 /// >
-/// > This will be completely removed when the JS side of it is slated for removal (ReactJS 17 / react.dart 6.0.0)
-@Deprecated('6.0.0')
+/// > This will be completely removed when the JS side of it is slated for removal (ReactJS 18 / react.dart 7.0.0)
+@Deprecated('7.0.0')
 @JS()
 @anonymous
 class InteropContextValue {
@@ -623,8 +623,8 @@ class InteropProps implements JsMap {
   /// replacement - `Component2` utilizes JS Maps for props,
   /// making `internal` obsolete.
   ///
-  /// Will be removed alongside `Component` in the `6.0.0` release.
-  @Deprecated('6.0.0')
+  /// Will be removed alongside `Component` in the `7.0.0` release.
+  @Deprecated('7.0.0')
   external ReactDartComponentInternal get internal;
   external dynamic get key;
   external dynamic get ref;
@@ -638,8 +638,8 @@ class InteropProps implements JsMap {
   /// replacement - `Component2` utilizes JS Maps for props,
   /// making `InteropProps` obsolete.
   ///
-  /// Will be removed alongside `Component` in the `6.0.0` release.
-  @Deprecated('6.0.0')
+  /// Will be removed alongside `Component` in the `7.0.0` release.
+  @Deprecated('7.0.0')
   external factory InteropProps({
     ReactDartComponentInternal internal,
     String key,
@@ -653,13 +653,13 @@ class InteropProps implements JsMap {
 /// replacement - `Component2` utilizes JS Maps for props,
 /// making `InteropProps` obsolete.
 ///
-/// Will be removed alongside `Component` in the `6.0.0` release.
+/// Will be removed alongside `Component` in the `7.0.0` release.
 ///
 /// > Internal react-dart information used to proxy React JS lifecycle to Dart
 /// > [Component] instances.
 /// >
 /// > __For internal/advanced use only.__
-@Deprecated('6.0.0')
+@Deprecated('7.0.0')
 class ReactDartComponentInternal {
   /// For a `ReactElement`, this is the initial props with defaults merged.
   ///
@@ -678,8 +678,8 @@ class ReactDartComponentInternal {
 /// > This API was never stable in any version of ReactJS, and was replaced with a new, incompatible context API
 /// > in ReactJS 16 that is exposed via the [Component2] class.
 /// >
-/// > This will be completely removed when the JS side of it is slated for removal (ReactJS 17 / react.dart 6.0.0)
-@Deprecated('6.0.0')
+/// > This will be completely removed when the JS side of it is slated for removal (ReactJS 18 / react.dart 7.0.0)
+@Deprecated('7.0.0')
 class ReactDartContextInternal {
   final dynamic value;
 
@@ -733,9 +733,9 @@ void markChildrenValidated(List<dynamic> children) {
 ///
 /// > __DEPRECATED.__
 /// >
-/// > Will be removed in `6.0.0` alongside [Component].
+/// > Will be removed in `7.0.0` alongside [Component].
 @JS('_createReactDartComponentClass')
-@Deprecated('6.0.0')
+@Deprecated('7.0.0')
 external ReactClass createReactDartComponentClass(
     ReactDartInteropStatics dartInteropStatics, ComponentStatics componentStatics,
     [JsComponentConfig jsConfig]);
@@ -768,10 +768,10 @@ bool get inReactDevMode => _inReactDevMode;
 ///
 /// __Deprecated.__
 ///
-/// Will be removed when [Component] is removed in the `6.0.0` release.
+/// Will be removed when [Component] is removed in the `7.0.0` release.
 @JS()
 @anonymous
-@Deprecated('6.0.0')
+@Deprecated('7.0.0')
 class ReactDartInteropStatics {
   external factory ReactDartInteropStatics({
     Component Function(
@@ -837,8 +837,8 @@ class ComponentStatics2 {
 /// > via the [Component2] class and is supported by [JsComponentConfig2].
 /// >
 /// > This will be completely removed when the JS side of `context` it is slated for
-/// > removal (ReactJS 17 / react.dart 6.0.0)
-@Deprecated('6.0.0')
+/// > removal (ReactJS 18 / react.dart 7.0.0)
+@Deprecated('7.0.0')
 @JS()
 @anonymous
 class JsComponentConfig {
