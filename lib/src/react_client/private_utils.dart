@@ -12,7 +12,7 @@ import 'package:react/src/js_interop_util.dart';
 /// This is used when setting environment variables to ensure they can be set properly.
 bool _isJsApiValid = false;
 
-@Deprecated('6.0.0')
+@Deprecated('7.0.0')
 InteropContextValue jsifyContext(Map<String, dynamic> context) {
   var interopContext = new InteropContextValue();
   context.forEach((key, value) {
@@ -29,7 +29,7 @@ T validateJsApiThenReturn<T>(T Function() computeReturn) {
   return computeReturn();
 }
 
-@Deprecated('6.0.0')
+@Deprecated('7.0.0')
 Map<String, dynamic> unjsifyContext(InteropContextValue interopContext) {
   // TODO consider using `contextKeys` for this if perf of objectKeys is bad.
   return new Map.fromIterable(objectKeys(interopContext), value: (key) {
