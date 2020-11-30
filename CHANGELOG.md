@@ -1,3 +1,31 @@
+## [6.0.0](https://github.com/cleandart/react-dart/compare/5.7.1...6.0.0)
+
+This stable, __major__ release of react includes:
+
+### ReactJS 17.x Support
+
+The underlying `.js` files provided by this package are now ReactJS version `17.0.1`.
+
+---
+### __ReactJS 17 Breaking Changes__
+> Source: https://reactjs.org/blog/2020/08/10/react-v17-rc.html#other-breaking-changes
+
+React 17 includes some breaking changes, but rather than being large API removals, they are mostly subtle behavior changes of existing APIs. Please refer to their [blog post](https://reactjs.org/blog/2020/08/10/react-v17-rc.html#other-breaking-changes) for all behavior changes.
+
+### __Dart API Breaking Changes__
+
+### Dart API Removals
+The only APIs that were removed were those that were no longer in use; this was done in https://github.com/cleandart/react-dart/pull/277.
+
+All other APIs slated for removal in 6.0.0 are being bumped to 7.0.0 [here](https://github.com/cleandart/react-dart/pull/289) in order to keep the migration to 6.0.0 as simple as possible. 
+
+### Other Breakages
+Breakage | Migration path
+-- | --
+`SyntheticEvent` classes (of all types) cannot be invoked. See [this blog post](https://wiki.atl.workiva.net/display/CP/2020/11/11/The+Road+to+MUI%3A+New+%60SyntheticEvent%60+Behavior+and+Component+Parity+Updates) for more information | Use `create{X}SyntheticEvent`. See the utilities [here](https://github.com/cleandart/react-dart/blob/master/lib/src/react_client/event_helpers.dart#L10). 
+`SyntheticEvent` classes (of all types) cannot be type checked with `is`. See [this blog post](https://wiki.atl.workiva.net/display/CP/2020/11/11/The+Road+to+MUI%3A+New+%60SyntheticEvent%60+Behavior+and+Component+Parity+Updates) for more information | Use `SyntheticEvent.is{X}Event` instead. See the utilities [here](https://github.com/cleandart/react-dart/blob/master/lib/src/react_client/event_helpers.dart#L587).
+`SyntheticEvent.isFormEvent` was removed because React.js does not have a `SyntheticFormEvent`, and via duck typing, it will always have the same shape as `SyntheticEvent` itself. | Check the event `type` property instead for one of the [relevant types](https://reactjs.org/docs/events.html#form-events). Note: the `type` property excludes the `on` prefix.
+
 ## [5.7.1](https://github.com/cleandart/react-dart/compare/5.7.0...5.7.1)
 
 - [#289] Update most deprecations that were slated for removal in v6.0.0 to be slated for removal in v7.0.0 instead. To keep the migration to v6.0.0 as easy as possible, only APIs that are known to be completely unused will be removed in v6.0.0. Therefore, most APIs that were marked for removal in v6.0.0 will remain until the v7.0.0 release. This PR updated deprecation annotations to reflect this. 
