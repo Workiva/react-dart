@@ -1,3 +1,18 @@
+## [6.0.0](https://github.com/cleandart/react-dart/compare/5.7.1...6.0.0)
+
+This stable, __major__ release of react includes:
+
+### ReactJS 17.x Support
+
+The underlying `.js` files provided by this package are now ReactJS version `17.0.1`.
+
+> __[Full List of Breaking Changes](https://github.com/cleandart/react-dart/pull/285)__
+
+## [5.7.1](https://github.com/cleandart/react-dart/compare/5.7.0...5.7.1)
+
+- [#289] Update most deprecations that were slated for removal in v6.0.0 to be slated for removal in v7.0.0 instead. To keep the migration to v6.0.0 as easy as possible, only APIs that are known to be completely unused will be removed in v6.0.0. Therefore, most APIs that were marked for removal in v6.0.0 will remain until the v7.0.0 release. This PR updated deprecation annotations to reflect this. 
+- [#287] Deprecate `SyntheticEvent.isFormEvent`. Because form events do not exist as their own type in ReactJS, this helper will be removed in v6.0.0. Instead, check for the expected [form event types](https://reactjs.org/docs/events.html#form-events).  
+
 ## [5.7.0](https://github.com/cleandart/react-dart/compare/5.6.1...5.7.0)
 
 - [#282] Add `SyntheticEvent` helpers that eliminate the need to use synthetic event class constructors. Additionally, added utilities to assist in type checking events without manually using the `is` keyword. 
