@@ -30,7 +30,7 @@ dynamic convertArgsToChildren(List childrenArgs) {
   }
 }
 
-@Deprecated('Event handlers are no longer converted')
+@Deprecated('Event handlers are no longer converted. This will be removed in 7.0.0.')
 Function unconvertJsEventHandler(Function jsConvertedEventHandler) => null;
 
 void convertRefValue(Map args) {

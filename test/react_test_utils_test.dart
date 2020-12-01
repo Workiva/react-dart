@@ -4,6 +4,7 @@ library react_test_utils_test;
 import 'dart:html';
 import 'dart:js_util';
 
+import 'package:js/js.dart';
 import 'package:react/react.dart';
 import 'package:react/react_dom.dart' as react_dom;
 import 'package:react/react_client.dart';
@@ -101,10 +102,16 @@ testUtils({isComponent2: false, dynamic eventComponent, dynamic sampleComponent,
       if (expectEventType != null) {
         test('with correct type', () {
           SyntheticEvent capturedEvent;
-          final component = renderIntoDocument(div({
-            eventHandlerName: (e) => capturedEvent = e,
+          DivElement ref;
+
+          renderIntoDocument(div({
+            eventHandlerName: (e) {
+              capturedEvent = e;
+            },
+            "ref": (r) => ref = r,
           }));
-          event(react_dom.findDOMNode(component), eventData);
+
+          event(ref, eventData);
           expectEventType(capturedEvent);
         });
       }
