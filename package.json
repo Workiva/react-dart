@@ -1,7 +1,7 @@
 {
   "name": "react-dart",
   "scripts": {
-    "prebuild": "npm install",
+    "prebuild": "yarn install",
     "build": "./node_modules/.bin/webpack"
   },
   "dependencies": {
