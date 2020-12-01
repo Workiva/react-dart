@@ -109,6 +109,14 @@ function _createReactDartComponentClass2(dartInteropStatics, componentStatics, j
     }
 
     static getDerivedStateFromProps(nextProps, prevState) {
+      // Must call checkPropTypes manually because React moved away from using the `prop-types` package.
+      // See: https://github.com/facebook/react/pull/18127
+      // React now uses its own internal cache of errors for PropTypes which broke `PropTypes.resetWarningCache()`.
+      // Solution was to use `PropTypes.checkPropTypes` directly which makes `PropTypes.resetWarningCache()` work.
+      // Solution from: https://github.com/facebook/react/issues/18251#issuecomment-609024557
+      if (process.env.NODE_ENV !== 'production') {
+        React.PropTypes.checkPropTypes(jsConfig.propTypes, nextProps, 'prop', ReactDartComponent2.displayName);
+      }
       let derivedState = dartInteropStatics.handleGetDerivedStateFromProps(componentStatics, nextProps, prevState);
       return typeof derivedState !== 'undefined' ? derivedState : null;
     }
@@ -131,14 +139,6 @@ function _createReactDartComponentClass2(dartInteropStatics, componentStatics, j
       return typeof derivedState !== 'undefined' ? derivedState : null;
     }
     render() {
-      // Must call checkPropTypes manually because React moved away from using the `prop-types` package.
-      // See: https://github.com/facebook/react/pull/18127
-      // React now uses its own internal cache of errors for PropTypes which broke `PropTypes.resetWarningCache()`.
-      // Solution was to use `PropTypes.checkPropTypes` directly which makes `PropTypes.resetWarningCache()` work.
-      // Solution from: https://github.com/facebook/react/issues/18251#issuecomment-609024557
-      if (process.env.NODE_ENV !== 'production') {
-        React.PropTypes.checkPropTypes(jsConfig.propTypes, this.props, 'prop', ReactDartComponent2.displayName);
-      }
       var result = dartInteropStatics.handleRender(this.dartComponent, this.props, this.state, this.context);
       if (typeof result === 'undefined') result = null;
       return result;
