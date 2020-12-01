@@ -101,10 +101,16 @@ testUtils({isComponent2: false, dynamic eventComponent, dynamic sampleComponent,
       if (expectEventType != null) {
         test('with correct type', () {
           SyntheticEvent capturedEvent;
-          final component = renderIntoDocument(div({
-            eventHandlerName: (e) => capturedEvent = e,
+          DivElement ref;
+
+          renderIntoDocument(div({
+            eventHandlerName: (e) {
+              capturedEvent = e;
+            },
+            "ref": (r) => ref = r,
           }));
-          event(react_dom.findDOMNode(component), eventData);
+
+          event(ref, eventData);
           expectEventType(capturedEvent);
         });
       }
