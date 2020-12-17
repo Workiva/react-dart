@@ -9,10 +9,12 @@ main() {
   verifyJsFileLoaded('react_dom_prod.js');
 
   group('React JS files (prod build):', () {
-    sharedJsFunctionTests();
-  });
+    sharedConsoleWarnTests(expectDeduplicateSyntheticEventWarnings: false);
 
-  test('inReactDevMode (prod build):', () {
-    expect(inReactDevMode, isFalse);
+    sharedJsFunctionTests();
+
+    test('inReactDevMode', () {
+      expect(inReactDevMode, isFalse);
+    });
   });
 }

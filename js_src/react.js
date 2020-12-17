@@ -6,6 +6,9 @@ import 'core-js/es/set';
 import 'core-js/stable/reflect/delete-property';
 import 'core-js/stable/object/assign';
 
+// Used by dart_dev_dev.js
+import 'core-js/stable/string/starts-with';
+
 // Additional polyfills are included by core-js based on 'usage' and browser requirements
 
 // Custom dart side methods
