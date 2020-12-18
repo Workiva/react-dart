@@ -1686,6 +1686,10 @@ main() {
                 currentEventTypeBeingTested == SyntheticEventType.syntheticFormEvent ? isTrue : isFalse,
                 reason: 'The `SyntheticEvent` base class is considered a Form Event via Duck Typing.');
           });
+
+          test('when the event is null', () {
+            expect(eventTypeTester(null), isFalse);
+          });
         });
       }
 
