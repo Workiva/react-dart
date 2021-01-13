@@ -70,7 +70,7 @@ void commonFactoryTests(ReactComponentFactoryProxy factory,
           final arguments = <dynamic>[props, ...expectedChildren];
           final instance = Function.apply(factory, arguments);
           expect(getChildren(instance), expectedChildren);
-        });
+        }, tags: i > 5 ? 'dart-2-7-dart2js-variadic-issues' : null);
       }
 
       test('$maxSupportedVariadicChildCount (and passes static analysis)', () {
@@ -79,7 +79,7 @@ void commonFactoryTests(ReactComponentFactoryProxy factory,
         // Generate these instead of hard coding them to ensure the arguments passed into this test match maxSupportedVariadicChildCount
         final expectedChildren = new List.generate(maxSupportedVariadicChildCount, (i) => i + 1);
         expect(getChildren(instance), equals(expectedChildren));
-      });
+      }, tags: 'dart-2-7-dart2js-variadic-issues');
     });
 
     test('a List', () {
