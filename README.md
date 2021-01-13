@@ -5,6 +5,8 @@
 [![Build Status](https://travis-ci.com/cleandart/react-dart.svg?branch=master)](https://travis-ci.com/cleandart/react-dart)
 [![React Dart API Docs](https://img.shields.io/badge/api_docs-react-blue.svg)](https://pub.dev/documentation/react/latest/)
 
+_Thanks to the folks at [Vacuumlabs](https://www.vacuumlabs.com/) for creating this project! :heart:_
+
 ## Getting Started
 
 ### Installation
