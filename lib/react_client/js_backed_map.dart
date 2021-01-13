@@ -58,12 +58,12 @@ class JsBackedMap extends MapBase<dynamic, dynamic> {
 
   @override
   dynamic operator [](Object key) {
-    return js_util.getProperty(jsObject, key);
+    return _JsBackedMapValue.unwrapIfNeeded(js_util.getProperty(jsObject, key));
   }
 
   @override
   void operator []=(dynamic key, dynamic value) {
-    js_util.setProperty(jsObject, key, value);
+    js_util.setProperty(jsObject, key, _JsBackedMapValue.wrapIfNeeded(value));
   }
 
   @override
@@ -122,6 +122,28 @@ class JsBackedMap extends MapBase<dynamic, dynamic> {
     // hashCode collisions more often, they are completely valid.
     // For more information, see the `Object.hashCode` doc comment.
     return 0;
+  }
+}
+
+/// A wrapper around a value that can't be stored in its raw form
+/// within a JS object (e.g., a Dart function).
+class _JsBackedMapValue {
+  final dynamic value;
+
+  const _JsBackedMapValue(this.value);
+
+  static dynamic wrapIfNeeded(dynamic value) {
+    if (value is Function && !identical(allowInterop(value), value)) {
+      return _JsBackedMapValue(value);
+    }
+    return value;
+  }
+
+  static dynamic unwrapIfNeeded(dynamic value) {
+    if (value is _JsBackedMapValue) {
+      return value.value;
+    }
+    return value;
   }
 }
 
