@@ -1,0 +1,72 @@
+name: Dart CI
+
+on: [push, pull_request]
+
+jobs:
+  # Check formatting using 2.7.2 until we can bump the lower bound to stable.
+  format:
+    runs-on: ubuntu-latest
+    container:
+      image: google/dart:2.7
+    steps:
+      - uses: actions/checkout@v2
+      - name: Print Dart SDK version
+        run: dart --version
+      - id: install
+        name: Install dependencies
+        run: dart pub get
+      - name: Check formatting
+        run: dart format --output=none --line-length=120 --set-exit-if-changed .
+        if: always() && steps.install.outcome == 'success'
+
+  analyze:
+    runs-on: ubuntu-latest
+    container:
+      image: google/dart:latest
+    steps:
+      - uses: actions/checkout@v2
+      - name: Print Dart SDK version
+        run: dart --version
+      - id: install
+        name: Install dependencies
+        run: dart pub get
+      - name: Validate dependencies
+        run: dart pub run dependency_validator -i build_runner,build_test,build_web_compilers
+        if: always() && steps.install.outcome == 'success'
+
+      # TODO: Uncomment this, and remove the Dart 2.7.2 format step once we are able to bump the lower bound of SDK.
+#      - name: Verify formatting
+#        run: dart format --output=none --line-length=120 --set-exit-if-changed .
+#        if: always() && steps.install.outcome == 'success'
+
+      - name: Analyze project source
+        run: dart analyze
+        if: always() && steps.install.outcome == 'success'
+
+  unit_tests_ddc:
+    needs: analyze
+    runs-on: ubuntu-latest
+    container:
+      image: google/dart:latest
+    steps:
+      - uses: actions/checkout@v2
+      - id: install
+        name: Install dependencies
+        run: dart pub get
+      - name: Run tests
+        run: dart pub run build_runner test -- --preset dartdevc
+        if: always() && steps.install.outcome == 'success'
+
+  unit_tests_dart2js:
+    needs: analyze
+    runs-on: ubuntu-latest
+    container:
+      image: google/dart:latest
+    steps:
+      - uses: actions/checkout@v2
+      - id: install
+        name: Install dependencies
+        run: dart pub get
+      - name: Run tests
+        run: dart pub run build_runner test --release -- --preset dart2js
+        if: always() && steps.install.outcome == 'success'
