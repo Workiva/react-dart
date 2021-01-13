@@ -1,0 +1,47 @@
+name: Dart CI (Dev Channel)
+
+on: [pull_request]
+
+jobs:
+  analyze:
+    runs-on: ubuntu-latest
+    container:
+      image: google/dart:dev
+    steps:
+      - uses: actions/checkout@v2
+      - name: Print Dart SDK version
+        run: dart --version
+      - id: install
+        name: Install dependencies
+        run: dart pub get
+      - name: Analyze project source
+        run: dart analyze
+        if: always() && steps.install.outcome == 'success'
+
+  unit_tests_ddc:
+    needs: analyze
+    runs-on: ubuntu-latest
+    container:
+      image: google/dart:dev
+    steps:
+      - uses: actions/checkout@v2
+      - id: install
+        name: Install dependencies
+        run: dart pub get
+      - name: Run tests
+        run: dart pub run build_runner test -- --preset dartdevc
+        if: always() && steps.install.outcome == 'success'
+
+  unit_tests_dart2js:
+    needs: analyze
+    runs-on: ubuntu-latest
+    container:
+      image: google/dart:dev
+    steps:
+      - uses: actions/checkout@v2
+      - id: install
+        name: Install dependencies
+        run: dart pub get
+      - name: Run tests
+        run: dart pub run build_runner test --release -- --preset dart2js
+        if: always() && steps.install.outcome == 'success'

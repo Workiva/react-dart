@@ -2,7 +2,7 @@
 
 [![Pub](https://img.shields.io/pub/v/react.svg)](https://pub.dev/packages/react)
 ![ReactJS v16.10.1](https://img.shields.io/badge/React_JS-v16.10.1-green.svg)
-[![Build Status](https://travis-ci.com/cleandart/react-dart.svg?branch=master)](https://travis-ci.com/cleandart/react-dart)
+[![Dart CI](https://github.com/Workiva/react-dart/workflows/Dart%20CI/badge.svg?branch=master)](https://github.com/Workiva/react-dart/actions?query=workflow%3A%22Dart+CI%22+branch%3Amaster)
 [![React Dart API Docs](https://img.shields.io/badge/api_docs-react-blue.svg)](https://pub.dev/documentation/react/latest/)
 
 _Thanks to the folks at [Vacuumlabs](https://www.vacuumlabs.com/) for creating this project! :heart:_
