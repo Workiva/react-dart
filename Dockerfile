@@ -16,22 +16,14 @@ RUN wget -q -O - https://dl-ssl.google.com/linux/linux_signing_key.pub | apt-key
 # Fail the build if the version doesn't match what we expected
 RUN google-chrome --version | grep " $EXPECTED_CHROME_VERSION\."
 
-# Need to analyze and format since dart_build_image only does it automatically for
-# packages that depend on dart_dev
-RUN dartanalyzer .
+# TODO: Remove this and instead run it within the github actions CI on the stable channel once SDK lower bound is >=2.9.3
 RUN dartfmt --line-length=120 --dry-run --set-exit-if-changed .
 
-RUN pub run dependency_validator -i build_runner,build_test,build_web_compilers
-
-# TODO run tests using dart_unit_test_image in skynet, remove Chrome install
+# TODO: Remove these test runs once SDK lower bound is >=2.9.3
 RUN pub run build_runner test --release -- --preset dart2js --exclude-tags=dart-2-7-dart2js-variadic-issues
 RUN pub run build_runner test -- --preset dartdevc
 
-RUN dart ./tool/run_consumer_tests.dart --orgName Workiva --repoName over_react --testCmd "pub run dart_dev test -P dartdevc"
-
-
-# We need 2.9.2 to verify the Chrome MemoryInfo workaround: https://github.com/cleandart/react-dart/pull/280,
-# and to run the tests that fail in 2.7
+# We need 2.9.2 to verify the Chrome MemoryInfo workaround: https://github.com/cleandart/react-dart/pull/280
 # TODO remove the workaround as well as this config once SDK lower bound is >=2.9.3
 FROM google/dart:2.9.2
 RUN dart --version
@@ -74,10 +66,9 @@ WORKDIR /build/
 ADD . /build/
 
 RUN pub get
-# Run dart2js tests that fail in 2.7
-RUN pub run build_runner test --release -- --preset dart2js --tags=dart-2-7-dart2js-variadic-issues
 # Run DDC tests to verify Chrome workaround
 RUN pub run build_runner test -- --preset dartdevc
-
+# Run dart2js tests that fail in 2.7
+RUN pub run build_runner test --release -- --preset dart2js --tags=dart-2-7-dart2js-variadic-issues
 
 FROM scratch
