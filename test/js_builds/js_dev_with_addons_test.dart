@@ -9,10 +9,12 @@ main() {
   verifyJsFileLoaded('react_dom.js');
 
   group('React JS files (dev w/ addons build):', () {
-    sharedJsFunctionTests();
-  });
+    sharedConsoleWarnTests(expectDeduplicateSyntheticEventWarnings: true);
 
-  test('inReactDevMode (dev build):', () {
-    expect(inReactDevMode, isTrue);
+    sharedJsFunctionTests();
+
+    test('inReactDevMode', () {
+      expect(inReactDevMode, isTrue);
+    });
   });
 }

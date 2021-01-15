@@ -1,8 +1,0 @@
-# js_interop_helpers_test
-
-The same Dart tests in `shared_tests.dart` are run using the different HTML files in this directory.
-
-These HTML files import different combinations of the different consumable React JS files exposed by this package,
-testing that they all include the JS functions (`_getProperty`/`_setProperty`) needed by `react_client/js_interop_helpers.dart`.
-
-That way, if the JS files get updated and those JS functions get accidentally deleted, we'll know about it.

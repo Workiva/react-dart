@@ -136,7 +136,7 @@ main() {
         originalHandlers = {};
         props = {};
 
-        for (final key in eventPropKeyToEventFactory.keys) {
+        for (final key in knownEventKeys) {
           props[key] = originalHandlers[key] = createHandler(key);
         }
       });
@@ -144,32 +144,22 @@ main() {
       test('for a DOM element', () {
         var component = react.div(props);
         var jsProps = unconvertJsProps(component);
-        for (final key in eventPropKeyToEventFactory.keys) {
+        for (final key in knownEventKeys) {
           expect(jsProps[key], isNotNull, reason: 'JS event handler prop should not be null');
-          expect(jsProps[key], same(originalHandlers[key]), reason: 'JS event handler prop was not unconverted');
+          expect(jsProps[key], anyOf(same(originalHandlers[key]), same(allowInterop(originalHandlers[key]))),
+              reason: 'JS event handler should be the original or original wrapped in allowInterop');
         }
       });
 
       test(', except for a JS composite component (handlers should already be unconverted)', () {
         var component = testJsComponentFactory(props);
         var jsProps = unconvertJsProps(component);
-        for (final key in eventPropKeyToEventFactory.keys) {
+        for (final key in knownEventKeys) {
           expect(jsProps[key], isNotNull, reason: 'JS event handler prop should not be null');
           expect(jsProps[key], same(allowInterop(originalHandlers[key])),
               reason: 'JS event handler prop was unexpectedly modified');
         }
       });
-    });
-  });
-
-  group('unconvertJsEventHandler', () {
-    test('returns null when the input is null', () {
-      var result;
-      expect(() {
-        result = unconvertJsEventHandler(null);
-      }, returnsNormally);
-
-      expect(result, isNull);
     });
   });
 

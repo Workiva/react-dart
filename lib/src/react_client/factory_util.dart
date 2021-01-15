@@ -5,16 +5,12 @@ import 'dart:js';
 
 import 'package:js/js.dart';
 
-import 'package:react/react.dart';
 import 'package:react/react_client/component_factory.dart';
 import 'package:react/react_client/js_backed_map.dart';
 import 'package:react/react_client/js_interop_helpers.dart';
 import 'package:react/react_client/react_interop.dart';
 
-import 'package:react/src/react_client/synthetic_event_wrappers.dart' as events;
 import 'package:react/src/typedefs.dart';
-
-import 'event_prop_key_to_event_factory.dart';
 
 /// Converts a list of variadic children arguments to children that should be passed to ReactJS.
 ///
@@ -34,53 +30,8 @@ dynamic convertArgsToChildren(List childrenArgs) {
   }
 }
 
-/// A mapping from converted/wrapped JS handler functions (the result of [_convertEventHandlers])
-/// to the original Dart functions (the input of [_convertEventHandlers]).
-final Expando<Function> originalEventHandler = new Expando();
-
-/// Convert packed event handler into wrapper and pass it only the Dart [SyntheticEvent] object converted from the
-/// [events.SyntheticEvent] event.
-convertEventHandlers(Map args) {
-  args.forEach((propKey, value) {
-    var eventFactory = eventPropKeyToEventFactory[propKey];
-    if (eventFactory != null && value != null) {
-      // Don't attempt to convert functions that have already been converted, or functions
-      // that were passed in as JS props.
-      final handlerHasAlreadyBeenConverted = unconvertJsEventHandler(value) != null;
-      if (!handlerHasAlreadyBeenConverted && !(isRawJsFunctionFromProps[value] ?? false)) {
-        // Apply allowInterop here so that the function we store in [_originalEventHandlers]
-        // is the same one we'll retrieve from the JS props.
-        var reactDartConvertedEventHandler = allowInterop((e, [_, __]) {
-          // To support Dart code calling converted handlers,
-          // check for Dart events and pass them through directly.
-          // Otherwise, convert the JS events like normal.
-          if (e is SyntheticEvent) {
-            value(e);
-          } else {
-            value(eventFactory(e as events.SyntheticEvent));
-          }
-        });
-
-        args[propKey] = reactDartConvertedEventHandler;
-        originalEventHandler[reactDartConvertedEventHandler] = value;
-      }
-    }
-  });
-}
-
-/// Returns the original Dart handler function that, within [convertEventHandlers],
-/// was converted/wrapped into the function [jsConvertedEventHandler] to be passed to the JS.
-///
-/// Returns `null` if [jsConvertedEventHandler] is `null`.
-///
-/// Returns `null` if [jsConvertedEventHandler] does not represent such a function
-///
-/// Useful for chaining event handlers on DOM or JS composite [ReactElement]s.
-Function unconvertJsEventHandler(Function jsConvertedEventHandler) {
-  if (jsConvertedEventHandler == null) return null;
-
-  return originalEventHandler[jsConvertedEventHandler];
-}
+@Deprecated('Event handlers are no longer converted. This will be removed in 7.0.0.')
+Function unconvertJsEventHandler(Function jsConvertedEventHandler) => null;
 
 void convertRefValue(Map args) {
   var ref = args['ref'];
@@ -159,14 +110,11 @@ dynamic generateChildren(List childrenArgs, {bool shouldAlwaysBeList = false}) {
 
 /// Converts [props] into a [JsMap] that can be utilized with `React.createElement()`.
 JsMap generateJsProps(Map props,
-    {bool shouldConvertEventHandlers = true,
-    bool convertRefValue = true,
+    {bool convertRefValue = true,
     bool convertCallbackRefValue = true,
     List<String> additionalRefPropKeys = const [],
     bool wrapWithJsify = true}) {
   final propsForJs = JsBackedMap.from(props);
-
-  if (shouldConvertEventHandlers) convertEventHandlers(propsForJs);
   if (convertRefValue) {
     convertRefValue2(propsForJs,
         convertCallbackRefValue: convertCallbackRefValue, additionalRefPropKeys: additionalRefPropKeys);

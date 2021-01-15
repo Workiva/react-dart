@@ -4,8 +4,12 @@ library react.event_helpers_test;
 import 'dart:html';
 
 import 'package:react/react.dart';
+import 'package:react/react_client/js_interop_helpers.dart';
+import 'package:react/react_dom.dart';
+import 'package:react/react_test_utils.dart';
 import 'package:react/src/react_client/event_helpers.dart';
 import 'package:test/test.dart';
+import 'package:mockito/mockito.dart';
 
 main() {
   group('Synthetic event helpers', () {
@@ -40,7 +44,9 @@ main() {
       // Function properties
       expect(() => event.stopPropagation(), returnsNormally);
       expect(() => event.preventDefault(), returnsNormally);
-      expect(event.defaultPrevented, isTrue, reason: 'calling preventDefault sets the value to true.');
+      expect(event.defaultPrevented, isFalse,
+          reason:
+              'The utilities here only provide an interface to grab properties off a map - there is no underlying instance for `preventDefault` to mutate');
     }
 
     void testSyntheticEventBaseForMergeTests(SyntheticEvent event) {
@@ -63,7 +69,6 @@ main() {
       // Function properties
       expect(() => event.stopPropagation(), returnsNormally, reason: 'this defaults to an empty function');
       expect(() => event.preventDefault(), returnsNormally);
-      expect(event.defaultPrevented, isTrue, reason: 'calling preventDefault sets the value to true.');
     }
 
     void testSyntheticEventBaseAfterMerge(SyntheticEvent event) {
@@ -92,6 +97,145 @@ main() {
       event.preventDefault();
       expect(mergeTestCounter, 2);
     }
+
+    test('wrapNativeKeyboardEvent', () {
+      var nativeKeyboardEvent = MockKeyboardEvent();
+      var currentTarget = DivElement();
+      var target = DivElement();
+      var calls = <String>[];
+
+      when(nativeKeyboardEvent.bubbles).thenReturn(true);
+      when(nativeKeyboardEvent.cancelable).thenReturn(true);
+      when(nativeKeyboardEvent.currentTarget).thenReturn(currentTarget);
+      when(nativeKeyboardEvent.defaultPrevented).thenReturn(false);
+      when(nativeKeyboardEvent.preventDefault()).thenAnswer((_) => calls.add('preventDefault'));
+      when(nativeKeyboardEvent.stopPropagation()).thenAnswer((_) => calls.add('stopPropagation'));
+      when(nativeKeyboardEvent.eventPhase).thenReturn(0);
+      when(nativeKeyboardEvent.target).thenReturn(target);
+      when(nativeKeyboardEvent.timeStamp).thenReturn(0);
+      when(nativeKeyboardEvent.type).thenReturn('type');
+      when(nativeKeyboardEvent.altKey).thenReturn(false);
+      when(nativeKeyboardEvent.charCode).thenReturn(0);
+      when(nativeKeyboardEvent.ctrlKey).thenReturn(false);
+      when(nativeKeyboardEvent.location).thenReturn(0);
+      when(nativeKeyboardEvent.keyCode).thenReturn(0);
+      when(nativeKeyboardEvent.metaKey).thenReturn(false);
+      when(nativeKeyboardEvent.repeat).thenReturn(false);
+      when(nativeKeyboardEvent.shiftKey).thenReturn(false);
+
+      expect(nativeKeyboardEvent.defaultPrevented, isFalse);
+
+      var syntheticKeyboardEvent = wrapNativeKeyboardEvent(nativeKeyboardEvent);
+
+      expect(syntheticKeyboardEvent, isA<SyntheticKeyboardEvent>());
+
+      expect(syntheticKeyboardEvent.bubbles, isTrue);
+      expect(syntheticKeyboardEvent.cancelable, isTrue);
+      expect(syntheticKeyboardEvent.currentTarget, currentTarget);
+      expect(syntheticKeyboardEvent.defaultPrevented, isFalse);
+      expect(() => syntheticKeyboardEvent.preventDefault(), returnsNormally);
+      expect(calls, contains('preventDefault'));
+      expect(() => syntheticKeyboardEvent.stopPropagation(), returnsNormally);
+      expect(calls, contains('stopPropagation'));
+      expect(syntheticKeyboardEvent.eventPhase, 0);
+      expect(syntheticKeyboardEvent.isTrusted, isNull);
+      expect(syntheticKeyboardEvent.nativeEvent, nativeKeyboardEvent);
+      expect(syntheticKeyboardEvent.target, target);
+      expect(syntheticKeyboardEvent.timeStamp, 0);
+      expect(syntheticKeyboardEvent.type, 'type');
+      expect(syntheticKeyboardEvent.altKey, isFalse);
+      expect(syntheticKeyboardEvent.char, String.fromCharCode(0));
+      expect(syntheticKeyboardEvent.charCode, 0);
+      expect(syntheticKeyboardEvent.ctrlKey, isFalse);
+      expect(syntheticKeyboardEvent.locale, isNull);
+      expect(syntheticKeyboardEvent.location, 0);
+      expect(syntheticKeyboardEvent.key, isNull);
+      expect(syntheticKeyboardEvent.keyCode, 0);
+      expect(syntheticKeyboardEvent.metaKey, isFalse);
+      expect(syntheticKeyboardEvent.repeat, isFalse);
+      expect(syntheticKeyboardEvent.shiftKey, isFalse);
+    });
+
+    test('wrapNativeMouseEvent', () {
+      var nativeMouseEvent = MockMouseEvent();
+      var currentTarget = DivElement();
+      var target = DivElement();
+      var relatedTarget = DivElement();
+      var calls = <String>[];
+
+      when(nativeMouseEvent.bubbles).thenReturn(true);
+      when(nativeMouseEvent.cancelable).thenReturn(true);
+      when(nativeMouseEvent.currentTarget).thenReturn(currentTarget);
+      when(nativeMouseEvent.defaultPrevented).thenReturn(false);
+      when(nativeMouseEvent.preventDefault()).thenAnswer((_) => calls.add('preventDefault'));
+      when(nativeMouseEvent.stopPropagation()).thenAnswer((_) => calls.add('stopPropagation'));
+      when(nativeMouseEvent.eventPhase).thenReturn(0);
+      when(nativeMouseEvent.target).thenReturn(target);
+      when(nativeMouseEvent.timeStamp).thenReturn(0);
+      when(nativeMouseEvent.type).thenReturn('type');
+      when(nativeMouseEvent.altKey).thenReturn(false);
+      when(nativeMouseEvent.button).thenReturn(0);
+      when(nativeMouseEvent.ctrlKey).thenReturn(false);
+      when(nativeMouseEvent.metaKey).thenReturn(false);
+      when(nativeMouseEvent.relatedTarget).thenReturn(relatedTarget);
+      when(nativeMouseEvent.shiftKey).thenReturn(false);
+      when(nativeMouseEvent.client).thenReturn(Point(1, 2));
+      when(nativeMouseEvent.page).thenReturn(Point(3, 4));
+      when(nativeMouseEvent.screen).thenReturn(Point(5, 6));
+
+      var syntheticMouseEvent = wrapNativeMouseEvent(nativeMouseEvent);
+
+      expect(syntheticMouseEvent, isA<SyntheticMouseEvent>());
+
+      expect(syntheticMouseEvent.bubbles, isTrue);
+      expect(syntheticMouseEvent.cancelable, isTrue);
+      expect(syntheticMouseEvent.currentTarget, currentTarget);
+      expect(syntheticMouseEvent.defaultPrevented, isFalse);
+      expect(() => syntheticMouseEvent.preventDefault(), returnsNormally);
+      expect(calls, contains('preventDefault'));
+      expect(() => syntheticMouseEvent.stopPropagation(), returnsNormally);
+      expect(calls, contains('stopPropagation'));
+      expect(syntheticMouseEvent.eventPhase, 0);
+      expect(syntheticMouseEvent.isTrusted, isNull);
+      expect(syntheticMouseEvent.nativeEvent, nativeMouseEvent);
+      expect(syntheticMouseEvent.target, target);
+      expect(syntheticMouseEvent.timeStamp, 0);
+      expect(syntheticMouseEvent.type, 'type');
+      expect(syntheticMouseEvent.altKey, isFalse);
+      expect(syntheticMouseEvent.button, 0);
+      expect(syntheticMouseEvent.buttons, isNull);
+      expect(syntheticMouseEvent.clientX, 1);
+      expect(syntheticMouseEvent.clientY, 2);
+      expect(syntheticMouseEvent.ctrlKey, isFalse);
+      expect(syntheticMouseEvent.dataTransfer, isNull);
+      expect(syntheticMouseEvent.metaKey, isFalse);
+      expect(syntheticMouseEvent.pageX, 3);
+      expect(syntheticMouseEvent.pageY, 4);
+      expect(syntheticMouseEvent.relatedTarget, relatedTarget);
+      expect(syntheticMouseEvent.screenX, 5);
+      expect(syntheticMouseEvent.screenY, 6);
+      expect(syntheticMouseEvent.shiftKey, isFalse);
+    });
+
+    test('fakeSyntheticFormEvent', () {
+      var element = DivElement();
+      var fakeEvent = fakeSyntheticFormEvent(element, 'change');
+
+      expect(fakeEvent, isA<SyntheticFormEvent>());
+
+      expect(fakeEvent.bubbles, isFalse);
+      expect(fakeEvent.cancelable, isFalse);
+      expect(fakeEvent.currentTarget, element);
+      expect(fakeEvent.defaultPrevented, false);
+      expect(() => fakeEvent.preventDefault(), returnsNormally);
+      expect(() => fakeEvent.stopPropagation(), returnsNormally);
+      expect(fakeEvent.eventPhase, Event.AT_TARGET);
+      expect(fakeEvent.isTrusted, isFalse);
+      expect(fakeEvent.nativeEvent, isNull);
+      expect(fakeEvent.target, element);
+      expect(fakeEvent.timeStamp, isA<int>());
+      expect(fakeEvent.type, 'change');
+    });
 
     group('createSyntheticEvent', () {
       test('returns normally when no parameters are provided', () {
@@ -690,7 +834,7 @@ main() {
             clientX: 100,
             clientY: 200,
             ctrlKey: true,
-            dataTransfer: SyntheticDataTransfer(testString, null, null, null),
+            dataTransfer: jsifyAndAllowInterop({'dropEffect': testString}),
             metaKey: true,
             pageX: 300,
             pageY: 400,
@@ -736,7 +880,7 @@ main() {
             clientX: 200,
             clientY: 300,
             ctrlKey: false,
-            dataTransfer: SyntheticDataTransfer(updatedTestString, null, null, null),
+            dataTransfer: jsifyAndAllowInterop({'dropEffect': updatedTestString}),
             metaKey: false,
             pageX: 400,
             pageY: 500,
@@ -786,7 +930,7 @@ main() {
             clientX: 100,
             clientY: 200,
             ctrlKey: true,
-            dataTransfer: SyntheticDataTransfer(testString, null, null, null),
+            dataTransfer: jsifyAndAllowInterop({'dropEffect': testString}),
             metaKey: true,
             pageX: 300,
             pageY: 400,
@@ -1502,5 +1646,442 @@ main() {
         });
       });
     });
+
+    group('SyntheticEventTypeHelpers', () {
+      void commonFalseTests(
+          bool Function(SyntheticEvent) eventTypeTester, SyntheticEventType currentEventTypeBeingTested) {
+        group('(common type helper false tests)', () {
+          // A little verbose, but this tests that every `eventTypeTester` only returns `true` for the event type being passed in.
+          //
+          // The complexity comes in because there's always 1 `expect` that should return `true`, which is the actual `currentEventTypeBeingTested`.
+          test('when the event is a different type', () {
+            expect(eventTypeTester(createSyntheticClipboardEvent()),
+                currentEventTypeBeingTested == SyntheticEventType.syntheticClipboardEvent ? isTrue : isFalse);
+            expect(eventTypeTester(createSyntheticKeyboardEvent()),
+                currentEventTypeBeingTested == SyntheticEventType.syntheticKeyboardEvent ? isTrue : isFalse);
+            expect(eventTypeTester(createSyntheticCompositionEvent()),
+                currentEventTypeBeingTested == SyntheticEventType.syntheticCompositionEvent ? isTrue : isFalse);
+            expect(eventTypeTester(createSyntheticFocusEvent()),
+                currentEventTypeBeingTested == SyntheticEventType.syntheticFocusEvent ? isTrue : isFalse);
+            expect(eventTypeTester(createSyntheticFormEvent()),
+                currentEventTypeBeingTested == SyntheticEventType.syntheticFormEvent ? isTrue : isFalse);
+            expect(eventTypeTester(createSyntheticMouseEvent()),
+                currentEventTypeBeingTested == SyntheticEventType.syntheticMouseEvent ? isTrue : isFalse);
+            expect(eventTypeTester(createSyntheticPointerEvent()),
+                currentEventTypeBeingTested == SyntheticEventType.syntheticPointerEvent ? isTrue : isFalse);
+            expect(eventTypeTester(createSyntheticTouchEvent()),
+                currentEventTypeBeingTested == SyntheticEventType.syntheticTouchEvent ? isTrue : isFalse);
+            expect(eventTypeTester(createSyntheticTransitionEvent()),
+                currentEventTypeBeingTested == SyntheticEventType.syntheticTransitionEvent ? isTrue : isFalse);
+            expect(eventTypeTester(createSyntheticAnimationEvent()),
+                currentEventTypeBeingTested == SyntheticEventType.syntheticAnimationEvent ? isTrue : isFalse);
+            expect(eventTypeTester(createSyntheticUIEvent()),
+                currentEventTypeBeingTested == SyntheticEventType.syntheticUIEvent ? isTrue : isFalse);
+            expect(eventTypeTester(createSyntheticWheelEvent()),
+                currentEventTypeBeingTested == SyntheticEventType.syntheticWheelEvent ? isTrue : isFalse);
+          });
+
+          test('when the event is the base class', () {
+            expect(eventTypeTester(createSyntheticEvent()),
+                currentEventTypeBeingTested == SyntheticEventType.syntheticFormEvent ? isTrue : isFalse,
+                reason: 'The `SyntheticEvent` base class is considered a Form Event via Duck Typing.');
+          });
+
+          test('when the event is null', () {
+            expect(eventTypeTester(null), isFalse);
+          });
+        });
+      }
+
+      group('isClipboardEvent', () {
+        group('returns true when', () {
+          test('the event is considered "empty"', () {
+            final e = createSyntheticClipboardEvent();
+            expect(e.isClipboardEvent, isTrue);
+          });
+
+          test('the event has a necessary field', () {
+            final event = createSyntheticClipboardEvent(clipboardData: 'data');
+            expect(event.isClipboardEvent, isTrue);
+          });
+        });
+
+        group('correctly returns false', () {
+          commonFalseTests((e) => e.isClipboardEvent, SyntheticEventType.syntheticClipboardEvent);
+        });
+      });
+
+      group('isKeyboardEvent', () {
+        group('returns true when', () {
+          test('the event is considered "empty"', () {
+            final e = createSyntheticKeyboardEvent();
+            expect(e.isKeyboardEvent, isTrue);
+          });
+
+          test('the event has a necessary field', () {
+            final e2 = createSyntheticKeyboardEvent(char: 'char');
+            expect(e2.isKeyboardEvent, isTrue);
+
+            final e4 = createSyntheticKeyboardEvent(locale: 'local');
+            expect(e4.isKeyboardEvent, isTrue);
+
+            final e5 = createSyntheticKeyboardEvent(location: 1);
+            expect(e5.isKeyboardEvent, isTrue);
+
+            final e6 = createSyntheticKeyboardEvent(key: 'key');
+            expect(e6.isKeyboardEvent, isTrue);
+
+            final e8 = createSyntheticKeyboardEvent(repeat: true);
+            expect(e8.isKeyboardEvent, isTrue);
+
+            final e10 = createSyntheticKeyboardEvent(keyCode: 2);
+            expect(e10.isKeyboardEvent, isTrue);
+
+            final e11 = createSyntheticKeyboardEvent(charCode: 3);
+            expect(e11.isKeyboardEvent, isTrue);
+          });
+        });
+
+        group('correctly returns false', () {
+          commonFalseTests((e) => e.isKeyboardEvent, SyntheticEventType.syntheticKeyboardEvent);
+        });
+      });
+
+      group('isCompositionEvent', () {
+        group('returns true when', () {
+          test('the event is considered "empty"', () {
+            final e = createSyntheticCompositionEvent();
+            expect(e.isCompositionEvent, isTrue);
+          });
+
+          test('returns true when the event has a necessary field', () {
+            final event = createSyntheticCompositionEvent(data: 'data');
+            expect(event.isCompositionEvent, isTrue);
+          });
+        });
+
+        group('correctly returns false', () {
+          commonFalseTests((e) => e.isCompositionEvent, SyntheticEventType.syntheticCompositionEvent);
+        });
+      });
+
+      group('isFocusEvent', () {
+        group('returns true when', () {
+          test('the event is considered "empty"', () {
+            final e = createSyntheticFocusEvent();
+            expect(e.isFocusEvent, isTrue);
+          });
+
+          test('the event is a synthetic focus event with a relatedTarget field', () {
+            final event = createSyntheticFocusEvent(relatedTarget: 'data');
+            expect(event.isFocusEvent, isTrue);
+          });
+        });
+
+        group('correctly returns false', () {
+          commonFalseTests((e) => e.isFocusEvent, SyntheticEventType.syntheticFocusEvent);
+        });
+      });
+
+      group('isMouseEvent', () {
+        group('returns true when', () {
+          test('the event is considered "empty"', () {
+            final e = createSyntheticMouseEvent();
+            expect(e.isMouseEvent, isTrue);
+          });
+
+          test('the event has a necessary field', () {
+            final e1 = createSyntheticMouseEvent(button: 10);
+            expect(e1.isMouseEvent, isTrue);
+
+            final e2 = createSyntheticMouseEvent(buttons: 10);
+            expect(e2.isMouseEvent, isTrue);
+
+            final e3 = createSyntheticMouseEvent(clientX: 10);
+            expect(e3.isMouseEvent, isTrue);
+
+            final e4 = createSyntheticMouseEvent(clientY: 10);
+            expect(e4.isMouseEvent, isTrue);
+
+            final e5 = createSyntheticMouseEvent(dataTransfer: jsifyAndAllowInterop({'dropEffect': 'data'}));
+            expect(e5.isMouseEvent, isTrue);
+
+            final e6 = createSyntheticMouseEvent(pageX: 10);
+            expect(e6.isMouseEvent, isTrue);
+
+            final e7 = createSyntheticMouseEvent(pageY: 10);
+            expect(e7.isMouseEvent, isTrue);
+
+            final e8 = createSyntheticMouseEvent(screenX: 10);
+            expect(e8.isMouseEvent, isTrue);
+
+            final e9 = createSyntheticMouseEvent(screenY: 10);
+            expect(e9.isMouseEvent, isTrue);
+          });
+        });
+
+        group('correctly returns false', () {
+          commonFalseTests((e) => e.isMouseEvent, SyntheticEventType.syntheticMouseEvent);
+        });
+
+        group('isPointerEvent', () {
+          group('returns true when', () {
+            test('the event is considered "empty"', () {
+              final e = createSyntheticPointerEvent();
+              expect(e.isPointerEvent, isTrue);
+            });
+
+            test('the event has a necessary field', () {
+              final e1 = createSyntheticPointerEvent(pointerId: 10);
+              expect(e1.isPointerEvent, isTrue);
+
+              final e2 = createSyntheticPointerEvent(width: 10);
+              expect(e2.isPointerEvent, isTrue);
+
+              final e3 = createSyntheticPointerEvent(height: 10);
+              expect(e3.isPointerEvent, isTrue);
+
+              final e4 = createSyntheticPointerEvent(pressure: 10);
+              expect(e4.isPointerEvent, isTrue);
+
+              final e5 = createSyntheticPointerEvent(tangentialPressure: 10);
+              expect(e5.isPointerEvent, isTrue);
+
+              final e6 = createSyntheticPointerEvent(tiltX: 10);
+              expect(e6.isPointerEvent, isTrue);
+
+              final e7 = createSyntheticPointerEvent(tiltY: 10);
+              expect(e7.isPointerEvent, isTrue);
+
+              final e8 = createSyntheticPointerEvent(twist: 10);
+              expect(e8.isPointerEvent, isTrue);
+
+              final e9 = createSyntheticPointerEvent(pointerType: 'type');
+              expect(e9.isPointerEvent, isTrue);
+
+              final e10 = createSyntheticPointerEvent(isPrimary: true);
+              expect(e10.isPointerEvent, isTrue);
+            });
+          });
+
+          group('correctly returns false', () {
+            commonFalseTests((e) => e.isPointerEvent, SyntheticEventType.syntheticPointerEvent);
+          });
+        });
+
+        group('isTouchEvent', () {
+          group('returns true when', () {
+            test('the event is considered "empty"', () {
+              final e = createSyntheticTouchEvent();
+              expect(e.isTouchEvent, isTrue);
+            });
+
+            test('the event has a necessary field', () {
+              final e1 = createSyntheticTouchEvent(changedTouches: 10);
+              expect(e1.isTouchEvent, isTrue);
+
+              final e2 = createSyntheticTouchEvent(targetTouches: 10);
+              expect(e2.isTouchEvent, isTrue);
+
+              final e3 = createSyntheticTouchEvent(touches: 10);
+              expect(e3.isTouchEvent, isTrue);
+            });
+          });
+
+          group('correctly returns false', () {
+            commonFalseTests((e) => e.isTouchEvent, SyntheticEventType.syntheticTouchEvent);
+          });
+        });
+
+        group('isTransitionEvent', () {
+          group('returns true when', () {
+            test('the event is considered "empty"', () {
+              final e = createSyntheticTransitionEvent();
+              expect(e.isTransitionEvent, isTrue);
+            });
+
+            test('the event has a necessary field', () {
+              final e1 = createSyntheticTransitionEvent(propertyName: 'property');
+              expect(e1.isTransitionEvent, isTrue);
+            });
+          });
+
+          group('correctly returns false', () {
+            commonFalseTests((e) => e.isTransitionEvent, SyntheticEventType.syntheticTransitionEvent);
+          });
+        });
+
+        group('isAnimationEvent', () {
+          group('returns true when', () {
+            test('the event is considered "empty"', () {
+              final e = createSyntheticAnimationEvent();
+              expect(e.isAnimationEvent, isTrue);
+            });
+
+            test('the event has a necessary field', () {
+              final e1 = createSyntheticAnimationEvent(animationName: 'name');
+              expect(e1.isAnimationEvent, isTrue);
+            });
+          });
+
+          group('correctly returns false', () {
+            commonFalseTests((e) => e.isAnimationEvent, SyntheticEventType.syntheticAnimationEvent);
+          });
+        });
+
+        group('isUiEvent', () {
+          group('returns true when', () {
+            test('the event is considered "empty"', () {
+              final e = createSyntheticUIEvent();
+              expect(e.isUiEvent, isTrue);
+            });
+
+            test('the event has a necessary field', () {
+              final e1 = createSyntheticUIEvent(detail: 10);
+              expect(e1.isUiEvent, isTrue);
+
+              final e2 = createSyntheticUIEvent(view: 10);
+              expect(e2.isUiEvent, isTrue);
+            });
+          });
+
+          group('correctly returns false', () {
+            commonFalseTests((e) => e.isUiEvent, SyntheticEventType.syntheticUIEvent);
+          });
+        });
+
+        group('isWheelEvent', () {
+          group('returns true when', () {
+            test('the event is considered "empty"', () {
+              final e = createSyntheticWheelEvent();
+              expect(e.isWheelEvent, isTrue);
+            });
+
+            test('the event has a necessary field', () {
+              final e1 = createSyntheticWheelEvent(deltaX: 10);
+              expect(e1.isWheelEvent, isTrue);
+
+              final e2 = createSyntheticWheelEvent(deltaMode: 10);
+              expect(e2.isWheelEvent, isTrue);
+
+              final e3 = createSyntheticWheelEvent(deltaY: 10);
+              expect(e3.isWheelEvent, isTrue);
+
+              final e4 = createSyntheticWheelEvent(deltaZ: 10);
+              expect(e4.isWheelEvent, isTrue);
+            });
+          });
+
+          group('correctly returns false', () {
+            commonFalseTests((e) => e.isWheelEvent, SyntheticEventType.syntheticWheelEvent);
+          });
+        });
+      });
+    });
+
+    group('DataTransferHelper', () {
+      group('dataTransfer', () {
+        SyntheticMouseEvent event;
+
+        tearDown(() {
+          event = null;
+        });
+
+        Element renderAndGetRootNode() {
+          final mountNode = Element.div();
+          final content = div({'onDrag': (e) => event = e, 'draggable': true}, []);
+          render(content, mountNode);
+          return mountNode.children.single;
+        }
+
+        group('detects an anonymous JS object correctly', () {
+          test('when all fields are filled out', () {
+            final files = [File([], 'name1'), File([], 'name2'), File([], 'name3')];
+
+            final eventData = {
+              'dataTransfer': {
+                'files': files,
+                'types': ['d', 'e', 'f'],
+                'effectAllowed': 'none',
+                'dropEffect': 'move',
+              }
+            };
+
+            final node = renderAndGetRootNode();
+            Simulate.drag(node, eventData);
+
+            final dataTransfer = event.dataTransfer;
+
+            expect(dataTransfer, isNotNull);
+
+            final fileNames = dataTransfer.files.map((file) => (file as File).name);
+
+            expect(fileNames, containsAll(['name1', 'name2', 'name3']));
+            expect(dataTransfer.types, containsAll(['d', 'e', 'f']));
+            expect(dataTransfer.effectAllowed, 'none');
+            expect(dataTransfer.dropEffect, 'move');
+          });
+
+          test('when none of the fields are filled out', () {
+            final eventData = {'dataTransfer': {}};
+
+            final node = renderAndGetRootNode();
+            Simulate.drag(node, eventData);
+
+            final dataTransfer = event.dataTransfer;
+
+            expect(dataTransfer, isNotNull);
+            expect(dataTransfer.files, isNotNull);
+            expect(dataTransfer.files, isEmpty);
+            expect(dataTransfer.types, isNotNull);
+            expect(dataTransfer.types, isEmpty);
+            expect(dataTransfer.effectAllowed, null);
+            expect(dataTransfer.dropEffect, null);
+          });
+        });
+
+        group('detects a DataTransfer object correctly', () {
+          test('when none of the fields are filled out', () {
+            final eventData = {
+              'dataTransfer': DataTransfer(),
+            };
+
+            final node = renderAndGetRootNode();
+            Simulate.drag(node, eventData);
+
+            final dataTransfer = event.dataTransfer;
+
+            expect(dataTransfer, isNotNull);
+            expect(dataTransfer.files, isNotNull);
+            expect(dataTransfer.files, isEmpty);
+            expect(dataTransfer.types, isNotNull);
+            expect(dataTransfer.types, isEmpty);
+            expect(dataTransfer.effectAllowed, 'none');
+            expect(dataTransfer.dropEffect, 'none');
+          });
+        });
+      });
+    });
   });
+}
+
+// ignore: avoid_implementing_value_types
+class MockKeyboardEvent extends Mock implements KeyboardEvent {}
+
+// ignore: avoid_implementing_value_types
+class MockMouseEvent extends Mock implements MouseEvent {}
+
+enum SyntheticEventType {
+  syntheticClipboardEvent,
+  syntheticKeyboardEvent,
+  syntheticCompositionEvent,
+  syntheticFocusEvent,
+  syntheticFormEvent,
+  syntheticMouseEvent,
+  syntheticPointerEvent,
+  syntheticTouchEvent,
+  syntheticTransitionEvent,
+  syntheticAnimationEvent,
+  syntheticUIEvent,
+  syntheticWheelEvent
 }

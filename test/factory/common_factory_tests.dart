@@ -267,8 +267,7 @@ void domEventHandlerWrappingTests(ReactComponentFactoryProxy factory) {
         test(eventCase.description, () {
           eventCase.simulate(node);
           expect(events[eventCase], isNotNull, reason: 'handler should have been called');
-          expect(events[eventCase],
-              eventCase.isDart ? isA<react.SyntheticMouseEvent>() : isNot(isA<react.SyntheticMouseEvent>()));
+          expect(events[eventCase], isA<react.SyntheticMouseEvent>());
         });
       }
     });
@@ -280,8 +279,15 @@ void domEventHandlerWrappingTests(ReactComponentFactoryProxy factory) {
               reason: 'test setup: component must pass props into props.onDartRender');
         });
 
-        final dummyEvent = react.SyntheticMouseEvent(null, null, null, null, null, null, null, null, null, null, null,
-            null, null, null, null, null, null, null, null, null, null, null, null, null, null, null);
+        react.SyntheticMouseEvent event;
+        final divRef = react.createRef<DivElement>();
+        render(react.div({
+          'ref': divRef,
+          'onClick': (e) => event = e,
+        }));
+        rtu.Simulate.click(divRef);
+
+        final dummyEvent = event;
 
         for (var eventCase in eventCases.where((helper) => helper.isDart)) {
           test(eventCase.description, () {
@@ -292,56 +298,24 @@ void domEventHandlerWrappingTests(ReactComponentFactoryProxy factory) {
     }
   });
 
-  group('wraps the handler with a function that proxies ReactJS event "persistence" as expected', () {
-    test('when event.persist() is called', () {
-      react.SyntheticMouseEvent actualEvent;
+  test('event has .persist and .isPersistent methods that can be called', () {
+    react.SyntheticMouseEvent actualEvent;
 
-      final nodeWithClickHandler = renderAndGetRootNode(factory({
-        'onClick': (react.SyntheticMouseEvent event) {
-          event.persist();
-          actualEvent = event;
-        }
-      }));
+    final nodeWithClickHandler = renderAndGetRootNode(factory({
+      'onClick': (react.SyntheticMouseEvent event) {
+        expect(() => event.persist(), returnsNormally);
+        actualEvent = event;
+      }
+    }));
 
-      rtu.Simulate.click(nodeWithClickHandler);
-
-      // ignore: invalid_use_of_protected_member
-      expect(actualEvent.$$jsPersistDoNotSetThisOrYouWillBeFired, isA<Function>());
-      expect(actualEvent.isPersistent, isTrue);
-    });
-
-    test('when event.persist() is not called', () {
-      react.SyntheticMouseEvent actualEvent;
-
-      final nodeWithClickHandler = renderAndGetRootNode(factory({
-        'onClick': (react.SyntheticMouseEvent event) {
-          actualEvent = event;
-        }
-      }));
-
-      rtu.Simulate.click(nodeWithClickHandler);
-
-      // ignore: invalid_use_of_protected_member
-      expect(actualEvent.$$jsPersistDoNotSetThisOrYouWillBeFired, isA<Function>());
-      expect(actualEvent.isPersistent, isFalse);
-    });
+    rtu.Simulate.click(nodeWithClickHandler);
+    expect(actualEvent.isPersistent, isA<bool>());
   });
 
   test('doesn\'t wrap the handler if it is null', () {
     final nodeWithClickHandler = renderAndGetRootNode(factory({'onClick': null}));
 
     expect(() => rtu.Simulate.click(nodeWithClickHandler), returnsNormally);
-  });
-
-  test('stores the original function in a way that it can be retrieved from unconvertJsEventHandler', () {
-    final originalHandler = (event) {};
-
-    var instance = factory({'onClick': originalHandler});
-    var instanceProps = getProps(instance);
-
-    expect(instanceProps['onClick'], isNot(same(originalHandler)),
-        reason: 'test setup sanity check; should be different, converted function');
-    expect(unconvertJsEventHandler(instanceProps['onClick']), same(originalHandler));
   });
 
   group('calls the handler in the zone the event was dispatched from', () {

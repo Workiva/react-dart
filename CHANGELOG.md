@@ -1,3 +1,15 @@
+## [6.0.0](https://github.com/cleandart/react-dart/compare/5.7.1...6.0.0)
+
+This stable, __major__ release of react includes:
+
+### ReactJS 17.x Support
+
+The underlying `.js` files provided by this package are now ReactJS version `17.0.1`.
+
+> __[Full List of Breaking Changes](https://github.com/cleandart/react-dart/pull/285)__
+
+> __[React 17 Release Blog Post](https://reactjs.org/blog/2020/10/20/react-v17.html)__
+
 ## [5.7.1](https://github.com/cleandart/react-dart/compare/5.7.0...5.7.1)
 
 - [#289] Update most deprecations that were slated for removal in v6.0.0 to be slated for removal in v7.0.0 instead. To keep the migration to v6.0.0 as easy as possible, only APIs that are known to be completely unused will be removed in v6.0.0. Therefore, most APIs that were marked for removal in v6.0.0 will remain until the v7.0.0 release. This PR updated deprecation annotations to reflect this. 
