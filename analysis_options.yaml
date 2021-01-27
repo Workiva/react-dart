@@ -6,7 +6,6 @@ analyzer:
     unused_import: warning
     duplicate_import: warning
     comment_references: info
-    prefer_void_to_null: info
 linter:
   rules:
     prefer_if_elements_to_conditional_expressions: false
