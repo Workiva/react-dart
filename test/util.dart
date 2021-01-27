@@ -178,8 +178,7 @@ class RefTestCaseCollection<T> {
         createJsRefObjectCase(),
       ];
 
-  // ignore: avoid_shadowing_type_parameters
-  RefTestCase createCaseByName<T>(String name) => createAllCases().singleWhere((c) => c.name == name);
+  RefTestCase createCaseByName(String name) => createAllCases().singleWhere((c) => c.name == name);
 
   List<String> get allTestCaseNames => createAllCases().map((c) => c.name).toList();
 }
