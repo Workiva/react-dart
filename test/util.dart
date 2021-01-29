@@ -126,8 +126,7 @@ class RefTestCaseCollection<T> {
     );
   }
 
-  // ignore: avoid_shadowing_type_parameters
-  RefTestCase createRefObjectCase<T>() {
+  RefTestCase createRefObjectCase() {
     const name = 'ref object';
     final ref = createRef<T>();
     return RefTestCase(
