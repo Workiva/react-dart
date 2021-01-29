@@ -158,6 +158,7 @@ testUtils({isComponent2: false, dynamic eventComponent, dynamic sampleComponent,
       group('compositionStart', () => testEvent(Simulate.compositionStart, 'compositionStart', expectCompositionEvent));
       group('compositionUpdate',
           () => testEvent(Simulate.compositionUpdate, 'compositionUpdate', expectCompositionEvent));
+      group('contextMenu', () => testEvent(Simulate.contextMenu, 'contextMenu', expectMouseEvent));
       group('cut', () => testEvent(Simulate.cut, 'cut', expectClipboardEvent));
       group('doubleClick', () => testEvent(Simulate.doubleClick, 'doubleClick', expectMouseEvent));
       group('drag', () => testEvent(Simulate.drag, 'drag', expectMouseEvent));
