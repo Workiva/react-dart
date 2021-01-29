@@ -108,7 +108,7 @@ class RefTestCaseCollection<T> {
     return RefTestCase(
       name: name,
       // ignore: unnecessary_lambdas, avoid_types_on_closure_parameters
-      ref: (dynamic value) => calls.add,
+      ref: (dynamic value) => calls.add(value),
       verifyRefWasUpdated: (actualValue) => expect(calls, [same(actualValue)], reason: _reasonMessage(name)),
       getCurrent: () => calls.single,
     );
