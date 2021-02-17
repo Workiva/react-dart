@@ -1,3 +1,7 @@
+## [6.0.1](https://github.com/cleandart/react-dart/compare/6.0.0...6.0.1)
+
+- [#305] Fix `JsBackedMap` for Dart 2.12.
+
 ## [6.0.0](https://github.com/cleandart/react-dart/compare/5.7.1...6.0.0)
 
 This stable, __major__ release of react includes:
