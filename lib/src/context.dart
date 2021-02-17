@@ -9,6 +9,7 @@ import 'dart:js_util';
 import 'package:js/js.dart';
 import 'package:react/react_client/react_interop.dart';
 import 'package:react/react_client/component_factory.dart' show ReactJsContextComponentFactoryProxy;
+import 'package:react/src/react_client/private_utils.dart';
 
 /// The return type of [createContext], Wraps [ReactContext] for use in Dart.
 /// Allows access to [Provider] and [Consumer] Components.
@@ -131,7 +132,7 @@ abstract class ContextHelpers {
   // It is wrapped so that the same Dart value can be retrieved from Dart with [_unjsifyNewContext].
   static dynamic jsifyNewContext(dynamic context) {
     var jsContextHolder = newObject();
-    setProperty(jsContextHolder, _reactDartContextSymbol, _ContextValue.wrapIfNeeded(context));
+    setProperty(jsContextHolder, _reactDartContextSymbol, DartValueWrapper.wrapIfNeeded(context));
     return jsContextHolder;
   }
 
@@ -140,30 +141,8 @@ abstract class ContextHelpers {
   // when used with [_jsifyNewContext].
   static dynamic unjsifyNewContext(dynamic interopContext) {
     if (interopContext != null && hasProperty(interopContext, _reactDartContextSymbol)) {
-      return _ContextValue.unwrapIfNeeded(getProperty(interopContext, _reactDartContextSymbol));
+      return DartValueWrapper.unwrapIfNeeded(getProperty(interopContext, _reactDartContextSymbol));
     }
     return interopContext;
-  }
-}
-
-/// A wrapper around a value that can't be stored in its raw form
-/// within a JS object (e.g., a Dart function).
-class _ContextValue {
-  final dynamic value;
-
-  const _ContextValue(this.value);
-
-  static dynamic wrapIfNeeded(dynamic value) {
-    if (value is Function && !identical(allowInterop(value), value)) {
-      return _ContextValue(value);
-    }
-    return value;
-  }
-
-  static dynamic unwrapIfNeeded(dynamic value) {
-    if (value is _ContextValue) {
-      return value.value;
-    }
-    return value;
   }
 }
