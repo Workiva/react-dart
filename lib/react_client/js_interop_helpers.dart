@@ -67,7 +67,7 @@ _convertDataTree(data) {
       return _convertedObjects[o];
     }
     if (o is Map) {
-      final convertedMap = newObject();
+      final convertedMap = newObject() as Object;
       _convertedObjects[o] = convertedMap;
       for (final key in o.keys) {
         setProperty(convertedMap, key, _convert(o[key]));

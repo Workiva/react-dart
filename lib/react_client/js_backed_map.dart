@@ -58,7 +58,7 @@ class JsBackedMap extends MapBase<dynamic, dynamic> {
   // ----------------------------------
 
   @override
-  dynamic operator [](Object key) {
+  dynamic? operator [](Object? key) {
     return DartValueWrapper.unwrapIfNeeded(js_util.getProperty(jsObject, key));
   }
 
@@ -71,7 +71,7 @@ class JsBackedMap extends MapBase<dynamic, dynamic> {
   Iterable<dynamic> get keys => _keys;
 
   @override
-  dynamic remove(Object key) {
+  dynamic? remove(Object? key) {
     final value = this[key];
     _Reflect.deleteProperty(jsObject, key);
     return value;
@@ -99,14 +99,14 @@ class JsBackedMap extends MapBase<dynamic, dynamic> {
   }
 
   @override
-  bool containsKey(Object key) => js_util.hasProperty(jsObject, key);
+  bool containsKey(Object? key) => js_util.hasProperty(jsObject, key);
 
   @override
   Iterable<dynamic> get values => _values;
 
   // todo figure out if this is faster than default implementation
   @override
-  bool containsValue(Object value) => _values.contains(value);
+  bool containsValue(Object? value) => _values.contains(value);
 
   @override
   bool operator ==(other) => other is JsBackedMap && other.jsObject == jsObject;

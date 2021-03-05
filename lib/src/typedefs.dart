@@ -26,7 +26,7 @@ typedef RefMethod = dynamic Function(String ref);
 /// Typedef for the `updater` argument of [Component2.setStateWithUpdater].
 ///
 /// See: <https://reactjs.org/docs/react-component.html#setstate>
-typedef StateUpdaterCallback = Map Function(Map prevState, Map props);
+typedef StateUpdaterCallback = Map? Function(Map prevState, Map props);
 
 /// Typedef of a non-transactional [Component2.setState] callback.
 ///

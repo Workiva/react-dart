@@ -12,10 +12,10 @@ authors:
 description: Bindings of the ReactJS library for building interactive interfaces.
 homepage: https://github.com/cleandart/react-dart
 environment:
-  sdk: '>=2.7.0 <3.0.0'
+  sdk: '>=2.12.0 <3.0.0'
 dependencies:
-  js: ^0.6.0
-  meta: ^1.1.6
+  js: ^0.6.3
+  meta: ^1.3.0
 dev_dependencies:
   args: ^1.5.1
   build_runner: ^1.6.5

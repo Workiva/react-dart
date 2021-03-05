@@ -40,7 +40,7 @@ dynamic getComponentTypeV2(ReactComponentFactoryProxy componentFactory) => compo
 
 typedef ComponentTestFunction = bool Function(/* [1] */ dynamic component);
 
-dynamic _jsifyEventData(Map eventData) => jsifyAndAllowInterop(eventData ?? const {});
+dynamic _jsifyEventData(Map? eventData) => jsifyAndAllowInterop(eventData ?? const {});
 
 /// Event simulation interface.
 ///
@@ -52,66 +52,66 @@ dynamic _jsifyEventData(Map eventData) => jsifyAndAllowInterop(eventData ?? cons
 /// This should include all events documented at:
 /// https://reactjs.org/docs/events.html
 class Simulate {
-  static void animationEnd(/* [1] */ node, [Map eventData]) =>
+  static void animationEnd(/* [1] */ node, [Map? eventData]) =>
       sw.Simulate.animationEnd(node, _jsifyEventData(eventData));
-  static void animationIteration(/* [1] */ node, [Map eventData]) =>
+  static void animationIteration(/* [1] */ node, [Map? eventData]) =>
       sw.Simulate.animationIteration(node, _jsifyEventData(eventData));
-  static void animationStart(/* [1] */ node, [Map eventData]) =>
+  static void animationStart(/* [1] */ node, [Map? eventData]) =>
       sw.Simulate.animationStart(node, _jsifyEventData(eventData));
-  static void blur(/*[1]*/ node, [Map eventData]) => sw.Simulate.blur(node, _jsifyEventData(eventData));
-  static void change(/*[1]*/ node, [Map eventData]) => sw.Simulate.change(node, _jsifyEventData(eventData));
-  static void click(/*[1]*/ node, [Map eventData]) => sw.Simulate.click(node, _jsifyEventData(eventData));
-  static void contextMenu(/*[1]*/ node, [Map eventData]) => sw.Simulate.contextMenu(node, _jsifyEventData(eventData));
-  static void copy(/*[1]*/ node, [Map eventData]) => sw.Simulate.copy(node, _jsifyEventData(eventData));
-  static void compositionEnd(/*[1]*/ node, [Map eventData]) =>
+  static void blur(/*[1]*/ node, [Map? eventData]) => sw.Simulate.blur(node, _jsifyEventData(eventData));
+  static void change(/*[1]*/ node, [Map? eventData]) => sw.Simulate.change(node, _jsifyEventData(eventData));
+  static void click(/*[1]*/ node, [Map? eventData]) => sw.Simulate.click(node, _jsifyEventData(eventData));
+  static void contextMenu(/*[1]*/ node, [Map? eventData]) => sw.Simulate.contextMenu(node, _jsifyEventData(eventData));
+  static void copy(/*[1]*/ node, [Map? eventData]) => sw.Simulate.copy(node, _jsifyEventData(eventData));
+  static void compositionEnd(/*[1]*/ node, [Map? eventData]) =>
       sw.Simulate.compositionEnd(node, _jsifyEventData(eventData));
-  static void compositionStart(/*[1]*/ node, [Map eventData]) =>
+  static void compositionStart(/*[1]*/ node, [Map? eventData]) =>
       sw.Simulate.compositionStart(node, _jsifyEventData(eventData));
-  static void compositionUpdate(/*[1]*/ node, [Map eventData]) =>
+  static void compositionUpdate(/*[1]*/ node, [Map? eventData]) =>
       sw.Simulate.compositionUpdate(node, _jsifyEventData(eventData));
-  static void cut(/*[1]*/ node, [Map eventData]) => sw.Simulate.cut(node, _jsifyEventData(eventData));
-  static void doubleClick(/*[1]*/ node, [Map eventData]) => sw.Simulate.doubleClick(node, _jsifyEventData(eventData));
-  static void drag(/*[1]*/ node, [Map eventData]) => sw.Simulate.drag(node, _jsifyEventData(eventData));
-  static void dragEnd(/*[1]*/ node, [Map eventData]) => sw.Simulate.dragEnd(node, _jsifyEventData(eventData));
-  static void dragEnter(/*[1]*/ node, [Map eventData]) => sw.Simulate.dragEnter(node, _jsifyEventData(eventData));
-  static void dragExit(/*[1]*/ node, [Map eventData]) => sw.Simulate.dragExit(node, _jsifyEventData(eventData));
-  static void dragLeave(/*[1]*/ node, [Map eventData]) => sw.Simulate.dragLeave(node, _jsifyEventData(eventData));
-  static void dragOver(/*[1]*/ node, [Map eventData]) => sw.Simulate.dragOver(node, _jsifyEventData(eventData));
-  static void dragStart(/*[1]*/ node, [Map eventData]) => sw.Simulate.dragStart(node, _jsifyEventData(eventData));
-  static void drop(/*[1]*/ node, [Map eventData]) => sw.Simulate.drop(node, _jsifyEventData(eventData));
-  static void focus(/*[1]*/ node, [Map eventData]) => sw.Simulate.focus(node, _jsifyEventData(eventData));
-  static void gotPointerCapture(/*[1]*/ node, [Map eventData]) =>
+  static void cut(/*[1]*/ node, [Map? eventData]) => sw.Simulate.cut(node, _jsifyEventData(eventData));
+  static void doubleClick(/*[1]*/ node, [Map? eventData]) => sw.Simulate.doubleClick(node, _jsifyEventData(eventData));
+  static void drag(/*[1]*/ node, [Map? eventData]) => sw.Simulate.drag(node, _jsifyEventData(eventData));
+  static void dragEnd(/*[1]*/ node, [Map? eventData]) => sw.Simulate.dragEnd(node, _jsifyEventData(eventData));
+  static void dragEnter(/*[1]*/ node, [Map? eventData]) => sw.Simulate.dragEnter(node, _jsifyEventData(eventData));
+  static void dragExit(/*[1]*/ node, [Map? eventData]) => sw.Simulate.dragExit(node, _jsifyEventData(eventData));
+  static void dragLeave(/*[1]*/ node, [Map? eventData]) => sw.Simulate.dragLeave(node, _jsifyEventData(eventData));
+  static void dragOver(/*[1]*/ node, [Map? eventData]) => sw.Simulate.dragOver(node, _jsifyEventData(eventData));
+  static void dragStart(/*[1]*/ node, [Map? eventData]) => sw.Simulate.dragStart(node, _jsifyEventData(eventData));
+  static void drop(/*[1]*/ node, [Map? eventData]) => sw.Simulate.drop(node, _jsifyEventData(eventData));
+  static void focus(/*[1]*/ node, [Map? eventData]) => sw.Simulate.focus(node, _jsifyEventData(eventData));
+  static void gotPointerCapture(/*[1]*/ node, [Map? eventData]) =>
       sw.Simulate.gotPointerCapture(node, _jsifyEventData(eventData));
-  static void input(/*[1]*/ node, [Map eventData]) => sw.Simulate.input(node, _jsifyEventData(eventData));
-  static void keyDown(/*[1]*/ node, [Map eventData]) => sw.Simulate.keyDown(node, _jsifyEventData(eventData));
-  static void keyPress(/*[1]*/ node, [Map eventData]) => sw.Simulate.keyPress(node, _jsifyEventData(eventData));
-  static void keyUp(/*[1]*/ node, [Map eventData]) => sw.Simulate.keyUp(node, _jsifyEventData(eventData));
-  static void lostPointerCapture(/*[1]*/ node, [Map eventData]) =>
+  static void input(/*[1]*/ node, [Map? eventData]) => sw.Simulate.input(node, _jsifyEventData(eventData));
+  static void keyDown(/*[1]*/ node, [Map? eventData]) => sw.Simulate.keyDown(node, _jsifyEventData(eventData));
+  static void keyPress(/*[1]*/ node, [Map? eventData]) => sw.Simulate.keyPress(node, _jsifyEventData(eventData));
+  static void keyUp(/*[1]*/ node, [Map? eventData]) => sw.Simulate.keyUp(node, _jsifyEventData(eventData));
+  static void lostPointerCapture(/*[1]*/ node, [Map? eventData]) =>
       sw.Simulate.lostPointerCapture(node, _jsifyEventData(eventData));
-  static void mouseDown(/*[1]*/ node, [Map eventData]) => sw.Simulate.mouseDown(node, _jsifyEventData(eventData));
-  static void mouseMove(/*[1]*/ node, [Map eventData]) => sw.Simulate.mouseMove(node, _jsifyEventData(eventData));
-  static void mouseOut(/*[1]*/ node, [Map eventData]) => sw.Simulate.mouseOut(node, _jsifyEventData(eventData));
-  static void mouseOver(/*[1]*/ node, [Map eventData]) => sw.Simulate.mouseOver(node, _jsifyEventData(eventData));
-  static void mouseUp(/*[1]*/ node, [Map eventData]) => sw.Simulate.mouseUp(node, _jsifyEventData(eventData));
-  static void pointerCancel(/*[1]*/ node, [Map eventData]) =>
+  static void mouseDown(/*[1]*/ node, [Map? eventData]) => sw.Simulate.mouseDown(node, _jsifyEventData(eventData));
+  static void mouseMove(/*[1]*/ node, [Map? eventData]) => sw.Simulate.mouseMove(node, _jsifyEventData(eventData));
+  static void mouseOut(/*[1]*/ node, [Map? eventData]) => sw.Simulate.mouseOut(node, _jsifyEventData(eventData));
+  static void mouseOver(/*[1]*/ node, [Map? eventData]) => sw.Simulate.mouseOver(node, _jsifyEventData(eventData));
+  static void mouseUp(/*[1]*/ node, [Map? eventData]) => sw.Simulate.mouseUp(node, _jsifyEventData(eventData));
+  static void pointerCancel(/*[1]*/ node, [Map? eventData]) =>
       sw.Simulate.pointerCancel(node, _jsifyEventData(eventData));
-  static void pointerDown(/*[1]*/ node, [Map eventData]) => sw.Simulate.pointerDown(node, _jsifyEventData(eventData));
-  static void pointerEnter(/*[1]*/ node, [Map eventData]) => sw.Simulate.pointerEnter(node, _jsifyEventData(eventData));
-  static void pointerLeave(/*[1]*/ node, [Map eventData]) => sw.Simulate.pointerLeave(node, _jsifyEventData(eventData));
-  static void pointerMove(/*[1]*/ node, [Map eventData]) => sw.Simulate.pointerMove(node, _jsifyEventData(eventData));
-  static void pointerOut(/*[1]*/ node, [Map eventData]) => sw.Simulate.pointerOut(node, _jsifyEventData(eventData));
-  static void pointerOver(/*[1]*/ node, [Map eventData]) => sw.Simulate.pointerOver(node, _jsifyEventData(eventData));
-  static void pointerUp(/*[1]*/ node, [Map eventData]) => sw.Simulate.pointerUp(node, _jsifyEventData(eventData));
-  static void paste(/*[1]*/ node, [Map eventData]) => sw.Simulate.paste(node, _jsifyEventData(eventData));
-  static void scroll(/*[1]*/ node, [Map eventData]) => sw.Simulate.scroll(node, _jsifyEventData(eventData));
-  static void submit(/*[1]*/ node, [Map eventData]) => sw.Simulate.submit(node, _jsifyEventData(eventData));
-  static void touchCancel(/*[1]*/ node, [Map eventData]) => sw.Simulate.touchCancel(node, _jsifyEventData(eventData));
-  static void touchEnd(/*[1]*/ node, [Map eventData]) => sw.Simulate.touchEnd(node, _jsifyEventData(eventData));
-  static void touchMove(/*[1]*/ node, [Map eventData]) => sw.Simulate.touchMove(node, _jsifyEventData(eventData));
-  static void touchStart(/*[1]*/ node, [Map eventData]) => sw.Simulate.touchStart(node, _jsifyEventData(eventData));
-  static void transitionEnd(/*[1]*/ node, [Map eventData]) =>
+  static void pointerDown(/*[1]*/ node, [Map? eventData]) => sw.Simulate.pointerDown(node, _jsifyEventData(eventData));
+  static void pointerEnter(/*[1]*/ node, [Map? eventData]) => sw.Simulate.pointerEnter(node, _jsifyEventData(eventData));
+  static void pointerLeave(/*[1]*/ node, [Map? eventData]) => sw.Simulate.pointerLeave(node, _jsifyEventData(eventData));
+  static void pointerMove(/*[1]*/ node, [Map? eventData]) => sw.Simulate.pointerMove(node, _jsifyEventData(eventData));
+  static void pointerOut(/*[1]*/ node, [Map? eventData]) => sw.Simulate.pointerOut(node, _jsifyEventData(eventData));
+  static void pointerOver(/*[1]*/ node, [Map? eventData]) => sw.Simulate.pointerOver(node, _jsifyEventData(eventData));
+  static void pointerUp(/*[1]*/ node, [Map? eventData]) => sw.Simulate.pointerUp(node, _jsifyEventData(eventData));
+  static void paste(/*[1]*/ node, [Map? eventData]) => sw.Simulate.paste(node, _jsifyEventData(eventData));
+  static void scroll(/*[1]*/ node, [Map? eventData]) => sw.Simulate.scroll(node, _jsifyEventData(eventData));
+  static void submit(/*[1]*/ node, [Map? eventData]) => sw.Simulate.submit(node, _jsifyEventData(eventData));
+  static void touchCancel(/*[1]*/ node, [Map? eventData]) => sw.Simulate.touchCancel(node, _jsifyEventData(eventData));
+  static void touchEnd(/*[1]*/ node, [Map? eventData]) => sw.Simulate.touchEnd(node, _jsifyEventData(eventData));
+  static void touchMove(/*[1]*/ node, [Map? eventData]) => sw.Simulate.touchMove(node, _jsifyEventData(eventData));
+  static void touchStart(/*[1]*/ node, [Map? eventData]) => sw.Simulate.touchStart(node, _jsifyEventData(eventData));
+  static void transitionEnd(/*[1]*/ node, [Map? eventData]) =>
       sw.Simulate.transitionEnd(node, _jsifyEventData(eventData));
-  static void wheel(/*[1]*/ node, [Map eventData]) => sw.Simulate.wheel(node, _jsifyEventData(eventData));
+  static void wheel(/*[1]*/ node, [Map? eventData]) => sw.Simulate.wheel(node, _jsifyEventData(eventData));
 }
 
 /// Traverse all components in tree and accumulate all components where
@@ -163,7 +163,7 @@ bool isCompositeComponent(/* [1] */ instance) {
   return _isCompositeComponent(instance)
       // Workaround for DOM components being detected as composite: https://github.com/facebook/react/pull/3839
       &&
-      getProperty(instance, 'tagName') == null;
+      getProperty(instance as Object, 'tagName') == null;
 }
 
 @JS('React.addons.TestUtils.isCompositeComponentWithType')

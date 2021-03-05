@@ -31,7 +31,7 @@ dynamic convertArgsToChildren(List childrenArgs) {
 }
 
 @Deprecated('Event handlers are no longer converted. This will be removed in 7.0.0.')
-Function unconvertJsEventHandler(Function jsConvertedEventHandler) => null;
+Function? unconvertJsEventHandler(Function jsConvertedEventHandler) => null;
 
 void convertRefValue(Map args) {
   final ref = args['ref'];
@@ -80,7 +80,11 @@ void convertRefValue2(
 /// - `[]` if there are no args and [shouldAlwaysBeList] is true
 /// - the single child if only one was specified
 /// - otherwise, the same list of args, will all top-level children validated
-dynamic generateChildren(List childrenArgs, {bool shouldAlwaysBeList = false}) {
+dynamic generateChildren(List? childrenArgs, {bool shouldAlwaysBeList = false}) {
+  if (childrenArgs == null) {
+    return shouldAlwaysBeList ? const [] : null;
+  }
+
   var children;
 
   if (childrenArgs.isEmpty) {
@@ -103,7 +107,7 @@ dynamic generateChildren(List childrenArgs, {bool shouldAlwaysBeList = false}) {
 
   if (children == null) {
     children = shouldAlwaysBeList ? childrenArgs.map(listifyChildren).toList() : childrenArgs;
-    markChildrenValidated(children as List);
+    markChildrenValidated(children);
   }
 
   return children;

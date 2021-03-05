@@ -13,9 +13,9 @@ class PropValidatorInfo {
   final String propFullName;
 
   const PropValidatorInfo({
-    this.propName,
-    this.componentName,
-    this.location,
-    this.propFullName,
+    required this.propName,
+    required this.componentName,
+    required this.location,
+    required this.propFullName,
   });
 }
