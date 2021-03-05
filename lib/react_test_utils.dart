@@ -225,7 +225,7 @@ external List<dynamic> scryRenderedDOMComponentsWithTag(
 
 /// Render a Component into a detached DOM node in the document.
 @JS('React.addons.TestUtils.renderIntoDocument')
-external /* [1] */ renderIntoDocument(ReactElement instance);
+external /* [1] */ renderIntoDocument(ReactElement? instance);
 
 /// Pass a mocked component module to this method to augment it with useful
 /// methods that allow it to be used as a dummy React component. Instead of
@@ -258,6 +258,6 @@ external ReactShallowRenderer createRenderer();
 class ReactShallowRenderer {
   /// Get the rendered output. [render] must be called first
   external ReactElement getRenderOutput();
-  external void render(ReactElement element, [context]);
+  external void render(ReactElement? element, [context]);
   external void unmount();
 }

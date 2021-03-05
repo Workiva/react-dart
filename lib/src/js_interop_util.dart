@@ -17,5 +17,5 @@ class PropertyDescriptor {
   external factory PropertyDescriptor({dynamic value});
 }
 
-String getJsFunctionName(Function object) =>
-    (getProperty(object, 'name') ?? getProperty(object, '\$static_name')) as String;
+String? getJsFunctionName(Function object) =>
+    (getProperty(object, 'name') ?? getProperty(object, '\$static_name')) as String?;

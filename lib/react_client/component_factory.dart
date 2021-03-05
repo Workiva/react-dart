@@ -212,12 +212,12 @@ class ReactJsContextComponentFactoryProxy extends ReactJsComponentFactoryProxy {
         super(jsClass, shouldConvertDomProps: shouldConvertDomProps);
 
   @override
-  ReactElement build(Map props, [List? childrenArgs]) {
+  ReactElement build(Map props, [List childrenArgs = const []]) {
     dynamic children = generateChildren(childrenArgs);
 
     if (isConsumer) {
       if (children is Function) {
-        final contextCallback = children as Function;
+        final contextCallback = children;
         children = allowInterop((args) {
           return contextCallback(ContextHelpers.unjsifyNewContext(args));
         });
@@ -270,7 +270,7 @@ class ReactJsComponentFactoryProxy extends ReactComponentFactoryProxy {
         _additionalRefPropKeys = additionalRefPropKeys;
 
   @override
-  ReactElement build(Map props, [List? childrenArgs]) {
+  ReactElement build(Map props, [List childrenArgs = const []]) {
     final children = generateChildren(childrenArgs, shouldAlwaysBeList: alwaysReturnChildrenAsList);
     final convertedProps =
         generateJsProps(props, convertCallbackRefValue: false, additionalRefPropKeys: _additionalRefPropKeys);
@@ -306,7 +306,7 @@ class ReactDomComponentFactoryProxy extends ReactComponentFactoryProxy {
 /// Creates ReactJS [Function Component] from Dart Function.
 class ReactDartFunctionComponentFactoryProxy extends ReactComponentFactoryProxy with JsBackedMapComponentFactoryMixin {
   /// The name of this function.
-  final String displayName;
+  final String? displayName;
 
   /// The React JS component definition of this Function Component.
   final JsFunctionComponent reactFunction;

@@ -27,7 +27,7 @@ export 'package:react/src/react_client/synthetic_event_wrappers.dart' hide NonNa
 export 'package:react/src/react_client/synthetic_data_transfer.dart' show SyntheticDataTransfer;
 export 'package:react/src/react_client/event_helpers.dart';
 
-typedef PropValidator<TProps> = Error Function(TProps props, PropValidatorInfo info);
+typedef PropValidator<TProps> = Error? Function(TProps props, PropValidatorInfo info);
 
 /// A React component declared using a function that takes in [props] and returns rendered output.
 ///
@@ -53,11 +53,11 @@ typedef ComponentRegistrar = ReactComponentFactoryProxy Function(ComponentFactor
 typedef ComponentRegistrar2 = ReactDartComponentFactoryProxy2 Function(
   ComponentFactory<Component2> componentFactory, {
   Iterable<String> skipMethods,
-  Component2BridgeFactory bridgeFactory,
+  Component2BridgeFactory? bridgeFactory,
 });
 
 typedef FunctionComponentRegistrar = ReactDartFunctionComponentFactoryProxy
-    Function(DartFunctionComponent componentFactory, {String displayName});
+    Function(DartFunctionComponent componentFactory, {String? displayName});
 
 /// Fragment component that allows the wrapping of children without the necessity of using
 /// an element that adds an additional layer to the DOM (div, span, etc).

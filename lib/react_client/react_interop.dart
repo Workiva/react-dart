@@ -59,13 +59,13 @@ abstract class React {
   external static ReactClass get Fragment;
 
   external static List<dynamic> useState(dynamic value);
-  external static void useEffect(dynamic Function() sideEffect, [List<Object>? dependencies]);
+  external static void useEffect(dynamic Function() sideEffect, [List<dynamic>? dependencies]);
   external static List<dynamic> useReducer(Function reducer, dynamic initialState, [Function? init]);
   external static Function useCallback(Function callback, List dependencies);
   external static ReactContext useContext(ReactContext context);
   external static JsRef useRef([dynamic? initialValue]);
   external static dynamic useMemo(dynamic Function() createFunction, [List<dynamic>? dependencies]);
-  external static void useLayoutEffect(dynamic Function() sideEffect, [List<Object>? dependencies]);
+  external static void useLayoutEffect(dynamic Function() sideEffect, [List<dynamic>? dependencies]);
   external static void useImperativeHandle(dynamic ref, dynamic Function() createHandle, [List<dynamic>? dependencies]);
   // NOTE: The use of generics on the `useDebugValue` interop will break the hook.
   external static dynamic useDebugValue(dynamic value, [Function? format]);
@@ -441,7 +441,7 @@ abstract class ReactDartComponentVersion {
       return type.dartComponentVersion;
     }
     if (type is Function) {
-      return getProperty(type, 'dartComponentVersion') as String;
+      return getProperty(type, 'dartComponentVersion') as String?;
     }
 
     return null;
@@ -460,20 +460,20 @@ abstract class ReactDartComponentVersion {
 @anonymous
 class ReactClassConfig {
   external factory ReactClassConfig({
-    String displayName,
-    List mixins,
-    Function componentWillMount,
-    Function componentDidMount,
-    Function componentWillReceiveProps,
-    Function shouldComponentUpdate,
-    Function componentWillUpdate,
-    Function componentDidUpdate,
-    Function componentWillUnmount,
-    Function getChildContext,
-    Map<String, dynamic> childContextTypes,
-    Function getDefaultProps,
-    Function getInitialState,
-    Function render,
+    String? displayName,
+    List? mixins,
+    Function? componentWillMount,
+    Function? componentDidMount,
+    Function? componentWillReceiveProps,
+    Function? shouldComponentUpdate,
+    Function? componentWillUpdate,
+    Function? componentDidUpdate,
+    Function? componentWillUnmount,
+    Function? getChildContext,
+    Map<String, dynamic>? childContextTypes,
+    Function? getDefaultProps,
+    Function? getInitialState,
+    Function? render,
   });
 
   /// The `displayName` string is used in debugging messages.
@@ -629,11 +629,11 @@ class InteropProps implements JsMap {
   /// Will be removed alongside `Component` in the `7.0.0` release.
   @Deprecated('7.0.0')
   external ReactDartComponentInternal get internal;
-  external dynamic get key;
-  external dynamic get ref;
+  external dynamic? get key;
+  external dynamic? get ref;
 
-  external set key(dynamic value);
-  external set ref(dynamic value);
+  external set key(dynamic? value);
+  external set ref(dynamic? value);
 
   /// __Deprecated.__
   ///
@@ -644,9 +644,9 @@ class InteropProps implements JsMap {
   /// Will be removed alongside `Component` in the `7.0.0` release.
   @Deprecated('7.0.0')
   external factory InteropProps({
-    ReactDartComponentInternal internal,
-    String key,
-    dynamic ref,
+    ReactDartComponentInternal? internal,
+    String? key,
+    dynamic? ref,
   });
 }
 
