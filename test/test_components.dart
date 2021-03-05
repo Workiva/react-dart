@@ -1,5 +1,6 @@
 // ignore_for_file: deprecated_member_use_from_same_package
 import 'package:react/react.dart';
+import 'package:react/react_client/component_factory.dart';
 
 /// Base component for event handling classes used in test cases.
 class EventComponent extends Component {
@@ -77,8 +78,8 @@ class WrapperComponent extends Component {
   render() => div(props, props['children']);
 }
 
-final eventComponent = registerComponent(() => EventComponent());
+final eventComponent = registerComponent(() => EventComponent()) as ReactDartComponentFactoryProxy;
 
-final sampleComponent = registerComponent(() => SampleComponent());
+final sampleComponent = registerComponent(() => SampleComponent()) as ReactDartComponentFactoryProxy;
 
-final wrapperComponent = registerComponent(() => WrapperComponent());
+final wrapperComponent = registerComponent(() => WrapperComponent()) as ReactDartComponentFactoryProxy;

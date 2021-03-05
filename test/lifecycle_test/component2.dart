@@ -71,11 +71,13 @@ class _SetStateTest extends react.Component2 with LifecycleTestHelper {
     return {'counter': previousState['counter'] + 1};
   }
 
+  bool get shouldThrow => state['shouldThrow'] as bool;
+
   @override
   render() {
     lifecycleCall('render');
 
-    if (!state['shouldThrow']) {
+    if (!shouldThrow) {
       return react.div({
         'onClick': (_) {
           setStateWithUpdater(outerTransactionalSetStateCallback, () {
@@ -111,7 +113,7 @@ class _SetStateTest extends react.Component2 with LifecycleTestHelper {
               });
             }
           }, [
-            state['shouldThrow'] ? ErrorComponent({'key': 'errorComp'}) : null,
+            shouldThrow ? ErrorComponent({'key': 'errorComp'}) : null,
             state['counter']
           ]));
     }

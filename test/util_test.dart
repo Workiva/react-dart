@@ -53,7 +53,7 @@ _FunctionFoo(Map props) {
   return react.div({});
 }
 
-final Foo = react.registerComponent(() => _Foo());
+final Foo = react.registerComponent(() => _Foo()) as ReactDartComponentFactoryProxy;
 
 class _Foo extends react.Component {
   @override

@@ -261,4 +261,4 @@ class DartComponentComponent extends Component {
   }
 }
 
-ReactDartComponentFactoryProxy DartComponent = react.registerComponent(() => DartComponentComponent());
+final DartComponent = react.registerComponent(() => DartComponentComponent()) as ReactDartComponentFactoryProxy;

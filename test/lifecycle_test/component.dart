@@ -8,7 +8,7 @@ import 'package:react/react_client.dart';
 
 import 'util.dart';
 
-ReactDartComponentFactoryProxy SetStateTest = react.registerComponent(() => _SetStateTest());
+final SetStateTest = react.registerComponent(() => _SetStateTest()) as ReactDartComponentFactoryProxy;
 
 class _SetStateTest extends react.Component with LifecycleTestHelper {
   @override
@@ -102,7 +102,7 @@ class _DefaultPropsCachingTest extends react.Component implements DefaultPropsCa
   render() => null;
 }
 
-ReactDartComponentFactoryProxy DefaultPropsTest = react.registerComponent(() => _DefaultPropsTest());
+final DefaultPropsTest = react.registerComponent(() => _DefaultPropsTest()) as ReactDartComponentFactoryProxy;
 
 class _DefaultPropsTest extends react.Component {
   static int getDefaultPropsCallCount = 0;
@@ -118,7 +118,7 @@ class _DefaultPropsTest extends react.Component {
   render() => null;
 }
 
-ReactDartComponentFactoryProxy ContextWrapperWithoutKeys = react.registerComponent(() => _ContextWrapperWithoutKeys());
+final ContextWrapperWithoutKeys = react.registerComponent(() => _ContextWrapperWithoutKeys()) as ReactDartComponentFactoryProxy;
 
 class _ContextWrapperWithoutKeys extends react.Component with LifecycleTestHelper {
   @override
@@ -137,7 +137,7 @@ class _ContextWrapperWithoutKeys extends react.Component with LifecycleTestHelpe
   render() => react.div({}, props['children']);
 }
 
-ReactDartComponentFactoryProxy ContextWrapper = react.registerComponent(() => _ContextWrapper());
+final ContextWrapper = react.registerComponent(() => _ContextWrapper()) as ReactDartComponentFactoryProxy;
 
 class _ContextWrapper extends react.Component with LifecycleTestHelper {
   @override
@@ -156,14 +156,14 @@ class _ContextWrapper extends react.Component with LifecycleTestHelper {
   render() => react.div({}, props['children']);
 }
 
-ReactDartComponentFactoryProxy LifecycleTestWithContext = react.registerComponent(() => _LifecycleTestWithContext());
+final LifecycleTestWithContext = react.registerComponent(() => _LifecycleTestWithContext()) as ReactDartComponentFactoryProxy;
 
 class _LifecycleTestWithContext extends _LifecycleTest {
   @override
   Iterable<String> get contextKeys => const ['foo']; // only listening to one context key
 }
 
-ReactDartComponentFactoryProxy LifecycleTest = react.registerComponent(() => _LifecycleTest());
+final LifecycleTest = react.registerComponent(() => _LifecycleTest()) as ReactDartComponentFactoryProxy;
 
 class _LifecycleTest extends react.Component with LifecycleTestHelper {
   @override
@@ -179,7 +179,7 @@ class _LifecycleTest extends react.Component with LifecycleTestHelper {
 
   @override
   void componentWillReceivePropsWithContext(newProps, newContext) =>
-      lifecycleCall('componentWillReceivePropsWithContext', arguments: [Map.from(newProps), Map.from(newContext)]);
+      lifecycleCall('componentWillReceivePropsWithContext', arguments: [Map.from(newProps), Map.from(newContext as Map)]);
 
   @override
   void componentWillUpdate(nextProps, nextState) =>

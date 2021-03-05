@@ -77,8 +77,8 @@ class WrapperComponent2 extends Component2 {
   render() => div(props, props['children']);
 }
 
-final eventComponent = registerComponent(() => EventComponent2());
+final eventComponent = registerComponent2(() => EventComponent2());
 
-final sampleComponent = registerComponent(() => SampleComponent2());
+final sampleComponent = registerComponent2(() => SampleComponent2());
 
-final wrapperComponent = registerComponent(() => WrapperComponent2());
+final wrapperComponent = registerComponent2(() => WrapperComponent2());

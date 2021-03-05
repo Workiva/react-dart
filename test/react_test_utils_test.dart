@@ -28,7 +28,12 @@ void main() {
       wrapperComponent: component2.wrapperComponent);
 }
 
-testUtils({isComponent2 = false, dynamic eventComponent, dynamic sampleComponent, dynamic wrapperComponent}) {
+testUtils({
+  bool isComponent2 = false,
+  ReactComponentFactoryProxy eventComponent,
+  ReactComponentFactoryProxy sampleComponent,
+  ReactComponentFactoryProxy wrapperComponent,
+}) {
   var component;
   Element domNode;
 
@@ -101,16 +106,17 @@ testUtils({isComponent2 = false, dynamic eventComponent, dynamic sampleComponent
       if (expectEventType != null) {
         test('with correct type', () {
           SyntheticEvent capturedEvent;
-          DivElement ref;
+          final ref = createRef<DivElement>();
 
           renderIntoDocument(div({
-            eventHandlerName: (e) {
+            // ignore: avoid_types_on_closure_parameters
+            eventHandlerName: (SyntheticEvent e) {
               capturedEvent = e;
             },
-            'ref': (r) => ref = r,
+            'ref': ref,
           }));
 
-          event(ref, eventData);
+          event(ref.current, eventData);
           expectEventType(capturedEvent);
         });
       }
