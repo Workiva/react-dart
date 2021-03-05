@@ -563,12 +563,12 @@ class ReactPortal {
 @anonymous
 class ReactComponent {
   // TODO: Cast as Component2 in 7.0.0
-  external Component get dartComponent;
+  external Component/*?*/ get dartComponent;
   // TODO how to make this JsMap without breaking stuff?
-  external InteropProps get props;
+  external InteropProps/*?*//*!*/ get props;
   external dynamic get context;
-  external JsMap get state;
-  external set state(JsMap value);
+  external JsMap/*?*/ get state;
+  external set state(JsMap/*?*/ value);
   external get refs;
   external void setState(state, [callback]);
   external void forceUpdate([callback]);

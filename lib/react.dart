@@ -87,7 +87,7 @@ abstract class Component {
   /// [doesn't work for overriding fields](https://github.com/dart-lang/sdk/issues/27452).
   ///
   /// TODO: Switch back to a plain field once this issue is fixed.
-  Map _props;
+  Map/*!*/ _props;
 
   /// A private field that backs [state], which is exposed via getter/setter so
   /// it can be overridden in strong mode.
@@ -96,7 +96,7 @@ abstract class Component {
   /// [doesn't work for overriding fields](https://github.com/dart-lang/sdk/issues/27452).
   ///
   /// TODO: Switch back to a plain field once this issue is fixed.
-  Map _state = {};
+  Map/*!*/ _state = {};
 
   /// A private field that backs [ref], which is exposed via getter/setter so
   /// it can be overridden in strong mode.
@@ -105,7 +105,7 @@ abstract class Component {
   /// [doesn't work for overriding fields](https://github.com/dart-lang/sdk/issues/27452).
   ///
   /// TODO: Switch back to a plain field once this issue is fixed.
-  RefMethod _ref;
+  RefMethod/*!*/ _ref;
 
   /// The React context map of this component, passed down from its ancestors' [getChildContext] value.
   ///
@@ -128,14 +128,14 @@ abstract class Component {
   /// ReactJS [Component] props.
   ///
   /// Related: [state]
-  Map get props => _props;
-  set props(Map value) => _props = value;
+  Map/*!*/ get props => _props;
+  set props(Map/*!*/ value) => _props = value;
 
   /// ReactJS [Component] state.
   ///
   /// Related: [props]
-  Map get state => _state;
-  set state(Map value) => _state = value;
+  Map/*!*/ get state => _state;
+  set state(Map/*!*/ value) => _state = value;
 
   /// __DEPRECATED.__
   ///
@@ -163,15 +163,15 @@ abstract class Component {
 
   dynamic _jsThis;
 
-  final List<SetStateCallback> _setStateCallbacks = [];
+  final List<SetStateCallback>/*!*/ _setStateCallbacks = [];
 
-  final List<StateUpdaterCallback> _transactionalSetStateCallbacks = [];
+  final List<StateUpdaterCallback>/*!*/ _transactionalSetStateCallbacks = [];
 
   /// The List of callbacks to be called after the component has been updated from a call to [setState].
-  List get setStateCallbacks => _setStateCallbacks;
+  List/*!*/ get setStateCallbacks => _setStateCallbacks;
 
   /// The List of transactional `setState` callbacks to be called before the component updates.
-  List get transactionalSetStateCallbacks => _transactionalSetStateCallbacks;
+  List/*!*/ get transactionalSetStateCallbacks => _transactionalSetStateCallbacks;
 
   /// The JavaScript [`ReactComponent`](https://reactjs.org/docs/react-api.html#reactdom.render)
   /// instance of this `Component` returned by [render].
@@ -380,7 +380,7 @@ abstract class Component {
   /// will not require a component update.
   ///
   /// See: <https://reactjs.org/docs/react-component.html#updating-shouldcomponentupdate>
-  bool shouldComponentUpdate(Map nextProps, Map nextState) => true;
+  bool/*!*/ shouldComponentUpdate(Map nextProps, Map nextState) => true;
 
   /// > __DEPRECATED - DO NOT USE__
   /// >
@@ -484,7 +484,7 @@ abstract class Component {
   /// Invoked once before the `Component` is mounted. The return value will be used as the initial value of [state].
   ///
   /// See: <https://reactjs.org/docs/react-component.html#getinitialstate>
-  Map getInitialState() => {};
+  Map/*!*/ getInitialState() => {};
 
   /// Invoked once and cached when [registerComponent] is called. Values in the mapping will be set on [props]
   /// if that prop is not specified by the parent component.
@@ -656,7 +656,7 @@ abstract class Component2 implements Component {
     return value;
   }
 
-  Component2Bridge get _bridge => Component2Bridge.forComponent(this);
+  Component2Bridge/*!*/ get _bridge => Component2Bridge.forComponent(this);
 
   /// Triggers a rerender with new state obtained by shallow-merging [newState] into the current [state].
   ///

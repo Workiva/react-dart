@@ -23,7 +23,7 @@ import 'package:react/src/react_client/private_utils.dart';
 ///
 /// Two JsBackedMap instances are considered equal if they are backed by the same [jsObject].
 class JsBackedMap extends MapBase<dynamic, dynamic> {
-  final JsMap jsObject;
+  final JsMap/*!*/ jsObject;
 
   /// Creates a JsBackedMap instance backed by a new [jsObject].
   JsBackedMap() : jsObject = JsMap();
@@ -32,7 +32,7 @@ class JsBackedMap extends MapBase<dynamic, dynamic> {
   JsBackedMap.backedBy(this.jsObject);
 
   /// Creates a JsBackedMap instance that contains all key/value pairs of [other].
-  factory JsBackedMap.from(Map other) => JsBackedMap()..addAll(other);
+  factory JsBackedMap.from(Map/*!*/ other) => JsBackedMap()..addAll(other);
 
   /// Creates a JsBackedMap instance that contains all key/value pairs of the JS object [jsOther].
   factory JsBackedMap.fromJs(JsMap jsOther) => JsBackedMap()..addAllFromJs(jsOther);
@@ -145,7 +145,7 @@ class JsMap {
 /// and you want to avoid copying it when possible.
 ///
 /// If a copy is always needed, use [JsBackedMap.from] instead.
-JsMap jsBackingMapOrJsCopy(Map map) {
+JsMap jsBackingMapOrJsCopy(Map/*!*/ map) {
   // todo is it faster to just always do .from?
   if (map is JsBackedMap) {
     return map.jsObject;
@@ -156,7 +156,7 @@ JsMap jsBackingMapOrJsCopy(Map map) {
 
 @JS('Object')
 abstract class _Object {
-  external static void assign(JsMap to, JsMap from);
+  external static void assign(JsMap to, JsMap/*!*/ from);
   external static List<dynamic> keys(JsMap object);
   // ignore: unused_element
   external static List<dynamic> values(JsMap object);
