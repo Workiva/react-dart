@@ -68,7 +68,7 @@ void commonFactoryTests(ReactComponentFactoryProxy factory,
         test('$childrenCount', () {
           final expectedChildren = List.generate(childrenCount, (i) => i + 1);
           final arguments = <dynamic>[props, ...expectedChildren];
-          final instance = Function.apply(factory, arguments);
+          final instance = Function.apply(factory, arguments) as ReactElement;
           expect(getChildren(instance), expectedChildren);
         }, tags: i > 5 ? 'dart-2-7-dart2js-variadic-issues' : null);
       }
@@ -237,7 +237,8 @@ void domEventHandlerWrappingTests(ReactComponentFactoryProxy factory) {
       propsFromDartRender = null;
 
       var element = factory({
-        'onDartRender': (p) {
+        // ignore: avoid_types_on_closure_parameters
+        'onDartRender': (Map p) {
           propsFromDartRender = p;
         },
         dart.eventPropKey: (event) => events[dart] = event,
@@ -248,7 +249,7 @@ void domEventHandlerWrappingTests(ReactComponentFactoryProxy factory) {
         element,
         jsifyAndAllowInterop({
           jsCloned.eventPropKey: (event) => events[jsCloned] = event,
-        }),
+        }) as JsMap,
       );
 
       element = React.cloneElement(
@@ -285,7 +286,8 @@ void domEventHandlerWrappingTests(ReactComponentFactoryProxy factory) {
         final divRef = react.createRef<DivElement>();
         render(react.div({
           'ref': divRef,
-          'onClick': (e) => event = e,
+          // ignore: avoid_types_on_closure_parameters
+          'onClick': (react.SyntheticMouseEvent e) => event = e,
         }));
         rtu.Simulate.click(divRef);
 
@@ -547,7 +549,7 @@ void refTests<T>(
   });
 }
 
-void _childKeyWarningTests(Function factory, {Function(ReactElement Function()) renderWithUniqueOwnerName}) {
+void _childKeyWarningTests(ReactComponentFactoryProxy factory, {Function(ReactElement Function()) renderWithUniqueOwnerName}) {
   group('key/children validation', () {
     bool consoleErrorCalled;
     var consoleErrorMessage;
@@ -557,7 +559,7 @@ void _childKeyWarningTests(Function factory, {Function(ReactElement Function()) 
       consoleErrorCalled = false;
       consoleErrorMessage = null;
 
-      originalConsoleError = context['console']['error'];
+      originalConsoleError = context['console']['error'] as JsFunction;
       context['console']['error'] = JsFunction.withThis((self, message, arg1, arg2, arg3) {
         consoleErrorCalled = true;
         consoleErrorMessage = message;
@@ -608,7 +610,7 @@ ReactComponent _renderWithStringRefSupportingOwner(ReactElement Function() rende
   final factory =
       react.registerComponent(() => _StringRefOwnerOwnerHelperComponent()) as ReactDartComponentFactoryProxy;
 
-  return rtu.renderIntoDocument(factory({'render': render}));
+  return rtu.renderIntoDocument(factory({'render': render})) as ReactComponent;
 }
 
 int _nextFactoryId = 0;

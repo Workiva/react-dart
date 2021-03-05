@@ -36,14 +36,14 @@ main() {
           return react.div({}, [
             react.div({
               'ref': (ref) {
-                textRef = ref;
+                textRef = ref as DivElement;
               },
             }, [
               text.value
             ]),
             react.div({
               'ref': (ref) {
-                countRef = ref;
+                countRef = ref as DivElement;
               },
             }, [
               count.value
@@ -51,7 +51,7 @@ main() {
             react.button({
               'onClick': (_) => text.set('newValue'),
               'ref': (ref) {
-                setButtonRef = ref;
+                setButtonRef = ref as ButtonElement;
               },
             }, [
               'Set'
@@ -59,7 +59,7 @@ main() {
             react.button({
               'onClick': (_) => count.setWithUpdater((prev) => prev + 1),
               'ref': (ref) {
-                setWithUpdaterButtonRef = ref;
+                setWithUpdaterButtonRef = ref as ButtonElement;
               },
             }, [
               '+'
@@ -102,7 +102,7 @@ main() {
       ButtonElement textButtonRef;
 
       Map reducer(Map state, Map action) {
-        switch (action['type']) {
+        switch (action['type'] as String) {
           case 'increment':
             return {...state, 'count': state['count'] + 1};
           case 'decrement':
@@ -126,14 +126,14 @@ main() {
           return react.div({}, [
             react.div({
               'ref': (ref) {
-                textRef = ref;
+                textRef = ref as DivElement;
               },
             }, [
               state.state['text']
             ]),
             react.div({
               'ref': (ref) {
-                countRef = ref;
+                countRef = ref as DivElement;
               },
             }, [
               state.state['count']
@@ -141,7 +141,7 @@ main() {
             react.button({
               'onClick': (_) => state.dispatch({'type': 'changeText', 'newText': 'newValue'}),
               'ref': (ref) {
-                textButtonRef = ref;
+                textButtonRef = ref as ButtonElement;
               },
             }, [
               'Set'
@@ -149,7 +149,7 @@ main() {
             react.button({
               'onClick': (_) => state.dispatch({'type': 'increment'}),
               'ref': (ref) {
-                addButtonRef = ref;
+                addButtonRef = ref as ButtonElement;
               },
             }, [
               '+'
@@ -157,7 +157,7 @@ main() {
             react.button({
               'onClick': (_) => state.dispatch({'type': 'decrement'}),
               'ref': (ref) {
-                subtractButtonRef = ref;
+                subtractButtonRef = ref as ButtonElement;
               },
             }, [
               '-'
@@ -196,13 +196,13 @@ main() {
         }
 
         Map reducer2(Map state, Map action) {
-          switch (action['type']) {
+          switch (action['type'] as String) {
             case 'increment':
               return {...state, 'count': state['count'] + 1};
             case 'decrement':
               return {...state, 'count': state['count'] - 1};
             case 'reset':
-              return initializeCount(action['payload']);
+              return initializeCount(action['payload'] as int);
             default:
               return state;
           }
@@ -212,12 +212,12 @@ main() {
           final mountNode = DivElement();
 
           UseReducerTest = react.registerFunctionComponent((props) {
-            final state = useReducerLazy<Map, Map, int>(reducer2, props['initialCount'], initializeCount);
+            final state = useReducerLazy<Map, Map, int>(reducer2, props['initialCount'] as int, initializeCount);
 
             return react.div({}, [
               react.div({
                 'ref': (ref) {
-                  countRef = ref;
+                  countRef = ref as DivElement;
                 },
               }, [
                 state.state['count']
@@ -225,7 +225,7 @@ main() {
               react.button({
                 'onClick': (_) => state.dispatch({'type': 'reset', 'payload': props['initialCount']}),
                 'ref': (ref) {
-                  resetButtonRef = ref;
+                  resetButtonRef = ref as ButtonElement;
                 },
               }, [
                 'reset'
@@ -233,7 +233,7 @@ main() {
               react.button({
                 'onClick': (_) => state.dispatch({'type': 'increment'}),
                 'ref': (ref) {
-                  addButtonRef = ref;
+                  addButtonRef = ref as ButtonElement;
                 },
               }, [
                 '+'
@@ -241,7 +241,7 @@ main() {
               react.button({
                 'onClick': (_) => state.dispatch({'type': 'decrement'}),
                 'ref': (ref) {
-                  subtractButtonRef = ref;
+                  subtractButtonRef = ref as ButtonElement;
                 },
               }, [
                 '-'
@@ -303,14 +303,14 @@ main() {
           return react.div({}, [
             react.div({
               'ref': (ref) {
-                deltaRef = ref;
+                deltaRef = ref as DivElement;
               },
             }, [
               delta.value
             ]),
             react.div({
               'ref': (ref) {
-                countRef = ref;
+                countRef = ref as DivElement;
               },
             }, [
               count.value
@@ -318,7 +318,7 @@ main() {
             react.button({
               'onClick': incrementNoDep,
               'ref': (ref) {
-                incrementNoDepButtonRef = ref;
+                incrementNoDepButtonRef = ref as ButtonElement;
               },
             }, [
               'Increment count no dep'
@@ -326,7 +326,7 @@ main() {
             react.button({
               'onClick': incrementWithDep,
               'ref': (ref) {
-                incrementWithDepButtonRef = ref;
+                incrementWithDepButtonRef = ref as ButtonElement;
               },
             }, [
               'Increment count'
@@ -334,7 +334,7 @@ main() {
             react.button({
               'onClick': incrementDelta,
               'ref': (ref) {
-                incrementDeltaButtonRef = ref;
+                incrementDeltaButtonRef = ref as ButtonElement;
               },
             }, [
               'Increment delta'
@@ -402,7 +402,7 @@ main() {
               'contextToUse': testContext,
               'mode': 'increment',
               'ref': (ref) {
-                providerRef = ref;
+                providerRef = ref as _ContextProviderWrapper;
               }
             }, [
               useContextTestFunctionComponent({'key': 't1'}, []),
@@ -466,7 +466,7 @@ main() {
             react.p({}, [refFromUseRef.current]),
             react.p({}, [refFromCreateRef.current]),
             react.button({
-              'ref': (ref) => reRenderButton = ref,
+              'ref': (ref) => reRenderButton = ref as ButtonElement,
               'onClick': (_) => renderIndex.setWithUpdater((prev) => prev + 1)
             }, [
               're-render'
@@ -564,11 +564,12 @@ main() {
           );
 
           return react.Fragment({}, [
-            react.button(
-                {'ref': (ref) => incrementButtonRef = ref, 'onClick': (_) => count.setWithUpdater((prev) => prev + 1)},
-                ['+']),
             react.button({
-              'ref': (ref) => reRenderButtonRef = ref,
+              'ref': (ref) => incrementButtonRef = ref as ButtonElement,
+              'onClick': (_) => count.setWithUpdater((prev) => prev + 1),
+            }, ['+']),
+            react.button({
+              'ref': (ref) => reRenderButtonRef = ref as ButtonElement,
               'onClick': (_) => reRender.setWithUpdater((prev) => prev + 1)
             }, [
               're-render'
@@ -670,7 +671,7 @@ main() {
             return react.Fragment({}, [
               react.div({'ref': ref}, count.value),
               react.button({
-                'ref': (ref) => reRenderButtonRef1 = ref,
+                'ref': (ref) => reRenderButtonRef1 = ref as ButtonElement,
                 'onClick': (_) => count.setWithUpdater((prev) => prev + 1),
               }, []),
             ]);
@@ -684,7 +685,7 @@ main() {
             return react.Fragment({}, [
               react.div({'ref': ref}, count.value),
               react.button({
-                'ref': (ref) => reRenderButtonRef2 = ref,
+                'ref': (ref) => reRenderButtonRef2 = ref as ButtonElement,
                 'onClick': (_) => count.setWithUpdater((prev) => prev + 1),
               }, []),
             ]);
@@ -692,14 +693,14 @@ main() {
 
           final NullRefComponent = react.registerFunctionComponent((props) {
             final count = useState(0);
-            final Ref someRefThatIsNotSet = props['someRefThatIsNotSet'];
+            final someRefThatIsNotSet = props['someRefThatIsNotSet'];
 
             useImperativeHandle(someRefThatIsNotSet, () => count.value, [count.value]);
 
             return react.Fragment({}, [
               react.div({'ref': someRefThatIsNotSet}, count.value),
               react.button({
-                'ref': (ref) => reRenderButtonRef2 = ref,
+                'ref': (ref) => reRenderButtonRef2 = ref as ButtonElement,
                 'onClick': (_) => count.setWithUpdater((prev) => prev + 1),
               }, []),
             ]);
@@ -717,7 +718,7 @@ main() {
             return react.Fragment({}, [
               NoDepsComponent({'ref': noDepsRef}, []),
               react.button({
-                'ref': (ref) => incrementButton = ref,
+                'ref': (ref) => incrementButton = ref as ButtonElement,
                 'onClick': (_) => noDepsRef.current['increment'](),
               }, [
                 '+'
@@ -777,7 +778,7 @@ main() {
       StateHook<bool> isOnline1;
       StateHook<bool> isOnline2;
 
-      StateHook useFriendStatus() {
+      StateHook<bool> useFriendStatus() {
         final isOnline = useState(false);
 
         useDebugValue(isOnline.value ? 'Online' : 'Not Online');
@@ -785,10 +786,10 @@ main() {
         return isOnline;
       }
 
-      StateHook useFriendStatusWithFormatFunction() {
+      StateHook<bool> useFriendStatusWithFormatFunction() {
         final isOnline = useState(true);
 
-        useDebugValue(isOnline.value, (value) => value ? 'Online' : 'Not Online');
+        useDebugValue<bool>(isOnline.value, (value) => value ? 'Online' : 'Not Online');
 
         return isOnline;
       }
@@ -924,7 +925,7 @@ void testEffectHook(Function effectHook) {
       return react.div({}, [
         react.div({
           'ref': (ref) {
-            countRef = ref;
+            countRef = ref as DivElement;
           },
         }, [
           count.value
@@ -934,7 +935,7 @@ void testEffectHook(Function effectHook) {
             count.set(count.value + 1);
           },
           'ref': (ref) {
-            countButtonRef = ref;
+            countButtonRef = ref as ButtonElement;
           },
         }, [
           '+'
