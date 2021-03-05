@@ -49,7 +49,7 @@ main() {
     });
 
     test('throws when a Dart component is passed in', () {
-      final instance = DartComponent({
+      final instance = DartComponent!({
         'jsProp': 'js',
         'style': testStyle,
       }, testChildren);
@@ -129,8 +129,8 @@ main() {
       Function createHandler(eventKey) => (_) {
             print(eventKey);
           };
-      Map<String, Function> originalHandlers;
-      Map props;
+      late Map<String, Function> originalHandlers;
+      late Map props;
 
       setUp(() {
         originalHandlers = {};
@@ -194,10 +194,10 @@ main() {
     }, tags: 'no-dart2js');
 
     test('throws with generic error when something else throws', () {
-      expect(() => react.registerComponent2(() => throw StateError('bad component')), throwsStateError);
+      expect(() => react.registerComponent2((() => throw StateError('bad component')) as react.Component2 Function()), throwsStateError);
       expect(() {
         try {
-          react.registerComponent2(() => throw StateError('bad component'));
+          react.registerComponent2((() => throw StateError('bad component')) as react.Component2 Function());
         } catch (_) {}
       }, prints(contains('Error when registering Component2:')));
     });
@@ -261,4 +261,4 @@ class DartComponentComponent extends Component {
   }
 }
 
-final DartComponent = react.registerComponent(() => DartComponentComponent()) as ReactDartComponentFactoryProxy;
+final DartComponent = react.registerComponent(() => DartComponentComponent()) as ReactDartComponentFactoryProxy?;

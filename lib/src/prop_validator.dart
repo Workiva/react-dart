@@ -7,10 +7,10 @@ typedef PropValidator<T> = Error Function(T props, PropValidatorInfo info);
 
 /// Metadata about a prop being validated by a [PropValidator].
 class PropValidatorInfo {
-  final String propName;
-  final String componentName;
-  final String location;
-  final String propFullName;
+  final String? propName;
+  final String? componentName;
+  final String? location;
+  final String? propFullName;
 
   const PropValidatorInfo({
     this.propName,

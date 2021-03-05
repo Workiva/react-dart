@@ -103,13 +103,13 @@ class Context<T> {
 ///
 /// Learn more: https://reactjs.org/docs/context.html#reactcreatecontext
 Context<TValue> createContext<TValue>([
-  TValue defaultValue,
-  int Function(TValue currentValue, TValue nextValue) calculateChangedBits,
+  TValue? defaultValue,
+  int Function(TValue? currentValue, TValue? nextValue)? calculateChangedBits,
 ]) {
   int jsifyCalculateChangedBitsArgs(currentValue, nextValue) {
-    return calculateChangedBits(
-      ContextHelpers.unjsifyNewContext(currentValue) as TValue,
-      ContextHelpers.unjsifyNewContext(nextValue) as TValue,
+    return calculateChangedBits!(
+      ContextHelpers.unjsifyNewContext(currentValue) as TValue?,
+      ContextHelpers.unjsifyNewContext(nextValue) as TValue?,
     );
   }
 

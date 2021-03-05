@@ -30,27 +30,27 @@ bool isDartComponent2(ReactElement element) =>
 
 bool isDartComponent(ReactElement element) => ReactDartComponentVersion.fromType(element.type) != null;
 
-T getDartComponent<T extends react.Component>(dynamic dartComponent) {
-  return (dartComponent as ReactComponent).dartComponent as T;
+T? getDartComponent<T extends react.Component?>(dynamic dartComponent) {
+  return (dartComponent as ReactComponent).dartComponent as T?;
 }
 
 Map getDartComponentProps(dynamic dartComponent) {
-  return getDartComponent(dartComponent).props;
+  return getDartComponent(dartComponent)!.props;
 }
 
-Map getDartElementProps(ReactElement dartElement) {
+Map? getDartElementProps(ReactElement dartElement) {
   return isDartComponent2(dartElement) ? JsBackedMap.fromJs(dartElement.props) : dartElement.props.internal.props;
 }
 
-ReactComponent render(ReactElement reactElement) {
+ReactComponent render(ReactElement? reactElement) {
   return rtu.renderIntoDocument(reactElement) as ReactComponent;
 }
 
 // Same as the public API but with tightened types to help fix implicit casts
-Element findDomNode(dynamic component) => react_dom.findDOMNode(component) as Element;
+Element? findDomNode(dynamic component) => react_dom.findDOMNode(component) as Element?;
 
 /// Returns a new [Map.unmodifiable] with all argument maps merged in.
-Map unmodifiableMap([Map map1, Map map2, Map map3, Map map4]) {
+Map unmodifiableMap([Map? map1, Map? map2, Map? map3, Map? map4]) {
   final merged = {};
   if (map1 != null) merged.addAll(map1);
   if (map2 != null) merged.addAll(map2);
@@ -88,10 +88,10 @@ class RefTestCase {
   final bool isJs;
 
   RefTestCase({
-    @required this.name,
-    @required this.ref,
-    @required this.verifyRefWasUpdated,
-    @required this.getCurrent,
+    required this.name,
+    required this.ref,
+    required this.verifyRefWasUpdated,
+    required this.getCurrent,
     this.isJs = false,
   });
 }

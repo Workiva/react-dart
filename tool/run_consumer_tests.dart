@@ -23,9 +23,9 @@ Future<void> main(List<String> args) async {
   }
 
   final repoName = parsedArgs['repoName'] as String;
-  final orgName = parsedArgs['orgName'] as String;
+  final orgName = parsedArgs['orgName'] as String?;
   final testCmdStr = parsedArgs['testCmd'] as String;
-  final packageName = parsedArgs['packageName'] ?? parsedArgs['repoName'] as String;
+  final packageName = parsedArgs['packageName'] ?? parsedArgs['repoName'] as String?;
 
   final reactGitSha = Process.runSync('git', ['rev-parse', 'HEAD']).stdout;
   print('Running $packageName tests while consuming react-dart at $reactGitSha ...\n');

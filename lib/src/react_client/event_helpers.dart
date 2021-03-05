@@ -11,7 +11,7 @@ import 'package:react/src/react_client/synthetic_event_wrappers.dart';
 /// Helper util that wraps a native [KeyboardEvent] in a [SyntheticKeyboardEvent].
 ///
 /// Used where a native [KeyboardEvent] is given and a [SyntheticKeyboardEvent] is needed.
-SyntheticKeyboardEvent wrapNativeKeyboardEvent(KeyboardEvent nativeEvent) {
+SyntheticKeyboardEvent? wrapNativeKeyboardEvent(KeyboardEvent nativeEvent) {
   return jsifyAndAllowInterop({
     // SyntheticEvent fields
     'bubbles': nativeEvent.bubbles,
@@ -41,13 +41,13 @@ SyntheticKeyboardEvent wrapNativeKeyboardEvent(KeyboardEvent nativeEvent) {
     'shiftKey': nativeEvent.shiftKey,
     'keyCode': nativeEvent.keyCode,
     'charCode': nativeEvent.charCode,
-  }) as SyntheticKeyboardEvent;
+  }) as SyntheticKeyboardEvent?;
 }
 
 /// Helper util that wraps a native [MouseEvent] in a [SyntheticMouseEvent].
 ///
 /// Used where a native [MouseEvent] is given and a [SyntheticMouseEvent] is needed.
-SyntheticMouseEvent wrapNativeMouseEvent(MouseEvent nativeEvent) {
+SyntheticMouseEvent? wrapNativeMouseEvent(MouseEvent nativeEvent) {
   return jsifyAndAllowInterop({
     // SyntheticEvent fields
     'bubbles': nativeEvent.bubbles,
@@ -80,7 +80,7 @@ SyntheticMouseEvent wrapNativeMouseEvent(MouseEvent nativeEvent) {
     'screenX': nativeEvent.screen.x,
     'screenY': nativeEvent.screen.y,
     'shiftKey': nativeEvent.shiftKey,
-  }) as SyntheticMouseEvent;
+  }) as SyntheticMouseEvent?;
 }
 
 /// If the consumer specifies a callback like `onChange` on one of our custom form components that are not *actually*
@@ -88,7 +88,7 @@ SyntheticMouseEvent wrapNativeMouseEvent(MouseEvent nativeEvent) {
 ///
 /// This helper method generates a "fake" [SyntheticFormEvent], with nothing but the `target` set to [element],
 /// `type` set to [type] and `timeStamp` set to the current time. All other arguments are `noop`, `false` or `null`.
-SyntheticFormEvent fakeSyntheticFormEvent(Element element, String type) {
+SyntheticFormEvent? fakeSyntheticFormEvent(Element element, String type) {
   return jsifyAndAllowInterop({
     // SyntheticEvent fields
     'bubbles': false,
@@ -106,23 +106,23 @@ SyntheticFormEvent fakeSyntheticFormEvent(Element element, String type) {
     'preventDefault': () {},
     'persist': () {},
     'isPersistent': () => true,
-  }) as SyntheticFormEvent;
+  }) as SyntheticFormEvent?;
 }
 
 Map<String, dynamic> _wrapBaseEventPropertiesInMap({
-  SyntheticEvent baseEvent,
-  bool bubbles,
-  bool cancelable,
+  SyntheticEvent? baseEvent,
+  bool? bubbles,
+  bool? cancelable,
   dynamic currentTarget,
-  bool defaultPrevented,
-  void Function() preventDefault,
-  void Function() stopPropagation,
-  num eventPhase,
-  bool isTrusted,
+  bool? defaultPrevented,
+  void Function()? preventDefault,
+  void Function()? stopPropagation,
+  num? eventPhase,
+  bool? isTrusted,
   dynamic nativeEvent,
   dynamic target,
-  num timeStamp,
-  String type,
+  num? timeStamp,
+  String? type,
 }) {
   return {
     'bubbles': bubbles ?? baseEvent?.bubbles ?? false,
@@ -145,20 +145,20 @@ Map<String, dynamic> _wrapBaseEventPropertiesInMap({
 /// In addition to creating empty instances (by invoking without any parameters) or completely custom instances
 /// by using the named parameters, this function will merge previously existing [baseEvent]s with the named parameters provided.
 /// The named parameters takes precedence, and therefore can be used to override specific fields on the [baseEvent].
-SyntheticEvent createSyntheticEvent({
-  SyntheticEvent baseEvent,
-  bool bubbles,
-  bool cancelable,
+SyntheticEvent? createSyntheticEvent({
+  SyntheticEvent? baseEvent,
+  bool? bubbles,
+  bool? cancelable,
   dynamic currentTarget,
-  bool defaultPrevented,
-  void Function() preventDefault,
-  void Function() stopPropagation,
-  num eventPhase,
-  bool isTrusted,
+  bool? defaultPrevented,
+  void Function()? preventDefault,
+  void Function()? stopPropagation,
+  num? eventPhase,
+  bool? isTrusted,
   dynamic nativeEvent,
   dynamic target,
-  num timeStamp,
-  String type,
+  num? timeStamp,
+  String? type,
 }) {
   return jsifyAndAllowInterop(_wrapBaseEventPropertiesInMap(
     baseEvent: baseEvent,
@@ -174,7 +174,7 @@ SyntheticEvent createSyntheticEvent({
     target: target,
     timeStamp: timeStamp,
     type: type,
-  )) as SyntheticEvent;
+  )) as SyntheticEvent?;
 }
 
 /// Returns a newly constructed [SyntheticClipboardEvent] instance.
@@ -182,20 +182,20 @@ SyntheticEvent createSyntheticEvent({
 /// In addition to creating empty instances (by invoking without any parameters) or completely custom instances
 /// by using the named parameters, this function will merge previously existing [baseEvent]s with the named parameters provided.
 /// The named parameters takes precedence, and therefore can be used to override specific fields on the [baseEvent].
-SyntheticClipboardEvent createSyntheticClipboardEvent({
-  SyntheticClipboardEvent baseEvent,
-  bool bubbles,
-  bool cancelable,
+SyntheticClipboardEvent? createSyntheticClipboardEvent({
+  SyntheticClipboardEvent? baseEvent,
+  bool? bubbles,
+  bool? cancelable,
   dynamic currentTarget,
-  bool defaultPrevented,
-  void Function() preventDefault,
-  void Function() stopPropagation,
-  num eventPhase,
-  bool isTrusted,
+  bool? defaultPrevented,
+  void Function()? preventDefault,
+  void Function()? stopPropagation,
+  num? eventPhase,
+  bool? isTrusted,
   dynamic nativeEvent,
   dynamic target,
-  num timeStamp,
-  String type,
+  num? timeStamp,
+  String? type,
   dynamic clipboardData,
 }) {
   return jsifyAndAllowInterop({
@@ -215,7 +215,7 @@ SyntheticClipboardEvent createSyntheticClipboardEvent({
       type: type,
     ),
     'clipboardData': clipboardData ?? baseEvent?.clipboardData,
-  }) as SyntheticClipboardEvent;
+  }) as SyntheticClipboardEvent?;
 }
 
 /// Returns a newly constructed [SyntheticKeyboardEvent] instance.
@@ -223,31 +223,31 @@ SyntheticClipboardEvent createSyntheticClipboardEvent({
 /// In addition to creating empty instances (by invoking without any parameters) or completely custom instances
 /// by using the named parameters, this function will merge previously existing [baseEvent]s with the named parameters provided.
 /// The named parameters takes precedence, and therefore can be used to override specific fields on the [baseEvent].
-SyntheticKeyboardEvent createSyntheticKeyboardEvent({
-  SyntheticKeyboardEvent baseEvent,
-  bool bubbles,
-  bool cancelable,
+SyntheticKeyboardEvent? createSyntheticKeyboardEvent({
+  SyntheticKeyboardEvent? baseEvent,
+  bool? bubbles,
+  bool? cancelable,
   dynamic currentTarget,
-  bool defaultPrevented,
-  void Function() preventDefault,
-  void Function() stopPropagation,
-  num eventPhase,
-  bool isTrusted,
+  bool? defaultPrevented,
+  void Function()? preventDefault,
+  void Function()? stopPropagation,
+  num? eventPhase,
+  bool? isTrusted,
   dynamic nativeEvent,
   dynamic target,
-  num timeStamp,
-  String type,
-  bool altKey,
-  String char,
-  bool ctrlKey,
-  String locale,
-  num location,
-  String key,
-  bool metaKey,
-  bool repeat,
-  bool shiftKey,
-  num keyCode,
-  num charCode,
+  num? timeStamp,
+  String? type,
+  bool? altKey,
+  String? char,
+  bool? ctrlKey,
+  String? locale,
+  num? location,
+  String? key,
+  bool? metaKey,
+  bool? repeat,
+  bool? shiftKey,
+  num? keyCode,
+  num? charCode,
 }) {
   return jsifyAndAllowInterop({
     ..._wrapBaseEventPropertiesInMap(
@@ -276,7 +276,7 @@ SyntheticKeyboardEvent createSyntheticKeyboardEvent({
     'metaKey': metaKey ?? baseEvent?.metaKey ?? false,
     'repeat': repeat ?? baseEvent?.repeat,
     'shiftKey': shiftKey ?? baseEvent?.shiftKey ?? false,
-  }) as SyntheticKeyboardEvent;
+  }) as SyntheticKeyboardEvent?;
 }
 
 /// Returns a newly constructed [SyntheticCompositionEvent] instance.
@@ -284,21 +284,21 @@ SyntheticKeyboardEvent createSyntheticKeyboardEvent({
 /// In addition to creating empty instances (by invoking without any parameters) or completely custom instances
 /// by using the named parameters, this function will merge previously existing [baseEvent]s with the named parameters provided.
 /// The named parameters takes precedence, and therefore can be used to override specific fields on the [baseEvent].
-SyntheticCompositionEvent createSyntheticCompositionEvent({
-  SyntheticCompositionEvent baseEvent,
-  bool bubbles,
-  bool cancelable,
+SyntheticCompositionEvent? createSyntheticCompositionEvent({
+  SyntheticCompositionEvent? baseEvent,
+  bool? bubbles,
+  bool? cancelable,
   dynamic currentTarget,
-  bool defaultPrevented,
-  void Function() preventDefault,
-  void Function() stopPropagation,
-  num eventPhase,
-  bool isTrusted,
+  bool? defaultPrevented,
+  void Function()? preventDefault,
+  void Function()? stopPropagation,
+  num? eventPhase,
+  bool? isTrusted,
   dynamic nativeEvent,
   dynamic target,
-  num timeStamp,
-  String type,
-  String data,
+  num? timeStamp,
+  String? type,
+  String? data,
 }) {
   return jsifyAndAllowInterop({
     ..._wrapBaseEventPropertiesInMap(
@@ -317,7 +317,7 @@ SyntheticCompositionEvent createSyntheticCompositionEvent({
       type: type,
     ),
     'data': data ?? baseEvent?.data,
-  }) as SyntheticCompositionEvent;
+  }) as SyntheticCompositionEvent?;
 }
 
 /// Returns a newly constructed [SyntheticFocusEvent] instance.
@@ -325,20 +325,20 @@ SyntheticCompositionEvent createSyntheticCompositionEvent({
 /// In addition to creating empty instances (by invoking without any parameters) or completely custom instances
 /// by using the named parameters, this function will merge previously existing [baseEvent]s with the named parameters provided.
 /// The named parameters takes precedence, and therefore can be used to override specific fields on the [baseEvent].
-SyntheticFocusEvent createSyntheticFocusEvent({
-  SyntheticFocusEvent baseEvent,
-  bool bubbles,
-  bool cancelable,
+SyntheticFocusEvent? createSyntheticFocusEvent({
+  SyntheticFocusEvent? baseEvent,
+  bool? bubbles,
+  bool? cancelable,
   dynamic currentTarget,
-  bool defaultPrevented,
-  void Function() preventDefault,
-  void Function() stopPropagation,
-  num eventPhase,
-  bool isTrusted,
+  bool? defaultPrevented,
+  void Function()? preventDefault,
+  void Function()? stopPropagation,
+  num? eventPhase,
+  bool? isTrusted,
   dynamic nativeEvent,
   dynamic target,
-  num timeStamp,
-  String type,
+  num? timeStamp,
+  String? type,
   /*DOMEventTarget*/ dynamic relatedTarget,
 }) {
   return jsifyAndAllowInterop({
@@ -358,7 +358,7 @@ SyntheticFocusEvent createSyntheticFocusEvent({
       type: type,
     ),
     'relatedTarget': relatedTarget ?? baseEvent?.relatedTarget,
-  }) as SyntheticFocusEvent;
+  }) as SyntheticFocusEvent?;
 }
 
 /// Returns a newly constructed [SyntheticFormEvent] instance.
@@ -366,20 +366,20 @@ SyntheticFocusEvent createSyntheticFocusEvent({
 /// In addition to creating empty instances (by invoking without any parameters) or completely custom instances
 /// by using the named parameters, this function will merge previously existing [baseEvent]s with the named parameters provided.
 /// The named parameters takes precedence, and therefore can be used to override specific fields on the [baseEvent].
-SyntheticFormEvent createSyntheticFormEvent({
-  SyntheticFormEvent baseEvent,
-  bool bubbles,
-  bool cancelable,
+SyntheticFormEvent? createSyntheticFormEvent({
+  SyntheticFormEvent? baseEvent,
+  bool? bubbles,
+  bool? cancelable,
   dynamic currentTarget,
-  bool defaultPrevented,
-  void Function() preventDefault,
-  void Function() stopPropagation,
-  num eventPhase,
-  bool isTrusted,
+  bool? defaultPrevented,
+  void Function()? preventDefault,
+  void Function()? stopPropagation,
+  num? eventPhase,
+  bool? isTrusted,
   dynamic nativeEvent,
   dynamic target,
-  num timeStamp,
-  String type,
+  num? timeStamp,
+  String? type,
 }) {
   return jsifyAndAllowInterop({
     ..._wrapBaseEventPropertiesInMap(
@@ -397,7 +397,7 @@ SyntheticFormEvent createSyntheticFormEvent({
       timeStamp: timeStamp,
       type: type,
     ),
-  }) as SyntheticFormEvent;
+  }) as SyntheticFormEvent?;
 }
 
 /// Returns a newly constructed [SyntheticMouseEvent] instance.
@@ -405,34 +405,34 @@ SyntheticFormEvent createSyntheticFormEvent({
 /// In addition to creating empty instances (by invoking without any parameters) or completely custom instances
 /// by using the named parameters, this function will merge previously existing [baseEvent]s with the named parameters provided.
 /// The named parameters takes precedence, and therefore can be used to override specific fields on the [baseEvent].
-SyntheticMouseEvent createSyntheticMouseEvent({
-  SyntheticMouseEvent baseEvent,
-  bool bubbles,
-  bool cancelable,
+SyntheticMouseEvent? createSyntheticMouseEvent({
+  SyntheticMouseEvent? baseEvent,
+  bool? bubbles,
+  bool? cancelable,
   dynamic currentTarget,
-  bool defaultPrevented,
-  void Function() preventDefault,
-  void Function() stopPropagation,
-  num eventPhase,
-  bool isTrusted,
+  bool? defaultPrevented,
+  void Function()? preventDefault,
+  void Function()? stopPropagation,
+  num? eventPhase,
+  bool? isTrusted,
   dynamic nativeEvent,
   dynamic target,
-  num timeStamp,
-  String type,
-  bool altKey,
-  num button,
-  num buttons,
-  num clientX,
-  num clientY,
-  bool ctrlKey,
+  num? timeStamp,
+  String? type,
+  bool? altKey,
+  num? button,
+  num? buttons,
+  num? clientX,
+  num? clientY,
+  bool? ctrlKey,
   dynamic dataTransfer,
-  bool metaKey,
-  num pageX,
-  num pageY,
+  bool? metaKey,
+  num? pageX,
+  num? pageY,
   /*DOMEventTarget*/ dynamic relatedTarget,
-  num screenX,
-  num screenY,
-  bool shiftKey,
+  num? screenX,
+  num? screenY,
+  bool? shiftKey,
 }) {
   return jsifyAndAllowInterop({
     ..._wrapBaseEventPropertiesInMap(
@@ -464,7 +464,7 @@ SyntheticMouseEvent createSyntheticMouseEvent({
     'screenX': screenX ?? baseEvent?.screenX,
     'screenY': screenY ?? baseEvent?.screenY,
     'shiftKey': shiftKey ?? baseEvent?.shiftKey ?? false,
-  }) as SyntheticMouseEvent;
+  }) as SyntheticMouseEvent?;
 }
 
 /// Returns a newly constructed [SyntheticPointerEvent] instance.
@@ -472,30 +472,30 @@ SyntheticMouseEvent createSyntheticMouseEvent({
 /// In addition to creating empty instances (by invoking without any parameters) or completely custom instances
 /// by using the named parameters, this function will merge previously existing [baseEvent]s with the named parameters provided.
 /// The named parameters takes precedence, and therefore can be used to override specific fields on the [baseEvent].
-SyntheticPointerEvent createSyntheticPointerEvent({
-  SyntheticPointerEvent baseEvent,
-  bool bubbles,
-  bool cancelable,
+SyntheticPointerEvent? createSyntheticPointerEvent({
+  SyntheticPointerEvent? baseEvent,
+  bool? bubbles,
+  bool? cancelable,
   dynamic currentTarget,
-  bool defaultPrevented,
-  void Function() preventDefault,
-  void Function() stopPropagation,
-  num eventPhase,
-  bool isTrusted,
+  bool? defaultPrevented,
+  void Function()? preventDefault,
+  void Function()? stopPropagation,
+  num? eventPhase,
+  bool? isTrusted,
   dynamic nativeEvent,
   dynamic target,
-  num timeStamp,
-  String type,
-  num pointerId,
-  num width,
-  num height,
-  num pressure,
-  num tangentialPressure,
-  num tiltX,
-  num tiltY,
-  num twist,
-  String pointerType,
-  bool isPrimary,
+  num? timeStamp,
+  String? type,
+  num? pointerId,
+  num? width,
+  num? height,
+  num? pressure,
+  num? tangentialPressure,
+  num? tiltX,
+  num? tiltY,
+  num? twist,
+  String? pointerType,
+  bool? isPrimary,
 }) {
   return jsifyAndAllowInterop({
     ..._wrapBaseEventPropertiesInMap(
@@ -523,7 +523,7 @@ SyntheticPointerEvent createSyntheticPointerEvent({
     'twist': twist ?? baseEvent?.twist,
     'pointerType': pointerType ?? baseEvent?.pointerType,
     'isPrimary': isPrimary ?? baseEvent?.isPrimary,
-  }) as SyntheticPointerEvent;
+  }) as SyntheticPointerEvent?;
 }
 
 /// Returns a newly constructed [SyntheticTouchEvent] instance.
@@ -531,25 +531,25 @@ SyntheticPointerEvent createSyntheticPointerEvent({
 /// In addition to creating empty instances (by invoking without any parameters) or completely custom instances
 /// by using the named parameters, this function will merge previously existing [baseEvent]s with the named parameters provided.
 /// The named parameters takes precedence, and therefore can be used to override specific fields on the [baseEvent].
-SyntheticTouchEvent createSyntheticTouchEvent({
-  SyntheticTouchEvent baseEvent,
-  bool bubbles,
-  bool cancelable,
+SyntheticTouchEvent? createSyntheticTouchEvent({
+  SyntheticTouchEvent? baseEvent,
+  bool? bubbles,
+  bool? cancelable,
   dynamic currentTarget,
-  bool defaultPrevented,
-  void Function() preventDefault,
-  void Function() stopPropagation,
-  num eventPhase,
-  bool isTrusted,
+  bool? defaultPrevented,
+  void Function()? preventDefault,
+  void Function()? stopPropagation,
+  num? eventPhase,
+  bool? isTrusted,
   dynamic nativeEvent,
   dynamic target,
-  num timeStamp,
-  String type,
-  bool altKey,
+  num? timeStamp,
+  String? type,
+  bool? altKey,
   /*DOMTouchList*/ dynamic changedTouches,
-  bool ctrlKey,
-  bool metaKey,
-  bool shiftKey,
+  bool? ctrlKey,
+  bool? metaKey,
+  bool? shiftKey,
   /*DOMTouchList*/ dynamic targetTouches,
   /*DOMTouchList*/ dynamic touches,
 }) {
@@ -576,7 +576,7 @@ SyntheticTouchEvent createSyntheticTouchEvent({
     'shiftKey': shiftKey ?? baseEvent?.shiftKey ?? false,
     'targetTouches': targetTouches ?? baseEvent?.targetTouches,
     'touches': touches ?? baseEvent?.touches,
-  }) as SyntheticTouchEvent;
+  }) as SyntheticTouchEvent?;
 }
 
 /// Returns a newly constructed [SyntheticTransitionEvent] instance.
@@ -584,23 +584,23 @@ SyntheticTouchEvent createSyntheticTouchEvent({
 /// In addition to creating empty instances (by invoking without any parameters) or completely custom instances
 /// by using the named parameters, this function will merge previously existing [baseEvent]s with the named parameters provided.
 /// The named parameters takes precedence, and therefore can be used to override specific fields on the [baseEvent].
-SyntheticTransitionEvent createSyntheticTransitionEvent({
-  SyntheticTransitionEvent baseEvent,
-  bool bubbles,
-  bool cancelable,
+SyntheticTransitionEvent? createSyntheticTransitionEvent({
+  SyntheticTransitionEvent? baseEvent,
+  bool? bubbles,
+  bool? cancelable,
   dynamic currentTarget,
-  bool defaultPrevented,
-  void Function() preventDefault,
-  void Function() stopPropagation,
-  num eventPhase,
-  bool isTrusted,
+  bool? defaultPrevented,
+  void Function()? preventDefault,
+  void Function()? stopPropagation,
+  num? eventPhase,
+  bool? isTrusted,
   dynamic nativeEvent,
   dynamic target,
-  num timeStamp,
-  String type,
-  String propertyName,
-  num elapsedTime,
-  String pseudoElement,
+  num? timeStamp,
+  String? type,
+  String? propertyName,
+  num? elapsedTime,
+  String? pseudoElement,
 }) {
   return jsifyAndAllowInterop({
     ..._wrapBaseEventPropertiesInMap(
@@ -621,7 +621,7 @@ SyntheticTransitionEvent createSyntheticTransitionEvent({
     'propertyName': propertyName ?? baseEvent?.propertyName,
     'elapsedTime': elapsedTime ?? baseEvent?.elapsedTime,
     'pseudoElement': pseudoElement ?? baseEvent?.pseudoElement,
-  }) as SyntheticTransitionEvent;
+  }) as SyntheticTransitionEvent?;
 }
 
 /// Returns a newly constructed [SyntheticAnimationEvent] instance.
@@ -629,23 +629,23 @@ SyntheticTransitionEvent createSyntheticTransitionEvent({
 /// In addition to creating empty instances (by invoking without any parameters) or completely custom instances
 /// by using the named parameters, this function will merge previously existing [baseEvent]s with the named parameters provided.
 /// The named parameters takes precedence, and therefore can be used to override specific fields on the [baseEvent].
-SyntheticAnimationEvent createSyntheticAnimationEvent({
-  SyntheticAnimationEvent baseEvent,
-  bool bubbles,
-  bool cancelable,
+SyntheticAnimationEvent? createSyntheticAnimationEvent({
+  SyntheticAnimationEvent? baseEvent,
+  bool? bubbles,
+  bool? cancelable,
   dynamic currentTarget,
-  bool defaultPrevented,
-  void Function() preventDefault,
-  void Function() stopPropagation,
-  num eventPhase,
-  bool isTrusted,
+  bool? defaultPrevented,
+  void Function()? preventDefault,
+  void Function()? stopPropagation,
+  num? eventPhase,
+  bool? isTrusted,
   dynamic nativeEvent,
   dynamic target,
-  num timeStamp,
-  String type,
-  String animationName,
-  num elapsedTime,
-  String pseudoElement,
+  num? timeStamp,
+  String? type,
+  String? animationName,
+  num? elapsedTime,
+  String? pseudoElement,
 }) {
   return jsifyAndAllowInterop({
     ..._wrapBaseEventPropertiesInMap(
@@ -666,7 +666,7 @@ SyntheticAnimationEvent createSyntheticAnimationEvent({
     'animationName': animationName ?? baseEvent?.animationName,
     'elapsedTime': elapsedTime ?? baseEvent?.elapsedTime,
     'pseudoElement': pseudoElement ?? baseEvent?.pseudoElement,
-  }) as SyntheticAnimationEvent;
+  }) as SyntheticAnimationEvent?;
 }
 
 /// Returns a newly constructed [SyntheticUIEvent] instance.
@@ -674,21 +674,21 @@ SyntheticAnimationEvent createSyntheticAnimationEvent({
 /// In addition to creating empty instances (by invoking without any parameters) or completely custom instances
 /// by using the named parameters, this function will merge previously existing [baseEvent]s with the named parameters provided.
 /// The named parameters takes precedence, and therefore can be used to override specific fields on the [baseEvent].
-SyntheticUIEvent createSyntheticUIEvent({
-  SyntheticUIEvent baseEvent,
-  bool bubbles,
-  bool cancelable,
+SyntheticUIEvent? createSyntheticUIEvent({
+  SyntheticUIEvent? baseEvent,
+  bool? bubbles,
+  bool? cancelable,
   dynamic currentTarget,
-  bool defaultPrevented,
-  void Function() preventDefault,
-  void Function() stopPropagation,
-  num eventPhase,
-  bool isTrusted,
+  bool? defaultPrevented,
+  void Function()? preventDefault,
+  void Function()? stopPropagation,
+  num? eventPhase,
+  bool? isTrusted,
   dynamic nativeEvent,
   dynamic target,
-  num timeStamp,
-  String type,
-  num detail,
+  num? timeStamp,
+  String? type,
+  num? detail,
   /*DOMAbstractView*/ dynamic view,
 }) {
   return jsifyAndAllowInterop({
@@ -709,7 +709,7 @@ SyntheticUIEvent createSyntheticUIEvent({
     ),
     'detail': detail ?? baseEvent?.detail,
     'view': view ?? baseEvent?.view,
-  }) as SyntheticUIEvent;
+  }) as SyntheticUIEvent?;
 }
 
 /// Returns a newly constructed [SyntheticWheelEvent] instance.
@@ -717,24 +717,24 @@ SyntheticUIEvent createSyntheticUIEvent({
 /// In addition to creating empty instances (by invoking without any parameters) or completely custom instances
 /// by using the named parameters, this function will merge previously existing [baseEvent]s with the named parameters provided.
 /// The named parameters takes precedence, and therefore can be used to override specific fields on the [baseEvent].
-SyntheticWheelEvent createSyntheticWheelEvent({
-  SyntheticWheelEvent baseEvent,
-  bool bubbles,
-  bool cancelable,
+SyntheticWheelEvent? createSyntheticWheelEvent({
+  SyntheticWheelEvent? baseEvent,
+  bool? bubbles,
+  bool? cancelable,
   dynamic currentTarget,
-  bool defaultPrevented,
-  void Function() preventDefault,
-  void Function() stopPropagation,
-  num eventPhase,
-  bool isTrusted,
+  bool? defaultPrevented,
+  void Function()? preventDefault,
+  void Function()? stopPropagation,
+  num? eventPhase,
+  bool? isTrusted,
   dynamic nativeEvent,
   dynamic target,
-  num timeStamp,
-  String type,
-  num deltaX,
-  num deltaMode,
-  num deltaY,
-  num deltaZ,
+  num? timeStamp,
+  String? type,
+  num? deltaX,
+  num? deltaMode,
+  num? deltaY,
+  num? deltaZ,
 }) {
   return jsifyAndAllowInterop({
     ..._wrapBaseEventPropertiesInMap(
@@ -756,12 +756,12 @@ SyntheticWheelEvent createSyntheticWheelEvent({
     'deltaMode': deltaMode ?? baseEvent?.deltaMode,
     'deltaY': deltaY ?? baseEvent?.deltaY,
     'deltaZ': deltaZ ?? baseEvent?.deltaZ,
-  }) as SyntheticWheelEvent;
+  }) as SyntheticWheelEvent?;
 }
 
-extension SyntheticEventTypeHelpers on SyntheticEvent {
+extension SyntheticEventTypeHelpers on SyntheticEvent? {
   bool _checkEventType(List<String> types) => this != null && type != null && types.any((t) => type.contains(t));
-  bool _hasProperty(String propertyName) => this != null && hasProperty(this, propertyName);
+  bool _hasProperty(String propertyName) => this != null && hasProperty(this!, propertyName);
 
   /// Whether the event instance has been removed from the ReactJS event pool.
   ///
@@ -809,5 +809,5 @@ extension DataTransferHelper on SyntheticMouseEvent {
   /// The data that is transferred during a drag and drop interaction.
   ///
   /// See <https://developer.mozilla.org/en-US/docs/Web/API/DragEvent/dataTransfer>
-  SyntheticDataTransfer get dataTransfer => syntheticDataTransferFactory(getProperty(this, 'dataTransfer'));
+  SyntheticDataTransfer? get dataTransfer => syntheticDataTransferFactory(getProperty(this, 'dataTransfer'));
 }

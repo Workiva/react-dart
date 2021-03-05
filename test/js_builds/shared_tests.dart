@@ -52,7 +52,7 @@ external set consoleWarnCalls(List<dynamic> value);
 @JS('console.warn')
 external void consoleWarn([a, b, c, d]);
 
-void sharedConsoleWarnTests({@required bool expectDeduplicateSyntheticEventWarnings}) {
+void sharedConsoleWarnTests({required bool expectDeduplicateSyntheticEventWarnings}) {
   group('console.warn wrapper (or lack thereof)', () {
     void clearConsoleWarnCalls() => consoleWarnCalls = [];
 

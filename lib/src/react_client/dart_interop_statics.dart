@@ -76,7 +76,7 @@ final ReactDartInteropStatics dartInteropStatics = (() {
   /// 3. Update [Component.state] by calling [Component.transferComponentState]
   void _afterPropsChange(Component component, InteropContextValue nextContext) {
     component
-      ..props = component.nextProps // [1]
+      ..props = component.nextProps! // [1]
       ..context = component.nextContext // [2]
       ..transferComponentState(); // [3]
   }
@@ -127,9 +127,9 @@ final ReactDartInteropStatics dartInteropStatics = (() {
         // If shouldComponentUpdateWithContext returns a valid bool (default implementation returns null),
         // then don't bother calling `shouldComponentUpdate` and have it trump.
         var shouldUpdate =
-            component.shouldComponentUpdateWithContext(component.nextProps, component.nextState, component.nextContext);
+            component.shouldComponentUpdateWithContext(component.nextProps!, component.nextState, component.nextContext!);
 
-        shouldUpdate ??= component.shouldComponentUpdate(component.nextProps, component.nextState);
+        shouldUpdate ??= component.shouldComponentUpdate(component.nextProps!, component.nextState);
 
         if (shouldUpdate) {
           return true;
@@ -147,8 +147,8 @@ final ReactDartInteropStatics dartInteropStatics = (() {
   void handleComponentWillUpdate(Component component, InteropContextValue nextContext) => zone.run(() {
         /// Call `componentWillUpdate` and the context variant
         component
-          ..componentWillUpdate(component.nextProps, component.nextState)
-          ..componentWillUpdateWithContext(component.nextProps, component.nextState, component.nextContext);
+          ..componentWillUpdate(component.nextProps!, component.nextState)
+          ..componentWillUpdateWithContext(component.nextProps!, component.nextState, component.nextContext!);
 
         _afterPropsChange(component, nextContext);
       });
@@ -157,10 +157,10 @@ final ReactDartInteropStatics dartInteropStatics = (() {
   ///
   /// Uses [prevState] which was transferred from [Component.nextState] in [componentWillUpdate].
   void handleComponentDidUpdate(Component component, ReactDartComponentInternal prevInternal) => zone.run(() {
-        final prevInternalProps = prevInternal.props;
+        final prevInternalProps = prevInternal.props!;
 
         /// Call `componentDidUpdate` and the context variant
-        component.componentDidUpdate(prevInternalProps, component.prevState);
+        component.componentDidUpdate(prevInternalProps, component.prevState!);
 
         _callSetStateCallbacks(component);
         // Clear out prevState after it's done being used so it's not retained
@@ -211,12 +211,12 @@ abstract class ReactDartInteropStatics2 {
           // Return the component so that the JS proxying component can store it,
           // avoiding an interceptor lookup.
           ..jsThis = jsThis
-          ..props = JsBackedMap.backedBy(jsThis.props)
+          ..props = JsBackedMap.backedBy(jsThis.props!)
           ..context = ContextHelpers.unjsifyNewContext(jsThis.context);
 
-        jsThis.state = jsBackingMapOrJsCopy(component.initialState);
+        jsThis.state = jsBackingMapOrJsCopy(component.initialState!);
 
-        component.state = JsBackedMap.backedBy(jsThis.state);
+        component.state = JsBackedMap.backedBy(jsThis.state!);
 
         // ignore: invalid_use_of_protected_member
         Component2Bridge.bridgeForComponent[component] = componentStatics.bridgeFactory(component);
@@ -242,7 +242,7 @@ abstract class ReactDartInteropStatics2 {
         return value;
       });
 
-  static JsMap handleGetDerivedStateFromProps(
+  static JsMap? handleGetDerivedStateFromProps(
           ComponentStatics2 componentStatics, JsMap jsNextProps, JsMap jsPrevState) => // dartfmt
       componentZone.run(() {
         final derivedState = componentStatics.instanceForStaticMethods
@@ -292,7 +292,7 @@ abstract class ReactDartInteropStatics2 {
         }
       });
 
-  static JsMap handleGetDerivedStateFromError(ComponentStatics2 componentStatics, dynamic error) => // dartfmt
+  static JsMap? handleGetDerivedStateFromError(ComponentStatics2 componentStatics, dynamic error) => // dartfmt
       componentZone.run(() {
         // Due to the error object being passed in from ReactJS it is a javascript object that does not get dartified.
         // To fix this we throw the error again from Dart to the JS side and catch it Dart side which re-dartifies it.
@@ -312,7 +312,7 @@ abstract class ReactDartInteropStatics2 {
         return component.render();
       });
 
-  static final JsMap staticsForJs = jsifyAndAllowInterop({
+  static final JsMap? staticsForJs = jsifyAndAllowInterop({
     'initComponent': initComponent,
     'handleComponentDidMount': handleComponentDidMount,
     'handleGetDerivedStateFromProps': handleGetDerivedStateFromProps,
@@ -323,5 +323,5 @@ abstract class ReactDartInteropStatics2 {
     'handleComponentDidCatch': handleComponentDidCatch,
     'handleGetDerivedStateFromError': handleGetDerivedStateFromError,
     'handleRender': handleRender,
-  }) as JsMap;
+  }) as JsMap?;
 }

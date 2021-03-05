@@ -71,13 +71,13 @@ class _SetStateTest extends react.Component2 with LifecycleTestHelper {
     return {'counter': previousState['counter'] + 1};
   }
 
-  bool get shouldThrow => state['shouldThrow'] as bool;
+  bool? get shouldThrow => state['shouldThrow'] as bool?;
 
   @override
   render() {
     lifecycleCall('render');
 
-    if (!shouldThrow) {
+    if (!shouldThrow!) {
       return react.div({
         'onClick': (_) {
           setStateWithUpdater(outerTransactionalSetStateCallback, () {
@@ -113,7 +113,7 @@ class _SetStateTest extends react.Component2 with LifecycleTestHelper {
               });
             }
           }, [
-            shouldThrow ? ErrorComponent({'key': 'errorComp'}) : null,
+            shouldThrow! ? ErrorComponent({'key': 'errorComp'}) : null,
             state['counter']
           ]));
     }
@@ -164,7 +164,7 @@ class PropTypesTestComponent extends react.Component2 {
                 '${info.propName} should be int. {"props": "$props", "propName": "${info.propName}", "componentName": "${info.componentName}", "location": "${info.location}", "propFullName": "${info.propFullName}"}');
           }
           return null;
-        }
+        } as Error? Function(Null, PropValidatorInfo)
       };
 
   @override
@@ -239,7 +239,7 @@ class _LifecycleTest extends react.Component2 with LifecycleTestHelper {
   void componentWillUnmount() => lifecycleCall('componentWillUnmount');
 
   @override
-  Map getDerivedStateFromProps(nextProps, prevState) => lifecycleCall('getDerivedStateFromProps',
+  Map? getDerivedStateFromProps(nextProps, prevState) => lifecycleCall('getDerivedStateFromProps',
       arguments: [Map.from(nextProps), Map.from(prevState)], staticProps: nextProps);
 
   @override
@@ -258,7 +258,7 @@ class _LifecycleTest extends react.Component2 with LifecycleTestHelper {
 
   @override
   bool shouldComponentUpdate(nextProps, nextState) => lifecycleCall('shouldComponentUpdate',
-      arguments: [Map.from(nextProps), Map.from(nextState)], defaultReturnValue: () => true);
+      arguments: [Map.from(nextProps), Map.from(nextState)], defaultReturnValue: () => true)!;
 
   @override
   render() => lifecycleCall('render', defaultReturnValue: () => react.div({}));
@@ -296,7 +296,7 @@ class _NoGetDerivedStateFromErrorLifecycleTest extends react.Component2 with Lif
 
   @override
   bool shouldComponentUpdate(nextProps, nextState) => lifecycleCall('shouldComponentUpdate',
-      arguments: [Map.from(nextProps), Map.from(nextState)], defaultReturnValue: () => true);
+      arguments: [Map.from(nextProps), Map.from(nextState)], defaultReturnValue: () => true)!;
 
   @override
   render() => lifecycleCall('render', defaultReturnValue: () => react.div({}));

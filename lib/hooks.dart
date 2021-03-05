@@ -18,10 +18,10 @@ import 'package:react/react_client/react_interop.dart';
 /// Learn more: <https://reactjs.org/docs/hooks-state.html>.
 class StateHook<T> {
   /// The first item of the pair returned by [React.useState].
-  T _value;
+  T? _value;
 
   /// The second item in the pair returned by [React.useState].
-  void Function(dynamic) _setValue;
+  late void Function(dynamic) _setValue;
 
   StateHook(T initialValue) {
     final result = React.useState(initialValue);
@@ -42,7 +42,7 @@ class StateHook<T> {
   /// The current value of the state.
   ///
   /// See: <https://reactjs.org/docs/hooks-reference.html#usestate>.
-  T get value => _value;
+  T? get value => _value;
 
   /// Updates [value] to [newValue].
   ///
@@ -140,7 +140,7 @@ StateHook<T> useStateLazy<T>(T Function() init) => StateHook.lazy(init);
 /// ```
 ///
 /// See: <https://reactjs.org/docs/hooks-effect.html#tip-optimizing-performance-by-skipping-effects>.
-void useEffect(dynamic Function() sideEffect, [List<Object> dependencies]) {
+void useEffect(dynamic Function() sideEffect, [List<Object?>? dependencies]) {
   final wrappedSideEffect = allowInterop(() {
     final result = sideEffect();
     if (result is Function) {
@@ -166,10 +166,10 @@ void useEffect(dynamic Function() sideEffect, [List<Object> dependencies]) {
 /// Learn more: <https://reactjs.org/docs/hooks-reference.html#usereducer>.
 class ReducerHook<TState, TAction, TInit> {
   /// The first item of the pair returned by [React.useReducer].
-  TState _state;
+  TState? _state;
 
   /// The second item in the pair returned by [React.useReducer].
-  void Function(TAction) _dispatch;
+  late void Function(TAction) _dispatch;
 
   ReducerHook(TState Function(TState state, TAction action) reducer, TState initialState) {
     final result = React.useReducer(allowInterop(reducer), initialState);
@@ -191,7 +191,7 @@ class ReducerHook<TState, TAction, TInit> {
   /// The current state map of the component.
   ///
   /// See: <https://reactjs.org/docs/hooks-reference.html#usereducer>.
-  TState get state => _state;
+  TState? get state => _state;
 
   /// Dispatches [action] and triggers stage changes.
   ///
@@ -356,7 +356,7 @@ T useCallback<T extends Function>(T callback, List dependencies) =>
 /// ```
 ///
 /// Learn more: <https://reactjs.org/docs/hooks-reference.html#usecontext>.
-T useContext<T>(Context<T> context) => ContextHelpers.unjsifyNewContext(React.useContext(context.jsThis)) as T;
+T? useContext<T>(Context<T> context) => ContextHelpers.unjsifyNewContext(React.useContext(context.jsThis)) as T?;
 
 /// Returns a mutable [Ref] object with [Ref.current] property initialized to [initialValue].
 ///
@@ -392,7 +392,7 @@ T useContext<T>(Context<T> context) => ContextHelpers.unjsifyNewContext(React.us
 /// ```
 ///
 /// Learn more: <https://reactjs.org/docs/hooks-reference.html#useref>.
-Ref<T> useRef<T>([T initialValue]) => Ref.useRefInit(initialValue);
+Ref<T?> useRef<T>([T? initialValue]) => Ref.useRefInit(initialValue);
 
 /// Returns a memoized version of the return value of [createFunction].
 ///
@@ -425,7 +425,7 @@ Ref<T> useRef<T>([T initialValue]) => Ref.useRefInit(initialValue);
 /// ```
 ///
 /// Learn more: <https://reactjs.org/docs/hooks-reference.html#usememo>.
-T useMemo<T>(T Function() createFunction, [List<dynamic> dependencies]) =>
+T useMemo<T>(T Function() createFunction, [List<dynamic>? dependencies]) =>
     React.useMemo(allowInterop(createFunction), dependencies) as T;
 
 /// Runs [sideEffect] synchronously after a [DartFunctionComponent] renders, but before the screen is updated.
@@ -461,7 +461,7 @@ T useMemo<T>(T Function() createFunction, [List<dynamic> dependencies]) =>
 /// ```
 ///
 /// Learn more: <https://reactjs.org/docs/hooks-reference.html#uselayouteffect>.
-void useLayoutEffect(dynamic Function() sideEffect, [List<Object> dependencies]) {
+void useLayoutEffect(dynamic Function() sideEffect, [List<Object>? dependencies]) {
   final wrappedSideEffect = allowInterop(() {
     final result = sideEffect();
     if (result is Function) {
@@ -529,7 +529,7 @@ void useLayoutEffect(dynamic Function() sideEffect, [List<Object> dependencies])
 /// ```
 ///
 /// Learn more: <https://reactjs.org/docs/hooks-reference.html#useimperativehandle>.
-void useImperativeHandle(dynamic ref, dynamic Function() createHandle, [List<dynamic> dependencies]) =>
+void useImperativeHandle(dynamic ref, dynamic Function() createHandle, [List<dynamic>? dependencies]) =>
     // ref will be a JsRef in forwardRef2, or a Ref in forwardRef. (Or null if no ref is provided)
     //
     // For some reason the ref argument to React.forwardRef is usually a JsRef object no matter the input ref type,
@@ -610,7 +610,7 @@ void useImperativeHandle(dynamic ref, dynamic Function() createHandle, [List<dyn
 /// ```
 ///
 /// Learn more: <https://reactjs.org/docs/hooks-reference.html#usedebugvalue>.
-dynamic useDebugValue<T>(T value, [dynamic Function(T) format]) {
+dynamic useDebugValue<T>(T value, [dynamic Function(T)? format]) {
   if (format == null) {
     return React.useDebugValue(value);
   }

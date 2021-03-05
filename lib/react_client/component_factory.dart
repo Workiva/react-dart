@@ -66,13 +66,13 @@ Map unconvertJsProps(/* ReactElement|ReactComponent */ instance) {
 /// Shared component factory proxy [build] method for components that utilize [JsBackedMap]s.
 mixin JsBackedMapComponentFactoryMixin on ReactComponentFactoryProxy {
   @override
-  ReactElement build(Map props, [List childrenArgs = const []]) {
-    final children = generateChildren(childrenArgs, shouldAlwaysBeList: true);
+  ReactElement build(Map props, [List? childrenArgs = const []]) {
+    final children = generateChildren(childrenArgs!, shouldAlwaysBeList: true);
     final convertedProps = generateExtendedJsProps(props);
     return React.createElement(type, convertedProps, children);
   }
 
-  static JsMap generateExtendedJsProps(Map props) => generateJsProps(props, wrapWithJsify: false);
+  static JsMap? generateExtendedJsProps(Map props) => generateJsProps(props, wrapWithJsify: false);
 }
 
 /// Use [ReactDartComponentFactoryProxy2] instead by calling [registerComponent2].
@@ -94,8 +94,8 @@ class ReactDartComponentFactoryProxy<TComponent extends Component> extends React
   ReactClass get type => reactClass;
 
   @override
-  ReactElement build(Map props, [List childrenArgs = const []]) {
-    var children = convertArgsToChildren(childrenArgs);
+  ReactElement build(Map props, [List? childrenArgs = const []]) {
+    var children = convertArgsToChildren(childrenArgs!);
     children = listifyChildren(children);
 
     return React.createElement(type, generateExtendedJsProps(props, children, defaultProps: defaultProps), children);
@@ -103,7 +103,7 @@ class ReactDartComponentFactoryProxy<TComponent extends Component> extends React
 
   /// Returns a JavaScript version of the specified [props], preprocessed for consumption by ReactJS and prepared for
   /// consumption by the `react` library internals.
-  static InteropProps generateExtendedJsProps(Map props, dynamic children, {Map defaultProps}) {
+  static InteropProps generateExtendedJsProps(Map props, dynamic children, {Map? defaultProps}) {
     if (children == null) {
       children = [];
     } else if (children is! Iterable) {
@@ -188,7 +188,7 @@ class ReactDartComponentFactoryProxy2<TComponent extends Component2> extends Rea
 
   /// Returns a JavaScript version of the specified [props], preprocessed for consumption by ReactJS and prepared for
   /// consumption by the `react` library internals.
-  static JsMap generateExtendedJsProps(Map props) => generateJsProps(props, wrapWithJsify: false);
+  static JsMap? generateExtendedJsProps(Map props) => generateJsProps(props, wrapWithJsify: false);
 }
 
 /// Creates ReactJS [ReactElement] instances for `JSContext` components.
@@ -213,12 +213,12 @@ class ReactJsContextComponentFactoryProxy extends ReactJsComponentFactoryProxy {
         super(jsClass, shouldConvertDomProps: shouldConvertDomProps);
 
   @override
-  ReactElement build(Map props, [List childrenArgs]) {
-    dynamic children = generateChildren(childrenArgs);
+  ReactElement build(Map props, [List? childrenArgs]) {
+    dynamic children = generateChildren(childrenArgs!);
 
     if (isConsumer) {
       if (children is Function) {
-        final contextCallback = children as Function;
+        final contextCallback = children;
         children = allowInterop((args) {
           return contextCallback(ContextHelpers.unjsifyNewContext(args));
         });
@@ -276,8 +276,8 @@ class ReactJsComponentFactoryProxy extends ReactComponentFactoryProxy {
   }
 
   @override
-  ReactElement build(Map props, [List childrenArgs]) {
-    final children = generateChildren(childrenArgs, shouldAlwaysBeList: alwaysReturnChildrenAsList);
+  ReactElement build(Map props, [List? childrenArgs]) {
+    final children = generateChildren(childrenArgs!, shouldAlwaysBeList: alwaysReturnChildrenAsList);
     final convertedProps =
         generateJsProps(props, convertCallbackRefValue: false, additionalRefPropKeys: _additionalRefPropKeys);
     return React.createElement(type, convertedProps, children);
@@ -302,8 +302,8 @@ class ReactDomComponentFactoryProxy extends ReactComponentFactoryProxy {
   String get type => name;
 
   @override
-  ReactElement build(Map props, [List childrenArgs = const []]) {
-    final children = generateChildren(childrenArgs);
+  ReactElement build(Map props, [List? childrenArgs = const []]) {
+    final children = generateChildren(childrenArgs!);
     final convertedProps = generateJsProps(props, convertCallbackRefValue: false, wrapWithJsify: true);
     return React.createElement(type, convertedProps, children);
   }
@@ -317,12 +317,12 @@ class ReactDomComponentFactoryProxy extends ReactComponentFactoryProxy {
 /// Creates ReactJS [Function Component] from Dart Function.
 class ReactDartFunctionComponentFactoryProxy extends ReactComponentFactoryProxy with JsBackedMapComponentFactoryMixin {
   /// The name of this function.
-  final String displayName;
+  final String? displayName;
 
   /// The React JS component definition of this Function Component.
   final JsFunctionComponent reactFunction;
 
-  ReactDartFunctionComponentFactoryProxy(DartFunctionComponent dartFunctionComponent, {String displayName})
+  ReactDartFunctionComponentFactoryProxy(DartFunctionComponent dartFunctionComponent, {String? displayName})
       : displayName = displayName ?? getJsFunctionName(dartFunctionComponent),
         reactFunction = _wrapFunctionComponent(dartFunctionComponent,
             displayName: displayName ?? getJsFunctionName(dartFunctionComponent));
@@ -340,7 +340,7 @@ class ReactDartWrappedComponentFactoryProxy extends ReactComponentFactoryProxy w
   ReactDartWrappedComponentFactoryProxy(this.type);
 
   ReactDartWrappedComponentFactoryProxy.forwardRef(DartForwardRefFunctionComponent dartFunctionComponent,
-      {String displayName})
+      {String? displayName})
       : type = _wrapForwardRefFunctionComponent(dartFunctionComponent,
             displayName: displayName ?? getJsFunctionName(dartFunctionComponent));
 }
@@ -351,13 +351,13 @@ class ReactDartWrappedComponentFactoryProxy extends ReactComponentFactoryProxy w
 ///
 /// In DDC, this will be the [DartFunctionComponent] name, but in dart2js it will be null unless
 /// overridden, since using runtimeType can lead to larger dart2js output.
-JsFunctionComponent _wrapFunctionComponent(DartFunctionComponent dartFunctionComponent, {String displayName}) {
+JsFunctionComponent _wrapFunctionComponent(DartFunctionComponent dartFunctionComponent, {String? displayName}) {
   // dart2js uses null and undefined interchangeably, meaning returning `null` from dart
   // may show up in js as `undefined`, ReactJS doesnt like that and expects a js `null` to be returned,
   // and throws if it gets `undefined`. `jsNull` is an interop variable that holds a JS `null` value
   // to force `null` as the return value if user returns a Dart `null`.
   // See: https://github.com/dart-lang/sdk/issues/27485
-  jsFunctionComponent(JsMap jsProps, [JsMap _legacyContext]) =>
+  jsFunctionComponent(JsMap jsProps, [JsMap? _legacyContext]) =>
       componentZone.run(() => dartFunctionComponent(JsBackedMap.backedBy(jsProps)) ?? jsNull);
   // ignore: omit_local_variable_types
   final JsFunctionComponent interopFunction = allowInterop(jsFunctionComponent);
@@ -377,7 +377,7 @@ JsFunctionComponent _wrapFunctionComponent(DartFunctionComponent dartFunctionCom
 /// In DDC, this will be the [DartFunctionComponent] name, but in dart2js it will be null unless
 /// overridden, since using runtimeType can lead to larger dart2js output.
 ReactClass _wrapForwardRefFunctionComponent(DartForwardRefFunctionComponent dartFunctionComponent,
-    {String displayName}) {
+    {String? displayName}) {
   // dart2js uses null and undefined interchangeably, meaning returning `null` from dart
   // may show up in js as `undefined`, ReactJS doesnt like that and expects a js `null` to be returned,
   // and throws if it gets `undefined`. `jsNull` is an interop variable that holds a JS `null` value

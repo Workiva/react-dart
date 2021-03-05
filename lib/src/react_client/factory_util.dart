@@ -31,7 +31,7 @@ dynamic convertArgsToChildren(List childrenArgs) {
 }
 
 @Deprecated('Event handlers are no longer converted. This will be removed in 7.0.0.')
-Function unconvertJsEventHandler(Function jsConvertedEventHandler) => null;
+Function? unconvertJsEventHandler(Function jsConvertedEventHandler) => null;
 
 void convertRefValue(Map args) {
   final ref = args['ref'];
@@ -103,14 +103,14 @@ dynamic generateChildren(List childrenArgs, {bool shouldAlwaysBeList = false}) {
 
   if (children == null) {
     children = shouldAlwaysBeList ? childrenArgs.map(listifyChildren).toList() : childrenArgs;
-    markChildrenValidated(children as List);
+    markChildrenValidated(children);
   }
 
   return children;
 }
 
 /// Converts [props] into a [JsMap] that can be utilized with `React.createElement()`.
-JsMap generateJsProps(Map props,
+JsMap? generateJsProps(Map props,
     {bool convertRefValue = true,
     bool convertCallbackRefValue = true,
     List<String> additionalRefPropKeys = const [],
@@ -121,5 +121,5 @@ JsMap generateJsProps(Map props,
         convertCallbackRefValue: convertCallbackRefValue, additionalRefPropKeys: additionalRefPropKeys);
   }
 
-  return wrapWithJsify ? jsifyAndAllowInterop(propsForJs) as JsMap : propsForJs.jsObject;
+  return wrapWithJsify ? jsifyAndAllowInterop(propsForJs) as JsMap? : propsForJs.jsObject;
 }

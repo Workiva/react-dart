@@ -6,7 +6,7 @@ import 'package:test/test.dart';
 
 main() {
   group('Component2', () {
-    Component2 component;
+    late Component2 component;
 
     setUpAll(() {
       component = MyComponent();

@@ -85,8 +85,8 @@ class _ParentComponent extends react.Component {
   }
 
   // Callback refs
-  InputElement _inputCallbackRef;
-  _ChildComponent _childCallbackRef;
+  InputElement? _inputCallbackRef;
+  late _ChildComponent _childCallbackRef;
   showInputCallbackRefValue(_) {
     final input = react_dom.findDOMNode(_inputCallbackRef) as InputElement;
     print(input.value);

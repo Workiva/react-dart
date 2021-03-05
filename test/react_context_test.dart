@@ -15,8 +15,8 @@ import 'shared_type_tester.dart';
 main() {
   void testTypeValue(dynamic typeToTest) {
     final mountNode = html.DivElement();
-    var contextTypeRef;
-    var consumerRef;
+    late var contextTypeRef;
+    late var consumerRef;
     react_dom.render(
         ContextProviderWrapper({
           'contextToUse': TestContext,
@@ -46,9 +46,9 @@ main() {
 
     group('calculateChangeBits argument functions correctly', () {
       final mountNode = html.DivElement();
-      _ContextProviderWrapper providerRef;
-      _ContextConsumerWrapper consumerEvenRef;
-      _ContextConsumerWrapper consumerOddRef;
+      late _ContextProviderWrapper providerRef;
+      late _ContextConsumerWrapper consumerEvenRef;
+      late _ContextConsumerWrapper consumerOddRef;
 
       setUp(() {
         react_dom.render(

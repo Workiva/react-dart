@@ -14,12 +14,12 @@ class _NsmEmulatedFunctionWithNameProperty implements Function {
   @override
   noSuchMethod(i) {}
 
-  String _name;
+  String? _name;
 
   // ignore: unnecessary_getters_setters
-  String get name => _name;
+  String? get name => _name;
   // ignore: unnecessary_getters_setters
-  set name(String value) => _name = value;
+  set name(String? value) => _name = value;
 }
 
 /// Whether this bug, <https://github.com/dart-lang/sdk/issues/27647>, is present in the current runtime.

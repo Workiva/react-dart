@@ -36,8 +36,8 @@ class _ChildComponent extends react.Component {
 var simpleComponent = react.registerComponent(() => SimpleComponent());
 
 class SimpleComponent extends react.Component {
-  var refToSpan;
-  var refToElement;
+  late var refToSpan;
+  late var refToElement;
 
   @override
   componentWillMount() => print('mount');

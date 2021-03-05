@@ -18,7 +18,7 @@ main() {
 var IndexComponent = react.registerComponent2(() => _IndexComponent());
 
 class _IndexComponent extends react.Component2 {
-  SimpleCustomComponent simpleRef;
+  late SimpleCustomComponent simpleRef;
 
   @override
   get initialState => {

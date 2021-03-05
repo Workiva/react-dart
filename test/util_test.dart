@@ -19,7 +19,7 @@ void main() {
     test('ReactDartComponentVersion.fromType', () {
       expect(ReactDartComponentVersion.fromType(react.div({}).type), isNull);
       expect(ReactDartComponentVersion.fromType(JsFoo({}).type), isNull);
-      expect(ReactDartComponentVersion.fromType(Foo({}).type), ReactDartComponentVersion.component);
+      expect(ReactDartComponentVersion.fromType(Foo!({}).type), ReactDartComponentVersion.component);
       expect(ReactDartComponentVersion.fromType(Foo2({}).type), ReactDartComponentVersion.component2);
       expect(ReactDartComponentVersion.fromType(FunctionFoo({}).type), ReactDartComponentVersion.component2);
     });
@@ -27,7 +27,7 @@ void main() {
     test('isDartComponent2', () {
       expect(isDartComponent2(div({})), isFalse);
       expect(isDartComponent2(JsFoo({})), isFalse);
-      expect(isDartComponent2(Foo({})), isFalse);
+      expect(isDartComponent2(Foo!({})), isFalse);
       expect(isDartComponent2(Foo2({})), isTrue);
       expect(isDartComponent2(FunctionFoo({})), isTrue);
     });
@@ -35,7 +35,7 @@ void main() {
     test('isDartComponent1', () {
       expect(isDartComponent1(div({})), isFalse);
       expect(isDartComponent1(JsFoo({})), isFalse);
-      expect(isDartComponent1(Foo({})), isTrue);
+      expect(isDartComponent1(Foo!({})), isTrue);
       expect(isDartComponent1(Foo2({})), isFalse);
       expect(isDartComponent1(FunctionFoo({})), isFalse);
     });
@@ -43,7 +43,7 @@ void main() {
     test('isDartComponent', () {
       expect(isDartComponent(div({})), isFalse);
       expect(isDartComponent(JsFoo({})), isFalse);
-      expect(isDartComponent(Foo({})), isTrue);
+      expect(isDartComponent(Foo!({})), isTrue);
       expect(isDartComponent(Foo2({})), isTrue);
       expect(isDartComponent(FunctionFoo({})), isTrue);
     });
@@ -56,7 +56,7 @@ _FunctionFoo(Map props) {
   return react.div({});
 }
 
-final Foo = react.registerComponent(() => _Foo()) as ReactDartComponentFactoryProxy;
+final Foo = react.registerComponent(() => _Foo()) as ReactDartComponentFactoryProxy?;
 
 class _Foo extends react.Component {
   @override

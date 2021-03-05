@@ -16,7 +16,7 @@ import 'package:react/src/react_client/dart_interop_statics.dart';
 /// Returns the list of lifecycle events to skip, having removed the
 /// important ones. If an important lifecycle event was set for skipping, a
 /// warning is issued.
-List<String> _filterSkipMethods(Iterable<String> methods) {
+List<String?> _filterSkipMethods(Iterable<String?> methods) {
   final finalList = List.of(methods);
   var shouldWarn = false;
 
@@ -89,8 +89,8 @@ ReactDartComponentFactoryProxy registerComponent(
 /// which produces a new JS `ReactClass` component class.
 ReactDartComponentFactoryProxy2 registerComponent2(
   ComponentFactory<Component2> componentFactory, {
-  Iterable<String> skipMethods = const ['getDerivedStateFromError', 'componentDidCatch'],
-  Component2BridgeFactory bridgeFactory,
+  Iterable<String?>? skipMethods = const ['getDerivedStateFromError', 'componentDidCatch'],
+  Component2BridgeFactory? bridgeFactory,
 }) {
   var errorPrinted = false;
   try {
@@ -102,24 +102,24 @@ ReactDartComponentFactoryProxy2 registerComponent2(
       instanceForStaticMethods: componentInstance,
       bridgeFactory: bridgeFactory,
     );
-    final filteredSkipMethods = _filterSkipMethods(skipMethods);
+    final filteredSkipMethods = _filterSkipMethods(skipMethods!);
 
     // Cache default props and store them on the ReactClass so they can be used
     // by ReactDartComponentFactoryProxy and externally.
     JsBackedMap defaultProps;
     try {
-      defaultProps = JsBackedMap.from(componentInstance.defaultProps);
+      defaultProps = JsBackedMap.from(componentInstance.defaultProps!);
     } catch (e, stack) {
       print('Error when registering Component2 when getting defaultProps: $e\n$stack');
       errorPrinted = true;
       rethrow;
     }
 
-    JsMap jsPropTypes;
+    JsMap? jsPropTypes;
     try {
       // Access `componentInstance.propTypes` within an assert so they get tree-shaken out of dart2js builds.
       assert(() {
-        jsPropTypes = bridgeFactory(componentInstance).jsifyPropTypes(componentInstance, componentInstance.propTypes);
+        jsPropTypes = bridgeFactory!(componentInstance).jsifyPropTypes(componentInstance, componentInstance.propTypes);
         return true;
       }());
     } catch (e, stack) {
@@ -153,5 +153,5 @@ ReactDartComponentFactoryProxy2 registerComponent2(
 /// Creates and returns a new `ReactDartFunctionComponentFactoryProxy` from the provided [dartFunctionComponent]
 /// which produces a new `JsFunctionComponent`.
 ReactDartFunctionComponentFactoryProxy registerFunctionComponent(DartFunctionComponent dartFunctionComponent,
-        {String displayName}) =>
+        {String? displayName}) =>
     ReactDartFunctionComponentFactoryProxy(dartFunctionComponent, displayName: displayName);

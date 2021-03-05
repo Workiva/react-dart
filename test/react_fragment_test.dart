@@ -12,7 +12,7 @@ import 'package:test/test.dart';
 main() {
   group('Fragment', () {
     test('renders nothing but its children', () {
-      var wrappingDivRef;
+      late var wrappingDivRef;
 
       react_dom.render(
         react.div({

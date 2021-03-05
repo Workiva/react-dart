@@ -12,7 +12,7 @@ HookTestComponent(Map props) {
   final evenOdd = useState('even');
 
   useEffect(() {
-    if (count.value % 2 == 0) {
+    if (count.value! % 2 == 0) {
       print('count changed to ${count.value.toString()}');
       evenOdd.set('even');
     } else {
@@ -68,7 +68,7 @@ class _MemoTestDemoWrapper extends react.Component2 {
 }
 
 final MemoTest = react.memo2(react.registerFunctionComponent((props) {
-  final context = useContext(TestNewContext);
+  final context = useContext(TestNewContext)!;
   return react.div(
     {},
     react.p(
@@ -95,7 +95,7 @@ final MemoTest = react.memo2(react.registerFunctionComponent((props) {
 var useReducerTestFunctionComponent =
     react.registerFunctionComponent(UseReducerTestComponent, displayName: 'useReducerTest');
 
-Map initializeCount(int initialValue) {
+Map initializeCount(int? initialValue) {
   return {'count': initialValue};
 }
 
@@ -113,10 +113,10 @@ Map reducer(Map state, Map action) {
 }
 
 UseReducerTestComponent(Map props) {
-  final state = useReducerLazy<Map, Map, int>(reducer, props['initialCount'], initializeCount);
+  final state = useReducerLazy<Map, Map, int?>(reducer, props['initialCount'], initializeCount);
 
   return react.Fragment({}, [
-    state.state['count'],
+    state.state!['count'],
     react.button({
       'key': 'urt1',
       'onClick': (_) => state.dispatch({'type': 'increment'})
@@ -149,7 +149,7 @@ UseCallbackTestComponent(Map props) {
   final delta = useState(1);
 
   final increment = useCallback((_) {
-    count.setWithUpdater((prev) => prev + delta.value);
+    count.setWithUpdater((prev) => prev + delta.value!);
   }, [delta.value]);
 
   final incrementDelta = useCallback((_) {
@@ -168,7 +168,7 @@ var useContextTestFunctionComponent =
     react.registerFunctionComponent(UseContextTestComponent, displayName: 'useContextTest');
 
 UseContextTestComponent(Map props) {
-  final context = useContext(TestNewContext);
+  final context = useContext(TestNewContext)!;
   return react.div({
     'key': 'uct1'
   }, [
@@ -239,7 +239,7 @@ UseRefTestComponent(Map props) {
   return react.Fragment({}, [
     react.p({'key': 'urtKey1'}, ['Current Input: ${inputValue.value}, Previous Input: ${prevInputValueRef.current}']),
     react.input({'key': 'urtKey2', 'ref': inputRef}),
-    react.button({'key': 'urtKey3', 'onClick': (_) => inputValue.set(inputRef.current.value)}, ['Update']),
+    react.button({'key': 'urtKey3', 'onClick': (_) => inputValue.set(inputRef.current!.value)}, ['Update']),
   ]);
 }
 
@@ -259,7 +259,7 @@ UseMemoTestComponent(Map props) {
   final fib = useMemo(
     () {
       print('calculating fibonacci...');
-      return fibonacci(count.value);
+      return fibonacci(count.value!);
     },
 
     /// This dependency prevents [fib] from being re-calculated every time the component re-renders.
@@ -281,7 +281,7 @@ UseMemoTestComponent2(Map props) {
   final count = useState(35);
 
   print('calculating fibonacci...');
-  final fib = fibonacci(count.value);
+  final fib = fibonacci(count.value!);
 
   return react.Fragment({}, [
     react.div({'key': 'div'}, ['Fibonacci of ${count.value} is $fib']),
@@ -373,17 +373,17 @@ UseImperativeHandleTestComponent(Map props) {
   final stateRef = useRef<FancyInputApi>();
 
   validate(_) {
-    if (!RegExp(r'^[a-zA-Z]+$').hasMatch(city.value)) {
+    if (!RegExp(r'^[a-zA-Z]+$').hasMatch(city.value!)) {
       message.set('Invalid form!');
       error.set('city');
-      cityRef.current.focus();
+      cityRef.current!.focus();
       return;
     }
 
-    if (!RegExp(r'^[a-zA-Z]+$').hasMatch(state.value)) {
+    if (!RegExp(r'^[a-zA-Z]+$').hasMatch(state.value!)) {
       message.set('Invalid form!');
       error.set('state');
-      stateRef.current.focus();
+      stateRef.current!.focus();
       return;
     }
 
@@ -421,8 +421,8 @@ final FancyCounter = react.forwardRef2((props, ref) {
     () {
       print('FancyCounter: useImperativeHandle re-assigns ref.current');
       return {
-        'increment': () => count.setWithUpdater((prev) => prev + props['diff']),
-        'decrement': () => count.setWithUpdater((prev) => prev - props['diff']),
+        'increment': () => count.setWithUpdater((prev) => prev + props['diff'] as int),
+        'decrement': () => count.setWithUpdater((prev) => prev - props['diff'] as int),
       };
     },
 
@@ -450,13 +450,13 @@ UseImperativeHandleTestComponent2(Map props) {
     }, []),
     react.button({
       'key': 'button1',
-      'onClick': (_) => fancyCounterRef.current['increment'](),
+      'onClick': (_) => fancyCounterRef.current!['increment'](),
     }, [
       'Increment by ${diff.value}'
     ]),
     react.button({
       'key': 'button2',
-      'onClick': (_) => fancyCounterRef.current['decrement'](),
+      'onClick': (_) => fancyCounterRef.current!['decrement'](),
     }, [
       'Decrement by ${diff.value}'
     ]),
@@ -468,12 +468,12 @@ class ChatAPI {
   static void subscribeToFriendStatus(int id, Function handleStatusChange) =>
       handleStatusChange({'isOnline': id % 2 == 0});
 
-  static void unsubscribeFromFriendStatus(int id, Function handleStatusChange) =>
+  static void unsubscribeFromFriendStatus(int? id, Function handleStatusChange) =>
       handleStatusChange({'isOnline': false});
 }
 
 // Custom Hook
-StateHook<bool> useFriendStatus(int friendID) {
+StateHook<bool?> useFriendStatus(int? friendID) {
   final isOnline = useState(false);
 
   void handleStatusChange(Map status) {
@@ -481,14 +481,14 @@ StateHook<bool> useFriendStatus(int friendID) {
   }
 
   useEffect(() {
-    ChatAPI.subscribeToFriendStatus(friendID, handleStatusChange);
+    ChatAPI.subscribeToFriendStatus(friendID!, handleStatusChange);
     return () {
       ChatAPI.unsubscribeFromFriendStatus(friendID, handleStatusChange);
     };
   });
 
   // Use format function to avoid unnecessarily formatting `isOnline` when the hooks aren't inspected in React DevTools.
-  useDebugValue<bool>(isOnline.value, (isOnline) => isOnline ? 'Online' : 'Not Online');
+  useDebugValue<bool?>(isOnline.value, (isOnline) => isOnline! ? 'Online' : 'Not Online');
 
   return isOnline;
 }
@@ -497,7 +497,7 @@ final FriendListItem = react.registerFunctionComponent((props) {
   final isOnline = useFriendStatus(props['friend']['id']);
 
   return react.li({
-    'style': {'color': isOnline.value ? 'green' : 'black'}
+    'style': {'color': isOnline.value! ? 'green' : 'black'}
   }, [
     props['friend']['name']
   ]);

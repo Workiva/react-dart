@@ -15,7 +15,7 @@ class _HelloComponent extends react.Component2 {
             return ArgumentError('($propValue) is too long. $propValue has a max length of 20 characters.');
           }
           return null;
-        },
+        } as Error? Function(Null, PropValidatorInfo),
       };
 
   @override
@@ -87,7 +87,7 @@ class _CheckBoxComponent extends react.Component {
 var checkBoxComponent = react.registerComponent(() => _CheckBoxComponent());
 
 class _ClockComponent extends react.Component {
-  Timer timer;
+  late Timer timer;
 
   @override
   getInitialState() => {'secondsElapsed': 0};
@@ -297,7 +297,7 @@ int calculateChangedBits(currentValue, nextValue) {
 var TestNewContext = react.createContext<Map>({'renderCount': 0}, calculateChangedBits);
 
 class _NewContextProviderComponent extends react.Component2 {
-  _NewContextRefComponent componentRef;
+  _NewContextRefComponent? componentRef;
 
   @override
   get initialState => {'renderCount': 0, 'complexMap': false};
@@ -407,7 +407,7 @@ var newContextConsumerObservedBitsComponent = react.registerComponent(() => _New
 
 class _NewContextTypeConsumerComponent extends react.Component2 {
   @override
-  final contextType = TestNewContext;
+  final Context<dynamic> contextType = TestNewContext;
 
   @override
   render() {
@@ -448,7 +448,7 @@ class _Component2TestComponent extends react.Component2 with react.TypedSnapshot
   }
 
   @override
-  void componentDidUpdate(prevProps, prevState, [String snapshot]) {
+  void componentDidUpdate(prevProps, prevState, [String? snapshot]) {
     if (snapshot != null) {
       print('Updated DOM and $snapshot');
       return;
@@ -521,7 +521,7 @@ var ErrorComponent = react.registerComponent(() => _ErrorComponent());
 class _CustomException implements Exception {
   int code;
   String message;
-  String randomMessage;
+  String? randomMessage;
 
   _CustomException(this.message, this.code) {
     switch (code) {
