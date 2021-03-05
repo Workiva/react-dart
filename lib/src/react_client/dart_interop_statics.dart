@@ -98,7 +98,8 @@ final ReactDartInteropStatics dartInteropStatics = (() {
     final nextState = component.nextState;
     final props = UnmodifiableMapView(component.props);
 
-    for (final callback in component.transactionalSetStateCallbacks) {
+    for (final _callback in component.transactionalSetStateCallbacks) {
+      final callback = _callback as StateUpdaterCallback;
       final stateUpdates = callback(nextState, props);
       if (stateUpdates != null) nextState.addAll(stateUpdates);
     }
@@ -322,5 +323,5 @@ abstract class ReactDartInteropStatics2 {
     'handleComponentDidCatch': handleComponentDidCatch,
     'handleGetDerivedStateFromError': handleGetDerivedStateFromError,
     'handleRender': handleRender,
-  });
+  }) as JsMap;
 }

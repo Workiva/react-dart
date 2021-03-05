@@ -3,9 +3,9 @@
 @TestOn('browser')
 library react.dart_function_factory_test;
 
-import 'package:js/js_util.dart';
 import 'package:react/react.dart' as react;
 import 'package:react/react_client/react_interop.dart';
+import 'package:react/src/js_interop_util.dart';
 import 'package:test/test.dart';
 
 import 'common_factory_tests.dart';
@@ -28,24 +28,22 @@ main() {
         test('gets automatically populated when not provided', () {
           expect(FunctionFoo.displayName, '_FunctionFoo');
 
-          expect(_getJsFunctionName(FunctionFoo.reactFunction), '_FunctionFoo');
+          expect(getJsFunctionName(FunctionFoo.reactFunction), '_FunctionFoo');
 
-          expect(FunctionFoo.displayName, _getJsFunctionName(FunctionFoo.reactFunction));
+          expect(FunctionFoo.displayName, getJsFunctionName(FunctionFoo.reactFunction));
         });
 
         test('is populated by the provided argument', () {
           expect(NamedFunctionFoo.displayName, 'Bar');
 
-          expect(_getJsFunctionName(NamedFunctionFoo.reactFunction), 'Bar');
+          expect(getJsFunctionName(NamedFunctionFoo.reactFunction), 'Bar');
 
-          expect(NamedFunctionFoo.displayName, _getJsFunctionName(NamedFunctionFoo.reactFunction));
+          expect(NamedFunctionFoo.displayName, getJsFunctionName(NamedFunctionFoo.reactFunction));
         });
       });
     });
   });
 }
-
-String _getJsFunctionName(Function object) => getProperty(object, 'name') ?? getProperty(object, '\$static_name');
 
 final NamedFunctionFoo = react.registerFunctionComponent(_FunctionFoo, displayName: 'Bar');
 

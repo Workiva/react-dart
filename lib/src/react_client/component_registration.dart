@@ -56,7 +56,7 @@ ReactDartComponentFactoryProxy registerComponent(
     final componentInstance = componentFactory();
 
     if (componentInstance is Component2) {
-      return registerComponent2(componentFactory, skipMethods: skipMethods);
+      return registerComponent2(() => componentFactory() as Component2, skipMethods: skipMethods);
     }
 
     final componentStatics = ComponentStatics(componentFactory);

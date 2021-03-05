@@ -25,8 +25,8 @@ class StateHook<T> {
 
   StateHook(T initialValue) {
     final result = React.useState(initialValue);
-    _value = result[0];
-    _setValue = result[1];
+    _value = result[0] as T;
+    _setValue = result[1] as void Function(dynamic);
   }
 
   /// Constructor for [useStateLazy], calls lazy version of [React.useState] to
@@ -35,8 +35,8 @@ class StateHook<T> {
   /// See: <https://reactjs.org/docs/hooks-reference.html#lazy-initial-state>.
   StateHook.lazy(T Function() init) {
     final result = React.useState(allowInterop(init));
-    _value = result[0];
-    _setValue = result[1];
+    _value = result[0] as T;
+    _setValue = result[1] as void Function(dynamic);
   }
 
   /// The current value of the state.
@@ -173,8 +173,8 @@ class ReducerHook<TState, TAction, TInit> {
 
   ReducerHook(TState Function(TState state, TAction action) reducer, TState initialState) {
     final result = React.useReducer(allowInterop(reducer), initialState);
-    _state = result[0];
-    _dispatch = result[1];
+    _state = result[0] as TState;
+    _dispatch = result[1] as void Function(TAction);
   }
 
   /// Constructor for [useReducerLazy], calls lazy version of [React.useReducer] to
@@ -184,8 +184,8 @@ class ReducerHook<TState, TAction, TInit> {
   ReducerHook.lazy(
       TState Function(TState state, TAction action) reducer, TInit initialArg, TState Function(TInit) init) {
     final result = React.useReducer(allowInterop(reducer), initialArg, allowInterop(init));
-    _state = result[0];
-    _dispatch = result[1];
+    _state = result[0] as TState;
+    _dispatch = result[1] as void Function(TAction);
   }
 
   /// The current state map of the component.
@@ -328,7 +328,7 @@ ReducerHook<TState, TAction, TInit> useReducerLazy<TState, TAction, TInit>(
 ///
 /// Learn more: <https://reactjs.org/docs/hooks-reference.html#usecallback>.
 T useCallback<T extends Function>(T callback, List dependencies) =>
-    React.useCallback(allowInterop(callback), dependencies);
+    React.useCallback(allowInterop(callback), dependencies) as T;
 
 /// Returns the value of the nearest [Context.Provider] for the provided [context] object every time that context is
 /// updated.
@@ -426,7 +426,7 @@ Ref<T> useRef<T>([T initialValue]) => Ref.useRefInit(initialValue);
 ///
 /// Learn more: <https://reactjs.org/docs/hooks-reference.html#usememo>.
 T useMemo<T>(T Function() createFunction, [List<dynamic> dependencies]) =>
-    React.useMemo(allowInterop(createFunction), dependencies);
+    React.useMemo(allowInterop(createFunction), dependencies) as T;
 
 /// Runs [sideEffect] synchronously after a [DartFunctionComponent] renders, but before the screen is updated.
 ///

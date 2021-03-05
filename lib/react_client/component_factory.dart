@@ -43,7 +43,7 @@ dynamic listifyChildren(dynamic children) {
 /// If `style` is specified in props, then it too is shallow-converted and included
 /// in the returned Map.
 Map unconvertJsProps(/* ReactElement|ReactComponent */ instance) {
-  final props = Map.from(JsBackedMap.backedBy(instance.props));
+  final props = Map.from(JsBackedMap.backedBy(instance.props as JsMap));
 
   // Catch if a Dart component has been passed in. Component (version 1) can be identified by having the "internal"
   // prop. Component2, however, does not have that but can be detected by checking whether or not the style prop is a
@@ -57,7 +57,7 @@ Map unconvertJsProps(/* ReactElement|ReactComponent */ instance) {
   // Convert the nested style map so it can be read by Dart code.
   final style = props['style'];
   if (style != null) {
-    props['style'] = Map<String, dynamic>.from(JsBackedMap.backedBy(style));
+    props['style'] = Map<String, dynamic>.from(JsBackedMap.backedBy(style as JsMap));
   }
 
   return props;
@@ -218,7 +218,7 @@ class ReactJsContextComponentFactoryProxy extends ReactJsComponentFactoryProxy {
 
     if (isConsumer) {
       if (children is Function) {
-        final Function contextCallback = children;
+        final contextCallback = children as Function;
         children = allowInterop((args) {
           return contextCallback(ContextHelpers.unjsifyNewContext(args));
         });
@@ -323,9 +323,9 @@ class ReactDartFunctionComponentFactoryProxy extends ReactComponentFactoryProxy 
   final JsFunctionComponent reactFunction;
 
   ReactDartFunctionComponentFactoryProxy(DartFunctionComponent dartFunctionComponent, {String displayName})
-      : displayName = displayName ?? _getJsFunctionName(dartFunctionComponent),
+      : displayName = displayName ?? getJsFunctionName(dartFunctionComponent),
         reactFunction = _wrapFunctionComponent(dartFunctionComponent,
-            displayName: displayName ?? _getJsFunctionName(dartFunctionComponent));
+            displayName: displayName ?? getJsFunctionName(dartFunctionComponent));
 
   @override
   JsFunctionComponent get type => reactFunction;
@@ -342,10 +342,8 @@ class ReactDartWrappedComponentFactoryProxy extends ReactComponentFactoryProxy w
   ReactDartWrappedComponentFactoryProxy.forwardRef(DartForwardRefFunctionComponent dartFunctionComponent,
       {String displayName})
       : type = _wrapForwardRefFunctionComponent(dartFunctionComponent,
-            displayName: displayName ?? _getJsFunctionName(dartFunctionComponent));
+            displayName: displayName ?? getJsFunctionName(dartFunctionComponent));
 }
-
-String _getJsFunctionName(Function object) => getProperty(object, 'name') ?? getProperty(object, '\$static_name');
 
 /// Creates a function component from the given [dartFunctionComponent] that can be used with React.
 ///
@@ -365,7 +363,7 @@ JsFunctionComponent _wrapFunctionComponent(DartFunctionComponent dartFunctionCom
   final JsFunctionComponent interopFunction = allowInterop(jsFunctionComponent);
   if (displayName != null) {
     // This is a work-around to display the correct name in the React DevTools.
-    defineProperty(interopFunction, 'name', jsify({'value': displayName}));
+    defineProperty(interopFunction, 'name', PropertyDescriptor(value: displayName));
   }
   // ignore: invalid_use_of_protected_member
   setProperty(interopFunction, 'dartComponentVersion', ReactDartComponentVersion.component2);
@@ -391,7 +389,7 @@ ReactClass _wrapForwardRefFunctionComponent(DartForwardRefFunctionComponent dart
   final interopFunction = allowInterop(jsFunctionComponent);
   if (displayName != null) {
     // This is a work-around to display the correct name in the React DevTools.
-    defineProperty(interopFunction, 'name', jsify({'value': displayName}));
+    defineProperty(interopFunction, 'name', PropertyDescriptor(value: displayName));
   }
   final jsForwardRefFunction = React.forwardRef(interopFunction);
   // ignore: invalid_use_of_protected_member

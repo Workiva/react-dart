@@ -108,7 +108,9 @@ Context<TValue> createContext<TValue>([
 ]) {
   int jsifyCalculateChangedBitsArgs(currentValue, nextValue) {
     return calculateChangedBits(
-        ContextHelpers.unjsifyNewContext(currentValue), ContextHelpers.unjsifyNewContext(nextValue));
+      ContextHelpers.unjsifyNewContext(currentValue) as TValue,
+      ContextHelpers.unjsifyNewContext(nextValue) as TValue,
+    );
   }
 
   final JSContext = React.createContext(ContextHelpers.jsifyNewContext(defaultValue),

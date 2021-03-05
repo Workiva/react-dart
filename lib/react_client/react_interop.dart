@@ -122,7 +122,7 @@ class Ref<T> {
         return dartCurrent as T;
       }
     }
-    return jsCurrent;
+    return jsCurrent as T;
   }
 
   /// Sets the value of [current].
@@ -241,7 +241,7 @@ ReactJsComponentFactoryProxy forwardRef(
   String displayName = 'Anonymous',
 }) {
   // ignore: avoid_types_on_closure_parameters
-  final wrappedComponent = allowInterop((JsMap props, JsRef ref) => componentZone.run(() {
+  final wrappedComponent = allowInterop((JsMap props, ref) => componentZone.run(() {
         final dartProps = JsBackedMap.backedBy(props);
         for (final value in dartProps.values) {
           if (value is Function) {
@@ -251,10 +251,10 @@ ReactJsComponentFactoryProxy forwardRef(
           }
         }
 
-        final dartRef = Ref.fromJs(ref);
+        final dartRef = Ref.fromJs(ref as JsRef);
         return wrapperFunction(dartProps, dartRef);
       }));
-  defineProperty(wrappedComponent, 'displayName', jsify({'value': displayName}));
+  defineProperty(wrappedComponent, 'displayName', PropertyDescriptor(value: displayName));
 
   final hoc = React.forwardRef(wrappedComponent);
   // ignore: invalid_use_of_protected_member
@@ -441,7 +441,7 @@ abstract class ReactDartComponentVersion {
       return type.dartComponentVersion;
     }
     if (type is Function) {
-      return getProperty(type, 'dartComponentVersion');
+      return getProperty(type, 'dartComponentVersion') as String;
     }
 
     return null;
