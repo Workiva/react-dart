@@ -18,6 +18,7 @@ class EventComponent extends Component {
         'onCompositionEnd': onEvent,
         'onCompositionStart': onEvent,
         'onCompositionUpdate': onEvent,
+        'onContextMenu': onEvent,
         'onCut': onEvent,
         'onDoubleClick': onEvent,
         'onDrag': onEvent,

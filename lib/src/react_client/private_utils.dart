@@ -59,3 +59,25 @@ void validateJsApi() {
     throw Exception('Loaded react.js must include react-dart JS interop helpers.');
   }
 }
+
+/// A wrapper around a value that can't be stored in its raw form
+/// within a JS object (e.g., a Dart function).
+class DartValueWrapper {
+  final dynamic value;
+
+  const DartValueWrapper(this.value);
+
+  static dynamic wrapIfNeeded(dynamic value) {
+    if (value is Function && !identical(allowInterop(value), value)) {
+      return DartValueWrapper(value);
+    }
+    return value;
+  }
+
+  static dynamic unwrapIfNeeded(dynamic value) {
+    if (value is DartValueWrapper) {
+      return value.value;
+    }
+    return value;
+  }
+}

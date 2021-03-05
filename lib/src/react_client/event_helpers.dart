@@ -783,7 +783,8 @@ extension SyntheticEventTypeHelpers on SyntheticEvent {
       (_hasProperty('relatedTarget') && !_hasProperty('button')) || _checkEventType(const ['focus', 'blur']);
 
   /// Uses Duck Typing to detect if the event instance is a [SyntheticMouseEvent].
-  bool get isMouseEvent => _hasProperty('button') || _checkEventType(const ['mouse', 'click', 'drag', 'drop']);
+  bool get isMouseEvent =>
+      _hasProperty('button') || _checkEventType(const ['mouse', 'click', 'drag', 'drop', 'contextmenu']);
 
   /// Uses Duck Typing to detect if the event instance is a [SyntheticPointerEvent].
   bool get isPointerEvent => _hasProperty('pointerId') || _checkEventType(const ['pointer']);
