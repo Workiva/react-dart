@@ -17,7 +17,7 @@ import 'util.dart';
 
 // Public APIs with tightened types to help fix implicit casts
 final div = react.div as ReactDomComponentFactoryProxy;
-final span = react.div as ReactDomComponentFactoryProxy;
+final span = react.span as ReactDomComponentFactoryProxy;
 
 void main() {
   testUtils(
