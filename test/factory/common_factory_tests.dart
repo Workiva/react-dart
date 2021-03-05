@@ -288,7 +288,7 @@ void domEventHandlerWrappingTests(ReactComponentFactoryProxy factory) {
           'ref': divRef,
           // ignore: avoid_types_on_closure_parameters
           'onClick': (react.SyntheticMouseEvent e) => event = e,
-        }));
+        }) as ReactElement);
         rtu.Simulate.click(divRef);
 
         final dummyEvent = event;

@@ -12,7 +12,7 @@ import 'package:test/test.dart';
 import 'package:react/react.dart' as react;
 import 'package:react/react_client.dart';
 import 'package:react/react_client/component_factory.dart';
-import 'package:react/react_client/react_interop.dart' show React, ReactComponent;
+import 'package:react/react_client/react_interop.dart' show React;
 import 'package:react/react_client/js_interop_helpers.dart';
 import 'package:react/react_dom.dart' as react_dom;
 import 'package:react/src/react_client/event_prop_key_to_event_factory.dart';
@@ -23,7 +23,7 @@ main() {
     const testStyle = <String, dynamic>{'background': 'white'};
 
     test('returns props for a composite JS component ReactElement', () {
-      final ReactElement instance = testJsComponentFactory({
+      final instance = testJsComponentFactory({
         'jsProp': 'js',
         'style': testStyle,
       }, testChildren);
@@ -59,7 +59,7 @@ main() {
 
     test('returns props for a composite JS ReactComponent', () {
       final mountNode = DivElement();
-      final ReactComponent renderedInstance = react_dom.render(
+      final renderedInstance = react_dom.render(
           testJsComponentFactory({
             'jsProp': 'js',
             'style': testStyle,
@@ -78,7 +78,7 @@ main() {
 
     test('returns props for a composite JS ReactComponent, even when the props change', () {
       final mountNode = DivElement();
-      ReactComponent renderedInstance = react_dom.render(
+      var renderedInstance = react_dom.render(
           testJsComponentFactory({
             'jsProp': 'js',
             'style': testStyle,
@@ -111,7 +111,7 @@ main() {
     });
 
     test('returns props for a DOM component ReactElement', () {
-      final ReactElement instance = react.div({
+      final instance = react.div({
         'domProp': 'dom',
         'style': testStyle,
       }, testChildren);
@@ -208,7 +208,7 @@ main() {
 external Function compositeComponent();
 
 /// A factory for a JS composite component, for use in testing.
-final Function testJsComponentFactory = (() {
+final testJsComponentFactory = (() {
   final type = compositeComponent();
   return ([props = const {}, children]) {
     return React.createElement(type, jsifyAndAllowInterop(props), listifyChildren(children));
