@@ -18,25 +18,25 @@ import 'package:react/react_client/react_interop.dart';
 /// Learn more: <https://reactjs.org/docs/hooks-state.html>.
 class StateHook<T> {
   /// The first item of the pair returned by [React.useState].
-  late T _value;
+  final T _value;
 
   /// The second item in the pair returned by [React.useState].
-  late void Function(dynamic) _setValue;
+  final void Function(dynamic) _setValue;
 
-  StateHook(T initialValue) {
+  StateHook._(this._value, this._setValue);
+
+  factory StateHook(T initialValue) {
     final result = React.useState(initialValue);
-    _value = result[0] as T;
-    _setValue = result[1] as void Function(dynamic);
+    return StateHook._(result[0] as T, result[1] as void Function(dynamic));
   }
 
   /// Constructor for [useStateLazy], calls lazy version of [React.useState] to
   /// initialize [_value] to the return value of [init].
   ///
   /// See: <https://reactjs.org/docs/hooks-reference.html#lazy-initial-state>.
-  StateHook.lazy(T Function() init) {
+  factory StateHook.lazy(T Function() init) {
     final result = React.useState(allowInterop(init));
-    _value = result[0] as T;
-    _setValue = result[1] as void Function(dynamic);
+    return StateHook._(result[0] as T, result[1] as void Function(dynamic));
   }
 
   /// The current value of the state.
@@ -166,26 +166,26 @@ void useEffect(dynamic Function() sideEffect, [List<Object>? dependencies]) {
 /// Learn more: <https://reactjs.org/docs/hooks-reference.html#usereducer>.
 class ReducerHook<TState, TAction, TInit> {
   /// The first item of the pair returned by [React.useReducer].
-  late TState _state;
+  final TState _state;
 
   /// The second item in the pair returned by [React.useReducer].
-  late void Function(TAction) _dispatch;
+  final void Function(TAction) _dispatch;
 
-  ReducerHook(TState Function(TState state, TAction action) reducer, TState initialState) {
+  ReducerHook._(this._state, this._dispatch);
+
+  factory ReducerHook(TState Function(TState state, TAction action) reducer, TState initialState) {
     final result = React.useReducer(allowInterop(reducer), initialState);
-    _state = result[0] as TState;
-    _dispatch = result[1] as void Function(TAction);
+    return ReducerHook._(result[0] as TState, result[1] as void Function(TAction));
   }
 
   /// Constructor for [useReducerLazy], calls lazy version of [React.useReducer] to
   /// initialize [_state] to the return value of [init(initialArg)].
   ///
   /// See: <https://reactjs.org/docs/hooks-reference.html#lazy-initialization>.
-  ReducerHook.lazy(
+  factory ReducerHook.lazy(
       TState Function(TState state, TAction action) reducer, TInit initialArg, TState Function(TInit) init) {
     final result = React.useReducer(allowInterop(reducer), initialArg, allowInterop(init));
-    _state = result[0] as TState;
-    _dispatch = result[1] as void Function(TAction);
+    return ReducerHook._(result[0] as TState, result[1] as void Function(TAction));
   }
 
   /// The current state map of the component.

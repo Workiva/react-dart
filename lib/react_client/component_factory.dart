@@ -267,7 +267,9 @@ class ReactJsComponentFactoryProxy extends ReactComponentFactoryProxy {
     List<String> additionalRefPropKeys = const [],
     // ignore: prefer_initializing_formals
   })  : type = jsClass,
-        _additionalRefPropKeys = additionalRefPropKeys;
+        _additionalRefPropKeys = additionalRefPropKeys {
+    ArgumentError.checkNotNull(jsClass, 'jsClass');
+  }
 
   @override
   ReactElement build(Map props, [List childrenArgs = const []]) {
