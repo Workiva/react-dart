@@ -413,27 +413,6 @@ void refTests<T>(
     });
   });
 
-  group('forwardRef function passes a ref through a component to one of its children, when the ref is a:', () {
-    for (final name in testCaseCollection.allTestCaseNames) {
-      // Callback refs don't work properly with forwardRef.
-      // This is part of why forwardRef is deprecated.
-      if (!name.contains('callback ref')) {
-        test(name, () {
-          final testCase = testCaseCollection.createCaseByName(name);
-          final ForwardRefTestComponent = forwardRef((props, ref) {
-            return factory({'ref': ref});
-          });
-
-          rtu.renderIntoDocument(ForwardRefTestComponent({
-            'ref': testCase.ref,
-          }));
-          final verifyFunction = testCase.isJs ? verifyJsRefValue! : verifyRefValue;
-          verifyFunction(testCase.getCurrent());
-        });
-      }
-    }
-  });
-
   group('forwardRef2 function passes a ref through a component to one of its children, when the ref is a:', () {
     for (final name in testCaseCollection.allTestCaseNames) {
       test(name, () {
