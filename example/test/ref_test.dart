@@ -85,19 +85,19 @@ class _ParentComponent extends react.Component {
   }
 
   // Callback refs
-  InputElement _inputCallbackRef;
-  _ChildComponent _childCallbackRef;
+  InputElement? _inputCallbackRef;
+  _ChildComponent? _childCallbackRef;
   showInputCallbackRefValue(_) {
     final input = react_dom.findDOMNode(_inputCallbackRef) as InputElement;
     print(input.value);
   }
 
   showChildCallbackRefValue(_) {
-    print(_childCallbackRef.somevalue);
+    print(_childCallbackRef!.somevalue);
   }
 
   incrementChildCallbackRefValue(_) {
-    _childCallbackRef.incrementValue();
+    _childCallbackRef!.incrementValue();
   }
 
   // Create refs
@@ -110,11 +110,11 @@ class _ParentComponent extends react.Component {
   }
 
   showChildCreateRefValue(_) {
-    print(_childCreateRef.current.somevalue);
+    print(_childCreateRef.current!.somevalue);
   }
 
   incrementChildCreateRefValue(_) {
-    _childCreateRef.current.incrementValue();
+    _childCreateRef.current!.incrementValue();
   }
 
   @override
