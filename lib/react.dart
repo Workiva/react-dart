@@ -159,9 +159,9 @@ abstract class Component {
   @Deprecated('7.0.0')
   set ref(RefMethod value) => _ref = value;
 
-  dynamic _jsRedraw;
+  late Function _jsRedraw;
 
-  dynamic _jsThis;
+  late Object _jsThis;
 
   final List<SetStateCallback> _setStateCallbacks = [];
 
@@ -1247,7 +1247,7 @@ abstract class Component2 implements Component {
 
   @override
   @Deprecated('7.0.0')
-  var _jsRedraw;
+  late var _jsRedraw;
 
   @override
   @Deprecated('7.0.0')
