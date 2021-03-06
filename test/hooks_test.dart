@@ -451,7 +451,7 @@ main() {
             react.p({}, [refFromUseRef.current]),
             react.p({}, [refFromCreateRef.current]),
             react.button({
-              'ref': (ref) => reRenderButton = ref as ButtonElement,
+              'ref': (ref) => reRenderButton = ref as ButtonElement?,
               'onClick': (_) => renderIndex.setWithUpdater((prev) => prev + 1)
             }, [
               're-render'
@@ -549,11 +549,11 @@ main() {
 
           return react.Fragment({}, [
             react.button({
-              'ref': (ref) => incrementButtonRef = ref as ButtonElement,
+              'ref': (ref) => incrementButtonRef = ref as ButtonElement?,
               'onClick': (_) => count.setWithUpdater((prev) => prev + 1),
             }, ['+']),
             react.button({
-              'ref': (ref) => reRenderButtonRef = ref as ButtonElement,
+              'ref': (ref) => reRenderButtonRef = ref as ButtonElement?,
               'onClick': (_) => reRender.setWithUpdater((prev) => prev + 1)
             }, [
               're-render'
@@ -655,7 +655,7 @@ main() {
             return react.Fragment({}, [
               react.div({'ref': ref}, count.value),
               react.button({
-                'ref': (ref) => reRenderButtonRef1 = ref as ButtonElement,
+                'ref': (ref) => reRenderButtonRef1 = ref as ButtonElement?,
                 'onClick': (_) => count.setWithUpdater((prev) => prev + 1),
               }, []),
             ]);
@@ -669,7 +669,7 @@ main() {
             return react.Fragment({}, [
               react.div({'ref': ref}, count.value),
               react.button({
-                'ref': (ref) => reRenderButtonRef2 = ref as ButtonElement,
+                'ref': (ref) => reRenderButtonRef2 = ref as ButtonElement?,
                 'onClick': (_) => count.setWithUpdater((prev) => prev + 1),
               }, []),
             ]);
@@ -684,7 +684,7 @@ main() {
             return react.Fragment({}, [
               react.div({'ref': someRefThatIsNotSet}, count.value),
               react.button({
-                'ref': (ref) => reRenderButtonRef2 = ref as ButtonElement,
+                'ref': (ref) => reRenderButtonRef2 = ref as ButtonElement?,
                 'onClick': (_) => count.setWithUpdater((prev) => prev + 1),
               }, []),
             ]);
@@ -702,7 +702,7 @@ main() {
             return react.Fragment({}, [
               NoDepsComponent({'ref': noDepsRef}, []),
               react.button({
-                'ref': (ref) => incrementButton = ref as ButtonElement,
+                'ref': (ref) => incrementButton = ref as ButtonElement?,
                 'onClick': (_) => noDepsRef.current['increment'](),
               }, [
                 '+'
