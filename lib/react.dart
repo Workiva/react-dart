@@ -1665,7 +1665,7 @@ dynamic li = validateJsApiThenReturn(() => ReactDomComponentFactoryProxy('li'));
 dynamic link = validateJsApiThenReturn(() => ReactDomComponentFactoryProxy('link'));
 
 /// The HTML `<main>` `Element`.
-dynamic main = validateJsApiThenReturn(() => ReactDomComponentFactoryProxy('main'));
+dynamic htmlMain = validateJsApiThenReturn(() => ReactDomComponentFactoryProxy('main'));
 
 /// The HTML `<map>` `MapElement`.
 dynamic map = validateJsApiThenReturn(() => ReactDomComponentFactoryProxy('map'));
