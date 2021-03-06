@@ -140,7 +140,7 @@ StateHook<T> useStateLazy<T>(T Function() init) => StateHook.lazy(init);
 /// ```
 ///
 /// See: <https://reactjs.org/docs/hooks-effect.html#tip-optimizing-performance-by-skipping-effects>.
-void useEffect(dynamic Function() sideEffect, [List<Object>? dependencies]) {
+void useEffect(dynamic Function() sideEffect, [List<Object?>? dependencies]) {
   final wrappedSideEffect = allowInterop(() {
     final result = sideEffect();
     if (result is Function) {
@@ -461,7 +461,7 @@ T useMemo<T>(T Function() createFunction, [List<dynamic>? dependencies]) =>
 /// ```
 ///
 /// Learn more: <https://reactjs.org/docs/hooks-reference.html#uselayouteffect>.
-void useLayoutEffect(dynamic Function() sideEffect, [List<Object>? dependencies]) {
+void useLayoutEffect(dynamic Function() sideEffect, [List<Object?>? dependencies]) {
   final wrappedSideEffect = allowInterop(() {
     final result = sideEffect();
     if (result is Function) {

@@ -59,14 +59,14 @@ abstract class React {
   external static ReactClass get Fragment;
 
   external static List<dynamic> useState(dynamic value);
-  external static void useEffect(dynamic Function() sideEffect, [List<dynamic>? dependencies]);
+  external static void useEffect(dynamic Function() sideEffect, [List<Object?>? dependencies]);
   external static List<dynamic> useReducer(Function reducer, dynamic initialState, [Function? init]);
-  external static Function useCallback(Function callback, List dependencies);
+  external static Function useCallback(Function callback, List<Object?> dependencies);
   external static ReactContext useContext(ReactContext context);
   external static JsRef useRef([dynamic? initialValue]);
-  external static dynamic useMemo(dynamic Function() createFunction, [List<dynamic>? dependencies]);
-  external static void useLayoutEffect(dynamic Function() sideEffect, [List<dynamic>? dependencies]);
-  external static void useImperativeHandle(dynamic ref, dynamic Function() createHandle, [List<dynamic>? dependencies]);
+  external static dynamic useMemo(dynamic Function() createFunction, [List<Object?>? dependencies]);
+  external static void useLayoutEffect(dynamic Function() sideEffect, [List<Object?>? dependencies]);
+  external static void useImperativeHandle(dynamic ref, dynamic Function() createHandle, [List<Object?>? dependencies]);
   // NOTE: The use of generics on the `useDebugValue` interop will break the hook.
   external static dynamic useDebugValue(dynamic value, [Function? format]);
 }

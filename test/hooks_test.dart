@@ -847,7 +847,7 @@ class _ContextProviderWrapper extends react.Component2 {
   }
 }
 
-void testEffectHook(Function effectHook) {
+void testEffectHook(void Function(dynamic Function() sideEffect, [List<Object?>? dependencies]) effectHook) {
   late ReactDartFunctionComponentFactoryProxy UseEffectTest;
   ButtonElement? countButtonRef;
   DivElement? countRef;
