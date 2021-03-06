@@ -34,21 +34,13 @@ void main() {
 
 testUtils({
   bool isComponent2 = false,
-  ReactComponentFactoryProxy eventComponent,
-  ReactComponentFactoryProxy sampleComponent,
-  ReactComponentFactoryProxy wrapperComponent,
+  required ReactComponentFactoryProxy eventComponent,
+  required ReactComponentFactoryProxy sampleComponent,
+  required ReactComponentFactoryProxy wrapperComponent,
 }) {
-  var component;
-  Element domNode;
-
-  tearDown(() {
-    component = null;
-    domNode = null;
-  });
-
   group('Shallow Rendering with a Component${isComponent2 ? "2" : ""}', () {
-    ReactElement content;
-    ReactShallowRenderer shallowRenderer;
+    late ReactElement content;
+    late ReactShallowRenderer shallowRenderer;
 
     setUp(() {
       content = sampleComponent({'className': 'test', 'id': 'createRendererTest'});
@@ -74,6 +66,9 @@ testUtils({
   });
 
   group('Simulate on a Component${isComponent2 ? "2" : ""}', () {
+    late Object component;
+    late Element domNode;
+
     setUp(() {
       component = renderIntoDocument(eventComponent({}));
       domNode = findDomNode(component);
@@ -87,8 +82,8 @@ testUtils({
     ) {
       final eventHandlerName = 'on${eventName[0].toUpperCase() + eventName.substring(1)}';
       eventName = eventName.toLowerCase();
-      Map eventData;
-      int fakeTimeStamp;
+      late Map eventData;
+      late int fakeTimeStamp;
 
       setUp(() {
         fakeTimeStamp = eventName.hashCode;
@@ -107,23 +102,22 @@ testUtils({
         expect(domNode.text, equals('$eventName $fakeTimeStamp'));
       });
 
-      if (expectEventType != null) {
-        test('with correct type', () {
-          SyntheticEvent capturedEvent;
-          final ref = createRef<DivElement>();
+      test('with correct type', () {
+        SyntheticEvent? capturedEvent;
+        final ref = createRef<DivElement>();
 
-          renderIntoDocument(div({
-            // ignore: avoid_types_on_closure_parameters
-            eventHandlerName: (SyntheticEvent e) {
-              capturedEvent = e;
-            },
-            'ref': ref,
-          }));
+        renderIntoDocument(div({
+          // ignore: avoid_types_on_closure_parameters
+          eventHandlerName: (SyntheticEvent e) {
+            capturedEvent = e;
+          },
+          'ref': ref,
+        }));
 
-          event(ref.current, eventData);
-          expectEventType(capturedEvent);
-        });
-      }
+        event(ref.current, eventData);
+        expect(capturedEvent, isNotNull);
+        expectEventType(capturedEvent!);
+      });
     }
 
     group('event', () {
@@ -214,7 +208,7 @@ testUtils({
     test('passes in and jsifies eventData properly', () {
       const testKeyCode = 42;
 
-      String callInfo;
+      String? callInfo;
       var wasStopPropagationCalled = false;
 
       final renderedNode = renderIntoDocument(div({
@@ -238,34 +232,34 @@ testUtils({
   });
 
   test('findRenderedDOMComponentWithClass on a Component${isComponent2 ? "2" : ""}', () {
-    component = renderIntoDocument(sampleComponent({}));
+    final component = renderIntoDocument(sampleComponent({}));
     final spanComponent = findRenderedDOMComponentWithClass(component, 'span1');
 
     expect(getProperty(spanComponent, 'tagName'), equals('SPAN'));
   });
 
   test('findRenderedDOMComponentWithTag on a Component${isComponent2 ? "2" : ""}', () {
-    component = renderIntoDocument(sampleComponent({}));
+    final component = renderIntoDocument(sampleComponent({}));
     final h1Component = findRenderedDOMComponentWithTag(component, 'h1');
 
     expect(getProperty(h1Component, 'tagName'), equals('H1'));
   });
 
   test('findRenderedComponentWithTypeV2 on a Component${isComponent2 ? "2" : ""}', () {
-    component = renderIntoDocument(wrapperComponent({}, [sampleComponent({})]));
+    final component = renderIntoDocument(wrapperComponent({}, [sampleComponent({})]));
     final result = findRenderedComponentWithTypeV2(component, sampleComponent);
     expect(isCompositeComponentWithTypeV2(result, sampleComponent), isTrue);
   });
 
   group('isCompositeComponent on a Component${isComponent2 ? "2" : ""}', () {
     test('returns true when element is a composite component (created with React.createClass())', () {
-      component = renderIntoDocument(eventComponent({}));
+      final component = renderIntoDocument(eventComponent({}));
 
       expect(isCompositeComponent(component), isTrue);
     });
 
     test('returns false when element is not a composite component (created with React.createClass())', () {
-      component = renderIntoDocument(div({}) as ReactElement);
+      final component = renderIntoDocument(div({}) as ReactElement);
 
       expect(isCompositeComponent(component), isFalse);
     });
@@ -288,7 +282,7 @@ testUtils({
 
   group('isDOMComponent on a Component${isComponent2 ? "2" : ""}', () {
     test('returns true when argument is a DOM component', () {
-      component = renderIntoDocument(sampleComponent({}));
+      final component = renderIntoDocument(sampleComponent({}));
       final h1Element = findRenderedDOMComponentWithTag(component, 'h1');
 
       expect(isDOMComponent(h1Element), isTrue);
@@ -320,7 +314,7 @@ testUtils({
   });
 
   test('scryRenderedComponentsWithTypeV2 on a Component${isComponent2 ? "2" : ""}', () {
-    component =
+    final component =
         renderIntoDocument(wrapperComponent({}, [sampleComponent({}), sampleComponent({}), eventComponent({})]));
 
     final results = scryRenderedComponentsWithTypeV2(component, sampleComponent);
@@ -331,7 +325,7 @@ testUtils({
   });
 
   test('scryRenderedDOMComponentsWithClass', () {
-    component = renderIntoDocument(wrapperComponent({}, [
+    final component = renderIntoDocument(wrapperComponent({}, [
       div({'className': 'divClass'}),
       div({'className': 'divClass'}),
       span({})
@@ -345,7 +339,7 @@ testUtils({
   });
 
   test('scryRenderedDOMComponentsWithTag', () {
-    component = renderIntoDocument(wrapperComponent({}, [div({}), div({}), span({})]));
+    final component = renderIntoDocument(wrapperComponent({}, [div({}), div({}), span({})]));
 
     final results = scryRenderedDOMComponentsWithTag(component, 'div');
 

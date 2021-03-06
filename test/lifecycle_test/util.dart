@@ -32,12 +32,12 @@ mixin LifecycleTestHelper on Component {
       }).toList();
 
   T lifecycleCall<T>(String memberName,
-      {List arguments = const [], T Function() defaultReturnValue, Map staticProps}) {
+      {List arguments = const [], T Function()? defaultReturnValue, Map? staticProps}) {
     lifecycleCalls.add({
       'memberName': memberName,
       'arguments': arguments,
-      'props': props == null ? null : Map.from(props),
-      'state': state == null ? null : Map.from(state),
+      'props': Map.from(props),
+      'state': Map.from(state),
       'context': context,
     });
 
@@ -50,7 +50,7 @@ mixin LifecycleTestHelper on Component {
       return defaultReturnValue();
     }
 
-    return null;
+    return null as T;
   }
 
   void callSetStateWithNullValue() {

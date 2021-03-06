@@ -6,7 +6,6 @@ import 'dart:html';
 import 'dart:js_util';
 
 import 'package:js/js.dart';
-import 'package:meta/meta.dart';
 import 'package:react/react.dart' as react;
 import 'package:react/react_client/react_interop.dart';
 import 'package:test/test.dart';
@@ -52,7 +51,7 @@ external set consoleWarnCalls(List<dynamic> value);
 @JS('console.warn')
 external void consoleWarn([a, b, c, d]);
 
-void sharedConsoleWarnTests({@required bool expectDeduplicateSyntheticEventWarnings}) {
+void sharedConsoleWarnTests({required bool expectDeduplicateSyntheticEventWarnings}) {
   group('console.warn wrapper (or lack thereof)', () {
     void clearConsoleWarnCalls() => consoleWarnCalls = [];
 

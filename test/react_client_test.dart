@@ -129,8 +129,8 @@ main() {
       Function createHandler(eventKey) => (_) {
             print(eventKey);
           };
-      Map<String, Function> originalHandlers;
-      Map props;
+      late Map<String, Function> originalHandlers;
+      late Map props;
 
       setUp(() {
         originalHandlers = {};
@@ -146,7 +146,7 @@ main() {
         final jsProps = unconvertJsProps(component);
         for (final key in knownEventKeys) {
           expect(jsProps[key], isNotNull, reason: 'JS event handler prop should not be null');
-          expect(jsProps[key], anyOf(same(originalHandlers[key]), same(allowInterop(originalHandlers[key]))),
+          expect(jsProps[key], anyOf(same(originalHandlers[key]), same(allowInterop(originalHandlers[key] as Function))),
               reason: 'JS event handler should be the original or original wrapped in allowInterop');
         }
       });
@@ -156,7 +156,7 @@ main() {
         final jsProps = unconvertJsProps(component);
         for (final key in knownEventKeys) {
           expect(jsProps[key], isNotNull, reason: 'JS event handler prop should not be null');
-          expect(jsProps[key], same(allowInterop(originalHandlers[key])),
+          expect(jsProps[key], same(allowInterop(originalHandlers[key] as Function)),
               reason: 'JS event handler prop was unexpectedly modified');
         }
       });

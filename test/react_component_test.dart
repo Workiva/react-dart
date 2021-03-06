@@ -6,7 +6,7 @@ import 'package:test/test.dart';
 
 main() {
   group('Component2', () {
-    Component2 component;
+    late Component2 component;
 
     setUpAll(() {
       component = MyComponent();
@@ -23,22 +23,22 @@ main() {
         expect(() => component.componentWillMount(), throwsUnsupportedError);
       });
       test('componentWillReceiveProps', () {
-        expect(() => component.componentWillReceiveProps(null), throwsUnsupportedError);
+        expect(() => component.componentWillReceiveProps({}), throwsUnsupportedError);
       });
       test('componentWillUpdate', () {
-        expect(() => component.componentWillUpdate(null, null), throwsUnsupportedError);
+        expect(() => component.componentWillUpdate({}, {}), throwsUnsupportedError);
       });
       test('getChildContext', () {
         expect(() => component.getChildContext(), throwsUnsupportedError);
       });
       test('shouldComponentUpdateWithContext', () {
-        expect(() => component.shouldComponentUpdateWithContext(null, null, null), throwsUnsupportedError);
+        expect(() => component.shouldComponentUpdateWithContext({}, {}, null), throwsUnsupportedError);
       });
       test('componentWillUpdateWithContext', () {
-        expect(() => component.componentWillUpdateWithContext(null, null, null), throwsUnsupportedError);
+        expect(() => component.componentWillUpdateWithContext({}, {}, null), throwsUnsupportedError);
       });
       test('componentWillReceivePropsWithContext', () {
-        expect(() => component.componentWillReceivePropsWithContext(null, null), throwsUnsupportedError);
+        expect(() => component.componentWillReceivePropsWithContext({}, null), throwsUnsupportedError);
       });
     });
 

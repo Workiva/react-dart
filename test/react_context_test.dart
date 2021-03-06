@@ -2,22 +2,19 @@
 @JS()
 library react_test_utils_test;
 
-import 'dart:html' as html;
-
 import 'package:js/js.dart';
 import 'package:test/test.dart';
 
 import 'package:react/react.dart' as react;
-import 'package:react/react_dom.dart' as react_dom;
 
 import 'shared_type_tester.dart';
+import 'util.dart';
 
 main() {
   void testTypeValue(dynamic typeToTest) {
-    final mountNode = html.DivElement();
     var contextTypeRef;
     var consumerRef;
-    react_dom.render(
+    render(
         ContextProviderWrapper({
           'contextToUse': TestContext,
           'value': typeToTest,
@@ -33,8 +30,7 @@ main() {
               consumerRef = ref;
             }
           })
-        ]),
-        mountNode);
+        ]));
     expect(contextTypeRef.context, same(typeToTest));
     expect(consumerRef.latestValue, same(typeToTest));
   }
@@ -45,13 +41,12 @@ main() {
     });
 
     group('calculateChangeBits argument functions correctly', () {
-      final mountNode = html.DivElement();
-      _ContextProviderWrapper providerRef;
-      _ContextConsumerWrapper consumerEvenRef;
-      _ContextConsumerWrapper consumerOddRef;
+      _ContextProviderWrapper? providerRef;
+      _ContextConsumerWrapper? consumerEvenRef;
+      _ContextConsumerWrapper? consumerOddRef;
 
       setUp(() {
-        react_dom.render(
+        render(
             ContextProviderWrapper({
               'contextToUse': TestCalculateChangedBitsContext,
               'mode': 'increment',
@@ -75,25 +70,24 @@ main() {
                   consumerOddRef = ref as _ContextConsumerWrapper;
                 }
               })
-            ]),
-            mountNode);
+            ]));
       });
 
       test('on first render', () {
-        expect(consumerEvenRef.latestValue, 1);
-        expect(consumerOddRef.latestValue, 1);
+        expect(consumerEvenRef!.latestValue, 1);
+        expect(consumerOddRef!.latestValue, 1);
       });
 
       test('on value updates', () {
-        providerRef.increment();
-        expect(consumerEvenRef.latestValue, 2);
-        expect(consumerOddRef.latestValue, 1);
-        providerRef.increment();
-        expect(consumerEvenRef.latestValue, 2);
-        expect(consumerOddRef.latestValue, 3);
-        providerRef.increment();
-        expect(consumerEvenRef.latestValue, 4);
-        expect(consumerOddRef.latestValue, 3);
+        providerRef!.increment();
+        expect(consumerEvenRef!.latestValue, 2);
+        expect(consumerOddRef!.latestValue, 1);
+        providerRef!.increment();
+        expect(consumerEvenRef!.latestValue, 2);
+        expect(consumerOddRef!.latestValue, 3);
+        providerRef!.increment();
+        expect(consumerEvenRef!.latestValue, 4);
+        expect(consumerOddRef!.latestValue, 3);
       });
     });
   });

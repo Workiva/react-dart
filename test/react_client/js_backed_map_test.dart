@@ -109,7 +109,7 @@ main() {
     });
 
     group('other map methods overridden or needed by MapBase', () {
-      JsBackedMap testMap;
+      late JsBackedMap testMap;
 
       setUp(() {
         testMap = JsBackedMap.from({

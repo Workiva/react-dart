@@ -740,7 +740,7 @@ void markChildrenValidated(List<dynamic> children) {
 @JS('_createReactDartComponentClass')
 @Deprecated('7.0.0')
 external ReactClass createReactDartComponentClass(
-    ReactDartInteropStatics dartInteropStatics, ComponentStatics componentStatics,
+    ReactDartInteropStatics? dartInteropStatics, ComponentStatics? componentStatics,
     [JsComponentConfig? jsConfig]);
 
 /// Returns a new JS [ReactClass] for a component that uses
@@ -749,7 +749,7 @@ external ReactClass createReactDartComponentClass(
 ///
 /// See `_ReactDartInteropStatics2.staticsForJs`]` for an example implementation.
 @JS('_createReactDartComponentClass2')
-external ReactClass createReactDartComponentClass2(JsMap dartInteropStatics, ComponentStatics2 componentStatics,
+external ReactClass createReactDartComponentClass2(JsMap? dartInteropStatics, ComponentStatics2? componentStatics,
     [JsComponentConfig2? jsConfig]);
 
 @JS('React.__isDevelopment')
