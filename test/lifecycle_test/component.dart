@@ -199,7 +199,7 @@ class _LifecycleTest extends react.Component with LifecycleTestHelper {
       arguments: [Map.from(nextProps), Map.from(nextState)], defaultReturnValue: () => true);
 
   @override
-  bool shouldComponentUpdateWithContext(nextProps, nextState, nextContext) =>
+  bool? shouldComponentUpdateWithContext(nextProps, nextState, nextContext) =>
       lifecycleCall('shouldComponentUpdateWithContext',
           arguments: [Map.from(nextProps), Map.from(nextState), Map.from(nextContext)], defaultReturnValue: () => true);
 

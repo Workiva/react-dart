@@ -239,7 +239,7 @@ class _LifecycleTest extends react.Component2 with LifecycleTestHelper {
   void componentWillUnmount() => lifecycleCall('componentWillUnmount');
 
   @override
-  Map getDerivedStateFromProps(nextProps, prevState) => lifecycleCall('getDerivedStateFromProps',
+  Map? getDerivedStateFromProps(nextProps, prevState) => lifecycleCall('getDerivedStateFromProps',
       arguments: [Map.from(nextProps), Map.from(prevState)], staticProps: nextProps);
 
   @override
