@@ -84,7 +84,7 @@ dynamic chainRefList(List<dynamic> refs) {
 }
 
 void _validateChainRefsArg(dynamic ref) {
-  if (ref is Function(Null) ||
+  if (ref is Function(Never) ||
       ref is Ref ||
       // Need to duck-type since `is JsRef` will return true for most JS objects.
       (ref is JsRef && hasProperty(ref, 'current'))) {

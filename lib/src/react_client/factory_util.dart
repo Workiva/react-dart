@@ -58,7 +58,7 @@ void convertRefValue2(
       // would fail the `is _CallbackRef<dynamic>` check.
       // See https://github.com/dart-lang/sdk/issues/34593 for more information on arity checks.
       // ignore: prefer_void_to_null
-    } else if (ref is CallbackRef<Null> && convertCallbackRefValue) {
+    } else if (ref is CallbackRef<Never> && convertCallbackRefValue) {
       args[refKey] = allowInterop((dynamic instance) {
         // Call as dynamic to perform dynamic dispatch, since we can't cast to _CallbackRef<dynamic>,
         // and since calling with non-null values will fail at runtime due to the _CallbackRef<Null> typing.
