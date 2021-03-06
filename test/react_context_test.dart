@@ -51,7 +51,7 @@ main() {
               'contextToUse': TestCalculateChangedBitsContext,
               'mode': 'increment',
               'ref': (ref) {
-                providerRef = ref as _ContextProviderWrapper;
+                providerRef = ref as _ContextProviderWrapper?;
               }
             }, [
               ContextConsumerWrapper({
@@ -59,7 +59,7 @@ main() {
                 'contextToUse': TestCalculateChangedBitsContext,
                 'unstable_observedBits': 1 << 2,
                 'ref': (ref) {
-                  consumerEvenRef = ref as _ContextConsumerWrapper;
+                  consumerEvenRef = ref as _ContextConsumerWrapper?;
                 }
               }),
               ContextConsumerWrapper({
@@ -67,7 +67,7 @@ main() {
                 'contextToUse': TestCalculateChangedBitsContext,
                 'unstable_observedBits': 1 << 3,
                 'ref': (ref) {
-                  consumerOddRef = ref as _ContextConsumerWrapper;
+                  consumerOddRef = ref as _ContextConsumerWrapper?;
                 }
               })
             ]));
