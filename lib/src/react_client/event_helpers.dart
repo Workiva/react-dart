@@ -760,6 +760,7 @@ SyntheticWheelEvent createSyntheticWheelEvent({
 }
 
 extension SyntheticEventTypeHelpers on SyntheticEvent {
+  // FIXME silence warnings, reinstate test (in mixed mode?) to test for null
   bool _checkEventType(List<String> types) => this != null && type != null && types.any((t) => type.contains(t));
   bool _hasProperty(String propertyName) => this != null && hasProperty(this, propertyName);
 
