@@ -885,7 +885,7 @@ abstract class Component2 implements Component {
   /// ```
   ///
   /// See: <https://reactjs.org/docs/typechecking-with-proptypes.html#proptypes>
-  Map<String, PropValidator<Null>> get propTypes => {}; // ignore: prefer_void_to_null
+  Map<String, PropValidator<Never>> get propTypes => {};
 
   /// Examines [props] and [state] and returns one of the following types:
   ///
