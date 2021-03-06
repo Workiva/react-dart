@@ -43,9 +43,9 @@ void sharedJsFunctionTests() {
 /// The arguments corresponding to each call of `console.warn`,
 /// collected via a spy set up in console_spy_include_this_js_first.js
 @JS()
-external List<List<dynamic>> get consoleWarnCalls;
+external List<List<Object?>> get consoleWarnCalls;
 @JS()
-external set consoleWarnCalls(List<dynamic> value);
+external set consoleWarnCalls(List<Object?> value);
 
 /// Like window.console.warn, but allows more than one argument.
 @JS('console.warn')

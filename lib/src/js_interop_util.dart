@@ -6,7 +6,7 @@ import 'dart:js_util';
 import 'package:js/js.dart';
 
 @JS('Object.keys')
-external List<String> objectKeys(Object object);
+external List<Object?> objectKeys(Object object);
 
 @JS('Object.defineProperty')
 external void defineProperty(dynamic object, String propertyName, PropertyDescriptor descriptor);
