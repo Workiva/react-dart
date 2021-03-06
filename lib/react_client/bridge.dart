@@ -119,11 +119,11 @@ class Component2BridgeImpl extends Component2Bridge {
       dynamic handlePropValidator(
         JsMap props,
         String propName,
-        String componentName,
+        String? componentName,
         String location,
-        String propFullName,
+        String? propFullName,
         // This is a required argument of PropTypes but is usually hidden from the JS consumer.
-        String secret,
+        String? secret,
       ) {
         // Create a Dart consumable version of the JsMap.
         final convertedProps = JsBackedMap.fromJs(props);
