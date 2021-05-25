@@ -6,6 +6,7 @@ import 'dart:core';
 import 'dart:js_util' as js_util;
 
 import 'package:js/js.dart';
+import 'package:react/src/react_client/private_utils.dart';
 
 /// A view into a JavaScript object ([jsObject]) that conforms to the Dart [Map] interface.
 ///
@@ -103,12 +104,12 @@ class JsBackedMap extends MapBase<dynamic, dynamic> {
 
   @override
   dynamic operator [](Object key) {
-    return js_util.getProperty(jsObject, key);
+    return DartValueWrapper.unwrapIfNeeded(js_util.getProperty(jsObject, key));
   }
 
   @override
   void operator []=(dynamic key, dynamic value) {
-    js_util.setProperty(jsObject, key, value);
+    js_util.setProperty(jsObject, key, DartValueWrapper.wrapIfNeeded(value));
   }
 
   @override

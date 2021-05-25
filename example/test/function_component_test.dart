@@ -35,7 +35,7 @@ HookTestComponent(Map props) {
   ]);
 }
 
-final MemoTestDemoWrapper = react.registerComponent(() => _MemoTestDemoWrapper());
+final MemoTestDemoWrapper = react.registerComponent2(() => _MemoTestDemoWrapper());
 
 class _MemoTestDemoWrapper extends react.Component2 {
   @override
@@ -187,7 +187,7 @@ int calculateChangedBits(currentValue, nextValue) {
 
 var TestNewContext = react.createContext<Map>({'renderCount': 0}, calculateChangedBits);
 
-var newContextProviderComponent = react.registerComponent(() => _NewContextProviderComponent());
+var newContextProviderComponent = react.registerComponent2(() => _NewContextProviderComponent());
 
 class _NewContextProviderComponent extends react.Component2 {
   get initialState => {'renderCount': 0, 'complexMap': false};

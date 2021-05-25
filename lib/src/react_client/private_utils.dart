@@ -12,7 +12,7 @@ import 'package:react/src/js_interop_util.dart';
 /// This is used when setting environment variables to ensure they can be set properly.
 bool _isJsApiValid = false;
 
-@Deprecated('6.0.0')
+@Deprecated('7.0.0')
 InteropContextValue jsifyContext(Map<String, dynamic> context) {
   var interopContext = new InteropContextValue();
   context.forEach((key, value) {
@@ -29,7 +29,7 @@ T validateJsApiThenReturn<T>(T Function() computeReturn) {
   return computeReturn();
 }
 
-@Deprecated('6.0.0')
+@Deprecated('7.0.0')
 Map<String, dynamic> unjsifyContext(InteropContextValue interopContext) {
   // TODO consider using `contextKeys` for this if perf of objectKeys is bad.
   return new Map.fromIterable(objectKeys(interopContext), value: (key) {
@@ -57,5 +57,27 @@ void validateJsApi() {
     throw new Exception('react.js and react_dom.js must be loaded.');
   } catch (_) {
     throw new Exception('Loaded react.js must include react-dart JS interop helpers.');
+  }
+}
+
+/// A wrapper around a value that can't be stored in its raw form
+/// within a JS object (e.g., a Dart function).
+class DartValueWrapper {
+  final dynamic value;
+
+  const DartValueWrapper(this.value);
+
+  static dynamic wrapIfNeeded(dynamic value) {
+    if (value is Function && !identical(allowInterop(value), value)) {
+      return DartValueWrapper(value);
+    }
+    return value;
+  }
+
+  static dynamic unwrapIfNeeded(dynamic value) {
+    if (value is DartValueWrapper) {
+      return value.value;
+    }
+    return value;
   }
 }

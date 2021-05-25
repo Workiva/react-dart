@@ -21,22 +21,6 @@ export 'package:react/react_client/component_factory.dart'
         JsBackedMapComponentFactoryMixin;
 export 'package:react/react_client/zone.dart' show componentZone;
 export 'package:react/src/react_client/chain_refs.dart' show chainRefs, chainRefList;
-export 'package:react/src/react_client/event_factory.dart'
-    show
-        syntheticEventFactory,
-        syntheticClipboardEventFactory,
-        syntheticCompositionEventFactory,
-        syntheticKeyboardEventFactory,
-        syntheticFocusEventFactory,
-        syntheticFormEventFactory,
-        syntheticDataTransferFactory,
-        syntheticPointerEventFactory,
-        syntheticMouseEventFactory,
-        syntheticTouchEventFactory,
-        syntheticTransitionEventFactory,
-        syntheticAnimationEventFactory,
-        syntheticUIEventFactory,
-        syntheticWheelEventFactory;
 export 'package:react/src/typedefs.dart' show JsFunctionComponent;
 
 /// Method used to initialize the React environment.
@@ -44,6 +28,6 @@ export 'package:react/src/typedefs.dart' show JsFunctionComponent;
 /// > __DEPRECATED.__
 /// >
 /// > Environment configuration is now done by default and should not be altered. This can now be removed.
-/// > This will be removed in 6.0.0, along with other configuration setting functions.
-@Deprecated('It is not longer required and can be removed. Will be removed from this library in the 6.0.0 release.')
+/// > This will be removed in 7.0.0, along with other configuration setting functions.
+@Deprecated('It is not longer required and can be removed. Will be removed from this library in the 7.0.0 release.')
 void setClientConfiguration() {}

@@ -1,0 +1,8 @@
+version: 1
+
+exclude:
+  - ^example/
+  - ^test/
+  - ^tool/
+  # Ignore compiled JS files and source maps
+  - ^lib/react\w*\.js(\.map)?$

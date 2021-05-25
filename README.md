@@ -1,15 +1,17 @@
 # Dart wrapper for [React JS](https://reactjs.org/)
 
 [![Pub](https://img.shields.io/pub/v/react.svg)](https://pub.dev/packages/react)
-![ReactJS v16.10.1](https://img.shields.io/badge/React_JS-v16.10.1-green.svg)
-[![Build Status](https://travis-ci.com/cleandart/react-dart.svg?branch=master)](https://travis-ci.com/cleandart/react-dart)
+![ReactJS v17.0.1](https://img.shields.io/badge/React_JS-v17.0.1-green.svg)
+[![Dart CI](https://github.com/Workiva/react-dart/workflows/Dart%20CI/badge.svg?branch=master)](https://github.com/Workiva/react-dart/actions?query=workflow%3A%22Dart+CI%22+branch%3Amaster)
 [![React Dart API Docs](https://img.shields.io/badge/api_docs-react-blue.svg)](https://pub.dev/documentation/react/latest/)
+
+_Thanks to the folks at [Vacuumlabs](https://www.vacuumlabs.com/) for creating this project! :heart:_
 
 ## Getting Started
 
 ### Installation
 
-If you are not familiar with the ReactJS library, read this [react tutorial](http://facebook.github.io/react/docs/getting-started.html) first.
+If you are not familiar with the ReactJS library, read this [react tutorial](https://reactjs.org/docs/getting-started.html) first.
 
 1. Install the Dart SDK
 
@@ -23,9 +25,9 @@ If you are not familiar with the ReactJS library, read this [react tutorial](htt
     name: your_package_name
     version: 1.0.0
     environment:
-      sdk: ^2.0.0
+      sdk: ^2.7.0
     dependencies:
-      react: ^5.0.0
+      react: ^6.0.0
     ```
 
 3. Install the dependencies using pub:
@@ -121,10 +123,10 @@ var aButton = button({"onClick": (SyntheticMouseEvent event) => print(event)});
 2. Then register the class so ReactJS can recognize it.
 
     ```dart
-    var CoolWidget = registerComponent(() => new CoolWidgetComponent());
+    var CoolWidget = registerComponent2(() => CoolWidgetComponent());
     ```
 
-    > __Warning:__ `registerComponent` should be called only once per component and lifetime of application.
+    > __Warning:__ `registerComponent2` should be called only once per component and lifetime of application.
 
 3. Then you can use the registered component similarly as native elements.
 
@@ -157,7 +159,7 @@ class CoolWidgetComponent extends Component2 {
   }
 }
 
-var CoolWidget = registerComponent(() => new CoolWidgetComponent());
+var CoolWidget = registerComponent2(() => CoolWidgetComponent());
 ```
 
 ```dart
@@ -179,14 +181,14 @@ main() {
 
 > __Note:__ The typed interface capabilities of this library are fairly limited, and can result in
   extremely verbose implementations. We strongly recommend using the
-  [OverReact](https://pub.dartlang.org/packages/over_react) package - which
+  [OverReact](https://pub.dev/packages/over_react) package - which
   makes creating statically-typed React UI components using Dart easy.
 
 ```dart
 // cool_widget.dart
 typedef CoolWidgetType({String headline, String text, int counter});
 
-var _CoolWidget = registerComponent(() => new CoolWidgetComponent());
+var _CoolWidget = registerComponent2(() => CoolWidgetComponent());
 
 CoolWidgetType CoolWidget({String headline, String text, int counter}) {
   return _CoolWidget({'headline':headline, 'text':text});
@@ -284,7 +286,7 @@ If you want to work with DOM nodes of dart or JS components instead,
 you can call top level `findDOMNode` on anything the ref returns.
 
 ```dart
-var DartComponent = registerComponent(() => new _DartComponent());
+var DartComponent = registerComponent2(() => _DartComponent());
 class _DartComponent extends Component2 {
   @override
   render() => div({});
@@ -294,16 +296,16 @@ class _DartComponent extends Component2 {
   }
 }
 
-var ParentComponent = registerComponent(() => new _ParentComponent());
+var ParentComponent = registerComponent2(() => _ParentComponent());
 class _ParentComponent extends Component2 {
-  InputElement inputRef; // Returns the DOM node.
-  _DartComponent dartComponentRef; // Returns instance of _DartComponent
+  final inputRef = createRef<InputElement>(); // inputRef.current is the DOM node.
+  final dartComponentRef = createRef<_DartComponent>(); // dartComponentRef.current is the instance of _DartComponent
 
   @override
   void componentDidMount() {
-    print(inputRef.value); // Prints "hello" to the console.
+    print(inputRef.current.value); // Prints "hello" to the console.
 
-    dartComponentRef.someInstanceMethod(5); // Calls the method defined in _DartComponent
+    dartComponentRef.current.someInstanceMethod(5); // Calls the method defined in _DartComponent
     react_dom.findDOMNode(dartComponentRef); // Returns div element rendered from _DartComponent
 
     react_dom.findDOMNode(this); // Returns root dom element rendered from this component
@@ -312,8 +314,8 @@ class _ParentComponent extends Component2 {
   @override
   render() {
     return div({},
-      input({"ref": (ref){ inputRef = ref; }, "defaultValue": "hello"}),
-      DartComponent({"ref": (ref) { dartComponentRef = ref; }}),
+      input({"ref": inputRef, "defaultValue": "hello"}),
+      DartComponent({"ref": dartComponentRef}),
     );
   }
 }
@@ -321,17 +323,17 @@ class _ParentComponent extends Component2 {
 
 ### Example Application
 
-For more robust examples take a look at our [examples](https://github.com/cleandart/react-dart/tree/master/example).
+For more robust examples take a look at our [examples](https://github.com/Workiva/react-dart/tree/master/example).
 
 
 
 ## Unit Testing Utilities
 
-[lib/react_test_utils.dart](https://github.com/cleandart/react-dart/blob/master/lib/react_test_utils.dart) is a
+[lib/react_test_utils.dart](https://github.com/Workiva/react-dart/blob/master/lib/react_test_utils.dart) is a
 Dart wrapper for the [ReactJS TestUtils](https://reactjs.org/docs/test-utils.html) library allowing for unit tests
 to be made for React components in Dart.
 
-Here is an example of how to use React React.addons.TestUtils. within a Dart test.
+Here is an example of how to use `package:react/react_test_utils.dart` within a Dart test.
 
 ```dart
 import 'package:test/test.dart';
@@ -352,7 +354,7 @@ class MyTestComponent extends react.Component2 {
   }
 }
 
-var myTestComponent = react.registerComponent(() => new MyTestComponent());
+var myTestComponent = react.registerComponent2(() => new MyTestComponent());
 
 void main() {
   test('should click button and set span text to "success"', () {
@@ -389,61 +391,36 @@ Format using
 dartfmt -l 120 -w .
 ```
 
-While we'd like to adhere to the recommended line length of 80, it's too too short for much of the code 
+While we'd like to adhere to the recommended line length of 80, it's too short for much of the code 
 repo written before a formatter was use, causing excessive wrapping and code that's hard to read.
 
-So, we us a line length of 120 instead. 
+So, we use a line length of 120 instead. 
 
 ### Running Tests
 
-#### Dart 2: dart2js
+#### dart2js
 
 ```bash
 pub run test -p chrome
 ```
 _Or any other browser, e.g. `-p firefox`._
 
-#### Dart 2: Dart Dev Compiler ("DDC")
+#### Dart Dev Compiler ("DDC")
 
 ```bash
 pub run build_runner test -- -p chrome
 ```
 _DDC only works in chrome._
 
-#### Dart 1: Dart VM
-
-```bash
-pub run test -p content-shell
-```
-
-#### Dart 1: dart2js
-
-```bash
-pub run test -p chrome
-```
-_Or any other browser platform, e.g. `-p firefox`._
-
-#### Dart 1: Dart Dev Compiler ("DDC")
-
-1. In one terminal, serve the test directory using the dev compiler:
-    ```bash
-    pub serve test --port=8090 --web-compiler=dartdevc
-    ```
-2. In another terminal, run the tests, referencing the port the dev compiler is using to serve the test directory:
-    ```bash
-    pub run test -p chrome --pub-serve=8090
-    ```
-    _DDC only works in chrome._
-
 ### Building React JS Source Files
 
 Make sure the packages you need are dependencies in `package.json` then run:
 ```bash
-npm install
+yarn install
 ```
 
 After modifying files any files in ./js_src/, run:
 
 ```bash
-npm run build
+yarn run build
 ```

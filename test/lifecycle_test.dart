@@ -195,7 +195,7 @@ main() {
             expect(errorArgs, {
               'props': '{intProp: test, children: []}',
               'propName': 'intProp',
-              'componentName': anyOf('PropTypesTestComponent', 'ReactDartComponent2'),
+              'componentName': 'PropTypesTestComponent',
               'location': 'prop',
               'propFullName': 'null',
             });

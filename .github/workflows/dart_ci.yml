@@ -1,0 +1,49 @@
+name: Dart CI
+
+on:
+  push:
+    branches: [ master ]
+  pull_request:
+    branches: [ master ]
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        sdk: [stable, dev]
+    steps:
+      - uses: actions/checkout@v2
+      - uses: dart-lang/setup-dart@v0.1
+        with:
+          channel: ${{ matrix.sdk }}
+
+      - name: Print Dart SDK version
+        run: dart --version
+
+      - id: install
+        name: Install dependencies
+        run: dart pub get
+
+      - name: Validate dependencies
+        run: dart pub run dependency_validator -i build_runner,build_test,build_web_compilers
+        if: always() && steps.install.outcome == 'success'
+
+      # TODO: Uncomment this, and remove the Dart 2.7.2 format step in the Workiva Build Dockerfile
+      # once we are able to bump the lower bound of SDK.
+#      - name: Verify formatting
+#        run: dart format --output=none --line-length=120 --set-exit-if-changed .
+#        if: always() && ${{ matrix.sdk }} == 'stable' && steps.install.outcome == 'success'
+
+      - name: Analyze project source
+        run: dart analyze
+        if: always() && steps.install.outcome == 'success'
+
+      - name: Run tests (DDC)
+        run: dart pub run build_runner test -- --preset dartdevc
+        if: always() && steps.install.outcome == 'success'
+
+      - name: Run tests (dart2js)
+        run: dart pub run build_runner test --release -- --preset dart2js
+        if: always() && steps.install.outcome == 'success'

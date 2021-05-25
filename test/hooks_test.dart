@@ -644,7 +644,7 @@ main() {
 
     group('useImperativeHandle -', () {
       group('updates `ref.current` to the return value of `createHandle()`', () {
-        var mountNode = new DivElement();
+        var mountNode = DivElement();
         ReactDartFunctionComponentFactoryProxy UseImperativeHandleTest;
         ButtonElement incrementButton;
         ButtonElement reRenderButtonRef1;
@@ -847,7 +847,7 @@ main() {
   });
 }
 
-ReactDartComponentFactoryProxy2 ContextProviderWrapper = react.registerComponent(() => new _ContextProviderWrapper());
+ReactDartComponentFactoryProxy2 ContextProviderWrapper = react.registerComponent2(() => _ContextProviderWrapper());
 
 class _ContextProviderWrapper extends react.Component2 {
   get initialState {
