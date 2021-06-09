@@ -1,3 +1,5 @@
+// @dart=2.7
+// ^ Do not remove until migrated to null safety. More info at https://wiki.atl.workiva.net/pages/viewpage.action?pageId=189370832
 // ignore_for_file: deprecated_member_use_from_same_package
 // ignore_for_file: invalid_use_of_protected_member
 @TestOn('browser')
