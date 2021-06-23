@@ -23,3 +23,21 @@ Finally, build react-dart's bundle:
 yarn build
 ```
 and commit the updated JS files in `lib/`.
+
+To validate that the bundle built properly:
+
+1. Run tests to make sure nothing's broken
+    ```sh
+    pub run test -- -P dartdevc
+    ```
+2. Double check that there don't seem to be to multiple copies of React included in the bundle, which won't always result in test failures. 
+   
+   One way to do this is to check that `lib/react_with_react_dom_prod.js` didn't significantly increase in size:
+   ```sh
+   git log --stat HEAD # or the commit containing bundle updates
+   ```
+   ```
+   ...
+   lib/react_dom_prod.js                |   Bin 139473 -> 152753 bytes
+   ...
+   ```
