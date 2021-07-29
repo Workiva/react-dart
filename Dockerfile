@@ -1,4 +1,4 @@
-FROM drydock-prod.workiva.net/workiva/dart_build_image:1
+FROM drydock-prod.workiva.net/workiva/dart_build_image:0.0.0-dart2.13.4-2
 
 # Chrome install adapted from https://github.com/Workiva/dart_unit_test_image/blob/master@%7B13-01-2021%7D/Dockerfile
 RUN wget -q -O - https://dl-ssl.google.com/linux/linux_signing_key.pub | apt-key add - && \
