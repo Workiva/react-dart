@@ -12,7 +12,7 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        sdk: [stable, dev]
+        sdk: [stable, beta]
     steps:
       - uses: actions/checkout@v2
       - uses: dart-lang/setup-dart@v0.1
@@ -43,7 +43,9 @@ jobs:
       - name: Run tests (DDC)
         run: dart pub run build_runner test -- --preset dartdevc
         if: always() && steps.install.outcome == 'success'
+        timeout-minutes: 5
 
       - name: Run tests (dart2js)
         run: dart pub run build_runner test --release -- --preset dart2js
         if: always() && steps.install.outcome == 'success'
+        timeout-minutes: 5
