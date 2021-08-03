@@ -17,7 +17,7 @@ import 'package:react/src/typedefs.dart';
 import 'package:react/src/react_client/factory_util.dart';
 
 // ignore: deprecated_member_use_from_same_package
-export 'package:react/src/react_client/factory_util.dart' show unconvertJsEventHandler;
+export 'package:react/src/react_client/factory_util.dart' show generateJsProps, unconvertJsEventHandler;
 
 /// Prepares [children] to be passed to the ReactJS [React.createElement] and
 /// the Dart [react.Component].

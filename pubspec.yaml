@@ -6,7 +6,7 @@ environment:
   sdk: '>=2.7.0 <3.0.0'
 dependencies:
   js: ^0.6.0
-  meta: ^1.1.6
+  meta: ">=1.1.6 <1.7.0" # Workaround to avoid https://github.com/dart-lang/sdk/issues/46142
 dev_dependencies:
   args: ^1.5.1
   build_runner: ^1.6.5
