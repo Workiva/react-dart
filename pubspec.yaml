@@ -3,15 +3,15 @@ version: 6.0.1
 description: Bindings of the ReactJS library for building interactive interfaces.
 homepage: https://github.com/cleandart/react-dart
 environment:
-  sdk: '>=2.7.0 <3.0.0'
+  sdk: '>=2.9.0 <3.0.0'
 dependencies:
   js: ^0.6.0
-  meta: ^1.1.6
+  meta: ">=1.2.2 <1.7.0"
 dev_dependencies:
   args: ^1.5.1
   build_runner: ^1.6.5
   build_test: ^0.10.8
-  build_web_compilers: ^2.1.4
+  build_web_compilers: ^2.12.0
   dependency_validator: ^1.2.0
   matcher: ^0.12.5
   mockito: ^4.1.1
