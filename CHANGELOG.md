@@ -1,3 +1,7 @@
+## [6.1.0](https://github.com/cleandart/react-dart/compare/6.0.1...6.1.0)
+
+- [#316] Export `generateJsProps`.
+
 ## [6.0.1](https://github.com/cleandart/react-dart/compare/6.0.0...6.0.1)
 
 - [#305] Fix `JsBackedMap` for Dart 2.12.
