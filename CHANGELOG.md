@@ -1,3 +1,7 @@
+## [6.1.1](https://github.com/cleandart/react-dart/compare/6.1.0...6.1.1)
+
+- [#319] Add `baseURI` polyfill for IE 11 compatibility on Dart 2.13.
+
 ## [6.1.0](https://github.com/cleandart/react-dart/compare/6.0.1...6.1.0)
 
 - [#316] Export `generateJsProps`.
