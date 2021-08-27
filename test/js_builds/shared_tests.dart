@@ -243,7 +243,6 @@ final _ThrowingFunctionComponent = react.registerFunctionComponent(
   displayName: r'DisplayName$_ThrowingFunctionComponent',
 );
 
-
 final _ThrowingForwardRefFunctionComponent = react.forwardRef2(
   (props, ref) {
     throw Exception();
