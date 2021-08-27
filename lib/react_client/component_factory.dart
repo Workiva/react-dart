@@ -360,7 +360,7 @@ JsFunctionComponent _wrapFunctionComponent(DartFunctionComponent dartFunctionCom
       componentZone.run(() => dartFunctionComponent(JsBackedMap.backedBy(jsProps)) ?? jsNull);
   JsFunctionComponent interopFunction = allowInterop(jsFunctionComponent);
   if (displayName != null) {
-    // This is a work-around to display the correct name in the React DevTools.
+    // This is a work-around to display the correct name in the React DevTools and error boundary component stacks.
     defineProperty(interopFunction, 'name', JsPropertyDescriptor(value: displayName));
   }
   // ignore: invalid_use_of_protected_member
@@ -386,7 +386,7 @@ ReactClass _wrapForwardRefFunctionComponent(DartForwardRefFunctionComponent dart
 
   final interopFunction = allowInterop(jsFunctionComponent);
   if (displayName != null) {
-    // This is a work-around to display the correct name in the React DevTools.
+    // This is a work-around to display the correct name in the React DevTools and error boundary component stacks.
     defineProperty(interopFunction, 'name', JsPropertyDescriptor(value: displayName));
   }
   final jsForwardRefFunction = React.forwardRef(interopFunction);
