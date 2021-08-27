@@ -253,7 +253,7 @@ ReactJsComponentFactoryProxy forwardRef(
         final dartRef = Ref.fromJs(ref);
         return wrapperFunction(dartProps, dartRef);
       }));
-  defineProperty(wrappedComponent, 'displayName', jsify({'value': displayName}));
+  defineProperty(wrappedComponent, 'displayName', JsPropertyDescriptor(value: displayName));
 
   var hoc = React.forwardRef(wrappedComponent);
   // ignore: invalid_use_of_protected_member

@@ -361,7 +361,7 @@ JsFunctionComponent _wrapFunctionComponent(DartFunctionComponent dartFunctionCom
   JsFunctionComponent interopFunction = allowInterop(jsFunctionComponent);
   if (displayName != null) {
     // This is a work-around to display the correct name in the React DevTools.
-    defineProperty(interopFunction, 'name', jsify({'value': displayName}));
+    defineProperty(interopFunction, 'name', JsPropertyDescriptor(value: displayName));
   }
   // ignore: invalid_use_of_protected_member
   setProperty(interopFunction, 'dartComponentVersion', ReactDartComponentVersion.component2);
@@ -387,7 +387,7 @@ ReactClass _wrapForwardRefFunctionComponent(DartForwardRefFunctionComponent dart
   final interopFunction = allowInterop(jsFunctionComponent);
   if (displayName != null) {
     // This is a work-around to display the correct name in the React DevTools.
-    defineProperty(interopFunction, 'name', jsify({'value': displayName}));
+    defineProperty(interopFunction, 'name', JsPropertyDescriptor(value: displayName));
   }
   final jsForwardRefFunction = React.forwardRef(interopFunction);
   // ignore: invalid_use_of_protected_member
