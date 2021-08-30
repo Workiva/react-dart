@@ -1,3 +1,7 @@
+## [6.1.2](https://github.com/cleandart/react-dart/compare/6.1.1...6.1.2)
+
+- [#321] Fix missing Dart component names in error boundary `componentStack`
+
 ## [6.1.1](https://github.com/cleandart/react-dart/compare/6.1.0...6.1.1)
 
 - [#319] Add `baseURI` polyfill for IE 11 compatibility on Dart 2.13.
