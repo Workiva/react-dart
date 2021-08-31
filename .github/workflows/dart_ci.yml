@@ -30,11 +30,9 @@ jobs:
         run: dart pub run dependency_validator -i build_runner,build_test,build_web_compilers,meta
         if: always() && steps.install.outcome == 'success'
 
-      # TODO: Uncomment this, and remove the Dart 2.7.2 format step in the Workiva Build Dockerfile
-      # once we are able to bump the lower bound of SDK.
-#      - name: Verify formatting
-#        run: dart format --output=none --line-length=120 --set-exit-if-changed .
-#        if: always() && ${{ matrix.sdk }} == 'stable' && steps.install.outcome == 'success'
+     - name: Verify formatting
+       run: dart format --output=none --line-length=120 --set-exit-if-changed .
+       if: always() && ${{ matrix.sdk }} == 'stable' && steps.install.outcome == 'success'
 
       - name: Analyze project source
         run: dart analyze
