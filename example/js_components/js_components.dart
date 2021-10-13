@@ -8,11 +8,12 @@ import 'package:react/react.dart' as react;
 import 'package:react/react_client.dart';
 import 'package:react/react_client/react_interop.dart';
 import 'package:react/react_dom.dart' as react_dom;
+import 'package:react_material_ui/styles/theme_provider.dart';
 
 main() {
   var content = IndexComponent({});
 
-  react_dom.render(content, querySelector('#content'));
+  react_dom.render((ThemeProvider()..theme = wkTheme)(content), querySelector('#content'));
 }
 
 var IndexComponent = react.registerComponent2(() => new _IndexComponent());

@@ -5,6 +5,7 @@ import 'dart:html';
 
 import 'package:react/react.dart' as react;
 import 'package:react/react_dom.dart' as react_dom;
+import 'package:react_material_ui/styles/theme_provider.dart';
 
 /**
  * Hello,
@@ -330,5 +331,5 @@ var geocodesApp = react.registerComponent(() => new _GeocodesApp());
 ///
 /// Select the root of the app and the place in the DOM where it should be mounted.
 void main() {
-  react_dom.render(geocodesApp({}), querySelector('#content'));
+  react_dom.render((ThemeProvider()..theme = wkTheme)(geocodesApp({})), querySelector('#content'));
 }
