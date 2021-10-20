@@ -27,7 +27,7 @@ jobs:
         run: dart pub get
 
       - name: Validate dependencies
-        run: dart pub run dependency_validator -i build_runner,build_test,build_web_compilers,meta
+        run: dart dart run dependency_validator
         if: always() && steps.install.outcome == 'success'
 
      - name: Verify formatting
