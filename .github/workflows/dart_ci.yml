@@ -12,7 +12,7 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        sdk: [stable, beta]
+        sdk: [2.13.4, stable, beta]
     steps:
       - uses: actions/checkout@v2
       - uses: dart-lang/setup-dart@v0.1
