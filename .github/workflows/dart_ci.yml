@@ -30,9 +30,9 @@ jobs:
         run: dart run dependency_validator
         if: always() && steps.install.outcome == 'success'
 
-     - name: Verify formatting
-       run: dart format --output=none --line-length=120 --set-exit-if-changed .
-       if: always() && ${{ matrix.sdk }} == 'stable' && steps.install.outcome == 'success'
+      - name: Verify formatting
+        run: dart format --output=none --line-length=120 --set-exit-if-changed .
+        if: always() && ${{ matrix.sdk }} == 'stable' && steps.install.outcome == 'success'
 
       - name: Analyze project source
         run: dart analyze
