@@ -3,9 +3,26 @@
 @JS()
 library react_client.js_interop_helpers;
 
+import 'dart:collection';
 import "dart:js_util";
 
 import "package:js/js.dart";
+
+import 'js_backed_map.dart';
+
+/// Like [identityHashCode], but uses a different hash for JS objects to work around an issue where
+/// [identityHashCode] adds an unwanted `$identityHash` property on JS objects (https://github.com/dart-lang/sdk/issues/47595).
+int _jsObjectFriendlyIdentityHashCode(Object object) =>
+    object is JsMap ? _jsObjectHashCode(object) : identityHashCode(object);
+
+/// A hashCode implementation for JS objects.
+///
+/// Even though the current implementation of returning the same hash code for all values is low-quality
+/// since all JS objects will collide, it is valid since it always returns the same value for the same object.
+///
+/// We also don't expect many JS objects to be passed into [jsifyAndAllowInterop], so the quality of this hash code
+/// is not of much concern.
+int _jsObjectHashCode(JsMap jsObject) => 0;
 
 // The following code is adapted from `package:js` in the dart-lang/sdk repo:
 // https://github.com/dart-lang/sdk/blob/2.2.0/sdk/lib/js_util/dart2js/js_util_dart2js.dart#L27
@@ -59,7 +76,9 @@ dynamic jsifyAndAllowInterop(object) {
 }
 
 _convertDataTree(data) {
-  final _convertedObjects = new Map.identity();
+  // Use _jsObjectFriendlyIdentityHashCode instead of `identityHashCode`/`Map.identity()`
+  // to work around https://github.com/dart-lang/sdk/issues/47595
+  final _convertedObjects = LinkedHashMap(equals: identical, hashCode: _jsObjectFriendlyIdentityHashCode);
 
   _convert(o) {
     if (_convertedObjects.containsKey(o)) {
