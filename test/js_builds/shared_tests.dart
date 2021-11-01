@@ -129,7 +129,7 @@ void sharedConsoleWarnTests({@required bool expectDeduplicateSyntheticEventWarni
           ]);
         });
       }
-    }, tags: 'no-dart2js');
+    }, tags: ['no-dart2js', 'no-sdk-2-14-plus']);
 
     test('logs other duplicate messages properly', () {
       consoleWarn('foo');

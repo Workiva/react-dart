@@ -2,9 +2,12 @@ name: Dart CI
 
 on:
   push:
-    branches: [ master ]
+    branches:
+      - 'master'
+      - 'test_consume_*'
   pull_request:
-    branches: [ master ]
+    branches:
+      - '*'
 
 jobs:
   build:
@@ -32,18 +35,20 @@ jobs:
 
       - name: Verify formatting
         run: dart format --output=none --line-length=120 --set-exit-if-changed .
-        if: always() && ${{ matrix.sdk }} == 'stable' && steps.install.outcome == 'success'
+        if: ${{ matrix.sdk == '2.13.4' }}
 
       - name: Analyze project source
         run: dart analyze
         if: always() && steps.install.outcome == 'success'
 
       - name: Run tests (DDC)
-        run: dart pub run build_runner test -- --preset dartdevc
+        run: |
+          if [ ${{ matrix.sdk }} = '2.13.4' ]; then dart run build_runner test -- --preset dartdevc-legacy; else dart run build_runner test -- --preset dartdevc; fi
         if: always() && steps.install.outcome == 'success'
         timeout-minutes: 5
 
       - name: Run tests (dart2js)
-        run: dart pub run build_runner test --release -- --preset dart2js
+        run: |
+          if [ ${{ matrix.sdk }} = '2.13.4' ]; then dart run build_runner test -- --preset dart2js-legacy; else dart run build_runner test -- --preset dart2js; fi
         if: always() && steps.install.outcome == 'success'
         timeout-minutes: 5
