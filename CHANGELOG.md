@@ -1,3 +1,8 @@
+## [6.1.4](https://github.com/cleandart/react-dart/compare/6.1.3...6.1.4)
+
+- [#327] Fix stable ci build
+- [#328] Work around $identityHash being added to JS objects passed into jsifyAndAllowInterop
+
 ## [6.1.3](https://github.com/cleandart/react-dart/compare/6.1.2...6.1.3)
 
 - [#308] Bump elliptic from 6.5.3 to 6.5.4
