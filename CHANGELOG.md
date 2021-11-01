@@ -1,3 +1,15 @@
+## [6.1.3](https://github.com/cleandart/react-dart/compare/6.1.2...6.1.3)
+
+- [#308] Bump elliptic from 6.5.3 to 6.5.4
+- [#311] Bump ssri from 6.0.1 to 6.0.2
+- [#312] Bump lodash from 4.17.20 to 4.17.21
+- [#313] Bump browserslist from 4.16.1 to 4.16.6
+- [#318] Bump path-parse from 1.0.6 to 1.0.7
+- [#323] Raise the Dart SDK minimum to at least 2.11.0
+- [#315] Upgrade CI to run using Dart 2.13
+- [#309] Update README.md
+- [#325] Upgrade dependency_validator
+
 ## [6.1.2](https://github.com/cleandart/react-dart/compare/6.1.1...6.1.2)
 
 - [#321] Fix missing Dart component names in error boundary `componentStack`
