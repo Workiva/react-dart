@@ -18,6 +18,10 @@ const React = require('react');
 const PropTypes = require('prop-types');
 const CreateReactClass = require('create-react-class');
 
+const reactVirtual = require('react-virtual');
+window.useVirtual = reactVirtual.useVirtual;
+window.defaultRangeExtractor = reactVirtual.defaultRangeExtractor;
+
 window.React = React;
 Object.assign(window, DartHelpers);
 
