@@ -1,3 +1,6 @@
+## [6.1.5](https://github.com/cleandart/react-dart/compare/6.1.4...6.1.5)##
+- [#333] Remove old, unused file from bin/
+
 ## [6.1.4](https://github.com/cleandart/react-dart/compare/6.1.3...6.1.4)
 
 - [#327] Fix stable ci build
