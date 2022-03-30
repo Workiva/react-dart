@@ -1,3 +1,6 @@
+## [6.1.6](https://github.com/cleandart/react-dart/compare/6.1.5...6.1.6)##
+- [#336] Publish JS bundles to Workiva CDN
+
 ## [6.1.5](https://github.com/cleandart/react-dart/compare/6.1.4...6.1.5)##
 - [#333] Remove old, unused file from bin/
 
