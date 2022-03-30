@@ -1,5 +1,5 @@
 name: react
-version: 6.1.5
+version: 6.1.6
 description: Bindings of the ReactJS library for building interactive interfaces.
 homepage: https://github.com/cleandart/react-dart
 environment:
