@@ -1,0 +1,18 @@
+name: validate_cdn_artifact
+description: Verifies the cdn artifact generated in the build contains the JS bundle files
+image: drydock.workiva.net/workiva/skynet-images:node-test-image-latest
+size: large
+timeout: 900
+
+requires:
+  Workiva/react-dart:
+    - cdn
+
+scripts:
+  - mkdir build
+  - cp $SKYNET_APPLICATION_REACT_DART_CDN ./build
+  - cd build
+  - tar -xf cdn_assets.tar.gz
+  - test -e ./react.js && { echo 'Verified dev bundle exists in CDN artifact.'; } || { echo 'Dev bundle /lib/react.js should exist in CDN artifact.'; exit 1; }
+  - test -e ./react_dom.js && { echo 'Verified dev DOM bundle exists in CDN artifact.'; } || { echo 'Dev DOM bundle /lib/react_dom.js should exist in CDN artifact.'; exit 1; }
+  - test -e ./react_with_react_dom_prod.js && { echo 'Verified prod bundle exists in CDN artifact.'; } || { echo 'Prod bundle /lib/react_with_react_dom_prod.js should exist in CDN artifact.'; exit 1; }
