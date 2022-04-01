@@ -334,6 +334,7 @@ ReactJsComponentFactoryProxy memo(ReactDartFunctionComponentFactoryProxy factory
 abstract class ReactDom {
   static Element findDOMNode(object) => ReactDOM.findDOMNode(object);
   static ReactComponent render(ReactElement component, Element element) => ReactDOM.render(component, element);
+  static ReactRoot createRoot(Element element) => ReactDOM.createRoot(element);
   static bool unmountComponentAtNode(Element element) => ReactDOM.unmountComponentAtNode(element);
 
   /// Returns a a portal that renders [children] into a [container].

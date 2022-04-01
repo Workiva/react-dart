@@ -12,7 +12,9 @@ import 'package:react/react_dom.dart' as react_dom;
 main() {
   var content = IndexComponent({});
 
-  react_dom.render(content, querySelector('#content'));
+  var root = react_dom.createRoot(querySelector('#content'));
+
+  root.render(content);
 }
 
 var IndexComponent = react.registerComponent2(() => new _IndexComponent());

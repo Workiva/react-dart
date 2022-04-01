@@ -5,8 +5,11 @@
 library react_dom;
 
 // ignore: deprecated_member_use_from_same_package
+import 'dart:html';
+
 import 'package:react/react.dart' show Component;
 import 'package:react/react_client/react_interop.dart' show ReactDom;
+import 'package:react/src/react_client/dart2_interop_workaround_bindings.dart';
 import 'package:react/src/react_client/private_utils.dart' show validateJsApiThenReturn;
 
 /// Renders a ReactElement into the DOM in the supplied [container] and return a reference to the [component]
@@ -17,6 +20,9 @@ import 'package:react/src/react_client/private_utils.dart' show validateJsApiThe
 ///
 /// TODO: Is there any reason to omit the [ReactElement] type for [component] or the [Element] type for [container]?
 Function render = validateJsApiThenReturn(() => ReactDom.render);
+
+// Create a root.
+ReactRoot Function(Element) createRoot = validateJsApiThenReturn(() => ReactDom.createRoot);
 
 /// Removes a mounted React component from the DOM and cleans up its event handlers and state.
 ///
