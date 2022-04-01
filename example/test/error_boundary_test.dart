@@ -11,6 +11,7 @@ const containerStyle = {
 };
 
 void main() {
+  final root = react_dom.createRoot(querySelector('#content'));
   final content = react.div(
     {},
     _ErrorBoundary(
@@ -35,7 +36,7 @@ void main() {
     ),
   );
 
-  react_dom.render(content, querySelector('#content'));
+  root.render(content);
 }
 
 final _ErrorBoundary = react.registerComponent2(() => _ErrorBoundaryComponent(), skipMethods: []);

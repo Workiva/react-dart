@@ -12,34 +12,28 @@ import 'package:test/test.dart';
 main() {
   group('Fragment', () {
     test('renders nothing but its children', () {
-      var wrappingDivRef;
+      final wrappingDivRef = react.createRef<Element>();
+      final root = react_dom.createRoot(DivElement());
 
-      react_dom.render(
-        react.div({
-          'ref': (ref) {
-            wrappingDivRef = ref;
-          }
-        }, [
-          react.Fragment({}, [
-            react.div({}),
-            react.div({}),
-            react.div({}),
-            react.div({}),
-          ])
-        ]),
-        new Element.div(),
-      );
+      react_dom.ReactTestUtils.act(() => root.render(react.div({
+            'ref': wrappingDivRef
+          }, [
+            react.Fragment({}, [
+              react.div({}),
+              react.div({}),
+              react.div({}),
+              react.div({}),
+            ])
+          ])));
 
-      expect(wrappingDivRef.children, hasLength(4));
+      expect(wrappingDivRef.current.children, hasLength(4));
     });
 
     test('passes the key properly onto the fragment', () {
       var callCount = 0;
+      final root = react_dom.createRoot(DivElement());
 
-      var mountElement = new Element.div();
-
-      react_dom.render(
-          react.Fragment({
+      react_dom.ReactTestUtils.act(() => root.render(react.Fragment({
             'key': 1
           }, [
             FragmentTestDummy({
@@ -47,13 +41,11 @@ main() {
                 callCount++;
               }
             })
-          ]),
-          mountElement);
+          ])));
 
       expect(callCount, 1);
 
-      react_dom.render(
-          react.Fragment({
+      react_dom.ReactTestUtils.act(() => root.render(react.Fragment({
             'key': 2
           }, [
             FragmentTestDummy({
@@ -61,8 +53,7 @@ main() {
                 callCount++;
               }
             })
-          ]),
-          mountElement);
+          ])));
 
       expect(callCount, 2, reason: 'Dummy should have been remounted as a result of Fragment key changing');
     });

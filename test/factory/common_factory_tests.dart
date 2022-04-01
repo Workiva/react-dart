@@ -1,7 +1,6 @@
 @JS()
 library react.test.common_factory_tests;
 
-// ignore_for_file: deprecated_member_use_from_same_package
 import 'dart:async';
 import 'dart:html';
 import 'dart:js';
@@ -9,7 +8,6 @@ import 'dart:js_util';
 
 import 'package:js/js.dart';
 import 'package:meta/meta.dart';
-import 'package:react/react_client/component_factory.dart';
 import 'package:react/react_client/js_backed_map.dart';
 import 'package:react/react_client/js_interop_helpers.dart';
 import 'package:test/test.dart';
@@ -196,7 +194,8 @@ void commonFactoryTests(ReactComponentFactoryProxy factory,
 void domEventHandlerWrappingTests(ReactComponentFactoryProxy factory) {
   Element renderAndGetRootNode(ReactElement content) {
     final mountNode = Element.div();
-    react_dom.render(content, mountNode);
+    final root = react_dom.createRoot(mountNode);
+    react_dom.ReactTestUtils.act(() => root.render(content));
     return mountNode.children.single;
   }
 
@@ -303,12 +302,14 @@ void domEventHandlerWrappingTests(ReactComponentFactoryProxy factory) {
 
     final nodeWithClickHandler = renderAndGetRootNode(factory({
       'onClick': (react.SyntheticMouseEvent event) {
+        // ignore: deprecated_member_use_from_same_package
         expect(() => event.persist(), returnsNormally);
         actualEvent = event;
       }
     }));
 
     rtu.Simulate.click(nodeWithClickHandler);
+    // ignore: deprecated_member_use_from_same_package
     expect(actualEvent.isPersistent, isA<bool>());
   });
 
@@ -418,6 +419,7 @@ void refTests<T>(
       if (!name.contains('callback ref')) {
         test(name, () {
           final testCase = testCaseCollection.createCaseByName(name);
+          // ignore: deprecated_member_use_from_same_package
           var ForwardRefTestComponent = forwardRef((props, ref) {
             return factory({'ref': ref});
           });
@@ -594,6 +596,7 @@ void _childKeyWarningTests(Function factory, {Function(ReactElement Function()) 
   });
 }
 
+// ignore: deprecated_member_use_from_same_package
 class _StringRefOwnerOwnerHelperComponent extends react.Component {
   @override
   render() => props['render']();
@@ -603,7 +606,8 @@ class _StringRefOwnerOwnerHelperComponent extends react.Component {
 /// for string ref tests.
 ReactComponent _renderWithStringRefSupportingOwner(ReactElement render()) {
   final factory =
-      react.registerComponent(() => new _StringRefOwnerOwnerHelperComponent()) as ReactDartComponentFactoryProxy;
+      // ignore: deprecated_member_use_from_same_package
+      react.registerComponent(() => _StringRefOwnerOwnerHelperComponent());
 
   return rtu.renderIntoDocument(factory({'render': render}));
 }
@@ -614,14 +618,17 @@ int _nextFactoryId = 0;
 ///
 /// This prevents React JS from not printing key warnings it deems as "duplicates".
 void _renderWithUniqueOwnerName(ReactElement render()) {
-  final factory = react.registerComponent2(() => new _UniqueOwnerHelperComponent());
+  // ignore: deprecated_member_use_from_same_package
+  final factory = react.registerComponent(() => _UniqueOwnerHelperComponent());
   factory.reactClass.displayName = 'OwnerHelperComponent_$_nextFactoryId';
   _nextFactoryId++;
 
-  rtu.renderIntoDocument(factory({'render': render}));
+  final root = react_dom.createRoot(DivElement());
+  react_dom.ReactTestUtils.act(() => root.render(factory({'render': render})));
 }
 
-class _UniqueOwnerHelperComponent extends react.Component2 {
+// ignore: deprecated_member_use_from_same_package
+class _UniqueOwnerHelperComponent extends react.Component {
   @override
   render() => props['render']();
 }

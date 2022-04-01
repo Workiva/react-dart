@@ -13,7 +13,6 @@ import 'factory/common_factory_tests.dart';
 main() {
   group('forwardRef', () {
     group('- common factory behavior -', () {
-      // ignore: deprecated_member_use_from_same_package
       final ForwardRefTest = react.forwardRef((props, ref) {
         props['onDartRender']?.call(props);
         return react.div({...props, 'ref': ref});

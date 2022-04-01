@@ -9,8 +9,11 @@ import 'dart:html';
 
 import 'package:react/react.dart' show Component;
 import 'package:react/react_client/react_interop.dart' show ReactDom;
-import 'package:react/src/react_client/dart2_interop_workaround_bindings.dart';
+import 'package:react/src/react_client/create_root.dart' show ReactRoot, createRoot;
 import 'package:react/src/react_client/private_utils.dart' show validateJsApiThenReturn;
+
+export 'package:react/src/react_client/create_root.dart' show ReactRoot, createRoot, CreateRootOptions;
+export 'package:react/src/react_client/js_interop/react_test_utils.dart' show ReactTestUtils;
 
 /// Renders a ReactElement into the DOM in the supplied [container] and return a reference to the [component]
 /// (or returns null for stateless components).
@@ -18,18 +21,20 @@ import 'package:react/src/react_client/private_utils.dart' show validateJsApiThe
 /// If the ReactElement was previously rendered into the [container], this will perform an update on it and only
 /// mutate the DOM as necessary to reflect the latest React component.
 ///
-/// TODO: Is there any reason to omit the [ReactElement] type for [component] or the [Element] type for [container]?
+/// Deprecated in ReactJS v18. Use [createRoot] instead. See: https://github.com/reactwg/react-18/discussions/5
+@Deprecated('Deprecated in ReactJS v18. Use createRoot instead. See: https://github.com/reactwg/react-18/discussions/5')
 Function render = validateJsApiThenReturn(() => ReactDom.render);
-
-// Create a root.
-ReactRoot Function(Element) createRoot = validateJsApiThenReturn(() => ReactDom.createRoot);
 
 /// Removes a mounted React component from the DOM and cleans up its event handlers and state.
 ///
 /// > Returns `false` if no component was mounted in the container specified via [render], otherwise returns `true`.
+///
+/// Deprecated in ReactJS v18. Call [ReactRoot.unmount] after assigning root to the return value of [createRoot].
+@Deprecated('Deprecated in ReactJS v18. Call root.unmount() after assigning root to the return value of createRoot().')
 Function unmountComponentAtNode = validateJsApiThenReturn(() => ReactDom.unmountComponentAtNode);
 
 /// If the component has been mounted into the DOM, this returns the corresponding native browser DOM [Element].
+@Deprecated('Deprecated in ReactJS v18.')
 Function findDOMNode = validateJsApiThenReturn(() => _findDomNode);
 
 dynamic _findDomNode(component) {

@@ -4,10 +4,10 @@ import "dart:html";
 import "package:react/react.dart" as react;
 import "package:react/react_dom.dart" as react_dom;
 
-var simpleComponent = react.registerComponent(() => new SimpleComponent());
+var SimpleComponent = react.registerComponent2(() => _SimpleComponent());
 
-class SimpleComponent extends react.Component {
-  componentWillMount() => print("mount");
+class _SimpleComponent extends react.Component2 {
+  componentDidMount() => print("mount");
 
   componentWillUnmount() => print("unmount");
 
@@ -17,10 +17,12 @@ class SimpleComponent extends react.Component {
 }
 
 void main() {
-  print("What");
-  var mountedNode = querySelector('#content');
+  var root = react_dom.createRoot(querySelector('#content'));
 
-  querySelector('#mount').onClick.listen((_) => react_dom.render(simpleComponent({}), mountedNode));
+  querySelector('#mount').onClick.listen((_) => root.render(SimpleComponent({})));
 
-  querySelector('#unmount').onClick.listen((_) => react_dom.unmountComponentAtNode(mountedNode));
+  querySelector('#unmount').onClick.listen((_) {
+    root.unmount();
+    root = react_dom.createRoot(querySelector('#content'));
+  });
 }

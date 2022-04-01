@@ -8,15 +8,13 @@ import 'package:react/react_client/react_interop.dart';
 
 @JS()
 abstract class ReactDOM {
+  @Deprecated('Deprecated in ReactJS v18.')
   external static Element findDOMNode(object);
+  @Deprecated(
+      'Deprecated in ReactJS v18. Use createRoot instead. See: https://github.com/reactwg/react-18/discussions/5')
   external static ReactComponent render(ReactElement component, Element element);
-  external static ReactRoot createRoot(Element element);
+  @Deprecated(
+      'Deprecated in ReactJS v18. Call root.unmount() after assigning root to the return value of createRoot().')
   external static bool unmountComponentAtNode(Element element);
   external static ReactPortal createPortal(dynamic children, Element container);
-}
-
-@JS()
-@anonymous
-abstract class ReactRoot {
-  external ReactComponent render(ReactElement component);
 }

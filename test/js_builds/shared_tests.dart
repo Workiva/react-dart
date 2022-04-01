@@ -151,15 +151,15 @@ void sharedErrorBoundaryComponentNameTests() {
   group('includes the Dart component displayName in error boundary errors for', () {
     void expectRenderErrorWithComponentName(ReactElement element, {@required String expectedComponentName}) {
       final capturedInfos = <ReactErrorInfo>[];
-      react_dom.render(
-          _ErrorBoundary({
+      final root = react_dom.createRoot(DivElement());
+      react_dom.ReactTestUtils.act(() => root.render(_ErrorBoundary({
             'onComponentDidCatch': (dynamic error, ReactErrorInfo info) {
               capturedInfos.add(info);
             }
-          }, element),
-          DivElement());
+          }, element)));
       expect(capturedInfos, hasLength(1), reason: 'test setup check; should have captured a single component error');
       expect(capturedInfos[0].componentStack, contains('at $expectedComponentName'));
+      root.unmount();
     }
 
     test('Component components', () {
