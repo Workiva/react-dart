@@ -57,6 +57,7 @@ abstract class React {
 
   external static ReactClass get StrictMode;
   external static ReactClass get Fragment;
+  external static ReactClass get Suspense;
 
   external static List<dynamic> useState(dynamic value);
   external static void useEffect(dynamic Function() sideEffect, [List<Object> dependencies]);

@@ -10,6 +10,7 @@ import 'shared_type_tester.dart';
 
 final _act = react_dom.ReactTestUtils.act;
 
+// FIXME (adl): Get rid of all the root.render usage in tests and use rtl render instead
 main() {
   react_dom.ReactRoot root;
 

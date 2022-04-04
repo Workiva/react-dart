@@ -72,6 +72,19 @@ var Fragment = ReactJsComponentFactoryProxy(React.Fragment);
 /// See: <https://reactjs.org/docs/strict-mode.html>
 var StrictMode = ReactJsComponentFactoryProxy(React.StrictMode);
 
+/// Suspense lets you declaratively specify the loading state for a
+/// part of the component tree if it’s not yet ready to be displayed:
+///
+/// Suspense makes the “UI loading state” a first-class declarative concept in the React programming model.
+///
+/// Suspense in React 18 works best when combined with the transition APIs like [useTransition].
+/// If you suspend during a transition, React will prevent already-visible content from being
+/// replaced by a fallback. Instead, React will delay the render until enough data has loaded
+/// to prevent a bad loading state.
+///
+/// See: <https://reactjs.org/docs/react-api.html#reactsuspense> / [Suspense in React 18](https://github.com/reactjs/rfcs/blob/main/text/0213-suspense-in-react-18.md)
+final Suspense = ReactJsComponentFactoryProxy(React.Suspense);
+
 /// Top-level ReactJS [Component class](https://facebook.github.io/react/docs/react-component.html)
 /// which provides the [ReactJS Component API](https://facebook.github.io/react/docs/react-component.html#reference)
 ///

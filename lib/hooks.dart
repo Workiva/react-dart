@@ -478,8 +478,8 @@ class TransitionHook {
   /// A callback to use to tell React which state to defer.
   ///
   /// See: https://reactjs.org/docs/hooks-reference.html#usetransition
-  void Function() get startTransition => _startTransition;
-  void Function() _startTransition;
+  void Function(Function() start) get startTransition => _startTransition;
+  void Function(Function() start) _startTransition;
 
   TransitionHook._() {
     final result = React.useTransition();
