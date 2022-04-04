@@ -1,6 +1,6 @@
 @TestOn('browser')
 @JS()
-library react_test_utils_test;
+library shared_type_tester;
 
 import 'dart:async';
 import 'dart:html' as html;

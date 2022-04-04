@@ -1,7 +1,7 @@
-// ignore_for_file: deprecated_member_use_from_same_package
 @JS()
-library js_function_test;
+library react.test.js_builds.shared_tests;
 
+import 'dart:async';
 import 'dart:html';
 import 'dart:js_util';
 
@@ -30,6 +30,7 @@ void sharedJsFunctionTests() {
 
     group('createReactDartComponentClass', () {
       test('is function that does not throw when called', () {
+        // ignore: deprecated_member_use_from_same_package
         expect(() => createReactDartComponentClass(null, null), returnsNormally);
       });
     });
@@ -147,44 +148,52 @@ void sharedConsoleWarnTests({@required bool expectDeduplicateSyntheticEventWarni
   });
 }
 
-void sharedErrorBoundaryComponentNameTests() {
+void sharedErrorBoundaryComponentNameTests({usingProdBundle: false}) {
   group('includes the Dart component displayName in error boundary errors for', () {
-    void expectRenderErrorWithComponentName(ReactElement element, {@required String expectedComponentName}) {
+    FutureOr<void> expectRenderErrorWithComponentName(ReactElement element,
+        {@required String expectedComponentName}) async {
       final capturedInfos = <ReactErrorInfo>[];
       final root = react_dom.createRoot(DivElement());
-      react_dom.ReactTestUtils.act(() => root.render(_ErrorBoundary({
+      r() => root.render(_ErrorBoundary({
             'onComponentDidCatch': (dynamic error, ReactErrorInfo info) {
               capturedInfos.add(info);
             }
-          }, element)));
+          }, element));
+
+      if (usingProdBundle) {
+        r();
+        await pumpEventQueue();
+      } else {
+        react_dom.ReactTestUtils.act(r);
+      }
       expect(capturedInfos, hasLength(1), reason: 'test setup check; should have captured a single component error');
       expect(capturedInfos[0].componentStack, contains('at $expectedComponentName'));
       root.unmount();
     }
 
-    test('Component components', () {
-      expectRenderErrorWithComponentName(
+    test('Component components', () async {
+      await expectRenderErrorWithComponentName(
         _ThrowingComponent({}),
         expectedComponentName: r'DisplayName$_ThrowingComponent',
       );
     });
 
-    test('Component2 components', () {
-      expectRenderErrorWithComponentName(
+    test('Component2 components', () async {
+      await expectRenderErrorWithComponentName(
         _ThrowingComponent2({}),
         expectedComponentName: r'DisplayName$_ThrowingComponent2',
       );
     });
 
-    test('function components', () {
-      expectRenderErrorWithComponentName(
+    test('function components', () async {
+      await expectRenderErrorWithComponentName(
         _ThrowingFunctionComponent({}),
         expectedComponentName: r'DisplayName$_ThrowingFunctionComponent',
       );
     });
 
-    test('forwardRef function components', () {
-      expectRenderErrorWithComponentName(
+    test('forwardRef function components', () async {
+      await expectRenderErrorWithComponentName(
         _ThrowingForwardRefFunctionComponent({}),
         expectedComponentName: r'DisplayName$_ThrowingForwardRefFunctionComponent',
       );
@@ -212,8 +221,10 @@ class _ErrorBoundaryComponent extends react.Component2 {
   }
 }
 
+// ignore: deprecated_member_use_from_same_package
 final _ThrowingComponent = react.registerComponent(() => _ThrowingComponentComponent());
 
+// ignore: deprecated_member_use_from_same_package
 class _ThrowingComponentComponent extends react.Component {
   @override
   String get displayName => r'DisplayName$_ThrowingComponentComponent';

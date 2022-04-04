@@ -1,18 +1,13 @@
 @TestOn('browser')
-@JS()
-library hooks_test;
-
 import 'dart:html';
 
-import "package:js/js.dart";
 import 'package:react/hooks.dart';
 import 'package:react/react.dart' as react;
-import 'package:react/react.dart';
 import 'package:react/react_client.dart';
 import 'package:react/react_dom.dart' as react_dom;
 import 'package:test/test.dart';
 
-import 'factory/common_factory_tests.dart';
+import 'factory/common_factory_tests.dart' show refTests;
 
 final _act = react_dom.ReactTestUtils.act;
 
@@ -396,7 +391,7 @@ main() {
       DivElement mountNode;
       _ContextProviderWrapper providerRef;
       int currentCount = 0;
-      Context<int> testContext;
+      react.Context<int> testContext;
       Function useContextTestFunctionComponent;
       react_dom.ReactRoot root;
 

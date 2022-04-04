@@ -1,12 +1,10 @@
 @TestOn('browser')
-library react.react_memo_test;
-
 import 'dart:html';
 
 import 'package:react/react.dart' as react;
 import 'package:react/react_client.dart';
 import 'package:react/react_client/react_interop.dart';
-import 'package:react/react_test_utils.dart' as rtu;
+import 'package:react_testing_library/react_testing_library.dart' as rtl;
 import 'package:test/test.dart';
 
 import 'factory/common_factory_tests.dart';
@@ -40,7 +38,7 @@ main() {
     test('can be passed a forwardRef component (regression test)', () {
       ReactComponentFactoryProxy factory;
       expect(() => factory = react.memo2(react.forwardRef2((props, ref) => 'foo')), returnsNormally);
-      expect(() => rtu.renderIntoDocument(factory({})), returnsNormally);
+      expect(() => rtl.render(factory({})), returnsNormally);
     });
 
     group('- common factory behavior -', () {
@@ -95,7 +93,7 @@ void sharedMemoTests(MemoFunction memoFunction) {
       );
     }), areEqual: customAreEqualFn);
 
-    rtu.renderIntoDocument(MemoTestWrapper({
+    rtl.render(MemoTestWrapper({
       'ref': memoTestWrapperComponentRef,
       'memoComponentFactory': MemoTest,
     }));

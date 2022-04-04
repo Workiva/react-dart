@@ -1,13 +1,9 @@
 @TestOn('browser')
-library react.dart_factory_test;
-
-// ignore_for_file: deprecated_member_use_from_same_package
-// ignore_for_file: invalid_use_of_protected_member
-import 'package:react/react_client/react_interop.dart';
 import 'package:test/test.dart';
 
 import 'package:react/react.dart' as react;
 import 'package:react/react_client.dart';
+import 'package:react/react_client/react_interop.dart';
 
 import 'common_factory_tests.dart';
 
@@ -20,6 +16,7 @@ main() {
     group('- common factory behavior -', () {
       group('Component', () {
         group('- common factory behavior -', () {
+          // ignore: invalid_use_of_protected_member
           commonFactoryTests(Foo, dartComponentVersion: ReactDartComponentVersion.component);
         });
 
@@ -38,6 +35,7 @@ main() {
 
       group('Component2', () {
         group('- common factory behavior -', () {
+          // ignore: invalid_use_of_protected_member
           commonFactoryTests(Foo2, dartComponentVersion: ReactDartComponentVersion.component2);
         });
 
@@ -57,8 +55,10 @@ main() {
   });
 }
 
+// ignore: deprecated_member_use_from_same_package
 final Foo = react.registerComponent(() => new _Foo()) as ReactDartComponentFactoryProxy;
 
+// ignore: deprecated_member_use_from_same_package
 class _Foo extends react.Component {
   @override
   render() {

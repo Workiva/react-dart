@@ -7,7 +7,7 @@ import 'package:react/react_client.dart';
 import 'package:react/src/react_client/chain_refs.dart';
 import 'package:test/test.dart';
 
-import '../util.dart';
+import '../fixtures/util.dart';
 
 main() {
   group('Ref chaining utils:', () {

@@ -1,8 +1,7 @@
-// ignore_for_file: deprecated_member_use_from_same_package
 import 'package:react/react.dart';
 
 /// Base component for event handling classes used in test cases.
-class EventComponent2 extends Component2 {
+class EventComponent extends Component2 {
   get initialState => {'text': ''};
   onEvent(SyntheticEvent e) => setState({'text': '${e.type} ${e.timeStamp}'});
   render() => div({
@@ -60,7 +59,7 @@ class EventComponent2 extends Component2 {
       }, state['text']);
 }
 
-class SampleComponent2 extends Component2 {
+class SampleComponent extends Component2 {
   render() => div(props, [
         h1({}, 'A header'),
         div({'className': 'div1'}, 'First div'),
@@ -69,12 +68,12 @@ class SampleComponent2 extends Component2 {
       ]);
 }
 
-class WrapperComponent2 extends Component2 {
+class WrapperComponent extends Component2 {
   render() => div(props, props['children']);
 }
 
-final eventComponent = registerComponent(() => new EventComponent2());
+final eventComponent = registerComponent2(() => new EventComponent());
 
-final sampleComponent = registerComponent(() => new SampleComponent2());
+final sampleComponent = registerComponent2(() => new SampleComponent());
 
-final wrapperComponent = registerComponent(() => new WrapperComponent2());
+final wrapperComponent = registerComponent2(() => new WrapperComponent());

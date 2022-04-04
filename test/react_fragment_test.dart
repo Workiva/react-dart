@@ -1,10 +1,6 @@
 @TestOn('browser')
-@JS()
-library react_test_utils_test;
-
 import 'dart:html';
 
-import 'package:js/js.dart';
 import 'package:react/react.dart' as react;
 import 'package:react/react_dom.dart' as react_dom;
 import 'package:test/test.dart';

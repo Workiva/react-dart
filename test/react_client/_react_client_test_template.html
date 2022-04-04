@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <!-- The "testName" placeholder will be replaced with a unique name for
+    each test. -->
+    <title>{{testName}} Test</title>
+
+    <!-- Load custom assets needed by the test. -->
+    <script src="packages/react/react_with_addons.js"></script>
+    <script src="packages/react/react_dom.js"></script>
+    <script src="packages/react_testing_library/js/react-testing-library.js"></script>
+    <script src="../fixtures/js/ReactCompositeTestComponent.js"></script>
+
+    <script>
+        function JsType() {}
+    </script>
+
+    <script>
+        // Adapted from https://github.com/dart-lang/sdk/blob/e995cb5f7cd67d39c1ee4bdbe95c8241db36725f/tests/lib/js/js_util/jsify_test.dart
+        function Foo(a) {
+          this.a = a;
+        }
+        Foo.prototype.bar = function() {
+          return this.a;
+        }
+        function checkMap(m, key, value) {
+          if (m.hasOwnProperty(key))
+            return m[key] == value;
+          else
+            return false;
+        }
+    </script>
+
+    <!-- Every template must include this placeholder. -->
+    {{testScript}}
+    <!-- It will be replaced by the builder with the required <link> tag:
+    <link rel="x-dart-test" href="...">
+    -->
+
+    <!-- Every template must include the test runner script. -->
+    <script src="packages/test/dart.js"></script>
+  </head>
+</html>

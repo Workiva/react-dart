@@ -1,27 +1,26 @@
 // ignore_for_file: deprecated_member_use_from_same_package
 @TestOn('browser')
-@JS()
-library lifecycle_test;
 
 import 'dart:async';
 import 'dart:convert';
 import 'dart:html';
 import 'dart:js';
 
-import "package:js/js.dart";
 import 'package:meta/meta.dart';
 import 'package:react/react.dart' as react;
 import 'package:react/react_client.dart';
 import 'package:react/react_client/js_backed_map.dart';
 import 'package:react/react_client/react_interop.dart' as react_interop;
 import 'package:react/react_dom.dart' as react_dom;
+import 'package:react/src/react_test_utils/internal_test_utils.dart';
+import 'package:react_testing_library/react_testing_library.dart' as rtl;
 import 'package:test/test.dart';
 
-import 'lifecycle_test/component.dart' as components;
-import 'lifecycle_test/component2.dart' as components2;
-import 'lifecycle_test/util.dart';
-import 'shared_type_tester.dart';
+import 'component.dart' as components;
+import 'component2.dart' as components2;
 import 'util.dart';
+import '../shared_type_tester.dart';
+import '../fixtures/util.dart';
 
 final _act = react_dom.ReactTestUtils.act;
 
@@ -236,14 +235,15 @@ main() {
 
         final Map expectedProps = unmodifiableMap(defaultProps, initialProps, emptyChildrenProps);
 
-        LifecycleTestHelper component = getDartComponent(render(components2.LifecycleTest(initialProps)));
+        final componentRef = react.createRef<LifecycleTestHelper>();
+        rtl.render(components2.LifecycleTest({...initialProps, 'ref': componentRef}));
 
-        component.lifecycleCalls.clear();
+        componentRef.current.lifecycleCalls.clear();
 
-        (component as react.Component2).forceUpdate();
+        react_dom.ReactTestUtils.act(() => (componentRef.current as react.Component2).forceUpdate());
 
         expect(
-            component.lifecycleCalls,
+            componentRef.current.lifecycleCalls,
             equals([
               matchCall('getDerivedStateFromProps'),
               matchCall('render', state: initialState),
@@ -254,13 +254,16 @@ main() {
 
       group('componentDidUpdate receives the same value created in getSnapshotBeforeUpdate when snapshot is', () {
         void testSnapshotType(dynamic expectedSnapshot) {
-          LifecycleTestHelper component = getDartComponent(
-              render(components2.LifecycleTest({'getSnapshotBeforeUpdate': (_, __, ___) => expectedSnapshot})));
-          component.lifecycleCalls.clear();
-          component.setState({});
+          final componentRef = react.createRef<LifecycleTestHelper>();
+          rtl.render(components2.LifecycleTest({
+            'getSnapshotBeforeUpdate': (_, __, ___) => expectedSnapshot,
+            'ref': componentRef,
+          }));
+          componentRef.current.lifecycleCalls.clear();
+          react_dom.ReactTestUtils.act(() => componentRef.current.setState({}));
 
           expect(
-            component.lifecycleCalls,
+            componentRef.current.lifecycleCalls,
             containsAllInOrder([
               matchCall('getSnapshotBeforeUpdate'),
               matchCall('componentDidUpdate', args: [anything, anything, same(expectedSnapshot)])
@@ -676,9 +679,9 @@ void sharedLifecycleTests<T extends react.Component>({
         ReactDartComponentFactoryProxy DefaultPropsTest =
             react.registerComponent(defaultPropsCachingTestComponentFactory);
         var components = [
-          render(DefaultPropsTest({})),
-          render(DefaultPropsTest({})),
-          render(DefaultPropsTest({})),
+          renderIntoDocument(DefaultPropsTest({})),
+          renderIntoDocument(DefaultPropsTest({})),
+          renderIntoDocument(DefaultPropsTest({})),
         ];
 
         expect(components.map(getDartComponentProps), everyElement(containsPair('getDefaultPropsCallCount', 1)));
@@ -705,17 +708,17 @@ void sharedLifecycleTests<T extends react.Component>({
 
       group('are merged into props by the time the Dart Component is rendered when', () {
         test('the specified props are empty', () {
-          var props = getDartComponentProps(render(DefaultPropsTest({})));
+          var props = getDartComponentProps(renderIntoDocument(DefaultPropsTest({})));
           expect(props, containsPair('defaultProp', 'default'));
         });
 
         test('the default props are overridden', () {
-          var props = getDartComponentProps(render(DefaultPropsTest({'defaultProp': 'overridden'})));
+          var props = getDartComponentProps(renderIntoDocument(DefaultPropsTest({'defaultProp': 'overridden'})));
           expect(props, containsPair('defaultProp', 'overridden'));
         });
 
         test('non-default props are added', () {
-          var props = getDartComponentProps(render(DefaultPropsTest({'otherProp': 'other'})));
+          var props = getDartComponentProps(renderIntoDocument(DefaultPropsTest({'otherProp': 'other'})));
           expect(props, containsPair('defaultProp', 'default'));
           expect(props, containsPair('otherProp', 'other'));
         });
@@ -723,7 +726,7 @@ void sharedLifecycleTests<T extends react.Component>({
     });
 
     test('receives correct lifecycle calls on component mount', () {
-      LifecycleTestHelper component = getDartComponent(render(LifecycleTest({})));
+      LifecycleTestHelper component = getDartComponent(renderIntoDocument(LifecycleTest({})));
       if (!isComponent2) {
         expect(
             component.lifecycleCalls,
@@ -1672,42 +1675,3 @@ void sharedLifecycleTests<T extends react.Component>({
     });
   });
 }
-
-@JS()
-external List getUpdatingSetStateLifeCycleCalls();
-
-@JS()
-external List getComponent2UpdatingSetStateLifeCycleCalls();
-
-@JS()
-external List getNonUpdatingSetStateLifeCycleCalls();
-
-@JS()
-external List getComponent2NonUpdatingSetStateLifeCycleCalls();
-
-@JS()
-external int getLatestJSCounter();
-
-@JS()
-external int getComponent2LatestJSCounter();
-
-@JS()
-external String getUpdatingRenderedCounter();
-
-@JS()
-external String getComponent2UpdatingRenderedCounter();
-
-@JS()
-external String getNonUpdatingRenderedCounter();
-
-@JS()
-external String getComponent2NonUpdatingRenderedCounter();
-
-@JS()
-external String getComponent2ErrorMessage();
-
-@JS()
-external dynamic getComponent2ErrorInfo();
-
-@JS()
-external String getComponent2ErrorFromDerivedState();

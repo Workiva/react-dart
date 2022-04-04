@@ -1,6 +1,4 @@
 @TestOn('browser')
-library react.dom_factory_test;
-
 import 'dart:html';
 
 import 'package:test/test.dart';
