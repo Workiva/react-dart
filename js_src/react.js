@@ -32,13 +32,13 @@ React.PropTypes = PropTypes; // Only needed to support legacy context until we u
 
 // // IE 11 polyfill
 // Source: https://github.com/webcomponents/webcomponents-platform/issues/2
-if (!('baseURI' in Node.prototype)) {
-  Object.defineProperty(Node.prototype, 'baseURI', {
-    get: function() {
-      const base = (this.ownerDocument || this).querySelector('base');
-      return (base || window.location).href;
-    },
-    configurable: true,
-    enumerable: true
-  });
-}
+// if (!('baseURI' in Node.prototype)) {
+//   Object.defineProperty(Node.prototype, 'baseURI', {
+//     get: function() {
+//       const base = (this.ownerDocument || this).querySelector('base');
+//       return (base || window.location).href;
+//     },
+//     configurable: true,
+//     enumerable: true
+//   });
+// }
