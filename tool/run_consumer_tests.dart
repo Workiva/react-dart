@@ -65,7 +65,7 @@ dependency_overrides:
   var pubspecSrc = pubspec.readAsStringSync();
   pubspecSrc = pubspecSrc.replaceFirst('dependencies:', '${dependencyOverrides}dependencies:');
   pubspec.writeAsStringSync(pubspecSrc);
-  final pubGetProcess = await Process.start('pub', ['get'], mode: ProcessStartMode.inheritStdio);
+  final pubGetProcess = await Process.start('dart', ['pub', 'get'], mode: ProcessStartMode.inheritStdio);
   await pubGetProcess.exitCode;
 
   final testArgs = testCmdStr.split(' ');
