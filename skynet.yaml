@@ -18,3 +18,19 @@ scripts:
   - test -e ./react_with_react_dom_prod.js && { echo 'Verified prod bundle exists in CDN artifact.'; } || { echo 'Prod bundle /lib/react_with_react_dom_prod.js should exist in CDN artifact.'; exit 1; }
   - test -e ./react_prod.js && { echo 'Verified prod bundle exists in CDN artifact.'; } || { echo 'Prod bundle /lib/react_prod.js should exist in CDN artifact.'; exit 1; }
   - test -e ./react_dom_prod.js && { echo 'Verified prod DOM bundle exists in CDN artifact.'; } || { echo 'Prod DOM bundle /lib/react_dom_prod.js should exist in CDN artifact.'; exit 1; }
+
+---
+
+name: verify-github-actions
+description: Verify that the github actions run passed, this is needed to make pipelines pass without manual intervention
+contact: 'Frontend Frameworks Architecture / #support-frontend-architecture'
+image: drydock.workiva.net/workiva/skynet-images:3693290 # Uses the image from this branch: https://github.com/Workiva/skynet-images/pull/127
+size: small
+timeout: 600
+
+env:
+# encrypted github token used for requests to api.github.com
+ - secure: wqV2dUVmOMNZgll+/Sr4fra76p+gTvqRS3QvNQASg3hzoysFz7enBaKsXKXoPFj+jexOvFVN/m4rko272z/xZ6lBMRI=
+
+scripts:
+  - python3 /actions/verify_github_actions.py
