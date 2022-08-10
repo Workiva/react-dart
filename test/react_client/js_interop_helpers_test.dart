@@ -175,7 +175,7 @@ main() {
       });
 
       test('array object constructed in JS', () {
-        // Create this and freeze it on the JS side so that we're not starting out with Dart's list implementation
+        // Create this on the JS side so that we're not starting out with Dart's list implementation
         // and potentially any wrapper classes.
         final frozenArray = createArray();
         expect(_getPrototypeOf(frozenArray), _arrayPrototype, reason: 'test setup check; should be an array');
