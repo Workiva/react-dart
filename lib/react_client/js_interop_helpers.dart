@@ -12,8 +12,18 @@ import 'js_backed_map.dart';
 
 /// Like [identityHashCode], but uses a different hash for JS objects to work around an issue where
 /// [identityHashCode] adds an unwanted `$identityHash` property on JS objects (https://github.com/dart-lang/sdk/issues/47595).
-int _jsObjectFriendlyIdentityHashCode(Object object) =>
-    object is JsMap ? _jsObjectHashCode(object) : identityHashCode(object);
+int _jsObjectFriendlyIdentityHashCode(Object object) {
+  // Try detecting JS objects.
+  if (object is JsMap) return _jsObjectHashCode(object);
+  // There are some JS objects that will fail the above check and throw.
+  // In those cases, fall back to a safe implementation.
+  // FIXME(greg) find out what these cases are, document them, and add tests
+  try {
+    return identityHashCode(object);
+  } catch (_) {
+    return _jsObjectHashCode(object);
+  }
+}
 
 /// A hashCode implementation for JS objects.
 ///
