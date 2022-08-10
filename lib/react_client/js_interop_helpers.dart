@@ -10,29 +10,32 @@ import "package:js/js.dart";
 
 import 'js_backed_map.dart';
 
-/// Like [identityHashCode], but uses a different hash for JS objects to work around an issue where
-/// [identityHashCode] adds an unwanted `$identityHash` property on JS objects (https://github.com/dart-lang/sdk/issues/47595).
+/// Like [identityHashCode], but uses a different hash for JS objects to work around:
+/// - an issue where [identityHashCode] adds an unwanted `$identityHash` property on JS objects: https://github.com/dart-lang/sdk/issues/47595
+/// - an issue where [identityHashCode] throws for frozen objects: https://github.com/dart-lang/sdk/issues/36354
 int _jsObjectFriendlyIdentityHashCode(Object object) {
-  // Try detecting JS objects.
-  if (object is JsMap) return _jsObjectHashCode(object);
-  // There are some JS objects that will fail the above check and throw.
-  // In those cases, fall back to a safe implementation.
-  // FIXME(greg) find out what these cases are, document them, and add tests
+  // Try detecting JS objects so we don't add properties to them.
+  // Workaround for https://github.com/dart-lang/sdk/issues/47595
+  if (object is JsMap) return _anonymousJsObjectOrFrozenObjectHashCode(object);
+
+  // If this fails, then most likely the object is a frozen JS object, such as  props object or a variadic JSX children Array.
+  // Note that props objects are typically handled by the above is JsMap case, though.
+  // Fall back to a safe implementation.
   try {
     return identityHashCode(object);
   } catch (_) {
-    return _jsObjectHashCode(object);
+    return _anonymousJsObjectOrFrozenObjectHashCode(object);
   }
 }
 
-/// A hashCode implementation for JS objects.
+/// A hashCode implementation for anonymous JS objects or frozen objects.
 ///
 /// Even though the current implementation of returning the same hash code for all values is low-quality
 /// since all JS objects will collide, it is valid since it always returns the same value for the same object.
 ///
-/// We also don't expect many JS objects to be passed into [jsifyAndAllowInterop], so the quality of this hash code
-/// is not of much concern.
-int _jsObjectHashCode(JsMap jsObject) => 0;
+/// We also don't expect many JS objects or frozen objects to be passed into [jsifyAndAllowInterop],
+/// so the quality of this hash code is not of much concern.
+int _anonymousJsObjectOrFrozenObjectHashCode(Object _) => 0;
 
 // The following code is adapted from `package:js` in the dart-lang/sdk repo:
 // https://github.com/dart-lang/sdk/blob/2.2.0/sdk/lib/js_util/dart2js/js_util_dart2js.dart#L27
