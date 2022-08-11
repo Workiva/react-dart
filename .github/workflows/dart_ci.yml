@@ -2,9 +2,12 @@ name: Dart CI
 
 on:
   push:
-    branches: [ master ]
+    branches:
+      - 'master'
+      - 'test_consume_*'
   pull_request:
-    branches: [ master ]
+    branches:
+      - '**'
 
 jobs:
   build:
@@ -12,12 +15,12 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        sdk: [stable, beta]
+        sdk: [2.13.4, stable, beta]
     steps:
       - uses: actions/checkout@v2
-      - uses: dart-lang/setup-dart@v0.1
+      - uses: dart-lang/setup-dart@v1
         with:
-          channel: ${{ matrix.sdk }}
+          sdk: ${{ matrix.sdk }}
 
       - name: Print Dart SDK version
         run: dart --version
@@ -27,25 +30,25 @@ jobs:
         run: dart pub get
 
       - name: Validate dependencies
-        run: dart pub run dependency_validator -i build_runner,build_test,build_web_compilers,meta
+        run: dart run dependency_validator
         if: always() && steps.install.outcome == 'success'
 
-      # TODO: Uncomment this, and remove the Dart 2.7.2 format step in the Workiva Build Dockerfile
-      # once we are able to bump the lower bound of SDK.
-#      - name: Verify formatting
-#        run: dart format --output=none --line-length=120 --set-exit-if-changed .
-#        if: always() && ${{ matrix.sdk }} == 'stable' && steps.install.outcome == 'success'
+      - name: Verify formatting
+        run: dart format --output=none --line-length=120 --set-exit-if-changed .
+        if: ${{ matrix.sdk == '2.13.4' }}
 
       - name: Analyze project source
         run: dart analyze
         if: always() && steps.install.outcome == 'success'
 
       - name: Run tests (DDC)
-        run: dart pub run build_runner test -- --preset dartdevc
+        run: |
+          if [ ${{ matrix.sdk }} = '2.13.4' ]; then dart run build_runner test -- --preset dartdevc-legacy; else dart run build_runner test -- --preset dartdevc; fi
         if: always() && steps.install.outcome == 'success'
         timeout-minutes: 5
 
       - name: Run tests (dart2js)
-        run: dart pub run build_runner test --release -- --preset dart2js
+        run: |
+          if [ ${{ matrix.sdk }} = '2.13.4' ]; then dart run build_runner test -- --preset dart2js-legacy; else dart run build_runner test -- --preset dart2js; fi
         if: always() && steps.install.outcome == 'success'
         timeout-minutes: 5
