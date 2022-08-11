@@ -1,7 +1,10 @@
-## [6.1.6](https://github.com/cleandart/react-dart/compare/6.1.5...6.1.6)##
+## [6.1.7](https://github.com/cleandart/react-dart/compare/6.1.6...6.1.7)
+- [#344] Fix identityHashCode error when forwarding props containing JSX children
+
+## [6.1.6](https://github.com/cleandart/react-dart/compare/6.1.5...6.1.6)
 - [#336] Publish JS bundles to Workiva CDN
 
-## [6.1.5](https://github.com/cleandart/react-dart/compare/6.1.4...6.1.5)##
+## [6.1.5](https://github.com/cleandart/react-dart/compare/6.1.4...6.1.5)
 - [#333] Remove old, unused file from bin/
 
 ## [6.1.4](https://github.com/cleandart/react-dart/compare/6.1.3...6.1.4)
