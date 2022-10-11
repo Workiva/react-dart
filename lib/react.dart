@@ -47,6 +47,8 @@ typedef DartForwardRefFunctionComponent = dynamic Function(JsBackedMap props, dy
 
 typedef T ComponentFactory<T extends Component>();
 
+typedef ReactElementFactory = ReactElement Function();
+
 typedef ReactComponentFactoryProxy ComponentRegistrar(ComponentFactory componentFactory,
     [Iterable<String> skipMethods]);
 
