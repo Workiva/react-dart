@@ -1,3 +1,6 @@
+## [6.1.8](https://github.com/cleandart/react-dart/compare/6.1.7...6.1.8)
+- [#350] Return `jsUndefined` instead of `null` when children prop is empty
+
 ## [6.1.7](https://github.com/cleandart/react-dart/compare/6.1.6...6.1.7)
 - [#344] Fix identityHashCode error when forwarding props containing JSX children
 
