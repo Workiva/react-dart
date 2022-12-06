@@ -5,9 +5,9 @@ library react.js_factory_test;
 import 'dart:html';
 
 import 'package:js/js.dart';
+import 'package:react/react.dart' as react;
 import 'package:react/react_client.dart';
 import 'package:react/react_client/react_interop.dart';
-import 'package:react/react_dom.dart' as react_dom;
 import 'package:react/react_test_utils.dart';
 import 'package:test/test.dart';
 
@@ -57,7 +57,9 @@ main() {
     });
 
     test('with no children returns JS undefined', () {
-      expect(() => react_dom.render(JsNoChildren({}), Element.div()), returnsNormally);
+      expect(hasUndefinedChildren(react.div({})), isTrue);
+      expect(hasUndefinedChildren(react.div({}, jsNull)), isFalse,
+          reason: 'Sanity check that JS `null` is not the same as JS `undefined`');
     });
   });
 }
@@ -71,5 +73,4 @@ external ReactClass get _JsFooFunction;
 final JsFooFunction = new ReactJsComponentFactoryProxy(_JsFooFunction);
 
 @JS()
-external ReactClass get _JsNoChildren;
-final JsNoChildren = new ReactJsComponentFactoryProxy(_JsNoChildren);
+external bool Function(ReactElement) get hasUndefinedChildren;
