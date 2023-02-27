@@ -13,6 +13,8 @@ main() {
 
     sharedJsFunctionTests();
 
+    sharedErrorBoundaryComponentNameTests();
+
     test('inReactDevMode', () {
       expect(inReactDevMode, isTrue);
     });

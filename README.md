@@ -25,7 +25,7 @@ If you are not familiar with the ReactJS library, read this [react tutorial](htt
     name: your_package_name
     version: 1.0.0
     environment:
-      sdk: ^2.7.0
+      sdk: ^2.11.0
     dependencies:
       react: ^6.0.0
     ```
@@ -33,16 +33,16 @@ If you are not familiar with the ReactJS library, read this [react tutorial](htt
 3. Install the dependencies using pub:
 
     ```bash
-    pub get
+    dart pub get
     ```
 
 ### Wire things up
 
 #### HTML
 
-In a `.html` file where Include the native javascript `react` and `react_dom` libraries
+In a `.html` file, include the native javascript `react` and `react_dom` libraries
 _(provided with this library for compatibility reasons)_ within your `.html` file,
-and add an element with an `id` to mount your React component into.
+and also add an element with an `id` to mount your React component.
 
 Lastly, add the `.js` file that Dart will generate. The file will be the name of the `.dart` file that
 contains your `main` entrypoint, with `.js` at the end.
@@ -388,7 +388,7 @@ void main() {
 
 Format using 
 ```bash
-dartfmt -l 120 -w .
+dart format -l 120 .
 ```
 
 While we'd like to adhere to the recommended line length of 80, it's too short for much of the code 
@@ -401,16 +401,18 @@ So, we use a line length of 120 instead.
 #### dart2js
 
 ```bash
-pub run test -p chrome
+dart run build_runner test --release -- --preset dart2js
 ```
-_Or any other browser, e.g. `-p firefox`._
+
+> NOTE: When using Dart SDK < 2.14.0, use `--preset dart2js-legacy` instead.
 
 #### Dart Dev Compiler ("DDC")
 
 ```bash
-pub run build_runner test -- -p chrome
+dart run build_runner test -- --preset dartdevc
 ```
-_DDC only works in chrome._
+
+> NOTE: When using Dart SDK < 2.14.0, use `--preset dartdevc-legacy` instead.
 
 ### Building React JS Source Files
 

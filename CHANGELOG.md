@@ -1,3 +1,44 @@
+## [6.1.8](https://github.com/cleandart/react-dart/compare/6.1.7...6.1.8)
+- [#350] Return `jsUndefined` instead of `null` when children prop is empty
+
+## [6.1.7](https://github.com/cleandart/react-dart/compare/6.1.6...6.1.7)
+- [#344] Fix identityHashCode error when forwarding props containing JSX children
+
+## [6.1.6](https://github.com/cleandart/react-dart/compare/6.1.5...6.1.6)
+- [#336] Publish JS bundles to Workiva CDN
+
+## [6.1.5](https://github.com/cleandart/react-dart/compare/6.1.4...6.1.5)
+- [#333] Remove old, unused file from bin/
+
+## [6.1.4](https://github.com/cleandart/react-dart/compare/6.1.3...6.1.4)
+
+- [#327] Fix stable ci build
+- [#328] Work around $identityHash being added to JS objects passed into jsifyAndAllowInterop
+
+## [6.1.3](https://github.com/cleandart/react-dart/compare/6.1.2...6.1.3)
+
+- [#308] Bump elliptic from 6.5.3 to 6.5.4
+- [#311] Bump ssri from 6.0.1 to 6.0.2
+- [#312] Bump lodash from 4.17.20 to 4.17.21
+- [#313] Bump browserslist from 4.16.1 to 4.16.6
+- [#318] Bump path-parse from 1.0.6 to 1.0.7
+- [#323] Raise the Dart SDK minimum to at least 2.11.0
+- [#315] Upgrade CI to run using Dart 2.13
+- [#309] Update README.md
+- [#325] Upgrade dependency_validator
+
+## [6.1.2](https://github.com/cleandart/react-dart/compare/6.1.1...6.1.2)
+
+- [#321] Fix missing Dart component names in error boundary `componentStack`
+
+## [6.1.1](https://github.com/cleandart/react-dart/compare/6.1.0...6.1.1)
+
+- [#319] Add `baseURI` polyfill for IE 11 compatibility on Dart 2.13.
+
+## [6.1.0](https://github.com/cleandart/react-dart/compare/6.0.1...6.1.0)
+
+- [#316] Export `generateJsProps`.
+
 ## [6.0.1](https://github.com/cleandart/react-dart/compare/6.0.0...6.0.1)
 
 - [#305] Fix `JsBackedMap` for Dart 2.12.

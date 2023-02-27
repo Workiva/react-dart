@@ -1,6 +1,11 @@
 targets:
   $default:
     builders:
+      # mockito's builder is expensive and is not needed until this package is
+      # migrated to null-safety. At that point, it should be scoped only to
+      # relevant files.
+      mockito:mockBuilder:
+        enabled: false
       build_web_compilers|entrypoint:
         # These are globs for the entrypoints you want to compile.
         generate_for:

@@ -7,6 +7,7 @@ import 'dart:js_util';
 
 import 'package:js/js.dart';
 import 'package:react/react.dart' as react;
+import 'package:react/react_dom.dart' as react_dom;
 import 'package:react/react_client/react_interop.dart';
 import 'package:test/test.dart';
 
@@ -126,7 +127,7 @@ void sharedConsoleWarnTests({required bool expectDeduplicateSyntheticEventWarnin
           ]);
         });
       }
-    }, tags: 'no-dart2js');
+    }, tags: ['no-dart2js', 'no-sdk-2-14-plus']);
 
     test('logs other duplicate messages properly', () {
       consoleWarn('foo');
@@ -143,3 +144,106 @@ void sharedConsoleWarnTests({required bool expectDeduplicateSyntheticEventWarnin
     });
   });
 }
+
+void sharedErrorBoundaryComponentNameTests() {
+  group('includes the Dart component displayName in error boundary errors for', () {
+    void expectRenderErrorWithComponentName(ReactElement element, {@required String expectedComponentName}) {
+      final capturedInfos = <ReactErrorInfo>[];
+      react_dom.render(
+          _ErrorBoundary({
+            'onComponentDidCatch': (dynamic error, ReactErrorInfo info) {
+              capturedInfos.add(info);
+            }
+          }, element),
+          DivElement());
+      expect(capturedInfos, hasLength(1), reason: 'test setup check; should have captured a single component error');
+      expect(capturedInfos[0].componentStack, contains('at $expectedComponentName'));
+    }
+
+    test('Component components', () {
+      expectRenderErrorWithComponentName(
+        _ThrowingComponent({}),
+        expectedComponentName: r'DisplayName$_ThrowingComponent',
+      );
+    });
+
+    test('Component2 components', () {
+      expectRenderErrorWithComponentName(
+        _ThrowingComponent2({}),
+        expectedComponentName: r'DisplayName$_ThrowingComponent2',
+      );
+    });
+
+    test('function components', () {
+      expectRenderErrorWithComponentName(
+        _ThrowingFunctionComponent({}),
+        expectedComponentName: r'DisplayName$_ThrowingFunctionComponent',
+      );
+    });
+
+    test('forwardRef function components', () {
+      expectRenderErrorWithComponentName(
+        _ThrowingForwardRefFunctionComponent({}),
+        expectedComponentName: r'DisplayName$_ThrowingForwardRefFunctionComponent',
+      );
+    });
+  });
+}
+
+final _ErrorBoundary = react.registerComponent2(() => _ErrorBoundaryComponent(), skipMethods: []);
+
+class _ErrorBoundaryComponent extends react.Component2 {
+  @override
+  Map get initialState => {'hasError': false};
+
+  @override
+  Map getDerivedStateFromError(dynamic error) => {'hasError': true};
+
+  @override
+  void componentDidCatch(dynamic error, ReactErrorInfo info) {
+    props['onComponentDidCatch'](error, info);
+  }
+
+  @override
+  render() {
+    return state['hasError'] ? null : props['children'];
+  }
+}
+
+final _ThrowingComponent = react.registerComponent(() => _ThrowingComponentComponent());
+
+class _ThrowingComponentComponent extends react.Component {
+  @override
+  String get displayName => r'DisplayName$_ThrowingComponentComponent';
+
+  @override
+  render() {
+    throw Exception();
+  }
+}
+
+final _ThrowingComponent2 = react.registerComponent2(() => _ThrowingComponent2Component());
+
+class _ThrowingComponent2Component extends react.Component2 {
+  @override
+  String get displayName => r'DisplayName$_ThrowingComponent2Component';
+
+  @override
+  render() {
+    throw Exception();
+  }
+}
+
+final _ThrowingFunctionComponent = react.registerFunctionComponent(
+  (props) {
+    throw Exception();
+  },
+  displayName: r'DisplayName$_ThrowingFunctionComponent',
+);
+
+final _ThrowingForwardRefFunctionComponent = react.forwardRef2(
+  (props, ref) {
+    throw Exception();
+  },
+  displayName: r'DisplayName$_ThrowingForwardRefFunctionComponent',
+);
