@@ -82,7 +82,7 @@ main() {
       expect(jsMap is List, isFalse);
       expect(jsMap is Map, isFalse);
       for (final key in map.keys) {
-        expect(checkMap(jsMap, key, map[key]), isTrue);
+        expect(checkMap(jsMap, key, map[key]!), isTrue);
       }
     });
 

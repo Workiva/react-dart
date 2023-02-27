@@ -147,7 +147,7 @@ void sharedConsoleWarnTests({required bool expectDeduplicateSyntheticEventWarnin
 
 void sharedErrorBoundaryComponentNameTests() {
   group('includes the Dart component displayName in error boundary errors for', () {
-    void expectRenderErrorWithComponentName(ReactElement element, {@required String expectedComponentName}) {
+    void expectRenderErrorWithComponentName(ReactElement element, {required String expectedComponentName}) {
       final capturedInfos = <ReactErrorInfo>[];
       react_dom.render(
           _ErrorBoundary({
