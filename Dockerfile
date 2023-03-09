@@ -1,4 +1,4 @@
-FROM google/dart:2.13
+FROM google/dart:2.18
 
 WORKDIR /build
 COPY pubspec.yaml .
