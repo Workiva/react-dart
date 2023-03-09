@@ -120,37 +120,27 @@ class Simulate {
 ///
 /// Included in Dart for completeness
 @JS('React.addons.TestUtils.findAllInRenderedTree')
-external List<dynamic> findAllInRenderedTree(
-    /* [1] */ tree,
-    ComponentTestFunction test);
+external List<dynamic> findAllInRenderedTree(/* [1] */ tree, ComponentTestFunction test);
 
 /// Like scryRenderedDOMComponentsWithClass() but expects there to be one
 /// result, and returns that one result, or throws exception if there is
 /// any other number of matches besides one.
 @JS('React.addons.TestUtils.findRenderedDOMComponentWithClass')
-external dynamic /* [1] */ findRenderedDOMComponentWithClass(
-    /* [1] */ tree,
-    String className);
+external dynamic /* [1] */ findRenderedDOMComponentWithClass(/* [1] */ tree, String className);
 
 /// Like scryRenderedDOMComponentsWithTag() but expects there to be one result,
 /// and returns that one result, or throws exception if there is any other
 /// number of matches besides one.
 @JS('React.addons.TestUtils.findRenderedDOMComponentWithTag')
-external dynamic /* [1] */ findRenderedDOMComponentWithTag(
-    /* [1] */ tree,
-    String tag);
+external dynamic /* [1] */ findRenderedDOMComponentWithTag(/* [1] */ tree, String tag);
 
 @JS('React.addons.TestUtils.findRenderedComponentWithType')
-external dynamic /* [1] */ _findRenderedComponentWithType(
-    /* [1] */ tree,
-    dynamic type);
+external dynamic /* [1] */ _findRenderedComponentWithType(/* [1] */ tree, dynamic type);
 
 /// Same as [scryRenderedComponentsWithTypeV2] but expects there to be one result
 /// and returns that one result, or throws exception if there is any other
 /// number of matches besides one.
-/* [1] */ findRenderedComponentWithTypeV2(
-    /* [1] */ tree,
-    ReactComponentFactoryProxy componentFactory) {
+/* [1] */ findRenderedComponentWithTypeV2(/* [1] */ tree, ReactComponentFactoryProxy componentFactory) {
   return _findRenderedComponentWithType(tree, getComponentTypeV2(componentFactory));
 }
 
@@ -171,9 +161,7 @@ external bool _isCompositeComponentWithType(/* [1] */ instance, dynamic type);
 
 /// Returns `true` if instance is a custom composite component created using `React.createClass()`
 /// that is of the [ReactComponentFactoryProxy.type] of the provided [componentFactory].
-bool isCompositeComponentWithTypeV2(
-    /* [1] */ instance,
-    ReactComponentFactoryProxy componentFactory) {
+bool isCompositeComponentWithTypeV2(/* [1] */ instance, ReactComponentFactoryProxy componentFactory) {
   return _isCompositeComponentWithType(instance, getComponentTypeV2(componentFactory));
 }
 
@@ -195,15 +183,11 @@ bool isElementOfTypeV2(dynamic element, ReactComponentFactoryProxy componentFact
 }
 
 @JS('React.addons.TestUtils.scryRenderedComponentsWithType')
-external List<dynamic> /* [1] */ _scryRenderedComponentsWithType(
-    /* [1] */ tree,
-    dynamic type);
+external List<dynamic> /* [1] */ _scryRenderedComponentsWithType(/* [1] */ tree, dynamic type);
 
 /// Finds all instances within the provided [tree]
 /// that are of the [ReactComponentFactoryProxy.type] of the provided [componentFactory].
-List<dynamic> /* [1] */ scryRenderedComponentsWithTypeV2(
-    /* [1] */ tree,
-    ReactComponentFactoryProxy componentFactory) {
+List<dynamic> /* [1] */ scryRenderedComponentsWithTypeV2(/* [1] */ tree, ReactComponentFactoryProxy componentFactory) {
   return _scryRenderedComponentsWithType(tree, getComponentTypeV2(componentFactory));
 }
 
@@ -211,17 +195,13 @@ List<dynamic> /* [1] */ scryRenderedComponentsWithTypeV2(
 
 /// Finds all instances of components in the rendered tree that are DOM
 /// components with the class name matching className.
-external List<dynamic> scryRenderedDOMComponentsWithClass(
-    /* [1] */ tree,
-    String className);
+external List<dynamic> scryRenderedDOMComponentsWithClass(/* [1] */ tree, String className);
 
 @JS('React.addons.TestUtils.scryRenderedDOMComponentsWithTag')
 
 /// Finds all instances of components in the rendered tree that are DOM
 /// components with the tag name matching tagName.
-external List<dynamic> scryRenderedDOMComponentsWithTag(
-    /* [1] */ tree,
-    String tagName);
+external List<dynamic> scryRenderedDOMComponentsWithTag(/* [1] */ tree, String tagName);
 
 /// Render a Component into a detached DOM node in the document.
 @JS('React.addons.TestUtils.renderIntoDocument')

@@ -723,8 +723,12 @@ void sharedLifecycleTests<T extends react.Component>({
           'newProp': 'new',
         };
 
-        final Map initialPropsWithDefaults = unmodifiableMap({}..addAll(defaultProps)..addAll(initialProps));
-        final Map newPropsWithDefaults = unmodifiableMap({}..addAll(defaultProps)..addAll(newProps));
+        final Map initialPropsWithDefaults = unmodifiableMap({}
+          ..addAll(defaultProps)
+          ..addAll(initialProps));
+        final Map newPropsWithDefaults = unmodifiableMap({}
+          ..addAll(defaultProps)
+          ..addAll(newProps));
 
         const Map expectedState = const {};
 
@@ -871,7 +875,9 @@ void sharedLifecycleTests<T extends react.Component>({
           'ref': ((ref) => component = ref),
         };
 
-        var initialProps = new Map.from(defaultProps)..addAll(initialContext)..addAll({'children': const []});
+        var initialProps = new Map.from(defaultProps)
+          ..addAll(initialContext)
+          ..addAll({'children': const []});
         // Add the 'ref' prop separately so it isn't an expected prop since React removes it internally
         var initialPropsWithRef = new Map.from(initialProps)..addAll(refMap);
 
@@ -935,8 +941,12 @@ void sharedLifecycleTests<T extends react.Component>({
       const Map initialProps = const {'initialProp': 'initial', 'children': const []};
       const Map newProps = const {'newProp': 'new', 'children': const []};
 
-      final Map initialPropsWithDefaults = unmodifiableMap({}..addAll(defaultProps)..addAll(initialProps));
-      final Map newPropsWithDefaults = unmodifiableMap({}..addAll(defaultProps)..addAll(newProps));
+      final Map initialPropsWithDefaults = unmodifiableMap({}
+        ..addAll(defaultProps)
+        ..addAll(initialProps));
+      final Map newPropsWithDefaults = unmodifiableMap({}
+        ..addAll(defaultProps)
+        ..addAll(newProps));
 
       const Map expectedState = const {};
       final dynamic expectedContext = isComponent2 ? null : const {};
@@ -1205,8 +1215,12 @@ void sharedLifecycleTests<T extends react.Component>({
         initialProps = unmodifiableMap({'getInitialState': (_) => initialState, 'initialState': (_) => initialState});
         newState1 = {'foo': 'bar'};
         newState2 = {'baz': 'foobar'};
-        expectedState1 = {}..addAll(initialState)..addAll(newState1);
-        expectedState2 = {}..addAll(expectedState1)..addAll(newState2);
+        expectedState1 = {}
+          ..addAll(initialState)
+          ..addAll(newState1);
+        expectedState2 = {}
+          ..addAll(expectedState1)
+          ..addAll(newState2);
 
         component = getDartComponent(render(LifecycleTest(initialProps)));
         component.lifecycleCalls.clear();
