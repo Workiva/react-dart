@@ -1,4 +1,6 @@
-FROM google/dart:2.18
+FROM drydock-prod.workiva.net/workiva/dart2_base_image:1 as dart2
+
+RUN dart --version
 
 WORKDIR /build
 COPY pubspec.yaml .
