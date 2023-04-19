@@ -12,7 +12,6 @@ import 'package:react/react_dom.dart' as react_dom;
 import 'package:react/src/js_interop_util.dart';
 import './simple_component.dart' deferred as simple;
 
-
 @JS('React.lazy')
 external ReactClass jsLazy(Promise Function() factory);
 
