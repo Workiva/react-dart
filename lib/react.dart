@@ -65,6 +65,11 @@ typedef ReactDartFunctionComponentFactoryProxy FunctionComponentRegistrar(DartFu
 /// See: <https://reactjs.org/docs/fragments.html>
 var Fragment = ReactJsComponentFactoryProxy(React.Fragment);
 
+/// Suspense lets you display a fallback UI until its children have finished loading.
+///
+/// See: <https://react.dev/reference/react/Suspense>
+var Suspense = ReactJsComponentFactoryProxy(React.Suspense);
+
 /// StrictMode is a tool for highlighting potential problems in an application.
 ///
 /// StrictMode does not render any visible UI. It activates additional checks and warnings for its descendants.
