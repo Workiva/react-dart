@@ -1,8 +1,8 @@
 ## [6.2.0](https://github.com/cleandart/react-dart/compare/6.1.8...6.2.0)
-	* [#357] Export Suspense component
-	* [#354] Raise analyzer minimum & unpin meta
-	* [#355] Pin mockito 5
-	* [#356] Unpin mockito, fix CI
+- [#357] Export Suspense component
+- [#354] Raise analyzer minimum & unpin meta
+- [#355] Pin mockito 5
+- [#356] Unpin mockito, fix CI
 
 ## [6.1.8](https://github.com/cleandart/react-dart/compare/6.1.7...6.1.8)
 - [#350] Return `jsUndefined` instead of `null` when children prop is empty
