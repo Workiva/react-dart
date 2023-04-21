@@ -1,5 +1,4 @@
 ## [6.2.0](https://github.com/cleandart/react-dart/compare/6.1.8...6.2.0)
-* Patch changes:
 	* [#357] Export Suspense component
 	* [#354] Raise analyzer minimum & unpin meta
 	* [#355] Pin mockito 5
