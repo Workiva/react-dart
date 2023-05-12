@@ -7,3 +7,5 @@ window._JsFoo = class JsFooComponent extends React.Component {
 window._JsFooFunction = React.forwardRef((props, ref) => (
   React.createElement("div", {...props, ref: ref})
 ));
+
+window.hasUndefinedChildren = (reactElement) => reactElement.props.children === undefined;
