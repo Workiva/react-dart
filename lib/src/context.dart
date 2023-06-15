@@ -111,7 +111,7 @@ Context<TValue> createContext<TValue>([
         ContextHelpers.unjsifyNewContext(currentValue), ContextHelpers.unjsifyNewContext(nextValue));
   }
 
-  var JSContext = reactJsModule.React.createContext(ContextHelpers.jsifyNewContext(defaultValue),
+  var JSContext = React.createContext(ContextHelpers.jsifyNewContext(defaultValue),
       calculateChangedBits != null ? allowInterop(jsifyCalculateChangedBitsArgs) : null);
   return Context(
     new ReactJsContextComponentFactoryProxy(JSContext.Provider, isProvider: true),
@@ -128,7 +128,7 @@ abstract class ContextHelpers {
   // It is wrapped so that the same Dart value can be retrieved from Dart with [_unjsifyNewContext].
   static dynamic jsifyNewContext(dynamic context) {
     var jsContextHolder = newObject();
-    setProperty(jsContextHolder, reactJsModule.helpers.reactDartContextSymbol, DartValueWrapper.wrapIfNeeded(context));
+    setProperty(jsContextHolder, reactModuleLoader.module.helpers.reactDartContextSymbol, DartValueWrapper.wrapIfNeeded(context));
     return jsContextHolder;
   }
 
@@ -136,8 +136,8 @@ abstract class ContextHelpers {
   // The value is unwrapped so that the same Dart value can be passed through js and retrived by Dart
   // when used with [_jsifyNewContext].
   static dynamic unjsifyNewContext(dynamic interopContext) {
-    if (interopContext != null && hasProperty(interopContext, reactJsModule.helpers.reactDartContextSymbol)) {
-      return DartValueWrapper.unwrapIfNeeded(getProperty(interopContext, reactJsModule.helpers.reactDartContextSymbol));
+    if (interopContext != null && hasProperty(interopContext, reactModuleLoader.module.helpers.reactDartContextSymbol)) {
+      return DartValueWrapper.unwrapIfNeeded(getProperty(interopContext, reactModuleLoader.module.helpers.reactDartContextSymbol));
     }
     return interopContext;
   }

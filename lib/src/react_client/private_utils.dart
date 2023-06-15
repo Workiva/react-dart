@@ -47,7 +47,7 @@ void validateJsApi() {
   try {
     // Attempt to invoke JS interop methods, which will throw if the
     // corresponding JS functions are not available.
-    reactJsModule.React.isValidElement(null);
+    React.isValidElement(null);
     ReactDom.findDOMNode(null);
     // ignore: deprecated_member_use_from_same_package
     createReactDartComponentClass(null, null, null);

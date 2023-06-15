@@ -90,7 +90,9 @@ class DartHelpersObject {
   external get reactDartContextSymbol;
 }
 
-ReactJsModule get reactJsModule => reactModuleLoader.module;
+ReactObject get React => reactModuleLoader.module.React;
+_ReactDOMObject get ReactDOM => reactModuleLoader.module.ReactDOM;
+DartHelpersObject get _helpers => reactModuleLoader.module.helpers;
 
 @JS()
 @anonymous
@@ -163,12 +165,12 @@ class Ref<T> {
   /// A JavaScript ref object returned by [React.createRef].
   final JsRef jsRef;
 
-  Ref() : jsRef = reactJsModule.React.createRef();
+  Ref() : jsRef = React.createRef();
 
   /// Constructor for [useRef], calls [React.useRef] to initialize [current] to [initialValue].
   ///
   /// See: <https://reactjs.org/docs/hooks-reference.html#useref>.
-  Ref.useRefInit(T initialValue) : jsRef = reactJsModule.React.useRef(initialValue);
+  Ref.useRefInit(T initialValue) : jsRef = React.useRef(initialValue);
 
   Ref.fromJs(this.jsRef);
 
@@ -320,7 +322,7 @@ ReactJsComponentFactoryProxy forwardRef(
       }));
   defineProperty(wrappedComponent, 'displayName', JsPropertyDescriptor(value: displayName));
 
-  var hoc = reactJsModule.React.forwardRef(wrappedComponent);
+  var hoc = React.forwardRef(wrappedComponent);
   // ignore: invalid_use_of_protected_member
   setProperty(hoc, 'dartComponentVersion', ReactDartComponentVersion.component2);
 
@@ -374,7 +376,7 @@ ReactComponentFactoryProxy memo2(ReactComponentFactoryProxy factory,
           final dartNextProps = JsBackedMap.backedBy(nextProps);
           return areEqual(dartPrevProps, dartNextProps);
         });
-  final hoc = reactJsModule.React.memo(factory.type, _areEqual);
+  final hoc = React.memo(factory.type, _areEqual);
   setProperty(hoc, 'dartComponentVersion', ReactDartComponentVersion.component2);
 
   return ReactDartWrappedComponentFactoryProxy(hoc);
@@ -390,7 +392,7 @@ ReactJsComponentFactoryProxy memo(ReactDartFunctionComponentFactoryProxy factory
           final dartNextProps = JsBackedMap.backedBy(nextProps);
           return areEqual(dartPrevProps, dartNextProps);
         });
-  final hoc = reactJsModule.React.memo(factory.type, _areEqual);
+  final hoc = React.memo(factory.type, _areEqual);
   setProperty(hoc, 'dartComponentVersion', ReactDartComponentVersion.component2);
 
   return ReactJsComponentFactoryProxy(hoc, alwaysReturnChildrenAsList: true);
@@ -407,9 +409,9 @@ abstract class _ReactDOMObject {
 }
 
 abstract class ReactDom {
-  static Element findDOMNode(object) => reactJsModule.ReactDOM.findDOMNode(object);
-  static ReactComponent render(ReactElement component, Element element) => reactJsModule.ReactDOM.render(component, element);
-  static bool unmountComponentAtNode(Element element) => reactJsModule.ReactDOM.unmountComponentAtNode(element);
+  static Element findDOMNode(object) => ReactDOM.findDOMNode(object);
+  static ReactComponent render(ReactElement component, Element element) => ReactDOM.render(component, element);
+  static bool unmountComponentAtNode(Element element) => ReactDOM.unmountComponentAtNode(element);
 
   /// Returns a a portal that renders [children] into a [container].
   ///
@@ -418,7 +420,7 @@ abstract class ReactDom {
   /// [children] can be any renderable React child, such as a [ReactElement], [String], or fragment.
   ///
   /// See: <https://reactjs.org/docs/portals.html>
-  static ReactPortal createPortal(dynamic children, Element container) => reactJsModule.ReactDOM.createPortal(children, container);
+  static ReactPortal createPortal(dynamic children, Element container) => ReactDOM.createPortal(children, container);
 }
 
 @JS('ReactDOMServer')
@@ -770,22 +772,22 @@ class JsError {
 
 /// A JS variable that can be used with Dart interop in order to force returning a JavaScript `null`.
 /// Use this if dart2js is possibly converting Dart `null` into `undefined`.
-dynamic get jsNull => reactJsModule.helpers.jsNull;
+dynamic get jsNull => _helpers.jsNull;
 
 /// A JS variable that can be used with Dart interop in order to force returning a JavaScript `undefined`.
 /// Use this if dart2js is possibly converting Dart `undefined` into `null`.
-dynamic get jsUndefined => reactJsModule.helpers.jsUndefined;
+dynamic get jsUndefined => _helpers.jsUndefined;
 
 /// Throws the error passed to it from Javascript.
 /// This allows us to catch the error in dart which re-dartifies the js errors/exceptions.
 @alwaysThrows
-void throwErrorFromJS(error) => reactJsModule.helpers.throwErrorFromJS(error);
+void throwErrorFromJS(error) => _helpers.throwErrorFromJS(error);
 
 /// Marks [child] as validated, as if it were passed into [React.createElement]
 /// as a variadic child.
 ///
 /// Offloaded to the JS to avoid dart2js interceptor lookup.
-void markChildValidated(child) => reactJsModule.helpers.markChildValidated(child);
+void markChildValidated(child) => _helpers.markChildValidated(child);
 
 /// Mark each child in [children] as validated so that React doesn't emit key warnings.
 ///
@@ -793,7 +795,7 @@ void markChildValidated(child) => reactJsModule.helpers.markChildValidated(child
 void markChildrenValidated(List<dynamic> children) {
   children.forEach((dynamic child) {
     // Use `isValidElement` since `is ReactElement` doesn't behave as expected.
-    if (reactJsModule.React.isValidElement(child)) {
+    if (React.isValidElement(child)) {
       markChildValidated(child);
     }
   });
@@ -807,14 +809,14 @@ void markChildrenValidated(List<dynamic> children) {
 /// >
 /// > Will be removed in `7.0.0` alongside [Component].
 @Deprecated('7.0.0')
-ReactClass createReactDartComponentClass(ReactDartInteropStatics dartInteropStatics, ComponentStatics componentStatics, [JsComponentConfig jsConfig]) => reactJsModule.helpers.createReactDartComponentClass(dartInteropStatics, componentStatics, jsConfig);
+ReactClass createReactDartComponentClass(ReactDartInteropStatics dartInteropStatics, ComponentStatics componentStatics, [JsComponentConfig jsConfig]) => _helpers.createReactDartComponentClass(dartInteropStatics, componentStatics, jsConfig);
 
 /// Returns a new JS [ReactClass] for a component that uses
 /// [dartInteropStatics] and [componentStatics] internally to proxy between
 /// the JS and Dart component instances.
 ///
 /// See `_ReactDartInteropStatics2.staticsForJs`]` for an example implementation.
-ReactClass createReactDartComponentClass2(JsMap dartInteropStatics, ComponentStatics2 componentStatics, [JsComponentConfig2 jsConfig]) => reactJsModule.helpers.createReactDartComponentClass2(dartInteropStatics, componentStatics, jsConfig);
+ReactClass createReactDartComponentClass2(JsMap dartInteropStatics, ComponentStatics2 componentStatics, [JsComponentConfig2 jsConfig]) => _helpers.createReactDartComponentClass2(dartInteropStatics, componentStatics, jsConfig);
 
 /// Whether the "dev" build of react.js is being used.
 ///
@@ -826,7 +828,7 @@ ReactClass createReactDartComponentClass2(JsMap dartInteropStatics, ComponentSta
 ///
 /// > This value will be `true` if your HTML page includes `react.js` or `react_with_addons.js`,
 ///   and `false` if your HTML page includes `react_prod.js` or `react_with_react_dom_prod.js`.
-bool get inReactDevMode => reactJsModule.React._inReactDevMode;
+bool get inReactDevMode => React._inReactDevMode;
 
 /// An object that stores static methods used by all Dart components.
 ///

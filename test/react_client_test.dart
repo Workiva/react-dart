@@ -211,7 +211,7 @@ external Function compositeComponent();
 final Function testJsComponentFactory = (() {
   final type = compositeComponent();
   return ([props = const {}, children]) {
-    return reactJsModule.React.createElement(type, jsifyAndAllowInterop(props), listifyChildren(children));
+    return React.createElement(type, jsifyAndAllowInterop(props), listifyChildren(children));
   };
 })();
 

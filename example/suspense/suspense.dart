@@ -17,7 +17,7 @@ import './simple_component.dart' deferred as simple;
 // This will most likely be added to the PUBLIC api in the future,
 // but needs more testing and Typing decisions to be made first.
 ReactJsComponentFactoryProxy lazy(Future<ReactComponentFactoryProxy> factory()) => ReactJsComponentFactoryProxy(
-      reactJsModule.React.lazy(
+      React.lazy(
         allowInterop(
           () => futureToPromise(
             // React.lazy only supports "default exports" from a module.

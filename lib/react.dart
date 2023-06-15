@@ -63,7 +63,7 @@ typedef ReactDartFunctionComponentFactoryProxy FunctionComponentRegistrar(DartFu
 /// an element that adds an additional layer to the DOM (div, span, etc).
 ///
 /// See: <https://reactjs.org/docs/fragments.html>
-var Fragment = ReactJsComponentFactoryProxy(reactJsModule.React.Fragment);
+var Fragment = ReactJsComponentFactoryProxy(React.Fragment);
 
 /// [Suspense] lets you display a fallback UI until its children have finished loading.
 ///
@@ -95,14 +95,14 @@ var Fragment = ReactJsComponentFactoryProxy(reactJsModule.React.Fragment);
 /// `NotALazyComponent` will trigger the closest ancestor [Suspense].
 ///
 /// See: <https://react.dev/reference/react/Suspense>
-var Suspense = ReactJsComponentFactoryProxy(reactJsModule.React.Suspense);
+var Suspense = ReactJsComponentFactoryProxy(React.Suspense);
 
 /// StrictMode is a tool for highlighting potential problems in an application.
 ///
 /// StrictMode does not render any visible UI. It activates additional checks and warnings for its descendants.
 ///
 /// See: <https://reactjs.org/docs/strict-mode.html>
-var StrictMode = ReactJsComponentFactoryProxy(reactJsModule.React.StrictMode);
+var StrictMode = ReactJsComponentFactoryProxy(React.StrictMode);
 
 /// Top-level ReactJS [Component class](https://facebook.github.io/react/docs/react-component.html)
 /// which provides the [ReactJS Component API](https://facebook.github.io/react/docs/react-component.html#reference)

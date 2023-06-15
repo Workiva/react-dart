@@ -67,7 +67,7 @@ class _Foo2 extends react.Component2 {
   render() => react.div({});
 }
 
-final JsFoo = ReactJsComponentFactoryProxy(reactJsModule.React.createClass(ReactClassConfig(
+final JsFoo = ReactJsComponentFactoryProxy(React.createClass(ReactClassConfig(
   displayName: 'JsFoo',
   render: allowInterop(() => react.div({})),
 )));

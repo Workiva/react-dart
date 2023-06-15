@@ -26,7 +26,7 @@ export 'package:react/src/react_client/factory_util.dart' show generateJsProps, 
 /// a non-growable [List], but this may be updated in the future to support
 /// advanced nesting and other kinds of children.
 dynamic listifyChildren(dynamic children) {
-  if (reactJsModule.React.isValidElement(children)) {
+  if (React.isValidElement(children)) {
     // Short-circuit if we're dealing with a ReactElement to avoid the dart2js
     // interceptor lookup involved in Dart type-checking.
     return children;
@@ -69,7 +69,7 @@ mixin JsBackedMapComponentFactoryMixin on ReactComponentFactoryProxy {
   ReactElement build(Map props, [List childrenArgs = const []]) {
     var children = generateChildren(childrenArgs, shouldAlwaysBeList: true);
     var convertedProps = generateExtendedJsProps(props);
-    return reactJsModule.React.createElement(type, convertedProps, children);
+    return React.createElement(type, convertedProps, children);
   }
 
   static JsMap generateExtendedJsProps(Map props) => generateJsProps(props, wrapWithJsify: false);
@@ -99,7 +99,7 @@ class ReactDartComponentFactoryProxy<TComponent extends Component> extends React
     var children = convertArgsToChildren(childrenArgs);
     children = listifyChildren(children);
 
-    return reactJsModule.React.createElement(type, generateExtendedJsProps(props, children, defaultProps: defaultProps), children);
+    return React.createElement(type, generateExtendedJsProps(props, children, defaultProps: defaultProps), children);
   }
 
   /// Returns a JavaScript version of the specified [props], preprocessed for consumption by ReactJS and prepared for
@@ -223,7 +223,7 @@ class ReactJsContextComponentFactoryProxy extends ReactJsComponentFactoryProxy {
       }
     }
 
-    return reactJsModule.React.createElement(type, generateExtendedJsProps(props), children);
+    return React.createElement(type, generateExtendedJsProps(props), children);
   }
 
   /// Returns a JavaScript version of the specified [props], preprocessed for consumption by ReactJS and prepared for
@@ -277,7 +277,7 @@ class ReactJsComponentFactoryProxy extends ReactComponentFactoryProxy {
     dynamic children = generateChildren(childrenArgs, shouldAlwaysBeList: alwaysReturnChildrenAsList);
     JsMap convertedProps =
         generateJsProps(props, convertCallbackRefValue: false, additionalRefPropKeys: _additionalRefPropKeys);
-    return reactJsModule.React.createElement(type, convertedProps, children);
+    return React.createElement(type, convertedProps, children);
   }
 }
 
@@ -302,7 +302,7 @@ class ReactDomComponentFactoryProxy extends ReactComponentFactoryProxy {
   ReactElement build(Map props, [List childrenArgs = const []]) {
     var children = generateChildren(childrenArgs);
     var convertedProps = generateJsProps(props, convertCallbackRefValue: false, wrapWithJsify: true);
-    return reactJsModule.React.createElement(type, convertedProps, children);
+    return React.createElement(type, convertedProps, children);
   }
 
   /// Performs special handling of certain props for consumption by ReactJS DOM components.
@@ -389,7 +389,7 @@ ReactClass _wrapForwardRefFunctionComponent(DartForwardRefFunctionComponent dart
     // This is a work-around to display the correct name in the React DevTools and error boundary component stacks.
     defineProperty(interopFunction, 'name', JsPropertyDescriptor(value: displayName));
   }
-  final jsForwardRefFunction = reactJsModule.React.forwardRef(interopFunction);
+  final jsForwardRefFunction = React.forwardRef(interopFunction);
   // ignore: invalid_use_of_protected_member
   setProperty(jsForwardRefFunction, 'dartComponentVersion', ReactDartComponentVersion.component2);
   return jsForwardRefFunction;
