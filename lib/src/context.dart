@@ -120,10 +120,6 @@ Context<TValue> createContext<TValue>([
   );
 }
 
-// A JavaScript symbol that we use as the key in a JS Object to wrap the Dart.
-@JS()
-external get _reactDartContextSymbol;
-
 /// A context utility for assisting with common needs of ReactDartContext.
 ///
 /// __For internal/advanced use only.__
@@ -132,7 +128,7 @@ abstract class ContextHelpers {
   // It is wrapped so that the same Dart value can be retrieved from Dart with [_unjsifyNewContext].
   static dynamic jsifyNewContext(dynamic context) {
     var jsContextHolder = newObject();
-    setProperty(jsContextHolder, _reactDartContextSymbol, DartValueWrapper.wrapIfNeeded(context));
+    setProperty(jsContextHolder, reactModuleLoader.module.helpers.reactDartContextSymbol, DartValueWrapper.wrapIfNeeded(context));
     return jsContextHolder;
   }
 
@@ -140,8 +136,8 @@ abstract class ContextHelpers {
   // The value is unwrapped so that the same Dart value can be passed through js and retrived by Dart
   // when used with [_jsifyNewContext].
   static dynamic unjsifyNewContext(dynamic interopContext) {
-    if (interopContext != null && hasProperty(interopContext, _reactDartContextSymbol)) {
-      return DartValueWrapper.unwrapIfNeeded(getProperty(interopContext, _reactDartContextSymbol));
+    if (interopContext != null && hasProperty(interopContext, reactModuleLoader.module.helpers.reactDartContextSymbol)) {
+      return DartValueWrapper.unwrapIfNeeded(getProperty(interopContext, reactModuleLoader.module.helpers.reactDartContextSymbol));
     }
     return interopContext;
   }
