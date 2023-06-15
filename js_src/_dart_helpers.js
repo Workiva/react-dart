@@ -1,3 +1,5 @@
+import {React} from './react';
+
 /**
  * react-dart JS interop helpers (used by react_client.dart and react_client/js_interop_helpers.dart)
  */
@@ -7,20 +9,20 @@ const _reactDartSymbolPrefix = 'react-dart.';
 
 /// A global symbol to identify javascript objects owned by react-dart context,
 /// in order to jsify and unjsify context objects correctly.
-const _reactDartContextSymbol = Symbol(_reactDartSymbolPrefix + 'context');
+const reactDartContextSymbol = Symbol(_reactDartSymbolPrefix + 'context');
 
 /// A JS side function to allow Dart to throw an error from JS in order to catch it Dart side.
 /// Used within Component2 error boundry methods to dartify the error argument.
 /// See: https://github.com/dart-lang/sdk/issues/36363
-function _throwErrorFromJS(error) {
+function throwErrorFromJS(error) {
   throw error;
 }
 
 /// A JS variable that can be used with Fart interop in order to force returning a
 /// JavaScript `null`. This prevents dart2js from possibly converting Dart `null` into `undefined`.
-const _jsNull = null;
+const jsNull = null;
 
-function _createReactDartComponentClass(dartInteropStatics, componentStatics, jsConfig) {
+function createReactDartComponentClass(dartInteropStatics, componentStatics, jsConfig) {
   class ReactDartComponent extends React.Component {
     constructor(props, context) {
       super(props, context);
@@ -93,7 +95,7 @@ function _createReactDartComponentClass(dartInteropStatics, componentStatics, js
   return ReactDartComponent;
 }
 
-function _createReactDartComponentClass2(dartInteropStatics, componentStatics, jsConfig) {
+function createReactDartComponentClass2(dartInteropStatics, componentStatics, jsConfig) {
   class ReactDartComponent2 extends React.Component {
     constructor(props, context) {
       super(props, context);
@@ -166,16 +168,16 @@ function _createReactDartComponentClass2(dartInteropStatics, componentStatics, j
   return ReactDartComponent2;
 }
 
-function _markChildValidated(child) {
+function markChildValidated(child) {
   const store = child._store;
   if (store) store.validated = true;
 }
 
-export default {
-  _reactDartContextSymbol,
-  _createReactDartComponentClass,
-  _createReactDartComponentClass2,
-  _markChildValidated,
-  _throwErrorFromJS,
-  _jsNull,
+export {
+  reactDartContextSymbol,
+  createReactDartComponentClass,
+  createReactDartComponentClass2,
+  markChildValidated,
+  throwErrorFromJS,
+  jsNull,
 };

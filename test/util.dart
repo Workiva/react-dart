@@ -149,7 +149,7 @@ class RefTestCaseCollection<T> {
 
   RefTestCase createJsRefObjectCase() {
     const name = 'JS ref object';
-    final ref = React.createRef();
+    final ref = reactJsModule.React.createRef();
     return RefTestCase(
       name: name,
       ref: ref,

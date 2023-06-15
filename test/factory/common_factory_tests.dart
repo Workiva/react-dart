@@ -242,14 +242,14 @@ void domEventHandlerWrappingTests(ReactComponentFactoryProxy factory) {
       });
 
       // Simulate a JS component cloning a handler onto a ReactElement created by a Dart component.
-      element = React.cloneElement(
+      element = reactJsModule.React.cloneElement(
         element,
         jsifyAndAllowInterop({
           jsCloned.eventPropKey: (event) => events[jsCloned] = event,
         }),
       );
 
-      element = React.cloneElement(
+      element = reactJsModule.React.cloneElement(
         element,
         // Invoke the factory corresponding to element's type
         // to get the correct version of the handler (converted or non-converted)

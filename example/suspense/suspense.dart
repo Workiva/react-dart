@@ -12,14 +12,12 @@ import 'package:react/react_dom.dart' as react_dom;
 import 'package:react/src/js_interop_util.dart';
 import './simple_component.dart' deferred as simple;
 
-@JS('React.lazy')
-external ReactClass jsLazy(Promise Function() factory);
 
 // Only intended for testing purposes, Please do not copy/paste this into repo.
 // This will most likely be added to the PUBLIC api in the future,
 // but needs more testing and Typing decisions to be made first.
 ReactJsComponentFactoryProxy lazy(Future<ReactComponentFactoryProxy> factory()) => ReactJsComponentFactoryProxy(
-      jsLazy(
+      reactJsModule.React.lazy(
         allowInterop(
           () => futureToPromise(
             // React.lazy only supports "default exports" from a module.

@@ -141,7 +141,7 @@ main() {
           consoleErrorCalled = false;
           consoleErrorMessage = null;
           mountNode = new DivElement();
-          react_interop.PropTypes.resetWarningCache();
+          react_interop.reactJsModule.React.PropTypes.resetWarningCache();
           originalConsoleError = context['console']['error'];
           context['console']['error'] = new JsFunction.withThis((self, message) {
             consoleErrorCalled = true;

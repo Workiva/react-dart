@@ -12,7 +12,7 @@ import 'package:test/test.dart';
 import 'package:react/react.dart' as react;
 import 'package:react/react_client.dart';
 import 'package:react/react_client/component_factory.dart';
-import 'package:react/react_client/react_interop.dart' show React, ReactComponent;
+import 'package:react/react_client/react_interop.dart' show React, ReactComponent, reactJsModule;
 import 'package:react/react_client/js_interop_helpers.dart';
 import 'package:react/react_dom.dart' as react_dom;
 import 'package:react/src/react_client/event_prop_key_to_event_factory.dart';
@@ -211,7 +211,7 @@ external Function compositeComponent();
 final Function testJsComponentFactory = (() {
   final type = compositeComponent();
   return ([props = const {}, children]) {
-    return React.createElement(type, jsifyAndAllowInterop(props), listifyChildren(children));
+    return reactJsModule.React.createElement(type, jsifyAndAllowInterop(props), listifyChildren(children));
   };
 })();
 

@@ -1,0 +1,19 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <title>ESM module import example</title>
+</head>
+<body>
+<div id="main"></div>
+
+<script type="module">
+  window._esmDynamicImport = function(moduleName) {
+    return import(moduleName);
+  }
+</script>
+
+<!-- Serve compiled output. -->
+<script defer src="main.dart.js"></script>
+</body>
+</html>
