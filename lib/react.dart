@@ -65,6 +65,38 @@ typedef FunctionComponentRegistrar = ReactDartFunctionComponentFactoryProxy
 /// See: <https://reactjs.org/docs/fragments.html>
 var Fragment = ReactJsComponentFactoryProxy(React.Fragment);
 
+/// [Suspense] lets you display a fallback UI until its children have finished loading.
+///
+/// Like [react.Fragment], [Suspense] does not render any visible UI.
+/// It lets you specify a loading indicator in case some components in
+/// the tree below it are not yet ready to render.
+/// [Suspense] currently works with:
+/// - Components that use React.lazy
+///   - (dynamic imports, not currently implemented in dart)
+///
+/// Example Usage:
+/// ```
+/// render() {
+///   return react.div({}, [
+///     Header({}),
+///     react.Suspense({'fallback': LoadingIndicator({})}, [
+///       LazyBodyComponent({}),
+///       NotALazyComponent({})
+///     ]),
+///     Footer({}),
+///   ]);
+/// }
+/// ```
+///
+/// In the above example, [Suspense] will display the `LoadingIndicator` until
+/// `LazyBodyComponent` is loaded. It will not display for `Header` or `Footer`.
+///
+/// However, any "lazy" descendant components in `LazyBodyComponent` and
+/// `NotALazyComponent` will trigger the closest ancestor [Suspense].
+///
+/// See: <https://react.dev/reference/react/Suspense>
+var Suspense = ReactJsComponentFactoryProxy(React.Suspense);
+
 /// StrictMode is a tool for highlighting potential problems in an application.
 ///
 /// StrictMode does not render any visible UI. It activates additional checks and warnings for its descendants.

@@ -1198,8 +1198,12 @@ void sharedLifecycleTests<T extends react.Component>({
         initialProps = unmodifiableMap({'getInitialState': (_) => initialState, 'initialState': (_) => initialState});
         newState1 = {'foo': 'bar'};
         newState2 = {'baz': 'foobar'};
-        expectedState1 = {}..addAll(initialState)..addAll(newState1);
-        expectedState2 = {}..addAll(expectedState1)..addAll(newState2);
+        expectedState1 = {}
+          ..addAll(initialState)
+          ..addAll(newState1);
+        expectedState2 = {}
+          ..addAll(expectedState1)
+          ..addAll(newState2);
 
         component = getDartComponent(render(LifecycleTest(initialProps)));
         component.lifecycleCalls.clear();

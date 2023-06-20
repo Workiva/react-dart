@@ -53,6 +53,7 @@ abstract class React {
   external static bool isValidElement(dynamic object);
 
   external static ReactClass get StrictMode;
+  external static ReactClass get Suspense;
   external static ReactClass get Fragment;
 
   external static List<dynamic> useState(dynamic value);
