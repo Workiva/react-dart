@@ -34,8 +34,7 @@ class SyntheticDataTransfer {
   /// See <https://developer.mozilla.org/en-US/docs/Web/API/DataTransfer/types>
   final List<String> types;
 
-  SyntheticDataTransfer(
-      this.dropEffect, this.effectAllowed, this.files, this.types);
+  SyntheticDataTransfer(this.dropEffect, this.effectAllowed, this.files, this.types);
 }
 
 /// Wrapper for [SyntheticDataTransfer].

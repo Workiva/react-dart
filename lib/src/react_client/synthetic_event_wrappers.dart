@@ -144,8 +144,7 @@ class SyntheticEvent {
   /// ```
   ///
   /// See: <https://reactjs.org/docs/events.html#event-pooling>
-  @Deprecated(
-      'The modern event system does not use pooling. This does nothing.')
+  @Deprecated('The modern event system does not use pooling. This does nothing.')
   external void persist();
 }
 

@@ -64,9 +64,7 @@ main() {
           ]),
           mountElement);
 
-      expect(callCount, 2,
-          reason:
-              'Dummy should have been remounted as a result of Fragment key changing');
+      expect(callCount, 2, reason: 'Dummy should have been remounted as a result of Fragment key changing');
     });
   });
 }

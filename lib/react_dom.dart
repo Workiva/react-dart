@@ -7,8 +7,7 @@ library react_dom;
 // ignore: deprecated_member_use_from_same_package
 import 'package:react/react.dart' show Component;
 import 'package:react/react_client/react_interop.dart' show ReactDom;
-import 'package:react/src/react_client/private_utils.dart'
-    show validateJsApiThenReturn;
+import 'package:react/src/react_client/private_utils.dart' show validateJsApiThenReturn;
 
 /// Renders a `ReactElement` into the DOM in the supplied `container` and returns a reference to the component
 /// (or returns null for stateless components).
@@ -22,14 +21,12 @@ Function render = validateJsApiThenReturn(() => ReactDom.render);
 /// Removes a mounted React component from the DOM and cleans up its event handlers and state.
 ///
 /// > Returns `false` if no component was mounted in the container specified via [render], otherwise returns `true`.
-Function unmountComponentAtNode =
-    validateJsApiThenReturn(() => ReactDom.unmountComponentAtNode);
+Function unmountComponentAtNode = validateJsApiThenReturn(() => ReactDom.unmountComponentAtNode);
 
 /// If the component has been mounted into the DOM, this returns the corresponding native browser DOM `Element`.
 Function findDOMNode = validateJsApiThenReturn(() => _findDomNode);
 
 dynamic _findDomNode(component) {
   // ignore: deprecated_member_use_from_same_package
-  return ReactDom.findDOMNode(
-      component is Component ? component.jsThis : component);
+  return ReactDom.findDOMNode(component is Component ? component.jsThis : component);
 }

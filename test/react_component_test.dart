@@ -12,9 +12,7 @@ main() {
       component = MyComponent();
     });
 
-    group(
-        'throws when unsupported lifecycle methods are called (e.g., via super-calls)',
-        () {
+    group('throws when unsupported lifecycle methods are called (e.g., via super-calls)', () {
       test('getInitialState', () {
         expect(() => component.getInitialState(), throwsUnsupportedError);
       });
@@ -25,32 +23,26 @@ main() {
         expect(() => component.componentWillMount(), throwsUnsupportedError);
       });
       test('componentWillReceiveProps', () {
-        expect(() => component.componentWillReceiveProps({}),
-            throwsUnsupportedError);
+        expect(() => component.componentWillReceiveProps({}), throwsUnsupportedError);
       });
       test('componentWillUpdate', () {
-        expect(() => component.componentWillUpdate({}, {}),
-            throwsUnsupportedError);
+        expect(() => component.componentWillUpdate({}, {}), throwsUnsupportedError);
       });
       test('getChildContext', () {
         expect(() => component.getChildContext(), throwsUnsupportedError);
       });
       test('shouldComponentUpdateWithContext', () {
-        expect(() => component.shouldComponentUpdateWithContext({}, {}, null),
-            throwsUnsupportedError);
+        expect(() => component.shouldComponentUpdateWithContext({}, {}, null), throwsUnsupportedError);
       });
       test('componentWillUpdateWithContext', () {
-        expect(() => component.componentWillUpdateWithContext({}, {}, null),
-            throwsUnsupportedError);
+        expect(() => component.componentWillUpdateWithContext({}, {}, null), throwsUnsupportedError);
       });
       test('componentWillReceivePropsWithContext', () {
-        expect(() => component.componentWillReceivePropsWithContext({}, null),
-            throwsUnsupportedError);
+        expect(() => component.componentWillReceivePropsWithContext({}, null), throwsUnsupportedError);
       });
     });
 
-    group('throws when unsupported members inherited from Component are used',
-        () {
+    group('throws when unsupported members inherited from Component are used', () {
       test('replaceState', () {
         expect(() => component.replaceState(null), throwsUnsupportedError);
       });
@@ -61,8 +53,7 @@ main() {
         expect(() => component.contextKeys, throwsUnsupportedError);
       });
       test('initComponentInternal', () {
-        expect(() => component.initComponentInternal(null, null),
-            throwsUnsupportedError);
+        expect(() => component.initComponentInternal(null, null), throwsUnsupportedError);
       });
       test('initStateInternal', () {
         expect(() => component.initStateInternal(), throwsUnsupportedError);
@@ -89,8 +80,7 @@ main() {
         expect(() => component.nextProps, throwsUnsupportedError);
       });
       test('transferComponentState', () {
-        expect(
-            () => component.transferComponentState(), throwsUnsupportedError);
+        expect(() => component.transferComponentState(), throwsUnsupportedError);
       });
       test('ref getter', () {
         expect(() => component.ref, throwsUnsupportedError);
@@ -99,8 +89,7 @@ main() {
         expect(() => component.setStateCallbacks, throwsUnsupportedError);
       });
       test('transactionalSetStateCallbacks getter', () {
-        expect(() => component.transactionalSetStateCallbacks,
-            throwsUnsupportedError);
+        expect(() => component.transactionalSetStateCallbacks, throwsUnsupportedError);
       });
     });
   });

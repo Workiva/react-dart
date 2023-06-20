@@ -52,8 +52,7 @@ class StateHook<T> {
   /// Updates [value] to the return value of [computeNewValue].
   ///
   /// See: <https://reactjs.org/docs/hooks-reference.html#functional-updates>.
-  void setWithUpdater(T Function(T oldValue) computeNewValue) =>
-      _setValue(allowInterop(computeNewValue));
+  void setWithUpdater(T Function(T oldValue) computeNewValue) => _setValue(allowInterop(computeNewValue));
 }
 
 /// Adds local state to a [DartFunctionComponent]
@@ -174,11 +173,9 @@ class ReducerHook<TState, TAction, TInit> {
 
   ReducerHook._(this._state, this._dispatch);
 
-  factory ReducerHook(TState Function(TState state, TAction action) reducer,
-      TState initialState) {
+  factory ReducerHook(TState Function(TState state, TAction action) reducer, TState initialState) {
     final result = React.useReducer(allowInterop(reducer), initialState);
-    return ReducerHook._(
-        result[0] as TState, result[1] as void Function(TAction));
+    return ReducerHook._(result[0] as TState, result[1] as void Function(TAction));
   }
 
   /// Constructor for [useReducerLazy], calls lazy version of [React.useReducer] to
@@ -186,13 +183,9 @@ class ReducerHook<TState, TAction, TInit> {
   ///
   /// See: <https://reactjs.org/docs/hooks-reference.html#lazy-initialization>.
   factory ReducerHook.lazy(
-      TState Function(TState state, TAction action) reducer,
-      TInit initialArg,
-      TState Function(TInit) init) {
-    final result =
-        React.useReducer(allowInterop(reducer), initialArg, allowInterop(init));
-    return ReducerHook._(
-        result[0] as TState, result[1] as void Function(TAction));
+      TState Function(TState state, TAction action) reducer, TInit initialArg, TState Function(TInit) init) {
+    final result = React.useReducer(allowInterop(reducer), initialArg, allowInterop(init));
+    return ReducerHook._(result[0] as TState, result[1] as void Function(TAction));
   }
 
   /// The current state map of the component.
@@ -245,8 +238,7 @@ class ReducerHook<TState, TAction, TInit> {
 ///
 /// Learn more: <https://reactjs.org/docs/hooks-reference.html#usereducer>.
 ReducerHook<TState, TAction, TInit> useReducer<TState, TAction, TInit>(
-        TState Function(TState state, TAction action) reducer,
-        TState initialState) =>
+        TState Function(TState state, TAction action) reducer, TState initialState) =>
     ReducerHook(reducer, initialState);
 
 /// Initializes state of a [DartFunctionComponent] to `init(initialArg)` and creates `dispatch` method.
@@ -300,9 +292,7 @@ ReducerHook<TState, TAction, TInit> useReducer<TState, TAction, TInit>(
 ///
 /// Learn more: <https://reactjs.org/docs/hooks-reference.html#lazy-initialization>.
 ReducerHook<TState, TAction, TInit> useReducerLazy<TState, TAction, TInit>(
-        TState Function(TState state, TAction action) reducer,
-        TInit initialArg,
-        TState Function(TInit) init) =>
+        TState Function(TState state, TAction action) reducer, TInit initialArg, TState Function(TInit) init) =>
     ReducerHook.lazy(reducer, initialArg, init);
 
 /// Returns a memoized version of [callback] that only changes if one of the [dependencies] has changed.
@@ -366,8 +356,7 @@ T useCallback<T extends Function>(T callback, List dependencies) =>
 /// ```
 ///
 /// Learn more: <https://reactjs.org/docs/hooks-reference.html#usecontext>.
-T useContext<T>(Context<T> context) =>
-    ContextHelpers.unjsifyNewContext(React.useContext(context.jsThis)) as T;
+T useContext<T>(Context<T> context) => ContextHelpers.unjsifyNewContext(React.useContext(context.jsThis)) as T;
 
 /// Returns a mutable [Ref] object with [Ref.current] property initialized to [initialValue].
 ///
@@ -472,8 +461,7 @@ T useMemo<T>(T Function() createFunction, [List<dynamic>? dependencies]) =>
 /// ```
 ///
 /// Learn more: <https://reactjs.org/docs/hooks-reference.html#uselayouteffect>.
-void useLayoutEffect(dynamic Function() sideEffect,
-    [List<Object?>? dependencies]) {
+void useLayoutEffect(dynamic Function() sideEffect, [List<Object?>? dependencies]) {
   final wrappedSideEffect = allowInterop(() {
     final result = sideEffect();
     if (result is Function) {
@@ -541,8 +529,7 @@ void useLayoutEffect(dynamic Function() sideEffect,
 /// ```
 ///
 /// Learn more: <https://reactjs.org/docs/hooks-reference.html#useimperativehandle>.
-void useImperativeHandle(dynamic ref, dynamic Function() createHandle,
-        [List<dynamic>? dependencies]) =>
+void useImperativeHandle(dynamic ref, dynamic Function() createHandle, [List<dynamic>? dependencies]) =>
     // ref will be a JsRef in forwardRef2, or a Ref in forwardRef. (Or null if no ref is provided)
     //
     // For some reason the ref argument to React.forwardRef is usually a JsRef object no matter the input ref type,
@@ -550,8 +537,7 @@ void useImperativeHandle(dynamic ref, dynamic Function() createHandle,
     // - https://github.com/facebook/flow/blob/master@%7B2020-09-08%7D/lib/react.js#L373
     // - https://github.com/facebook/flow/blob/master@%7B2020-09-08%7D/lib/react.js#L305
     // and not just a ref object, so we type it as dynamic here.
-    React.useImperativeHandle(
-        ref is Ref ? ref.jsRef : ref, allowInterop(createHandle), dependencies);
+    React.useImperativeHandle(ref is Ref ? ref.jsRef : ref, allowInterop(createHandle), dependencies);
 
 /// Displays [value] as a label for a custom hook in React DevTools.
 ///

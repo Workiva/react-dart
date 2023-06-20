@@ -16,24 +16,18 @@ import 'package:react/react_client.dart';
 import 'package:react/react_client/react_interop.dart';
 import 'package:react/react_client/component_factory.dart';
 import 'package:react/src/context.dart';
-import 'package:react/src/react_client/component_registration.dart'
-    as registration_utils;
-import 'package:react/src/react_client/private_utils.dart'
-    show validateJsApiThenReturn;
+import 'package:react/src/react_client/component_registration.dart' as registration_utils;
+import 'package:react/src/react_client/private_utils.dart' show validateJsApiThenReturn;
 
 export 'package:react/src/context.dart';
 export 'package:react/src/prop_validator.dart';
 export 'package:react/src/react_client/event_helpers.dart';
-export 'package:react/react_client/react_interop.dart'
-    show forwardRef, forwardRef2, createRef, memo, memo2;
-export 'package:react/src/react_client/synthetic_event_wrappers.dart'
-    hide NonNativeDataTransfer;
-export 'package:react/src/react_client/synthetic_data_transfer.dart'
-    show SyntheticDataTransfer;
+export 'package:react/react_client/react_interop.dart' show forwardRef, forwardRef2, createRef, memo, memo2;
+export 'package:react/src/react_client/synthetic_event_wrappers.dart' hide NonNativeDataTransfer;
+export 'package:react/src/react_client/synthetic_data_transfer.dart' show SyntheticDataTransfer;
 export 'package:react/src/react_client/event_helpers.dart';
 
-typedef PropValidator<TProps> = Error? Function(
-    TProps props, PropValidatorInfo info);
+typedef PropValidator<TProps> = Error? Function(TProps props, PropValidatorInfo info);
 
 /// A React component declared using a function that takes in [props] and returns rendered output.
 ///
@@ -49,13 +43,12 @@ typedef DartFunctionComponent = dynamic Function(JsBackedMap props);
 /// In the current JS implementation, the ref argument to [React.forwardRef] is usually a JsRef object no matter the input ref type,
 /// but according to React the ref argument can be any ref type: https://github.com/facebook/flow/blob/master@%7B2020-09-08%7D/lib/react.js#L305
 /// and not just a ref object, so we type [ref] as dynamic here.
-typedef DartForwardRefFunctionComponent = dynamic Function(
-    JsBackedMap props, dynamic ref);
+typedef DartForwardRefFunctionComponent = dynamic Function(JsBackedMap props, dynamic ref);
 
 typedef ComponentFactory<T extends Component> = T Function();
 
-typedef ComponentRegistrar = ReactComponentFactoryProxy
-    Function(ComponentFactory componentFactory, [Iterable<String> skipMethods]);
+typedef ComponentRegistrar = ReactComponentFactoryProxy Function(ComponentFactory componentFactory,
+    [Iterable<String> skipMethods]);
 
 typedef ComponentRegistrar2 = ReactDartComponentFactoryProxy2 Function(
   ComponentFactory<Component2> componentFactory, {
@@ -411,8 +404,7 @@ abstract class Component {
   /// > in ReactJS 16 that is exposed via the [Component2] class.
   /// >
   /// > This will be completely removed when the JS side of it is slated for removal (ReactJS 18 / react.dart 7.0.0)
-  void componentWillReceivePropsWithContext(
-      Map newProps, dynamic nextContext) {}
+  void componentWillReceivePropsWithContext(Map newProps, dynamic nextContext) {}
 
   /// ReactJS lifecycle method that is invoked before rendering when [nextProps] or [nextState] are being received.
   ///
@@ -430,9 +422,7 @@ abstract class Component {
   /// > This will be completely removed when the JS side of it is slated for removal (ReactJS 18 / react.dart 7.0.0)
   @Deprecated('7.0.0')
   // ignore: avoid_returning_null
-  bool? shouldComponentUpdateWithContext(
-          Map nextProps, Map nextState, Map nextContext) =>
-      null;
+  bool? shouldComponentUpdateWithContext(Map nextProps, Map nextState, Map nextContext) => null;
 
   /// ReactJS lifecycle method that is invoked immediately before rendering when [nextProps] or [nextState] are being
   /// received.
@@ -464,8 +454,7 @@ abstract class Component {
   /// >
   /// > This will be completely removed when the JS side of it is slated for removal (ReactJS 18 / react.dart 7.0.0)
   @Deprecated('7.0.0')
-  void componentWillUpdateWithContext(
-      Map nextProps, Map nextState, Map? nextContext) {}
+  void componentWillUpdateWithContext(Map nextProps, Map nextState, Map? nextContext) {}
 
   /// ReactJS lifecycle method that is invoked immediately after the `Component`'s updates are flushed to the DOM.
   ///
@@ -719,8 +708,7 @@ abstract class Component2 implements Component {
   /// Optionally accepts a [callback] that gets called after the component updates.
   ///
   /// See: <https://reactjs.org/docs/react-component.html#setstate>
-  void setStateWithUpdater(StateUpdaterCallback updater,
-      [SetStateCallback? callback]) {
+  void setStateWithUpdater(StateUpdaterCallback updater, [SetStateCallback? callback]) {
     _bridge.setStateWithUpdater(this, updater, callback);
   }
 
@@ -981,8 +969,7 @@ abstract class Component2 implements Component {
   // ******************************************************************************************************************
 
   UnsupportedError _unsupportedLifecycleError(String memberName) =>
-      UnsupportedError(
-          'Component2 drops support for the lifecycle method $memberName.'
+      UnsupportedError('Component2 drops support for the lifecycle method $memberName.'
           ' See doc comment on Component2.$memberName for migration instructions.');
 
   /// Invoked once before the `Component` is mounted. The return value will be used as the initial value of [state].
@@ -1021,8 +1008,7 @@ abstract class Component2 implements Component {
   @override
   @mustCallSuper
   @Deprecated('7.0.0')
-  void componentWillMount() =>
-      throw _unsupportedLifecycleError('componentWillMount');
+  void componentWillMount() => throw _unsupportedLifecycleError('componentWillMount');
 
   /// ReactJS lifecycle method that is invoked when a `Component` is receiving new props ([nextProps]).
   ///
@@ -1080,8 +1066,7 @@ abstract class Component2 implements Component {
   @override
   @mustCallSuper
   @Deprecated('7.0.0')
-  void componentWillReceiveProps(Map nextProps) =>
-      throw _unsupportedLifecycleError('componentWillReceiveProps');
+  void componentWillReceiveProps(Map nextProps) => throw _unsupportedLifecycleError('componentWillReceiveProps');
 
   /// ReactJS lifecycle method that is invoked when a `Component` is receiving
   /// new props ([nextProps]) and/or state ([nextState]).
@@ -1124,8 +1109,7 @@ abstract class Component2 implements Component {
   @override
   @mustCallSuper
   @Deprecated('7.0.0')
-  void componentWillUpdate(Map nextProps, Map nextState) =>
-      throw _unsupportedLifecycleError('componentWillUpdate');
+  void componentWillUpdate(Map nextProps, Map nextState) => throw _unsupportedLifecycleError('componentWillUpdate');
 
   /// Do not use; this is part of the legacy context API.
   ///
@@ -1135,8 +1119,7 @@ abstract class Component2 implements Component {
   @override
   @mustCallSuper
   @Deprecated('7.0.0')
-  Map<String, dynamic> getChildContext() =>
-      throw _unsupportedLifecycleError('getChildContext');
+  Map<String, dynamic> getChildContext() => throw _unsupportedLifecycleError('getChildContext');
 
   /// Do not use; this is part of the legacy context API.
   ///
@@ -1146,8 +1129,7 @@ abstract class Component2 implements Component {
   @override
   @mustCallSuper
   @Deprecated('7.0.0')
-  bool shouldComponentUpdateWithContext(
-          Map nextProps, Map nextState, dynamic nextContext) =>
+  bool shouldComponentUpdateWithContext(Map nextProps, Map nextState, dynamic nextContext) =>
       throw _unsupportedLifecycleError('shouldComponentUpdateWithContext');
 
   /// Do not use; this is part of the legacy context API.
@@ -1158,8 +1140,7 @@ abstract class Component2 implements Component {
   @override
   @mustCallSuper
   @Deprecated('7.0.0')
-  void componentWillUpdateWithContext(
-          Map nextProps, Map nextState, dynamic nextContext) =>
+  void componentWillUpdateWithContext(Map nextProps, Map nextState, dynamic nextContext) =>
       throw _unsupportedLifecycleError('componentWillUpdateWithContext');
 
   /// Do not use; this is part of the legacy context API.
@@ -1170,40 +1151,35 @@ abstract class Component2 implements Component {
   @override
   @mustCallSuper
   @Deprecated('7.0.0')
-  void componentWillReceivePropsWithContext(
-          Map newProps, dynamic nextContext) =>
+  void componentWillReceivePropsWithContext(Map newProps, dynamic nextContext) =>
       throw _unsupportedLifecycleError('componentWillReceivePropsWithContext');
 
   // ******************************************************************************************************************
   // Other deprecated and unsupported members
   // ******************************************************************************************************************
 
-  UnsupportedError _unsupportedError(String memberName) =>
-      UnsupportedError('Component2 drops support for $memberName');
+  UnsupportedError _unsupportedError(String memberName) => UnsupportedError('Component2 drops support for $memberName');
 
   /// Do not use.
   ///
   /// Will be removed when [Component] is removed in the `7.0.0` release.
   @override
   @Deprecated('7.0.0')
-  void replaceState(Map? newState, [SetStateCallback? callback]) =>
-      throw _unsupportedError('replaceState');
+  void replaceState(Map? newState, [SetStateCallback? callback]) => throw _unsupportedError('replaceState');
 
   /// Do not use.
   ///
   /// Will be removed when [Component] is removed in the `7.0.0` release.
   @override
   @Deprecated('7.0.0')
-  Iterable<String> get childContextKeys =>
-      throw _unsupportedError('"Legacy" Context [childContextKeys]');
+  Iterable<String> get childContextKeys => throw _unsupportedError('"Legacy" Context [childContextKeys]');
 
   /// Do not use.
   ///
   /// Will be removed when [Component] is removed in the `7.0.0` release.
   @override
   @Deprecated('7.0.0')
-  Iterable<String> get contextKeys =>
-      throw _unsupportedError('"Legacy" Context [contextKeys]');
+  Iterable<String> get contextKeys => throw _unsupportedError('"Legacy" Context [contextKeys]');
 
   /// Do not use.
   ///
@@ -1228,8 +1204,7 @@ abstract class Component2 implements Component {
   get nextContext => throw _unsupportedError('"Legacy" Context [nextContext]');
   @override
   @Deprecated('7.0.0')
-  set nextContext(_) =>
-      throw _unsupportedError('"Legacy" Context [nextContext]');
+  set nextContext(_) => throw _unsupportedError('"Legacy" Context [nextContext]');
 
   /// Do not use.
   ///
@@ -1239,16 +1214,14 @@ abstract class Component2 implements Component {
   get prevContext => throw _unsupportedError('"Legacy" Context [prevContext]');
   @override
   @Deprecated('7.0.0')
-  set prevContext(_) =>
-      throw _unsupportedError('"Legacy" Context [prevContext]');
+  set prevContext(_) => throw _unsupportedError('"Legacy" Context [prevContext]');
 
   /// Do not use.
   ///
   /// Will be removed when [Component] is removed in the `7.0.0` release.
   @override
   @Deprecated('7.0.0')
-  Map get prevState =>
-      throw _unsupportedError('"Legacy" Context [prevContext]');
+  Map get prevState => throw _unsupportedError('"Legacy" Context [prevContext]');
   @override
   set prevState(_) => throw _unsupportedError('"Legacy" Context [prevContext]');
 
@@ -1273,8 +1246,7 @@ abstract class Component2 implements Component {
   /// Will be removed when [Component] is removed in the `7.0.0` release.
   @override
   @Deprecated('7.0.0')
-  void transferComponentState() =>
-      throw _unsupportedError('transferComponentState');
+  void transferComponentState() => throw _unsupportedError('transferComponentState');
 
   /// Do not use.
   ///
@@ -1290,8 +1262,7 @@ abstract class Component2 implements Component {
   /// Will be removed when [Component] is removed in the `7.0.0` release.
   @override
   @Deprecated('7.0.0')
-  List<SetStateCallback> get setStateCallbacks =>
-      throw _unsupportedError('setStateCallbacks');
+  List<SetStateCallback> get setStateCallbacks => throw _unsupportedError('setStateCallbacks');
 
   @override
   @Deprecated('7.0.0')
@@ -1380,8 +1351,7 @@ abstract class Component2 implements Component {
 mixin TypedSnapshot<TSnapshot> {
   TSnapshot getSnapshotBeforeUpdate(Map prevProps, Map prevState);
 
-  void componentDidUpdate(Map prevProps, Map prevState,
-      [covariant TSnapshot snapshot]);
+  void componentDidUpdate(Map prevProps, Map prevState, [covariant TSnapshot snapshot]);
 }
 
 /// Creates a ReactJS virtual DOM instance ([ReactElement] on the client).
@@ -1515,14 +1485,11 @@ class NotSpecified {
 }
 
 /// Registers a component factory on both client and server.
-@Deprecated(
-    'Use registerComponent2 after migrating your components from Component to Component2.')
-/*ComponentRegistrar*/ Function registerComponent =
-    validateJsApiThenReturn(() => registration_utils.registerComponent);
+@Deprecated('Use registerComponent2 after migrating your components from Component to Component2.')
+/*ComponentRegistrar*/ Function registerComponent = validateJsApiThenReturn(() => registration_utils.registerComponent);
 
 /// Registers a component factory on both client and server.
-ComponentRegistrar2 registerComponent2 =
-    validateJsApiThenReturn(() => registration_utils.registerComponent2);
+ComponentRegistrar2 registerComponent2 = validateJsApiThenReturn(() => registration_utils.registerComponent2);
 
 /// Registers a function component on the client.
 ///
@@ -1553,117 +1520,91 @@ FunctionComponentRegistrar registerFunctionComponent =
 dynamic a = validateJsApiThenReturn(() => ReactDomComponentFactoryProxy('a'));
 
 /// The HTML `<abbr>` `Element`.
-dynamic abbr =
-    validateJsApiThenReturn(() => ReactDomComponentFactoryProxy('abbr'));
+dynamic abbr = validateJsApiThenReturn(() => ReactDomComponentFactoryProxy('abbr'));
 
 /// The HTML `<address>` `Element`.
-dynamic address =
-    validateJsApiThenReturn(() => ReactDomComponentFactoryProxy('address'));
+dynamic address = validateJsApiThenReturn(() => ReactDomComponentFactoryProxy('address'));
 
 /// The HTML `<area>` `AreaElement`.
-dynamic area =
-    validateJsApiThenReturn(() => ReactDomComponentFactoryProxy('area'));
+dynamic area = validateJsApiThenReturn(() => ReactDomComponentFactoryProxy('area'));
 
 /// The HTML `<article>` `Element`.
-dynamic article =
-    validateJsApiThenReturn(() => ReactDomComponentFactoryProxy('article'));
+dynamic article = validateJsApiThenReturn(() => ReactDomComponentFactoryProxy('article'));
 
 /// The HTML `<aside>` `Element`.
-dynamic aside =
-    validateJsApiThenReturn(() => ReactDomComponentFactoryProxy('aside'));
+dynamic aside = validateJsApiThenReturn(() => ReactDomComponentFactoryProxy('aside'));
 
 /// The HTML `<audio>` `AudioElement`.
-dynamic audio =
-    validateJsApiThenReturn(() => ReactDomComponentFactoryProxy('audio'));
+dynamic audio = validateJsApiThenReturn(() => ReactDomComponentFactoryProxy('audio'));
 
 /// The HTML `<b>` `Element`.
 dynamic b = validateJsApiThenReturn(() => ReactDomComponentFactoryProxy('b'));
 
 /// The HTML `<base>` `BaseElement`.
-dynamic base =
-    validateJsApiThenReturn(() => ReactDomComponentFactoryProxy('base'));
+dynamic base = validateJsApiThenReturn(() => ReactDomComponentFactoryProxy('base'));
 
 /// The HTML `<bdi>` `Element`.
-dynamic bdi =
-    validateJsApiThenReturn(() => ReactDomComponentFactoryProxy('bdi'));
+dynamic bdi = validateJsApiThenReturn(() => ReactDomComponentFactoryProxy('bdi'));
 
 /// The HTML `<bdo>` `Element`.
-dynamic bdo =
-    validateJsApiThenReturn(() => ReactDomComponentFactoryProxy('bdo'));
+dynamic bdo = validateJsApiThenReturn(() => ReactDomComponentFactoryProxy('bdo'));
 
 /// The HTML `<big>` `Element`.
-dynamic big =
-    validateJsApiThenReturn(() => ReactDomComponentFactoryProxy('big'));
+dynamic big = validateJsApiThenReturn(() => ReactDomComponentFactoryProxy('big'));
 
 /// The HTML `<blockquote>` `Element`.
-dynamic blockquote =
-    validateJsApiThenReturn(() => ReactDomComponentFactoryProxy('blockquote'));
+dynamic blockquote = validateJsApiThenReturn(() => ReactDomComponentFactoryProxy('blockquote'));
 
 /// The HTML `<body>` `BodyElement`.
-dynamic body =
-    validateJsApiThenReturn(() => ReactDomComponentFactoryProxy('body'));
+dynamic body = validateJsApiThenReturn(() => ReactDomComponentFactoryProxy('body'));
 
 /// The HTML `<br>` `BRElement`.
 dynamic br = validateJsApiThenReturn(() => ReactDomComponentFactoryProxy('br'));
 
 /// The HTML `<button>` `ButtonElement`.
-dynamic button =
-    validateJsApiThenReturn(() => ReactDomComponentFactoryProxy('button'));
+dynamic button = validateJsApiThenReturn(() => ReactDomComponentFactoryProxy('button'));
 
 /// The HTML `<canvas>` `CanvasElement`.
-dynamic canvas =
-    validateJsApiThenReturn(() => ReactDomComponentFactoryProxy('canvas'));
+dynamic canvas = validateJsApiThenReturn(() => ReactDomComponentFactoryProxy('canvas'));
 
 /// The HTML `<caption>` `Element`.
-dynamic caption =
-    validateJsApiThenReturn(() => ReactDomComponentFactoryProxy('caption'));
+dynamic caption = validateJsApiThenReturn(() => ReactDomComponentFactoryProxy('caption'));
 
 /// The HTML `<cite>` `Element`.
-dynamic cite =
-    validateJsApiThenReturn(() => ReactDomComponentFactoryProxy('cite'));
+dynamic cite = validateJsApiThenReturn(() => ReactDomComponentFactoryProxy('cite'));
 
 /// The HTML `<code>` `Element`.
-dynamic code =
-    validateJsApiThenReturn(() => ReactDomComponentFactoryProxy('code'));
+dynamic code = validateJsApiThenReturn(() => ReactDomComponentFactoryProxy('code'));
 
 /// The HTML `<col>` `Element`.
-dynamic col =
-    validateJsApiThenReturn(() => ReactDomComponentFactoryProxy('col'));
+dynamic col = validateJsApiThenReturn(() => ReactDomComponentFactoryProxy('col'));
 
 /// The HTML `<colgroup>` `Element`.
-dynamic colgroup =
-    validateJsApiThenReturn(() => ReactDomComponentFactoryProxy('colgroup'));
+dynamic colgroup = validateJsApiThenReturn(() => ReactDomComponentFactoryProxy('colgroup'));
 
 /// The HTML `<data>` `Element`.
-dynamic data =
-    validateJsApiThenReturn(() => ReactDomComponentFactoryProxy('data'));
+dynamic data = validateJsApiThenReturn(() => ReactDomComponentFactoryProxy('data'));
 
 /// The HTML `<datalist>` `DataListElement`.
-dynamic datalist =
-    validateJsApiThenReturn(() => ReactDomComponentFactoryProxy('datalist'));
+dynamic datalist = validateJsApiThenReturn(() => ReactDomComponentFactoryProxy('datalist'));
 
 /// The HTML `<dd>` `Element`.
 dynamic dd = validateJsApiThenReturn(() => ReactDomComponentFactoryProxy('dd'));
 
 /// The HTML `<del>` `Element`.
-dynamic del =
-    validateJsApiThenReturn(() => ReactDomComponentFactoryProxy('del'));
+dynamic del = validateJsApiThenReturn(() => ReactDomComponentFactoryProxy('del'));
 
 /// The HTML `<details>` `DetailsElement`.
-dynamic details =
-    validateJsApiThenReturn(() => ReactDomComponentFactoryProxy('details'));
+dynamic details = validateJsApiThenReturn(() => ReactDomComponentFactoryProxy('details'));
 
 /// The HTML `<dfn>` `Element`.
-dynamic dfn =
-    validateJsApiThenReturn(() => ReactDomComponentFactoryProxy('dfn'));
+dynamic dfn = validateJsApiThenReturn(() => ReactDomComponentFactoryProxy('dfn'));
 
 /// The HTML `<dialog>` `DialogElement`.
-dynamic dialog =
-    validateJsApiThenReturn(() => ReactDomComponentFactoryProxy('dialog'));
+dynamic dialog = validateJsApiThenReturn(() => ReactDomComponentFactoryProxy('dialog'));
 
 /// The HTML `<div>` `DivElement`.
-dynamic div =
-    validateJsApiThenReturn(() => ReactDomComponentFactoryProxy('div'));
+dynamic div = validateJsApiThenReturn(() => ReactDomComponentFactoryProxy('div'));
 
 /// The HTML `<dl>` `DListElement`.
 dynamic dl = validateJsApiThenReturn(() => ReactDomComponentFactoryProxy('dl'));
@@ -1675,28 +1616,22 @@ dynamic dt = validateJsApiThenReturn(() => ReactDomComponentFactoryProxy('dt'));
 dynamic em = validateJsApiThenReturn(() => ReactDomComponentFactoryProxy('em'));
 
 /// The HTML `<embed>` `EmbedElement`.
-dynamic embed =
-    validateJsApiThenReturn(() => ReactDomComponentFactoryProxy('embed'));
+dynamic embed = validateJsApiThenReturn(() => ReactDomComponentFactoryProxy('embed'));
 
 /// The HTML `<fieldset>` `FieldSetElement`.
-dynamic fieldset =
-    validateJsApiThenReturn(() => ReactDomComponentFactoryProxy('fieldset'));
+dynamic fieldset = validateJsApiThenReturn(() => ReactDomComponentFactoryProxy('fieldset'));
 
 /// The HTML `<figcaption>` `Element`.
-dynamic figcaption =
-    validateJsApiThenReturn(() => ReactDomComponentFactoryProxy('figcaption'));
+dynamic figcaption = validateJsApiThenReturn(() => ReactDomComponentFactoryProxy('figcaption'));
 
 /// The HTML `<figure>` `Element`.
-dynamic figure =
-    validateJsApiThenReturn(() => ReactDomComponentFactoryProxy('figure'));
+dynamic figure = validateJsApiThenReturn(() => ReactDomComponentFactoryProxy('figure'));
 
 /// The HTML `<footer>` `Element`.
-dynamic footer =
-    validateJsApiThenReturn(() => ReactDomComponentFactoryProxy('footer'));
+dynamic footer = validateJsApiThenReturn(() => ReactDomComponentFactoryProxy('footer'));
 
 /// The HTML `<form>` `FormElement`.
-dynamic form =
-    validateJsApiThenReturn(() => ReactDomComponentFactoryProxy('form'));
+dynamic form = validateJsApiThenReturn(() => ReactDomComponentFactoryProxy('form'));
 
 /// The HTML `<h1>` `HeadingElement`.
 dynamic h1 = validateJsApiThenReturn(() => ReactDomComponentFactoryProxy('h1'));
@@ -1717,135 +1652,106 @@ dynamic h5 = validateJsApiThenReturn(() => ReactDomComponentFactoryProxy('h5'));
 dynamic h6 = validateJsApiThenReturn(() => ReactDomComponentFactoryProxy('h6'));
 
 /// The HTML `<head>` `HeadElement`.
-dynamic head =
-    validateJsApiThenReturn(() => ReactDomComponentFactoryProxy('head'));
+dynamic head = validateJsApiThenReturn(() => ReactDomComponentFactoryProxy('head'));
 
 /// The HTML `<header>` `Element`.
-dynamic header =
-    validateJsApiThenReturn(() => ReactDomComponentFactoryProxy('header'));
+dynamic header = validateJsApiThenReturn(() => ReactDomComponentFactoryProxy('header'));
 
 /// The HTML `<hr>` `HRElement`.
 dynamic hr = validateJsApiThenReturn(() => ReactDomComponentFactoryProxy('hr'));
 
 /// The HTML `<html>` `HtmlHtmlElement`.
-dynamic html =
-    validateJsApiThenReturn(() => ReactDomComponentFactoryProxy('html'));
+dynamic html = validateJsApiThenReturn(() => ReactDomComponentFactoryProxy('html'));
 
 /// The HTML `<i>` `Element`.
 dynamic i = validateJsApiThenReturn(() => ReactDomComponentFactoryProxy('i'));
 
 /// The HTML `<iframe>` `IFrameElement`.
-dynamic iframe =
-    validateJsApiThenReturn(() => ReactDomComponentFactoryProxy('iframe'));
+dynamic iframe = validateJsApiThenReturn(() => ReactDomComponentFactoryProxy('iframe'));
 
 /// The HTML `<img>` `ImageElement`.
-dynamic img =
-    validateJsApiThenReturn(() => ReactDomComponentFactoryProxy('img'));
+dynamic img = validateJsApiThenReturn(() => ReactDomComponentFactoryProxy('img'));
 
 /// The HTML `<input>` `InputElement`.
-dynamic input =
-    validateJsApiThenReturn(() => ReactDomComponentFactoryProxy('input'));
+dynamic input = validateJsApiThenReturn(() => ReactDomComponentFactoryProxy('input'));
 
 /// The HTML `<ins>` `Element`.
-dynamic ins =
-    validateJsApiThenReturn(() => ReactDomComponentFactoryProxy('ins'));
+dynamic ins = validateJsApiThenReturn(() => ReactDomComponentFactoryProxy('ins'));
 
 /// The HTML `<kbd>` `Element`.
-dynamic kbd =
-    validateJsApiThenReturn(() => ReactDomComponentFactoryProxy('kbd'));
+dynamic kbd = validateJsApiThenReturn(() => ReactDomComponentFactoryProxy('kbd'));
 
 /// The HTML `<keygen>` `KeygenElement`.
-dynamic keygen =
-    validateJsApiThenReturn(() => ReactDomComponentFactoryProxy('keygen'));
+dynamic keygen = validateJsApiThenReturn(() => ReactDomComponentFactoryProxy('keygen'));
 
 /// The HTML `<label>` `LabelElement`.
-dynamic label =
-    validateJsApiThenReturn(() => ReactDomComponentFactoryProxy('label'));
+dynamic label = validateJsApiThenReturn(() => ReactDomComponentFactoryProxy('label'));
 
 /// The HTML `<legend>` `LegendElement`.
-dynamic legend =
-    validateJsApiThenReturn(() => ReactDomComponentFactoryProxy('legend'));
+dynamic legend = validateJsApiThenReturn(() => ReactDomComponentFactoryProxy('legend'));
 
 /// The HTML `<li>` `LIElement`.
 dynamic li = validateJsApiThenReturn(() => ReactDomComponentFactoryProxy('li'));
 
 /// The HTML `<link>` `LinkElement`.
-dynamic link =
-    validateJsApiThenReturn(() => ReactDomComponentFactoryProxy('link'));
+dynamic link = validateJsApiThenReturn(() => ReactDomComponentFactoryProxy('link'));
 
 /// The HTML `<main>` `Element`.
-dynamic htmlMain =
-    validateJsApiThenReturn(() => ReactDomComponentFactoryProxy('main'));
+dynamic htmlMain = validateJsApiThenReturn(() => ReactDomComponentFactoryProxy('main'));
 
 /// The HTML `<map>` `MapElement`.
-dynamic map =
-    validateJsApiThenReturn(() => ReactDomComponentFactoryProxy('map'));
+dynamic map = validateJsApiThenReturn(() => ReactDomComponentFactoryProxy('map'));
 
 /// The HTML `<mark>` `Element`.
-dynamic mark =
-    validateJsApiThenReturn(() => ReactDomComponentFactoryProxy('mark'));
+dynamic mark = validateJsApiThenReturn(() => ReactDomComponentFactoryProxy('mark'));
 
 /// The HTML `<menu>` `MenuElement`.
-dynamic menu =
-    validateJsApiThenReturn(() => ReactDomComponentFactoryProxy('menu'));
+dynamic menu = validateJsApiThenReturn(() => ReactDomComponentFactoryProxy('menu'));
 
 /// The HTML `<menuitem>` `MenuItemElement`.
-dynamic menuitem =
-    validateJsApiThenReturn(() => ReactDomComponentFactoryProxy('menuitem'));
+dynamic menuitem = validateJsApiThenReturn(() => ReactDomComponentFactoryProxy('menuitem'));
 
 /// The HTML `<meta>` `MetaElement`.
-dynamic meta =
-    validateJsApiThenReturn(() => ReactDomComponentFactoryProxy('meta'));
+dynamic meta = validateJsApiThenReturn(() => ReactDomComponentFactoryProxy('meta'));
 
 /// The HTML `<meter>` `MeterElement`.
-dynamic meter =
-    validateJsApiThenReturn(() => ReactDomComponentFactoryProxy('meter'));
+dynamic meter = validateJsApiThenReturn(() => ReactDomComponentFactoryProxy('meter'));
 
 /// The HTML `<nav>` `Element`.
-dynamic nav =
-    validateJsApiThenReturn(() => ReactDomComponentFactoryProxy('nav'));
+dynamic nav = validateJsApiThenReturn(() => ReactDomComponentFactoryProxy('nav'));
 
 /// The HTML `<noscript>` `Element`.
-dynamic noscript =
-    validateJsApiThenReturn(() => ReactDomComponentFactoryProxy('noscript'));
+dynamic noscript = validateJsApiThenReturn(() => ReactDomComponentFactoryProxy('noscript'));
 
 /// The HTML `<object>` `ObjectElement`.
-dynamic object =
-    validateJsApiThenReturn(() => ReactDomComponentFactoryProxy('object'));
+dynamic object = validateJsApiThenReturn(() => ReactDomComponentFactoryProxy('object'));
 
 /// The HTML `<ol>` `OListElement`.
 dynamic ol = validateJsApiThenReturn(() => ReactDomComponentFactoryProxy('ol'));
 
 /// The HTML `<optgroup>` `OptGroupElement`.
-dynamic optgroup =
-    validateJsApiThenReturn(() => ReactDomComponentFactoryProxy('optgroup'));
+dynamic optgroup = validateJsApiThenReturn(() => ReactDomComponentFactoryProxy('optgroup'));
 
 /// The HTML `<option>` `OptionElement`.
-dynamic option =
-    validateJsApiThenReturn(() => ReactDomComponentFactoryProxy('option'));
+dynamic option = validateJsApiThenReturn(() => ReactDomComponentFactoryProxy('option'));
 
 /// The HTML `<output>` `OutputElement`.
-dynamic output =
-    validateJsApiThenReturn(() => ReactDomComponentFactoryProxy('output'));
+dynamic output = validateJsApiThenReturn(() => ReactDomComponentFactoryProxy('output'));
 
 /// The HTML `<p>` `ParagraphElement`.
 dynamic p = validateJsApiThenReturn(() => ReactDomComponentFactoryProxy('p'));
 
 /// The HTML `<param>` `ParamElement`.
-dynamic param =
-    validateJsApiThenReturn(() => ReactDomComponentFactoryProxy('param'));
+dynamic param = validateJsApiThenReturn(() => ReactDomComponentFactoryProxy('param'));
 
 /// The HTML `<picture>` `PictureElement`.
-dynamic picture =
-    validateJsApiThenReturn(() => ReactDomComponentFactoryProxy('picture'));
+dynamic picture = validateJsApiThenReturn(() => ReactDomComponentFactoryProxy('picture'));
 
 /// The HTML `<pre>` `PreElement`.
-dynamic pre =
-    validateJsApiThenReturn(() => ReactDomComponentFactoryProxy('pre'));
+dynamic pre = validateJsApiThenReturn(() => ReactDomComponentFactoryProxy('pre'));
 
 /// The HTML `<progress>` `ProgressElement`.
-dynamic progress =
-    validateJsApiThenReturn(() => ReactDomComponentFactoryProxy('progress'));
+dynamic progress = validateJsApiThenReturn(() => ReactDomComponentFactoryProxy('progress'));
 
 /// The HTML `<q>` `QuoteElement`.
 dynamic q = validateJsApiThenReturn(() => ReactDomComponentFactoryProxy('q'));
@@ -1857,100 +1763,79 @@ dynamic rp = validateJsApiThenReturn(() => ReactDomComponentFactoryProxy('rp'));
 dynamic rt = validateJsApiThenReturn(() => ReactDomComponentFactoryProxy('rt'));
 
 /// The HTML `<ruby>` `Element`.
-dynamic ruby =
-    validateJsApiThenReturn(() => ReactDomComponentFactoryProxy('ruby'));
+dynamic ruby = validateJsApiThenReturn(() => ReactDomComponentFactoryProxy('ruby'));
 
 /// The HTML `<s>` `Element`.
 dynamic s = validateJsApiThenReturn(() => ReactDomComponentFactoryProxy('s'));
 
 /// The HTML `<samp>` `Element`.
-dynamic samp =
-    validateJsApiThenReturn(() => ReactDomComponentFactoryProxy('samp'));
+dynamic samp = validateJsApiThenReturn(() => ReactDomComponentFactoryProxy('samp'));
 
 /// The HTML `<script>` `ScriptElement`.
-dynamic script =
-    validateJsApiThenReturn(() => ReactDomComponentFactoryProxy('script'));
+dynamic script = validateJsApiThenReturn(() => ReactDomComponentFactoryProxy('script'));
 
 /// The HTML `<section>` `Element`.
-dynamic section =
-    validateJsApiThenReturn(() => ReactDomComponentFactoryProxy('section'));
+dynamic section = validateJsApiThenReturn(() => ReactDomComponentFactoryProxy('section'));
 
 /// The HTML `<select>` `SelectElement`.
-dynamic select =
-    validateJsApiThenReturn(() => ReactDomComponentFactoryProxy('select'));
+dynamic select = validateJsApiThenReturn(() => ReactDomComponentFactoryProxy('select'));
 
 /// The HTML `<small>` `Element`.
-dynamic small =
-    validateJsApiThenReturn(() => ReactDomComponentFactoryProxy('small'));
+dynamic small = validateJsApiThenReturn(() => ReactDomComponentFactoryProxy('small'));
 
 /// The HTML `<source>` `SourceElement`.
-dynamic source =
-    validateJsApiThenReturn(() => ReactDomComponentFactoryProxy('source'));
+dynamic source = validateJsApiThenReturn(() => ReactDomComponentFactoryProxy('source'));
 
 /// The HTML `<span>` `SpanElement`.
-dynamic span =
-    validateJsApiThenReturn(() => ReactDomComponentFactoryProxy('span'));
+dynamic span = validateJsApiThenReturn(() => ReactDomComponentFactoryProxy('span'));
 
 /// The HTML `<strong>` `Element`.
-dynamic strong =
-    validateJsApiThenReturn(() => ReactDomComponentFactoryProxy('strong'));
+dynamic strong = validateJsApiThenReturn(() => ReactDomComponentFactoryProxy('strong'));
 
 /// The HTML `<style>` `StyleElement`.
-dynamic style =
-    validateJsApiThenReturn(() => ReactDomComponentFactoryProxy('style'));
+dynamic style = validateJsApiThenReturn(() => ReactDomComponentFactoryProxy('style'));
 
 /// The HTML `<sub>` `Element`.
-dynamic sub =
-    validateJsApiThenReturn(() => ReactDomComponentFactoryProxy('sub'));
+dynamic sub = validateJsApiThenReturn(() => ReactDomComponentFactoryProxy('sub'));
 
 /// The HTML `<summary>` `Element`.
-dynamic summary =
-    validateJsApiThenReturn(() => ReactDomComponentFactoryProxy('summary'));
+dynamic summary = validateJsApiThenReturn(() => ReactDomComponentFactoryProxy('summary'));
 
 /// The HTML `<sup>` `Element`.
-dynamic sup =
-    validateJsApiThenReturn(() => ReactDomComponentFactoryProxy('sup'));
+dynamic sup = validateJsApiThenReturn(() => ReactDomComponentFactoryProxy('sup'));
 
 /// The HTML `<table>` `TableElement`.
-dynamic table =
-    validateJsApiThenReturn(() => ReactDomComponentFactoryProxy('table'));
+dynamic table = validateJsApiThenReturn(() => ReactDomComponentFactoryProxy('table'));
 
 /// The HTML `<tbody>` `TableSectionElement`.
-dynamic tbody =
-    validateJsApiThenReturn(() => ReactDomComponentFactoryProxy('tbody'));
+dynamic tbody = validateJsApiThenReturn(() => ReactDomComponentFactoryProxy('tbody'));
 
 /// The HTML `<td>` `TableCellElement`.
 dynamic td = validateJsApiThenReturn(() => ReactDomComponentFactoryProxy('td'));
 
 /// The HTML `<textarea>` `TextAreaElement`.
-dynamic textarea =
-    validateJsApiThenReturn(() => ReactDomComponentFactoryProxy('textarea'));
+dynamic textarea = validateJsApiThenReturn(() => ReactDomComponentFactoryProxy('textarea'));
 
 /// The HTML `<tfoot>` `TableSectionElement`.
-dynamic tfoot =
-    validateJsApiThenReturn(() => ReactDomComponentFactoryProxy('tfoot'));
+dynamic tfoot = validateJsApiThenReturn(() => ReactDomComponentFactoryProxy('tfoot'));
 
 /// The HTML `<th>` `TableCellElement`.
 dynamic th = validateJsApiThenReturn(() => ReactDomComponentFactoryProxy('th'));
 
 /// The HTML `<thead>` `TableSectionElement`.
-dynamic thead =
-    validateJsApiThenReturn(() => ReactDomComponentFactoryProxy('thead'));
+dynamic thead = validateJsApiThenReturn(() => ReactDomComponentFactoryProxy('thead'));
 
 /// The HTML `<time>` `TimeInputElement`.
-dynamic time =
-    validateJsApiThenReturn(() => ReactDomComponentFactoryProxy('time'));
+dynamic time = validateJsApiThenReturn(() => ReactDomComponentFactoryProxy('time'));
 
 /// The HTML `<title>` `TitleElement`.
-dynamic title =
-    validateJsApiThenReturn(() => ReactDomComponentFactoryProxy('title'));
+dynamic title = validateJsApiThenReturn(() => ReactDomComponentFactoryProxy('title'));
 
 /// The HTML `<tr>` `TableRowElement`.
 dynamic tr = validateJsApiThenReturn(() => ReactDomComponentFactoryProxy('tr'));
 
 /// The HTML `<track>` `TrackElement`.
-dynamic track =
-    validateJsApiThenReturn(() => ReactDomComponentFactoryProxy('track'));
+dynamic track = validateJsApiThenReturn(() => ReactDomComponentFactoryProxy('track'));
 
 /// The HTML `<u>` `Element`.
 dynamic u = validateJsApiThenReturn(() => ReactDomComponentFactoryProxy('u'));
@@ -1961,356 +1846,268 @@ dynamic ul = validateJsApiThenReturn(() => ReactDomComponentFactoryProxy('ul'));
 /// The HTML `<var>` `Element`.
 ///
 /// _Named variable because `var` is a reserved word in Dart._
-dynamic variable =
-    validateJsApiThenReturn(() => ReactDomComponentFactoryProxy('var'));
+dynamic variable = validateJsApiThenReturn(() => ReactDomComponentFactoryProxy('var'));
 
 /// The HTML `<video>` `VideoElement`.
-dynamic video =
-    validateJsApiThenReturn(() => ReactDomComponentFactoryProxy('video'));
+dynamic video = validateJsApiThenReturn(() => ReactDomComponentFactoryProxy('video'));
 
 /// The HTML `<wbr>` `Element`.
-dynamic wbr =
-    validateJsApiThenReturn(() => ReactDomComponentFactoryProxy('wbr'));
+dynamic wbr = validateJsApiThenReturn(() => ReactDomComponentFactoryProxy('wbr'));
 
 /// The SVG `<altGlyph>` `AltGlyphElement`.
-dynamic altGlyph =
-    validateJsApiThenReturn(() => ReactDomComponentFactoryProxy('altGlyph'));
+dynamic altGlyph = validateJsApiThenReturn(() => ReactDomComponentFactoryProxy('altGlyph'));
 
 /// The SVG `<altGlyphDef>` `AltGlyphDefElement`.
-dynamic altGlyphDef =
-    validateJsApiThenReturn(() => ReactDomComponentFactoryProxy('altGlyphDef'));
+dynamic altGlyphDef = validateJsApiThenReturn(() => ReactDomComponentFactoryProxy('altGlyphDef'));
 
 /// The SVG `<altGlyphItem>` `AltGlyphItemElement`.
-dynamic altGlyphItem = validateJsApiThenReturn(
-    () => ReactDomComponentFactoryProxy('altGlyphItem'));
+dynamic altGlyphItem = validateJsApiThenReturn(() => ReactDomComponentFactoryProxy('altGlyphItem'));
 
 /// The SVG `<animate>` `AnimateElement`.
-dynamic animate =
-    validateJsApiThenReturn(() => ReactDomComponentFactoryProxy('animate'));
+dynamic animate = validateJsApiThenReturn(() => ReactDomComponentFactoryProxy('animate'));
 
 /// The SVG `<animateColor>` `AnimateColorElement`.
-dynamic animateColor = validateJsApiThenReturn(
-    () => ReactDomComponentFactoryProxy('animateColor'));
+dynamic animateColor = validateJsApiThenReturn(() => ReactDomComponentFactoryProxy('animateColor'));
 
 /// The SVG `<animateMotion>` `AnimateMotionElement`.
-dynamic animateMotion = validateJsApiThenReturn(
-    () => ReactDomComponentFactoryProxy('animateMotion'));
+dynamic animateMotion = validateJsApiThenReturn(() => ReactDomComponentFactoryProxy('animateMotion'));
 
 /// The SVG `<animateTransform>` `AnimateTransformElement`.
-dynamic animateTransform = validateJsApiThenReturn(
-    () => ReactDomComponentFactoryProxy('animateTransform'));
+dynamic animateTransform = validateJsApiThenReturn(() => ReactDomComponentFactoryProxy('animateTransform'));
 
 /// The SVG `<circle>` `CircleElement`.
-dynamic circle =
-    validateJsApiThenReturn(() => ReactDomComponentFactoryProxy('circle'));
+dynamic circle = validateJsApiThenReturn(() => ReactDomComponentFactoryProxy('circle'));
 
 /// The SVG `<clipPath>` `ClipPathElement`.
-dynamic clipPath =
-    validateJsApiThenReturn(() => ReactDomComponentFactoryProxy('clipPath'));
+dynamic clipPath = validateJsApiThenReturn(() => ReactDomComponentFactoryProxy('clipPath'));
 
 /// The SVG `<color-profile>` `ColorProfileElement`.
-dynamic colorProfile = validateJsApiThenReturn(
-    () => ReactDomComponentFactoryProxy('color-profile'));
+dynamic colorProfile = validateJsApiThenReturn(() => ReactDomComponentFactoryProxy('color-profile'));
 
 /// The SVG `<cursor>` `CursorElement`.
-dynamic cursor =
-    validateJsApiThenReturn(() => ReactDomComponentFactoryProxy('cursor'));
+dynamic cursor = validateJsApiThenReturn(() => ReactDomComponentFactoryProxy('cursor'));
 
 /// The SVG `<defs>` `DefsElement`.
-dynamic defs =
-    validateJsApiThenReturn(() => ReactDomComponentFactoryProxy('defs'));
+dynamic defs = validateJsApiThenReturn(() => ReactDomComponentFactoryProxy('defs'));
 
 /// The SVG `<desc>` `DescElement`.
-dynamic desc =
-    validateJsApiThenReturn(() => ReactDomComponentFactoryProxy('desc'));
+dynamic desc = validateJsApiThenReturn(() => ReactDomComponentFactoryProxy('desc'));
 
 /// The SVG `<discard>` `DiscardElement`.
-dynamic discard =
-    validateJsApiThenReturn(() => ReactDomComponentFactoryProxy('discard'));
+dynamic discard = validateJsApiThenReturn(() => ReactDomComponentFactoryProxy('discard'));
 
 /// The SVG `<ellipse>` `EllipseElement`.
-dynamic ellipse =
-    validateJsApiThenReturn(() => ReactDomComponentFactoryProxy('ellipse'));
+dynamic ellipse = validateJsApiThenReturn(() => ReactDomComponentFactoryProxy('ellipse'));
 
 /// The SVG `<feBlend>` `FeBlendElement`.
-dynamic feBlend =
-    validateJsApiThenReturn(() => ReactDomComponentFactoryProxy('feBlend'));
+dynamic feBlend = validateJsApiThenReturn(() => ReactDomComponentFactoryProxy('feBlend'));
 
 /// The SVG `<feColorMatrix>` `FeColorMatrixElement`.
-dynamic feColorMatrix = validateJsApiThenReturn(
-    () => ReactDomComponentFactoryProxy('feColorMatrix'));
+dynamic feColorMatrix = validateJsApiThenReturn(() => ReactDomComponentFactoryProxy('feColorMatrix'));
 
 /// The SVG `<feComponentTransfer>` `FeComponentTransferElement`.
-dynamic feComponentTransfer = validateJsApiThenReturn(
-    () => ReactDomComponentFactoryProxy('feComponentTransfer'));
+dynamic feComponentTransfer = validateJsApiThenReturn(() => ReactDomComponentFactoryProxy('feComponentTransfer'));
 
 /// The SVG `<feComposite>` `FeCompositeElement`.
-dynamic feComposite =
-    validateJsApiThenReturn(() => ReactDomComponentFactoryProxy('feComposite'));
+dynamic feComposite = validateJsApiThenReturn(() => ReactDomComponentFactoryProxy('feComposite'));
 
 /// The SVG `<feConvolveMatrix>` `FeConvolveMatrixElement`.
-dynamic feConvolveMatrix = validateJsApiThenReturn(
-    () => ReactDomComponentFactoryProxy('feConvolveMatrix'));
+dynamic feConvolveMatrix = validateJsApiThenReturn(() => ReactDomComponentFactoryProxy('feConvolveMatrix'));
 
 /// The SVG `<feDiffuseLighting>` `FeDiffuseLightingElement`.
-dynamic feDiffuseLighting = validateJsApiThenReturn(
-    () => ReactDomComponentFactoryProxy('feDiffuseLighting'));
+dynamic feDiffuseLighting = validateJsApiThenReturn(() => ReactDomComponentFactoryProxy('feDiffuseLighting'));
 
 /// The SVG `<feDisplacementMap>` `FeDisplacementMapElement`.
-dynamic feDisplacementMap = validateJsApiThenReturn(
-    () => ReactDomComponentFactoryProxy('feDisplacementMap'));
+dynamic feDisplacementMap = validateJsApiThenReturn(() => ReactDomComponentFactoryProxy('feDisplacementMap'));
 
 /// The SVG `<feDistantLight>` `FeDistantLightElement`.
-dynamic feDistantLight = validateJsApiThenReturn(
-    () => ReactDomComponentFactoryProxy('feDistantLight'));
+dynamic feDistantLight = validateJsApiThenReturn(() => ReactDomComponentFactoryProxy('feDistantLight'));
 
 /// The SVG `<feDropShadow>` `FeDropShadowElement`.
-dynamic feDropShadow = validateJsApiThenReturn(
-    () => ReactDomComponentFactoryProxy('feDropShadow'));
+dynamic feDropShadow = validateJsApiThenReturn(() => ReactDomComponentFactoryProxy('feDropShadow'));
 
 /// The SVG `<feFlood>` `FeFloodElement`.
-dynamic feFlood =
-    validateJsApiThenReturn(() => ReactDomComponentFactoryProxy('feFlood'));
+dynamic feFlood = validateJsApiThenReturn(() => ReactDomComponentFactoryProxy('feFlood'));
 
 /// The SVG `<feFuncA>` `FeFuncAElement`.
-dynamic feFuncA =
-    validateJsApiThenReturn(() => ReactDomComponentFactoryProxy('feFuncA'));
+dynamic feFuncA = validateJsApiThenReturn(() => ReactDomComponentFactoryProxy('feFuncA'));
 
 /// The SVG `<feFuncB>` `FeFuncBElement`.
-dynamic feFuncB =
-    validateJsApiThenReturn(() => ReactDomComponentFactoryProxy('feFuncB'));
+dynamic feFuncB = validateJsApiThenReturn(() => ReactDomComponentFactoryProxy('feFuncB'));
 
 /// The SVG `<feFuncG>` `FeFuncGElement`.
-dynamic feFuncG =
-    validateJsApiThenReturn(() => ReactDomComponentFactoryProxy('feFuncG'));
+dynamic feFuncG = validateJsApiThenReturn(() => ReactDomComponentFactoryProxy('feFuncG'));
 
 /// The SVG `<feFuncR>` `FeFuncRElement`.
-dynamic feFuncR =
-    validateJsApiThenReturn(() => ReactDomComponentFactoryProxy('feFuncR'));
+dynamic feFuncR = validateJsApiThenReturn(() => ReactDomComponentFactoryProxy('feFuncR'));
 
 /// The SVG `<feGaussianBlur>` `FeGaussianBlurElement`.
-dynamic feGaussianBlur = validateJsApiThenReturn(
-    () => ReactDomComponentFactoryProxy('feGaussianBlur'));
+dynamic feGaussianBlur = validateJsApiThenReturn(() => ReactDomComponentFactoryProxy('feGaussianBlur'));
 
 /// The SVG `<feImage>` `FeImageElement`.
-dynamic feImage =
-    validateJsApiThenReturn(() => ReactDomComponentFactoryProxy('feImage'));
+dynamic feImage = validateJsApiThenReturn(() => ReactDomComponentFactoryProxy('feImage'));
 
 /// The SVG `<feMerge>` `FeMergeElement`.
-dynamic feMerge =
-    validateJsApiThenReturn(() => ReactDomComponentFactoryProxy('feMerge'));
+dynamic feMerge = validateJsApiThenReturn(() => ReactDomComponentFactoryProxy('feMerge'));
 
 /// The SVG `<feMergeNode>` `FeMergeNodeElement`.
-dynamic feMergeNode =
-    validateJsApiThenReturn(() => ReactDomComponentFactoryProxy('feMergeNode'));
+dynamic feMergeNode = validateJsApiThenReturn(() => ReactDomComponentFactoryProxy('feMergeNode'));
 
 /// The SVG `<feMorphology>` `FeMorphologyElement`.
-dynamic feMorphology = validateJsApiThenReturn(
-    () => ReactDomComponentFactoryProxy('feMorphology'));
+dynamic feMorphology = validateJsApiThenReturn(() => ReactDomComponentFactoryProxy('feMorphology'));
 
 /// The SVG `<feOffset>` `FeOffsetElement`.
-dynamic feOffset =
-    validateJsApiThenReturn(() => ReactDomComponentFactoryProxy('feOffset'));
+dynamic feOffset = validateJsApiThenReturn(() => ReactDomComponentFactoryProxy('feOffset'));
 
 /// The SVG `<fePointLight>` `FePointLightElement`.
-dynamic fePointLight = validateJsApiThenReturn(
-    () => ReactDomComponentFactoryProxy('fePointLight'));
+dynamic fePointLight = validateJsApiThenReturn(() => ReactDomComponentFactoryProxy('fePointLight'));
 
 /// The SVG `<feSpecularLighting>` `FeSpecularLightingElement`.
-dynamic feSpecularLighting = validateJsApiThenReturn(
-    () => ReactDomComponentFactoryProxy('feSpecularLighting'));
+dynamic feSpecularLighting = validateJsApiThenReturn(() => ReactDomComponentFactoryProxy('feSpecularLighting'));
 
 /// The SVG `<feSpotLight>` `FeSpotLightElement`.
-dynamic feSpotLight =
-    validateJsApiThenReturn(() => ReactDomComponentFactoryProxy('feSpotLight'));
+dynamic feSpotLight = validateJsApiThenReturn(() => ReactDomComponentFactoryProxy('feSpotLight'));
 
 /// The SVG `<feTile>` `FeTileElement`.
-dynamic feTile =
-    validateJsApiThenReturn(() => ReactDomComponentFactoryProxy('feTile'));
+dynamic feTile = validateJsApiThenReturn(() => ReactDomComponentFactoryProxy('feTile'));
 
 /// The SVG `<feTurbulence>` `FeTurbulenceElement`.
-dynamic feTurbulence = validateJsApiThenReturn(
-    () => ReactDomComponentFactoryProxy('feTurbulence'));
+dynamic feTurbulence = validateJsApiThenReturn(() => ReactDomComponentFactoryProxy('feTurbulence'));
 
 /// The SVG `<filter>` `FilterElement`.
-dynamic filter =
-    validateJsApiThenReturn(() => ReactDomComponentFactoryProxy('filter'));
+dynamic filter = validateJsApiThenReturn(() => ReactDomComponentFactoryProxy('filter'));
 
 /// The SVG `<font>` `FontElement`.
-dynamic font =
-    validateJsApiThenReturn(() => ReactDomComponentFactoryProxy('font'));
+dynamic font = validateJsApiThenReturn(() => ReactDomComponentFactoryProxy('font'));
 
 /// The SVG `<font-face>` `FontFaceElement`.
-dynamic fontFace =
-    validateJsApiThenReturn(() => ReactDomComponentFactoryProxy('font-face'));
+dynamic fontFace = validateJsApiThenReturn(() => ReactDomComponentFactoryProxy('font-face'));
 
 /// The SVG `<font-face-format>` `FontFaceFormatElement`.
-dynamic fontFaceFormat = validateJsApiThenReturn(
-    () => ReactDomComponentFactoryProxy('font-face-format'));
+dynamic fontFaceFormat = validateJsApiThenReturn(() => ReactDomComponentFactoryProxy('font-face-format'));
 
 /// The SVG `<font-face-name>` `FontFaceNameElement`.
-dynamic fontFaceName = validateJsApiThenReturn(
-    () => ReactDomComponentFactoryProxy('font-face-name'));
+dynamic fontFaceName = validateJsApiThenReturn(() => ReactDomComponentFactoryProxy('font-face-name'));
 
 /// The SVG `<font-face-src>` `FontFaceSrcElement`.
-dynamic fontFaceSrc = validateJsApiThenReturn(
-    () => ReactDomComponentFactoryProxy('font-face-src'));
+dynamic fontFaceSrc = validateJsApiThenReturn(() => ReactDomComponentFactoryProxy('font-face-src'));
 
 /// The SVG `<font-face-uri>` `FontFaceUriElement`.
-dynamic fontFaceUri = validateJsApiThenReturn(
-    () => ReactDomComponentFactoryProxy('font-face-uri'));
+dynamic fontFaceUri = validateJsApiThenReturn(() => ReactDomComponentFactoryProxy('font-face-uri'));
 
 /// The SVG `<foreignObject>` `ForeignObjectElement`.
-dynamic foreignObject = validateJsApiThenReturn(
-    () => ReactDomComponentFactoryProxy('foreignObject'));
+dynamic foreignObject = validateJsApiThenReturn(() => ReactDomComponentFactoryProxy('foreignObject'));
 
 /// The SVG `<g>` `GElement`.
 dynamic g = validateJsApiThenReturn(() => ReactDomComponentFactoryProxy('g'));
 
 /// The SVG `<glyph>` `GlyphElement`.
-dynamic glyph =
-    validateJsApiThenReturn(() => ReactDomComponentFactoryProxy('glyph'));
+dynamic glyph = validateJsApiThenReturn(() => ReactDomComponentFactoryProxy('glyph'));
 
 /// The SVG `<glyphRef>` `GlyphRefElement`.
-dynamic glyphRef =
-    validateJsApiThenReturn(() => ReactDomComponentFactoryProxy('glyphRef'));
+dynamic glyphRef = validateJsApiThenReturn(() => ReactDomComponentFactoryProxy('glyphRef'));
 
 /// The SVG `<hatch>` `HatchElement`.
-dynamic hatch =
-    validateJsApiThenReturn(() => ReactDomComponentFactoryProxy('hatch'));
+dynamic hatch = validateJsApiThenReturn(() => ReactDomComponentFactoryProxy('hatch'));
 
 /// The SVG `<hatchpath>` `HatchpathElement`.
-dynamic hatchpath =
-    validateJsApiThenReturn(() => ReactDomComponentFactoryProxy('hatchpath'));
+dynamic hatchpath = validateJsApiThenReturn(() => ReactDomComponentFactoryProxy('hatchpath'));
 
 /// The SVG `<hkern>` `HkernElement`.
-dynamic hkern =
-    validateJsApiThenReturn(() => ReactDomComponentFactoryProxy('hkern'));
+dynamic hkern = validateJsApiThenReturn(() => ReactDomComponentFactoryProxy('hkern'));
 
 /// The SVG `<image>` `ImageElement`.
-dynamic image =
-    validateJsApiThenReturn(() => ReactDomComponentFactoryProxy('image'));
+dynamic image = validateJsApiThenReturn(() => ReactDomComponentFactoryProxy('image'));
 
 /// The SVG `<line>` `LineElement`.
-dynamic line =
-    validateJsApiThenReturn(() => ReactDomComponentFactoryProxy('line'));
+dynamic line = validateJsApiThenReturn(() => ReactDomComponentFactoryProxy('line'));
 
 /// The SVG `<linearGradient>` `LinearGradientElement`.
-dynamic linearGradient = validateJsApiThenReturn(
-    () => ReactDomComponentFactoryProxy('linearGradient'));
+dynamic linearGradient = validateJsApiThenReturn(() => ReactDomComponentFactoryProxy('linearGradient'));
 
 /// The SVG `<marker>` `MarkerElement`.
-dynamic marker =
-    validateJsApiThenReturn(() => ReactDomComponentFactoryProxy('marker'));
+dynamic marker = validateJsApiThenReturn(() => ReactDomComponentFactoryProxy('marker'));
 
 /// The SVG `<mask>` `MaskElement`.
-dynamic mask =
-    validateJsApiThenReturn(() => ReactDomComponentFactoryProxy('mask'));
+dynamic mask = validateJsApiThenReturn(() => ReactDomComponentFactoryProxy('mask'));
 
 /// The SVG `<mesh>` `MeshElement`.
-dynamic mesh =
-    validateJsApiThenReturn(() => ReactDomComponentFactoryProxy('mesh'));
+dynamic mesh = validateJsApiThenReturn(() => ReactDomComponentFactoryProxy('mesh'));
 
 /// The SVG `<meshgradient>` `MeshgradientElement`.
-dynamic meshgradient = validateJsApiThenReturn(
-    () => ReactDomComponentFactoryProxy('meshgradient'));
+dynamic meshgradient = validateJsApiThenReturn(() => ReactDomComponentFactoryProxy('meshgradient'));
 
 /// The SVG `<meshpatch>` `MeshpatchElement`.
-dynamic meshpatch =
-    validateJsApiThenReturn(() => ReactDomComponentFactoryProxy('meshpatch'));
+dynamic meshpatch = validateJsApiThenReturn(() => ReactDomComponentFactoryProxy('meshpatch'));
 
 /// The SVG `<meshrow>` `MeshrowElement`.
-dynamic meshrow =
-    validateJsApiThenReturn(() => ReactDomComponentFactoryProxy('meshrow'));
+dynamic meshrow = validateJsApiThenReturn(() => ReactDomComponentFactoryProxy('meshrow'));
 
 /// The SVG `<metadata>` `MetadataElement`.
-dynamic metadata =
-    validateJsApiThenReturn(() => ReactDomComponentFactoryProxy('metadata'));
+dynamic metadata = validateJsApiThenReturn(() => ReactDomComponentFactoryProxy('metadata'));
 
 /// The SVG `<missing-glyph>` `MissingGlyphElement`.
-dynamic missingGlyph = validateJsApiThenReturn(
-    () => ReactDomComponentFactoryProxy('missing-glyph'));
+dynamic missingGlyph = validateJsApiThenReturn(() => ReactDomComponentFactoryProxy('missing-glyph'));
 
 /// The SVG `<mpath>` `MpathElement`.
-dynamic mpath =
-    validateJsApiThenReturn(() => ReactDomComponentFactoryProxy('mpath'));
+dynamic mpath = validateJsApiThenReturn(() => ReactDomComponentFactoryProxy('mpath'));
 
 /// The SVG `<path>` `PathElement`.
-dynamic path =
-    validateJsApiThenReturn(() => ReactDomComponentFactoryProxy('path'));
+dynamic path = validateJsApiThenReturn(() => ReactDomComponentFactoryProxy('path'));
 
 /// The SVG `<pattern>` `PatternElement`.
-dynamic pattern =
-    validateJsApiThenReturn(() => ReactDomComponentFactoryProxy('pattern'));
+dynamic pattern = validateJsApiThenReturn(() => ReactDomComponentFactoryProxy('pattern'));
 
 /// The SVG `<polygon>` `PolygonElement`.
-dynamic polygon =
-    validateJsApiThenReturn(() => ReactDomComponentFactoryProxy('polygon'));
+dynamic polygon = validateJsApiThenReturn(() => ReactDomComponentFactoryProxy('polygon'));
 
 /// The SVG `<polyline>` `PolylineElement`.
-dynamic polyline =
-    validateJsApiThenReturn(() => ReactDomComponentFactoryProxy('polyline'));
+dynamic polyline = validateJsApiThenReturn(() => ReactDomComponentFactoryProxy('polyline'));
 
 /// The SVG `<radialGradient>` `RadialGradientElement`.
-dynamic radialGradient = validateJsApiThenReturn(
-    () => ReactDomComponentFactoryProxy('radialGradient'));
+dynamic radialGradient = validateJsApiThenReturn(() => ReactDomComponentFactoryProxy('radialGradient'));
 
 /// The SVG `<rect>` `RectElement`.
-dynamic rect =
-    validateJsApiThenReturn(() => ReactDomComponentFactoryProxy('rect'));
+dynamic rect = validateJsApiThenReturn(() => ReactDomComponentFactoryProxy('rect'));
 
 /// The SVG `<set>` `SetElement`.
-dynamic svgSet =
-    validateJsApiThenReturn(() => ReactDomComponentFactoryProxy('set'));
+dynamic svgSet = validateJsApiThenReturn(() => ReactDomComponentFactoryProxy('set'));
 
 /// The SVG `<solidcolor>` `SolidcolorElement`.
-dynamic solidcolor =
-    validateJsApiThenReturn(() => ReactDomComponentFactoryProxy('solidcolor'));
+dynamic solidcolor = validateJsApiThenReturn(() => ReactDomComponentFactoryProxy('solidcolor'));
 
 /// The SVG `<stop>` `StopElement`.
-dynamic stop =
-    validateJsApiThenReturn(() => ReactDomComponentFactoryProxy('stop'));
+dynamic stop = validateJsApiThenReturn(() => ReactDomComponentFactoryProxy('stop'));
 
 /// The SVG `<svg>` `SvgSvgElement`.
-dynamic svg =
-    validateJsApiThenReturn(() => ReactDomComponentFactoryProxy('svg'));
+dynamic svg = validateJsApiThenReturn(() => ReactDomComponentFactoryProxy('svg'));
 
 /// The SVG `<switch>` `SwitchElement`.
-dynamic svgSwitch =
-    validateJsApiThenReturn(() => ReactDomComponentFactoryProxy('switch'));
+dynamic svgSwitch = validateJsApiThenReturn(() => ReactDomComponentFactoryProxy('switch'));
 
 /// The SVG `<symbol>` `SymbolElement`.
-dynamic symbol =
-    validateJsApiThenReturn(() => ReactDomComponentFactoryProxy('symbol'));
+dynamic symbol = validateJsApiThenReturn(() => ReactDomComponentFactoryProxy('symbol'));
 
 /// The SVG `<text>` `TextElement`.
-dynamic text =
-    validateJsApiThenReturn(() => ReactDomComponentFactoryProxy('text'));
+dynamic text = validateJsApiThenReturn(() => ReactDomComponentFactoryProxy('text'));
 
 /// The SVG `<textPath>` `TextPathElement`.
-dynamic textPath =
-    validateJsApiThenReturn(() => ReactDomComponentFactoryProxy('textPath'));
+dynamic textPath = validateJsApiThenReturn(() => ReactDomComponentFactoryProxy('textPath'));
 
 /// The SVG `<tref>` `TrefElement`.
-dynamic tref =
-    validateJsApiThenReturn(() => ReactDomComponentFactoryProxy('tref'));
+dynamic tref = validateJsApiThenReturn(() => ReactDomComponentFactoryProxy('tref'));
 
 /// The SVG `<tspan>` `TSpanElement`.
-dynamic tspan =
-    validateJsApiThenReturn(() => ReactDomComponentFactoryProxy('tspan'));
+dynamic tspan = validateJsApiThenReturn(() => ReactDomComponentFactoryProxy('tspan'));
 
 /// The SVG `<unknown>` `UnknownElement`.
-dynamic unknown =
-    validateJsApiThenReturn(() => ReactDomComponentFactoryProxy('unknown'));
+dynamic unknown = validateJsApiThenReturn(() => ReactDomComponentFactoryProxy('unknown'));
 
 /// The SVG `<use>` `UseElement`.
-dynamic use =
-    validateJsApiThenReturn(() => ReactDomComponentFactoryProxy('use'));
+dynamic use = validateJsApiThenReturn(() => ReactDomComponentFactoryProxy('use'));
 
 /// The SVG `<view>` `ViewElement`.
-dynamic view =
-    validateJsApiThenReturn(() => ReactDomComponentFactoryProxy('view'));
+dynamic view = validateJsApiThenReturn(() => ReactDomComponentFactoryProxy('view'));
 
 /// The SVG `<vkern>` `VkernElement`.
-dynamic vkern =
-    validateJsApiThenReturn(() => ReactDomComponentFactoryProxy('vkern'));
+dynamic vkern = validateJsApiThenReturn(() => ReactDomComponentFactoryProxy('vkern'));

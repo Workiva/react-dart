@@ -22,10 +22,7 @@ final ReactDartInteropStatics dartInteropStatics = (() {
   final zone = Zone.current;
 
   /// Wrapper for [Component.getInitialState].
-  Component initComponent(
-          ReactComponent jsThis,
-          ReactDartComponentInternal internal,
-          InteropContextValue context,
+  Component initComponent(ReactComponent jsThis, ReactDartComponentInternal internal, InteropContextValue context,
           ComponentStatics componentStatics) =>
       zone.run(() {
         void jsRedraw() {
@@ -43,8 +40,7 @@ final ReactDartInteropStatics dartInteropStatics = (() {
         };
 
         final component = componentStatics.componentFactory()
-          ..initComponentInternal(
-              internal.props, jsRedraw, getRef, jsThis, unjsifyContext(context))
+          ..initComponentInternal(internal.props, jsRedraw, getRef, jsThis, unjsifyContext(context))
           ..initStateInternal();
 
         // Return the component so that the JS proxying component can store it,
@@ -52,8 +48,7 @@ final ReactDartInteropStatics dartInteropStatics = (() {
         return component;
       });
 
-  InteropContextValue handleGetChildContext(Component component) =>
-      zone.run(() {
+  InteropContextValue handleGetChildContext(Component component) => zone.run(() {
         return jsifyContext(component.getChildContext());
       });
 
@@ -69,8 +64,7 @@ final ReactDartInteropStatics dartInteropStatics = (() {
         component.componentDidMount();
       });
 
-  Map _getNextProps(
-      Component component, ReactDartComponentInternal nextInternal) {
+  Map _getNextProps(Component component, ReactDartComponentInternal nextInternal) {
     final newProps = nextInternal.props;
     return newProps != null ? Map.from(newProps) : {};
   }
@@ -114,9 +108,7 @@ final ReactDartInteropStatics dartInteropStatics = (() {
 
   /// Wrapper for [Component.componentWillReceiveProps].
   void handleComponentWillReceiveProps(
-          Component component,
-          ReactDartComponentInternal nextInternal,
-          InteropContextValue nextContext) =>
+          Component component, ReactDartComponentInternal nextInternal, InteropContextValue nextContext) =>
       zone.run(() {
         final nextProps = _getNextProps(component, nextInternal);
         final newContext = unjsifyContext(nextContext);
@@ -129,9 +121,7 @@ final ReactDartInteropStatics dartInteropStatics = (() {
       });
 
   /// Wrapper for [Component.shouldComponentUpdate].
-  bool handleShouldComponentUpdate(
-          Component component, InteropContextValue nextContext) =>
-      zone.run(() {
+  bool handleShouldComponentUpdate(Component component, InteropContextValue nextContext) => zone.run(() {
         _callSetStateTransactionalCallbacks(component);
 
         // If shouldComponentUpdateWithContext returns a valid bool (default implementation returns null),
@@ -139,8 +129,7 @@ final ReactDartInteropStatics dartInteropStatics = (() {
         var shouldUpdate = component.shouldComponentUpdateWithContext(
             component.nextProps!, component.nextState, component.nextContext!);
 
-        shouldUpdate ??= component.shouldComponentUpdate(
-            component.nextProps!, component.nextState);
+        shouldUpdate ??= component.shouldComponentUpdate(component.nextProps!, component.nextState);
 
         if (shouldUpdate) {
           return true;
@@ -155,14 +144,11 @@ final ReactDartInteropStatics dartInteropStatics = (() {
       });
 
   /// Wrapper for [Component.componentWillUpdate].
-  void handleComponentWillUpdate(
-          Component component, InteropContextValue nextContext) =>
-      zone.run(() {
+  void handleComponentWillUpdate(Component component, InteropContextValue nextContext) => zone.run(() {
         /// Call `componentWillUpdate` and the context variant
         component
           ..componentWillUpdate(component.nextProps!, component.nextState)
-          ..componentWillUpdateWithContext(
-              component.nextProps!, component.nextState, component.nextContext);
+          ..componentWillUpdateWithContext(component.nextProps!, component.nextState, component.nextContext);
 
         _afterPropsChange(component, nextContext);
       });
@@ -170,9 +156,7 @@ final ReactDartInteropStatics dartInteropStatics = (() {
   /// Wrapper for [Component.componentDidUpdate].
   ///
   /// Uses [prevState] which was transferred from [Component.nextState] in [componentWillUpdate].
-  void handleComponentDidUpdate(
-          Component component, ReactDartComponentInternal prevInternal) =>
-      zone.run(() {
+  void handleComponentDidUpdate(Component component, ReactDartComponentInternal prevInternal) => zone.run(() {
         final prevInternalProps = prevInternal.props;
 
         /// Call `componentDidUpdate` and the context variant
@@ -202,8 +186,7 @@ final ReactDartInteropStatics dartInteropStatics = (() {
       handleGetChildContext: allowInterop(handleGetChildContext),
       handleComponentWillMount: allowInterop(handleComponentWillMount),
       handleComponentDidMount: allowInterop(handleComponentDidMount),
-      handleComponentWillReceiveProps:
-          allowInterop(handleComponentWillReceiveProps),
+      handleComponentWillReceiveProps: allowInterop(handleComponentWillReceiveProps),
       handleShouldComponentUpdate: allowInterop(handleShouldComponentUpdate),
       handleComponentWillUpdate: allowInterop(handleComponentWillUpdate),
       handleComponentDidUpdate: allowInterop(handleComponentDidUpdate),
@@ -212,8 +195,7 @@ final ReactDartInteropStatics dartInteropStatics = (() {
 })();
 
 abstract class ReactDartInteropStatics2 {
-  static void _updatePropsAndStateWithJs(
-      Component2 component, JsMap props, JsMap state) {
+  static void _updatePropsAndStateWithJs(Component2 component, JsMap props, JsMap state) {
     component
       ..props = JsBackedMap.backedBy(props)
       ..state = JsBackedMap.backedBy(state);
@@ -223,8 +205,7 @@ abstract class ReactDartInteropStatics2 {
     component.context = ContextHelpers.unjsifyNewContext(jsContext);
   }
 
-  static Component2 initComponent(ReactComponent jsThis,
-          ComponentStatics2 componentStatics) => // dartfmt
+  static Component2 initComponent(ReactComponent jsThis, ComponentStatics2 componentStatics) => // dartfmt
       componentZone.run(() {
         final component = componentStatics.componentFactory()
           // Return the component so that the JS proxying component can store it,
@@ -238,8 +219,7 @@ abstract class ReactDartInteropStatics2 {
         component.state = JsBackedMap.backedBy(jsThis.state!);
 
         // ignore: invalid_use_of_protected_member
-        Component2Bridge.bridgeForComponent[component] =
-            componentStatics.bridgeFactory(component);
+        Component2Bridge.bridgeForComponent[component] = componentStatics.bridgeFactory(component);
         return component;
       });
 
@@ -248,8 +228,7 @@ abstract class ReactDartInteropStatics2 {
         component.componentDidMount();
       });
 
-  static bool handleShouldComponentUpdate(Component2 component,
-          JsMap jsNextProps, JsMap jsNextState) => // dartfmt
+  static bool handleShouldComponentUpdate(Component2 component, JsMap jsNextProps, JsMap jsNextState) => // dartfmt
       componentZone.run(() {
         final value = component.shouldComponentUpdate(
           JsBackedMap.backedBy(jsNextProps),
@@ -264,21 +243,17 @@ abstract class ReactDartInteropStatics2 {
       });
 
   static JsMap? handleGetDerivedStateFromProps(
-          ComponentStatics2 componentStatics,
-          JsMap jsNextProps,
-          JsMap jsPrevState) => // dartfmt
+          ComponentStatics2 componentStatics, JsMap jsNextProps, JsMap jsPrevState) => // dartfmt
       componentZone.run(() {
         final derivedState = componentStatics.instanceForStaticMethods
-            .getDerivedStateFromProps(JsBackedMap.backedBy(jsNextProps),
-                JsBackedMap.backedBy(jsPrevState));
+            .getDerivedStateFromProps(JsBackedMap.backedBy(jsNextProps), JsBackedMap.backedBy(jsPrevState));
         if (derivedState != null) {
           return jsBackingMapOrJsCopy(derivedState);
         }
         return null;
       });
 
-  static dynamic handleGetSnapshotBeforeUpdate(Component2 component,
-          JsMap jsPrevProps, JsMap jsPrevState) => // dartfmt
+  static dynamic handleGetSnapshotBeforeUpdate(Component2 component, JsMap jsPrevProps, JsMap jsPrevState) => // dartfmt
       componentZone.run(() {
         final snapshotValue = component.getSnapshotBeforeUpdate(
           JsBackedMap.backedBy(jsPrevProps),
@@ -288,8 +263,8 @@ abstract class ReactDartInteropStatics2 {
         return snapshotValue;
       });
 
-  static void handleComponentDidUpdate(Component2 component,
-          ReactComponent jsThis, JsMap jsPrevProps, JsMap jsPrevState,
+  static void handleComponentDidUpdate(
+          Component2 component, ReactComponent jsThis, JsMap jsPrevProps, JsMap jsPrevState,
           [dynamic snapshot]) => // dartfmt
       componentZone.run(() {
         component.componentDidUpdate(
@@ -304,8 +279,7 @@ abstract class ReactDartInteropStatics2 {
         component.componentWillUnmount();
       });
 
-  static void handleComponentDidCatch(Component2 component, dynamic error,
-          ReactErrorInfo info) => // dartfmt
+  static void handleComponentDidCatch(Component2 component, dynamic error, ReactErrorInfo info) => // dartfmt
       componentZone.run(() {
         // Due to the error object being passed in from ReactJS it is a javascript object that does not get dartified.
         // To fix this we throw the error again from Dart to the JS side and catch it Dart side which re-dartifies it.
@@ -318,23 +292,20 @@ abstract class ReactDartInteropStatics2 {
         }
       });
 
-  static JsMap? handleGetDerivedStateFromError(
-          ComponentStatics2 componentStatics, dynamic error) => // dartfmt
+  static JsMap? handleGetDerivedStateFromError(ComponentStatics2 componentStatics, dynamic error) => // dartfmt
       componentZone.run(() {
         // Due to the error object being passed in from ReactJS it is a javascript object that does not get dartified.
         // To fix this we throw the error again from Dart to the JS side and catch it Dart side which re-dartifies it.
         try {
           throwErrorFromJS(error);
         } catch (e) {
-          final result = componentStatics.instanceForStaticMethods
-              .getDerivedStateFromError(e);
+          final result = componentStatics.instanceForStaticMethods.getDerivedStateFromError(e);
           if (result != null) return jsBackingMapOrJsCopy(result);
           return null;
         }
       });
 
-  static dynamic handleRender(Component2 component, JsMap jsProps,
-          JsMap jsState, dynamic jsContext) => // dartfmt
+  static dynamic handleRender(Component2 component, JsMap jsProps, JsMap jsState, dynamic jsContext) => // dartfmt
       componentZone.run(() {
         _updatePropsAndStateWithJs(component, jsProps, jsState);
         _updateContextWithJs(component, jsContext);

@@ -104,13 +104,11 @@ int calculateChangedBits(currentValue, nextValue) {
   return result;
 }
 
-var TestCalculateChangedBitsContext =
-    react.createContext(1, calculateChangedBits);
+var TestCalculateChangedBitsContext = react.createContext(1, calculateChangedBits);
 
 var TestContext = react.createContext();
 
-final ContextProviderWrapper =
-    react.registerComponent2(() => _ContextProviderWrapper());
+final ContextProviderWrapper = react.registerComponent2(() => _ContextProviderWrapper());
 
 class _ContextProviderWrapper extends react.Component2 {
   @override
@@ -125,31 +123,27 @@ class _ContextProviderWrapper extends react.Component2 {
   @override
   render() {
     return react.div({}, [
-      (props['contextToUse'] as react.Context).Provider({
-        'value':
-            props['mode'] == 'increment' ? state['counter'] : props['value']
-      }, props['children'])
+      (props['contextToUse'] as react.Context)
+          .Provider({'value': props['mode'] == 'increment' ? state['counter'] : props['value']}, props['children'])
     ]);
   }
 }
 
-final ContextConsumerWrapper =
-    react.registerComponent2(() => _ContextConsumerWrapper());
+final ContextConsumerWrapper = react.registerComponent2(() => _ContextConsumerWrapper());
 
 class _ContextConsumerWrapper extends react.Component2 {
   dynamic latestValue;
   @override
   render() {
-    return (props['contextToUse'] as react.Context).Consumer(
-        {'unstable_observedBits': props['unstable_observedBits']}, (value) {
+    return (props['contextToUse'] as react.Context).Consumer({'unstable_observedBits': props['unstable_observedBits']},
+        (value) {
       latestValue = value;
       return react.div({}, '$value');
     });
   }
 }
 
-final ContextTypeComponent =
-    react.registerComponent2(() => _ContextTypeComponent());
+final ContextTypeComponent = react.registerComponent2(() => _ContextTypeComponent());
 
 class _ContextTypeComponent extends react.Component2 {
   @override

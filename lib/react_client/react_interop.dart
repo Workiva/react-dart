@@ -19,16 +19,12 @@ import 'package:react/react_client.dart' show ComponentFactory;
 import 'package:react/react_client/bridge.dart';
 import 'package:react/react_client/js_backed_map.dart';
 import 'package:react/react_client/component_factory.dart'
-    show
-        ReactDartWrappedComponentFactoryProxy,
-        ReactDartFunctionComponentFactoryProxy,
-        ReactJsComponentFactoryProxy;
+    show ReactDartWrappedComponentFactoryProxy, ReactDartFunctionComponentFactoryProxy, ReactJsComponentFactoryProxy;
 import 'package:react/src/react_client/dart2_interop_workaround_bindings.dart';
 
-typedef ReactJsComponentFactory = ReactElement Function(
-    dynamic props, dynamic children);
-typedef JsPropValidator = dynamic Function(JsMap props, String propName,
-    String componentName, String location, String propFullName, String secret);
+typedef ReactJsComponentFactory = ReactElement Function(dynamic props, dynamic children);
+typedef JsPropValidator = dynamic Function(
+    JsMap props, String propName, String componentName, String location, String propFullName, String secret);
 
 // ----------------------------------------------------------------------------
 //   Top-level API
@@ -37,8 +33,7 @@ typedef JsPropValidator = dynamic Function(JsMap props, String propName,
 @JS()
 abstract class React {
   external static String get version;
-  external static ReactElement cloneElement(ReactElement element,
-      [JsMap? props, dynamic? children]);
+  external static ReactElement cloneElement(ReactElement element, [JsMap? props, dynamic? children]);
   external static ReactContext createContext([
     dynamic defaultValue,
     int Function(dynamic currentValue, dynamic nextValue)? calculateChangedBits,
@@ -47,11 +42,9 @@ abstract class React {
   external static ReactClass createClass(ReactClassConfig reactClassConfig);
   @Deprecated('7.0.0')
   external static ReactJsComponentFactory createFactory(type);
-  external static ReactElement createElement(dynamic type, props,
-      [dynamic? children]);
+  external static ReactElement createElement(dynamic type, props, [dynamic? children]);
   external static JsRef createRef();
-  external static ReactClass forwardRef(
-      Function(JsMap props, dynamic ref) wrapperFunction);
+  external static ReactClass forwardRef(Function(JsMap props, dynamic ref) wrapperFunction);
   external static ReactClass memo(
     dynamic wrapperFunction, [
     bool Function(JsMap prevProps, JsMap nextProps)? areEqual,
@@ -64,22 +57,14 @@ abstract class React {
   external static ReactClass get Fragment;
 
   external static List<dynamic> useState(dynamic value);
-  external static void useEffect(dynamic Function() sideEffect,
-      [List<Object?>? dependencies]);
-  external static List<dynamic> useReducer(
-      Function reducer, dynamic initialState,
-      [Function? init]);
-  external static Function useCallback(
-      Function callback, List<Object?> dependencies);
+  external static void useEffect(dynamic Function() sideEffect, [List<Object?>? dependencies]);
+  external static List<dynamic> useReducer(Function reducer, dynamic initialState, [Function? init]);
+  external static Function useCallback(Function callback, List<Object?> dependencies);
   external static ReactContext useContext(ReactContext context);
   external static JsRef useRef([dynamic? initialValue]);
-  external static dynamic useMemo(dynamic Function() createFunction,
-      [List<Object?>? dependencies]);
-  external static void useLayoutEffect(dynamic Function() sideEffect,
-      [List<Object?>? dependencies]);
-  external static void useImperativeHandle(
-      dynamic ref, dynamic Function() createHandle,
-      [List<Object?>? dependencies]);
+  external static dynamic useMemo(dynamic Function() createFunction, [List<Object?>? dependencies]);
+  external static void useLayoutEffect(dynamic Function() sideEffect, [List<Object?>? dependencies]);
+  external static void useImperativeHandle(dynamic ref, dynamic Function() createHandle, [List<Object?>? dependencies]);
   // NOTE: The use of generics on the `useDebugValue` interop will break the hook.
   external static dynamic useDebugValue(dynamic value, [Function? format]);
 }
@@ -246,8 +231,7 @@ ReactComponentFactoryProxy forwardRef2(
   DartForwardRefFunctionComponent wrapperFunction, {
   String? displayName,
 }) =>
-    ReactDartWrappedComponentFactoryProxy.forwardRef(wrapperFunction,
-        displayName: displayName);
+    ReactDartWrappedComponentFactoryProxy.forwardRef(wrapperFunction, displayName: displayName);
 
 /// A [higher order component](https://reactjs.org/docs/higher-order-components.html) for function components
 /// that behaves similar to the way [`React.PureComponent`](https://reactjs.org/docs/react-api.html#reactpurecomponent)
@@ -298,15 +282,13 @@ ReactComponentFactoryProxy memo2(ReactComponentFactoryProxy factory,
           return areEqual(dartPrevProps, dartNextProps);
         });
   final hoc = React.memo(factory.type, _areEqual);
-  setProperty(
-      hoc, 'dartComponentVersion', ReactDartComponentVersion.component2);
+  setProperty(hoc, 'dartComponentVersion', ReactDartComponentVersion.component2);
 
   return ReactDartWrappedComponentFactoryProxy(hoc);
 }
 
 @Deprecated('Use memo2')
-ReactJsComponentFactoryProxy memo(
-    ReactDartFunctionComponentFactoryProxy factory,
+ReactJsComponentFactoryProxy memo(ReactDartFunctionComponentFactoryProxy factory,
     {bool Function(Map prevProps, Map nextProps)? areEqual}) {
   final _areEqual = areEqual == null
       ? null
@@ -317,18 +299,15 @@ ReactJsComponentFactoryProxy memo(
           return areEqual(dartPrevProps, dartNextProps);
         });
   final hoc = React.memo(factory.type, _areEqual);
-  setProperty(
-      hoc, 'dartComponentVersion', ReactDartComponentVersion.component2);
+  setProperty(hoc, 'dartComponentVersion', ReactDartComponentVersion.component2);
 
   return ReactJsComponentFactoryProxy(hoc, alwaysReturnChildrenAsList: true);
 }
 
 abstract class ReactDom {
   static Element findDOMNode(object) => ReactDOM.findDOMNode(object);
-  static ReactComponent render(ReactElement component, Element element) =>
-      ReactDOM.render(component, element);
-  static bool unmountComponentAtNode(Element element) =>
-      ReactDOM.unmountComponentAtNode(element);
+  static ReactComponent render(ReactElement component, Element element) => ReactDOM.render(component, element);
+  static bool unmountComponentAtNode(Element element) => ReactDOM.unmountComponentAtNode(element);
 
   /// Returns a a portal that renders [children] into a [container].
   ///
@@ -337,8 +316,7 @@ abstract class ReactDom {
   /// [children] can be any renderable React child, such as a [ReactElement], [String], or fragment.
   ///
   /// See: <https://reactjs.org/docs/portals.html>
-  static ReactPortal createPortal(dynamic children, Element container) =>
-      ReactDOM.createPortal(children, container);
+  static ReactPortal createPortal(dynamic children, Element container) => ReactDOM.createPortal(children, container);
 }
 
 @JS('ReactDOMServer')
@@ -732,8 +710,7 @@ void markChildrenValidated(List<dynamic> children) {
 @JS('_createReactDartComponentClass')
 @Deprecated('7.0.0')
 external ReactClass createReactDartComponentClass(
-    ReactDartInteropStatics? dartInteropStatics,
-    ComponentStatics? componentStatics,
+    ReactDartInteropStatics? dartInteropStatics, ComponentStatics? componentStatics,
     [JsComponentConfig? jsConfig]);
 
 /// Returns a new JS [ReactClass] for a component that uses
@@ -742,8 +719,7 @@ external ReactClass createReactDartComponentClass(
 ///
 /// See `_ReactDartInteropStatics2.staticsForJs`]` for an example implementation.
 @JS('_createReactDartComponentClass2')
-external ReactClass createReactDartComponentClass2(
-    JsMap? dartInteropStatics, ComponentStatics2? componentStatics,
+external ReactClass createReactDartComponentClass2(JsMap? dartInteropStatics, ComponentStatics2? componentStatics,
     [JsComponentConfig2? jsConfig]);
 
 @JS('React.__isDevelopment')
@@ -787,12 +763,9 @@ class ReactDartInteropStatics {
       InteropContextValue nextContext,
     )
         handleComponentWillReceiveProps,
-    bool Function(Component component, InteropContextValue nextContext)
-        handleShouldComponentUpdate,
-    void Function(Component component, InteropContextValue nextContext)
-        handleComponentWillUpdate,
-    void Function(Component component, ReactDartComponentInternal prevInternal)
-        handleComponentDidUpdate,
+    bool Function(Component component, InteropContextValue nextContext) handleShouldComponentUpdate,
+    void Function(Component component, InteropContextValue nextContext) handleComponentWillUpdate,
+    void Function(Component component, ReactDartComponentInternal prevInternal) handleComponentDidUpdate,
     void Function(Component component) handleComponentWillUnmount,
     dynamic Function(Component component) handleRender,
   });

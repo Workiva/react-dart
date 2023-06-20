@@ -138,10 +138,8 @@ final CssBaseline = ReactJsComponentFactoryProxy(MaterialUI.CssBaseline);
 final Dialog = ReactJsComponentFactoryProxy(MaterialUI.Dialog);
 final DialogActions = ReactJsComponentFactoryProxy(MaterialUI.DialogActions);
 final DialogContent = ReactJsComponentFactoryProxy(MaterialUI.DialogContent);
-final DialogContentText =
-    ReactJsComponentFactoryProxy(MaterialUI.DialogContentText);
+final DialogContentText = ReactJsComponentFactoryProxy(MaterialUI.DialogContentText);
 final DialogTitle = ReactJsComponentFactoryProxy(MaterialUI.DialogTitle);
 final Icon = ReactJsComponentFactoryProxy(MaterialUI.Icon);
-final MuiThemeProvider =
-    ReactJsComponentFactoryProxy(MaterialUI.MuiThemeProvider);
+final MuiThemeProvider = ReactJsComponentFactoryProxy(MaterialUI.MuiThemeProvider);
 final Typography = ReactJsComponentFactoryProxy(MaterialUI.Typography);

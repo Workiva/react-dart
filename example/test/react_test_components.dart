@@ -12,8 +12,7 @@ class _HelloComponent extends react.Component2 {
         'name': (Map props, info) {
           final String propValue = props[info.propName];
           if (propValue.length > 20) {
-            return ArgumentError(
-                '($propValue) is too long. $propValue has a max length of 20 characters.');
+            return ArgumentError('($propValue) is too long. $propValue has a max length of 20 characters.');
           }
           return null;
         },
@@ -79,8 +78,7 @@ class _CheckBoxComponent extends react.Component {
       react.label({
         'htmlFor': 'doTheDishes',
         'key': 'label',
-        'className':
-            'form-check-label ${state['checked'] ? 'striked' : 'not-striked'}'
+        'className': 'form-check-label ${state['checked'] ? 'striked' : 'not-striked'}'
       }, 'do the dishes'),
     ]);
   }
@@ -217,11 +215,7 @@ class _LegacyContextComponent extends react.Component {
     return react.ul({
       'key': 'ul'
     }, [
-      react.button({
-        'key': 'button',
-        'className': 'btn btn-primary',
-        'onClick': _onButtonClick
-      }, 'Redraw'),
+      react.button({'key': 'button', 'className': 'btn btn-primary', 'onClick': _onButtonClick}, 'Redraw'),
       react.br({'key': 'break1'}),
       'LegacyContextComponent.getChildContext(): ',
       getChildContext().toString(),
@@ -236,8 +230,7 @@ class _LegacyContextComponent extends react.Component {
   }
 }
 
-var legacyContextComponent =
-    react.registerComponent(() => _LegacyContextComponent());
+var legacyContextComponent = react.registerComponent(() => _LegacyContextComponent());
 
 class _LegacyContextConsumerComponent extends react.Component {
   @override
@@ -257,8 +250,7 @@ class _LegacyContextConsumerComponent extends react.Component {
   }
 }
 
-var legacyContextConsumerComponent =
-    react.registerComponent(() => _LegacyContextConsumerComponent());
+var legacyContextConsumerComponent = react.registerComponent(() => _LegacyContextConsumerComponent());
 
 class _GrandchildLegacyContextConsumerComponent extends react.Component {
   @override
@@ -292,8 +284,7 @@ class _NewContextRefComponent extends react.Component2 {
   }
 }
 
-var newContextRefComponent =
-    react.registerComponent(() => _NewContextRefComponent());
+var newContextRefComponent = react.registerComponent(() => _NewContextRefComponent());
 
 int calculateChangedBits(currentValue, nextValue) {
   var result = 1 << 1;
@@ -303,8 +294,7 @@ int calculateChangedBits(currentValue, nextValue) {
   return result;
 }
 
-var TestNewContext =
-    react.createContext<Map>({'renderCount': 0}, calculateChangedBits);
+var TestNewContext = react.createContext<Map>({'renderCount': 0}, calculateChangedBits);
 
 class _NewContextProviderComponent extends react.Component2 {
   _NewContextRefComponent? componentRef;
@@ -377,14 +367,12 @@ class _NewContextProviderComponent extends react.Component2 {
   }
 }
 
-var newContextProviderComponent =
-    react.registerComponent(() => _NewContextProviderComponent());
+var newContextProviderComponent = react.registerComponent(() => _NewContextProviderComponent());
 
 class _NewContextConsumerComponent extends react.Component2 {
   @override
   render() {
-    return TestNewContext.Consumer(
-        {'unstable_observedBits': props['unstable_observedBits']}, (value) {
+    return TestNewContext.Consumer({'unstable_observedBits': props['unstable_observedBits']}, (value) {
       return react.ul({
         'key': 'ul1'
       }, [
@@ -397,14 +385,12 @@ class _NewContextConsumerComponent extends react.Component2 {
   }
 }
 
-var newContextConsumerComponent =
-    react.registerComponent(() => _NewContextConsumerComponent());
+var newContextConsumerComponent = react.registerComponent(() => _NewContextConsumerComponent());
 
 class _NewContextConsumerObservedBitsComponent extends react.Component2 {
   @override
   render() {
-    return TestNewContext.Consumer(
-        {'unstable_observedBits': props['unstable_observedBits']}, (value) {
+    return TestNewContext.Consumer({'unstable_observedBits': props['unstable_observedBits']}, (value) {
       return react.ul({
         'key': 'ul2'
       }, [
@@ -417,8 +403,7 @@ class _NewContextConsumerObservedBitsComponent extends react.Component2 {
   }
 }
 
-var newContextConsumerObservedBitsComponent =
-    react.registerComponent(() => _NewContextConsumerObservedBitsComponent());
+var newContextConsumerObservedBitsComponent = react.registerComponent(() => _NewContextConsumerObservedBitsComponent());
 
 class _NewContextTypeConsumerComponent extends react.Component2 {
   @override
@@ -435,8 +420,7 @@ class _NewContextTypeConsumerComponent extends react.Component2 {
   }
 }
 
-class _Component2TestComponent extends react.Component2
-    with react.TypedSnapshot<String> {
+class _Component2TestComponent extends react.Component2 with react.TypedSnapshot<String> {
   @override
   get defaultProps => {'defaultProp': true};
 
@@ -512,10 +496,8 @@ class _Component2TestComponent extends react.Component2
   }
 }
 
-var newContextTypeConsumerComponentComponent =
-    react.registerComponent(() => _NewContextTypeConsumerComponent());
-var component2TestComponent =
-    react.registerComponent(() => _Component2TestComponent());
+var newContextTypeConsumerComponentComponent = react.registerComponent(() => _NewContextTypeConsumerComponent());
+var component2TestComponent = react.registerComponent(() => _Component2TestComponent());
 
 class _ErrorComponent extends react.Component2 {
   @override
@@ -541,8 +523,7 @@ class _CustomException implements Exception {
   final String message;
   final String randomMessage;
 
-  _CustomException(this.message, this.code)
-      : randomMessage = _getRandomMessage(code);
+  _CustomException(this.message, this.code) : randomMessage = _getRandomMessage(code);
 
   static String _getRandomMessage(code) {
     switch (code) {
@@ -570,10 +551,7 @@ class _Component2ErrorTestComponent extends react.Component2 {
       print(info.dartStackTrace);
       setState({'error': error.randomMessage});
     } else {
-      setState({
-        'error':
-            'We can capture the error, store it in state and display it here.'
-      });
+      setState({'error': 'We can capture the error, store it in state and display it here.'});
     }
   }
 
@@ -598,12 +576,8 @@ class _Component2ErrorTestComponent extends react.Component2 {
       'key': 'e-cont'
     }, [
       react.h3({'key': 'e-header'}, 'Error Boundary Test'),
-      state['clicked']
-          ? ErrorComponent({'key': 'ec-1', 'errored': state['errored']})
-          : null,
-      errorMessage != null
-          ? react.div({'key': 'ec-m-1'}, '$errorMessage')
-          : null,
+      state['clicked'] ? ErrorComponent({'key': 'ec-1', 'errored': state['errored']}) : null,
+      errorMessage != null ? react.div({'key': 'ec-m-1'}, '$errorMessage') : null,
       !state['errored']
           ? react.button({
               'type': 'button',
@@ -625,5 +599,4 @@ class _Component2ErrorTestComponent extends react.Component2 {
   }
 }
 
-var component2ErrorTestComponent =
-    react.registerComponent(() => _Component2ErrorTestComponent(), ['render']);
+var component2ErrorTestComponent = react.registerComponent(() => _Component2ErrorTestComponent(), ['render']);

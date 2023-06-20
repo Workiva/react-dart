@@ -15,9 +15,9 @@ void main() {
     {},
     _ErrorBoundary(
       {
+        // ignore: avoid_types_on_closure_parameters
         'onComponentDidCatch': (dynamic error, ReactErrorInfo info) {
-          print(
-              'componentDidCatch: info.componentStack ${info.componentStack}');
+          print('componentDidCatch: info.componentStack ${info.componentStack}');
         },
       },
       react.div(
@@ -39,8 +39,7 @@ void main() {
   react_dom.render(content, querySelector('#content'));
 }
 
-final _ErrorBoundary =
-    react.registerComponent2(() => _ErrorBoundaryComponent(), skipMethods: []);
+final _ErrorBoundary = react.registerComponent2(() => _ErrorBoundaryComponent(), skipMethods: []);
 
 class _ErrorBoundaryComponent extends react.Component2 {
   @override
@@ -56,14 +55,11 @@ class _ErrorBoundaryComponent extends react.Component2 {
 
   @override
   render() {
-    return state['hasError']
-        ? 'Error boundary caught an error'
-        : props['children'];
+    return state['hasError'] ? 'Error boundary caught an error' : props['children'];
   }
 }
 
-final _ThrowingComponent =
-    react.registerComponent2(() => _ThrowingComponentComponent2());
+final _ThrowingComponent = react.registerComponent2(() => _ThrowingComponentComponent2());
 
 class _ThrowingComponentComponent2 extends react.Component2 {
   @override

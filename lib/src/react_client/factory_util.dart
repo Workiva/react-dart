@@ -28,8 +28,7 @@ dynamic convertArgsToChildren(List childrenArgs) {
   }
 }
 
-@Deprecated(
-    'Event handlers are no longer converted. This will be removed in 7.0.0.')
+@Deprecated('Event handlers are no longer converted. This will be removed in 7.0.0.')
 Function? unconvertJsEventHandler(Function jsConvertedEventHandler) => null;
 
 void convertRefValue(Map args) {
@@ -79,8 +78,7 @@ void convertRefValue2(
 /// - `[]` if there are no args and [shouldAlwaysBeList] is true
 /// - the single child if only one was specified
 /// - otherwise, the same list of args, will all top-level children validated
-dynamic generateChildren(List? childrenArgs,
-    {bool shouldAlwaysBeList = false}) {
+dynamic generateChildren(List? childrenArgs, {bool shouldAlwaysBeList = false}) {
   if (childrenArgs == null) {
     return shouldAlwaysBeList ? const [] : null;
   }
@@ -106,9 +104,7 @@ dynamic generateChildren(List? childrenArgs,
   }
 
   if (children == null) {
-    children = shouldAlwaysBeList
-        ? childrenArgs.map(listifyChildren).toList()
-        : childrenArgs;
+    children = shouldAlwaysBeList ? childrenArgs.map(listifyChildren).toList() : childrenArgs;
     markChildrenValidated(children);
   }
 
@@ -124,11 +120,8 @@ JsMap generateJsProps(Map props,
   final propsForJs = JsBackedMap.from(props);
   if (convertRefValue) {
     convertRefValue2(propsForJs,
-        convertCallbackRefValue: convertCallbackRefValue,
-        additionalRefPropKeys: additionalRefPropKeys);
+        convertCallbackRefValue: convertCallbackRefValue, additionalRefPropKeys: additionalRefPropKeys);
   }
 
-  return wrapWithJsify
-      ? jsifyAndAllowInterop(propsForJs) as JsMap
-      : propsForJs.jsObject;
+  return wrapWithJsify ? jsifyAndAllowInterop(propsForJs) as JsMap : propsForJs.jsObject;
 }

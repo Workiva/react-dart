@@ -11,8 +11,7 @@ import '../shared_type_tester.dart';
 
 main() {
   group('JsBackedMap', () {
-    group('sets and retrieves values without JS interop interfering with them:',
-        () {
+    group('sets and retrieves values without JS interop interfering with them:', () {
       void testTypeValue(dynamic testValue) {
         final jsBackedMap = JsBackedMap();
         jsBackedMap['testValue'] = testValue;
@@ -35,33 +34,26 @@ main() {
         expect(jsBackedMap, containsPair('foo', 1));
 
         setProperty(jsMap, 'baz', 2);
-        expect(jsBackedMap, containsPair('baz', 2),
-            reason: 'should be backed by the given JS map');
+        expect(jsBackedMap, containsPair('baz', 2), reason: 'should be backed by the given JS map');
       });
 
-      test(
-          '.from creates a new instance with all key-value pairs from another map',
-          () {
+      test('.from creates a new instance with all key-value pairs from another map', () {
         final otherMap = {'foo': 1};
         final jsBackedMap = JsBackedMap.from(otherMap);
         expect(jsBackedMap, otherMap);
 
         otherMap['bar'] = 2;
-        expect(jsBackedMap, hasLength(1),
-            reason: 'should not be backed by the other map');
+        expect(jsBackedMap, hasLength(1), reason: 'should not be backed by the other map');
       });
 
-      test(
-          '.fromJs creates a new instance with all key-value pairs from another JS map',
-          () {
+      test('.fromJs creates a new instance with all key-value pairs from another JS map', () {
         final otherJsMap = jsify({'foo': 1}) as JsMap;
         final jsBackedMap = JsBackedMap.fromJs(otherJsMap);
         expect(jsBackedMap, containsPair('foo', 1));
         expect(jsBackedMap.jsObject, isNot(otherJsMap));
 
         setProperty(otherJsMap, 'baz', 2);
-        expect(jsBackedMap, hasLength(1),
-            reason: 'should not be backed by the other map');
+        expect(jsBackedMap, hasLength(1), reason: 'should not be backed by the other map');
       });
     });
 
@@ -108,8 +100,7 @@ main() {
           // This throws only in strict-mode JS, meaning it throws in DDC and not in dart2js.
           jsBackedMap['foo'] = 'bar';
         } catch (_) {}
-        expect(jsBackedMap, isEmpty,
-            reason: 'test setup check; object should be frozen');
+        expect(jsBackedMap, isEmpty, reason: 'test setup check; object should be frozen');
 
         // DDC throws when attempting to access `.hashCode` on frozen objects:
         // https://github.com/dart-lang/sdk/issues/36354

@@ -59,8 +59,7 @@ main() {
     test('with no children returns JS undefined', () {
       expect(hasUndefinedChildren(react.div({})), isTrue);
       expect(hasUndefinedChildren(react.div({}, jsNull)), isFalse,
-          reason:
-              'Sanity check that JS `null` is not the same as JS `undefined`');
+          reason: 'Sanity check that JS `null` is not the same as JS `undefined`');
     });
   });
 }

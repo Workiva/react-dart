@@ -32,8 +32,7 @@ main() {
 
       // Other defaults
       expect(event.type, isNotNull,
-          reason:
-              'The implementation (i.e. value) does not matter, but this should be a non-empty value');
+          reason: 'The implementation (i.e. value) does not matter, but this should be a non-empty value');
       expect(event.timeStamp, 0);
 
       // Null defaults
@@ -68,8 +67,7 @@ main() {
       expect(event.target, isA<InputElement>());
 
       // Function properties
-      expect(() => event.stopPropagation(), returnsNormally,
-          reason: 'this defaults to an empty function');
+      expect(() => event.stopPropagation(), returnsNormally, reason: 'this defaults to an empty function');
       expect(() => event.preventDefault(), returnsNormally);
     }
 
@@ -110,10 +108,8 @@ main() {
       when(nativeKeyboardEvent.cancelable).thenReturn(true);
       when(nativeKeyboardEvent.currentTarget).thenReturn(currentTarget);
       when(nativeKeyboardEvent.defaultPrevented).thenReturn(false);
-      when(nativeKeyboardEvent.preventDefault())
-          .thenAnswer((_) => calls.add('preventDefault'));
-      when(nativeKeyboardEvent.stopPropagation())
-          .thenAnswer((_) => calls.add('stopPropagation'));
+      when(nativeKeyboardEvent.preventDefault()).thenAnswer((_) => calls.add('preventDefault'));
+      when(nativeKeyboardEvent.stopPropagation()).thenAnswer((_) => calls.add('stopPropagation'));
       when(nativeKeyboardEvent.eventPhase).thenReturn(0);
       when(nativeKeyboardEvent.target).thenReturn(target);
       when(nativeKeyboardEvent.timeStamp).thenReturn(0);
@@ -129,8 +125,7 @@ main() {
 
       expect(nativeKeyboardEvent.defaultPrevented, isFalse);
 
-      final syntheticKeyboardEvent =
-          wrapNativeKeyboardEvent(nativeKeyboardEvent);
+      final syntheticKeyboardEvent = wrapNativeKeyboardEvent(nativeKeyboardEvent);
 
       expect(syntheticKeyboardEvent, isA<SyntheticKeyboardEvent>());
 
@@ -172,10 +167,8 @@ main() {
       when(nativeMouseEvent.cancelable).thenReturn(true);
       when(nativeMouseEvent.currentTarget).thenReturn(currentTarget);
       when(nativeMouseEvent.defaultPrevented).thenReturn(false);
-      when(nativeMouseEvent.preventDefault())
-          .thenAnswer((_) => calls.add('preventDefault'));
-      when(nativeMouseEvent.stopPropagation())
-          .thenAnswer((_) => calls.add('stopPropagation'));
+      when(nativeMouseEvent.preventDefault()).thenAnswer((_) => calls.add('preventDefault'));
+      when(nativeMouseEvent.stopPropagation()).thenAnswer((_) => calls.add('stopPropagation'));
       when(nativeMouseEvent.eventPhase).thenReturn(0);
       when(nativeMouseEvent.target).thenReturn(target);
       when(nativeMouseEvent.timeStamp).thenReturn(0);
@@ -643,8 +636,7 @@ main() {
           testSyntheticEventBaseForMergeTests(baseEvent);
           expect(baseEvent.data, 'initial data');
 
-          final newEvent =
-              createSyntheticCompositionEvent(baseEvent: baseEvent);
+          final newEvent = createSyntheticCompositionEvent(baseEvent: baseEvent);
           testSyntheticEventBaseForMergeTests(newEvent);
           expect(newEvent.data, 'initial data');
         });
@@ -888,8 +880,7 @@ main() {
             clientX: 200,
             clientY: 300,
             ctrlKey: false,
-            dataTransfer:
-                jsifyAndAllowInterop({'dropEffect': updatedTestString}),
+            dataTransfer: jsifyAndAllowInterop({'dropEffect': updatedTestString}),
             metaKey: false,
             pageX: 400,
             pageY: 500,
@@ -1657,96 +1648,43 @@ main() {
     });
 
     group('SyntheticEventTypeHelpers', () {
-      void commonFalseTests(bool Function(SyntheticEvent) eventTypeTester,
-          SyntheticEventType currentEventTypeBeingTested) {
+      void commonFalseTests(
+          bool Function(SyntheticEvent) eventTypeTester, SyntheticEventType currentEventTypeBeingTested) {
         group('(common type helper false tests)', () {
           // A little verbose, but this tests that every `eventTypeTester` only returns `true` for the event type being passed in.
           //
           // The complexity comes in because there's always 1 `expect` that should return `true`, which is the actual `currentEventTypeBeingTested`.
           test('when the event is a different type', () {
-            expect(
-                eventTypeTester(createSyntheticClipboardEvent()),
-                currentEventTypeBeingTested ==
-                        SyntheticEventType.syntheticClipboardEvent
-                    ? isTrue
-                    : isFalse);
-            expect(
-                eventTypeTester(createSyntheticKeyboardEvent()),
-                currentEventTypeBeingTested ==
-                        SyntheticEventType.syntheticKeyboardEvent
-                    ? isTrue
-                    : isFalse);
-            expect(
-                eventTypeTester(createSyntheticCompositionEvent()),
-                currentEventTypeBeingTested ==
-                        SyntheticEventType.syntheticCompositionEvent
-                    ? isTrue
-                    : isFalse);
-            expect(
-                eventTypeTester(createSyntheticFocusEvent()),
-                currentEventTypeBeingTested ==
-                        SyntheticEventType.syntheticFocusEvent
-                    ? isTrue
-                    : isFalse);
-            expect(
-                eventTypeTester(createSyntheticFormEvent()),
-                currentEventTypeBeingTested ==
-                        SyntheticEventType.syntheticFormEvent
-                    ? isTrue
-                    : isFalse);
-            expect(
-                eventTypeTester(createSyntheticMouseEvent()),
-                currentEventTypeBeingTested ==
-                        SyntheticEventType.syntheticMouseEvent
-                    ? isTrue
-                    : isFalse);
-            expect(
-                eventTypeTester(createSyntheticPointerEvent()),
-                currentEventTypeBeingTested ==
-                        SyntheticEventType.syntheticPointerEvent
-                    ? isTrue
-                    : isFalse);
-            expect(
-                eventTypeTester(createSyntheticTouchEvent()),
-                currentEventTypeBeingTested ==
-                        SyntheticEventType.syntheticTouchEvent
-                    ? isTrue
-                    : isFalse);
-            expect(
-                eventTypeTester(createSyntheticTransitionEvent()),
-                currentEventTypeBeingTested ==
-                        SyntheticEventType.syntheticTransitionEvent
-                    ? isTrue
-                    : isFalse);
-            expect(
-                eventTypeTester(createSyntheticAnimationEvent()),
-                currentEventTypeBeingTested ==
-                        SyntheticEventType.syntheticAnimationEvent
-                    ? isTrue
-                    : isFalse);
-            expect(
-                eventTypeTester(createSyntheticUIEvent()),
-                currentEventTypeBeingTested ==
-                        SyntheticEventType.syntheticUIEvent
-                    ? isTrue
-                    : isFalse);
-            expect(
-                eventTypeTester(createSyntheticWheelEvent()),
-                currentEventTypeBeingTested ==
-                        SyntheticEventType.syntheticWheelEvent
-                    ? isTrue
-                    : isFalse);
+            expect(eventTypeTester(createSyntheticClipboardEvent()),
+                currentEventTypeBeingTested == SyntheticEventType.syntheticClipboardEvent ? isTrue : isFalse);
+            expect(eventTypeTester(createSyntheticKeyboardEvent()),
+                currentEventTypeBeingTested == SyntheticEventType.syntheticKeyboardEvent ? isTrue : isFalse);
+            expect(eventTypeTester(createSyntheticCompositionEvent()),
+                currentEventTypeBeingTested == SyntheticEventType.syntheticCompositionEvent ? isTrue : isFalse);
+            expect(eventTypeTester(createSyntheticFocusEvent()),
+                currentEventTypeBeingTested == SyntheticEventType.syntheticFocusEvent ? isTrue : isFalse);
+            expect(eventTypeTester(createSyntheticFormEvent()),
+                currentEventTypeBeingTested == SyntheticEventType.syntheticFormEvent ? isTrue : isFalse);
+            expect(eventTypeTester(createSyntheticMouseEvent()),
+                currentEventTypeBeingTested == SyntheticEventType.syntheticMouseEvent ? isTrue : isFalse);
+            expect(eventTypeTester(createSyntheticPointerEvent()),
+                currentEventTypeBeingTested == SyntheticEventType.syntheticPointerEvent ? isTrue : isFalse);
+            expect(eventTypeTester(createSyntheticTouchEvent()),
+                currentEventTypeBeingTested == SyntheticEventType.syntheticTouchEvent ? isTrue : isFalse);
+            expect(eventTypeTester(createSyntheticTransitionEvent()),
+                currentEventTypeBeingTested == SyntheticEventType.syntheticTransitionEvent ? isTrue : isFalse);
+            expect(eventTypeTester(createSyntheticAnimationEvent()),
+                currentEventTypeBeingTested == SyntheticEventType.syntheticAnimationEvent ? isTrue : isFalse);
+            expect(eventTypeTester(createSyntheticUIEvent()),
+                currentEventTypeBeingTested == SyntheticEventType.syntheticUIEvent ? isTrue : isFalse);
+            expect(eventTypeTester(createSyntheticWheelEvent()),
+                currentEventTypeBeingTested == SyntheticEventType.syntheticWheelEvent ? isTrue : isFalse);
           });
 
           test('when the event is the base class', () {
-            expect(
-                eventTypeTester(createSyntheticEvent()),
-                currentEventTypeBeingTested ==
-                        SyntheticEventType.syntheticFormEvent
-                    ? isTrue
-                    : isFalse,
-                reason:
-                    'The `SyntheticEvent` base class is considered a Form Event via Duck Typing.');
+            expect(eventTypeTester(createSyntheticEvent()),
+                currentEventTypeBeingTested == SyntheticEventType.syntheticFormEvent ? isTrue : isFalse,
+                reason: 'The `SyntheticEvent` base class is considered a Form Event via Duck Typing.');
           });
         });
       }
@@ -1765,8 +1703,7 @@ main() {
         });
 
         group('correctly returns false', () {
-          commonFalseTests((e) => e.isClipboardEvent,
-              SyntheticEventType.syntheticClipboardEvent);
+          commonFalseTests((e) => e.isClipboardEvent, SyntheticEventType.syntheticClipboardEvent);
         });
       });
 
@@ -1802,8 +1739,7 @@ main() {
         });
 
         group('correctly returns false', () {
-          commonFalseTests((e) => e.isKeyboardEvent,
-              SyntheticEventType.syntheticKeyboardEvent);
+          commonFalseTests((e) => e.isKeyboardEvent, SyntheticEventType.syntheticKeyboardEvent);
         });
       });
 
@@ -1821,8 +1757,7 @@ main() {
         });
 
         group('correctly returns false', () {
-          commonFalseTests((e) => e.isCompositionEvent,
-              SyntheticEventType.syntheticCompositionEvent);
+          commonFalseTests((e) => e.isCompositionEvent, SyntheticEventType.syntheticCompositionEvent);
         });
       });
 
@@ -1833,17 +1768,14 @@ main() {
             expect(e.isFocusEvent, isTrue);
           });
 
-          test(
-              'the event is a synthetic focus event with a relatedTarget field',
-              () {
+          test('the event is a synthetic focus event with a relatedTarget field', () {
             final event = createSyntheticFocusEvent(relatedTarget: 'data');
             expect(event.isFocusEvent, isTrue);
           });
         });
 
         group('correctly returns false', () {
-          commonFalseTests(
-              (e) => e.isFocusEvent, SyntheticEventType.syntheticFocusEvent);
+          commonFalseTests((e) => e.isFocusEvent, SyntheticEventType.syntheticFocusEvent);
         });
       });
 
@@ -1867,8 +1799,7 @@ main() {
             final e4 = createSyntheticMouseEvent(clientY: 10);
             expect(e4.isMouseEvent, isTrue);
 
-            final e5 = createSyntheticMouseEvent(
-                dataTransfer: jsifyAndAllowInterop({'dropEffect': 'data'}));
+            final e5 = createSyntheticMouseEvent(dataTransfer: jsifyAndAllowInterop({'dropEffect': 'data'}));
             expect(e5.isMouseEvent, isTrue);
 
             final e6 = createSyntheticMouseEvent(pageX: 10);
@@ -1886,8 +1817,7 @@ main() {
         });
 
         group('correctly returns false', () {
-          commonFalseTests(
-              (e) => e.isMouseEvent, SyntheticEventType.syntheticMouseEvent);
+          commonFalseTests((e) => e.isMouseEvent, SyntheticEventType.syntheticMouseEvent);
         });
 
         group('isPointerEvent', () {
@@ -1931,8 +1861,7 @@ main() {
           });
 
           group('correctly returns false', () {
-            commonFalseTests((e) => e.isPointerEvent,
-                SyntheticEventType.syntheticPointerEvent);
+            commonFalseTests((e) => e.isPointerEvent, SyntheticEventType.syntheticPointerEvent);
           });
         });
 
@@ -1956,8 +1885,7 @@ main() {
           });
 
           group('correctly returns false', () {
-            commonFalseTests(
-                (e) => e.isTouchEvent, SyntheticEventType.syntheticTouchEvent);
+            commonFalseTests((e) => e.isTouchEvent, SyntheticEventType.syntheticTouchEvent);
           });
         });
 
@@ -1969,15 +1897,13 @@ main() {
             });
 
             test('the event has a necessary field', () {
-              final e1 =
-                  createSyntheticTransitionEvent(propertyName: 'property');
+              final e1 = createSyntheticTransitionEvent(propertyName: 'property');
               expect(e1.isTransitionEvent, isTrue);
             });
           });
 
           group('correctly returns false', () {
-            commonFalseTests((e) => e.isTransitionEvent,
-                SyntheticEventType.syntheticTransitionEvent);
+            commonFalseTests((e) => e.isTransitionEvent, SyntheticEventType.syntheticTransitionEvent);
           });
         });
 
@@ -1995,8 +1921,7 @@ main() {
           });
 
           group('correctly returns false', () {
-            commonFalseTests((e) => e.isAnimationEvent,
-                SyntheticEventType.syntheticAnimationEvent);
+            commonFalseTests((e) => e.isAnimationEvent, SyntheticEventType.syntheticAnimationEvent);
           });
         });
 
@@ -2017,8 +1942,7 @@ main() {
           });
 
           group('correctly returns false', () {
-            commonFalseTests(
-                (e) => e.isUiEvent, SyntheticEventType.syntheticUIEvent);
+            commonFalseTests((e) => e.isUiEvent, SyntheticEventType.syntheticUIEvent);
           });
         });
 
@@ -2045,8 +1969,7 @@ main() {
           });
 
           group('correctly returns false', () {
-            commonFalseTests(
-                (e) => e.isWheelEvent, SyntheticEventType.syntheticWheelEvent);
+            commonFalseTests((e) => e.isWheelEvent, SyntheticEventType.syntheticWheelEvent);
           });
         });
       });
@@ -2063,21 +1986,14 @@ main() {
         Element renderAndGetRootNode() {
           final mountNode = Element.div();
           // ignore: avoid_types_on_closure_parameters
-          final content = div({
-            'onDrag': (SyntheticMouseEvent e) => event = e,
-            'draggable': true
-          }, []);
+          final content = div({'onDrag': (SyntheticMouseEvent e) => event = e, 'draggable': true}, []);
           render(content, mountNode);
           return mountNode.children.single;
         }
 
         group('detects an anonymous JS object correctly', () {
           test('when all fields are filled out', () {
-            final files = [
-              File([], 'name1'),
-              File([], 'name2'),
-              File([], 'name3')
-            ];
+            final files = [File([], 'name1'), File([], 'name2'), File([], 'name3')];
 
             final eventData = {
               'dataTransfer': {
@@ -2095,8 +2011,7 @@ main() {
 
             expect(dataTransfer, isNotNull);
 
-            final fileNames =
-                dataTransfer!.files.map((file) => (file as File).name);
+            final fileNames = dataTransfer!.files.map((file) => (file as File).name);
 
             expect(fileNames, containsAll(['name1', 'name2', 'name3']));
             expect(dataTransfer.types, containsAll(['d', 'e', 'f']));

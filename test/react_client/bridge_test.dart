@@ -10,13 +10,10 @@ import '../util.dart';
 main() {
   // Test behavior that isn't functionally tested via component lifecycle tests.
   group('Component2Bridge', () {
-    group(
-        '.forComponent returns the bridge used by that mounted component, which',
-        () {
+    group('.forComponent returns the bridge used by that mounted component, which', () {
       test('by default is a const instance of Component2BridgeImpl', () {
         final instance = getDartComponent<_Foo>(render(Foo({})));
-        expect(Component2Bridge.forComponent(instance),
-            same(const Component2BridgeImpl()));
+        expect(Component2Bridge.forComponent(instance), same(const Component2BridgeImpl()));
       });
 
       test('can be a custom bridge specified via registerComponent2', () {
@@ -40,10 +37,8 @@ main() {
     });
 
     group('- Component2BridgeImpl', () {
-      test('.bridgeFactory returns a const instance of Component2BridgeImpl',
-          () {
-        expect(Component2BridgeImpl.bridgeFactory(_Foo()),
-            same(const Component2BridgeImpl()));
+      test('.bridgeFactory returns a const instance of Component2BridgeImpl', () {
+        expect(Component2BridgeImpl.bridgeFactory(_Foo()), same(const Component2BridgeImpl()));
       });
     });
   });
@@ -58,8 +53,7 @@ class _Foo extends react.Component2 {
 
 List<Map>? customBridgeCalls;
 
-final BridgeTest =
-    react.registerComponent2(() => _BridgeTest(), bridgeFactory: (component) {
+final BridgeTest = react.registerComponent2(() => _BridgeTest(), bridgeFactory: (component) {
   final returnedBridge = CustomComponent2Bridge();
   customBridgeCalls?.add({
     'component': component,

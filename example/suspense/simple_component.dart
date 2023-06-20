@@ -1,8 +1,7 @@
 import 'package:react/hooks.dart';
 import 'package:react/react.dart' as react;
 
-var SimpleComponent = react.registerFunctionComponent(SimpleFunctionComponent,
-    displayName: 'simple');
+var SimpleComponent = react.registerFunctionComponent(SimpleFunctionComponent, displayName: 'simple');
 
 SimpleFunctionComponent(Map props) {
   final count = useState(1);
@@ -10,10 +9,10 @@ SimpleFunctionComponent(Map props) {
 
   useEffect(() {
     if (count.value % 2 == 0) {
-      print('count changed to ' + count.value.toString());
+      print('count changed to ${count.value}');
       evenOdd.set('even');
     } else {
-      print('count changed to ' + count.value.toString());
+      print('count changed to ${count.value}');
       evenOdd.set('odd');
     }
     return () {
@@ -25,12 +24,7 @@ SimpleFunctionComponent(Map props) {
 
   return react.div({}, [
     react.button({'onClick': (_) => count.set(1), 'key': 'ust1'}, ['Reset']),
-    react.button({
-      'onClick': (_) => count.setWithUpdater((prev) => prev + 1),
-      'key': 'ust2'
-    }, [
-      '+'
-    ]),
+    react.button({'onClick': (_) => count.setWithUpdater((prev) => prev + 1), 'key': 'ust2'}, ['+']),
     react.br({'key': 'ust3'}),
     react.p({'key': 'ust4'}, ['${count.value} is ${evenOdd.value}']),
   ]);

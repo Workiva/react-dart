@@ -75,8 +75,7 @@ dynamic chainRefList(List<dynamic> refs) {
         ref.current = value;
       } else {
         // ignore: invalid_use_of_protected_member, deprecated_member_use_from_same_package
-        (ref as JsRef).current =
-            value is react.Component ? value.jsThis : value;
+        (ref as JsRef).current = value is react.Component ? value.jsThis : value;
       }
     }
   }
@@ -93,8 +92,7 @@ void _validateChainRefsArg(dynamic ref) {
   }
 
   if (ref is String) throw AssertionError('String refs cannot be chained');
-  if (ref is Function)
-    throw AssertionError('callback refs must take a single argument');
+  if (ref is Function) throw AssertionError('callback refs must take a single argument');
 
   throw AssertionError('Invalid ref type: $ref');
 }

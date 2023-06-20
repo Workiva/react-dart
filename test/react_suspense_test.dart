@@ -22,9 +22,7 @@ external ReactClass jsLazy(Promise Function() factory);
 // Only intended for testing purposes, Please do not copy/paste this into repo.
 // This will most likely be added to the PUBLIC api in the future,
 // but needs more testing and Typing decisions to be made first.
-ReactJsComponentFactoryProxy lazy(
-        Future<ReactComponentFactoryProxy> factory()) =>
-    ReactJsComponentFactoryProxy(
+ReactJsComponentFactoryProxy lazy(Future<ReactComponentFactoryProxy> Function() factory) => ReactJsComponentFactoryProxy(
       jsLazy(
         allowInterop(
           () => futureToPromise(
@@ -46,7 +44,7 @@ main() {
         return simple.SimpleFunctionComponent;
       });
       var wrappingDivRef;
-      var mountElement = new Element.div();
+      final mountElement = Element.div();
       react_dom.render(
         react.div({
           'ref': (ref) {
@@ -69,8 +67,7 @@ main() {
       await Future.delayed(Duration(seconds: 2));
       expect(wrappingDivRef.querySelector('#simple-component'), isNotNull,
           reason: 'This component should be present now.');
-      expect(wrappingDivRef.querySelector('#loading'), isNull,
-          reason: 'The loader should have hidden.');
+      expect(wrappingDivRef.querySelector('#loading'), isNull, reason: 'The loader should have hidden.');
     });
 
     test('is instant after the lazy component has been loaded once', () async {
@@ -81,8 +78,8 @@ main() {
       });
       var wrappingDivRef;
       var wrappingDivRef2;
-      var mountElement = new Element.div();
-      var mountElement2 = new Element.div();
+      final mountElement = Element.div();
+      final mountElement2 = Element.div();
 
       react_dom.render(
         react.div({
@@ -106,8 +103,7 @@ main() {
       await Future.delayed(Duration(seconds: 2));
       expect(wrappingDivRef.querySelector('#simple-component'), isNotNull,
           reason: 'This component should be present now.');
-      expect(wrappingDivRef.querySelector('#loading'), isNull,
-          reason: 'The loader should have hidden.');
+      expect(wrappingDivRef.querySelector('#loading'), isNull, reason: 'The loader should have hidden.');
 
       // Mounting to a new element should be instant since it was already loaded before
       react_dom.render(
@@ -127,8 +123,7 @@ main() {
       expect(wrappingDivRef2.querySelector('#simple-component'), isNotNull,
           reason: 'Its already been loaded, so this should appear instantly.');
       expect(wrappingDivRef2.querySelector('#loading'), isNull,
-          reason:
-              'Its already been loaded, so the loading UI shouldn\'t show.');
+          reason: 'Its already been loaded, so the loading UI shouldn\'t show.');
     });
   });
 }

@@ -5,8 +5,7 @@ import 'package:react/react.dart';
 const Map defaultProps = {'defaultProp': 'default'};
 const Map emptyChildrenProps = {'children': []};
 
-Map matchCall(String memberName,
-    {args = anything, props = anything, state = anything, context = anything}) {
+Map matchCall(String memberName, {args = anything, props = anything, state = anything, context = anything}) {
   return {
     'memberName': memberName,
     'arguments': args,
@@ -32,8 +31,7 @@ mixin LifecycleTestHelper on Component {
         return call['memberName'];
       }).toList();
 
-  static bool _throwsLateInitializationError(
-      void Function() accessLateVariable) {
+  static bool _throwsLateInitializationError(void Function() accessLateVariable) {
     try {
       accessLateVariable();
     } catch (e) {
@@ -48,9 +46,7 @@ mixin LifecycleTestHelper on Component {
   }
 
   T lifecycleCall<T>(String memberName,
-      {List arguments = const [],
-      T Function()? defaultReturnValue,
-      Map? staticProps}) {
+      {List arguments = const [], T Function()? defaultReturnValue, Map? staticProps}) {
     // If this is false and we access late variables, such as jsThis/props/state, we'll get a LateInitializationError
     // fixme rethink this solution, since it's gross and also might not work in dart2js or mixed mode; perhaps conditionally don't try to access props/state in early lifecycle methods
     final hasPropsInitialized = !_throwsLateInitializationError(() => props);
@@ -64,11 +60,9 @@ mixin LifecycleTestHelper on Component {
       'context': context,
     });
 
-    final lifecycleCallback =
-        (staticProps ?? (hasPropsInitialized ? props : {}))[memberName];
+    final lifecycleCallback = (staticProps ?? (hasPropsInitialized ? props : {}))[memberName];
     if (lifecycleCallback != null) {
-      return Function.apply(lifecycleCallback as Function, [this, ...arguments])
-          as T;
+      return Function.apply(lifecycleCallback as Function, [this, ...arguments]) as T;
     }
 
     if (defaultReturnValue != null) {
