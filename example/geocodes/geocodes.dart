@@ -134,7 +134,8 @@ class _GeocodesForm extends react.Component {
           'value': state['value'],
           'onChange': handleChange,
           // Input is referenced to access it's value
-          'ref': (searchInputInstance) => this.searchInputInstance = searchInputInstance,
+          'ref': (searchInputInstance) =>
+              this.searchInputInstance = searchInputInstance,
         }),
         react.span({
           'key': 'spacer',
@@ -249,7 +250,8 @@ class _GeocodesApp extends react.Component {
 
     // Prepare the URL
     addressQuery = Uri.encodeQueryComponent(addressQuery);
-    final path = 'https://maps.googleapis.com/maps/api/geocode/json?address=$addressQuery';
+    final path =
+        'https://maps.googleapis.com/maps/api/geocode/json?address=$addressQuery';
 
     try {
       // Send the request
@@ -273,7 +275,8 @@ class _GeocodesApp extends react.Component {
         // change one item. Therefore we mutate it and then replace it by itself.
         //
         // Have a look at `vacuum_persistent` package to achieve immutability of state.
-        setState({'shown_addresses': data['results'], 'history': state['history']});
+        setState(
+            {'shown_addresses': data['results'], 'history': state['history']});
       } else {
         // Otherwise, query was `canceled`
         state['history'][id]['status'] = 'canceled';

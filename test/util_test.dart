@@ -19,9 +19,12 @@ void main() {
     test('ReactDartComponentVersion.fromType', () {
       expect(ReactDartComponentVersion.fromType(react.div({}).type), isNull);
       expect(ReactDartComponentVersion.fromType(JsFoo({}).type), isNull);
-      expect(ReactDartComponentVersion.fromType(Foo({}).type), ReactDartComponentVersion.component);
-      expect(ReactDartComponentVersion.fromType(Foo2({}).type), ReactDartComponentVersion.component2);
-      expect(ReactDartComponentVersion.fromType(FunctionFoo({}).type), ReactDartComponentVersion.component2);
+      expect(ReactDartComponentVersion.fromType(Foo({}).type),
+          ReactDartComponentVersion.component);
+      expect(ReactDartComponentVersion.fromType(Foo2({}).type),
+          ReactDartComponentVersion.component2);
+      expect(ReactDartComponentVersion.fromType(FunctionFoo({}).type),
+          ReactDartComponentVersion.component2);
     });
 
     test('isDartComponent2', () {
@@ -56,7 +59,8 @@ _FunctionFoo(Map props) {
   return react.div({});
 }
 
-final Foo = react.registerComponent(() => _Foo()) as ReactDartComponentFactoryProxy;
+final Foo =
+    react.registerComponent(() => _Foo()) as ReactDartComponentFactoryProxy;
 
 class _Foo extends react.Component {
   @override

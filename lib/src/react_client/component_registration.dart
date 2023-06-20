@@ -52,13 +52,17 @@ List<String> _filterSkipMethods(Iterable<String> methods) {
 @Deprecated('7.0.0')
 ReactDartComponentFactoryProxy registerComponent(
   ComponentFactory componentFactory, [
-  Iterable<String> skipMethods = const ['getDerivedStateFromError', 'componentDidCatch'],
+  Iterable<String> skipMethods = const [
+    'getDerivedStateFromError',
+    'componentDidCatch'
+  ],
 ]) {
   try {
     final componentInstance = componentFactory();
 
     if (componentInstance is Component2) {
-      return registerComponent2(() => componentFactory() as Component2, skipMethods: skipMethods);
+      return registerComponent2(() => componentFactory() as Component2,
+          skipMethods: skipMethods);
     }
 
     final componentStatics = ComponentStatics(componentFactory);
@@ -72,7 +76,8 @@ ReactDartComponentFactoryProxy registerComponent(
 
     /// Create the JS `ReactClass` component class
     /// with custom JS lifecycle methods.
-    final reactComponentClass = createReactDartComponentClass(dartInteropStatics, componentStatics, jsConfig)
+    final reactComponentClass = createReactDartComponentClass(
+        dartInteropStatics, componentStatics, jsConfig)
       // ignore: invalid_use_of_protected_member
       ..dartComponentVersion = ReactDartComponentVersion.component
       // This is redundant since we also set `name` below, but some code may depend on reading displayName
@@ -81,7 +86,8 @@ ReactDartComponentFactoryProxy registerComponent(
 
     // This is a work-around to display the correct name in error boundary component stacks
     // (and in the React DevTools if we weren't already setting displayName).
-    defineProperty(reactComponentClass, 'name', JsPropertyDescriptor(value: displayName));
+    defineProperty(
+        reactComponentClass, 'name', JsPropertyDescriptor(value: displayName));
 
     // Cache default props and store them on the ReactClass so they can be used
     // by ReactDartComponentFactoryProxy and externally.
@@ -99,7 +105,10 @@ ReactDartComponentFactoryProxy registerComponent(
 /// which produces a new JS `ReactClass` component class.
 ReactDartComponentFactoryProxy2 registerComponent2(
   ComponentFactory<Component2> componentFactory, {
-  Iterable<String> skipMethods = const ['getDerivedStateFromError', 'componentDidCatch'],
+  Iterable<String> skipMethods = const [
+    'getDerivedStateFromError',
+    'componentDidCatch'
+  ],
   Component2BridgeFactory? bridgeFactory,
 }) {
   var errorPrinted = false;
@@ -120,7 +129,8 @@ ReactDartComponentFactoryProxy2 registerComponent2(
     try {
       defaultProps = JsBackedMap.from(componentInstance.defaultProps);
     } catch (e, stack) {
-      print('Error when registering Component2 when getting defaultProps: $e\n$stack');
+      print(
+          'Error when registering Component2 when getting defaultProps: $e\n$stack');
       errorPrinted = true;
       rethrow;
     }
@@ -129,11 +139,13 @@ ReactDartComponentFactoryProxy2 registerComponent2(
     try {
       // Access `componentInstance.propTypes` within an assert so they get tree-shaken out of dart2js builds.
       assert(() {
-        jsPropTypes = bridgeFactory!(componentInstance).jsifyPropTypes(componentInstance, componentInstance.propTypes);
+        jsPropTypes = bridgeFactory!(componentInstance)
+            .jsifyPropTypes(componentInstance, componentInstance.propTypes);
         return true;
       }());
     } catch (e, stack) {
-      print('Error when registering Component2 when getting propTypes: $e\n$stack');
+      print(
+          'Error when registering Component2 when getting propTypes: $e\n$stack');
       errorPrinted = true;
       rethrow;
     }
@@ -149,18 +161,20 @@ ReactDartComponentFactoryProxy2 registerComponent2(
 
     /// Create the JS `ReactClass` component class
     /// with custom JS lifecycle methods.
-    final reactComponentClass =
-        createReactDartComponentClass2(ReactDartInteropStatics2.staticsForJs, componentStatics, jsConfig2)
-          // This is redundant since we also set `name` below, but some code may depend on reading displayName
-          // so we'll leave this in place for now.
-          ..displayName = displayName;
+    final reactComponentClass = createReactDartComponentClass2(
+        ReactDartInteropStatics2.staticsForJs, componentStatics, jsConfig2)
+      // This is redundant since we also set `name` below, but some code may depend on reading displayName
+      // so we'll leave this in place for now.
+      ..displayName = displayName;
 
     // This is a work-around to display the correct name in error boundary component stacks
     // (and in the React DevTools if we weren't already setting displayName).
-    defineProperty(reactComponentClass, 'name', JsPropertyDescriptor(value: displayName));
+    defineProperty(
+        reactComponentClass, 'name', JsPropertyDescriptor(value: displayName));
 
     // ignore: invalid_use_of_protected_member
-    reactComponentClass.dartComponentVersion = ReactDartComponentVersion.component2;
+    reactComponentClass.dartComponentVersion =
+        ReactDartComponentVersion.component2;
 
     return ReactDartComponentFactoryProxy2(reactComponentClass);
   } catch (e, stack) {
@@ -171,6 +185,8 @@ ReactDartComponentFactoryProxy2 registerComponent2(
 
 /// Creates and returns a new `ReactDartFunctionComponentFactoryProxy` from the provided [dartFunctionComponent]
 /// which produces a new `JsFunctionComponent`.
-ReactDartFunctionComponentFactoryProxy registerFunctionComponent(DartFunctionComponent dartFunctionComponent,
+ReactDartFunctionComponentFactoryProxy registerFunctionComponent(
+        DartFunctionComponent dartFunctionComponent,
         {String? displayName}) =>
-    ReactDartFunctionComponentFactoryProxy(dartFunctionComponent, displayName: displayName);
+    ReactDartFunctionComponentFactoryProxy(dartFunctionComponent,
+        displayName: displayName);

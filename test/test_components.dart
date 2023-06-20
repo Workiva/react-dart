@@ -78,8 +78,11 @@ class WrapperComponent extends Component {
   render() => div(props, props['children']);
 }
 
-final eventComponent = registerComponent(() => EventComponent()) as ReactDartComponentFactoryProxy;
+final eventComponent =
+    registerComponent(() => EventComponent()) as ReactDartComponentFactoryProxy;
 
-final sampleComponent = registerComponent(() => SampleComponent()) as ReactDartComponentFactoryProxy;
+final sampleComponent = registerComponent(() => SampleComponent())
+    as ReactDartComponentFactoryProxy;
 
-final wrapperComponent = registerComponent(() => WrapperComponent()) as ReactDartComponentFactoryProxy;
+final wrapperComponent = registerComponent(() => WrapperComponent())
+    as ReactDartComponentFactoryProxy;

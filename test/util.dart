@@ -18,16 +18,20 @@ import 'package:test/test.dart';
 Map getProps(dynamic elementOrComponent) {
   final props = elementOrComponent.props;
 
-  return Map.fromIterable(objectKeys(props), value: (key) => getProperty(props, key));
+  return Map.fromIterable(objectKeys(props),
+      value: (key) => getProperty(props, key));
 }
 
 bool isDartComponent1(ReactElement element) =>
-    ReactDartComponentVersion.fromType(element.type) == ReactDartComponentVersion.component;
+    ReactDartComponentVersion.fromType(element.type) ==
+    ReactDartComponentVersion.component;
 
 bool isDartComponent2(ReactElement element) =>
-    ReactDartComponentVersion.fromType(element.type) == ReactDartComponentVersion.component2;
+    ReactDartComponentVersion.fromType(element.type) ==
+    ReactDartComponentVersion.component2;
 
-bool isDartComponent(ReactElement element) => ReactDartComponentVersion.fromType(element.type) != null;
+bool isDartComponent(ReactElement element) =>
+    ReactDartComponentVersion.fromType(element.type) != null;
 
 T getDartComponent<T extends react.Component>(dynamic dartComponent) {
   return (dartComponent as ReactComponent).dartComponent as T;
@@ -38,7 +42,9 @@ Map getDartComponentProps(dynamic dartComponent) {
 }
 
 Map getDartElementProps(ReactElement dartElement) {
-  return isDartComponent2(dartElement) ? JsBackedMap.fromJs(dartElement.props) : dartElement.props.internal.props!;
+  return isDartComponent2(dartElement)
+      ? JsBackedMap.fromJs(dartElement.props)
+      : dartElement.props.internal.props!;
 }
 
 ReactComponent render(ReactElement reactElement) {
@@ -46,7 +52,8 @@ ReactComponent render(ReactElement reactElement) {
 }
 
 // Same as the public API but with tightened types to help fix implicit casts
-Element findDomNode(dynamic component) => react_dom.findDOMNode(component) as Element;
+Element findDomNode(dynamic component) =>
+    react_dom.findDOMNode(component) as Element;
 
 /// Returns a new [Map.unmodifiable] with all argument maps merged in.
 Map unmodifiableMap([Map? map1, Map? map2, Map? map3, Map? map4]) {
@@ -113,7 +120,8 @@ class RefTestCaseCollection<T> {
       name: name,
       // ignore: unnecessary_lambdas, avoid_types_on_closure_parameters
       ref: (dynamic value) => calls.add(value),
-      verifyRefWasUpdated: (actualValue) => expect(calls, [same(actualValue)], reason: _reasonMessage(name)),
+      verifyRefWasUpdated: (actualValue) =>
+          expect(calls, [same(actualValue)], reason: _reasonMessage(name)),
       getCurrent: () => calls.single,
     );
   }
@@ -125,7 +133,8 @@ class RefTestCaseCollection<T> {
       name: name,
       // ignore: unnecessary_lambdas, avoid_types_on_closure_parameters
       ref: (T value) => calls.add(value),
-      verifyRefWasUpdated: (actualValue) => expect(calls, [same(actualValue)], reason: _reasonMessage(name)),
+      verifyRefWasUpdated: (actualValue) =>
+          expect(calls, [same(actualValue)], reason: _reasonMessage(name)),
       getCurrent: () => calls.single,
     );
   }
@@ -136,7 +145,8 @@ class RefTestCaseCollection<T> {
     return RefTestCase(
       name: name,
       ref: ref,
-      verifyRefWasUpdated: (actualValue) => expect(ref.current, same(actualValue), reason: _reasonMessage(name)),
+      verifyRefWasUpdated: (actualValue) =>
+          expect(ref.current, same(actualValue), reason: _reasonMessage(name)),
       getCurrent: () => ref.current,
     );
   }
@@ -147,7 +157,8 @@ class RefTestCaseCollection<T> {
     return RefTestCase(
       name: name,
       ref: allowInterop(calls.add),
-      verifyRefWasUpdated: (actualValue) => expect(calls, [same(actualValue)], reason: _reasonMessage(name)),
+      verifyRefWasUpdated: (actualValue) =>
+          expect(calls, [same(actualValue)], reason: _reasonMessage(name)),
       getCurrent: () => calls.single,
       isJs: true,
     );
@@ -159,7 +170,8 @@ class RefTestCaseCollection<T> {
     return RefTestCase(
       name: name,
       ref: ref,
-      verifyRefWasUpdated: (actualValue) => expect(ref.current, same(actualValue), reason: _reasonMessage(name)),
+      verifyRefWasUpdated: (actualValue) =>
+          expect(ref.current, same(actualValue), reason: _reasonMessage(name)),
       getCurrent: () => ref.current,
       isJs: true,
     );
@@ -181,7 +193,9 @@ class RefTestCaseCollection<T> {
         createJsRefObjectCase(),
       ];
 
-  RefTestCase createCaseByName(String name) => createAllCases().singleWhere((c) => c.name == name);
+  RefTestCase createCaseByName(String name) =>
+      createAllCases().singleWhere((c) => c.name == name);
 
-  List<String> get allTestCaseNames => createAllCases().map((c) => c.name).toList();
+  List<String> get allTestCaseNames =>
+      createAllCases().map((c) => c.name).toList();
 }

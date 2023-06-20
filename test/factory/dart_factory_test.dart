@@ -20,7 +20,8 @@ main() {
     group('- common factory behavior -', () {
       group('Component', () {
         group('- common factory behavior -', () {
-          commonFactoryTests(Foo, dartComponentVersion: ReactDartComponentVersion.component);
+          commonFactoryTests(Foo,
+              dartComponentVersion: ReactDartComponentVersion.component);
         });
 
         group('- refs -', () {
@@ -30,7 +31,10 @@ main() {
               expect(ref, isA<_Foo>());
             },
             verifyJsRefValue: (ref) {
-              expect(ref, isA<ReactComponent>().having((c) => c.dartComponent, 'dartComponent', isA<_Foo>()));
+              expect(
+                  ref,
+                  isA<ReactComponent>().having(
+                      (c) => c.dartComponent, 'dartComponent', isA<_Foo>()));
             },
           );
         });
@@ -38,7 +42,8 @@ main() {
 
       group('Component2', () {
         group('- common factory behavior -', () {
-          commonFactoryTests(Foo2, dartComponentVersion: ReactDartComponentVersion.component2);
+          commonFactoryTests(Foo2,
+              dartComponentVersion: ReactDartComponentVersion.component2);
         });
 
         group('- refs -', () {
@@ -48,7 +53,10 @@ main() {
               expect(ref, isA<_Foo2>());
             },
             verifyJsRefValue: (ref) {
-              expect(ref, isA<ReactComponent>().having((c) => c.dartComponent, 'dartComponent', isA<_Foo2>()));
+              expect(
+                  ref,
+                  isA<ReactComponent>().having(
+                      (c) => c.dartComponent, 'dartComponent', isA<_Foo2>()));
             },
           );
         });
@@ -57,7 +65,8 @@ main() {
   });
 }
 
-final Foo = react.registerComponent(() => _Foo()) as ReactDartComponentFactoryProxy;
+final Foo =
+    react.registerComponent(() => _Foo()) as ReactDartComponentFactoryProxy;
 
 class _Foo extends react.Component {
   @override

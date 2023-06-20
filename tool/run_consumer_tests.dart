@@ -11,24 +11,29 @@ Future<void> main(List<String> args) async {
   final parsedArgs = parser.parse(args);
 
   if (parsedArgs['repoName'] == null) {
-    throw ProcessException('consumer_tests.dart', parsedArgs.arguments, '--repoName must be provided', -1);
+    throw ProcessException('consumer_tests.dart', parsedArgs.arguments,
+        '--repoName must be provided', -1);
   }
 
   if (parsedArgs['orgName'] == null) {
-    throw ProcessException('consumer_tests.dart', parsedArgs.arguments, '--orgName must be provided', -1);
+    throw ProcessException('consumer_tests.dart', parsedArgs.arguments,
+        '--orgName must be provided', -1);
   }
 
   if (parsedArgs['testCmd'] == null) {
-    throw ProcessException('consumer_tests.dart', parsedArgs.arguments, '--testCmd must be provided', -1);
+    throw ProcessException('consumer_tests.dart', parsedArgs.arguments,
+        '--testCmd must be provided', -1);
   }
 
   final repoName = parsedArgs['repoName'] as String;
   final orgName = parsedArgs['orgName'] as String;
   final testCmdStr = parsedArgs['testCmd'] as String;
-  final packageName = parsedArgs['packageName'] ?? parsedArgs['repoName'] as String;
+  final packageName =
+      parsedArgs['packageName'] ?? parsedArgs['repoName'] as String;
 
   final reactGitSha = Process.runSync('git', ['rev-parse', 'HEAD']).stdout;
-  print('Running $packageName tests while consuming react-dart at $reactGitSha ...\n');
+  print(
+      'Running $packageName tests while consuming react-dart at $reactGitSha ...\n');
 
   final rootDir = Directory.current;
   final tmpDir = Directory('consumer_testing_temp');
@@ -63,14 +68,17 @@ dependency_overrides:
 
   final pubspec = File('pubspec.yaml');
   var pubspecSrc = pubspec.readAsStringSync();
-  pubspecSrc = pubspecSrc.replaceFirst('dependencies:', '${dependencyOverrides}dependencies:');
+  pubspecSrc = pubspecSrc.replaceFirst(
+      'dependencies:', '${dependencyOverrides}dependencies:');
   pubspec.writeAsStringSync(pubspecSrc);
-  final pubGetProcess = await Process.start('dart', ['pub', 'get'], mode: ProcessStartMode.inheritStdio);
+  final pubGetProcess = await Process.start('dart', ['pub', 'get'],
+      mode: ProcessStartMode.inheritStdio);
   await pubGetProcess.exitCode;
 
   final testArgs = testCmdStr.split(' ');
-  final consumerTestProcess =
-      await Process.start(testArgs[0], [...testArgs..removeAt(0)], mode: ProcessStartMode.inheritStdio);
+  final consumerTestProcess = await Process.start(
+      testArgs[0], [...testArgs..removeAt(0)],
+      mode: ProcessStartMode.inheritStdio);
   await consumerTestProcess.exitCode;
 
   Directory.current = rootDir;

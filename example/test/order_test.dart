@@ -34,7 +34,8 @@ class _List extends react.Component {
 
   @override
   render() {
-    return react.ul({'onClick': (e) => remove()}, items.map((text) => item({'text': text, 'key': text})));
+    return react.ul({'onClick': (e) => remove()},
+        items.map((text) => item({'text': text, 'key': text})));
   }
 }
 

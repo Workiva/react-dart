@@ -5,7 +5,8 @@ import 'package:react/hooks.dart';
 import 'package:react/react.dart' as react;
 import 'package:react/react_dom.dart' as react_dom;
 
-var hookTestFunctionComponent = react.registerFunctionComponent(HookTestComponent, displayName: 'useStateTest');
+var hookTestFunctionComponent = react
+    .registerFunctionComponent(HookTestComponent, displayName: 'useStateTest');
 
 HookTestComponent(Map props) {
   final count = useState(1);
@@ -28,13 +29,19 @@ HookTestComponent(Map props) {
 
   return react.div({}, [
     react.button({'onClick': (_) => count.set(1), 'key': 'ust1'}, ['Reset']),
-    react.button({'onClick': (_) => count.setWithUpdater((prev) => prev + 1), 'key': 'ust2'}, ['+']),
+    react.button({
+      'onClick': (_) => count.setWithUpdater((prev) => prev + 1),
+      'key': 'ust2'
+    }, [
+      '+'
+    ]),
     react.br({'key': 'ust3'}),
     react.p({'key': 'ust4'}, ['${count.value} is ${evenOdd.value}']),
   ]);
 }
 
-final MemoTestDemoWrapper = react.registerComponent2(() => _MemoTestDemoWrapper());
+final MemoTestDemoWrapper =
+    react.registerComponent2(() => _MemoTestDemoWrapper());
 
 class _MemoTestDemoWrapper extends react.Component2 {
   @override
@@ -60,7 +67,10 @@ class _MemoTestDemoWrapper extends react.Component2 {
         'type': 'button',
         'className': 'btn btn-primary',
         'onClick': (_) {
-          setState({'someKeyThatMemoShouldIgnore': state['someKeyThatMemoShouldIgnore'] + 1});
+          setState({
+            'someKeyThatMemoShouldIgnore':
+                state['someKeyThatMemoShouldIgnore'] + 1
+          });
         },
       }, 'Update prop value that MemoTest will ignore (${state['someKeyThatMemoShouldIgnore']})'),
     );
@@ -92,8 +102,9 @@ final MemoTest = react.memo2(react.registerFunctionComponent((props) {
   return prevProps['localCount'] == nextProps['localCount'];
 });
 
-var useReducerTestFunctionComponent =
-    react.registerFunctionComponent(UseReducerTestComponent, displayName: 'useReducerTest');
+var useReducerTestFunctionComponent = react.registerFunctionComponent(
+    UseReducerTestComponent,
+    displayName: 'useReducerTest');
 
 Map initializeCount(int initialValue) {
   return {'count': initialValue};
@@ -113,7 +124,8 @@ Map reducer(Map state, Map action) {
 }
 
 UseReducerTestComponent(Map props) {
-  final state = useReducerLazy<Map, Map, int>(reducer, props['initialCount'], initializeCount);
+  final state = useReducerLazy<Map, Map, int>(
+      reducer, props['initialCount'], initializeCount);
 
   return react.Fragment({}, [
     state.state['count'],
@@ -141,8 +153,9 @@ UseReducerTestComponent(Map props) {
   ]);
 }
 
-var useCallbackTestFunctionComponent =
-    react.registerFunctionComponent(UseCallbackTestComponent, displayName: 'useCallbackTest');
+var useCallbackTestFunctionComponent = react.registerFunctionComponent(
+    UseCallbackTestComponent,
+    displayName: 'useCallbackTest');
 
 UseCallbackTestComponent(Map props) {
   final count = useState(0);
@@ -160,19 +173,22 @@ UseCallbackTestComponent(Map props) {
     react.div({'key': 'ucbt1'}, ['Delta is ${delta.value}']),
     react.div({'key': 'ucbt2'}, ['Count is ${count.value}']),
     react.button({'onClick': increment, 'key': 'ucbt3'}, ['Increment count']),
-    react.button({'onClick': incrementDelta, 'key': 'ucbt4'}, ['Increment delta']),
+    react.button(
+        {'onClick': incrementDelta, 'key': 'ucbt4'}, ['Increment delta']),
   ]);
 }
 
-var useContextTestFunctionComponent =
-    react.registerFunctionComponent(UseContextTestComponent, displayName: 'useContextTest');
+var useContextTestFunctionComponent = react.registerFunctionComponent(
+    UseContextTestComponent,
+    displayName: 'useContextTest');
 
 UseContextTestComponent(Map props) {
   final context = useContext(TestNewContext);
   return react.div({
     'key': 'uct1'
   }, [
-    react.div({'key': 'uct2'}, ['useContext counter value is ${context['renderCount']}']),
+    react.div({'key': 'uct2'},
+        ['useContext counter value is ${context['renderCount']}']),
   ]);
 }
 
@@ -184,9 +200,11 @@ int calculateChangedBits(currentValue, nextValue) {
   return result;
 }
 
-var TestNewContext = react.createContext<Map>({'renderCount': 0}, calculateChangedBits);
+var TestNewContext =
+    react.createContext<Map>({'renderCount': 0}, calculateChangedBits);
 
-var newContextProviderComponent = react.registerComponent2(() => _NewContextProviderComponent());
+var newContextProviderComponent =
+    react.registerComponent2(() => _NewContextProviderComponent());
 
 class _NewContextProviderComponent extends react.Component2 {
   @override
@@ -224,7 +242,8 @@ class _NewContextProviderComponent extends react.Component2 {
   }
 }
 
-var useRefTestFunctionComponent = react.registerFunctionComponent(UseRefTestComponent, displayName: 'useRefTest');
+var useRefTestFunctionComponent = react
+    .registerFunctionComponent(UseRefTestComponent, displayName: 'useRefTest');
 
 UseRefTestComponent(Map props) {
   final inputValue = useState('');
@@ -237,9 +256,18 @@ UseRefTestComponent(Map props) {
   });
 
   return react.Fragment({}, [
-    react.p({'key': 'urtKey1'}, ['Current Input: ${inputValue.value}, Previous Input: ${prevInputValueRef.current}']),
+    react.p({
+      'key': 'urtKey1'
+    }, [
+      'Current Input: ${inputValue.value}, Previous Input: ${prevInputValueRef.current}'
+    ]),
     react.input({'key': 'urtKey2', 'ref': inputRef}),
-    react.button({'key': 'urtKey3', 'onClick': (_) => inputValue.set(inputRef.current!.value!)}, ['Update']),
+    react.button({
+      'key': 'urtKey3',
+      'onClick': (_) => inputValue.set(inputRef.current!.value!)
+    }, [
+      'Update'
+    ]),
   ]);
 }
 
@@ -250,7 +278,9 @@ int fibonacci(int n) {
   return fibonacci(n - 1) + fibonacci(n - 2);
 }
 
-final useMemoTestFunctionComponent = react.registerFunctionComponent(UseMemoTestComponent, displayName: 'useMemoTest');
+final useMemoTestFunctionComponent = react.registerFunctionComponent(
+    UseMemoTestComponent,
+    displayName: 'useMemoTest');
 
 UseMemoTestComponent(Map props) {
   final reRender = useState(0);
@@ -268,13 +298,24 @@ UseMemoTestComponent(Map props) {
 
   return react.Fragment({}, [
     react.div({'key': 'div'}, ['Fibonacci of ${count.value} is $fib']),
-    react.button({'key': 'button1', 'onClick': (_) => count.setWithUpdater((prev) => prev + 1)}, ['+']),
-    react.button({'key': 'button2', 'onClick': (_) => reRender.setWithUpdater((prev) => prev + 1)}, ['re-render']),
+    react.button({
+      'key': 'button1',
+      'onClick': (_) => count.setWithUpdater((prev) => prev + 1)
+    }, [
+      '+'
+    ]),
+    react.button({
+      'key': 'button2',
+      'onClick': (_) => reRender.setWithUpdater((prev) => prev + 1)
+    }, [
+      're-render'
+    ]),
   ]);
 }
 
-final useMemoTestFunctionComponent2 =
-    react.registerFunctionComponent(UseMemoTestComponent2, displayName: 'useMemoTest2');
+final useMemoTestFunctionComponent2 = react.registerFunctionComponent(
+    UseMemoTestComponent2,
+    displayName: 'useMemoTest2');
 
 UseMemoTestComponent2(Map props) {
   final reRender = useState(0);
@@ -285,15 +326,26 @@ UseMemoTestComponent2(Map props) {
 
   return react.Fragment({}, [
     react.div({'key': 'div'}, ['Fibonacci of ${count.value} is $fib']),
-    react.button({'key': 'button1', 'onClick': (_) => count.setWithUpdater((prev) => prev + 1)}, ['+']),
-    react.button({'key': 'button2', 'onClick': (_) => reRender.setWithUpdater((prev) => prev + 1)}, ['re-render']),
+    react.button({
+      'key': 'button1',
+      'onClick': (_) => count.setWithUpdater((prev) => prev + 1)
+    }, [
+      '+'
+    ]),
+    react.button({
+      'key': 'button2',
+      'onClick': (_) => reRender.setWithUpdater((prev) => prev + 1)
+    }, [
+      're-render'
+    ]),
   ]);
 }
 
 final random = Random();
 
-final randomUseLayoutEffectTestComponent =
-    react.registerFunctionComponent(RandomUseLayoutEffectTestComponent, displayName: 'randomUseLayoutEffectTest');
+final randomUseLayoutEffectTestComponent = react.registerFunctionComponent(
+    RandomUseLayoutEffectTestComponent,
+    displayName: 'randomUseLayoutEffectTest');
 
 RandomUseLayoutEffectTestComponent(Map props) {
   final value = useState<double>(0);
@@ -307,13 +359,15 @@ RandomUseLayoutEffectTestComponent(Map props) {
   return react.Fragment({}, [
     react.h5({'key': 'randomUseLayout1'}, ['Example using useLayoutEffect:']),
     react.div({'key': 'randomUseLayout2'}, ['value: ${value.value}']),
-    react.button({'key': 'randomUseLayout3', 'onClick': (_) => value.set(0)}, ['Change Value']),
+    react.button({'key': 'randomUseLayout3', 'onClick': (_) => value.set(0)},
+        ['Change Value']),
     react.br({'key': 'randomUseLayout4'}),
   ]);
 }
 
-final randomUseEffectTestComponent =
-    react.registerFunctionComponent(RandomUseEffectTestComponent, displayName: 'randomUseEffectTest');
+final randomUseEffectTestComponent = react.registerFunctionComponent(
+    RandomUseEffectTestComponent,
+    displayName: 'randomUseEffectTest');
 
 RandomUseEffectTestComponent(Map props) {
   final value = useState<double>(0);
@@ -327,7 +381,8 @@ RandomUseEffectTestComponent(Map props) {
   return react.Fragment({}, [
     react.h5({'key': 'random1'}, ['Example using useEffect (notice flicker):']),
     react.div({'key': 'random2'}, ['value: ${value.value}']),
-    react.button({'key': 'random3', 'onClick': (_) => value.set(0)}, ['Change Value']),
+    react.button(
+        {'key': 'random3', 'onClick': (_) => value.set(0)}, ['Change Value']),
   ]);
 }
 
@@ -361,7 +416,8 @@ final FancyInput = react.forwardRef2((props, ref) {
 });
 
 final useImperativeHandleTestFunctionComponent =
-    react.registerFunctionComponent(UseImperativeHandleTestComponent, displayName: 'useImperativeHandleTest');
+    react.registerFunctionComponent(UseImperativeHandleTestComponent,
+        displayName: 'useImperativeHandleTest');
 
 UseImperativeHandleTestComponent(Map props) {
   final city = useState('');
@@ -421,8 +477,10 @@ final FancyCounter = react.forwardRef2((props, ref) {
     () {
       print('FancyCounter: useImperativeHandle re-assigns ref.current');
       return {
-        'increment': () => count.setWithUpdater((prev) => prev + (props['diff'] as int)),
-        'decrement': () => count.setWithUpdater((prev) => prev - (props['diff'] as int)),
+        'increment': () =>
+            count.setWithUpdater((prev) => prev + (props['diff'] as int)),
+        'decrement': () =>
+            count.setWithUpdater((prev) => prev - (props['diff'] as int)),
       };
     },
 
@@ -435,7 +493,8 @@ final FancyCounter = react.forwardRef2((props, ref) {
 });
 
 final useImperativeHandleTestFunctionComponent2 =
-    react.registerFunctionComponent(UseImperativeHandleTestComponent2, displayName: 'useImperativeHandleTest2');
+    react.registerFunctionComponent(UseImperativeHandleTestComponent2,
+        displayName: 'useImperativeHandleTest2');
 
 UseImperativeHandleTestComponent2(Map props) {
   final diff = useState(1);
@@ -460,7 +519,12 @@ UseImperativeHandleTestComponent2(Map props) {
     }, [
       'Decrement by ${diff.value}'
     ]),
-    react.button({'key': 'button3', 'onClick': (_) => diff.setWithUpdater((prev) => prev + 1)}, ['+']),
+    react.button({
+      'key': 'button3',
+      'onClick': (_) => diff.setWithUpdater((prev) => prev + 1)
+    }, [
+      '+'
+    ]),
   ]);
 }
 
@@ -468,7 +532,8 @@ class ChatAPI {
   static void subscribeToFriendStatus(int id, Function handleStatusChange) =>
       handleStatusChange({'isOnline': id % 2 == 0});
 
-  static void unsubscribeFromFriendStatus(int id, Function handleStatusChange) =>
+  static void unsubscribeFromFriendStatus(
+          int id, Function handleStatusChange) =>
       handleStatusChange({'isOnline': false});
 }
 
@@ -488,7 +553,8 @@ StateHook<bool> useFriendStatus(int friendID) {
   });
 
   // Use format function to avoid unnecessarily formatting `isOnline` when the hooks aren't inspected in React DevTools.
-  useDebugValue<bool>(isOnline.value, (isOnline) => isOnline ? 'Online' : 'Not Online');
+  useDebugValue<bool>(
+      isOnline.value, (isOnline) => isOnline ? 'Online' : 'Not Online');
 
   return isOnline;
 }
@@ -528,8 +594,10 @@ void main() {
   render() {
     react_dom.render(
         react.Fragment({}, [
-          react.h1({'key': 'functionComponentTestLabel'}, ['Function Component Tests']),
-          react.h2({'key': 'useStateTestLabel'}, ['useState & useEffect Hook Test']),
+          react.h1({'key': 'functionComponentTestLabel'},
+              ['Function Component Tests']),
+          react.h2(
+              {'key': 'useStateTestLabel'}, ['useState & useEffect Hook Test']),
           hookTestFunctionComponent({
             'key': 'useStateTest',
           }, []),
@@ -571,11 +639,13 @@ void main() {
           }, []),
           react.br({'key': 'br4'}),
           react.br({'key': 'br5'}),
-          react.h6({'key': 'h62'}, ['Without useMemo (notice calculation done on every render):']),
+          react.h6({'key': 'h62'},
+              ['Without useMemo (notice calculation done on every render):']),
           useMemoTestFunctionComponent2({
             'key': 'useMemoTest2',
           }, []),
-          react.h2({'key': 'useLayoutEffectTestLabel'}, ['useLayoutEffect Hook Test']),
+          react.h2({'key': 'useLayoutEffectTestLabel'},
+              ['useLayoutEffect Hook Test']),
           randomUseLayoutEffectTestComponent({
             'key': 'useLayoutEffectTest',
           }, []),
@@ -583,7 +653,8 @@ void main() {
           randomUseEffectTestComponent({
             'key': 'useLayoutEffectTest2',
           }, []),
-          react.h2({'key': 'useImperativeHandleTestLabel'}, ['useImperativeHandle Hook Test']),
+          react.h2({'key': 'useImperativeHandleTestLabel'},
+              ['useImperativeHandle Hook Test']),
           useImperativeHandleTestFunctionComponent({
             'key': 'useImperativeHandleTest',
           }, []),
@@ -591,7 +662,8 @@ void main() {
             'key': 'useImperativeHandleTest2',
           }, []),
           react.br({'key': 'br7'}),
-          react.h2({'key': 'useDebugValueTestLabel'}, ['useDebugValue Hook Test']),
+          react.h2(
+              {'key': 'useDebugValueTestLabel'}, ['useDebugValue Hook Test']),
           UseDebugValueTestComponent({
             'key': 'useDebugValueTest',
           }, []),

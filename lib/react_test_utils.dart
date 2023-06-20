@@ -36,11 +36,13 @@ import 'package:react/src/react_test_utils/simulate_wrappers.dart' as sw;
 ///
 /// * For DOM components, this with return the String corresponding to its tagName ('div', 'a', etc.).
 /// * For custom composite components React.createClass()-based components, this will return the [ReactClass].
-dynamic getComponentTypeV2(ReactComponentFactoryProxy componentFactory) => componentFactory.type;
+dynamic getComponentTypeV2(ReactComponentFactoryProxy componentFactory) =>
+    componentFactory.type;
 
 typedef ComponentTestFunction = bool Function(/* [1] */ dynamic component);
 
-dynamic _jsifyEventData(Map? eventData) => jsifyAndAllowInterop(eventData ?? const {});
+dynamic _jsifyEventData(Map? eventData) =>
+    jsifyAndAllowInterop(eventData ?? const {});
 
 /// Event simulation interface.
 ///
@@ -58,60 +60,100 @@ class Simulate {
       sw.Simulate.animationIteration(node, _jsifyEventData(eventData));
   static void animationStart(/* [1] */ node, [Map? eventData]) =>
       sw.Simulate.animationStart(node, _jsifyEventData(eventData));
-  static void blur(/*[1]*/ node, [Map? eventData]) => sw.Simulate.blur(node, _jsifyEventData(eventData));
-  static void change(/*[1]*/ node, [Map? eventData]) => sw.Simulate.change(node, _jsifyEventData(eventData));
-  static void click(/*[1]*/ node, [Map? eventData]) => sw.Simulate.click(node, _jsifyEventData(eventData));
-  static void contextMenu(/*[1]*/ node, [Map? eventData]) => sw.Simulate.contextMenu(node, _jsifyEventData(eventData));
-  static void copy(/*[1]*/ node, [Map? eventData]) => sw.Simulate.copy(node, _jsifyEventData(eventData));
+  static void blur(/*[1]*/ node, [Map? eventData]) =>
+      sw.Simulate.blur(node, _jsifyEventData(eventData));
+  static void change(/*[1]*/ node, [Map? eventData]) =>
+      sw.Simulate.change(node, _jsifyEventData(eventData));
+  static void click(/*[1]*/ node, [Map? eventData]) =>
+      sw.Simulate.click(node, _jsifyEventData(eventData));
+  static void contextMenu(/*[1]*/ node, [Map? eventData]) =>
+      sw.Simulate.contextMenu(node, _jsifyEventData(eventData));
+  static void copy(/*[1]*/ node, [Map? eventData]) =>
+      sw.Simulate.copy(node, _jsifyEventData(eventData));
   static void compositionEnd(/*[1]*/ node, [Map? eventData]) =>
       sw.Simulate.compositionEnd(node, _jsifyEventData(eventData));
   static void compositionStart(/*[1]*/ node, [Map? eventData]) =>
       sw.Simulate.compositionStart(node, _jsifyEventData(eventData));
   static void compositionUpdate(/*[1]*/ node, [Map? eventData]) =>
       sw.Simulate.compositionUpdate(node, _jsifyEventData(eventData));
-  static void cut(/*[1]*/ node, [Map? eventData]) => sw.Simulate.cut(node, _jsifyEventData(eventData));
-  static void doubleClick(/*[1]*/ node, [Map? eventData]) => sw.Simulate.doubleClick(node, _jsifyEventData(eventData));
-  static void drag(/*[1]*/ node, [Map? eventData]) => sw.Simulate.drag(node, _jsifyEventData(eventData));
-  static void dragEnd(/*[1]*/ node, [Map? eventData]) => sw.Simulate.dragEnd(node, _jsifyEventData(eventData));
-  static void dragEnter(/*[1]*/ node, [Map? eventData]) => sw.Simulate.dragEnter(node, _jsifyEventData(eventData));
-  static void dragExit(/*[1]*/ node, [Map? eventData]) => sw.Simulate.dragExit(node, _jsifyEventData(eventData));
-  static void dragLeave(/*[1]*/ node, [Map? eventData]) => sw.Simulate.dragLeave(node, _jsifyEventData(eventData));
-  static void dragOver(/*[1]*/ node, [Map? eventData]) => sw.Simulate.dragOver(node, _jsifyEventData(eventData));
-  static void dragStart(/*[1]*/ node, [Map? eventData]) => sw.Simulate.dragStart(node, _jsifyEventData(eventData));
-  static void drop(/*[1]*/ node, [Map? eventData]) => sw.Simulate.drop(node, _jsifyEventData(eventData));
-  static void focus(/*[1]*/ node, [Map? eventData]) => sw.Simulate.focus(node, _jsifyEventData(eventData));
+  static void cut(/*[1]*/ node, [Map? eventData]) =>
+      sw.Simulate.cut(node, _jsifyEventData(eventData));
+  static void doubleClick(/*[1]*/ node, [Map? eventData]) =>
+      sw.Simulate.doubleClick(node, _jsifyEventData(eventData));
+  static void drag(/*[1]*/ node, [Map? eventData]) =>
+      sw.Simulate.drag(node, _jsifyEventData(eventData));
+  static void dragEnd(/*[1]*/ node, [Map? eventData]) =>
+      sw.Simulate.dragEnd(node, _jsifyEventData(eventData));
+  static void dragEnter(/*[1]*/ node, [Map? eventData]) =>
+      sw.Simulate.dragEnter(node, _jsifyEventData(eventData));
+  static void dragExit(/*[1]*/ node, [Map? eventData]) =>
+      sw.Simulate.dragExit(node, _jsifyEventData(eventData));
+  static void dragLeave(/*[1]*/ node, [Map? eventData]) =>
+      sw.Simulate.dragLeave(node, _jsifyEventData(eventData));
+  static void dragOver(/*[1]*/ node, [Map? eventData]) =>
+      sw.Simulate.dragOver(node, _jsifyEventData(eventData));
+  static void dragStart(/*[1]*/ node, [Map? eventData]) =>
+      sw.Simulate.dragStart(node, _jsifyEventData(eventData));
+  static void drop(/*[1]*/ node, [Map? eventData]) =>
+      sw.Simulate.drop(node, _jsifyEventData(eventData));
+  static void focus(/*[1]*/ node, [Map? eventData]) =>
+      sw.Simulate.focus(node, _jsifyEventData(eventData));
   static void gotPointerCapture(/*[1]*/ node, [Map? eventData]) =>
       sw.Simulate.gotPointerCapture(node, _jsifyEventData(eventData));
-  static void input(/*[1]*/ node, [Map? eventData]) => sw.Simulate.input(node, _jsifyEventData(eventData));
-  static void keyDown(/*[1]*/ node, [Map? eventData]) => sw.Simulate.keyDown(node, _jsifyEventData(eventData));
-  static void keyPress(/*[1]*/ node, [Map? eventData]) => sw.Simulate.keyPress(node, _jsifyEventData(eventData));
-  static void keyUp(/*[1]*/ node, [Map? eventData]) => sw.Simulate.keyUp(node, _jsifyEventData(eventData));
+  static void input(/*[1]*/ node, [Map? eventData]) =>
+      sw.Simulate.input(node, _jsifyEventData(eventData));
+  static void keyDown(/*[1]*/ node, [Map? eventData]) =>
+      sw.Simulate.keyDown(node, _jsifyEventData(eventData));
+  static void keyPress(/*[1]*/ node, [Map? eventData]) =>
+      sw.Simulate.keyPress(node, _jsifyEventData(eventData));
+  static void keyUp(/*[1]*/ node, [Map? eventData]) =>
+      sw.Simulate.keyUp(node, _jsifyEventData(eventData));
   static void lostPointerCapture(/*[1]*/ node, [Map? eventData]) =>
       sw.Simulate.lostPointerCapture(node, _jsifyEventData(eventData));
-  static void mouseDown(/*[1]*/ node, [Map? eventData]) => sw.Simulate.mouseDown(node, _jsifyEventData(eventData));
-  static void mouseMove(/*[1]*/ node, [Map? eventData]) => sw.Simulate.mouseMove(node, _jsifyEventData(eventData));
-  static void mouseOut(/*[1]*/ node, [Map? eventData]) => sw.Simulate.mouseOut(node, _jsifyEventData(eventData));
-  static void mouseOver(/*[1]*/ node, [Map? eventData]) => sw.Simulate.mouseOver(node, _jsifyEventData(eventData));
-  static void mouseUp(/*[1]*/ node, [Map? eventData]) => sw.Simulate.mouseUp(node, _jsifyEventData(eventData));
+  static void mouseDown(/*[1]*/ node, [Map? eventData]) =>
+      sw.Simulate.mouseDown(node, _jsifyEventData(eventData));
+  static void mouseMove(/*[1]*/ node, [Map? eventData]) =>
+      sw.Simulate.mouseMove(node, _jsifyEventData(eventData));
+  static void mouseOut(/*[1]*/ node, [Map? eventData]) =>
+      sw.Simulate.mouseOut(node, _jsifyEventData(eventData));
+  static void mouseOver(/*[1]*/ node, [Map? eventData]) =>
+      sw.Simulate.mouseOver(node, _jsifyEventData(eventData));
+  static void mouseUp(/*[1]*/ node, [Map? eventData]) =>
+      sw.Simulate.mouseUp(node, _jsifyEventData(eventData));
   static void pointerCancel(/*[1]*/ node, [Map? eventData]) =>
       sw.Simulate.pointerCancel(node, _jsifyEventData(eventData));
-  static void pointerDown(/*[1]*/ node, [Map? eventData]) => sw.Simulate.pointerDown(node, _jsifyEventData(eventData));
-  static void pointerEnter(/*[1]*/ node, [Map? eventData]) => sw.Simulate.pointerEnter(node, _jsifyEventData(eventData));
-  static void pointerLeave(/*[1]*/ node, [Map? eventData]) => sw.Simulate.pointerLeave(node, _jsifyEventData(eventData));
-  static void pointerMove(/*[1]*/ node, [Map? eventData]) => sw.Simulate.pointerMove(node, _jsifyEventData(eventData));
-  static void pointerOut(/*[1]*/ node, [Map? eventData]) => sw.Simulate.pointerOut(node, _jsifyEventData(eventData));
-  static void pointerOver(/*[1]*/ node, [Map? eventData]) => sw.Simulate.pointerOver(node, _jsifyEventData(eventData));
-  static void pointerUp(/*[1]*/ node, [Map? eventData]) => sw.Simulate.pointerUp(node, _jsifyEventData(eventData));
-  static void paste(/*[1]*/ node, [Map? eventData]) => sw.Simulate.paste(node, _jsifyEventData(eventData));
-  static void scroll(/*[1]*/ node, [Map? eventData]) => sw.Simulate.scroll(node, _jsifyEventData(eventData));
-  static void submit(/*[1]*/ node, [Map? eventData]) => sw.Simulate.submit(node, _jsifyEventData(eventData));
-  static void touchCancel(/*[1]*/ node, [Map? eventData]) => sw.Simulate.touchCancel(node, _jsifyEventData(eventData));
-  static void touchEnd(/*[1]*/ node, [Map? eventData]) => sw.Simulate.touchEnd(node, _jsifyEventData(eventData));
-  static void touchMove(/*[1]*/ node, [Map? eventData]) => sw.Simulate.touchMove(node, _jsifyEventData(eventData));
-  static void touchStart(/*[1]*/ node, [Map? eventData]) => sw.Simulate.touchStart(node, _jsifyEventData(eventData));
+  static void pointerDown(/*[1]*/ node, [Map? eventData]) =>
+      sw.Simulate.pointerDown(node, _jsifyEventData(eventData));
+  static void pointerEnter(/*[1]*/ node, [Map? eventData]) =>
+      sw.Simulate.pointerEnter(node, _jsifyEventData(eventData));
+  static void pointerLeave(/*[1]*/ node, [Map? eventData]) =>
+      sw.Simulate.pointerLeave(node, _jsifyEventData(eventData));
+  static void pointerMove(/*[1]*/ node, [Map? eventData]) =>
+      sw.Simulate.pointerMove(node, _jsifyEventData(eventData));
+  static void pointerOut(/*[1]*/ node, [Map? eventData]) =>
+      sw.Simulate.pointerOut(node, _jsifyEventData(eventData));
+  static void pointerOver(/*[1]*/ node, [Map? eventData]) =>
+      sw.Simulate.pointerOver(node, _jsifyEventData(eventData));
+  static void pointerUp(/*[1]*/ node, [Map? eventData]) =>
+      sw.Simulate.pointerUp(node, _jsifyEventData(eventData));
+  static void paste(/*[1]*/ node, [Map? eventData]) =>
+      sw.Simulate.paste(node, _jsifyEventData(eventData));
+  static void scroll(/*[1]*/ node, [Map? eventData]) =>
+      sw.Simulate.scroll(node, _jsifyEventData(eventData));
+  static void submit(/*[1]*/ node, [Map? eventData]) =>
+      sw.Simulate.submit(node, _jsifyEventData(eventData));
+  static void touchCancel(/*[1]*/ node, [Map? eventData]) =>
+      sw.Simulate.touchCancel(node, _jsifyEventData(eventData));
+  static void touchEnd(/*[1]*/ node, [Map? eventData]) =>
+      sw.Simulate.touchEnd(node, _jsifyEventData(eventData));
+  static void touchMove(/*[1]*/ node, [Map? eventData]) =>
+      sw.Simulate.touchMove(node, _jsifyEventData(eventData));
+  static void touchStart(/*[1]*/ node, [Map? eventData]) =>
+      sw.Simulate.touchStart(node, _jsifyEventData(eventData));
   static void transitionEnd(/*[1]*/ node, [Map? eventData]) =>
       sw.Simulate.transitionEnd(node, _jsifyEventData(eventData));
-  static void wheel(/*[1]*/ node, [Map? eventData]) => sw.Simulate.wheel(node, _jsifyEventData(eventData));
+  static void wheel(/*[1]*/ node, [Map? eventData]) =>
+      sw.Simulate.wheel(node, _jsifyEventData(eventData));
 }
 
 /// Traverse all components in tree and accumulate all components where
@@ -120,28 +162,34 @@ class Simulate {
 ///
 /// Included in Dart for completeness
 @JS('React.addons.TestUtils.findAllInRenderedTree')
-external List<dynamic> findAllInRenderedTree(/* [1] */ tree, ComponentTestFunction test);
+external List<dynamic> findAllInRenderedTree(
+    /* [1] */ tree, ComponentTestFunction test);
 
 /// Like scryRenderedDOMComponentsWithClass() but expects there to be one
 /// result, and returns that one result, or throws exception if there is
 /// any other number of matches besides one.
 @JS('React.addons.TestUtils.findRenderedDOMComponentWithClass')
-external dynamic /* [1] */ findRenderedDOMComponentWithClass(/* [1] */ tree, String className);
+external dynamic /* [1] */ findRenderedDOMComponentWithClass(
+    /* [1] */ tree, String className);
 
 /// Like scryRenderedDOMComponentsWithTag() but expects there to be one result,
 /// and returns that one result, or throws exception if there is any other
 /// number of matches besides one.
 @JS('React.addons.TestUtils.findRenderedDOMComponentWithTag')
-external dynamic /* [1] */ findRenderedDOMComponentWithTag(/* [1] */ tree, String tag);
+external dynamic /* [1] */ findRenderedDOMComponentWithTag(
+    /* [1] */ tree, String tag);
 
 @JS('React.addons.TestUtils.findRenderedComponentWithType')
-external dynamic /* [1] */ _findRenderedComponentWithType(/* [1] */ tree, dynamic type);
+external dynamic /* [1] */ _findRenderedComponentWithType(
+    /* [1] */ tree, dynamic type);
 
 /// Same as [scryRenderedComponentsWithTypeV2] but expects there to be one result
 /// and returns that one result, or throws exception if there is any other
 /// number of matches besides one.
-/* [1] */ findRenderedComponentWithTypeV2(/* [1] */ tree, ReactComponentFactoryProxy componentFactory) {
-  return _findRenderedComponentWithType(tree, getComponentTypeV2(componentFactory));
+/* [1] */ findRenderedComponentWithTypeV2(
+    /* [1] */ tree, ReactComponentFactoryProxy componentFactory) {
+  return _findRenderedComponentWithType(
+      tree, getComponentTypeV2(componentFactory));
 }
 
 @JS('React.addons.TestUtils.isCompositeComponent')
@@ -161,8 +209,10 @@ external bool _isCompositeComponentWithType(/* [1] */ instance, dynamic type);
 
 /// Returns `true` if instance is a custom composite component created using `React.createClass()`
 /// that is of the [ReactComponentFactoryProxy.type] of the provided [componentFactory].
-bool isCompositeComponentWithTypeV2(/* [1] */ instance, ReactComponentFactoryProxy componentFactory) {
-  return _isCompositeComponentWithType(instance, getComponentTypeV2(componentFactory));
+bool isCompositeComponentWithTypeV2(
+    /* [1] */ instance, ReactComponentFactoryProxy componentFactory) {
+  return _isCompositeComponentWithType(
+      instance, getComponentTypeV2(componentFactory));
 }
 
 /// Returns true if instance is a DOM component (such as a <div> or <span>).
@@ -178,30 +228,36 @@ external bool _isElementOfType(dynamic element, dynamic componentClass);
 
 /// Returns `true` if [element] is a [ReactElement]
 /// that is of the [ReactComponentFactoryProxy.type] of the provided [componentFactory].
-bool isElementOfTypeV2(dynamic element, ReactComponentFactoryProxy componentFactory) {
+bool isElementOfTypeV2(
+    dynamic element, ReactComponentFactoryProxy componentFactory) {
   return _isElementOfType(element, getComponentTypeV2(componentFactory));
 }
 
 @JS('React.addons.TestUtils.scryRenderedComponentsWithType')
-external List<dynamic> /* [1] */ _scryRenderedComponentsWithType(/* [1] */ tree, dynamic type);
+external List<dynamic> /* [1] */ _scryRenderedComponentsWithType(
+    /* [1] */ tree, dynamic type);
 
 /// Finds all instances within the provided [tree]
 /// that are of the [ReactComponentFactoryProxy.type] of the provided [componentFactory].
-List<dynamic> /* [1] */ scryRenderedComponentsWithTypeV2(/* [1] */ tree, ReactComponentFactoryProxy componentFactory) {
-  return _scryRenderedComponentsWithType(tree, getComponentTypeV2(componentFactory));
+List<dynamic> /* [1] */ scryRenderedComponentsWithTypeV2(
+    /* [1] */ tree, ReactComponentFactoryProxy componentFactory) {
+  return _scryRenderedComponentsWithType(
+      tree, getComponentTypeV2(componentFactory));
 }
 
 @JS('React.addons.TestUtils.scryRenderedDOMComponentsWithClass')
 
 /// Finds all instances of components in the rendered tree that are DOM
 /// components with the class name matching className.
-external List<dynamic> scryRenderedDOMComponentsWithClass(/* [1] */ tree, String className);
+external List<dynamic> scryRenderedDOMComponentsWithClass(
+    /* [1] */ tree, String className);
 
 @JS('React.addons.TestUtils.scryRenderedDOMComponentsWithTag')
 
 /// Finds all instances of components in the rendered tree that are DOM
 /// components with the tag name matching tagName.
-external List<dynamic> scryRenderedDOMComponentsWithTag(/* [1] */ tree, String tagName);
+external List<dynamic> scryRenderedDOMComponentsWithTag(
+    /* [1] */ tree, String tagName);
 
 /// Render a Component into a detached DOM node in the document.
 @JS('React.addons.TestUtils.renderIntoDocument')
@@ -212,7 +268,8 @@ external /* [1] */ renderIntoDocument(ReactElement? instance);
 /// rendering as usual, the component will become a simple <div> (or other tag
 /// if mockTagName is provided) containing any provided children.
 @JS('React.addons.TestUtils.mockComponent')
-external ReactClass mockComponent(ReactClass componentClass, String mockTagName);
+external ReactClass mockComponent(
+    ReactClass componentClass, String mockTagName);
 
 /// Returns a ReactShallowRenderer instance
 ///

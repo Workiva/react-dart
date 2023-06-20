@@ -13,7 +13,8 @@ void main() {
           legacyContextConsumerComponent({
             'key': 'consumerComponent'
           }, [
-            grandchildLegacyContextConsumerComponent({'key': 'legacyConsumerGrandchildComponent'})
+            grandchildLegacyContextConsumerComponent(
+                {'key': 'legacyConsumerGrandchildComponent'})
           ]),
         ]),
         react.h1({'key': 'h1'}, ['React New Context API']),
@@ -27,7 +28,8 @@ void main() {
             'key': 'newConsumerObservedBitsComponent',
             'unstable_observedBits': 1 << 2,
           }),
-          newContextTypeConsumerComponentComponent({'key': 'newContextTypeConsumerComponent'}, []),
+          newContextTypeConsumerComponentComponent(
+              {'key': 'newContextTypeConsumerComponent'}, []),
         ]),
       ]),
       querySelector('#content'));

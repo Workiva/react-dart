@@ -14,23 +14,22 @@ main() {
   void testTypeValue(dynamic typeToTest) {
     var contextTypeRef;
     var consumerRef;
-    render(
-        ContextProviderWrapper({
-          'contextToUse': TestContext,
-          'value': typeToTest,
-        }, [
-          ContextTypeComponent({
-            'ref': (ref) {
-              contextTypeRef = ref;
-            }
-          }),
-          ContextConsumerWrapper({
-            'contextToUse': TestContext,
-            'ref': (ref) {
-              consumerRef = ref;
-            }
-          })
-        ]));
+    render(ContextProviderWrapper({
+      'contextToUse': TestContext,
+      'value': typeToTest,
+    }, [
+      ContextTypeComponent({
+        'ref': (ref) {
+          contextTypeRef = ref;
+        }
+      }),
+      ContextConsumerWrapper({
+        'contextToUse': TestContext,
+        'ref': (ref) {
+          consumerRef = ref;
+        }
+      })
+    ]));
     expect(contextTypeRef.context, same(typeToTest));
     expect(consumerRef.latestValue, same(typeToTest));
   }
@@ -46,31 +45,30 @@ main() {
       _ContextConsumerWrapper? consumerOddRef;
 
       setUp(() {
-        render(
-            ContextProviderWrapper({
-              'contextToUse': TestCalculateChangedBitsContext,
-              'mode': 'increment',
-              'ref': (ref) {
-                providerRef = ref as _ContextProviderWrapper?;
-              }
-            }, [
-              ContextConsumerWrapper({
-                'key': 'EvenContextConsumer',
-                'contextToUse': TestCalculateChangedBitsContext,
-                'unstable_observedBits': 1 << 2,
-                'ref': (ref) {
-                  consumerEvenRef = ref as _ContextConsumerWrapper?;
-                }
-              }),
-              ContextConsumerWrapper({
-                'key': 'OddContextConsumer',
-                'contextToUse': TestCalculateChangedBitsContext,
-                'unstable_observedBits': 1 << 3,
-                'ref': (ref) {
-                  consumerOddRef = ref as _ContextConsumerWrapper?;
-                }
-              })
-            ]));
+        render(ContextProviderWrapper({
+          'contextToUse': TestCalculateChangedBitsContext,
+          'mode': 'increment',
+          'ref': (ref) {
+            providerRef = ref as _ContextProviderWrapper?;
+          }
+        }, [
+          ContextConsumerWrapper({
+            'key': 'EvenContextConsumer',
+            'contextToUse': TestCalculateChangedBitsContext,
+            'unstable_observedBits': 1 << 2,
+            'ref': (ref) {
+              consumerEvenRef = ref as _ContextConsumerWrapper?;
+            }
+          }),
+          ContextConsumerWrapper({
+            'key': 'OddContextConsumer',
+            'contextToUse': TestCalculateChangedBitsContext,
+            'unstable_observedBits': 1 << 3,
+            'ref': (ref) {
+              consumerOddRef = ref as _ContextConsumerWrapper?;
+            }
+          })
+        ]));
       });
 
       test('on first render', () {
@@ -106,11 +104,13 @@ int calculateChangedBits(currentValue, nextValue) {
   return result;
 }
 
-var TestCalculateChangedBitsContext = react.createContext(1, calculateChangedBits);
+var TestCalculateChangedBitsContext =
+    react.createContext(1, calculateChangedBits);
 
 var TestContext = react.createContext();
 
-final ContextProviderWrapper = react.registerComponent2(() => _ContextProviderWrapper());
+final ContextProviderWrapper =
+    react.registerComponent2(() => _ContextProviderWrapper());
 
 class _ContextProviderWrapper extends react.Component2 {
   @override
@@ -125,27 +125,31 @@ class _ContextProviderWrapper extends react.Component2 {
   @override
   render() {
     return react.div({}, [
-      (props['contextToUse'] as react.Context)
-          .Provider({'value': props['mode'] == 'increment' ? state['counter'] : props['value']}, props['children'])
+      (props['contextToUse'] as react.Context).Provider({
+        'value':
+            props['mode'] == 'increment' ? state['counter'] : props['value']
+      }, props['children'])
     ]);
   }
 }
 
-final ContextConsumerWrapper = react.registerComponent2(() => _ContextConsumerWrapper());
+final ContextConsumerWrapper =
+    react.registerComponent2(() => _ContextConsumerWrapper());
 
 class _ContextConsumerWrapper extends react.Component2 {
   dynamic latestValue;
   @override
   render() {
-    return (props['contextToUse'] as react.Context).Consumer({'unstable_observedBits': props['unstable_observedBits']},
-        (value) {
+    return (props['contextToUse'] as react.Context).Consumer(
+        {'unstable_observedBits': props['unstable_observedBits']}, (value) {
       latestValue = value;
       return react.div({}, '$value');
     });
   }
 }
 
-final ContextTypeComponent = react.registerComponent2(() => _ContextTypeComponent());
+final ContextTypeComponent =
+    react.registerComponent2(() => _ContextTypeComponent());
 
 class _ContextTypeComponent extends react.Component2 {
   @override

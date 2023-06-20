@@ -76,7 +76,9 @@ main() {
       );
     });
 
-    test('returns props for a composite JS ReactComponent, even when the props change', () {
+    test(
+        'returns props for a composite JS ReactComponent, even when the props change',
+        () {
       final mountNode = DivElement();
       var renderedInstance = react_dom.render(
           testJsComponentFactory({
@@ -145,18 +147,27 @@ main() {
         final component = react.div(props);
         final jsProps = unconvertJsProps(component);
         for (final key in knownEventKeys) {
-          expect(jsProps[key], isNotNull, reason: 'JS event handler prop should not be null');
-          expect(jsProps[key], anyOf(same(originalHandlers[key]), same(allowInterop(originalHandlers[key] as Function))),
-              reason: 'JS event handler should be the original or original wrapped in allowInterop');
+          expect(jsProps[key], isNotNull,
+              reason: 'JS event handler prop should not be null');
+          expect(
+              jsProps[key],
+              anyOf(same(originalHandlers[key]),
+                  same(allowInterop(originalHandlers[key] as Function))),
+              reason:
+                  'JS event handler should be the original or original wrapped in allowInterop');
         }
       });
 
-      test(', except for a JS composite component (handlers should already be unconverted)', () {
+      test(
+          ', except for a JS composite component (handlers should already be unconverted)',
+          () {
         final component = testJsComponentFactory(props);
         final jsProps = unconvertJsProps(component);
         for (final key in knownEventKeys) {
-          expect(jsProps[key], isNotNull, reason: 'JS event handler prop should not be null');
-          expect(jsProps[key], same(allowInterop(originalHandlers[key] as Function)),
+          expect(jsProps[key], isNotNull,
+              reason: 'JS event handler prop should not be null');
+          expect(jsProps[key],
+              same(allowInterop(originalHandlers[key] as Function)),
               reason: 'JS event handler prop was unexpectedly modified');
         }
       });
@@ -165,7 +176,9 @@ main() {
 
   group('registerComponent', () {
     test('throws with printed error', () {
-      expect(() => react.registerComponent(() => ThrowsInDefaultPropsComponent()), throwsStateError);
+      expect(
+          () => react.registerComponent(() => ThrowsInDefaultPropsComponent()),
+          throwsStateError);
       expect(() {
         try {
           react.registerComponent(() => ThrowsInDefaultPropsComponent());
@@ -176,25 +189,37 @@ main() {
 
   group('registerComponent2', () {
     test('throws with specific error when defaultProps throws', () {
-      expect(() => react.registerComponent2(() => ThrowsInDefaultPropsComponent2()), throwsStateError);
+      expect(
+          () =>
+              react.registerComponent2(() => ThrowsInDefaultPropsComponent2()),
+          throwsStateError);
       expect(() {
         try {
           react.registerComponent2(() => ThrowsInDefaultPropsComponent2());
         } catch (_) {}
-      }, prints(contains('Error when registering Component2 when getting defaultProps')));
+      },
+          prints(contains(
+              'Error when registering Component2 when getting defaultProps')));
     });
 
     test('throws with specific error when propTypes throws', () {
-      expect(() => react.registerComponent2(() => ThrowsInPropTypesComponent2()), throwsStateError);
+      expect(
+          () => react.registerComponent2(() => ThrowsInPropTypesComponent2()),
+          throwsStateError);
       expect(() {
         try {
           react.registerComponent2(() => ThrowsInPropTypesComponent2());
         } catch (_) {}
-      }, prints(contains('Error when registering Component2 when getting propTypes')));
+      },
+          prints(contains(
+              'Error when registering Component2 when getting propTypes')));
     }, tags: 'no-dart2js');
 
     test('throws with generic error when something else throws', () {
-      expect(() => react.registerComponent2(() => throw StateError('bad component')), throwsStateError);
+      expect(
+          () =>
+              react.registerComponent2(() => throw StateError('bad component')),
+          throwsStateError);
       expect(() {
         try {
           react.registerComponent2(() => throw StateError('bad component'));
@@ -211,7 +236,8 @@ external Function compositeComponent();
 final testJsComponentFactory = (() {
   final type = compositeComponent();
   return ([props = const {}, children]) {
-    return React.createElement(type, jsifyAndAllowInterop(props), listifyChildren(children));
+    return React.createElement(
+        type, jsifyAndAllowInterop(props), listifyChildren(children));
   };
 })();
 
@@ -252,7 +278,8 @@ class DartComponent2Component extends Component2 {
   }
 }
 
-final DartComponent2 = react.registerComponent2(() => DartComponent2Component());
+final DartComponent2 =
+    react.registerComponent2(() => DartComponent2Component());
 
 class DartComponentComponent extends Component {
   @override
@@ -261,4 +288,5 @@ class DartComponentComponent extends Component {
   }
 }
 
-final DartComponent = react.registerComponent(() => DartComponentComponent()) as ReactDartComponentFactoryProxy;
+final DartComponent = react.registerComponent(() => DartComponentComponent())
+    as ReactDartComponentFactoryProxy;

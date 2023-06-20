@@ -33,7 +33,8 @@ T validateJsApiThenReturn<T>(T Function() computeReturn) {
 Map<String, dynamic> unjsifyContext(InteropContextValue interopContext) {
   // TODO consider using `contextKeys` for this if perf of objectKeys is bad.
   return Map.fromIterable(objectKeys(interopContext), value: (key) {
-    final internal = getProperty(interopContext, key) as ReactDartContextInternal?;
+    final internal =
+        getProperty(interopContext, key) as ReactDartContextInternal?;
     return internal?.value;
   });
 }
@@ -56,7 +57,8 @@ void validateJsApi() {
   } on NoSuchMethodError catch (_) {
     throw Exception('react.js and react_dom.js must be loaded.');
   } catch (_) {
-    throw Exception('Loaded react.js must include react-dart JS interop helpers.');
+    throw Exception(
+        'Loaded react.js must include react-dart JS interop helpers.');
   }
 }
 

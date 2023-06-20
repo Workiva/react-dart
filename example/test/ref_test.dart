@@ -105,7 +105,8 @@ class _ParentComponent extends react.Component {
   final Ref<_ChildComponent> _childCreateRef = react.createRef();
 
   showInputCreateRefValue(_) {
-    final input = react_dom.findDOMNode(_inputCreateRef.current) as InputElement;
+    final input =
+        react_dom.findDOMNode(_inputCreateRef.current) as InputElement;
     print(input.value);
   }
 

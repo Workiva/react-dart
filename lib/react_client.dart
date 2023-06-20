@@ -5,8 +5,10 @@
 // ignore_for_file: deprecated_member_use_from_same_package
 library react_client;
 
-export 'package:react/react.dart' show ReactComponentFactoryProxy, ComponentFactory;
-export 'package:react/react_client/react_interop.dart' show ReactElement, ReactJsComponentFactory, inReactDevMode, Ref;
+export 'package:react/react.dart'
+    show ReactComponentFactoryProxy, ComponentFactory;
+export 'package:react/react_client/react_interop.dart'
+    show ReactElement, ReactJsComponentFactory, inReactDevMode, Ref;
 export 'package:react/react_client/component_factory.dart'
     show
         listifyChildren,
@@ -20,7 +22,8 @@ export 'package:react/react_client/component_factory.dart'
         ReactDartFunctionComponentFactoryProxy,
         JsBackedMapComponentFactoryMixin;
 export 'package:react/react_client/zone.dart' show componentZone;
-export 'package:react/src/react_client/chain_refs.dart' show chainRefs, chainRefList;
+export 'package:react/src/react_client/chain_refs.dart'
+    show chainRefs, chainRefList;
 export 'package:react/src/typedefs.dart' show JsFunctionComponent;
 
 /// Method used to initialize the React environment.
@@ -29,5 +32,6 @@ export 'package:react/src/typedefs.dart' show JsFunctionComponent;
 /// >
 /// > Environment configuration is now done by default and should not be altered. This can now be removed.
 /// > This will be removed in 7.0.0, along with other configuration setting functions.
-@Deprecated('It is not longer required and can be removed. Will be removed from this library in the 7.0.0 release.')
+@Deprecated(
+    'It is not longer required and can be removed. Will be removed from this library in the 7.0.0 release.')
 void setClientConfiguration() {}

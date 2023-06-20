@@ -30,7 +30,8 @@ main() {
 
           expect(getJsFunctionName(FunctionFoo.reactFunction), '_FunctionFoo');
 
-          expect(FunctionFoo.displayName, getJsFunctionName(FunctionFoo.reactFunction));
+          expect(FunctionFoo.displayName,
+              getJsFunctionName(FunctionFoo.reactFunction));
         });
 
         test('is populated by the provided argument', () {
@@ -38,14 +39,16 @@ main() {
 
           expect(getJsFunctionName(NamedFunctionFoo.reactFunction), 'Bar');
 
-          expect(NamedFunctionFoo.displayName, getJsFunctionName(NamedFunctionFoo.reactFunction));
+          expect(NamedFunctionFoo.displayName,
+              getJsFunctionName(NamedFunctionFoo.reactFunction));
         });
       });
     });
   });
 }
 
-final NamedFunctionFoo = react.registerFunctionComponent(_FunctionFoo, displayName: 'Bar');
+final NamedFunctionFoo =
+    react.registerFunctionComponent(_FunctionFoo, displayName: 'Bar');
 
 final FunctionFoo = react.registerFunctionComponent(_FunctionFoo);
 

@@ -18,7 +18,9 @@ external ReactClass jsLazy(Promise Function() factory);
 // Only intended for testing purposes, Please do not copy/paste this into repo.
 // This will most likely be added to the PUBLIC api in the future,
 // but needs more testing and Typing decisions to be made first.
-ReactJsComponentFactoryProxy lazy(Future<ReactComponentFactoryProxy> factory()) => ReactJsComponentFactoryProxy(
+ReactJsComponentFactoryProxy lazy(
+        Future<ReactComponentFactoryProxy> factory()) =>
+    ReactJsComponentFactoryProxy(
       jsLazy(
         allowInterop(
           () => futureToPromise(
@@ -43,7 +45,8 @@ final lazyComponent = lazy(() async {
   return simple.SimpleComponent;
 });
 
-var wrapper = react.registerFunctionComponent(WrapperComponent, displayName: 'wrapper');
+var wrapper =
+    react.registerFunctionComponent(WrapperComponent, displayName: 'wrapper');
 
 WrapperComponent(Map props) {
   return react.div({

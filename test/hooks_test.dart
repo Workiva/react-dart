@@ -137,7 +137,8 @@ main() {
               state.state['count']
             ]),
             react.button({
-              'onClick': (_) => state.dispatch({'type': 'changeText', 'newText': 'newValue'}),
+              'onClick': (_) =>
+                  state.dispatch({'type': 'changeText', 'newText': 'newValue'}),
               'ref': (ref) {
                 textButtonRef = ref as ButtonElement?;
               },
@@ -210,7 +211,8 @@ main() {
         final mountNode = DivElement();
 
         final UseReducerTest = react.registerFunctionComponent((props) {
-          final state = useReducerLazy<Map, Map, int>(reducer2, props['initialCount'] as int, initializeCount);
+          final state = useReducerLazy<Map, Map, int>(
+              reducer2, props['initialCount'] as int, initializeCount);
 
           return react.div({}, [
             react.div({
@@ -221,7 +223,8 @@ main() {
               state.state['count']
             ]),
             react.button({
-              'onClick': (_) => state.dispatch({'type': 'reset', 'payload': props['initialCount']}),
+              'onClick': (_) => state.dispatch(
+                  {'type': 'reset', 'payload': props['initialCount']}),
               'ref': (ref) {
                 resetButtonRef = ref as ButtonElement?;
               },
@@ -355,12 +358,15 @@ main() {
 
         test('callback stays the same if state not in dependency list', () {
           react_test_utils.Simulate.click(incrementNoDepButtonRef);
-          expect(countRef!.text, '3', reason: 'still increments by 1 because delta not in dependency list');
+          expect(countRef!.text, '3',
+              reason:
+                  'still increments by 1 because delta not in dependency list');
         });
 
         test('callback updates if state is in dependency list', () {
           react_test_utils.Simulate.click(incrementWithDepButtonRef);
-          expect(countRef!.text, '5', reason: 'increments by 2 because delta updated');
+          expect(countRef!.text, '5',
+              reason: 'increments by 2 because delta updated');
         });
       });
     });
@@ -382,13 +388,15 @@ main() {
           return react.div({
             'key': 'uct1'
           }, [
-            react.div({'key': 'uct2'}, ['useContext counter value is $context']),
+            react
+                .div({'key': 'uct2'}, ['useContext counter value is $context']),
           ]);
         }
 
         testContext = react.createContext(1);
-        useContextTestFunctionComponent =
-            react.registerFunctionComponent(UseContextTestComponent, displayName: 'useContextTest');
+        useContextTestFunctionComponent = react.registerFunctionComponent(
+            UseContextTestComponent,
+            displayName: 'useContextTest');
 
         react_dom.render(
             ContextProviderWrapper({
@@ -481,16 +489,19 @@ main() {
 
         test('will persist even after the component re-renders', () {
           expect(renderIndex.value, 1);
-          expect(refFromUseRef.current, 1, reason: 'Ref object initially created on first render');
+          expect(refFromUseRef.current, 1,
+              reason: 'Ref object initially created on first render');
           expect(refFromCreateRef.current, 1);
 
           react_test_utils.Simulate.click(reRenderButton);
 
           expect(renderIndex.value, 2);
           expect(refFromUseRef.current, 1,
-              reason: 'useRef returns the same Ref object on every render for the full lifetime of the component');
+              reason:
+                  'useRef returns the same Ref object on every render for the full lifetime of the component');
           expect(refFromCreateRef.current, 2,
-              reason: 'compare to createRef which creates a new Ref object on every render');
+              reason:
+                  'compare to createRef which creates a new Ref object on every render');
         });
       });
     });
@@ -551,7 +562,9 @@ main() {
             react.button({
               'ref': (ref) => incrementButtonRef = ref as ButtonElement?,
               'onClick': (_) => count.setWithUpdater((prev) => prev + 1),
-            }, ['+']),
+            }, [
+              '+'
+            ]),
             react.button({
               'ref': (ref) => reRenderButtonRef = ref as ButtonElement?,
               'onClick': (_) => reRender.setWithUpdater((prev) => prev + 1)
@@ -584,16 +597,21 @@ main() {
         test('createFunction does not run if state not in dependency list', () {
           expect(returnValueEmptyDeps, 8);
 
-          expect(createFunctionCallCountEmptyDeps, 1, reason: 'count.value is not in dependency list');
+          expect(createFunctionCallCountEmptyDeps, 1,
+              reason: 'count.value is not in dependency list');
         });
 
-        test('createFunction re-runs if state is in dependency list or if there is no dependency list', () {
+        test(
+            'createFunction re-runs if state is in dependency list or if there is no dependency list',
+            () {
           expect(returnValueWithDeps, 13);
           expect(returnValueNoDeps, 13);
 
-          expect(createFunctionCallCountWithDeps, 2, reason: 'count.value is in dependency list');
+          expect(createFunctionCallCountWithDeps, 2,
+              reason: 'count.value is in dependency list');
           expect(createFunctionCallCountNoDeps, 2,
-              reason: 'createFunction runs on every render because there is no dependency list');
+              reason:
+                  'createFunction runs on every render because there is no dependency list');
         });
       });
 
@@ -603,18 +621,23 @@ main() {
         });
 
         test('createFunction re-runs if there is no dependency list', () {
-          expect(returnValueNoDeps, 13, reason: 'count.value stayed the same so the same value is returned');
+          expect(returnValueNoDeps, 13,
+              reason:
+                  'count.value stayed the same so the same value is returned');
 
           expect(createFunctionCallCountNoDeps, 3,
-              reason: 'createFunction runs on every render because there is no dependency list');
+              reason:
+                  'createFunction runs on every render because there is no dependency list');
         });
 
         test('createFunction does not run if there is a dependency list', () {
           expect(returnValueEmptyDeps, 8);
           expect(returnValueWithDeps, 13);
 
-          expect(createFunctionCallCountEmptyDeps, 1, reason: 'no dependency changed');
-          expect(createFunctionCallCountWithDeps, 2, reason: 'no dependency changed');
+          expect(createFunctionCallCountEmptyDeps, 1,
+              reason: 'no dependency changed');
+          expect(createFunctionCallCountWithDeps, 2,
+              reason: 'no dependency changed');
         });
       });
     });
@@ -624,7 +647,8 @@ main() {
     });
 
     group('useImperativeHandle -', () {
-      group('updates `ref.current` to the return value of `createHandle()`', () {
+      group('updates `ref.current` to the return value of `createHandle()`',
+          () {
         ButtonElement? incrementButton;
         ButtonElement? reRenderButtonRef1;
         ButtonElement? reRenderButtonRef2;
@@ -641,7 +665,8 @@ main() {
 
             useImperativeHandle(
               ref,
-              () => {'increment': () => count.setWithUpdater((prev) => prev + 1)},
+              () =>
+                  {'increment': () => count.setWithUpdater((prev) => prev + 1)},
             );
 
             return react.div({'ref': ref}, count.value);
@@ -679,7 +704,8 @@ main() {
             final count = useState(0);
             final someRefThatIsNotSet = props['someRefThatIsNotSet'];
 
-            useImperativeHandle(someRefThatIsNotSet, () => count.value, [count.value]);
+            useImperativeHandle(
+                someRefThatIsNotSet, () => count.value, [count.value]);
 
             return react.Fragment({}, [
               react.div({'ref': someRefThatIsNotSet}, count.value),
@@ -690,11 +716,13 @@ main() {
             ]);
           });
 
-          expect(() => react_dom.render(NullRefComponent({}, []), mountNode), returnsNormally,
+          expect(() => react_dom.render(NullRefComponent({}, []), mountNode),
+              returnsNormally,
               reason: 'Hook should not throw if the ref is null');
           react_dom.unmountComponentAtNode(mountNode);
 
-          final UseImperativeHandleTest = react.registerFunctionComponent((props) {
+          final UseImperativeHandleTest =
+              react.registerFunctionComponent((props) {
             noDepsRef = useRef();
             emptyDepsRef = useRef();
             depsRef = useRef();
@@ -716,7 +744,9 @@ main() {
         });
 
         test('(with no dependency list)', () {
-          expect(noDepsRef.current, isA<Map>(), reason: 'useImperativeHandle overrides the existing ref.current value');
+          expect(noDepsRef.current, isA<Map>(),
+              reason:
+                  'useImperativeHandle overrides the existing ref.current value');
           expect(noDepsRef.current['increment'], isA<Function>());
           expect(count.value, 0);
 
@@ -726,20 +756,26 @@ main() {
 
         test('(with empty dependency list)', () {
           expect(emptyDepsRef.current, isA<int>(),
-              reason: 'useImperativeHandle overrides the existing ref.current value');
+              reason:
+                  'useImperativeHandle overrides the existing ref.current value');
           expect(emptyDepsRef.current, 0);
 
           react_test_utils.Simulate.click(reRenderButtonRef1);
           expect(emptyDepsRef.current, 0,
-              reason: 'current value does not update because count.value is not in dependency list');
+              reason:
+                  'current value does not update because count.value is not in dependency list');
         });
 
         test('(with non-empty dependency list)', () {
-          expect(depsRef.current, isA<int>(), reason: 'useImperativeHandle overrides the existing ref.current value');
+          expect(depsRef.current, isA<int>(),
+              reason:
+                  'useImperativeHandle overrides the existing ref.current value');
           expect(depsRef.current, 0);
 
           react_test_utils.Simulate.click(reRenderButtonRef2);
-          expect(depsRef.current, 1, reason: 'current value updates because count.value is in dependency list');
+          expect(depsRef.current, 1,
+              reason:
+                  'current value updates because count.value is in dependency list');
         });
       });
 
@@ -771,7 +807,8 @@ main() {
       StateHook<bool> useFriendStatusWithFormatFunction() {
         final isOnline = useState(true);
 
-        useDebugValue<bool>(isOnline.value, (value) => value ? 'Online' : 'Not Online');
+        useDebugValue<bool>(
+            isOnline.value, (value) => value ? 'Online' : 'Not Online');
 
         return isOnline;
       }
@@ -826,7 +863,8 @@ main() {
   });
 }
 
-ReactDartComponentFactoryProxy2 ContextProviderWrapper = react.registerComponent2(() => _ContextProviderWrapper());
+ReactDartComponentFactoryProxy2 ContextProviderWrapper =
+    react.registerComponent2(() => _ContextProviderWrapper());
 
 class _ContextProviderWrapper extends react.Component2 {
   @override
@@ -841,13 +879,17 @@ class _ContextProviderWrapper extends react.Component2 {
   @override
   render() {
     return react.div({}, [
-      (props['contextToUse'] as Context)
-          .Provider({'value': props['mode'] == 'increment' ? state['counter'] : props['value']}, props['children'])
+      (props['contextToUse'] as Context).Provider({
+        'value':
+            props['mode'] == 'increment' ? state['counter'] : props['value']
+      }, props['children'])
     ]);
   }
 }
 
-void testEffectHook(void Function(dynamic Function() sideEffect, [List<Object?>? dependencies]) effectHook) {
+void testEffectHook(
+    void Function(dynamic Function() sideEffect, [List<Object?>? dependencies])
+        effectHook) {
   late ReactDartFunctionComponentFactoryProxy UseEffectTest;
   ButtonElement? countButtonRef;
   DivElement? countRef;
@@ -932,20 +974,27 @@ void testEffectHook(void Function(dynamic Function() sideEffect, [List<Object?>?
     expect(countRef!.text, '0');
 
     expect(useEffectCallCount, 1);
-    expect(useEffectCleanupCallCount, 0, reason: 'component has not been unmounted or re-rendered');
+    expect(useEffectCleanupCallCount, 0,
+        reason: 'component has not been unmounted or re-rendered');
   });
 
-  test('side effect (with dependency list) is called after the first render', () {
+  test('side effect (with dependency list) is called after the first render',
+      () {
     expect(useEffectWithDepsCallCount, 1);
-    expect(useEffectCleanupWithDepsCallCount, 0, reason: 'component has not been unmounted or re-rendered');
+    expect(useEffectCleanupWithDepsCallCount, 0,
+        reason: 'component has not been unmounted or re-rendered');
 
     expect(useEffectWithDepsCallCount2, 1);
-    expect(useEffectCleanupWithDepsCallCount2, 0, reason: 'component has not been unmounted or re-rendered');
+    expect(useEffectCleanupWithDepsCallCount2, 0,
+        reason: 'component has not been unmounted or re-rendered');
   });
 
-  test('side effect (with empty dependency list) is called after the first render', () {
+  test(
+      'side effect (with empty dependency list) is called after the first render',
+      () {
     expect(useEffectWithEmptyDepsCallCount, 1);
-    expect(useEffectCleanupWithEmptyDepsCallCount, 0, reason: 'component has not been unmounted or re-rendered');
+    expect(useEffectCleanupWithEmptyDepsCallCount, 0,
+        reason: 'component has not been unmounted or re-rendered');
   });
 
   group('after state change,', () {
@@ -957,23 +1006,32 @@ void testEffectHook(void Function(dynamic Function() sideEffect, [List<Object?>?
       expect(countRef!.text, '1');
 
       expect(useEffectCallCount, 2);
-      expect(useEffectCleanupCallCount, 1, reason: 'cleanup called before re-render');
+      expect(useEffectCleanupCallCount, 1,
+          reason: 'cleanup called before re-render');
     });
 
-    test('side effect (with dependency list) is called again if one of its dependencies changed', () {
+    test(
+        'side effect (with dependency list) is called again if one of its dependencies changed',
+        () {
       expect(useEffectWithDepsCallCount, 2, reason: 'count.value changed');
-      expect(useEffectCleanupWithDepsCallCount, 1, reason: 'cleanup called before re-render');
+      expect(useEffectCleanupWithDepsCallCount, 1,
+          reason: 'cleanup called before re-render');
     });
 
-    test('side effect (with dependency list) is not called again if none of its dependencies changed', () {
-      expect(useEffectWithDepsCallCount2, 1, reason: 'countDown.value did not change');
+    test(
+        'side effect (with dependency list) is not called again if none of its dependencies changed',
+        () {
+      expect(useEffectWithDepsCallCount2, 1,
+          reason: 'countDown.value did not change');
       expect(useEffectCleanupWithDepsCallCount2, 0,
           reason: 'cleanup not called because countDown.value did not change');
     });
 
     test('side effect (with empty dependency list) is not called again', () {
-      expect(useEffectWithEmptyDepsCallCount, 1, reason: 'side effect is only called once for empty dependency list');
-      expect(useEffectCleanupWithEmptyDepsCallCount, 0, reason: 'component has not been unmounted');
+      expect(useEffectWithEmptyDepsCallCount, 1,
+          reason: 'side effect is only called once for empty dependency list');
+      expect(useEffectCleanupWithEmptyDepsCallCount, 0,
+          reason: 'component has not been unmounted');
     });
   });
 
@@ -983,20 +1041,24 @@ void testEffectHook(void Function(dynamic Function() sideEffect, [List<Object?>?
     });
 
     test('cleanup (no dependency list) is called', () {
-      expect(useEffectCallCount, 2, reason: 'side effect not called on unmount');
+      expect(useEffectCallCount, 2,
+          reason: 'side effect not called on unmount');
       expect(useEffectCleanupCallCount, 2);
     });
 
     test('cleanup (with dependency list) is called', () {
-      expect(useEffectWithDepsCallCount, 2, reason: 'side effect not called on unmount');
+      expect(useEffectWithDepsCallCount, 2,
+          reason: 'side effect not called on unmount');
       expect(useEffectCleanupWithDepsCallCount, 2);
 
-      expect(useEffectWithDepsCallCount2, 1, reason: 'side effect not called on unmount');
+      expect(useEffectWithDepsCallCount2, 1,
+          reason: 'side effect not called on unmount');
       expect(useEffectCleanupWithDepsCallCount2, 1);
     });
 
     test('cleanup (with empty dependency list) is called', () {
-      expect(useEffectWithEmptyDepsCallCount, 1, reason: 'side effect not called on unmount');
+      expect(useEffectWithEmptyDepsCallCount, 1,
+          reason: 'side effect not called on unmount');
       expect(useEffectCleanupWithEmptyDepsCallCount, 1);
     });
   });

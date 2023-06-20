@@ -54,31 +54,37 @@ main() {
 
       group('raises an assertion when inputs are invalid:', () {
         test('strings', () {
-          expect(() => chainRefList([testRef, 'bad ref']), throwsA(isA<AssertionError>()));
+          expect(() => chainRefList([testRef, 'bad ref']),
+              throwsA(isA<AssertionError>()));
         });
 
         test('unsupported function types', () {
-          expect(() => chainRefList([testRef, () {}]), throwsA(isA<AssertionError>()));
+          expect(() => chainRefList([testRef, () {}]),
+              throwsA(isA<AssertionError>()));
         });
 
         test('other objects', () {
-          expect(() => chainRefList([testRef, Object()]), throwsA(isA<AssertionError>()));
+          expect(() => chainRefList([testRef, Object()]),
+              throwsA(isA<AssertionError>()));
         });
 
         // test JS interop objects since type-checking anonymous interop objects
         test('non-createRef anonymous JS interop objects', () {
-          expect(() => chainRefList([testRef, JsTypeAnonymous()]), throwsA(isA<AssertionError>()));
+          expect(() => chainRefList([testRef, JsTypeAnonymous()]),
+              throwsA(isA<AssertionError>()));
         });
 
         // test JS interop objects since type-checking anonymous interop objects
         test('non-createRef JS interop objects', () {
-          expect(() => chainRefList([testRef, JsType()]), throwsA(isA<AssertionError>()));
+          expect(() => chainRefList([testRef, JsType()]),
+              throwsA(isA<AssertionError>()));
         });
       }, tags: 'no-dart2js');
 
       test('does not raise an assertion for valid input refs', () {
         final testCases = RefTestCaseCollection<Object>().createAllCases();
-        expect(() => chainRefList(testCases.map((r) => r.ref).toList()), returnsNormally);
+        expect(() => chainRefList(testCases.map((r) => r.ref).toList()),
+            returnsNormally);
       });
     });
   });

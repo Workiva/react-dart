@@ -13,9 +13,11 @@ typedef CallbackRef<T> = Function(T? componentOrDomNode);
 /// - [props] will always be supplied as the first argument
 /// - [legacyContext] has been deprecated and should not be used but remains for backward compatibility and is necessary
 /// to match Dart's generated call signature based on the number of args React provides.
-typedef JsFunctionComponent = dynamic Function(JsMap props, [JsMap? legacyContext]);
+typedef JsFunctionComponent = dynamic Function(JsMap props,
+    [JsMap? legacyContext]);
 
-typedef JsForwardRefFunctionComponent = dynamic Function(JsMap props, dynamic ref);
+typedef JsForwardRefFunctionComponent = dynamic Function(
+    JsMap props, dynamic ref);
 
 /// Typedef for `react.Component.ref`, which should return one of the following specified by the provided [ref]:
 ///

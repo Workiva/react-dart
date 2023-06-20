@@ -35,7 +35,8 @@ class JsBackedMap extends MapBase<dynamic, dynamic> {
   factory JsBackedMap.from(Map other) => JsBackedMap()..addAll(other);
 
   /// Creates a JsBackedMap instance that contains all key/value pairs of the JS object [jsOther].
-  factory JsBackedMap.fromJs(JsMap jsOther) => JsBackedMap()..addAllFromJs(jsOther);
+  factory JsBackedMap.fromJs(JsMap jsOther) =>
+      JsBackedMap()..addAllFromJs(jsOther);
 
   // Private helpers with narrower typing than we want to expose, for use in other methods
   List<dynamic> get _keys => _Object.keys(jsObject);
@@ -60,7 +61,8 @@ class JsBackedMap extends MapBase<dynamic, dynamic> {
   @override
   dynamic? operator [](Object? key) {
     // Cast key as dynamic to work around https://github.com/dart-lang/sdk/issues/45219
-    return DartValueWrapper.unwrapIfNeeded(js_util.getProperty(jsObject, key as dynamic));
+    return DartValueWrapper.unwrapIfNeeded(
+        js_util.getProperty(jsObject, key as dynamic));
   }
 
   @override
@@ -101,7 +103,8 @@ class JsBackedMap extends MapBase<dynamic, dynamic> {
 
   @override
   // Cast key as dynamic to work around https://github.com/dart-lang/sdk/issues/45219
-  bool containsKey(Object? key) => js_util.hasProperty(jsObject, key as dynamic);
+  bool containsKey(Object? key) =>
+      js_util.hasProperty(jsObject, key as dynamic);
 
   @override
   Iterable<dynamic> get values => _values;

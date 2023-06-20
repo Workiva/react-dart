@@ -41,7 +41,8 @@ void commonFactoryTests(ReactComponentFactoryProxy factory,
 
   test('has a type with the expected ReactDartComponentVersion', () {
     // ignore: invalid_use_of_protected_member
-    expect(ReactDartComponentVersion.fromType(factory.type), dartComponentVersion);
+    expect(
+        ReactDartComponentVersion.fromType(factory.type), dartComponentVersion);
   });
 
   void sharedChildrenTests(dynamic Function(ReactElement instance) getChildren,
@@ -61,7 +62,9 @@ void commonFactoryTests(ReactComponentFactoryProxy factory,
 
       const firstGeneralCaseVariadicChildCount = 2;
       const maxSupportedVariadicChildCount = 40;
-      for (var i = firstGeneralCaseVariadicChildCount; i < maxSupportedVariadicChildCount; i++) {
+      for (var i = firstGeneralCaseVariadicChildCount;
+          i < maxSupportedVariadicChildCount;
+          i++) {
         final childrenCount = i;
 
         test('$childrenCount', () {
@@ -73,10 +76,51 @@ void commonFactoryTests(ReactComponentFactoryProxy factory,
       }
 
       test('$maxSupportedVariadicChildCount (and passes static analysis)', () {
-        final instance = factory(props, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22,
-            23, 24, 25, 26, 27, 28, 29, 30, 31, 32, 33, 34, 35, 36, 37, 38, 39, 40);
+        final instance = factory(
+            props,
+            1,
+            2,
+            3,
+            4,
+            5,
+            6,
+            7,
+            8,
+            9,
+            10,
+            11,
+            12,
+            13,
+            14,
+            15,
+            16,
+            17,
+            18,
+            19,
+            20,
+            21,
+            22,
+            23,
+            24,
+            25,
+            26,
+            27,
+            28,
+            29,
+            30,
+            31,
+            32,
+            33,
+            34,
+            35,
+            36,
+            37,
+            38,
+            39,
+            40);
         // Generate these instead of hard coding them to ensure the arguments passed into this test match maxSupportedVariadicChildCount
-        final expectedChildren = List.generate(maxSupportedVariadicChildCount, (i) => i + 1);
+        final expectedChildren =
+            List.generate(maxSupportedVariadicChildCount, (i) => i + 1);
         expect(getChildren(instance), equals(expectedChildren));
       }, tags: 'dart-2-7-dart2js-variadic-issues');
     });
@@ -106,7 +150,8 @@ void commonFactoryTests(ReactComponentFactoryProxy factory,
   }
 
   group('passes children to the JS component when specified as', () {
-    dynamic getJsChildren(ReactElement instance) => getProperty(instance.props, 'children');
+    dynamic getJsChildren(ReactElement instance) =>
+        getProperty(instance.props, 'children');
 
     sharedChildrenTests(getJsChildren,
         // Only Component2 should always get lists.
@@ -118,7 +163,8 @@ void commonFactoryTests(ReactComponentFactoryProxy factory,
     group('passes children to the Dart component when specified as', () {
       final notCalledSentinelValue = Object();
       dynamic childrenFromLastRender;
-      void onDartRender(Map props) => childrenFromLastRender = props['children'];
+      void onDartRender(Map props) =>
+          childrenFromLastRender = props['children'];
 
       dynamic getDartChildren(ReactElement instance) {
         // Set to a value that won't ever be equal to children, so we can tell whether it was called.
@@ -126,7 +172,8 @@ void commonFactoryTests(ReactComponentFactoryProxy factory,
         rtu.renderIntoDocument(instance);
         final children = childrenFromLastRender;
         if (childrenFromLastRender == notCalledSentinelValue) {
-          throw StateError('onDartRender was not called when rendering `instance`. '
+          throw StateError(
+              'onDartRender was not called when rendering `instance`. '
               'Ensure the `props` argument are being passed to the factory.');
         }
         return children;
@@ -151,7 +198,8 @@ void commonFactoryTests(ReactComponentFactoryProxy factory,
           }
         }));
 
-        expect(receivedProps, isA<JsBackedMap>(), reason: 'props should be a JsBackedMap');
+        expect(receivedProps, isA<JsBackedMap>(),
+            reason: 'props should be a JsBackedMap');
       });
     }
 
@@ -180,7 +228,8 @@ void commonFactoryTests(ReactComponentFactoryProxy factory,
       addTearDown(() => componentZone = oldComponentZone);
       componentZone = Zone.current.fork();
       expect(componentZone, isNot(Zone.current),
-          reason: 'test setup: component zone should be different than the zone used to render it');
+          reason:
+              'test setup: component zone should be different than the zone used to render it');
 
       Zone? renderZone;
       rtu.renderIntoDocument(factory({
@@ -188,7 +237,8 @@ void commonFactoryTests(ReactComponentFactoryProxy factory,
           renderZone = Zone.current;
         }
       }));
-      expect(renderZone, isNotNull, reason: 'test setup: onDartRender should have been called');
+      expect(renderZone, isNotNull,
+          reason: 'test setup: onDartRender should have been called');
       expect(renderZone, same(componentZone));
     });
   }
@@ -219,7 +269,8 @@ void domEventHandlerWrappingTests(ReactComponentFactoryProxy factory) {
 
   group('wraps event handlers properly,', () {
     const dart = EventTestCase.dart('onMouseUp', 'set on component');
-    const dartCloned = EventTestCase.dart('onMouseLeave', 'cloned onto component');
+    const dartCloned =
+        EventTestCase.dart('onMouseLeave', 'cloned onto component');
     const jsCloned = EventTestCase.js('onClick', 'cloned onto component ');
     const eventCases = {dart, jsCloned, dartCloned};
 
@@ -228,7 +279,8 @@ void domEventHandlerWrappingTests(ReactComponentFactoryProxy factory) {
     late Map propsFromDartRender;
 
     setUpAll(() {
-      expect(eventCases.map((h) => h.eventPropKey).toSet(), hasLength(eventCases.length),
+      expect(eventCases.map((h) => h.eventPropKey).toSet(),
+          hasLength(eventCases.length),
           reason: 'test setup: each helper should have a unique event key');
 
       events = {};
@@ -262,21 +314,27 @@ void domEventHandlerWrappingTests(ReactComponentFactoryProxy factory) {
       node = renderAndGetRootNode(element);
     });
 
-    group('passing Dart events to Dart handlers, and JS events to handlers originating from JS:', () {
+    group(
+        'passing Dart events to Dart handlers, and JS events to handlers originating from JS:',
+        () {
       for (final eventCase in eventCases) {
         test(eventCase.description, () {
           eventCase.simulate(node);
-          expect(events[eventCase], isNotNull, reason: 'handler should have been called');
+          expect(events[eventCase], isNotNull,
+              reason: 'handler should have been called');
           expect(events[eventCase], isA<react.SyntheticMouseEvent>());
         });
       }
     });
 
     if (isDartComponent(factory({}))) {
-      group('in a way that the handlers are callable from within the Dart component:', () {
+      group(
+          'in a way that the handlers are callable from within the Dart component:',
+          () {
         setUpAll(() {
           expect(propsFromDartRender, isNotNull,
-              reason: 'test setup: component must pass props into props.onDartRender');
+              reason:
+                  'test setup: component must pass props into props.onDartRender');
         });
 
         late react.SyntheticMouseEvent event;
@@ -292,7 +350,9 @@ void domEventHandlerWrappingTests(ReactComponentFactoryProxy factory) {
 
         for (final eventCase in eventCases.where((helper) => helper.isDart)) {
           test(eventCase.description, () {
-            expect(() => propsFromDartRender[eventCase.eventPropKey](dummyEvent), returnsNormally);
+            expect(
+                () => propsFromDartRender[eventCase.eventPropKey](dummyEvent),
+                returnsNormally);
           });
         }
       });
@@ -315,7 +375,8 @@ void domEventHandlerWrappingTests(ReactComponentFactoryProxy factory) {
   });
 
   test('doesn\'t wrap the handler if it is null', () {
-    final nodeWithClickHandler = renderAndGetRootNode(factory({'onClick': null}));
+    final nodeWithClickHandler =
+        renderAndGetRootNode(factory({'onClick': null}));
 
     expect(() => rtu.Simulate.click(nodeWithClickHandler), returnsNormally);
   });
@@ -400,20 +461,24 @@ void refTests<T>(
         rtu.renderIntoDocument(factory({
           'ref': testCase.ref,
         }));
-        final verifyFunction = testCase.isJs ? verifyJsRefValue! : verifyRefValue;
+        final verifyFunction =
+            testCase.isJs ? verifyJsRefValue! : verifyRefValue;
         verifyFunction(testCase.getCurrent());
       });
     }
 
     test('string refs', () {
-      final renderedInstance = _renderWithStringRefSupportingOwner(() => factory({'ref': 'test'}));
+      final renderedInstance =
+          _renderWithStringRefSupportingOwner(() => factory({'ref': 'test'}));
 
       // ignore: deprecated_member_use_from_same_package
       verifyRefValue(renderedInstance.dartComponent!.ref('test'));
     });
   });
 
-  group('forwardRef2 function passes a ref through a component to one of its children, when the ref is a:', () {
+  group(
+      'forwardRef2 function passes a ref through a component to one of its children, when the ref is a:',
+      () {
     for (final name in testCaseCollection.allTestCaseNames) {
       test(name, () {
         final testCase = testCaseCollection.createCaseByName(name);
@@ -424,7 +489,8 @@ void refTests<T>(
         rtu.renderIntoDocument(ForwardRefTestComponent({
           'ref': testCase.ref,
         }));
-        final verifyFunction = testCase.isJs ? verifyJsRefValue! : verifyRefValue;
+        final verifyFunction =
+            testCase.isJs ? verifyJsRefValue! : verifyRefValue;
         verifyFunction(testCase.getCurrent());
       });
     }
@@ -445,8 +511,10 @@ void refTests<T>(
       }));
 
       for (final testCase in testCases) {
-        final verifyFunction = testCase.isJs ? verifyJsRefValue! : verifyRefValue;
-        final valueToVerify = testCase.isJs ? refSpy.jsRef.current : refSpy.current;
+        final verifyFunction =
+            testCase.isJs ? verifyJsRefValue! : verifyRefValue;
+        final valueToVerify =
+            testCase.isJs ? refSpy.jsRef.current : refSpy.current;
 
         // Test setup check: verify refValue is correct,
         // which we'll use below to verify refs were updated.
@@ -455,7 +523,9 @@ void refTests<T>(
       }
     });
 
-    group('when refs come from sources where they have been potentially converted:', () {
+    group(
+        'when refs come from sources where they have been potentially converted:',
+        () {
       test('ReactElement.ref', () {
         final testCases = testCaseCollection.createAllCases().map((testCase) {
           return RefTestCase(
@@ -478,8 +548,10 @@ void refTests<T>(
         }));
 
         for (final testCase in testCases) {
-          final verifyFunction = testCase.isJs ? verifyJsRefValue! : verifyRefValue;
-          final valueToVerify = testCase.isJs ? refSpy.jsRef.current : refSpy.current;
+          final verifyFunction =
+              testCase.isJs ? verifyJsRefValue! : verifyRefValue;
+          final valueToVerify =
+              testCase.isJs ? refSpy.jsRef.current : refSpy.current;
 
           // Test setup check: verify refValue is correct,
           // which we'll use below to verify refs were updated.
@@ -509,8 +581,10 @@ void refTests<T>(
               'ref': testCase.ref,
             }));
 
-            final verifyFunction = testCase.isJs ? verifyJsRefValue! : verifyRefValue;
-            final valueToVerify = testCase.isJs ? refSpy.jsRef.current : refSpy.current;
+            final verifyFunction =
+                testCase.isJs ? verifyJsRefValue! : verifyRefValue;
+            final valueToVerify =
+                testCase.isJs ? refSpy.jsRef.current : refSpy.current;
 
             // Test setup check: verify refValue is correct,
             // which we'll use below to verify refs were updated.
@@ -525,7 +599,8 @@ void refTests<T>(
   });
 }
 
-void _childKeyWarningTests(ReactComponentFactoryProxy factory, {required Function(ReactElement Function()) renderWithUniqueOwnerName}) {
+void _childKeyWarningTests(ReactComponentFactoryProxy factory,
+    {required Function(ReactElement Function()) renderWithUniqueOwnerName}) {
   group('key/children validation', () {
     late bool consoleErrorCalled;
     var consoleErrorMessage;
@@ -536,7 +611,8 @@ void _childKeyWarningTests(ReactComponentFactoryProxy factory, {required Functio
       consoleErrorMessage = null;
 
       originalConsoleError = context['console']['error'] as JsFunction;
-      context['console']['error'] = JsFunction.withThis((self, message, arg1, arg2, arg3) {
+      context['console']['error'] =
+          JsFunction.withThis((self, message, arg1, arg2, arg3) {
         consoleErrorCalled = true;
         consoleErrorMessage = message;
 
@@ -551,26 +627,34 @@ void _childKeyWarningTests(ReactComponentFactoryProxy factory, {required Functio
     test('warns when a single child is passed as a list', () {
       _renderWithUniqueOwnerName(() => factory({}, [react.span({})]));
 
-      expect(consoleErrorCalled, isTrue, reason: 'should have outputted a warning');
-      expect(consoleErrorMessage, contains('Each child in a list should have a unique "key" prop.'));
+      expect(consoleErrorCalled, isTrue,
+          reason: 'should have outputted a warning');
+      expect(consoleErrorMessage,
+          contains('Each child in a list should have a unique "key" prop.'));
     });
 
     test('warns when multiple children are passed as a list', () {
-      renderWithUniqueOwnerName(() => factory({}, [react.span({}), react.span({}), react.span({})]));
+      renderWithUniqueOwnerName(
+          () => factory({}, [react.span({}), react.span({}), react.span({})]));
 
-      expect(consoleErrorCalled, isTrue, reason: 'should have outputted a warning');
+      expect(consoleErrorCalled, isTrue,
+          reason: 'should have outputted a warning');
     });
 
-    test('does not warn when multiple children are passed as variadic args', () {
-      renderWithUniqueOwnerName(() => factory({}, react.span({}), react.span({}), react.span({})));
+    test('does not warn when multiple children are passed as variadic args',
+        () {
+      renderWithUniqueOwnerName(
+          () => factory({}, react.span({}), react.span({}), react.span({})));
 
-      expect(consoleErrorCalled, isFalse, reason: 'should not have outputted a warning');
+      expect(consoleErrorCalled, isFalse,
+          reason: 'should not have outputted a warning');
     });
 
     test('when rendering custom Dart components', () {
       renderWithUniqueOwnerName(() => factory({}, react.span({})));
 
-      expect(consoleErrorCalled, isFalse, reason: 'should not have outputted a warning');
+      expect(consoleErrorCalled, isFalse,
+          reason: 'should not have outputted a warning');
     });
   });
 }
@@ -582,9 +666,11 @@ class _StringRefOwnerOwnerHelperComponent extends react.Component {
 
 /// Renders the provided [render] function with a Component owner that supports string refs,
 /// for string ref tests.
-ReactComponent _renderWithStringRefSupportingOwner(ReactElement Function() render) {
+ReactComponent _renderWithStringRefSupportingOwner(
+    ReactElement Function() render) {
   final factory =
-      react.registerComponent(() => _StringRefOwnerOwnerHelperComponent()) as ReactDartComponentFactoryProxy;
+      react.registerComponent(() => _StringRefOwnerOwnerHelperComponent())
+          as ReactDartComponentFactoryProxy;
 
   return rtu.renderIntoDocument(factory({'render': render})) as ReactComponent;
 }
@@ -631,7 +717,8 @@ class EventTestCase {
     return name.substring(0, 1).toLowerCase() + name.substring(1);
   }
 
-  void simulate(Element node) => callMethod(_Simulate, _camelCaseEventName, [node]);
+  void simulate(Element node) =>
+      callMethod(_Simulate, _camelCaseEventName, [node]);
 
   @override
   String toString() => 'EventHelper: ($eventPropKey) $description';

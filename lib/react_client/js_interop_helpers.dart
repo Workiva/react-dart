@@ -92,7 +92,8 @@ dynamic jsifyAndAllowInterop(object) {
 _convertDataTree(data) {
   // Use _jsObjectFriendlyIdentityHashCode instead of `identityHashCode`/`Map.identity()`
   // to work around https://github.com/dart-lang/sdk/issues/47595
-  final _convertedObjects = LinkedHashMap(equals: identical, hashCode: _jsObjectFriendlyIdentityHashCode);
+  final _convertedObjects = LinkedHashMap(
+      equals: identical, hashCode: _jsObjectFriendlyIdentityHashCode);
 
   _convert(o) {
     if (_convertedObjects.containsKey(o)) {

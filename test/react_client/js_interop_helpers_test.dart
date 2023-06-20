@@ -120,17 +120,21 @@ main() {
       expect(() => jsifyAndAllowInterop('a'), throwsArgumentError);
     });
 
-    test('does not result in unwanted properties (e.g., \$identityHash) being added to converted JS objects', () {
+    test(
+        'does not result in unwanted properties (e.g., \$identityHash) being added to converted JS objects',
+        () {
       final nestedJsObject = jsifyAndAllowInterop({'foo': 'bar'});
       const expectedProperties = ['foo'];
-      expect(objectKeys(nestedJsObject), expectedProperties, reason: 'test setup check');
+      expect(objectKeys(nestedJsObject), expectedProperties,
+          reason: 'test setup check');
 
       // We want to include a JS object in jsifyAndAllowInterop
       final jsObject = jsifyAndAllowInterop({
         'nestedJsObject': nestedJsObject,
       });
       final convertedNestedJsObject = getProperty(jsObject, 'nestedJsObject');
-      expect(convertedNestedJsObject, same(nestedJsObject), reason: 'JS object should have just gotten passed through');
+      expect(convertedNestedJsObject, same(nestedJsObject),
+          reason: 'JS object should have just gotten passed through');
       expect(objectKeys(convertedNestedJsObject), expectedProperties,
           reason: 'JS object should not have any additional properties');
     });
@@ -142,34 +146,41 @@ main() {
             reason: 'test setup check; should not extend from another JS type');
 
         _freeze(frozenAnonymousObject);
-        expect(_isFrozen(frozenAnonymousObject), isTrue, reason: 'test setup check; should have frozen');
+        expect(_isFrozen(frozenAnonymousObject), isTrue,
+            reason: 'test setup check; should have frozen');
 
         dynamic jsObject;
         expect(() {
           jsObject = jsifyAndAllowInterop({
             'frozenObject': frozenAnonymousObject,
           });
-        }, returnsNormally, reason: 'should not throw when it encounters a frozen object');
-        final convertedNestedFrozenObject = getProperty(jsObject, 'frozenObject');
+        }, returnsNormally,
+            reason: 'should not throw when it encounters a frozen object');
+        final convertedNestedFrozenObject =
+            getProperty(jsObject, 'frozenObject');
         expect(convertedNestedFrozenObject, same(frozenAnonymousObject),
             reason: 'JS object should have just gotten passed through');
       });
 
       test('non-anonymous object', () {
         final frozenNonAnynymousObject = Foo(21);
-        expect(_getPrototypeOf(frozenNonAnynymousObject), isNot(_objectPrototype),
+        expect(
+            _getPrototypeOf(frozenNonAnynymousObject), isNot(_objectPrototype),
             reason: 'test setup check; should extend from another JS type');
 
         _freeze(frozenNonAnynymousObject);
-        expect(_isFrozen(frozenNonAnynymousObject), isTrue, reason: 'test setup check; should have frozen');
+        expect(_isFrozen(frozenNonAnynymousObject), isTrue,
+            reason: 'test setup check; should have frozen');
 
         dynamic jsObject;
         expect(() {
           jsObject = jsifyAndAllowInterop({
             'frozenObject': frozenNonAnynymousObject,
           });
-        }, returnsNormally, reason: 'should not throw when it encounters a frozen object');
-        final convertedNestedFrozenObject = getProperty(jsObject, 'frozenObject');
+        }, returnsNormally,
+            reason: 'should not throw when it encounters a frozen object');
+        final convertedNestedFrozenObject =
+            getProperty(jsObject, 'frozenObject');
         expect(convertedNestedFrozenObject, same(frozenNonAnynymousObject),
             reason: 'JS object should have just gotten passed through');
       });
@@ -178,22 +189,27 @@ main() {
         // Create this on the JS side so that we're not starting out with Dart's list implementation
         // and potentially any wrapper classes.
         final frozenArray = createArray();
-        expect(_getPrototypeOf(frozenArray), _arrayPrototype, reason: 'test setup check; should be an array');
+        expect(_getPrototypeOf(frozenArray), _arrayPrototype,
+            reason: 'test setup check; should be an array');
 
         _freeze(frozenArray);
-        expect(_isFrozen(frozenArray), isTrue, reason: 'test setup check; should have frozen');
+        expect(_isFrozen(frozenArray), isTrue,
+            reason: 'test setup check; should have frozen');
 
         dynamic jsObject;
         expect(() {
           jsObject = jsifyAndAllowInterop({
             'frozenArray': frozenArray,
           });
-        }, returnsNormally, reason: 'should not throw when it encounters a frozen object');
-        final convertedNestedFrozenObject = getProperty(jsObject, 'frozenArray');
+        }, returnsNormally,
+            reason: 'should not throw when it encounters a frozen object');
+        final convertedNestedFrozenObject =
+            getProperty(jsObject, 'frozenArray');
         // Note that we don't expect it to be `same(frozenArray)` since the array passes the `is Iterable` check,
         // and thus gets processed in _convertDataTree.
         expect(convertedNestedFrozenObject, equals(frozenArray),
-            reason: 'JS object should have been converted properly passed through');
+            reason:
+                'JS object should have been converted properly passed through');
       });
     });
   });

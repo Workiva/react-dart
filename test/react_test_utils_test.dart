@@ -43,7 +43,8 @@ testUtils({
     late ReactShallowRenderer shallowRenderer;
 
     setUp(() {
-      content = sampleComponent({'className': 'test', 'id': 'createRendererTest'});
+      content =
+          sampleComponent({'className': 'test', 'id': 'createRendererTest'});
 
       shallowRenderer = createRenderer();
     });
@@ -80,7 +81,8 @@ testUtils({
       String eventName,
       void Function(SyntheticEvent e) expectEventType,
     ) {
-      final eventHandlerName = 'on${eventName[0].toUpperCase() + eventName.substring(1)}';
+      final eventHandlerName =
+          'on${eventName[0].toUpperCase() + eventName.substring(1)}';
       eventName = eventName.toLowerCase();
       late Map eventData;
       late int fakeTimeStamp;
@@ -123,86 +125,188 @@ testUtils({
     group('event', () {
       void Function(SyntheticEvent) _expectEventType(SyntheticEventType type) {
         return (event) {
-          expect(event.isClipboardEvent, type == SyntheticEventType.syntheticClipboardEvent);
-          expect(event.isKeyboardEvent, type == SyntheticEventType.syntheticKeyboardEvent);
-          expect(event.isCompositionEvent, type == SyntheticEventType.syntheticCompositionEvent);
-          expect(event.isFocusEvent, type == SyntheticEventType.syntheticFocusEvent);
-          expect(event.isMouseEvent, type == SyntheticEventType.syntheticMouseEvent);
-          expect(event.isPointerEvent, type == SyntheticEventType.syntheticPointerEvent);
-          expect(event.isTouchEvent, type == SyntheticEventType.syntheticTouchEvent);
-          expect(event.isTransitionEvent, type == SyntheticEventType.syntheticTransitionEvent);
-          expect(event.isAnimationEvent, type == SyntheticEventType.syntheticAnimationEvent);
+          expect(event.isClipboardEvent,
+              type == SyntheticEventType.syntheticClipboardEvent);
+          expect(event.isKeyboardEvent,
+              type == SyntheticEventType.syntheticKeyboardEvent);
+          expect(event.isCompositionEvent,
+              type == SyntheticEventType.syntheticCompositionEvent);
+          expect(event.isFocusEvent,
+              type == SyntheticEventType.syntheticFocusEvent);
+          expect(event.isMouseEvent,
+              type == SyntheticEventType.syntheticMouseEvent);
+          expect(event.isPointerEvent,
+              type == SyntheticEventType.syntheticPointerEvent);
+          expect(event.isTouchEvent,
+              type == SyntheticEventType.syntheticTouchEvent);
+          expect(event.isTransitionEvent,
+              type == SyntheticEventType.syntheticTransitionEvent);
+          expect(event.isAnimationEvent,
+              type == SyntheticEventType.syntheticAnimationEvent);
           expect(event.isUiEvent, type == SyntheticEventType.syntheticUIEvent);
-          expect(event.isWheelEvent, type == SyntheticEventType.syntheticWheelEvent);
+          expect(event.isWheelEvent,
+              type == SyntheticEventType.syntheticWheelEvent);
         };
       }
 
-      final expectClipboardEvent = _expectEventType(SyntheticEventType.syntheticClipboardEvent);
-      final expectKeyboardEvent = _expectEventType(SyntheticEventType.syntheticKeyboardEvent);
-      final expectCompositionEvent = _expectEventType(SyntheticEventType.syntheticCompositionEvent);
-      final expectFocusEvent = _expectEventType(SyntheticEventType.syntheticFocusEvent);
-      final expectFormEvent = _expectEventType(SyntheticEventType.syntheticFormEvent);
-      final expectMouseEvent = _expectEventType(SyntheticEventType.syntheticMouseEvent);
-      final expectPointerEvent = _expectEventType(SyntheticEventType.syntheticPointerEvent);
-      final expectTouchEvent = _expectEventType(SyntheticEventType.syntheticTouchEvent);
-      final expectTransitionEvent = _expectEventType(SyntheticEventType.syntheticTransitionEvent);
-      final expectAnimationEvent = _expectEventType(SyntheticEventType.syntheticAnimationEvent);
-      final expectUiEvent = _expectEventType(SyntheticEventType.syntheticUIEvent);
-      final expectWheelEvent = _expectEventType(SyntheticEventType.syntheticWheelEvent);
+      final expectClipboardEvent =
+          _expectEventType(SyntheticEventType.syntheticClipboardEvent);
+      final expectKeyboardEvent =
+          _expectEventType(SyntheticEventType.syntheticKeyboardEvent);
+      final expectCompositionEvent =
+          _expectEventType(SyntheticEventType.syntheticCompositionEvent);
+      final expectFocusEvent =
+          _expectEventType(SyntheticEventType.syntheticFocusEvent);
+      final expectFormEvent =
+          _expectEventType(SyntheticEventType.syntheticFormEvent);
+      final expectMouseEvent =
+          _expectEventType(SyntheticEventType.syntheticMouseEvent);
+      final expectPointerEvent =
+          _expectEventType(SyntheticEventType.syntheticPointerEvent);
+      final expectTouchEvent =
+          _expectEventType(SyntheticEventType.syntheticTouchEvent);
+      final expectTransitionEvent =
+          _expectEventType(SyntheticEventType.syntheticTransitionEvent);
+      final expectAnimationEvent =
+          _expectEventType(SyntheticEventType.syntheticAnimationEvent);
+      final expectUiEvent =
+          _expectEventType(SyntheticEventType.syntheticUIEvent);
+      final expectWheelEvent =
+          _expectEventType(SyntheticEventType.syntheticWheelEvent);
 
-      group('animationEnd', () => testEvent(Simulate.animationEnd, 'animationEnd', expectAnimationEvent));
-      group('animationIteration',
-          () => testEvent(Simulate.animationIteration, 'animationIteration', expectAnimationEvent));
-      group('animationStart', () => testEvent(Simulate.animationStart, 'animationStart', expectAnimationEvent));
-      group('blur', () => testEvent(Simulate.blur, 'blur', expectFocusEvent));
-      group('change', () => testEvent(Simulate.change, 'change', expectFormEvent));
-      group('click', () => testEvent(Simulate.click, 'click', expectMouseEvent));
-      group('copy', () => testEvent(Simulate.copy, 'copy', expectClipboardEvent));
-      group('compositionEnd', () => testEvent(Simulate.compositionEnd, 'compositionEnd', expectCompositionEvent));
-      group('compositionStart', () => testEvent(Simulate.compositionStart, 'compositionStart', expectCompositionEvent));
-      group('compositionUpdate',
-          () => testEvent(Simulate.compositionUpdate, 'compositionUpdate', expectCompositionEvent));
-      group('contextMenu', () => testEvent(Simulate.contextMenu, 'contextMenu', expectMouseEvent));
-      group('cut', () => testEvent(Simulate.cut, 'cut', expectClipboardEvent));
-      group('doubleClick', () => testEvent(Simulate.doubleClick, 'doubleClick', expectMouseEvent));
-      group('drag', () => testEvent(Simulate.drag, 'drag', expectMouseEvent));
-      group('dragEnd', () => testEvent(Simulate.dragEnd, 'dragEnd', expectMouseEvent));
-      group('dragEnter', () => testEvent(Simulate.dragEnter, 'dragEnter', expectMouseEvent));
-      group('dragExit', () => testEvent(Simulate.dragExit, 'dragExit', expectMouseEvent));
-      group('dragLeave', () => testEvent(Simulate.dragLeave, 'dragLeave', expectMouseEvent));
-      group('dragOver', () => testEvent(Simulate.dragOver, 'dragOver', expectMouseEvent));
-      group('dragStart', () => testEvent(Simulate.dragStart, 'dragStart', expectMouseEvent));
-      group('drop', () => testEvent(Simulate.drop, 'drop', expectMouseEvent));
-      group('focus', () => testEvent(Simulate.focus, 'focus', expectFocusEvent));
-      group('gotPointerCapture', () => testEvent(Simulate.gotPointerCapture, 'gotPointerCapture', expectPointerEvent));
-      group('input', () => testEvent(Simulate.input, 'input', expectFormEvent));
-      group('keyDown', () => testEvent(Simulate.keyDown, 'keyDown', expectKeyboardEvent));
-      group('keyPress', () => testEvent(Simulate.keyPress, 'keyPress', expectKeyboardEvent));
-      group('keyUp', () => testEvent(Simulate.keyUp, 'keyUp', expectKeyboardEvent));
       group(
-          'lostPointerCapture', () => testEvent(Simulate.lostPointerCapture, 'lostPointerCapture', expectPointerEvent));
-      group('mouseDown', () => testEvent(Simulate.mouseDown, 'mouseDown', expectMouseEvent));
-      group('mouseMove', () => testEvent(Simulate.mouseMove, 'mouseMove', expectMouseEvent));
-      group('mouseOut', () => testEvent(Simulate.mouseOut, 'mouseOut', expectMouseEvent));
-      group('mouseOver', () => testEvent(Simulate.mouseOver, 'mouseOver', expectMouseEvent));
-      group('mouseUp', () => testEvent(Simulate.mouseUp, 'mouseUp', expectMouseEvent));
-      group('paste', () => testEvent(Simulate.paste, 'paste', expectClipboardEvent));
-      group('pointerCancel', () => testEvent(Simulate.pointerCancel, 'pointerCancel', expectPointerEvent));
-      group('pointerDown', () => testEvent(Simulate.pointerDown, 'pointerDown', expectPointerEvent));
-      group('pointerEnter', () => testEvent(Simulate.pointerEnter, 'pointerEnter', expectPointerEvent));
-      group('pointerLeave', () => testEvent(Simulate.pointerLeave, 'pointerLeave', expectPointerEvent));
-      group('pointerMove', () => testEvent(Simulate.pointerMove, 'pointerMove', expectPointerEvent));
-      group('pointerOver', () => testEvent(Simulate.pointerOver, 'pointerOver', expectPointerEvent));
-      group('pointerOut', () => testEvent(Simulate.pointerOut, 'pointerOut', expectPointerEvent));
-      group('pointerUp', () => testEvent(Simulate.pointerUp, 'pointerUp', expectPointerEvent));
-      group('scroll', () => testEvent(Simulate.scroll, 'scroll', expectUiEvent));
-      group('submit', () => testEvent(Simulate.submit, 'submit', expectFormEvent));
-      group('touchCancel', () => testEvent(Simulate.touchCancel, 'touchCancel', expectTouchEvent));
-      group('touchEnd', () => testEvent(Simulate.touchEnd, 'touchEnd', expectTouchEvent));
-      group('touchMove', () => testEvent(Simulate.touchMove, 'touchMove', expectTouchEvent));
-      group('touchStart', () => testEvent(Simulate.touchStart, 'touchStart', expectTouchEvent));
-      group('transitionEnd', () => testEvent(Simulate.transitionEnd, 'transitionEnd', expectTransitionEvent));
-      group('wheel', () => testEvent(Simulate.wheel, 'wheel', expectWheelEvent));
+          'animationEnd',
+          () => testEvent(
+              Simulate.animationEnd, 'animationEnd', expectAnimationEvent));
+      group(
+          'animationIteration',
+          () => testEvent(Simulate.animationIteration, 'animationIteration',
+              expectAnimationEvent));
+      group(
+          'animationStart',
+          () => testEvent(
+              Simulate.animationStart, 'animationStart', expectAnimationEvent));
+      group('blur', () => testEvent(Simulate.blur, 'blur', expectFocusEvent));
+      group('change',
+          () => testEvent(Simulate.change, 'change', expectFormEvent));
+      group(
+          'click', () => testEvent(Simulate.click, 'click', expectMouseEvent));
+      group(
+          'copy', () => testEvent(Simulate.copy, 'copy', expectClipboardEvent));
+      group(
+          'compositionEnd',
+          () => testEvent(Simulate.compositionEnd, 'compositionEnd',
+              expectCompositionEvent));
+      group(
+          'compositionStart',
+          () => testEvent(Simulate.compositionStart, 'compositionStart',
+              expectCompositionEvent));
+      group(
+          'compositionUpdate',
+          () => testEvent(Simulate.compositionUpdate, 'compositionUpdate',
+              expectCompositionEvent));
+      group(
+          'contextMenu',
+          () =>
+              testEvent(Simulate.contextMenu, 'contextMenu', expectMouseEvent));
+      group('cut', () => testEvent(Simulate.cut, 'cut', expectClipboardEvent));
+      group(
+          'doubleClick',
+          () =>
+              testEvent(Simulate.doubleClick, 'doubleClick', expectMouseEvent));
+      group('drag', () => testEvent(Simulate.drag, 'drag', expectMouseEvent));
+      group('dragEnd',
+          () => testEvent(Simulate.dragEnd, 'dragEnd', expectMouseEvent));
+      group('dragEnter',
+          () => testEvent(Simulate.dragEnter, 'dragEnter', expectMouseEvent));
+      group('dragExit',
+          () => testEvent(Simulate.dragExit, 'dragExit', expectMouseEvent));
+      group('dragLeave',
+          () => testEvent(Simulate.dragLeave, 'dragLeave', expectMouseEvent));
+      group('dragOver',
+          () => testEvent(Simulate.dragOver, 'dragOver', expectMouseEvent));
+      group('dragStart',
+          () => testEvent(Simulate.dragStart, 'dragStart', expectMouseEvent));
+      group('drop', () => testEvent(Simulate.drop, 'drop', expectMouseEvent));
+      group(
+          'focus', () => testEvent(Simulate.focus, 'focus', expectFocusEvent));
+      group(
+          'gotPointerCapture',
+          () => testEvent(Simulate.gotPointerCapture, 'gotPointerCapture',
+              expectPointerEvent));
+      group('input', () => testEvent(Simulate.input, 'input', expectFormEvent));
+      group('keyDown',
+          () => testEvent(Simulate.keyDown, 'keyDown', expectKeyboardEvent));
+      group('keyPress',
+          () => testEvent(Simulate.keyPress, 'keyPress', expectKeyboardEvent));
+      group('keyUp',
+          () => testEvent(Simulate.keyUp, 'keyUp', expectKeyboardEvent));
+      group(
+          'lostPointerCapture',
+          () => testEvent(Simulate.lostPointerCapture, 'lostPointerCapture',
+              expectPointerEvent));
+      group('mouseDown',
+          () => testEvent(Simulate.mouseDown, 'mouseDown', expectMouseEvent));
+      group('mouseMove',
+          () => testEvent(Simulate.mouseMove, 'mouseMove', expectMouseEvent));
+      group('mouseOut',
+          () => testEvent(Simulate.mouseOut, 'mouseOut', expectMouseEvent));
+      group('mouseOver',
+          () => testEvent(Simulate.mouseOver, 'mouseOver', expectMouseEvent));
+      group('mouseUp',
+          () => testEvent(Simulate.mouseUp, 'mouseUp', expectMouseEvent));
+      group('paste',
+          () => testEvent(Simulate.paste, 'paste', expectClipboardEvent));
+      group(
+          'pointerCancel',
+          () => testEvent(
+              Simulate.pointerCancel, 'pointerCancel', expectPointerEvent));
+      group(
+          'pointerDown',
+          () => testEvent(
+              Simulate.pointerDown, 'pointerDown', expectPointerEvent));
+      group(
+          'pointerEnter',
+          () => testEvent(
+              Simulate.pointerEnter, 'pointerEnter', expectPointerEvent));
+      group(
+          'pointerLeave',
+          () => testEvent(
+              Simulate.pointerLeave, 'pointerLeave', expectPointerEvent));
+      group(
+          'pointerMove',
+          () => testEvent(
+              Simulate.pointerMove, 'pointerMove', expectPointerEvent));
+      group(
+          'pointerOver',
+          () => testEvent(
+              Simulate.pointerOver, 'pointerOver', expectPointerEvent));
+      group(
+          'pointerOut',
+          () =>
+              testEvent(Simulate.pointerOut, 'pointerOut', expectPointerEvent));
+      group('pointerUp',
+          () => testEvent(Simulate.pointerUp, 'pointerUp', expectPointerEvent));
+      group(
+          'scroll', () => testEvent(Simulate.scroll, 'scroll', expectUiEvent));
+      group('submit',
+          () => testEvent(Simulate.submit, 'submit', expectFormEvent));
+      group(
+          'touchCancel',
+          () =>
+              testEvent(Simulate.touchCancel, 'touchCancel', expectTouchEvent));
+      group('touchEnd',
+          () => testEvent(Simulate.touchEnd, 'touchEnd', expectTouchEvent));
+      group('touchMove',
+          () => testEvent(Simulate.touchMove, 'touchMove', expectTouchEvent));
+      group('touchStart',
+          () => testEvent(Simulate.touchStart, 'touchStart', expectTouchEvent));
+      group(
+          'transitionEnd',
+          () => testEvent(
+              Simulate.transitionEnd, 'transitionEnd', expectTransitionEvent));
+      group(
+          'wheel', () => testEvent(Simulate.wheel, 'wheel', expectWheelEvent));
     });
 
     test('passes in and jsifies eventData properly', () {
@@ -227,56 +331,73 @@ testUtils({
       });
 
       expect(callInfo, 'onKeyDown $testKeyCode');
-      expect(wasStopPropagationCalled, isTrue, reason: 'should have successfully called Dart function passed in');
+      expect(wasStopPropagationCalled, isTrue,
+          reason: 'should have successfully called Dart function passed in');
     });
   });
 
-  test('findRenderedDOMComponentWithClass on a Component${isComponent2 ? "2" : ""}', () {
+  test(
+      'findRenderedDOMComponentWithClass on a Component${isComponent2 ? "2" : ""}',
+      () {
     final component = renderIntoDocument(sampleComponent({}));
     final spanComponent = findRenderedDOMComponentWithClass(component, 'span1');
 
     expect(getProperty(spanComponent, 'tagName'), equals('SPAN'));
   });
 
-  test('findRenderedDOMComponentWithTag on a Component${isComponent2 ? "2" : ""}', () {
+  test(
+      'findRenderedDOMComponentWithTag on a Component${isComponent2 ? "2" : ""}',
+      () {
     final component = renderIntoDocument(sampleComponent({}));
     final h1Component = findRenderedDOMComponentWithTag(component, 'h1');
 
     expect(getProperty(h1Component, 'tagName'), equals('H1'));
   });
 
-  test('findRenderedComponentWithTypeV2 on a Component${isComponent2 ? "2" : ""}', () {
-    final component = renderIntoDocument(wrapperComponent({}, [sampleComponent({})]));
+  test(
+      'findRenderedComponentWithTypeV2 on a Component${isComponent2 ? "2" : ""}',
+      () {
+    final component =
+        renderIntoDocument(wrapperComponent({}, [sampleComponent({})]));
     final result = findRenderedComponentWithTypeV2(component, sampleComponent);
     expect(isCompositeComponentWithTypeV2(result, sampleComponent), isTrue);
   });
 
   group('isCompositeComponent on a Component${isComponent2 ? "2" : ""}', () {
-    test('returns true when element is a composite component (created with React.createClass())', () {
+    test(
+        'returns true when element is a composite component (created with React.createClass())',
+        () {
       final component = renderIntoDocument(eventComponent({}));
 
       expect(isCompositeComponent(component), isTrue);
     });
 
-    test('returns false when element is not a composite component (created with React.createClass())', () {
+    test(
+        'returns false when element is not a composite component (created with React.createClass())',
+        () {
       final component = renderIntoDocument(div({}) as ReactElement);
 
       expect(isCompositeComponent(component), isFalse);
     });
   });
 
-  group('isCompositeComponentWithTypeV2 on a Component${isComponent2 ? "2" : ""}', () {
+  group(
+      'isCompositeComponentWithTypeV2 on a Component${isComponent2 ? "2" : ""}',
+      () {
     final renderedInstance = renderIntoDocument(sampleComponent({}));
 
-    test('returns true when element is a composite component (created with React.createClass()) of the specified type',
+    test(
+        'returns true when element is a composite component (created with React.createClass()) of the specified type',
         () {
-      expect(isCompositeComponentWithTypeV2(renderedInstance, sampleComponent), isTrue);
+      expect(isCompositeComponentWithTypeV2(renderedInstance, sampleComponent),
+          isTrue);
     });
 
     test(
         'returns false when element is not a composite component (created with React.createClass()) of the specified type',
         () {
-      expect(isCompositeComponentWithTypeV2(renderedInstance, eventComponent), isFalse);
+      expect(isCompositeComponentWithTypeV2(renderedInstance, eventComponent),
+          isFalse);
     });
   });
 
@@ -313,11 +434,14 @@ testUtils({
     });
   });
 
-  test('scryRenderedComponentsWithTypeV2 on a Component${isComponent2 ? "2" : ""}', () {
-    final component =
-        renderIntoDocument(wrapperComponent({}, [sampleComponent({}), sampleComponent({}), eventComponent({})]));
+  test(
+      'scryRenderedComponentsWithTypeV2 on a Component${isComponent2 ? "2" : ""}',
+      () {
+    final component = renderIntoDocument(wrapperComponent(
+        {}, [sampleComponent({}), sampleComponent({}), eventComponent({})]));
 
-    final results = scryRenderedComponentsWithTypeV2(component, sampleComponent);
+    final results =
+        scryRenderedComponentsWithTypeV2(component, sampleComponent);
 
     expect(results.length, 2);
     expect(isCompositeComponentWithTypeV2(results[0], sampleComponent), isTrue);
@@ -339,7 +463,8 @@ testUtils({
   });
 
   test('scryRenderedDOMComponentsWithTag', () {
-    final component = renderIntoDocument(wrapperComponent({}, [div({}), div({}), span({})]));
+    final component =
+        renderIntoDocument(wrapperComponent({}, [div({}), div({}), span({})]));
 
     final results = scryRenderedDOMComponentsWithTag(component, 'div');
 
@@ -353,11 +478,13 @@ testUtils({
     final reactComponent = renderIntoDocument(sampleComponent({}));
     final divElements = scryRenderedDOMComponentsWithTag(reactComponent, 'div');
     final h1Elements = scryRenderedDOMComponentsWithTag(reactComponent, 'h1');
-    final spanElements = scryRenderedDOMComponentsWithTag(reactComponent, 'span');
+    final spanElements =
+        scryRenderedDOMComponentsWithTag(reactComponent, 'span');
 
     expect(divElements.length, equals(3));
     // First div should be the parent div created by renderIntoDocument()
-    expect(findDomNode(divElements[0]).text, equals('A headerFirst divSecond div'));
+    expect(findDomNode(divElements[0]).text,
+        equals('A headerFirst divSecond div'));
     expect(findDomNode(divElements[1]).text, equals('First div'));
     expect(findDomNode(divElements[2]).text, equals('Second div'));
     expect(h1Elements.length, equals(1));

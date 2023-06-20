@@ -13,7 +13,8 @@ import 'package:test/test.dart';
 
 void verifyJsFileLoaded(String filename) {
   final isLoaded = document.getElementsByTagName('script').any((script) {
-    return Uri.parse((script as ScriptElement).src).pathSegments.last == filename;
+    return Uri.parse((script as ScriptElement).src).pathSegments.last ==
+        filename;
   });
 
   if (!isLoaded) throw Exception('$filename is not loaded');
@@ -29,13 +30,17 @@ void sharedJsFunctionTests() {
 
     group('createReactDartComponentClass', () {
       test('is function that does not throw when called', () {
-        expect(() => createReactDartComponentClass(null, null), returnsNormally);
+        expect(
+            () => createReactDartComponentClass(null, null), returnsNormally);
       });
     });
 
     group('createReactDartComponentClass2', () {
       test('is function that does not throw when called', () {
-        expect(() => createReactDartComponentClass2(null, null, JsComponentConfig2(skipMethods: [])), returnsNormally);
+        expect(
+            () => createReactDartComponentClass2(
+                null, null, JsComponentConfig2(skipMethods: [])),
+            returnsNormally);
       });
     });
   });
@@ -52,7 +57,8 @@ external set consoleWarnCalls(List<Object?> value);
 @JS('console.warn')
 external void consoleWarn([a, b, c, d]);
 
-void sharedConsoleWarnTests({required bool expectDeduplicateSyntheticEventWarnings}) {
+void sharedConsoleWarnTests(
+    {required bool expectDeduplicateSyntheticEventWarnings}) {
   group('console.warn wrapper (or lack thereof)', () {
     void clearConsoleWarnCalls() => consoleWarnCalls = [];
 
@@ -85,7 +91,8 @@ void sharedConsoleWarnTests({required bool expectDeduplicateSyntheticEventWarnin
 
     void triggerRealDdcSyntheticEventWarning<T extends react.SyntheticEvent>() {
       if (T == react.SyntheticEvent) {
-        throw ArgumentError('T must a subclass of SyntheticEvent, not SyntheticEvent itself, for this to reproduce.');
+        throw ArgumentError(
+            'T must a subclass of SyntheticEvent, not SyntheticEvent itself, for this to reproduce.');
       }
 
       // Adapted from reduced test case in https://github.com/dart-lang/sdk/issues/43939
@@ -102,7 +109,9 @@ void sharedConsoleWarnTests({required bool expectDeduplicateSyntheticEventWarnin
             ' and also logs a helpful message (integration test)', () {
           triggerRealDdcSyntheticEventWarning<react.SyntheticMouseEvent>();
           expect(consoleWarnCalls, [
-            ['Cannot find native JavaScript type (SyntheticMouseEvent) for type check'],
+            [
+              'Cannot find native JavaScript type (SyntheticMouseEvent) for type check'
+            ],
             [
               'The above warning is expected and is the result of a workaround to https://github.com/dart-lang/sdk/issues/43939'
             ],
@@ -120,10 +129,18 @@ void sharedConsoleWarnTests({required bool expectDeduplicateSyntheticEventWarnin
           triggerRealDdcSyntheticEventWarning<react.SyntheticMouseEvent>();
           triggerRealDdcSyntheticEventWarning<react.SyntheticKeyboardEvent>();
           expect(consoleWarnCalls, [
-            ['Cannot find native JavaScript type (SyntheticMouseEvent) for type check'],
-            ['Cannot find native JavaScript type (SyntheticEvent) for type check'],
-            ['Cannot find native JavaScript type (SyntheticKeyboardEvent) for type check'],
-            ['Cannot find native JavaScript type (SyntheticEvent) for type check'],
+            [
+              'Cannot find native JavaScript type (SyntheticMouseEvent) for type check'
+            ],
+            [
+              'Cannot find native JavaScript type (SyntheticEvent) for type check'
+            ],
+            [
+              'Cannot find native JavaScript type (SyntheticKeyboardEvent) for type check'
+            ],
+            [
+              'Cannot find native JavaScript type (SyntheticEvent) for type check'
+            ],
           ]);
         });
       }
@@ -146,8 +163,10 @@ void sharedConsoleWarnTests({required bool expectDeduplicateSyntheticEventWarnin
 }
 
 void sharedErrorBoundaryComponentNameTests() {
-  group('includes the Dart component displayName in error boundary errors for', () {
-    void expectRenderErrorWithComponentName(ReactElement element, {required String expectedComponentName}) {
+  group('includes the Dart component displayName in error boundary errors for',
+      () {
+    void expectRenderErrorWithComponentName(ReactElement element,
+        {required String expectedComponentName}) {
       final capturedInfos = <ReactErrorInfo>[];
       react_dom.render(
           _ErrorBoundary({
@@ -156,8 +175,11 @@ void sharedErrorBoundaryComponentNameTests() {
             }
           }, element),
           DivElement());
-      expect(capturedInfos, hasLength(1), reason: 'test setup check; should have captured a single component error');
-      expect(capturedInfos[0].componentStack, contains('at $expectedComponentName'));
+      expect(capturedInfos, hasLength(1),
+          reason:
+              'test setup check; should have captured a single component error');
+      expect(capturedInfos[0].componentStack,
+          contains('at $expectedComponentName'));
     }
 
     test('Component components', () {
@@ -184,13 +206,15 @@ void sharedErrorBoundaryComponentNameTests() {
     test('forwardRef function components', () {
       expectRenderErrorWithComponentName(
         _ThrowingForwardRefFunctionComponent({}),
-        expectedComponentName: r'DisplayName$_ThrowingForwardRefFunctionComponent',
+        expectedComponentName:
+            r'DisplayName$_ThrowingForwardRefFunctionComponent',
       );
     });
   });
 }
 
-final _ErrorBoundary = react.registerComponent2(() => _ErrorBoundaryComponent(), skipMethods: []);
+final _ErrorBoundary =
+    react.registerComponent2(() => _ErrorBoundaryComponent(), skipMethods: []);
 
 class _ErrorBoundaryComponent extends react.Component2 {
   @override
@@ -210,7 +234,8 @@ class _ErrorBoundaryComponent extends react.Component2 {
   }
 }
 
-final _ThrowingComponent = react.registerComponent(() => _ThrowingComponentComponent());
+final _ThrowingComponent =
+    react.registerComponent(() => _ThrowingComponentComponent());
 
 class _ThrowingComponentComponent extends react.Component {
   @override
@@ -222,7 +247,8 @@ class _ThrowingComponentComponent extends react.Component {
   }
 }
 
-final _ThrowingComponent2 = react.registerComponent2(() => _ThrowingComponent2Component());
+final _ThrowingComponent2 =
+    react.registerComponent2(() => _ThrowingComponent2Component());
 
 class _ThrowingComponent2Component extends react.Component2 {
   @override

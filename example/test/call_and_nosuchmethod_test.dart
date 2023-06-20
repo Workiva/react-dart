@@ -18,8 +18,14 @@ void main() {
       react.div({}, [
         react.div({'key': 'noChildren'}),
         react.div({'key': 'emptyList'}, []),
-        react.div({'key': 'singleItemInList'}, [react.div({})]), // This should produce a key warning
-        react.div({'key': 'twoItemsInList'}, [react.div({}), react.div({})]), // This should produce a key warning
+        react.div({'key': 'singleItemInList'},
+            [react.div({})]), // This should produce a key warning
+        react.div({
+          'key': 'twoItemsInList'
+        }, [
+          react.div({}),
+          react.div({})
+        ]), // This should produce a key warning
         react.div({'key': 'oneVariadicChild'}, react.div({})),
 
         // These tests of variadic children won't pass in the ddc until https://github.com/dart-lang/sdk/issues/29904
@@ -29,10 +35,16 @@ void main() {
 
         customComponent({'key': 'noChildren2'}),
         customComponent({'key': 'emptyList2'}, []),
-        customComponent({'key': 'singleItemInList2'}, [customComponent({})]), // This should produce a key warning
-        customComponent({'key': 'twoItemsInList2'},
-            [customComponent({}), customComponent({})]), // This should produce a key warning
-        customComponent({'key': 'oneVariadicChild2'}, customComponent({'key': '1'})),
+        customComponent({'key': 'singleItemInList2'},
+            [customComponent({})]), // This should produce a key warning
+        customComponent({
+          'key': 'twoItemsInList2'
+        }, [
+          customComponent({}),
+          customComponent({})
+        ]), // This should produce a key warning
+        customComponent(
+            {'key': 'oneVariadicChild2'}, customComponent({'key': '1'})),
 
         // These tests of variadic children won't pass in the ddc until https://github.com/dart-lang/sdk/issues/29904
         // is resolved.
