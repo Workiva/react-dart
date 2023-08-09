@@ -24,8 +24,8 @@ void sharedTypeTests(
 }) {
   if (!skipNormalDartObjects) {
     test('normal Dart objects', () {
-      final object = new Foo('f');
-      final iterable = new Iterable.generate(2);
+      final object = Foo('f');
+      final iterable = Iterable.generate(2);
       testTypeValue(object);
       testTypeValue(iterable);
     });
@@ -68,7 +68,7 @@ void sharedTypeTests(
       _functionLocalMethod() {}
       final functionLocalMethod = _functionLocalMethod;
       final functionExpression = () {};
-      final functionTearOff = new Object().toString;
+      final functionTearOff = Object().toString;
       final functionAllowInterop = allowInterop(() {});
 
       testTypeValue(functionLocalMethod);
@@ -80,8 +80,8 @@ void sharedTypeTests(
 
   if (!skipBrowserObjects) {
     test('browser objects', () {
-      final element = new html.DivElement();
-      final customEvent = new html.CustomEvent('foo');
+      final element = html.DivElement();
+      final customEvent = html.CustomEvent('foo');
       final window = html.window;
 
       testTypeValue(element);
@@ -102,7 +102,7 @@ void sharedTypeTests(
 
   if (!skipDatetimes) {
     test('datetimes', () {
-      final dateTime = new DateTime.utc(2018);
+      final dateTime = DateTime.utc(2018);
 
       testTypeValue(dateTime);
     });
@@ -110,7 +110,7 @@ void sharedTypeTests(
 
   if (!skipFutures) {
     test('futures', () {
-      final future = new Future(() {});
+      final future = Future(() {});
 
       testTypeValue(future);
     });
@@ -118,7 +118,7 @@ void sharedTypeTests(
 
   if (!skipJsAnonInteropTypes) {
     test('JS anonymous interop types', () {
-      final jsAnonymous = new JsTypeAnonymous();
+      final jsAnonymous = JsTypeAnonymous();
 
       testTypeValue(jsAnonymous);
     });
@@ -126,7 +126,7 @@ void sharedTypeTests(
 
   if (!skipJsInteropTypes) {
     test('JS interop types', () {
-      final jsType = new JsType();
+      final jsType = JsType();
 
       testTypeValue(jsType);
     });

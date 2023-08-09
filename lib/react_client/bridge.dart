@@ -33,7 +33,7 @@ abstract class Component2Bridge {
   ///
   /// Protected; use [forComponent] instead.
   @protected
-  static final Expando<Component2Bridge> bridgeForComponent = new Expando();
+  static final Expando<Component2Bridge> bridgeForComponent = Expando();
 
   const Component2Bridge();
 
@@ -94,8 +94,8 @@ class Component2BridgeImpl extends Component2Bridge {
   void setStateWithUpdater(Component2 component, StateUpdaterCallback stateUpdater, SetStateCallback callback) {
     final firstArg = allowInterop((JsMap jsPrevState, JsMap jsProps, [_]) {
       final value = stateUpdater(
-        new JsBackedMap.backedBy(jsPrevState),
-        new JsBackedMap.backedBy(jsProps),
+        JsBackedMap.backedBy(jsPrevState),
+        JsBackedMap.backedBy(jsProps),
       );
       if (value == null) return null;
       return jsBackingMapOrJsCopy(value);

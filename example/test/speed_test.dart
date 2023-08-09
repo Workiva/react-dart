@@ -5,7 +5,7 @@ import "dart:async";
 import "package:react/react.dart" as react;
 import "package:react/react_dom.dart" as react_dom;
 
-Stopwatch stopwatch = new Stopwatch()..start();
+Stopwatch stopwatch = Stopwatch()..start();
 timeprint(message) {
   print("$message ${stopwatch.elapsedMilliseconds}");
   stopwatch.reset();
@@ -21,7 +21,7 @@ class _Div extends react.Component {
   }
 }
 
-var Div = react.registerComponent(() => new _Div());
+var Div = react.registerComponent(() => _Div());
 
 class _Span extends react.Component {
   shouldComponentUpdate(nProps, nState) {
@@ -33,11 +33,11 @@ class _Span extends react.Component {
   }
 }
 
-var Span = react.registerComponent(() => new _Span());
+var Span = react.registerComponent(() => _Span());
 
 class _Hello extends react.Component {
   componentWillMount() {
-    new Future.delayed(new Duration(seconds: 5), () {
+    Future.delayed(Duration(seconds: 5), () {
       stopwatch.reset();
       timeprint('before redraw call');
       redraw();
@@ -72,7 +72,7 @@ class _Hello extends react.Component {
   }
 }
 
-var Hello = react.registerComponent(() => new _Hello());
+var Hello = react.registerComponent(() => _Hello());
 
 void main() {
   var data = [];

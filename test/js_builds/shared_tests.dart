@@ -17,7 +17,7 @@ void verifyJsFileLoaded(String filename) {
     return Uri.parse((script as ScriptElement).src).pathSegments.last == filename;
   });
 
-  if (!isLoaded) throw new Exception('$filename is not loaded');
+  if (!isLoaded) throw Exception('$filename is not loaded');
 }
 
 void sharedJsFunctionTests() {

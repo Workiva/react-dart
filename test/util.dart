@@ -17,7 +17,7 @@ import 'package:test/test.dart';
 Map getProps(dynamic elementOrComponent) {
   var props = elementOrComponent.props;
 
-  return new Map.fromIterable(objectKeys(props), value: (key) => getProperty(props, key));
+  return Map.fromIterable(objectKeys(props), value: (key) => getProperty(props, key));
 }
 
 bool isDartComponent1(ReactElement element) =>
@@ -37,7 +37,7 @@ Map getDartComponentProps(ReactComponent dartComponent) {
 }
 
 Map getDartElementProps(ReactElement dartElement) {
-  return isDartComponent2(dartElement) ? new JsBackedMap.fromJs(dartElement.props) : dartElement.props.internal.props;
+  return isDartComponent2(dartElement) ? JsBackedMap.fromJs(dartElement.props) : dartElement.props.internal.props;
 }
 
 ReactComponent render(ReactElement reactElement) {
@@ -51,7 +51,7 @@ Map unmodifiableMap([Map map1, Map map2, Map map3, Map map4]) {
   if (map2 != null) merged.addAll(map2);
   if (map3 != null) merged.addAll(map3);
   if (map4 != null) merged.addAll(map4);
-  return new Map.unmodifiable(merged);
+  return Map.unmodifiable(merged);
 }
 
 bool assertsEnabled() {

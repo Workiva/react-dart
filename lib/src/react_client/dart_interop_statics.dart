@@ -65,7 +65,7 @@ final ReactDartInteropStatics dartInteropStatics = (() {
 
   Map _getNextProps(Component component, ReactDartComponentInternal nextInternal) {
     var newProps = nextInternal.props;
-    return newProps != null ? new Map.from(newProps) : {};
+    return newProps != null ? Map.from(newProps) : {};
   }
 
   /// 1. Update [Component.props] using the value stored to [Component.nextProps]
@@ -95,7 +95,7 @@ final ReactDartInteropStatics dartInteropStatics = (() {
 
   void _callSetStateTransactionalCallbacks(Component component) {
     var nextState = component.nextState;
-    var props = new UnmodifiableMapView(component.props);
+    var props = UnmodifiableMapView(component.props);
 
     component.transactionalSetStateCallbacks.forEach((callback) {
       final stateUpdates = callback(nextState, props);
@@ -181,7 +181,7 @@ final ReactDartInteropStatics dartInteropStatics = (() {
         return component.render();
       });
 
-  return new ReactDartInteropStatics(
+  return ReactDartInteropStatics(
       initComponent: allowInterop(initComponent),
       handleGetChildContext: allowInterop(handleGetChildContext),
       handleComponentWillMount: allowInterop(handleComponentWillMount),
@@ -197,8 +197,8 @@ final ReactDartInteropStatics dartInteropStatics = (() {
 abstract class ReactDartInteropStatics2 {
   static void _updatePropsAndStateWithJs(Component2 component, JsMap props, JsMap state) {
     component
-      ..props = new JsBackedMap.backedBy(props)
-      ..state = new JsBackedMap.backedBy(state);
+      ..props = JsBackedMap.backedBy(props)
+      ..state = JsBackedMap.backedBy(state);
   }
 
   static void _updateContextWithJs(Component2 component, dynamic jsContext) {
@@ -213,12 +213,12 @@ abstract class ReactDartInteropStatics2 {
 
         component
           ..jsThis = jsThis
-          ..props = new JsBackedMap.backedBy(jsThis.props)
+          ..props = JsBackedMap.backedBy(jsThis.props)
           ..context = ContextHelpers.unjsifyNewContext(jsThis.context);
 
         jsThis.state = jsBackingMapOrJsCopy(component.initialState);
 
-        component.state = new JsBackedMap.backedBy(jsThis.state);
+        component.state = JsBackedMap.backedBy(jsThis.state);
 
         // ignore: invalid_use_of_protected_member
         Component2Bridge.bridgeForComponent[component] = componentStatics.bridgeFactory(component);
@@ -233,8 +233,8 @@ abstract class ReactDartInteropStatics2 {
   static bool handleShouldComponentUpdate(Component2 component, JsMap jsNextProps, JsMap jsNextState) => // dartfmt
       componentZone.run(() {
         final value = component.shouldComponentUpdate(
-          new JsBackedMap.backedBy(jsNextProps),
-          new JsBackedMap.backedBy(jsNextState),
+          JsBackedMap.backedBy(jsNextProps),
+          JsBackedMap.backedBy(jsNextState),
         );
 
         if (!value) {
@@ -248,7 +248,7 @@ abstract class ReactDartInteropStatics2 {
           ComponentStatics2 componentStatics, JsMap jsNextProps, JsMap jsPrevState) => // dartfmt
       componentZone.run(() {
         var derivedState = componentStatics.instanceForStaticMethods
-            .getDerivedStateFromProps(new JsBackedMap.backedBy(jsNextProps), new JsBackedMap.backedBy(jsPrevState));
+            .getDerivedStateFromProps(JsBackedMap.backedBy(jsNextProps), JsBackedMap.backedBy(jsPrevState));
         if (derivedState != null) {
           return jsBackingMapOrJsCopy(derivedState);
         }
@@ -258,8 +258,8 @@ abstract class ReactDartInteropStatics2 {
   static dynamic handleGetSnapshotBeforeUpdate(Component2 component, JsMap jsPrevProps, JsMap jsPrevState) => // dartfmt
       componentZone.run(() {
         final snapshotValue = component.getSnapshotBeforeUpdate(
-          new JsBackedMap.backedBy(jsPrevProps),
-          new JsBackedMap.backedBy(jsPrevState),
+          JsBackedMap.backedBy(jsPrevProps),
+          JsBackedMap.backedBy(jsPrevState),
         );
 
         return snapshotValue;
@@ -270,8 +270,8 @@ abstract class ReactDartInteropStatics2 {
           [dynamic snapshot]) => // dartfmt
       componentZone.run(() {
         component.componentDidUpdate(
-          new JsBackedMap.backedBy(jsPrevProps),
-          new JsBackedMap.backedBy(jsPrevState),
+          JsBackedMap.backedBy(jsPrevProps),
+          JsBackedMap.backedBy(jsPrevState),
           snapshot,
         );
       });

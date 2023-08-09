@@ -114,8 +114,8 @@ Context<TValue> createContext<TValue>([
   var JSContext = React.createContext(ContextHelpers.jsifyNewContext(defaultValue),
       calculateChangedBits != null ? allowInterop(jsifyCalculateChangedBitsArgs) : null);
   return Context(
-    new ReactJsContextComponentFactoryProxy(JSContext.Provider, isProvider: true),
-    new ReactJsContextComponentFactoryProxy(JSContext.Consumer, isConsumer: true),
+    ReactJsContextComponentFactoryProxy(JSContext.Provider, isProvider: true),
+    ReactJsContextComponentFactoryProxy(JSContext.Consumer, isConsumer: true),
     JSContext,
   );
 }

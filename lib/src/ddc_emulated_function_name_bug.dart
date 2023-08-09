@@ -29,7 +29,7 @@ class _NsmEmulatedFunctionWithNameProperty implements Function {
 final bool isBugPresent = (() {
   const testValue = 'test value';
 
-  var testObject = new _NsmEmulatedFunctionWithNameProperty();
+  var testObject = _NsmEmulatedFunctionWithNameProperty();
 
   try {
     // In the DDC, this throws:

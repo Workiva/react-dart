@@ -67,7 +67,7 @@ main() {
     });
 
     test('converts an Iterable', () {
-      final set = new Set.from([1, 2, 3, 4, 5, 6, 7, 8]);
+      final set = Set.from([1, 2, 3, 4, 5, 6, 7, 8]);
       final array = jsifyAndAllowInterop(set);
       expect(array is List, isTrue);
       expect(array.length, equals(set.length));

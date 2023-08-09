@@ -11,7 +11,7 @@ customAssert(text, condition) {
     throw (text);
 }
 
-var ChildComponent = react.registerComponent(() => new _ChildComponent());
+var ChildComponent = react.registerComponent(() => _ChildComponent());
 
 class _ChildComponent extends react.Component {
   var counter = 0;
@@ -31,7 +31,7 @@ class _ChildComponent extends react.Component {
       ]);
 }
 
-var simpleComponent = react.registerComponent(() => new SimpleComponent());
+var simpleComponent = react.registerComponent(() => SimpleComponent());
 
 class SimpleComponent extends react.Component {
   var refToSpan;

@@ -10,7 +10,7 @@ class _CustomComponent extends react.Component {
   }
 }
 
-var customComponent = react.registerComponent(() => new _CustomComponent());
+var customComponent = react.registerComponent(() => _CustomComponent());
 
 void main() {
   react_dom.render(

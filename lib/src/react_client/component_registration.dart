@@ -62,9 +62,9 @@ ReactDartComponentFactoryProxy registerComponent(
       return registerComponent2(componentFactory, skipMethods: skipMethods);
     }
 
-    var componentStatics = new ComponentStatics(componentFactory);
+    var componentStatics = ComponentStatics(componentFactory);
 
-    var jsConfig = new JsComponentConfig(
+    var jsConfig = JsComponentConfig(
       childContextKeys: componentInstance.childContextKeys,
       contextKeys: componentInstance.contextKeys,
     );
@@ -86,10 +86,10 @@ ReactDartComponentFactoryProxy registerComponent(
 
     // Cache default props and store them on the ReactClass so they can be used
     // by ReactDartComponentFactoryProxy and externally.
-    final Map defaultProps = new Map.unmodifiable(componentInstance.getDefaultProps());
+    final Map defaultProps = Map.unmodifiable(componentInstance.getDefaultProps());
     reactComponentClass.dartDefaultProps = defaultProps;
 
-    return new ReactDartComponentFactoryProxy(reactComponentClass);
+    return ReactDartComponentFactoryProxy(reactComponentClass);
   } catch (e, stack) {
     print('Error when registering Component: $e\n$stack');
     rethrow;
@@ -108,7 +108,7 @@ ReactDartComponentFactoryProxy2 registerComponent2(
     bridgeFactory ??= Component2BridgeImpl.bridgeFactory;
 
     final componentInstance = componentFactory();
-    final componentStatics = new ComponentStatics2(
+    final componentStatics = ComponentStatics2(
       componentFactory: componentFactory,
       instanceForStaticMethods: componentInstance,
       bridgeFactory: bridgeFactory,
@@ -139,7 +139,7 @@ ReactDartComponentFactoryProxy2 registerComponent2(
       rethrow;
     }
 
-    var jsConfig2 = new JsComponentConfig2(
+    var jsConfig2 = JsComponentConfig2(
       defaultProps: defaultProps.jsObject,
       contextType: componentInstance.contextType?.jsThis,
       skipMethods: filteredSkipMethods,
@@ -163,7 +163,7 @@ ReactDartComponentFactoryProxy2 registerComponent2(
     // ignore: invalid_use_of_protected_member
     reactComponentClass.dartComponentVersion = ReactDartComponentVersion.component2;
 
-    return new ReactDartComponentFactoryProxy2(reactComponentClass);
+    return ReactDartComponentFactoryProxy2(reactComponentClass);
   } catch (e, stack) {
     if (!errorPrinted) print('Error when registering Component2: $e\n$stack');
     rethrow;

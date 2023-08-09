@@ -21,7 +21,7 @@ class _HelloComponent extends react.Component2 {
   }
 }
 
-var helloComponent = react.registerComponent(() => new _HelloComponent());
+var helloComponent = react.registerComponent(() => _HelloComponent());
 
 class _HelloGreeter extends react.Component {
   var myInput;
@@ -47,7 +47,7 @@ class _HelloGreeter extends react.Component {
   }
 }
 
-var helloGreeter = react.registerComponent(() => new _HelloGreeter());
+var helloGreeter = react.registerComponent(() => _HelloGreeter());
 
 class _CheckBoxComponent extends react.Component {
   getInitialState() => {"checked": false};
@@ -77,7 +77,7 @@ class _CheckBoxComponent extends react.Component {
   }
 }
 
-var checkBoxComponent = react.registerComponent(() => new _CheckBoxComponent());
+var checkBoxComponent = react.registerComponent(() => _CheckBoxComponent());
 
 class _ClockComponent extends react.Component {
   Timer timer;
@@ -87,7 +87,7 @@ class _ClockComponent extends react.Component {
   Map getDefaultProps() => {'refreshRate': 1000};
 
   void componentWillMount() {
-    timer = new Timer.periodic(new Duration(milliseconds: this.props["refreshRate"]), this.tick);
+    timer = Timer.periodic(Duration(milliseconds: this.props["refreshRate"]), this.tick);
   }
 
   void componentWillUnmount() {
@@ -120,12 +120,12 @@ class _ClockComponent extends react.Component {
   }
 }
 
-var clockComponent = react.registerComponent(() => new _ClockComponent());
+var clockComponent = react.registerComponent(() => _ClockComponent());
 
 class _ListComponent extends react.Component {
   Map getInitialState() {
     return {
-      "items": new List.from([0, 1, 2, 3])
+      "items": List.from([0, 1, 2, 3])
     };
   }
 
@@ -144,7 +144,7 @@ class _ListComponent extends react.Component {
   int iterator = 3;
 
   void addItem(event) {
-    List items = new List.from(state["items"]);
+    List items = List.from(state["items"]);
     items.add(++iterator);
     setState({"items": items});
   }
@@ -167,7 +167,7 @@ class _ListComponent extends react.Component {
   }
 }
 
-var listComponent = react.registerComponent(() => new _ListComponent());
+var listComponent = react.registerComponent(() => _ListComponent());
 
 class _MainComponent extends react.Component {
   render() {
@@ -175,7 +175,7 @@ class _MainComponent extends react.Component {
   }
 }
 
-var mainComponent = react.registerComponent(() => new _MainComponent());
+var mainComponent = react.registerComponent(() => _MainComponent());
 
 /////
 // REACT OLD CONTEXT COMPONENTS
@@ -210,7 +210,7 @@ class _LegacyContextComponent extends react.Component {
   }
 }
 
-var legacyContextComponent = react.registerComponent(() => new _LegacyContextComponent());
+var legacyContextComponent = react.registerComponent(() => _LegacyContextComponent());
 
 class _LegacyContextConsumerComponent extends react.Component {
   @override
@@ -229,7 +229,7 @@ class _LegacyContextConsumerComponent extends react.Component {
   }
 }
 
-var legacyContextConsumerComponent = react.registerComponent(() => new _LegacyContextConsumerComponent());
+var legacyContextConsumerComponent = react.registerComponent(() => _LegacyContextConsumerComponent());
 
 class _GrandchildLegacyContextConsumerComponent extends react.Component {
   @override
@@ -246,7 +246,7 @@ class _GrandchildLegacyContextConsumerComponent extends react.Component {
 }
 
 var grandchildLegacyContextConsumerComponent =
-    react.registerComponent(() => new _GrandchildLegacyContextConsumerComponent());
+    react.registerComponent(() => _GrandchildLegacyContextConsumerComponent());
 
 ////
 // REACT NEW CONTEXT COMPONENTS
@@ -261,7 +261,7 @@ class _NewContextRefComponent extends react.Component2 {
   }
 }
 
-var newContextRefComponent = react.registerComponent(() => new _NewContextRefComponent());
+var newContextRefComponent = react.registerComponent(() => _NewContextRefComponent());
 
 int calculateChangedBits(currentValue, nextValue) {
   int result = 1 << 1;
@@ -342,7 +342,7 @@ class _NewContextProviderComponent extends react.Component2 {
   }
 }
 
-var newContextProviderComponent = react.registerComponent(() => new _NewContextProviderComponent());
+var newContextProviderComponent = react.registerComponent(() => _NewContextProviderComponent());
 
 class _NewContextConsumerComponent extends react.Component2 {
   render() {
@@ -359,7 +359,7 @@ class _NewContextConsumerComponent extends react.Component2 {
   }
 }
 
-var newContextConsumerComponent = react.registerComponent(() => new _NewContextConsumerComponent());
+var newContextConsumerComponent = react.registerComponent(() => _NewContextConsumerComponent());
 
 class _NewContextConsumerObservedBitsComponent extends react.Component2 {
   render() {
@@ -377,7 +377,7 @@ class _NewContextConsumerObservedBitsComponent extends react.Component2 {
 }
 
 var newContextConsumerObservedBitsComponent =
-    react.registerComponent(() => new _NewContextConsumerObservedBitsComponent());
+    react.registerComponent(() => _NewContextConsumerObservedBitsComponent());
 
 class _NewContextTypeConsumerComponent extends react.Component2 {
   @override
@@ -402,7 +402,7 @@ class _Component2TestComponent extends react.Component2 with react.TypedSnapshot
     final prevItems = prevState['items'];
     if (prevItems.isEmpty || prevItems[0] != 3) {
       return ({
-        'items': new List.from([3, 1, 2, 0])
+        'items': List.from([3, 1, 2, 0])
       });
     }
     return null;
@@ -425,13 +425,13 @@ class _Component2TestComponent extends react.Component2 with react.TypedSnapshot
   }
 
   void removeItem(event) {
-    List items = new List.from(state["items"]);
+    List items = List.from(state["items"]);
     items.removeAt(items.length - 1);
     setState({"items": items});
   }
 
   void addItem(event) {
-    List items = new List.from(state["items"]);
+    List items = List.from(state["items"]);
     items.add(items.length);
     setState({"items": items});
   }
@@ -463,13 +463,13 @@ class _Component2TestComponent extends react.Component2 with react.TypedSnapshot
   }
 }
 
-var newContextTypeConsumerComponentComponent = react.registerComponent(() => new _NewContextTypeConsumerComponent());
-var component2TestComponent = react.registerComponent(() => new _Component2TestComponent());
+var newContextTypeConsumerComponentComponent = react.registerComponent(() => _NewContextTypeConsumerComponent());
+var component2TestComponent = react.registerComponent(() => _Component2TestComponent());
 
 class _ErrorComponent extends react.Component2 {
   void componentDidMount() {
     if (!props["errored"]) {
-      throw new _CustomException("It broke!", 2);
+      throw _CustomException("It broke!", 2);
     }
   }
 
@@ -481,7 +481,7 @@ class _ErrorComponent extends react.Component2 {
   }
 }
 
-var ErrorComponent = react.registerComponent(() => new _ErrorComponent());
+var ErrorComponent = react.registerComponent(() => _ErrorComponent());
 
 class _CustomException implements Exception {
   int code;
@@ -563,4 +563,4 @@ class _Component2ErrorTestComponent extends react.Component2 {
   }
 }
 
-var component2ErrorTestComponent = react.registerComponent(() => new _Component2ErrorTestComponent(), ['render']);
+var component2ErrorTestComponent = react.registerComponent(() => _Component2ErrorTestComponent(), ['render']);

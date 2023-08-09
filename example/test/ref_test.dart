@@ -5,7 +5,7 @@ import "package:react/react.dart" as react;
 import "package:react/react_dom.dart" as react_dom;
 import "package:react/react_client.dart";
 
-var ChildComponent = react.registerComponent(() => new _ChildComponent());
+var ChildComponent = react.registerComponent(() => _ChildComponent());
 
 class _ChildComponent extends react.Component {
   int somevalue = 10;
@@ -66,7 +66,7 @@ var ChildComponentForm = react.forwardRef2((props, ref) {
   ]);
 }, displayName: 'ChildComponentForm');
 
-var ParentComponent = react.registerComponent(() => new _ParentComponent());
+var ParentComponent = react.registerComponent(() => _ParentComponent());
 
 class _ParentComponent extends react.Component {
   // String refs

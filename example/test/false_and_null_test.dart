@@ -14,7 +14,7 @@ class _Component extends react.Component {
   }
 }
 
-var component = react.registerComponent(() => new _Component());
+var component = react.registerComponent(() => _Component());
 
 void main() {
   var content = react.div({}, [

@@ -4,7 +4,7 @@ import "dart:html";
 import "package:react/react.dart" as react;
 import "package:react/react_dom.dart" as react_dom;
 
-var simpleComponent = react.registerComponent(() => new SimpleComponent());
+var simpleComponent = react.registerComponent(() => SimpleComponent());
 
 class SimpleComponent extends react.Component {
   componentWillMount() => print("mount");

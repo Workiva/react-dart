@@ -51,7 +51,7 @@ Map unconvertJsProps(/* ReactElement|ReactComponent */ instance) {
   // it is a Dart Component.
   // ignore: deprecated_member_use_from_same_package
   if (props['internal'] is ReactDartComponentInternal || (props['style'] != null && props['style'] is Map)) {
-    throw new ArgumentError('A Dart Component cannot be passed into unconvertJsProps.');
+    throw ArgumentError('A Dart Component cannot be passed into unconvertJsProps.');
   }
 
   // Convert the nested style map so it can be read by Dart code.
@@ -116,7 +116,7 @@ class ReactDartComponentFactoryProxy<TComponent extends Component> extends React
     // 3. Remove "reserved" props that should not be visible to the rendered component.
 
     // [1]
-    Map extendedProps = (defaultProps != null ? new Map.from(defaultProps) : {})
+    Map extendedProps = (defaultProps != null ? Map.from(defaultProps) : {})
       // [2]
       ..addAll(props)
       ..['children'] = children
@@ -124,9 +124,9 @@ class ReactDartComponentFactoryProxy<TComponent extends Component> extends React
       ..remove('key')
       ..remove('ref');
 
-    var internal = new ReactDartComponentInternal()..props = extendedProps;
+    var internal = ReactDartComponentInternal()..props = extendedProps;
 
-    var interopProps = new InteropProps(internal: internal);
+    var interopProps = InteropProps(internal: internal);
 
     // Don't pass a key into InteropProps if one isn't defined, so that the value will
     // be `undefined` in the JS, which is ignored by React, whereas `null` isn't.
@@ -181,7 +181,7 @@ class ReactDartComponentFactoryProxy2<TComponent extends Component2> extends Rea
 
   ReactDartComponentFactoryProxy2(ReactClass reactClass)
       : this.reactClass = reactClass,
-        this.defaultProps = new JsBackedMap.fromJs(reactClass.defaultProps);
+        this.defaultProps = JsBackedMap.fromJs(reactClass.defaultProps);
 
   @override
   ReactClass get type => reactClass;
@@ -229,7 +229,7 @@ class ReactJsContextComponentFactoryProxy extends ReactJsComponentFactoryProxy {
   /// Returns a JavaScript version of the specified [props], preprocessed for consumption by ReactJS and prepared for
   /// consumption by the `react` library internals.
   JsMap generateExtendedJsProps(Map props) {
-    JsBackedMap propsForJs = new JsBackedMap.from(props);
+    JsBackedMap propsForJs = JsBackedMap.from(props);
 
     if (isProvider) {
       propsForJs['value'] = ContextHelpers.jsifyNewContext(propsForJs['value']);
@@ -267,7 +267,7 @@ class ReactJsComponentFactoryProxy extends ReactComponentFactoryProxy {
   })  : this.type = jsClass,
         this._additionalRefPropKeys = additionalRefPropKeys {
     if (jsClass == null) {
-      throw new ArgumentError('`jsClass` must not be null. '
+      throw ArgumentError('`jsClass` must not be null. '
           'Ensure that the JS component class you\'re referencing is available and being accessed correctly.');
     }
   }

@@ -66,7 +66,7 @@ void commonFactoryTests(ReactComponentFactoryProxy factory,
         final childrenCount = i;
 
         test('$childrenCount', () {
-          final expectedChildren = new List.generate(childrenCount, (i) => i + 1);
+          final expectedChildren = List.generate(childrenCount, (i) => i + 1);
           final arguments = <dynamic>[props, ...expectedChildren];
           final instance = Function.apply(factory, arguments);
           expect(getChildren(instance), expectedChildren);
@@ -77,7 +77,7 @@ void commonFactoryTests(ReactComponentFactoryProxy factory,
         final instance = factory(props, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22,
             23, 24, 25, 26, 27, 28, 29, 30, 31, 32, 33, 34, 35, 36, 37, 38, 39, 40);
         // Generate these instead of hard coding them to ensure the arguments passed into this test match maxSupportedVariadicChildCount
-        final expectedChildren = new List.generate(maxSupportedVariadicChildCount, (i) => i + 1);
+        final expectedChildren = List.generate(maxSupportedVariadicChildCount, (i) => i + 1);
         expect(getChildren(instance), equals(expectedChildren));
       }, tags: 'dart-2-7-dart2js-variadic-issues');
     });
@@ -96,12 +96,12 @@ void commonFactoryTests(ReactComponentFactoryProxy factory,
     });
 
     test('an Iterable', () {
-      var instance = factory(props, new Iterable.generate(3, (int i) => '$i'));
+      var instance = factory(props, Iterable.generate(3, (int i) => '$i'));
       expect(getChildren(instance), equals(['0', '1', '2']));
     });
 
     test('an empty Iterable', () {
-      var instance = factory(props, new Iterable.empty());
+      var instance = factory(props, Iterable.empty());
       expect(getChildren(instance), equals([]));
     });
   }
@@ -352,7 +352,7 @@ void domEventHandlerWrappingTests(ReactComponentFactoryProxy factory) {
         }));
       });
 
-      nodeWithClickHandler.dispatchEvent(new MouseEvent('click'));
+      nodeWithClickHandler.dispatchEvent(MouseEvent('click'));
     });
   });
 }
@@ -555,7 +555,7 @@ void _childKeyWarningTests(Function factory, {Function(ReactElement Function()) 
       consoleErrorMessage = null;
 
       originalConsoleError = context['console']['error'];
-      context['console']['error'] = new JsFunction.withThis((self, message, arg1, arg2, arg3) {
+      context['console']['error'] = JsFunction.withThis((self, message, arg1, arg2, arg3) {
         consoleErrorCalled = true;
         consoleErrorMessage = message;
 
@@ -603,7 +603,7 @@ class _StringRefOwnerOwnerHelperComponent extends react.Component {
 /// for string ref tests.
 ReactComponent _renderWithStringRefSupportingOwner(ReactElement render()) {
   final factory =
-      react.registerComponent(() => new _StringRefOwnerOwnerHelperComponent()) as ReactDartComponentFactoryProxy;
+      react.registerComponent(() => _StringRefOwnerOwnerHelperComponent()) as ReactDartComponentFactoryProxy;
 
   return rtu.renderIntoDocument(factory({'render': render}));
 }
@@ -614,7 +614,7 @@ int _nextFactoryId = 0;
 ///
 /// This prevents React JS from not printing key warnings it deems as "duplicates".
 void _renderWithUniqueOwnerName(ReactElement render()) {
-  final factory = react.registerComponent2(() => new _UniqueOwnerHelperComponent());
+  final factory = react.registerComponent2(() => _UniqueOwnerHelperComponent());
   factory.reactClass.displayName = 'OwnerHelperComponent_$_nextFactoryId';
   _nextFactoryId++;
 

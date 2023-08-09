@@ -58,7 +58,7 @@ main() {
     });
 
     test('returns props for a composite JS ReactComponent', () {
-      var mountNode = new DivElement();
+      var mountNode = DivElement();
       ReactComponent renderedInstance = react_dom.render(
           testJsComponentFactory({
             'jsProp': 'js',
@@ -77,7 +77,7 @@ main() {
     });
 
     test('returns props for a composite JS ReactComponent, even when the props change', () {
-      var mountNode = new DivElement();
+      var mountNode = DivElement();
       ReactComponent renderedInstance = react_dom.render(
           testJsComponentFactory({
             'jsProp': 'js',
@@ -250,7 +250,7 @@ class DartComponent2Component extends Component2 {
   }
 }
 
-final DartComponent2 = react.registerComponent2(() => new DartComponent2Component());
+final DartComponent2 = react.registerComponent2(() => DartComponent2Component());
 
 class DartComponentComponent extends Component {
   @override
@@ -259,4 +259,4 @@ class DartComponentComponent extends Component {
   }
 }
 
-ReactDartComponentFactoryProxy DartComponent = react.registerComponent(() => new DartComponentComponent());
+ReactDartComponentFactoryProxy DartComponent = react.registerComponent(() => DartComponentComponent());

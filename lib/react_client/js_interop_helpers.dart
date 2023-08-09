@@ -83,7 +83,7 @@ int _anonymousJsObjectOrFrozenObjectHashCode(Object _) => 0;
 /// JavaScript type, and all other objects are proxied.
 dynamic jsifyAndAllowInterop(object) {
   if (object is! Map && object is! Iterable) {
-    throw new ArgumentError.value(object, 'object', 'must be a Map or Iterable');
+    throw ArgumentError.value(object, 'object', 'must be a Map or Iterable');
   }
   return _convertDataTree(object);
 }

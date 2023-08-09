@@ -35,8 +35,8 @@ mixin LifecycleTestHelper on Component {
     lifecycleCalls.add({
       'memberName': memberName,
       'arguments': arguments,
-      'props': props == null ? null : new Map.from(props),
-      'state': state == null ? null : new Map.from(state),
+      'props': props == null ? null : Map.from(props),
+      'state': state == null ? null : Map.from(state),
       'context': context,
     });
 

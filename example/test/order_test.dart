@@ -19,7 +19,7 @@ class _Item extends react.Component {
   }
 }
 
-var item = react.registerComponent(() => new _Item());
+var item = react.registerComponent(() => _Item());
 
 class _List extends react.Component {
   var items = ['item1', 'item2', 'item3'];
@@ -34,7 +34,7 @@ class _List extends react.Component {
   }
 }
 
-var list = react.registerComponent(() => new _List());
+var list = react.registerComponent(() => _List());
 
 void main() {
   react_dom.render(list({}), querySelector('#content'));

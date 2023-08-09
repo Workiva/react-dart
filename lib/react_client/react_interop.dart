@@ -88,7 +88,7 @@ abstract class React {
 ///
 /// Learn more: <https://reactjs.org/docs/refs-and-the-dom.html#creating-refs>.
 Ref<T> createRef<T>() {
-  return new Ref<T>();
+  return Ref<T>();
 }
 
 /// When this is provided as the ref prop, a reference to the rendered component

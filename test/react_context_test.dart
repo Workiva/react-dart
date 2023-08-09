@@ -14,7 +14,7 @@ import 'shared_type_tester.dart';
 
 main() {
   void testTypeValue(dynamic typeToTest) {
-    var mountNode = new html.DivElement();
+    var mountNode = html.DivElement();
     var contextTypeRef;
     var consumerRef;
     react_dom.render(
@@ -45,7 +45,7 @@ main() {
     });
 
     group('calculateChangeBits argument functions correctly', () {
-      var mountNode = new html.DivElement();
+      var mountNode = html.DivElement();
       _ContextProviderWrapper providerRef;
       _ContextConsumerWrapper consumerEvenRef;
       _ContextConsumerWrapper consumerOddRef;
@@ -116,7 +116,7 @@ var TestCalculateChangedBitsContext = react.createContext(1, calculateChangedBit
 
 var TestContext = react.createContext();
 
-final ContextProviderWrapper = react.registerComponent2(() => new _ContextProviderWrapper());
+final ContextProviderWrapper = react.registerComponent2(() => _ContextProviderWrapper());
 
 class _ContextProviderWrapper extends react.Component2 {
   get initialState {
@@ -135,7 +135,7 @@ class _ContextProviderWrapper extends react.Component2 {
   }
 }
 
-final ContextConsumerWrapper = react.registerComponent2(() => new _ContextConsumerWrapper());
+final ContextConsumerWrapper = react.registerComponent2(() => _ContextConsumerWrapper());
 
 class _ContextConsumerWrapper extends react.Component2 {
   dynamic latestValue;
@@ -147,7 +147,7 @@ class _ContextConsumerWrapper extends react.Component2 {
   }
 }
 
-final ContextTypeComponent = react.registerComponent2(() => new _ContextTypeComponent());
+final ContextTypeComponent = react.registerComponent2(() => _ContextTypeComponent());
 
 class _ContextTypeComponent extends react.Component2 {
   var contextType = TestContext;

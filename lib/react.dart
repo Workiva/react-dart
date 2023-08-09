@@ -226,21 +226,21 @@ abstract class Component {
     /// [context]s typing was loosened from Map to dynamic to support the new context API in [Component2]
     /// which extends from [Component]. Only "legacy" context APIs are supported in [Component] - which means
     /// it will still be expected to be a Map.
-    this.context = new Map.from(context ?? const {});
+    this.context = Map.from(context ?? const {});
 
     /// [nextContext]s typing was loosened from Map to dynamic to support the new context API in [Component2]
     /// which extends from [Component]. Only "legacy" context APIs are supported in [Component] - which means
     /// it will still be expected to be a Map.
-    this.nextContext = new Map.from(this.context ?? const {});
+    this.nextContext = Map.from(this.context ?? const {});
   }
 
   _initProps(props) {
-    this.props = new Map.from(props);
+    this.props = Map.from(props);
     this.nextProps = this.props;
   }
 
   initStateInternal() {
-    this.state = new Map.from(getInitialState());
+    this.state = Map.from(getInitialState());
 
     // Call `transferComponentState` to get state also to `_prevState`
     transferComponentState();
@@ -312,7 +312,7 @@ abstract class Component {
     if (_nextState != null) {
       state = _nextState;
     }
-    _nextState = new Map.from(state);
+    _nextState = Map.from(state);
   }
 
   /// Force a call to [render] by calling [setState], which effectively "redraws" the `Component`.
@@ -335,7 +335,7 @@ abstract class Component {
     } else if (newState is StateUpdaterCallback) {
       _transactionalSetStateCallbacks.add(newState);
     } else if (newState != null) {
-      throw new ArgumentError(
+      throw ArgumentError(
           'setState expects its first parameter to either be a Map or a `TransactionalSetStateCallback`.');
     }
 
@@ -355,7 +355,7 @@ abstract class Component {
   /// > Use [setState] instead.
   @Deprecated('7.0.0')
   void replaceState(Map newState, [callback()]) {
-    Map nextState = newState == null ? {} : new Map.from(newState);
+    Map nextState = newState == null ? {} : Map.from(newState);
     _nextState = nextState;
     if (callback != null) _setStateCallbacks.add(callback);
 
@@ -961,7 +961,7 @@ abstract class Component2 implements Component {
   // ******************************************************************************************************************
 
   UnsupportedError _unsupportedLifecycleError(String memberName) =>
-      new UnsupportedError('Component2 drops support for the lifecycle method $memberName.'
+      UnsupportedError('Component2 drops support for the lifecycle method $memberName.'
           ' See doc comment on Component2.$memberName for migration instructions.');
 
   /// Invoked once before the `Component` is mounted. The return value will be used as the initial value of [state].
@@ -1146,7 +1146,7 @@ abstract class Component2 implements Component {
   // ******************************************************************************************************************
 
   UnsupportedError _unsupportedError(String memberName) =>
-      new UnsupportedError('Component2 drops support for $memberName');
+      UnsupportedError('Component2 drops support for $memberName');
 
   /// Do not use.
   ///
