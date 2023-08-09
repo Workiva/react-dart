@@ -208,7 +208,6 @@ class ReactJsContextComponentFactoryProxy extends ReactJsComponentFactoryProxy {
     this.shouldConvertDomProps = true,
     this.isConsumer = false,
     this.isProvider = false,
-    // ignore: prefer_initializing_formals
   })  : type = jsClass,
         super(jsClass, shouldConvertDomProps: shouldConvertDomProps);
 
@@ -266,7 +265,6 @@ class ReactJsComponentFactoryProxy extends ReactComponentFactoryProxy {
     this.shouldConvertDomProps = true,
     this.alwaysReturnChildrenAsList = false,
     List<String> additionalRefPropKeys = const [],
-    // ignore: prefer_initializing_formals
   })  : type = jsClass,
         _additionalRefPropKeys = additionalRefPropKeys {
     if (jsClass == null) {
