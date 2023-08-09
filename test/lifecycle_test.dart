@@ -61,7 +61,7 @@ main() {
 
       group('prevents concurrent modification of `_setStateCallbacks`', () {
         LifecycleTestHelper component;
-        const Map initialState = const {
+        const Map initialState = {
           'initialState': 'initial',
         };
         int firstStateUpdateCalls;
@@ -204,7 +204,7 @@ main() {
       });
 
       test('updates with correct lifecycle calls when `forceUpdate` is called', () {
-        const Map initialState = const {
+        const Map initialState = {
           'initialState': 'initial',
         };
 
@@ -250,11 +250,11 @@ main() {
 
       group('getDerivedStateFromProps returns', () {
         test('derived state, resulting in an updated instance state value', () {
-          const Map initialDerivedState = const {
+          const Map initialDerivedState = {
             'initialDerivedState': 'initial',
           };
 
-          const Map updatedDerivedState = const {
+          const Map updatedDerivedState = {
             'initialDerivedState': 'updated',
           };
 
@@ -301,7 +301,7 @@ main() {
         });
 
         test('null, leaving the existing instance state value intact', () {
-          const Map initialState = const {
+          const Map initialState = {
             'foo': 'sudo',
           };
           final Map initialProps = unmodifiableMap({
@@ -730,11 +730,11 @@ void sharedLifecycleTests<T extends react.Component>({
           ..addAll(defaultProps)
           ..addAll(newProps));
 
-        const Map expectedState = const {};
+        const Map expectedState = {};
 
-        const Map initialContext = const {'foo': false};
+        const Map initialContext = {'foo': false};
 
-        const Map expectedContext = const {'foo': true};
+        const Map expectedContext = {'foo': true};
 
         Map refMap = {
           'ref': ((ref) => component = ref),
@@ -801,11 +801,11 @@ void sharedLifecycleTests<T extends react.Component>({
       test('receives updated context with correct lifecycle calls', () {
         LifecycleTestHelper component;
 
-        const Map expectedState = const {};
+        const Map expectedState = {};
 
-        const Map initialContext = const {'foo': false};
+        const Map initialContext = {'foo': false};
 
-        const Map expectedContext = const {'foo': true};
+        const Map expectedContext = {'foo': true};
 
         Map refMap = {
           'ref': ((ref) => component = ref),
@@ -865,7 +865,7 @@ void sharedLifecycleTests<T extends react.Component>({
       test('receives updated context with correct lifecycle calls when wrapped with a consumer', () {
         LifecycleTestHelper component;
 
-        const Map expectedState = const {};
+        const Map expectedState = {};
 
         Map initialContext = {'foo': false};
 
@@ -938,8 +938,8 @@ void sharedLifecycleTests<T extends react.Component>({
     }
 
     test('receives updated props with correct lifecycle calls and defaults properly merged in', () {
-      const Map initialProps = const {'initialProp': 'initial', 'children': const []};
-      const Map newProps = const {'newProp': 'new', 'children': const []};
+      const Map initialProps = {'initialProp': 'initial', 'children': []};
+      const Map newProps = {'newProp': 'new', 'children': []};
 
       final Map initialPropsWithDefaults = unmodifiableMap({}
         ..addAll(defaultProps)
@@ -948,7 +948,7 @@ void sharedLifecycleTests<T extends react.Component>({
         ..addAll(defaultProps)
         ..addAll(newProps));
 
-      const Map expectedState = const {};
+      const Map expectedState = {};
       final dynamic expectedContext = isComponent2 ? null : const {};
       const Null expectedSnapshot = null;
 
@@ -999,7 +999,7 @@ void sharedLifecycleTests<T extends react.Component>({
 
     if (isComponent2) {
       test('initializes state with the value set by `initialState`', () {
-        const Map initialState = const {
+        const Map initialState = {
           'initialState': 'initial',
         };
 
@@ -1020,14 +1020,14 @@ void sharedLifecycleTests<T extends react.Component>({
     }
 
     group('updates state with correct lifecycle calls', () {
-      const Map initialState = const {
+      const Map initialState = {
         'initialState': 'initial',
       };
-      const Map newState = const {
+      const Map newState = {
         'initialState': 'initial',
         'newState': 'new',
       };
-      const Map stateDelta = const {
+      const Map stateDelta = {
         'newState': 'new',
       };
 
@@ -1151,7 +1151,7 @@ void sharedLifecycleTests<T extends react.Component>({
     });
 
     test('updates state with correct lifecycle calls when `redraw` is called', () {
-      const Map initialState = const {
+      const Map initialState = {
         'initialState': 'initial',
       };
 
@@ -1198,7 +1198,7 @@ void sharedLifecycleTests<T extends react.Component>({
 
     group('prevents concurrent modification of `_setStateCallbacks`', () {
       LifecycleTestHelper component;
-      const Map initialState = const {
+      const Map initialState = {
         'initialState': 'initial',
       };
       int firstStateUpdateCalls;
@@ -1266,17 +1266,17 @@ void sharedLifecycleTests<T extends react.Component>({
 
     if (!isComponent2) {
       test('properly handles a call to setState within componentWillReceiveProps', () {
-        const Map initialState = const {
+        const Map initialState = {
           'initialState': 'initial',
         };
-        const Map newState = const {
+        const Map newState = {
           'initialState': 'initial',
           'newState': 'new',
         };
-        const Map stateDelta = const {
+        const Map stateDelta = {
           'newState': 'new',
         };
-        const Map expectedContext = const {};
+        const Map expectedContext = {};
 
         final Map lifecycleTestProps = unmodifiableMap({
           'getInitialState': (_) => initialState,
@@ -1340,12 +1340,12 @@ void sharedLifecycleTests<T extends react.Component>({
           'initialProp': 'initial',
           'children': const []
         });
-        const Map newProps = const {'newProp': 'new', 'children': const []};
+        const Map newProps = {'newProp': 'new', 'children': []};
 
         final Map initialPropsWithDefaults = unmodifiableMap(defaultProps, initialProps);
         final Map newPropsWithDefaults = unmodifiableMap(defaultProps, newProps);
 
-        const Map expectedState = const {};
+        const Map expectedState = {};
 
         var mountNode = DivElement();
         var instance = react_dom.render(LifecycleTest(initialProps), mountNode);
@@ -1384,14 +1384,14 @@ void sharedLifecycleTests<T extends react.Component>({
 
       test('updates state with correct lifecycle calls and does not rerender', () {
         final dynamic expectedContext = isComponent2 ? null : const {};
-        const Map initialState = const {
+        const Map initialState = {
           'initialState': 'initial',
         };
-        const Map newState = const {
+        const Map newState = {
           'initialState': 'initial',
           'newState': 'new',
         };
-        const Map stateDelta = const {
+        const Map stateDelta = {
           'newState': 'new',
         };
 
@@ -1433,14 +1433,14 @@ void sharedLifecycleTests<T extends react.Component>({
 
       if (!isComponent2) {
         test('properly handles a call to setState within componentWillReceiveProps and does not rerender', () {
-          const Map initialState = const {
+          const Map initialState = {
             'initialState': 'initial',
           };
-          const Map newState = const {
+          const Map newState = {
             'initialState': 'initial',
             'newState': 'new',
           };
-          const Map stateDelta = const {
+          const Map stateDelta = {
             'newState': 'new',
           };
 

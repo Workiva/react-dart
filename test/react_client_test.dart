@@ -19,8 +19,8 @@ import 'package:react/src/react_client/event_prop_key_to_event_factory.dart';
 
 main() {
   group('unconvertJsProps', () {
-    const List testChildren = const ['child1', 'child2'];
-    const Map<String, dynamic> testStyle = const {'background': 'white'};
+    const List testChildren = ['child1', 'child2'];
+    const Map<String, dynamic> testStyle = {'background': 'white'};
 
     test('returns props for a composite JS component ReactElement', () {
       ReactElement instance = testJsComponentFactory({

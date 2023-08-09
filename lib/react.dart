@@ -1463,7 +1463,7 @@ abstract class ReactComponentFactoryProxy implements Function {
   }
 }
 
-const _notSpecified = const NotSpecified();
+const _notSpecified = NotSpecified();
 
 class NotSpecified {
   const NotSpecified();

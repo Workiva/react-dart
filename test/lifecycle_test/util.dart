@@ -2,8 +2,8 @@
 import 'package:matcher/matcher.dart';
 import 'package:react/react.dart';
 
-const Map defaultProps = const {'defaultProp': 'default'};
-const Map emptyChildrenProps = const {'children': const []};
+const Map defaultProps = {'defaultProp': 'default'};
+const Map emptyChildrenProps = {'children': []};
 
 Map matchCall(String memberName, {args: anything, props: anything, state: anything, context: anything}) {
   return {
