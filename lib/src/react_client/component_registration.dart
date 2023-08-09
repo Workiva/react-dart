@@ -1,5 +1,6 @@
 import 'dart:html';
 
+import 'package:js/js_util.dart';
 import 'package:react/react.dart';
 import 'package:react/react_client/bridge.dart';
 import 'package:react/react_client/js_backed_map.dart';
@@ -7,6 +8,8 @@ import 'package:react/react_client/react_interop.dart';
 import 'package:react/react_client/component_factory.dart';
 
 import 'package:react/src/react_client/dart_interop_statics.dart';
+
+import '../js_interop_util.dart';
 
 /// Util used with `registerComponent2` to ensure no important lifecycle
 /// events are skipped. This includes `shouldComponentUpdate`,
@@ -66,12 +69,20 @@ ReactDartComponentFactoryProxy registerComponent(
       contextKeys: componentInstance.contextKeys,
     );
 
+    final displayName = componentInstance.displayName;
+
     /// Create the JS `ReactClass` component class
     /// with custom JS lifecycle methods.
     final reactComponentClass = createReactDartComponentClass(dartInteropStatics, componentStatics, jsConfig)
       // ignore: invalid_use_of_protected_member
       ..dartComponentVersion = ReactDartComponentVersion.component
-      ..displayName = componentFactory().displayName;
+      // This is redundant since we also set `name` below, but some code may depend on reading displayName
+      // so we'll leave this in place for now.
+      ..displayName = displayName;
+
+    // This is a work-around to display the correct name in error boundary component stacks
+    // (and in the React DevTools if we weren't already setting displayName).
+    defineProperty(reactComponentClass, 'name', JsPropertyDescriptor(value: displayName));
 
     // Cache default props and store them on the ReactClass so they can be used
     // by ReactDartComponentFactoryProxy and externally.
@@ -135,13 +146,22 @@ ReactDartComponentFactoryProxy2 registerComponent2(
       propTypes: jsPropTypes ?? JsBackedMap().jsObject,
     );
 
+    final displayName = componentInstance.displayName;
+
     /// Create the JS `ReactClass` component class
     /// with custom JS lifecycle methods.
     final reactComponentClass =
         createReactDartComponentClass2(ReactDartInteropStatics2.staticsForJs, componentStatics, jsConfig2)
-          ..displayName = componentInstance.displayName
-          // ignore: invalid_use_of_protected_member
-          ..dartComponentVersion = ReactDartComponentVersion.component2;
+          // This is redundant since we also set `name` below, but some code may depend on reading displayName
+          // so we'll leave this in place for now.
+          ..displayName = displayName;
+
+    // This is a work-around to display the correct name in error boundary component stacks
+    // (and in the React DevTools if we weren't already setting displayName).
+    defineProperty(reactComponentClass, 'name', JsPropertyDescriptor(value: displayName));
+
+    // ignore: invalid_use_of_protected_member
+    reactComponentClass.dartComponentVersion = ReactDartComponentVersion.component2;
 
     return ReactDartComponentFactoryProxy2(reactComponentClass);
   } catch (e, stack) {

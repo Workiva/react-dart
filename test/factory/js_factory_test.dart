@@ -5,6 +5,7 @@ library react.js_factory_test;
 import 'dart:html';
 
 import 'package:js/js.dart';
+import 'package:react/react.dart' as react;
 import 'package:react/react_client.dart';
 import 'package:react/react_client/react_interop.dart';
 import 'package:react/react_test_utils.dart';
@@ -54,6 +55,12 @@ main() {
         expect(JsFooFunction.type, equals(_JsFooFunction));
       });
     });
+
+    test('with no children returns JS undefined', () {
+      expect(hasUndefinedChildren(react.div({})), isTrue);
+      expect(hasUndefinedChildren(react.div({}, jsNull)), isFalse,
+          reason: 'Sanity check that JS `null` is not the same as JS `undefined`');
+    });
   });
 }
 
@@ -64,3 +71,6 @@ final JsFoo = ReactJsComponentFactoryProxy(_JsFoo);
 @JS()
 external ReactClass get _JsFooFunction;
 final JsFooFunction = ReactJsComponentFactoryProxy(_JsFooFunction);
+
+@JS()
+external bool Function(ReactElement) get hasUndefinedChildren;

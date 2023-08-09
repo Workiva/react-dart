@@ -17,7 +17,7 @@ import 'package:react/src/typedefs.dart';
 import 'package:react/src/react_client/factory_util.dart';
 
 // ignore: deprecated_member_use_from_same_package
-export 'package:react/src/react_client/factory_util.dart' show unconvertJsEventHandler;
+export 'package:react/src/react_client/factory_util.dart' show generateJsProps, unconvertJsEventHandler;
 
 /// Prepares [children] to be passed to the ReactJS [React.createElement] and
 /// the Dart [Component2].
@@ -362,8 +362,8 @@ JsFunctionComponent _wrapFunctionComponent(DartFunctionComponent dartFunctionCom
   // ignore: omit_local_variable_types
   final JsFunctionComponent interopFunction = allowInterop(jsFunctionComponent);
   if (displayName != null) {
-    // This is a work-around to display the correct name in the React DevTools.
-    defineProperty(interopFunction, 'name', PropertyDescriptor(value: displayName));
+    // This is a work-around to display the correct name in the React DevTools and error boundary component stacks.
+    defineProperty(interopFunction, 'name', JsPropertyDescriptor(value: displayName));
   }
   // ignore: invalid_use_of_protected_member
   setProperty(interopFunction, 'dartComponentVersion', ReactDartComponentVersion.component2);
@@ -388,8 +388,8 @@ ReactClass _wrapForwardRefFunctionComponent(DartForwardRefFunctionComponent dart
 
   final interopFunction = allowInterop(jsFunctionComponent);
   if (displayName != null) {
-    // This is a work-around to display the correct name in the React DevTools.
-    defineProperty(interopFunction, 'name', PropertyDescriptor(value: displayName));
+    // This is a work-around to display the correct name in the React DevTools and error boundary component stacks.
+    defineProperty(interopFunction, 'name', JsPropertyDescriptor(value: displayName));
   }
   final jsForwardRefFunction = React.forwardRef(interopFunction);
   // ignore: invalid_use_of_protected_member

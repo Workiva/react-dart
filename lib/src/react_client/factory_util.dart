@@ -84,7 +84,7 @@ dynamic generateChildren(List childrenArgs, {bool shouldAlwaysBeList = false}) {
   var children;
 
   if (childrenArgs.isEmpty) {
-    if (!shouldAlwaysBeList) return null;
+    if (!shouldAlwaysBeList) return jsUndefined;
     children = childrenArgs;
   } else if (childrenArgs.length == 1) {
     if (shouldAlwaysBeList) {

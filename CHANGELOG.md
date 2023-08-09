@@ -1,3 +1,50 @@
+## [6.2.0](https://github.com/cleandart/react-dart/compare/6.1.8...6.2.0)
+- [#357] Export Suspense component
+- [#354] Raise analyzer minimum & unpin meta
+- [#355] Pin mockito 5
+- [#356] Unpin mockito, fix CI
+
+## [6.1.8](https://github.com/cleandart/react-dart/compare/6.1.7...6.1.8)
+- [#350] Return `jsUndefined` instead of `null` when children prop is empty
+
+## [6.1.7](https://github.com/cleandart/react-dart/compare/6.1.6...6.1.7)
+- [#344] Fix identityHashCode error when forwarding props containing JSX children
+
+## [6.1.6](https://github.com/cleandart/react-dart/compare/6.1.5...6.1.6)
+- [#336] Publish JS bundles to Workiva CDN
+
+## [6.1.5](https://github.com/cleandart/react-dart/compare/6.1.4...6.1.5)
+- [#333] Remove old, unused file from bin/
+
+## [6.1.4](https://github.com/cleandart/react-dart/compare/6.1.3...6.1.4)
+
+- [#327] Fix stable ci build
+- [#328] Work around $identityHash being added to JS objects passed into jsifyAndAllowInterop
+
+## [6.1.3](https://github.com/cleandart/react-dart/compare/6.1.2...6.1.3)
+
+- [#308] Bump elliptic from 6.5.3 to 6.5.4
+- [#311] Bump ssri from 6.0.1 to 6.0.2
+- [#312] Bump lodash from 4.17.20 to 4.17.21
+- [#313] Bump browserslist from 4.16.1 to 4.16.6
+- [#318] Bump path-parse from 1.0.6 to 1.0.7
+- [#323] Raise the Dart SDK minimum to at least 2.11.0
+- [#315] Upgrade CI to run using Dart 2.13
+- [#309] Update README.md
+- [#325] Upgrade dependency_validator
+
+## [6.1.2](https://github.com/cleandart/react-dart/compare/6.1.1...6.1.2)
+
+- [#321] Fix missing Dart component names in error boundary `componentStack`
+
+## [6.1.1](https://github.com/cleandart/react-dart/compare/6.1.0...6.1.1)
+
+- [#319] Add `baseURI` polyfill for IE 11 compatibility on Dart 2.13.
+
+## [6.1.0](https://github.com/cleandart/react-dart/compare/6.0.1...6.1.0)
+
+- [#316] Export `generateJsProps`.
+
 ## [6.0.1](https://github.com/cleandart/react-dart/compare/6.0.0...6.0.1)
 
 - [#305] Fix `JsBackedMap` for Dart 2.12.
@@ -16,16 +63,16 @@ The underlying `.js` files provided by this package are now ReactJS version `17.
 
 ## [5.7.1](https://github.com/cleandart/react-dart/compare/5.7.0...5.7.1)
 
-- [#289] Update most deprecations that were slated for removal in v6.0.0 to be slated for removal in v7.0.0 instead. To keep the migration to v6.0.0 as easy as possible, only APIs that are known to be completely unused will be removed in v6.0.0. Therefore, most APIs that were marked for removal in v6.0.0 will remain until the v7.0.0 release. This PR updated deprecation annotations to reflect this. 
-- [#287] Deprecate `SyntheticEvent.isFormEvent`. Because form events do not exist as their own type in ReactJS, this helper will be removed in v6.0.0. Instead, check for the expected [form event types](https://reactjs.org/docs/events.html#form-events).  
+- [#289] Update most deprecations that were slated for removal in v6.0.0 to be slated for removal in v7.0.0 instead. To keep the migration to v6.0.0 as easy as possible, only APIs that are known to be completely unused will be removed in v6.0.0. Therefore, most APIs that were marked for removal in v6.0.0 will remain until the v7.0.0 release. This PR updated deprecation annotations to reflect this.
+- [#287] Deprecate `SyntheticEvent.isFormEvent`. Because form events do not exist as their own type in ReactJS, this helper will be removed in v6.0.0. Instead, check for the expected [form event types](https://reactjs.org/docs/events.html#form-events).
 
 ## [5.7.0](https://github.com/cleandart/react-dart/compare/5.6.1...5.7.0)
 
-- [#282] Add `SyntheticEvent` helpers that eliminate the need to use synthetic event class constructors. Additionally, added utilities to assist in type checking events without manually using the `is` keyword. 
+- [#282] Add `SyntheticEvent` helpers that eliminate the need to use synthetic event class constructors. Additionally, added utilities to assist in type checking events without manually using the `is` keyword.
 
 ## [5.6.1](https://github.com/cleandart/react-dart/compare/5.6.0...5.6.1)
 
-- [#280] Update React dev JS files to include a [workaround](https://github.com/dart-lang/sdk/issues/43193) to a DDC bug when using Chrome 86+ (fixed in Dart 2.9.3) 
+- [#280] Update React dev JS files to include a [workaround](https://github.com/dart-lang/sdk/issues/43193) to a DDC bug when using Chrome 86+ (fixed in Dart 2.9.3)
 
 ## [5.6.0](https://github.com/cleandart/react-dart/compare/5.5.1...5.6.0)
 
@@ -46,8 +93,8 @@ __New Features__
 
 - 🎉 🎉 🎉 __Support for function components, memo and hooks!!!__ 🎉 🎉 🎉
 
-    Sooooo much work from so many amazing people made this possible, but to summarize: 
-    
+    Sooooo much work from so many amazing people made this possible, but to summarize:
+
     - [#221] Add support for function components
     - [#252] Add support for `memo` higher order component
     - Hooks, hooks, and more hooks!
@@ -63,40 +110,40 @@ __New Features__
         - [#246] useDebugValue
 
     <p><br>It works like this...</p>
-    
+
     Define the component:
     ```dart
     import 'package:react/react.dart' as react;
-    
+
     final SomeWidget = react.registerFunctionComponent(_SomeWidget, displayName: 'SomeWidget');
-    
+
     _SomeWidget(Map props) {
       // You can use hooks in here, too!
-      
+
       return react.div({}, [
         // Some children...
       ]);
     }
     ```
-    
+
     Render the component _(exact same consumer API as a class-based component)_:
     ```dart
     import 'package:react/react_dom.dart' as react_dom;
     import 'some_widget.dart'; // Where your component is defined
-    
+
     main() {
       final renderedWidget = SomeWidget({
         // put some props here
       }, [
         // put some children here!
       ]);
-    
+
       react_dom.render(renderedWidget, querySelector('#idOfSomeNodeInTheDom'));
     }
     ```
-    
+
     > Check out all the [function component and hooks examples](https://github.com/cleandart/react-dart/blob/c9a1211d5d77a9e354b864e99ef8f52b60eeff85/example/test/function_component_test.dart) for more information!
-        
+
 __Fixes / Updates__
 - [#253] Deprecate `setClientConfiguration`.
     - It is no longer necessary - and can be removed from your implementations
@@ -106,7 +153,7 @@ __Fixes / Updates__
 
 __New Features__
 - [#244] Add support for [HTML Composition events](https://developer.mozilla.org/en-US/docs/Web/API/CompositionEvent)
-- [#263] Add support for [`SyntheticEvent.persist()`](https://reactjs.org/docs/events.html#event-pooling) 
+- [#263] Add support for [`SyntheticEvent.persist()`](https://reactjs.org/docs/events.html#event-pooling)
 
 __Fixes / Updates__
 - [#261] Stop errors thrown within the call stack of `Component.render()` from being swallowed

@@ -56,6 +56,7 @@ abstract class React {
   external static bool isValidElement(dynamic object);
 
   external static ReactClass get StrictMode;
+  external static ReactClass get Suspense;
   external static ReactClass get Fragment;
 
   external static List<dynamic> useState(dynamic value);
@@ -254,7 +255,7 @@ ReactJsComponentFactoryProxy forwardRef(
         final dartRef = Ref.fromJs(ref as JsRef);
         return wrapperFunction(dartProps, dartRef);
       }));
-  defineProperty(wrappedComponent, 'displayName', PropertyDescriptor(value: displayName));
+  defineProperty(wrappedComponent, 'displayName', JsPropertyDescriptor(value: displayName));
 
   final hoc = React.forwardRef(wrappedComponent);
   // ignore: invalid_use_of_protected_member

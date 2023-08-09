@@ -41,7 +41,11 @@ mixin LifecycleTestHelper on Component {
       'context': context,
     });
 
-    final lifecycleCallback = props == null ? staticProps == null ? null : staticProps[memberName] : props[memberName];
+    final lifecycleCallback = props == null
+        ? staticProps == null
+            ? null
+            : staticProps[memberName]
+        : props[memberName];
     if (lifecycleCallback != null) {
       return Function.apply(lifecycleCallback as Function, [this, ...arguments]) as T;
     }
