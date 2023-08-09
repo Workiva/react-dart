@@ -411,7 +411,6 @@ void refTests<T>(
     test('string refs', () {
       final renderedInstance = _renderWithStringRefSupportingOwner(() => factory({'ref': 'test'}));
 
-      // ignore: deprecated_member_use_from_same_package
       verifyRefValue(renderedInstance.dartComponent.ref('test'));
     });
   });

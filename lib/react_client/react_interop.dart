@@ -1,4 +1,3 @@
-// ignore_for_file: deprecated_member_use_from_same_package
 /// JS interop classes for main React JS APIs and react-dart internals.
 ///
 /// For use in `react_client.dart` and by advanced react-dart users.
@@ -241,7 +240,7 @@ ReactJsComponentFactoryProxy forwardRef(
   Function(Map props, Ref ref) wrapperFunction, {
   String displayName = 'Anonymous',
 }) {
-  // ignore: avoid_types_on_closure_parameters
+  // ignore: avoid_types_on_closure_parameters, invalid_use_of_visible_for_testing_member
   final wrappedComponent = allowInterop((JsMap props, ref) => componentZone.run(() {
         final dartProps = JsBackedMap.backedBy(props);
         for (final value in dartProps.values) {
@@ -858,10 +857,10 @@ class JsComponentConfig {
 @anonymous
 class JsComponentConfig2 {
   external factory JsComponentConfig2({
+    @required List<String> skipMethods,
     dynamic contextType,
     JsMap defaultProps,
     JsMap propTypes,
-    @required List<String> skipMethods,
   });
 }
 

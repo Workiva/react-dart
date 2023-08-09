@@ -1,7 +1,6 @@
 @TestOn('browser')
 library react.forward_ref_test;
 
-// ignore_for_file: deprecated_member_use_from_same_package
 import 'dart:js_util';
 
 import 'package:react/react.dart' as react;
@@ -33,12 +32,14 @@ main() {
 
     group('sets displayName on the rendered component as expected', () {
       test('falling back to "Anonymous" when the displayName argument is not passed to forwardRef', () {
+        // ignore: deprecated_member_use_from_same_package
         final ForwardRefTestComponent = forwardRef((props, ref) {});
         expect(getProperty(getProperty(ForwardRefTestComponent.type, 'render'), 'displayName'), 'Anonymous');
       });
 
       test('when displayName argument is passed to forwardRef', () {
         const name = 'ForwardRefTestComponent';
+        // ignore: deprecated_member_use_from_same_package
         final ForwardRefTestComponent = forwardRef((props, ref) {}, displayName: name);
         expect(getProperty(getProperty(ForwardRefTestComponent.type, 'render'), 'displayName'), name);
       });
