@@ -8,7 +8,7 @@ customAssert(text, condition) {
   if (condition)
     print('$text passed');
   else
-    throw (text);
+    throw text;
 }
 
 var ChildComponent = react.registerComponent(() => _ChildComponent());

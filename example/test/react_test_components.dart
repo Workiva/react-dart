@@ -431,9 +431,9 @@ class _Component2TestComponent extends react.Component2 with react.TypedSnapshot
   Map getDerivedStateFromProps(nextProps, prevState) {
     final prevItems = prevState['items'];
     if (prevItems.isEmpty || prevItems[0] != 3) {
-      return ({
+      return {
         'items': List.from([3, 1, 2, 0])
-      });
+      };
     }
     return null;
   }

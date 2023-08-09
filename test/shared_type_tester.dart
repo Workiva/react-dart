@@ -51,9 +51,9 @@ void sharedTypeTests(
       });
       if (!skipNumTypes) {
         test('num types', () {
-          final intValue = (1 as int); // ignore: unnecessary_cast
+          final intValue = 1 as int; // ignore: unnecessary_cast
           final doubleValue = 1.1;
-          final numValue = (1 as num); // ignore: unnecessary_cast
+          final numValue = 1 as num; // ignore: unnecessary_cast
 
           testTypeValue(intValue);
           testTypeValue(doubleValue);

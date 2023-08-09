@@ -737,7 +737,7 @@ void sharedLifecycleTests<T extends react.Component>({
         const Map expectedContext = {'foo': true};
 
         Map refMap = {
-          'ref': ((ref) => component = ref),
+          'ref': (ref) => component = ref,
         };
 
         // Add the 'ref' prop separately so it isn't an expected prop since React removes it internally
@@ -808,7 +808,7 @@ void sharedLifecycleTests<T extends react.Component>({
         const Map expectedContext = {'foo': true};
 
         Map refMap = {
-          'ref': ((ref) => component = ref),
+          'ref': (ref) => component = ref,
         };
 
         final initialProps = Map.from(defaultProps)..addAll({'children': const []});
@@ -872,7 +872,7 @@ void sharedLifecycleTests<T extends react.Component>({
         Map expectedContext = {'foo': true};
 
         Map refMap = {
-          'ref': ((ref) => component = ref),
+          'ref': (ref) => component = ref,
         };
 
         final initialProps = Map.from(defaultProps)
