@@ -263,7 +263,7 @@ void domEventHandlerWrappingTests(ReactComponentFactoryProxy factory) {
     });
 
     group('passing Dart events to Dart handlers, and JS events to handlers originating from JS:', () {
-      for (var eventCase in eventCases) {
+      for (final eventCase in eventCases) {
         test(eventCase.description, () {
           eventCase.simulate(node);
           expect(events[eventCase], isNotNull, reason: 'handler should have been called');
@@ -289,7 +289,7 @@ void domEventHandlerWrappingTests(ReactComponentFactoryProxy factory) {
 
         final dummyEvent = event;
 
-        for (var eventCase in eventCases.where((helper) => helper.isDart)) {
+        for (final eventCase in eventCases.where((helper) => helper.isDart)) {
           test(eventCase.description, () {
             expect(() => propsFromDartRender[eventCase.eventPropKey](dummyEvent), returnsNormally);
           });

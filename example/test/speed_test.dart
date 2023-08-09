@@ -55,7 +55,7 @@ class _Hello extends react.Component {
     timeprint('rendering start');
     var data = props['data'];
     var children = [];
-    for (var elem in data) {
+    for (final elem in data) {
       children.add(react.div({
         'key': elem[0]
       }, [

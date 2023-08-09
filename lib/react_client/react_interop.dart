@@ -243,7 +243,7 @@ ReactJsComponentFactoryProxy forwardRef(
 }) {
   final wrappedComponent = allowInterop((JsMap props, JsRef ref) => componentZone.run(() {
         final dartProps = JsBackedMap.backedBy(props);
-        for (var value in dartProps.values) {
+        for (final value in dartProps.values) {
           if (value is Function) {
             // Tag functions that came straight from the JS
             // so that we know to pass them through as-is during prop conversion.

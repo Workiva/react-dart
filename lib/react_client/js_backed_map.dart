@@ -79,7 +79,7 @@ class JsBackedMap extends MapBase<dynamic, dynamic> {
 
   @override
   void clear() {
-    for (var key in _keys) {
+    for (final key in _keys) {
       _Reflect.deleteProperty(jsObject, key);
     }
   }
