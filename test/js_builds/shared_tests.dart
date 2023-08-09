@@ -92,6 +92,7 @@ void sharedConsoleWarnTests({@required bool expectDeduplicateSyntheticEventWarni
       }
 
       // Adapted from reduced test case in https://github.com/dart-lang/sdk/issues/43939
+      // ignore: prefer_function_declarations_over_variables
       dynamic function = (react.SyntheticEvent event) {};
       // ignore: unused_local_variable
       dynamic Function(T) function2 = function;

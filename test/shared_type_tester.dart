@@ -67,6 +67,7 @@ void sharedTypeTests(
     test('functions', () {
       _functionLocalMethod() {}
       final functionLocalMethod = _functionLocalMethod;
+      // ignore: prefer_function_declarations_over_variables
       final functionExpression = () {};
       final functionTearOff = Object().toString;
       final functionAllowInterop = allowInterop(() {});

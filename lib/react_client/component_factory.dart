@@ -144,6 +144,7 @@ class ReactDartComponentFactoryProxy<TComponent extends Component> extends React
       // Use CallbackRef<Null> to check arity, since parameters could be non-dynamic, and thus
       // would fail the `is CallbackRef<dynamic>` check.
       // See https://github.com/dart-lang/sdk/issues/34593 for more information on arity checks.
+      // ignore: prefer_void_to_null
       if (ref is CallbackRef<Null>) {
         interopProps.ref = allowInterop((dynamic instance) {
           // Call as dynamic to perform dynamic dispatch, since we can't cast to CallbackRef<dynamic>,

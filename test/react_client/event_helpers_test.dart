@@ -133,6 +133,7 @@ main() {
       expect(syntheticKeyboardEvent.cancelable, isTrue);
       expect(syntheticKeyboardEvent.currentTarget, currentTarget);
       expect(syntheticKeyboardEvent.defaultPrevented, isFalse);
+      // ignore: unnecessary_lambdas
       expect(() => syntheticKeyboardEvent.preventDefault(), returnsNormally);
       expect(calls, contains('preventDefault'));
       expect(() => syntheticKeyboardEvent.stopPropagation(), returnsNormally);
@@ -191,6 +192,7 @@ main() {
       expect(syntheticMouseEvent.cancelable, isTrue);
       expect(syntheticMouseEvent.currentTarget, currentTarget);
       expect(syntheticMouseEvent.defaultPrevented, isFalse);
+      // ignore: unnecessary_lambdas
       expect(() => syntheticMouseEvent.preventDefault(), returnsNormally);
       expect(calls, contains('preventDefault'));
       expect(() => syntheticMouseEvent.stopPropagation(), returnsNormally);
@@ -227,6 +229,7 @@ main() {
       expect(fakeEvent.cancelable, isFalse);
       expect(fakeEvent.currentTarget, element);
       expect(fakeEvent.defaultPrevented, false);
+      // ignore: unnecessary_lambdas
       expect(() => fakeEvent.preventDefault(), returnsNormally);
       expect(() => fakeEvent.stopPropagation(), returnsNormally);
       expect(fakeEvent.eventPhase, Event.AT_TARGET);

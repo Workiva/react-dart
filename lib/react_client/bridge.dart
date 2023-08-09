@@ -63,6 +63,7 @@ class Component2BridgeImpl extends Component2Bridge {
   /// Returns a const bridge instance suitable for use with any component.
   ///
   /// See [Component2BridgeFactory] for more info.
+  // ignore: prefer_constructors_over_static_methods
   static Component2BridgeImpl bridgeFactory(Component2 _) => const Component2BridgeImpl();
 
   @override

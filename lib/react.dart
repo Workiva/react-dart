@@ -160,12 +160,14 @@ abstract class Component {
   /// ReactJS [Component] props.
   ///
   /// Related: [state]
+  // ignore: unnecessary_getters_setters
   Map get props => _props;
   set props(Map value) => _props = value;
 
   /// ReactJS [Component] state.
   ///
   /// Related: [props]
+  // ignore: unnecessary_getters_setters
   Map get state => _state;
   set state(Map value) => _state = value;
 
@@ -195,8 +197,10 @@ abstract class Component {
 
   dynamic _jsThis;
 
+  // ignore: prefer_final_fields
   List<SetStateCallback> _setStateCallbacks = [];
 
+  // ignore: prefer_final_fields
   List<StateUpdaterCallback> _transactionalSetStateCallbacks = [];
 
   /// The List of callbacks to be called after the component has been updated from a call to [setState].
@@ -421,6 +425,7 @@ abstract class Component {
   /// >
   /// > This will be completely removed when the JS side of it is slated for removal (ReactJS 18 / react.dart 7.0.0)
   @Deprecated('7.0.0')
+  // ignore: avoid_returning_null
   bool shouldComponentUpdateWithContext(Map nextProps, Map nextState, Map nextContext) => null;
 
   /// ReactJS lifecycle method that is invoked immediately before rendering when [nextProps] or [nextState] are being
@@ -916,6 +921,7 @@ abstract class Component2 implements Component {
   /// ```
   ///
   /// See: <https://reactjs.org/docs/typechecking-with-proptypes.html#proptypes>
+  // ignore: prefer_void_to_null
   Map<String, PropValidator<Null>> get propTypes => {};
 
   /// Examines [props] and [state] and returns one of the following types:
