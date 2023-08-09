@@ -719,12 +719,12 @@ external void markChildValidated(child);
 ///
 /// ___Only for use with variadic children.___
 void markChildrenValidated(List<dynamic> children) {
-  children.forEach((dynamic child) {
+  for (final child in children) {
     // Use `isValidElement` since `is ReactElement` doesn't behave as expected.
     if (React.isValidElement(child)) {
       markChildValidated(child);
     }
-  });
+  }
 }
 
 /// Returns a new JS [ReactClass] for a component that uses

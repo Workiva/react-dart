@@ -5,10 +5,11 @@ import 'package:react/react.dart' as react;
 import 'package:react/react_dom.dart' as react_dom;
 
 customAssert(text, condition) {
-  if (condition)
+  if (condition) {
     print('$text passed');
-  else
+  } else {
     throw text;
+  }
 }
 
 var ChildComponent = react.registerComponent(() => _ChildComponent());

@@ -57,9 +57,7 @@ void sharedConsoleWarnTests({@required bool expectDeduplicateSyntheticEventWarni
   group('console.warn wrapper (or lack thereof)', () {
     void clearConsoleWarnCalls() => consoleWarnCalls = [];
 
-    setUp(() {
-      clearConsoleWarnCalls();
-    });
+    setUp(clearConsoleWarnCalls);
 
     test('warns as expected with any number of arguments', () {
       consoleWarn('foo');

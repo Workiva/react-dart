@@ -47,7 +47,7 @@ main() {
         final renderedInstance = react_dom.render(components.SetStateTest({}), mountNode);
         LifecycleTestHelper component = getDartComponent(renderedInstance);
 
-        expect(() => component.setState(Map()), returnsNormally);
+        expect(() => component.setState({}), returnsNormally);
         expect(
             () => component.setState((_, __) {
                   return {};
@@ -135,7 +135,7 @@ main() {
         String consoleErrorMessage;
         JsFunction originalConsoleError;
         DivElement mountNode;
-        final expectedWarningPrefix = 'Warning: Failed prop type: Invalid argument(s): intProp should be int. ';
+        const expectedWarningPrefix = 'Warning: Failed prop type: Invalid argument(s): intProp should be int. ';
 
         setUp(() {
           consoleErrorCalled = false;
@@ -950,7 +950,7 @@ void sharedLifecycleTests<T extends react.Component>({
 
       const Map expectedState = {};
       final dynamic expectedContext = isComponent2 ? null : const {};
-      const Null expectedSnapshot = null;
+      const void expectedSnapshot = null;
 
       final mountNode = DivElement();
       final instance = react_dom.render(LifecycleTest(initialProps), mountNode);
@@ -1034,7 +1034,7 @@ void sharedLifecycleTests<T extends react.Component>({
       Map initialProps;
       Map expectedProps;
       dynamic newContext;
-      Null expectedSnapshot;
+      void expectedSnapshot;
       bool updatingStateWithNull;
       LifecycleTestHelper component;
 
@@ -1162,7 +1162,7 @@ void sharedLifecycleTests<T extends react.Component>({
 
       final expectedProps = unmodifiableMap(defaultProps, initialProps, emptyChildrenProps);
 
-      final Null expectedSnapshot = null;
+      const void expectedSnapshot = null;
 
       LifecycleTestHelper component = getDartComponent(render(LifecycleTest(initialProps)));
 
@@ -1458,7 +1458,7 @@ void sharedLifecycleTests<T extends react.Component>({
           final initialPropsWithDefaults = unmodifiableMap(defaultProps, initialProps, emptyChildrenProps);
           final newPropsWithDefaults = unmodifiableMap(defaultProps, newProps, emptyChildrenProps);
 
-          final Map expectedContext = const {};
+          const Map expectedContext = {};
 
           final mountNode = DivElement();
           final instance = react_dom.render(LifecycleTest(initialProps), mountNode);

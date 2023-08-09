@@ -451,7 +451,7 @@ class _Component2TestComponent extends react.Component2 with react.TypedSnapshot
   void componentDidUpdate(prevProps, prevState, [String snapshot]) {
     if (snapshot != null) {
       print('Updated DOM and ' + snapshot);
-      return null;
+      return;
     }
     print('No Snapshot');
   }

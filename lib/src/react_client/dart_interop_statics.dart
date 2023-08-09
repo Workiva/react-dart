@@ -27,14 +27,14 @@ final ReactDartInteropStatics dartInteropStatics = (() {
           jsThis.setState(newObject());
         }
 
-        final getRef = (name) {
+        getRef(name) {
           final ref = getProperty(jsThis.refs, name);
           if (ref == null) return null;
           if (ref is Element) return ref;
           if (ref is ReactComponent) return ref.dartComponent ?? ref;
 
           return ref;
-        };
+        }
 
         final component = componentStatics.componentFactory()
           ..initComponentInternal(internal.props, jsRedraw, getRef, jsThis, unjsifyContext(context))
@@ -86,19 +86,19 @@ final ReactDartInteropStatics dartInteropStatics = (() {
     final callbacks = component.setStateCallbacks.toList();
     // Prevent concurrent modification during iteration
     component.setStateCallbacks.clear();
-    callbacks.forEach((callback) {
+    for (final callback in callbacks) {
       callback();
-    });
+    }
   }
 
   void _callSetStateTransactionalCallbacks(Component component) {
     final nextState = component.nextState;
     final props = UnmodifiableMapView(component.props);
 
-    component.transactionalSetStateCallbacks.forEach((callback) {
+    for (final callback in component.transactionalSetStateCallbacks) {
       final stateUpdates = callback(nextState, props);
       if (stateUpdates != null) nextState.addAll(stateUpdates);
-    });
+    }
     component.transactionalSetStateCallbacks.clear();
   }
 
@@ -125,9 +125,7 @@ final ReactDartInteropStatics dartInteropStatics = (() {
         var shouldUpdate =
             component.shouldComponentUpdateWithContext(component.nextProps, component.nextState, component.nextContext);
 
-        if (shouldUpdate == null) {
-          shouldUpdate = component.shouldComponentUpdate(component.nextProps, component.nextState);
-        }
+        shouldUpdate ??= component.shouldComponentUpdate(component.nextProps, component.nextState);
 
         if (shouldUpdate) {
           return true;

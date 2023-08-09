@@ -456,13 +456,9 @@ main() {
           refFromUseRef = useRef();
           refFromCreateRef = react.createRef();
 
-          if (refFromUseRef.current == null) {
-            refFromUseRef.current = renderIndex.value;
-          }
+          refFromUseRef.current ??= renderIndex.value;
 
-          if (refFromCreateRef.current == null) {
-            refFromCreateRef.current = renderIndex.value;
-          }
+          refFromCreateRef.current ??= renderIndex.value;
 
           return react.Fragment({}, [
             react.input({'ref': domElementRef}),

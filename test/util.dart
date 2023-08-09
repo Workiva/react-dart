@@ -107,7 +107,7 @@ class RefTestCaseCollection<T> {
     final calls = [];
     return RefTestCase(
       name: name,
-      ref: (value) => calls.add(value),
+      ref: calls.add,
       verifyRefWasUpdated: (actualValue) => expect(calls, [same(actualValue)], reason: _reasonMessage(name)),
       getCurrent: () => calls.single,
     );
@@ -118,7 +118,7 @@ class RefTestCaseCollection<T> {
     final calls = [];
     return RefTestCase(
       name: name,
-      ref: (T value) => calls.add(value),
+      ref: calls.add,
       verifyRefWasUpdated: (actualValue) => expect(calls, [same(actualValue)], reason: _reasonMessage(name)),
       getCurrent: () => calls.single,
     );
@@ -140,7 +140,7 @@ class RefTestCaseCollection<T> {
     final calls = [];
     return RefTestCase(
       name: name,
-      ref: allowInterop((value) => calls.add(value)),
+      ref: allowInterop(calls.add),
       verifyRefWasUpdated: (actualValue) => expect(calls, [same(actualValue)], reason: _reasonMessage(name)),
       getCurrent: () => calls.single,
       isJs: true,

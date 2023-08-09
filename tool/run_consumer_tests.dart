@@ -2,7 +2,7 @@ import 'dart:io';
 
 import 'package:args/args.dart';
 
-Future<Null> main(List<String> args) async {
+Future<void> main(List<String> args) async {
   final parser = ArgParser()
     ..addOption('repoName')
     ..addOption('orgName')

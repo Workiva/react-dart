@@ -41,9 +41,9 @@ void sharedTypeTests(
   if (!skipPrimitives) {
     group('primitives', () {
       test('', () {
-        final stringValue = 'test';
-        final boolValue = false;
-        final nullValue = null;
+        const stringValue = 'test';
+        const boolValue = false;
+        const nullValue = null;
 
         testTypeValue(stringValue);
         testTypeValue(boolValue);
@@ -51,9 +51,9 @@ void sharedTypeTests(
       });
       if (!skipNumTypes) {
         test('num types', () {
-          final intValue = 1 as int; // ignore: unnecessary_cast
-          final doubleValue = 1.1;
-          final numValue = 1 as num; // ignore: unnecessary_cast
+          const intValue = 1 as int; // ignore: unnecessary_cast
+          const doubleValue = 1.1;
+          const numValue = 1 as num; // ignore: unnecessary_cast
 
           testTypeValue(intValue);
           testTypeValue(doubleValue);

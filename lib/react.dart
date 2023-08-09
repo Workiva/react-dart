@@ -292,7 +292,7 @@ abstract class Component {
   /// Public getter for [_nextState].
   ///
   /// If `null`, then [_nextState] is equal to [state] - which is the value that will be returned.
-  Map get nextState => _nextState == null ? state : _nextState;
+  Map get nextState => _nextState ?? state;
 
   /// Reference to the value of [props] for the upcoming render cycle.
   ///

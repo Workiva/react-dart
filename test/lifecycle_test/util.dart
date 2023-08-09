@@ -48,9 +48,9 @@ mixin LifecycleTestHelper on Component {
     if (lifecycleCallback != null) {
       return Function.apply(
           lifecycleCallback,
-          []
-            ..add(this)
-            ..addAll(arguments));
+          [this, ...arguments]
+            
+            );
     }
 
     if (defaultReturnValue != null) {
