@@ -1,12 +1,19 @@
+include: package:workiva_analysis_options/v2.recommended.yaml
+
 analyzer:
   strong-mode:
+    # TODO change to false as part of the null safety major, which avoids us having to add a lot more casts
     implicit-casts: true
-    implicit-dynamic: true
+  errors:
+    must_call_super: error
+    comment_references: info
+    # This is too noisy since it warns for all lifecycle methods.
+    always_declare_return_types: ignore
+    # The following are ignored to avoid merge conflicts with null safety branch
+    directives_ordering: ignore
+    prefer_typing_uninitialized_variables: ignore
 linter:
   rules:
-    - avoid_private_typedef_functions
-    - await_only_futures
-    - cancel_subscriptions
-    - close_sinks
-    - unawaited_futures
-    - avoid_init_to_null
+    prefer_if_elements_to_conditional_expressions: false
+    overridden_fields: false
+    type_annotate_public_apis: false
