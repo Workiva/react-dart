@@ -158,7 +158,6 @@ JsMap jsBackingMapOrJsCopy(Map map) {
 abstract class _Object {
   external static void assign(JsMap to, JsMap from);
   external static List<dynamic> keys(JsMap object);
-  external static List<dynamic> values(JsMap object);
 }
 
 @JS('Reflect')
