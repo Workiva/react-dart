@@ -9,6 +9,11 @@ analyzer:
     comment_references: info
     # This is too noisy since it warns for all lifecycle methods.
     always_declare_return_types: ignore
+    # We very often need to annotate parameters when they're embedded in Maps
+    # with dynamic values, so this lint is noisy and wrong in those cases.
+    avoid_types_on_closure_parameters: ignore
+    # This makes string concatenation less readable in some cases
+    prefer_interpolation_to_compose_strings: ignore
     # The following are ignored to avoid merge conflicts with null safety branch
     directives_ordering: ignore
     prefer_typing_uninitialized_variables: ignore
