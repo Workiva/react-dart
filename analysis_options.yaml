@@ -1,6 +1,9 @@
 include: package:workiva_analysis_options/v2.recommended.yaml
 
 analyzer:
+  strong-mode:
+    # TODO change to false as part of the null safety major, which avoids us having to add a lot more casts
+    implicit-casts: true
   errors:
     must_call_super: error
     comment_references: info
