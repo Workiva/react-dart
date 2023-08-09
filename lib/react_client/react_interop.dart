@@ -25,7 +25,7 @@ import 'package:react/react_client/zone.dart';
 import 'package:react/src/js_interop_util.dart';
 import 'package:react/src/react_client/dart2_interop_workaround_bindings.dart';
 
-typedef ReactElement ReactJsComponentFactory(props, children);
+typedef ReactJsComponentFactory = ReactElement Function(dynamic props, dynamic children);
 typedef JsPropValidator = dynamic Function(
     JsMap props, String propName, String componentName, String location, String propFullName, String secret);
 
