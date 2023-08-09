@@ -28,7 +28,7 @@ void main() {
       wrapperComponent: component2.wrapperComponent);
 }
 
-testUtils({isComponent2: false, dynamic eventComponent, dynamic sampleComponent, dynamic wrapperComponent}) {
+testUtils({isComponent2 = false, dynamic eventComponent, dynamic sampleComponent, dynamic wrapperComponent}) {
   var component;
   Element domNode;
 
