@@ -17,12 +17,6 @@ class JsPropertyDescriptor {
 @JS('Object.defineProperty')
 external void defineProperty(dynamic object, String propertyName, JsPropertyDescriptor descriptor);
 
-@JS()
-@anonymous
-class PropertyDescriptor {
-  external factory PropertyDescriptor({dynamic value});
-}
-
 String getJsFunctionName(Function object) =>
     (getProperty(object, 'name') ?? getProperty(object, '\$static_name')) as String;
 
