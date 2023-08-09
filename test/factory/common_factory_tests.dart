@@ -405,7 +405,6 @@ void refTests<T>(
     test('string refs', () {
       final renderedInstance = _renderWithStringRefSupportingOwner(() => factory({'ref': 'test'}));
 
-      // ignore: deprecated_member_use_from_same_package
       verifyRefValue(renderedInstance.dartComponent.ref('test'));
     });
   });
@@ -645,15 +644,17 @@ class EventTestCase {
         description = 'JS handler $description';
 
   String get _camelCaseEventName {
-    var name = eventPropKey.replaceFirst(RegExp(r'^on'), '');
-    name = name.substring(0, 1).toLowerCase() + name.substring(1);
-    return name;
+    return eventPropKey.replaceFirst(RegExp(r'^on'), '').capitalize();
   }
 
   void simulate(Element node) => callMethod(_Simulate, _camelCaseEventName, [node]);
 
   @override
   String toString() => 'EventHelper: ($eventPropKey) $description';
+}
+
+extension on String {
+  String capitalize() => substring(0, 1).toLowerCase() + substring(1);
 }
 
 @JS('React.addons.TestUtils.Simulate')

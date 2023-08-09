@@ -220,7 +220,7 @@ class _ErrorComponent extends react.Component2 {
   }
 
   @override
-  void render() {
+  render() {
     _throwError();
     return react.div({'key': 'defaultMessage'}, 'Error');
   }

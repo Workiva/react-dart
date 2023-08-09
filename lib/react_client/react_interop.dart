@@ -1,4 +1,3 @@
-// ignore_for_file: deprecated_member_use_from_same_package
 /// JS interop classes for main React JS APIs and react-dart internals.
 ///
 /// For use in `react_client.dart` and by advanced react-dart users.
@@ -855,10 +854,10 @@ class JsComponentConfig {
 @anonymous
 class JsComponentConfig2 {
   external factory JsComponentConfig2({
+    @required List<String> skipMethods,
     dynamic contextType,
     JsMap defaultProps,
     JsMap propTypes,
-    @required List<String> skipMethods,
   });
 }
 
@@ -874,5 +873,5 @@ class ReactErrorInfo {
 
   /// The dart stack trace associated with this error.
   external StackTrace get dartStackTrace;
-  external set dartStackTrace(StackTrace);
+  external set dartStackTrace(StackTrace value);
 }

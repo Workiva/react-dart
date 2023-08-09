@@ -467,7 +467,7 @@ UseImperativeHandleTestComponent2(Map props) {
 
 class ChatAPI {
   static void subscribeToFriendStatus(int id, Function handleStatusChange) =>
-      handleStatusChange({'isOnline': id % 2 == 0 ? true : false});
+      handleStatusChange({'isOnline': id % 2 == 0});
 
   static void unsubscribeFromFriendStatus(int id, Function handleStatusChange) =>
       handleStatusChange({'isOnline': false});

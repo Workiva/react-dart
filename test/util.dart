@@ -124,7 +124,7 @@ class RefTestCaseCollection<T> {
     );
   }
 
-  RefTestCase createRefObjectCase<T>() {
+  RefTestCase createRefObjectCase() {
     const name = 'ref object';
     final ref = createRef<T>();
     return RefTestCase(
@@ -175,7 +175,7 @@ class RefTestCaseCollection<T> {
         createJsRefObjectCase(),
       ];
 
-  RefTestCase createCaseByName<T>(String name) => createAllCases().singleWhere((c) => c.name == name);
+  RefTestCase createCaseByName(String name) => createAllCases().singleWhere((c) => c.name == name);
 
   List<String> get allTestCaseNames => createAllCases().map((c) => c.name).toList();
 }
