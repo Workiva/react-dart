@@ -202,6 +202,7 @@ abstract class ReactDartInteropStatics2 {
   }
 
   static Component2 initComponent(ReactComponent jsThis, ComponentStatics2 componentStatics) => // dartfmt
+      // ignore: invalid_use_of_visible_for_testing_member
       componentZone.run(() {
         final component = componentStatics.componentFactory();
         // Return the component so that the JS proxying component can store it,
@@ -222,11 +223,13 @@ abstract class ReactDartInteropStatics2 {
       });
 
   static void handleComponentDidMount(Component2 component) => // dartfmt
+      // ignore: invalid_use_of_visible_for_testing_member
       componentZone.run(() {
         component.componentDidMount();
       });
 
   static bool handleShouldComponentUpdate(Component2 component, JsMap jsNextProps, JsMap jsNextState) => // dartfmt
+      // ignore: invalid_use_of_visible_for_testing_member
       componentZone.run(() {
         final value = component.shouldComponentUpdate(
           JsBackedMap.backedBy(jsNextProps),
@@ -242,6 +245,7 @@ abstract class ReactDartInteropStatics2 {
 
   static JsMap handleGetDerivedStateFromProps(
           ComponentStatics2 componentStatics, JsMap jsNextProps, JsMap jsPrevState) => // dartfmt
+      // ignore: invalid_use_of_visible_for_testing_member
       componentZone.run(() {
         final derivedState = componentStatics.instanceForStaticMethods
             .getDerivedStateFromProps(JsBackedMap.backedBy(jsNextProps), JsBackedMap.backedBy(jsPrevState));
@@ -252,6 +256,7 @@ abstract class ReactDartInteropStatics2 {
       });
 
   static dynamic handleGetSnapshotBeforeUpdate(Component2 component, JsMap jsPrevProps, JsMap jsPrevState) => // dartfmt
+      // ignore: invalid_use_of_visible_for_testing_member
       componentZone.run(() {
         final snapshotValue = component.getSnapshotBeforeUpdate(
           JsBackedMap.backedBy(jsPrevProps),
@@ -264,6 +269,7 @@ abstract class ReactDartInteropStatics2 {
   static void handleComponentDidUpdate(
           Component2 component, ReactComponent jsThis, JsMap jsPrevProps, JsMap jsPrevState,
           [dynamic snapshot]) => // dartfmt
+      // ignore: invalid_use_of_visible_for_testing_member
       componentZone.run(() {
         component.componentDidUpdate(
           JsBackedMap.backedBy(jsPrevProps),
@@ -273,11 +279,13 @@ abstract class ReactDartInteropStatics2 {
       });
 
   static void handleComponentWillUnmount(Component2 component) => // dartfmt
+      // ignore: invalid_use_of_visible_for_testing_member
       componentZone.run(() {
         component.componentWillUnmount();
       });
 
   static void handleComponentDidCatch(Component2 component, dynamic error, ReactErrorInfo info) => // dartfmt
+      // ignore: invalid_use_of_visible_for_testing_member
       componentZone.run(() {
         // Due to the error object being passed in from ReactJS it is a javascript object that does not get dartified.
         // To fix this we throw the error again from Dart to the JS side and catch it Dart side which re-dartifies it.
@@ -291,6 +299,7 @@ abstract class ReactDartInteropStatics2 {
       });
 
   static JsMap handleGetDerivedStateFromError(ComponentStatics2 componentStatics, dynamic error) => // dartfmt
+      // ignore: invalid_use_of_visible_for_testing_member
       componentZone.run(() {
         // Due to the error object being passed in from ReactJS it is a javascript object that does not get dartified.
         // To fix this we throw the error again from Dart to the JS side and catch it Dart side which re-dartifies it.
@@ -304,6 +313,7 @@ abstract class ReactDartInteropStatics2 {
       });
 
   static dynamic handleRender(Component2 component, JsMap jsProps, JsMap jsState, dynamic jsContext) => // dartfmt
+      // ignore: invalid_use_of_visible_for_testing_member
       componentZone.run(() {
         _updatePropsAndStateWithJs(component, jsProps, jsState);
         _updateContextWithJs(component, jsContext);

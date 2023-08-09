@@ -361,6 +361,7 @@ JsFunctionComponent _wrapFunctionComponent(DartFunctionComponent dartFunctionCom
   // to force `null` as the return value if user returns a Dart `null`.
   // See: https://github.com/dart-lang/sdk/issues/27485
   jsFunctionComponent(JsMap jsProps, [JsMap _legacyContext]) =>
+      // ignore: invalid_use_of_visible_for_testing_member
       componentZone.run(() => dartFunctionComponent(JsBackedMap.backedBy(jsProps)) ?? jsNull);
   JsFunctionComponent interopFunction = allowInterop(jsFunctionComponent);
   if (displayName != null) {
@@ -386,6 +387,7 @@ ReactClass _wrapForwardRefFunctionComponent(DartForwardRefFunctionComponent dart
   // to force `null` as the return value if user returns a Dart `null`.
   // See: https://github.com/dart-lang/sdk/issues/27485
   jsFunctionComponent(JsMap props, dynamic ref) =>
+      // ignore: invalid_use_of_visible_for_testing_member
       componentZone.run(() => dartFunctionComponent(JsBackedMap.backedBy(props), ref) ?? jsNull);
 
   final interopFunction = allowInterop(jsFunctionComponent);

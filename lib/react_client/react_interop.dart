@@ -240,6 +240,7 @@ ReactJsComponentFactoryProxy forwardRef(
   Function(Map props, Ref ref) wrapperFunction, {
   String displayName = 'Anonymous',
 }) {
+  // ignore: invalid_use_of_visible_for_testing_member
   final wrappedComponent = allowInterop((JsMap props, JsRef ref) => componentZone.run(() {
         final dartProps = JsBackedMap.backedBy(props);
         for (final value in dartProps.values) {
