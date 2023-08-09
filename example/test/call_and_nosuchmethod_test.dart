@@ -1,8 +1,8 @@
 // ignore_for_file: deprecated_member_use_from_same_package
-import "dart:html";
+import 'dart:html';
 
-import "package:react/react_dom.dart" as react_dom;
-import "package:react/react.dart" as react;
+import 'package:react/react_dom.dart' as react_dom;
+import 'package:react/react.dart' as react;
 
 class _CustomComponent extends react.Component {
   render() {

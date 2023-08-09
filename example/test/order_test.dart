@@ -1,13 +1,13 @@
 // ignore_for_file: deprecated_member_use_from_same_package
 import 'dart:html';
 
-import "package:react/react.dart" as react;
-import "package:react/react_dom.dart" as react_dom;
+import 'package:react/react.dart' as react;
+import 'package:react/react_dom.dart' as react_dom;
 
 class _Item extends react.Component {
   componentWillReceiveProps(newProps) {
-    print("Old props: $props");
-    print("New props: $newProps");
+    print('Old props: $props');
+    print('New props: $newProps');
   }
 
   shouldComponentUpdate(nextProps, nextState) {

@@ -88,7 +88,7 @@ void sharedConsoleWarnTests({@required bool expectDeduplicateSyntheticEventWarni
 
     void triggerRealDdcSyntheticEventWarning<T extends react.SyntheticEvent>() {
       if (T == react.SyntheticEvent) {
-        throw ArgumentError("T must a subclass of SyntheticEvent, not SyntheticEvent itself, for this to reproduce.");
+        throw ArgumentError('T must a subclass of SyntheticEvent, not SyntheticEvent itself, for this to reproduce.');
       }
 
       // Adapted from reduced test case in https://github.com/dart-lang/sdk/issues/43939

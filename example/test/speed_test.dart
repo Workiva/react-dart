@@ -1,13 +1,13 @@
 // ignore_for_file: deprecated_member_use_from_same_package
-import "dart:html";
-import "dart:async";
+import 'dart:html';
+import 'dart:async';
 
-import "package:react/react.dart" as react;
-import "package:react/react_dom.dart" as react_dom;
+import 'package:react/react.dart' as react;
+import 'package:react/react_dom.dart' as react_dom;
 
 Stopwatch stopwatch = Stopwatch()..start();
 timeprint(message) {
-  print("$message ${stopwatch.elapsedMilliseconds}");
+  print('$message ${stopwatch.elapsedMilliseconds}');
   stopwatch.reset();
 }
 
@@ -46,7 +46,7 @@ class _Hello extends react.Component {
   }
 
   render() {
-    timeprint("rendering start");
+    timeprint('rendering start');
     var data = props['data'];
     var children = [];
     for (var elem in data) {
@@ -54,7 +54,7 @@ class _Hello extends react.Component {
         'key': elem[0]
       }, [
         react.span({'key': 'span1'}, elem[0]),
-        " ",
+        ' ',
         react.span({'key': 'span2'}, elem[1])
       ]));
     }
@@ -65,9 +65,9 @@ class _Hello extends react.Component {
 //          react.span({}, elem[1])
 //        ]))
 //    );
-    timeprint("rendering almost ends");
+    timeprint('rendering almost ends');
     var res = react.div({}, children);
-    timeprint("rendering ends");
+    timeprint('rendering ends');
     return res;
   }
 }
@@ -77,7 +77,7 @@ var Hello = react.registerComponent(() => _Hello());
 void main() {
   var data = [];
   for (num i = 0; i < 1000; i++) {
-    data.add(["name_$i", "value_$i"]);
+    data.add(['name_$i', 'value_$i']);
   }
-  react_dom.render(Hello({"data": data}, []), querySelector('#content'));
+  react_dom.render(Hello({'data': data}, []), querySelector('#content'));
 }

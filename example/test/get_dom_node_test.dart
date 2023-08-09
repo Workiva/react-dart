@@ -1,12 +1,12 @@
 // ignore_for_file: deprecated_member_use_from_same_package
-import "dart:html";
+import 'dart:html';
 
-import "package:react/react.dart" as react;
-import "package:react/react_dom.dart" as react_dom;
+import 'package:react/react.dart' as react;
+import 'package:react/react_dom.dart' as react_dom;
 
 customAssert(text, condition) {
   if (condition)
-    print("${text} passed");
+    print('${text} passed');
   else
     throw (text);
 }
@@ -17,7 +17,7 @@ class _ChildComponent extends react.Component {
   var counter = 0;
 
   render() => react.div({}, [
-        "Test element",
+        'Test element',
         counter.toString(),
         react.button({
           'type': 'button',
@@ -37,14 +37,14 @@ class SimpleComponent extends react.Component {
   var refToSpan;
   var refToElement;
 
-  componentWillMount() => print("mount");
+  componentWillMount() => print('mount');
 
-  componentWillUnmount() => print("unmount");
+  componentWillUnmount() => print('unmount');
 
   componentDidMount() {
-    customAssert("ref to span return span ", refToSpan.text == "Test");
-    customAssert("findDOMNode works on this", react_dom.findDOMNode(this) != null);
-    customAssert("random ref resolves to null", this.ref("someRandomRef") == null);
+    customAssert('ref to span return span ', refToSpan.text == 'Test');
+    customAssert('findDOMNode works on this', react_dom.findDOMNode(this) != null);
+    customAssert('random ref resolves to null', this.ref('someRandomRef') == null);
   }
 
   var counter = 0;
@@ -52,10 +52,10 @@ class SimpleComponent extends react.Component {
   render() => react.div({}, [
         react.span({
           'key': 'span1',
-          "ref": (ref) {
+          'ref': (ref) {
             refToSpan = ref;
           }
-        }, "Test"),
+        }, 'Test'),
         react.span({'key': 'span2'}, counter),
         react.button({
           'type': 'button',
@@ -66,7 +66,7 @@ class SimpleComponent extends react.Component {
         react.br({'key': 'br'}),
         ChildComponent({
           'key': 'child',
-          "ref": (ref) {
+          'ref': (ref) {
             refToElement = ref;
           }
         }),

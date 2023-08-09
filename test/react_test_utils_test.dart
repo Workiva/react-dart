@@ -107,7 +107,7 @@ testUtils({isComponent2: false, dynamic eventComponent, dynamic sampleComponent,
             eventHandlerName: (e) {
               capturedEvent = e;
             },
-            "ref": (r) => ref = r,
+            'ref': (r) => ref = r,
           }));
 
           event(ref, eventData);

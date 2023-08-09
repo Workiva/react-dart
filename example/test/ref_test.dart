@@ -1,9 +1,9 @@
 // ignore_for_file: deprecated_member_use_from_same_package
-import "dart:html";
+import 'dart:html';
 
-import "package:react/react.dart" as react;
-import "package:react/react_dom.dart" as react_dom;
-import "package:react/react_client.dart";
+import 'package:react/react.dart' as react;
+import 'package:react/react_dom.dart' as react_dom;
+import 'package:react/react_client.dart';
 
 var ChildComponent = react.registerComponent(() => _ChildComponent());
 
@@ -14,7 +14,7 @@ class _ChildComponent extends react.Component {
     redraw();
   }
 
-  render() => react.span({}, "Child element with value ${somevalue}");
+  render() => react.span({}, 'Child element with value ${somevalue}');
 }
 
 var InputComponentForm = react.forwardRef2((props, ref) {
@@ -39,14 +39,14 @@ var InputComponentForm = react.forwardRef2((props, ref) {
 
 var ChildComponentForm = react.forwardRef2((props, ref) {
   return react.Fragment({}, [
-    react.h4({'key': 'create-child-h4'}, "ChildComponent"),
+    react.h4({'key': 'create-child-h4'}, 'ChildComponent'),
     react.form({
       'key': 'childComponentForm',
       'className': 'form-inline'
     }, [
       ChildComponent({
         'key': 'create-child',
-        "ref": ref,
+        'ref': ref,
       }),
       '\u00a0',
       react.button({
@@ -76,11 +76,11 @@ class _ParentComponent extends react.Component {
   }
 
   showChildValue(_) {
-    print(ref("childRef").somevalue);
+    print(ref('childRef').somevalue);
   }
 
   incrementChildValue(_) {
-    ref("childRef").incrementValue();
+    ref('childRef').incrementValue();
   }
 
   // Callback refs
@@ -121,8 +121,8 @@ class _ParentComponent extends react.Component {
         react.div({
           'key': 'string-refs'
         }, [
-          react.h2({'key': 'string-h2'}, "String refs"),
-          react.h4({'key': 'string-h4'}, "<input>"),
+          react.h2({'key': 'string-h2'}, 'String refs'),
+          react.h4({'key': 'string-h4'}, '<input>'),
           react.form({
             'key': 'stringRefInputForm',
             'className': 'form-inline'
@@ -140,12 +140,12 @@ class _ParentComponent extends react.Component {
               'onClick': showInputValue,
             }, 'Print input element value'),
           ]),
-          react.h4({'key': 'string-h4-child'}, "ChildComponent"),
+          react.h4({'key': 'string-h4-child'}, 'ChildComponent'),
           react.form({
             'key': 'stringRefChildComponentForm',
             'className': 'form-inline'
           }, [
-            ChildComponent({'key': 'string-child', "ref": "childRef"}),
+            ChildComponent({'key': 'string-child', 'ref': 'childRef'}),
             '\u00a0',
             react.button({
               'type': 'button',
@@ -165,8 +165,8 @@ class _ParentComponent extends react.Component {
         react.div({
           'key': 'callback-refs'
         }, [
-          react.h2({'key': 'h2-callback'}, "Callback refs"),
-          react.h4({'key': 'h4-callback-input'}, "<input>"),
+          react.h2({'key': 'h2-callback'}, 'Callback refs'),
+          react.h4({'key': 'h4-callback-input'}, '<input>'),
           react.form({
             'key': 'inputForm',
             'className': 'form-inline'
@@ -184,14 +184,14 @@ class _ParentComponent extends react.Component {
               'onClick': showInputCallbackRefValue,
             }, 'Print input element value'),
           ]),
-          react.h4({'key': 'callback-child-h4'}, "ChildComponent"),
+          react.h4({'key': 'callback-child-h4'}, 'ChildComponent'),
           react.form({
             'key': 'childComponentForm',
             'className': 'form-inline'
           }, [
             ChildComponent({
               'key': 'callback-child',
-              "ref": (instance) => _childCallbackRef = instance,
+              'ref': (instance) => _childCallbackRef = instance,
             }),
             '\u00a0',
             react.button({
@@ -212,8 +212,8 @@ class _ParentComponent extends react.Component {
         react.div({
           'key': 'forward-refs'
         }, [
-          react.h2({'key': 'h2-forward'}, "Create / Forward refs"),
-          react.h4({'key': 'h4-forward-input'}, "<input>"),
+          react.h2({'key': 'h2-forward'}, 'Create / Forward refs'),
+          react.h4({'key': 'h4-forward-input'}, '<input>'),
           InputComponentForm({
             'ref': _inputCreateRef,
             'showInputForwardRefValue': showInputCreateRefValue,

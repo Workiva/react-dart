@@ -4,7 +4,7 @@ library hooks_test;
 
 import 'dart:html';
 
-import "package:js/js.dart";
+import 'package:js/js.dart';
 import 'package:react/hooks.dart';
 import 'package:react/react.dart' as react;
 import 'package:react/react.dart';

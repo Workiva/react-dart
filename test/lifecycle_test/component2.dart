@@ -2,7 +2,7 @@
 @JS()
 library react.lifecycle_test.component2;
 
-import "package:js/js.dart";
+import 'package:js/js.dart';
 import 'package:react/react.dart' as react;
 import 'package:react/react_client/react_interop.dart';
 
@@ -58,7 +58,7 @@ class _SetStateTest extends react.Component2 with LifecycleTestHelper {
   @override
   Map getDerivedStateFromError(error) {
     lifecycleCall('getDerivedStateFromError', arguments: [error]);
-    return {"shouldThrow": false, "errorFromGetDerivedState": error};
+    return {'shouldThrow': false, 'errorFromGetDerivedState': error};
   }
 
   Map outerTransactionalSetStateCallback(Map previousState, __) {
@@ -110,7 +110,7 @@ class _SetStateTest extends react.Component2 with LifecycleTestHelper {
               });
             }
           }, [
-            state["shouldThrow"] ? ErrorComponent({"key": "errorComp"}) : null,
+            state['shouldThrow'] ? ErrorComponent({'key': 'errorComp'}) : null,
             state['counter']
           ]));
     }
@@ -205,12 +205,12 @@ class TestDartException implements Exception {
 
 class _ErrorComponent extends react.Component2 {
   void _throwError() {
-    throw TestDartException("It crashed!", 100);
+    throw TestDartException('It crashed!', 100);
   }
 
   void render() {
     _throwError();
-    return react.div({'key': 'defaultMessage'}, "Error");
+    return react.div({'key': 'defaultMessage'}, 'Error');
   }
 }
 

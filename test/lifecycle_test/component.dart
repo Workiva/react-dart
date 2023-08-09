@@ -2,7 +2,7 @@
 @JS()
 library react.lifecycle_test.component;
 
-import "package:js/js.dart";
+import 'package:js/js.dart';
 import 'package:react/react.dart' as react;
 import 'package:react/react_client.dart';
 
@@ -15,7 +15,7 @@ class _SetStateTest extends react.Component with LifecycleTestHelper {
   Map getDefaultProps() => {'shouldUpdate': true};
 
   @override
-  getInitialState() => {"counter": 1};
+  getInitialState() => {'counter': 1};
 
   @override
   componentWillReceiveProps(_) {

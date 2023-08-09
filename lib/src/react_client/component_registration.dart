@@ -39,10 +39,10 @@ List<String> _filterSkipMethods(Iterable<String> methods) {
   }
 
   if (shouldWarn) {
-    window.console.warn("WARNING: Crucial lifecycle methods passed into "
-        "skipMethods. shouldComponentUpdate, componentDidUpdate, and render "
-        "cannot be skipped and will still be added to the new component. Please "
-        "remove them from skipMethods.");
+    window.console.warn('WARNING: Crucial lifecycle methods passed into '
+        'skipMethods. shouldComponentUpdate, componentDidUpdate, and render '
+        'cannot be skipped and will still be added to the new component. Please '
+        'remove them from skipMethods.');
   }
 
   return finalList;

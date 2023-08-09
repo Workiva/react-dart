@@ -62,21 +62,21 @@ class _IndexComponent extends react.Component2 {
           DialogActions(
             {},
             Button({
-              'color': "primary",
+              'color': 'primary',
               'onClick': handleClose,
             }, 'OK'),
           )),
       Typography({
-        'variant': "h4",
+        'variant': 'h4',
         'gutterBottom': true,
       }, 'Material-UI'),
       Typography({
-        'variant': "subtitle1",
+        'variant': 'subtitle1',
         'gutterBottom': true,
       }, 'example project'),
       Button({
-        'variant': "contained",
-        'color': "secondary",
+        'variant': 'contained',
+        'color': 'secondary',
         'onClick': handleClick,
       }, Icon({}, 'fingerprint'), 'Super Secret Password'),
     );

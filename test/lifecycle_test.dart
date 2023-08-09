@@ -8,7 +8,7 @@ import 'dart:convert';
 import 'dart:html';
 import 'dart:js';
 
-import "package:js/js.dart";
+import 'package:js/js.dart';
 import 'package:meta/meta.dart';
 import 'package:react/react.dart' as react;
 import 'package:react/react_client.dart';
@@ -337,7 +337,7 @@ main() {
         var renderedInstance = react_dom.render(components2.SetStateTest({}), mountNode);
         LifecycleTestHelper component = getDartComponent(renderedInstance);
         LifecycleTestHelper.staticLifecycleCalls.clear();
-        component.setState({"shouldThrow": true});
+        component.setState({'shouldThrow': true});
 
         // First render throws an error, caught by `getDerivedStateFromError`.
         // `getDerivedStateFromError` sets state, starting the update cycle
@@ -362,7 +362,7 @@ main() {
               'getSnapshotBeforeUpdate',
               'componentDidUpdate'
             ]));
-        expect(component.state["shouldThrow"], isFalse,
+        expect(component.state['shouldThrow'], isFalse,
             reason: 'applies the state returned by `getDerivedStateFromError`');
       });
 
@@ -377,7 +377,7 @@ main() {
           'render': (_) {
             if (_shouldThrow) {
               _shouldThrow = false;
-              return components2.ErrorComponent({"key": "errorComp"});
+              return components2.ErrorComponent({'key': 'errorComp'});
             }
             return react.div({});
           }
@@ -412,7 +412,7 @@ main() {
           'render': (_) {
             if (_shouldThrow) {
               _shouldThrow = false;
-              return components2.ErrorComponent({"key": "errorComp"});
+              return components2.ErrorComponent({'key': 'errorComp'});
             }
             return react.div({});
           }
@@ -445,7 +445,7 @@ main() {
         var renderedInstance = react_dom.render(components2.SetStateTest({}), mountNode);
         LifecycleTestHelper component = getDartComponent(renderedInstance);
         LifecycleTestHelper.staticLifecycleCalls.clear();
-        component.setState({"shouldThrow": true});
+        component.setState({'shouldThrow': true});
 
         expect(
             component.lifecycleCalls,
@@ -454,7 +454,7 @@ main() {
                   args: [isA<components2.TestDartException>(), isA<react_interop.ReactErrorInfo>()]),
               matchCall('getDerivedStateFromError', args: [isA<components2.TestDartException>()]),
             ]));
-        expect(component.state["shouldThrow"], isFalse,
+        expect(component.state['shouldThrow'], isFalse,
             reason: 'applies the state returned by `getDerivedStateFromError`');
       });
 
@@ -463,7 +463,7 @@ main() {
         var renderedInstance = react_dom.render(components2.SkipMethodsTest({}), mountNode);
         LifecycleTestHelper component = getDartComponent(renderedInstance);
         LifecycleTestHelper.staticLifecycleCalls.clear();
-        component.setState({"shouldThrow": true});
+        component.setState({'shouldThrow': true});
 
         expect(
             component.lifecycleCallMemberNames,
@@ -491,7 +491,7 @@ main() {
         LifecycleTestHelper component = getDartComponent(renderedInstance);
         Element renderedNode = react_dom.findDOMNode(renderedInstance);
         LifecycleTestHelper.staticLifecycleCalls.clear();
-        component.setState({"shouldThrow": true});
+        component.setState({'shouldThrow': true});
 
         expect(renderedNode.children[1].text, contains(getComponent2ErrorMessage()));
         // Because the stacktrace will be different between JS and Dart, in
@@ -511,7 +511,7 @@ main() {
           var renderedInstance = react_dom.render(components2.DefaultSkipMethodsTest({}), mountNode);
           LifecycleTestHelper component = getDartComponent(renderedInstance);
           LifecycleTestHelper.staticLifecycleCalls.clear();
-          component.setState({"shouldThrow": true});
+          component.setState({'shouldThrow': true});
         }, throwsA(anything));
       });
     });

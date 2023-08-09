@@ -1,8 +1,8 @@
 // ignore_for_file: deprecated_member_use_from_same_package
-import "dart:async";
+import 'dart:async';
 
-import "package:react/react.dart" as react;
-import "package:react/react_dom.dart" as react_dom;
+import 'package:react/react.dart' as react;
+import 'package:react/react_dom.dart' as react_dom;
 
 class _HelloComponent extends react.Component2 {
   @override
@@ -25,7 +25,7 @@ var helloComponent = react.registerComponent(() => _HelloComponent());
 
 class _HelloGreeter extends react.Component {
   var myInput;
-  getInitialState() => {"name": "World"};
+  getInitialState() => {'name': 'World'};
 
   onInputChange(e) {
     var input = react_dom.findDOMNode(myInput);
@@ -50,7 +50,7 @@ class _HelloGreeter extends react.Component {
 var helloGreeter = react.registerComponent(() => _HelloGreeter());
 
 class _CheckBoxComponent extends react.Component {
-  getInitialState() => {"checked": false};
+  getInitialState() => {'checked': false};
 
   _handleChange(e) {
     this.setState({'checked': e.target.checked});
@@ -87,7 +87,7 @@ class _ClockComponent extends react.Component {
   Map getDefaultProps() => {'refreshRate': 1000};
 
   void componentWillMount() {
-    timer = Timer.periodic(Duration(milliseconds: this.props["refreshRate"]), this.tick);
+    timer = Timer.periodic(Duration(milliseconds: this.props['refreshRate']), this.tick);
   }
 
   void componentWillUnmount() {
@@ -96,7 +96,7 @@ class _ClockComponent extends react.Component {
 
   void componentDidMount() {
     var rootNode = react_dom.findDOMNode(this);
-    rootNode.style.backgroundColor = "#FFAAAA";
+    rootNode.style.backgroundColor = '#FFAAAA';
   }
 
   bool shouldComponentUpdate(nextProps, nextState) {
@@ -106,7 +106,7 @@ class _ClockComponent extends react.Component {
   }
 
   void componentWillReceiveProps(nextProps) {
-    print("Received props: $nextProps");
+    print('Received props: $nextProps');
   }
 
   tick(Timer timer) {
@@ -114,9 +114,9 @@ class _ClockComponent extends react.Component {
   }
 
   render() {
-    return react.span({'onClick': (event) => print("Hello World!")},
+    return react.span({'onClick': (event) => print('Hello World!')},
 //        { 'onClick': (event, [domid = null]) => print("Hello World!") },
-        ["Seconds elapsed: ", "${state['secondsElapsed']}"]);
+        ['Seconds elapsed: ', "${state['secondsElapsed']}"]);
   }
 }
 
@@ -125,34 +125,34 @@ var clockComponent = react.registerComponent(() => _ClockComponent());
 class _ListComponent extends react.Component {
   Map getInitialState() {
     return {
-      "items": List.from([0, 1, 2, 3])
+      'items': List.from([0, 1, 2, 3])
     };
   }
 
   void componentWillUpdate(nextProps, nextState) {
-    if (nextState["items"].length > state["items"].length) {
-      print("Adding " + nextState["items"].last.toString());
+    if (nextState['items'].length > state['items'].length) {
+      print('Adding ' + nextState['items'].last.toString());
     }
   }
 
   void componentDidUpdate(prevProps, prevState) {
-    if (prevState["items"].length > state["items"].length) {
-      print("Removed " + prevState["items"].first.toString());
+    if (prevState['items'].length > state['items'].length) {
+      print('Removed ' + prevState['items'].first.toString());
     }
   }
 
   int iterator = 3;
 
   void addItem(event) {
-    List items = List.from(state["items"]);
+    List items = List.from(state['items']);
     items.add(++iterator);
-    setState({"items": items});
+    setState({'items': items});
   }
 
   dynamic render() {
     List<dynamic> items = [];
     for (var item in state['items']) {
-      items.add(react.li({"key": item}, "$item"));
+      items.add(react.li({'key': item}, '$item'));
     }
 
     return react.div({}, [
@@ -409,10 +409,10 @@ class _Component2TestComponent extends react.Component2 with react.TypedSnapshot
   }
 
   String getSnapshotBeforeUpdate(nextProps, prevState) {
-    if (prevState["items"].length > state["items"].length) {
-      return "removed " + prevState["items"].last.toString();
+    if (prevState['items'].length > state['items'].length) {
+      return 'removed ' + prevState['items'].last.toString();
     } else {
-      return "added " + state["items"].last.toString();
+      return 'added ' + state['items'].last.toString();
     }
   }
 
@@ -421,19 +421,19 @@ class _Component2TestComponent extends react.Component2 with react.TypedSnapshot
       print('Updated DOM and ' + snapshot);
       return null;
     }
-    print("No Snapshot");
+    print('No Snapshot');
   }
 
   void removeItem(event) {
-    List items = List.from(state["items"]);
+    List items = List.from(state['items']);
     items.removeAt(items.length - 1);
-    setState({"items": items});
+    setState({'items': items});
   }
 
   void addItem(event) {
-    List items = List.from(state["items"]);
+    List items = List.from(state['items']);
     items.add(items.length);
-    setState({"items": items});
+    setState({'items': items});
   }
 
   dynamic render() {
@@ -442,7 +442,7 @@ class _Component2TestComponent extends react.Component2 with react.TypedSnapshot
     final items = [];
     for (var item in state['items']) {
       final count = itemCounts[item] = (itemCounts[item] ?? 0) + 1;
-      items.add(react.li({'key': 'c2-$item-$count'}, "$item"));
+      items.add(react.li({'key': 'c2-$item-$count'}, '$item'));
     }
 
     return react.div({}, [
@@ -468,8 +468,8 @@ var component2TestComponent = react.registerComponent(() => _Component2TestCompo
 
 class _ErrorComponent extends react.Component2 {
   void componentDidMount() {
-    if (!props["errored"]) {
-      throw _CustomException("It broke!", 2);
+    if (!props['errored']) {
+      throw _CustomException('It broke!', 2);
     }
   }
 
@@ -477,7 +477,7 @@ class _ErrorComponent extends react.Component2 {
     return react.div(
         {'key': 'eb-d1-e'},
         "Oh no, I'm an error! Check your "
-        "console.");
+        'console.');
   }
 }
 
@@ -491,58 +491,58 @@ class _CustomException implements Exception {
   _CustomException(this.message, this.code) {
     switch (code) {
       case 1:
-        randomMessage = "The code is a 1";
+        randomMessage = 'The code is a 1';
         break;
       case 2:
-        randomMessage = "The Code is a 2";
+        randomMessage = 'The Code is a 2';
         break;
       default:
-        randomMessage = "Default Error Code";
+        randomMessage = 'Default Error Code';
     }
   }
 }
 
 class _Component2ErrorTestComponent extends react.Component2 {
   Map get initialState => {
-        "clicked": false,
-        "errored": false,
-        "error": null,
+        'clicked': false,
+        'errored': false,
+        'error': null,
       };
 
   void componentDidCatch(error, info) {
     if (error is _CustomException) {
       print(info.dartStackTrace);
-      setState({"error": error.randomMessage});
+      setState({'error': error.randomMessage});
     } else {
       setState({
-        "error": "We can capture the error, store it in state and "
-            "display it here."
+        'error': 'We can capture the error, store it in state and '
+            'display it here.'
       });
     }
   }
 
   Map getDerivedStateFromError(error) {
-    return {"errored": true};
+    return {'errored': true};
   }
 
   void error(event) {
-    setState({"clicked": true});
+    setState({'clicked': true});
   }
 
   void clearError(event) {
-    setState({"clicked": false, "error": null, "errored": false});
+    setState({'clicked': false, 'error': null, 'errored': false});
   }
 
   dynamic render() {
-    dynamic errorMessage = state["error"] ?? "No error yet";
+    dynamic errorMessage = state['error'] ?? 'No error yet';
 
     return react.div({
-      "key": "e-cont"
+      'key': 'e-cont'
     }, [
-      react.h3({"key": "e-header"}, "Error Boundary Test"),
-      state["clicked"] ? ErrorComponent({'key': 'ec-1', 'errored': state['errored']}) : null,
+      react.h3({'key': 'e-header'}, 'Error Boundary Test'),
+      state['clicked'] ? ErrorComponent({'key': 'ec-1', 'errored': state['errored']}) : null,
       errorMessage != null ? react.div({'key': 'ec-m-1'}, '$errorMessage') : null,
-      !state["errored"]
+      !state['errored']
           ? react.button({
               'type': 'button',
               'key': 'c3-r-button',
@@ -550,7 +550,7 @@ class _Component2ErrorTestComponent extends react.Component2 {
               'onClick': error,
             }, 'Trigger Error')
           : null,
-      state["errored"]
+      state['errored']
           ? react.button({
               'type': 'button',
               'key': 'c3-c-button',
@@ -558,7 +558,7 @@ class _Component2ErrorTestComponent extends react.Component2 {
               'onClick': clearError,
             }, 'Clear Error')
           : null,
-      react.hr({"key": "e-hr"}),
+      react.hr({'key': 'e-hr'}),
     ]);
   }
 }

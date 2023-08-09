@@ -4,9 +4,9 @@
 library react_client.js_interop_helpers;
 
 import 'dart:collection';
-import "dart:js_util";
+import 'dart:js_util';
 
-import "package:js/js.dart";
+import 'package:js/js.dart';
 
 import 'js_backed_map.dart';
 
