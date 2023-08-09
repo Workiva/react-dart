@@ -114,7 +114,7 @@ Map reducer(Map state, Map action) {
 }
 
 UseReducerTestComponent(Map props) {
-  final state = useReducerLazy(reducer, props['initialCount'], initializeCount);
+  final state = useReducerLazy(reducer, props['initialCount'] as int, initializeCount);
 
   return react.Fragment({}, [
     state.state['count'],
@@ -297,7 +297,7 @@ final randomUseLayoutEffectTestComponent =
     react.registerFunctionComponent(RandomUseLayoutEffectTestComponent, displayName: 'randomUseLayoutEffectTest');
 
 RandomUseLayoutEffectTestComponent(Map props) {
-  final value = useState(0);
+  final value = useState<num>(0);
 
   useLayoutEffect(() {
     if (value.value == 0) {
@@ -317,7 +317,7 @@ final randomUseEffectTestComponent =
     react.registerFunctionComponent(RandomUseEffectTestComponent, displayName: 'randomUseEffectTest');
 
 RandomUseEffectTestComponent(Map props) {
-  final value = useState(0);
+  final value = useState<num>(0);
 
   useEffect(() {
     if (value.value == 0) {
