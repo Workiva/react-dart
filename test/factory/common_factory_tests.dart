@@ -45,7 +45,7 @@ void commonFactoryTests(ReactComponentFactoryProxy factory,
     expect(ReactDartComponentVersion.fromType(factory.type), dartComponentVersion);
   });
 
-  void sharedChildrenTests(dynamic getChildren(ReactElement instance),
+  void sharedChildrenTests(dynamic Function(ReactElement instance) getChildren,
       {@required bool shouldAlwaysBeList, Map props = const {}}) {
     // There are different code paths for 0, 1, 2, 3, 4, 5, 6, and 6+ arguments.
     // Test all of them.
@@ -368,8 +368,8 @@ void domEventHandlerWrappingTests(ReactComponentFactoryProxy factory) {
 /// It will be called with the actual ref value for JS refs, (e.g., JS ref objects as opposed to Dart objects)
 void refTests<T>(
   ReactComponentFactoryProxy factory, {
-  @required void verifyRefValue(dynamic refValue),
-  void verifyJsRefValue(dynamic refValue),
+  void Function(dynamic refValue) verifyRefValue,
+  void Function(dynamic refValue) verifyJsRefValue,
 }) {
   if (T == dynamic) {
     throw ArgumentError('Generic parameter T must be specified');
@@ -601,7 +601,7 @@ class _StringRefOwnerOwnerHelperComponent extends react.Component {
 
 /// Renders the provided [render] function with a Component owner that supports string refs,
 /// for string ref tests.
-ReactComponent _renderWithStringRefSupportingOwner(ReactElement render()) {
+ReactComponent _renderWithStringRefSupportingOwner(ReactElement Function() render) {
   final factory =
       react.registerComponent(() => _StringRefOwnerOwnerHelperComponent()) as ReactDartComponentFactoryProxy;
 
@@ -613,7 +613,7 @@ int _nextFactoryId = 0;
 /// Renders the provided [render] function with a Component2 owner that will have a unique name.
 ///
 /// This prevents React JS from not printing key warnings it deems as "duplicates".
-void _renderWithUniqueOwnerName(ReactElement render()) {
+void _renderWithUniqueOwnerName(ReactElement Function() render) {
   final factory = react.registerComponent2(() => _UniqueOwnerHelperComponent());
   factory.reactClass.displayName = 'OwnerHelperComponent_$_nextFactoryId';
   _nextFactoryId++;

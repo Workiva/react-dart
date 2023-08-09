@@ -27,7 +27,7 @@ export 'package:react/src/react_client/synthetic_event_wrappers.dart' hide NonNa
 export 'package:react/src/react_client/synthetic_data_transfer.dart' show SyntheticDataTransfer;
 export 'package:react/src/react_client/event_helpers.dart';
 
-typedef Error PropValidator<TProps>(TProps props, PropValidatorInfo info);
+typedef PropValidator<TProps> = Error Function(TProps props, PropValidatorInfo info);
 
 /// A React component declared using a function that takes in [props] and returns rendered output.
 ///
@@ -45,18 +45,18 @@ typedef DartFunctionComponent = dynamic Function(JsBackedMap props);
 /// and not just a ref object, so we type [ref] as dynamic here.
 typedef DartForwardRefFunctionComponent = dynamic Function(JsBackedMap props, dynamic ref);
 
-typedef T ComponentFactory<T extends Component>();
+typedef ComponentFactory<T extends Component> = T Function();
 
-typedef ReactComponentFactoryProxy ComponentRegistrar(ComponentFactory componentFactory,
+typedef ComponentRegistrar = ReactComponentFactoryProxy Function(ComponentFactory componentFactory,
     [Iterable<String> skipMethods]);
 
-typedef ReactDartComponentFactoryProxy2 ComponentRegistrar2(
+typedef ComponentRegistrar2 = ReactDartComponentFactoryProxy2 Function(
   ComponentFactory<Component2> componentFactory, {
   Iterable<String> skipMethods,
   Component2BridgeFactory bridgeFactory,
 });
 
-typedef ReactDartFunctionComponentFactoryProxy FunctionComponentRegistrar(DartFunctionComponent componentFactory,
+typedef FunctionComponentRegistrar = ReactDartFunctionComponentFactoryProxy Function(DartFunctionComponent componentFactory,
     {String displayName});
 
 /// Fragment component that allows the wrapping of children without the necessity of using
@@ -318,7 +318,7 @@ abstract class Component {
   /// Force a call to [render] by calling [setState], which effectively "redraws" the `Component`.
   ///
   /// Optionally accepts a [callback] that gets called after the component updates.
-  void redraw([callback()]) {
+  void redraw([Function() callback]) {
     setState({}, callback);
   }
 
@@ -329,7 +329,7 @@ abstract class Component {
   /// Also allows [newState] to be used as a transactional `setState` callback.
   ///
   /// See: <https://facebook.github.io/react/docs/react-component.html#setstate>
-  void setState(covariant dynamic newState, [callback()]) {
+  void setState(covariant dynamic newState, [Function() callback]) {
     if (newState is Map) {
       _nextState.addAll(newState);
     } else if (newState is StateUpdaterCallback) {
@@ -354,7 +354,7 @@ abstract class Component {
   /// >
   /// > Use [setState] instead.
   @Deprecated('7.0.0')
-  void replaceState(Map newState, [callback()]) {
+  void replaceState(Map newState, [Function() callback]) {
     final nextState = newState == null ? {} : Map.from(newState);
     _nextState = nextState;
     if (callback != null) _setStateCallbacks.add(callback);

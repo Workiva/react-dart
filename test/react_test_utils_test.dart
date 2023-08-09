@@ -72,9 +72,9 @@ testUtils({isComponent2 = false, dynamic eventComponent, dynamic sampleComponent
     });
 
     void testEvent(
-      void event(dynamic instanceOrNode, Map eventData),
+      void Function(dynamic instanceOrNode, Map eventData) event,
       String eventName,
-      void expectEventType(SyntheticEvent e),
+      void Function(SyntheticEvent e) expectEventType,
     ) {
       final eventHandlerName = 'on${eventName[0].toUpperCase() + eventName.substring(1)}';
       eventName = eventName.toLowerCase();
