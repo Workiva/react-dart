@@ -548,7 +548,8 @@ void refTests<T>(
   });
 }
 
-void _childKeyWarningTests(ReactComponentFactoryProxy factory, {Function(ReactElement Function()) renderWithUniqueOwnerName}) {
+void _childKeyWarningTests(ReactComponentFactoryProxy factory,
+    {Function(ReactElement Function()) renderWithUniqueOwnerName}) {
   group('key/children validation', () {
     bool consoleErrorCalled;
     var consoleErrorMessage;

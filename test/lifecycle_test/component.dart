@@ -118,7 +118,8 @@ class _DefaultPropsTest extends react.Component {
   render() => null;
 }
 
-final ContextWrapperWithoutKeys = react.registerComponent(() => _ContextWrapperWithoutKeys()) as ReactDartComponentFactoryProxy;
+final ContextWrapperWithoutKeys =
+    react.registerComponent(() => _ContextWrapperWithoutKeys()) as ReactDartComponentFactoryProxy;
 
 class _ContextWrapperWithoutKeys extends react.Component with LifecycleTestHelper {
   @override
@@ -156,7 +157,8 @@ class _ContextWrapper extends react.Component with LifecycleTestHelper {
   render() => react.div({}, props['children']);
 }
 
-final LifecycleTestWithContext = react.registerComponent(() => _LifecycleTestWithContext()) as ReactDartComponentFactoryProxy;
+final LifecycleTestWithContext =
+    react.registerComponent(() => _LifecycleTestWithContext()) as ReactDartComponentFactoryProxy;
 
 class _LifecycleTestWithContext extends _LifecycleTest {
   @override
@@ -179,7 +181,8 @@ class _LifecycleTest extends react.Component with LifecycleTestHelper {
 
   @override
   void componentWillReceivePropsWithContext(newProps, newContext) =>
-      lifecycleCall('componentWillReceivePropsWithContext', arguments: [Map.from(newProps), Map.from(newContext as Map)]);
+      lifecycleCall('componentWillReceivePropsWithContext',
+          arguments: [Map.from(newProps), Map.from(newContext as Map)]);
 
   @override
   void componentWillUpdate(nextProps, nextState) =>

@@ -567,7 +567,9 @@ main() {
             react.button({
               'ref': (ref) => incrementButtonRef = ref as ButtonElement,
               'onClick': (_) => count.setWithUpdater((prev) => prev + 1),
-            }, ['+']),
+            }, [
+              '+'
+            ]),
             react.button({
               'ref': (ref) => reRenderButtonRef = ref as ButtonElement,
               'onClick': (_) => reRender.setWithUpdater((prev) => prev + 1)

@@ -16,7 +16,6 @@ final span = react.span as ReactDomComponentFactoryProxy;
 
 main() {
   group('ReactDomComponentFactoryProxy', () {
-
     group('- common factory behavior -', () {
       commonFactoryTests(div);
     });
