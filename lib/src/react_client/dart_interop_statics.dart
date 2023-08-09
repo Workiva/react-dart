@@ -14,7 +14,6 @@ import 'package:react/react_client/zone.dart';
 
 import 'package:react/src/context.dart';
 import 'package:react/src/react_client/private_utils.dart';
-import 'package:react/src/typedefs.dart';
 
 /// The static methods that proxy JS component lifecycle methods to Dart components.
 @Deprecated('7.0.0')

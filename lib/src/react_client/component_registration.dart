@@ -1,6 +1,5 @@
 import 'dart:html';
 
-import 'package:js/js_util.dart';
 import 'package:react/react.dart';
 import 'package:react/react_client/bridge.dart';
 import 'package:react/react_client/js_backed_map.dart';
