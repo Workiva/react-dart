@@ -25,7 +25,7 @@ String getJsFunctionName(Function object) =>
 /// See also:
 /// - [promiseToFuture]
 Promise futureToPromise<T>(Future<T> future) {
-  return Promise(allowInterop((Function resolve, Function reject) {
+  return Promise(allowInterop((resolve, reject) {
     future.then((result) => resolve(result), onError: reject);
   }));
 }

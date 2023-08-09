@@ -152,6 +152,7 @@ void sharedErrorBoundaryComponentNameTests() {
       final capturedInfos = <ReactErrorInfo>[];
       react_dom.render(
           _ErrorBoundary({
+            // ignore: avoid_types_on_closure_parameters
             'onComponentDidCatch': (dynamic error, ReactErrorInfo info) {
               capturedInfos.add(info);
             }

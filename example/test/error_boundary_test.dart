@@ -15,6 +15,7 @@ void main() {
     {},
     _ErrorBoundary(
       {
+        // ignore: avoid_types_on_closure_parameters
         'onComponentDidCatch': (dynamic error, ReactErrorInfo info) {
           print('componentDidCatch: info.componentStack ${info.componentStack}');
         },
