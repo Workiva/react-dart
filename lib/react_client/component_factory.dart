@@ -95,6 +95,7 @@ class ReactDartComponentFactoryProxy<TComponent extends Component> extends React
   @override
   ReactClass get type => reactClass;
 
+  @override
   ReactElement build(Map props, [List childrenArgs = const []]) {
     var children = convertArgsToChildren(childrenArgs);
     children = listifyChildren(children);
@@ -175,8 +176,10 @@ class ReactDartComponentFactoryProxy2<TComponent extends Component2> extends Rea
         ReactDartComponentFactoryProxy {
   /// The ReactJS class used as the type for all [ReactElement]s built by
   /// this factory.
+  @override
   final ReactClass reactClass;
 
+  @override
   final Map defaultProps;
 
   ReactDartComponentFactoryProxy2(ReactClass reactClass)
@@ -200,6 +203,7 @@ class ReactJsContextComponentFactoryProxy extends ReactJsComponentFactoryProxy {
   final ReactClass type;
   final bool isConsumer;
   final bool isProvider;
+  @override
   final bool shouldConvertDomProps;
 
   ReactJsContextComponentFactoryProxy(

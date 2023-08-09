@@ -16,6 +16,7 @@ var ChildComponent = react.registerComponent(() => _ChildComponent());
 class _ChildComponent extends react.Component {
   var counter = 0;
 
+  @override
   render() => react.div({}, [
         'Test element',
         counter.toString(),
@@ -37,10 +38,13 @@ class SimpleComponent extends react.Component {
   var refToSpan;
   var refToElement;
 
+  @override
   componentWillMount() => print('mount');
 
+  @override
   componentWillUnmount() => print('unmount');
 
+  @override
   componentDidMount() {
     customAssert('ref to span return span ', refToSpan.text == 'Test');
     customAssert('findDOMNode works on this', react_dom.findDOMNode(this) != null);
@@ -49,6 +53,7 @@ class SimpleComponent extends react.Component {
 
   var counter = 0;
 
+  @override
   render() => react.div({}, [
         react.span({
           'key': 'span1',

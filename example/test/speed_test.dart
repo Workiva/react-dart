@@ -12,10 +12,12 @@ timeprint(message) {
 }
 
 class _Div extends react.Component {
+  @override
   shouldComponentUpdate(nProps, nState) {
     return nProps['key'] != props['key'];
   }
 
+  @override
   render() {
     return react.div(props, props['children']);
   }
@@ -24,10 +26,12 @@ class _Div extends react.Component {
 var Div = react.registerComponent(() => _Div());
 
 class _Span extends react.Component {
+  @override
   shouldComponentUpdate(nProps, nState) {
     return nProps['children'][0] != props['children'][0];
   }
 
+  @override
   render() {
     return react.span(props, props['children']);
   }
@@ -36,6 +40,7 @@ class _Span extends react.Component {
 var Span = react.registerComponent(() => _Span());
 
 class _Hello extends react.Component {
+  @override
   componentWillMount() {
     Future.delayed(Duration(seconds: 5), () {
       stopwatch.reset();
@@ -45,6 +50,7 @@ class _Hello extends react.Component {
     });
   }
 
+  @override
   render() {
     timeprint('rendering start');
     var data = props['data'];

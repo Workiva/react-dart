@@ -14,6 +14,7 @@ class _ChildComponent extends react.Component {
     redraw();
   }
 
+  @override
   render() => react.span({}, 'Child element with value ${somevalue}');
 }
 
@@ -116,6 +117,7 @@ class _ParentComponent extends react.Component {
     _childCreateRef.current.incrementValue();
   }
 
+  @override
   render() => react.div({}, [
         react.h1({'key': 'h1'}, 'Refs'),
         react.div({

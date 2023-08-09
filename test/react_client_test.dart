@@ -226,6 +226,7 @@ class ThrowsInDefaultPropsComponent extends Component {
 }
 
 class ThrowsInDefaultPropsComponent2 extends Component2 {
+  @override
   get defaultProps => throw StateError('bad default props');
 
   @override
@@ -235,6 +236,7 @@ class ThrowsInDefaultPropsComponent2 extends Component2 {
 }
 
 class ThrowsInPropTypesComponent2 extends Component2 {
+  @override
   get propTypes => throw StateError('bad prop types');
 
   @override

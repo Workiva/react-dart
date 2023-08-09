@@ -190,8 +190,10 @@ var TestNewContext = react.createContext<Map>({'renderCount': 0}, calculateChang
 var newContextProviderComponent = react.registerComponent2(() => _NewContextProviderComponent());
 
 class _NewContextProviderComponent extends react.Component2 {
+  @override
   get initialState => {'renderCount': 0, 'complexMap': false};
 
+  @override
   render() {
     final provideMap = {'renderCount': this.state['renderCount']};
 

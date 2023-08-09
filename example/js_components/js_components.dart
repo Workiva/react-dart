@@ -20,6 +20,7 @@ var IndexComponent = react.registerComponent2(() => _IndexComponent());
 class _IndexComponent extends react.Component2 {
   SimpleCustomComponent simpleRef;
 
+  @override
   get initialState => {
         'open': false,
       };
@@ -37,6 +38,7 @@ class _IndexComponent extends react.Component2 {
     print(simpleRef.getFoo());
   }
 
+  @override
   render() {
     return MuiThemeProvider(
       {

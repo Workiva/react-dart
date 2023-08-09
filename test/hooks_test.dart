@@ -850,6 +850,7 @@ main() {
 ReactDartComponentFactoryProxy2 ContextProviderWrapper = react.registerComponent2(() => _ContextProviderWrapper());
 
 class _ContextProviderWrapper extends react.Component2 {
+  @override
   get initialState {
     return {'counter': 1};
   }
@@ -858,6 +859,7 @@ class _ContextProviderWrapper extends react.Component2 {
     this.setState({'counter': state['counter'] + 1});
   }
 
+  @override
   render() {
     return react.div({}, [
       props['contextToUse']

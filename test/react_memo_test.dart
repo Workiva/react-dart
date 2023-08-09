@@ -174,6 +174,7 @@ final MemoTestWrapper = react.registerComponent2(() => _MemoTestWrapperComponent
 class _MemoTestWrapperComponent extends react.Component2 {
   int redrawCount = 0;
 
+  @override
   get initialState => {
         'localCount': 0,
         'valueMemoShouldIgnoreViaAreEqual': 0,

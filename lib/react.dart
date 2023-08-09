@@ -677,6 +677,7 @@ abstract class Component2 implements Component {
   ///
   /// This will result in the dart2js name being `ReactDartComponent2` (the
   /// name of the proxying JS component defined in _dart_helpers.js).
+  @override
   String get displayName {
     var value;
     assert(() {
@@ -695,6 +696,7 @@ abstract class Component2 implements Component {
   /// To use a transactional `setState` callback, check out [setStateWithUpdater].
   ///
   /// See: <https://reactjs.org/docs/react-component.html#setstate>
+  @override
   void setState(Map newState, [SetStateCallback callback]) {
     _bridge.setState(this, newState, callback);
   }
@@ -724,6 +726,7 @@ abstract class Component2 implements Component {
   /// The [componentDidMount] method of child `Component`s is invoked _before_ that of parent `Component`.
   ///
   /// See: <https://facebook.github.io/react/docs/react-component.html#mounting-componentdidmount>
+  @override
   void componentDidMount() {}
 
   /// ReactJS lifecycle method that is invoked before rendering when new props ([nextProps]) are received.
@@ -771,6 +774,7 @@ abstract class Component2 implements Component {
   /// will not require a component update.
   ///
   /// See: <https://reactjs.org/docs/react-component.html#shouldcomponentupdate>
+  @override
   bool shouldComponentUpdate(Map nextProps, Map nextState) => true;
 
   /// ReactJS lifecycle method that is invoked immediately after re-rendering
@@ -828,6 +832,7 @@ abstract class Component2 implements Component {
   /// parameter in `componentDidUpdate` will be null.
   ///
   /// See: <https://reactjs.org/docs/react-component.html#componentdidupdate>
+  @override
   void componentDidUpdate(Map prevProps, Map prevState, [dynamic snapshot]) {}
 
   /// ReactJS lifecycle method that is invoked immediately before a `Component` is unmounted from the DOM.
@@ -836,6 +841,7 @@ abstract class Component2 implements Component {
   /// were created in [componentDidMount].
   ///
   /// See: <https://reactjs.org/docs/react-component.html#componentwillunmount>
+  @override
   void componentWillUnmount() {}
 
   /// ReactJS lifecycle method that is invoked after an [error] is thrown by a descendant.
@@ -930,6 +936,7 @@ abstract class Component2 implements Component {
   /// or the other lifecycle methods instead. Keeping `render` pure makes components easier to think about.
   ///
   /// See: <https://reactjs.org/docs/react-component.html#render>
+  @override
   dynamic render();
 
   // ******************************************************************************************************************
@@ -971,6 +978,7 @@ abstract class Component2 implements Component {
   /// > __DEPRECATED - DO NOT USE__
   /// >
   /// > Use the [initialState] getter instead.
+  @override
   @mustCallSuper
   @Deprecated('7.0.0')
   Map getInitialState() => throw _unsupportedLifecycleError('getInitialState');
@@ -986,6 +994,7 @@ abstract class Component2 implements Component {
   /// > __DEPRECATED - DO NOT USE__
   /// >
   /// > Use the [defaultProps] getter instead.
+  @override
   @mustCallSuper
   @Deprecated('7.0.0')
   Map getDefaultProps() => throw _unsupportedLifecycleError('getDefaultProps');
@@ -995,6 +1004,7 @@ abstract class Component2 implements Component {
   /// > __DEPRECATED - DO NOT USE__
   /// >
   /// > Use [componentDidMount] instead
+  @override
   @mustCallSuper
   @Deprecated('7.0.0')
   void componentWillMount() => throw _unsupportedLifecycleError('componentWillMount');
@@ -1052,6 +1062,7 @@ abstract class Component2 implements Component {
   ///
   ///       // NOTE: You could also return a `snapshot` value from this method for later use in `componentDidUpdate`.
   ///     }
+  @override
   @mustCallSuper
   @Deprecated('7.0.0')
   void componentWillReceiveProps(Map nextProps) => throw _unsupportedLifecycleError('componentWillReceiveProps');
@@ -1094,6 +1105,7 @@ abstract class Component2 implements Component {
   ///
   ///       // NOTE: You could also return a `snapshot` value from this method for later use in `componentDidUpdate`.
   ///     }
+  @override
   @mustCallSuper
   @Deprecated('7.0.0')
   void componentWillUpdate(Map nextProps, Map nextState) => throw _unsupportedLifecycleError('componentWillUpdate');
@@ -1210,6 +1222,7 @@ abstract class Component2 implements Component {
   @override
   @Deprecated('7.0.0')
   Map get prevState => throw _unsupportedError('"Legacy" Context [prevContext]');
+  @override
   set prevState(_) => throw _unsupportedError('"Legacy" Context [prevContext]');
 
   /// Do not use.
@@ -1225,6 +1238,7 @@ abstract class Component2 implements Component {
   @override
   @Deprecated('7.0.0')
   Map get nextProps => throw _unsupportedError('nextProps');
+  @override
   set nextProps(_) => throw _unsupportedError('nextProps');
 
   /// Do not use.
@@ -1240,6 +1254,7 @@ abstract class Component2 implements Component {
   @override
   @Deprecated('7.0.0')
   RefMethod get ref => throw _unsupportedError('ref');
+  @override
   set ref(_) => throw _unsupportedError('ref');
 
   /// Do not use.

@@ -3,8 +3,10 @@ import 'package:react/react.dart';
 
 /// Base component for event handling classes used in test cases.
 class EventComponent extends Component {
+  @override
   getInitialState() => {'text': ''};
   onEvent(SyntheticEvent e) => setState({'text': '${e.type} ${e.timeStamp}'});
+  @override
   render() => div({
         'onAnimationEnd': onEvent,
         'onAnimationIteration': onEvent,
@@ -61,6 +63,7 @@ class EventComponent extends Component {
 }
 
 class SampleComponent extends Component {
+  @override
   render() => div(props, [
         h1({}, 'A header'),
         div({'className': 'div1'}, 'First div'),
@@ -70,6 +73,7 @@ class SampleComponent extends Component {
 }
 
 class WrapperComponent extends Component {
+  @override
   render() => div(props, props['children']);
 }
 

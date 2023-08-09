@@ -5,6 +5,7 @@ import 'package:react/react_dom.dart' as react_dom;
 import 'package:react/react.dart' as react;
 
 class _CustomComponent extends react.Component {
+  @override
   render() {
     return react.div({}, props['children']);
   }

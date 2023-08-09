@@ -75,6 +75,7 @@ class _FragmentTestDummy extends react.Component2 {
     props['onComponentDidMount']();
   }
 
+  @override
   render() {
     return react.button(props, 'hi');
   }

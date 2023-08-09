@@ -5,6 +5,7 @@ import 'package:react/react.dart' as react;
 import 'package:react/react_dom.dart' as react_dom;
 
 class _Component extends react.Component {
+  @override
   render() {
     if (props['hardCodedNullReturn'] == true) {
       return null;

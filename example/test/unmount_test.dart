@@ -7,10 +7,13 @@ import 'package:react/react_dom.dart' as react_dom;
 var simpleComponent = react.registerComponent(() => SimpleComponent());
 
 class SimpleComponent extends react.Component {
+  @override
   componentWillMount() => print('mount');
 
+  @override
   componentWillUnmount() => print('unmount');
 
+  @override
   render() => react.div({}, [
         'Simple component',
       ]);
