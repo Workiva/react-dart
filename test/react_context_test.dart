@@ -158,6 +158,6 @@ class _ContextTypeComponent extends react.Component2 {
 
   @override
   render() {
-    return react.div({}, '${context}');
+    return react.div({}, '$context');
   }
 }

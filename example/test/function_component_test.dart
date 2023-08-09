@@ -210,7 +210,7 @@ class _NewContextProviderComponent extends react.Component2 {
         'onClick': _onButtonClick,
       }, 'Redraw'),
       react.br({'key': 'break1'}),
-      'TestContext.Provider props.value: ${provideMap}',
+      'TestContext.Provider props.value: $provideMap',
       react.br({'key': 'break2'}),
       react.br({'key': 'break3'}),
       TestNewContext.Provider(
@@ -285,7 +285,7 @@ UseMemoTestComponent2(Map props) {
   final fib = fibonacci(count.value);
 
   return react.Fragment({}, [
-    react.div({'key': 'div'}, ['Fibonacci of ${count.value} is ${fib}']),
+    react.div({'key': 'div'}, ['Fibonacci of ${count.value} is $fib']),
     react.button({'key': 'button1', 'onClick': (_) => count.setWithUpdater((prev) => prev + 1)}, ['+']),
     react.button({'key': 'button2', 'onClick': (_) => reRender.setWithUpdater((prev) => prev + 1)}, ['re-render']),
   ]);

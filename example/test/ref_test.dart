@@ -15,7 +15,7 @@ class _ChildComponent extends react.Component {
   }
 
   @override
-  render() => react.span({}, 'Child element with value ${somevalue}');
+  render() => react.span({}, 'Child element with value $somevalue');
 }
 
 var InputComponentForm = react.forwardRef2((props, ref) {

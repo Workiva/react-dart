@@ -347,7 +347,7 @@ class _NewContextProviderComponent extends react.Component2 {
         'onClick': _onComplexClick,
       }, 'Redraw With Complex Value'),
       react.br({'key': 'break1'}),
-      'TestContext.Provider props.value: ${provideMap}',
+      'TestContext.Provider props.value: $provideMap',
       react.br({'key': 'break2'}),
       react.br({'key': 'break3'}),
       TestNewContext.Provider(
@@ -375,7 +375,7 @@ class _NewContextConsumerComponent extends react.Component2 {
       return react.ul({
         'key': 'ul1'
       }, [
-        'TestContext.Consumer: value = ${value}',
+        'TestContext.Consumer: value = $value',
         react.br({'key': 'break12'}),
         react.br({'key': 'break22'}),
         props['children'],
@@ -393,7 +393,7 @@ class _NewContextConsumerObservedBitsComponent extends react.Component2 {
       return react.ul({
         'key': 'ul2'
       }, [
-        'TestContext.Consumer (with unstable_observedBits set to trigger when `renderCount % 2 == 0`): value = ${value}',
+        'TestContext.Consumer (with unstable_observedBits set to trigger when `renderCount % 2 == 0`): value = $value',
         react.br({'key': 'break13'}),
         react.br({'key': 'break23'}),
         props['children'],
@@ -415,7 +415,7 @@ class _NewContextTypeConsumerComponent extends react.Component2 {
     return react.ul({
       'key': 'ul3'
     }, [
-      'Using Component.contextType: this.context = ${context}',
+      'Using Component.contextType: this.context = $context',
     ]);
   }
 }

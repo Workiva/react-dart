@@ -6,7 +6,7 @@ import 'package:react/react_dom.dart' as react_dom;
 
 customAssert(text, condition) {
   if (condition)
-    print('${text} passed');
+    print('$text passed');
   else
     throw (text);
 }

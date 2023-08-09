@@ -389,7 +389,7 @@ main() {
           return react.div({
             'key': 'uct1'
           }, [
-            react.div({'key': 'uct2'}, ['useContext counter value is ${context}']),
+            react.div({'key': 'uct2'}, ['useContext counter value is $context']),
           ]);
         }
 
