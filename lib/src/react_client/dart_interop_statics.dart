@@ -19,7 +19,7 @@ import 'package:react/src/typedefs.dart';
 /// The static methods that proxy JS component lifecycle methods to Dart components.
 @Deprecated('7.0.0')
 final ReactDartInteropStatics dartInteropStatics = (() {
-  var zone = Zone.current;
+  final zone = Zone.current;
 
   /// Wrapper for [Component.getInitialState].
   Component initComponent(ReactComponent jsThis, ReactDartComponentInternal internal, InteropContextValue context,
@@ -29,8 +29,8 @@ final ReactDartInteropStatics dartInteropStatics = (() {
           jsThis.setState(newObject());
         }
 
-        RefMethod getRef = (name) {
-          var ref = getProperty(jsThis.refs, name);
+        final getRef = (name) {
+          final ref = getProperty(jsThis.refs, name);
           if (ref == null) return null;
           if (ref is Element) return ref;
           if (ref is ReactComponent) return ref.dartComponent ?? ref;
@@ -38,7 +38,7 @@ final ReactDartInteropStatics dartInteropStatics = (() {
           return ref;
         };
 
-        Component component = componentStatics.componentFactory()
+        final component = componentStatics.componentFactory()
           ..initComponentInternal(internal.props, jsRedraw, getRef, jsThis, unjsifyContext(context))
           ..initStateInternal();
 
@@ -64,7 +64,7 @@ final ReactDartInteropStatics dartInteropStatics = (() {
       });
 
   Map _getNextProps(Component component, ReactDartComponentInternal nextInternal) {
-    var newProps = nextInternal.props;
+    final newProps = nextInternal.props;
     return newProps != null ? Map.from(newProps) : {};
   }
 
@@ -85,7 +85,7 @@ final ReactDartInteropStatics dartInteropStatics = (() {
   }
 
   void _callSetStateCallbacks(Component component) {
-    var callbacks = component.setStateCallbacks.toList();
+    final callbacks = component.setStateCallbacks.toList();
     // Prevent concurrent modification during iteration
     component.setStateCallbacks.clear();
     callbacks.forEach((callback) {
@@ -94,8 +94,8 @@ final ReactDartInteropStatics dartInteropStatics = (() {
   }
 
   void _callSetStateTransactionalCallbacks(Component component) {
-    var nextState = component.nextState;
-    var props = UnmodifiableMapView(component.props);
+    final nextState = component.nextState;
+    final props = UnmodifiableMapView(component.props);
 
     component.transactionalSetStateCallbacks.forEach((callback) {
       final stateUpdates = callback(nextState, props);
@@ -108,8 +108,8 @@ final ReactDartInteropStatics dartInteropStatics = (() {
   void handleComponentWillReceiveProps(
           Component component, ReactDartComponentInternal nextInternal, InteropContextValue nextContext) =>
       zone.run(() {
-        var nextProps = _getNextProps(component, nextInternal);
-        var newContext = unjsifyContext(nextContext);
+        final nextProps = _getNextProps(component, nextInternal);
+        final newContext = unjsifyContext(nextContext);
 
         component
           ..nextProps = nextProps
@@ -124,7 +124,7 @@ final ReactDartInteropStatics dartInteropStatics = (() {
 
         // If shouldComponentUpdateWithContext returns a valid bool (default implementation returns null),
         // then don't bother calling `shouldComponentUpdate` and have it trump.
-        bool shouldUpdate =
+        var shouldUpdate =
             component.shouldComponentUpdateWithContext(component.nextProps, component.nextState, component.nextContext);
 
         if (shouldUpdate == null) {
@@ -157,7 +157,7 @@ final ReactDartInteropStatics dartInteropStatics = (() {
   ///
   /// Uses [prevState] which was transferred from [Component.nextState] in [componentWillUpdate].
   void handleComponentDidUpdate(Component component, ReactDartComponentInternal prevInternal) => zone.run(() {
-        var prevInternalProps = prevInternal.props;
+        final prevInternalProps = prevInternal.props;
 
         /// Call `componentDidUpdate` and the context variant
         component.componentDidUpdate(prevInternalProps, component.prevState);
@@ -247,7 +247,7 @@ abstract class ReactDartInteropStatics2 {
   static JsMap handleGetDerivedStateFromProps(
           ComponentStatics2 componentStatics, JsMap jsNextProps, JsMap jsPrevState) => // dartfmt
       componentZone.run(() {
-        var derivedState = componentStatics.instanceForStaticMethods
+        final derivedState = componentStatics.instanceForStaticMethods
             .getDerivedStateFromProps(JsBackedMap.backedBy(jsNextProps), JsBackedMap.backedBy(jsPrevState));
         if (derivedState != null) {
           return jsBackingMapOrJsCopy(derivedState);

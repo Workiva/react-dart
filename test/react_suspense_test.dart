@@ -44,7 +44,7 @@ main() {
         return simple.SimpleFunctionComponent;
       });
       var wrappingDivRef;
-      var mountElement = Element.div();
+      final mountElement = Element.div();
       react_dom.render(
         react.div({
           'ref': (ref) {
@@ -78,8 +78,8 @@ main() {
       });
       var wrappingDivRef;
       var wrappingDivRef2;
-      var mountElement = Element.div();
-      var mountElement2 = Element.div();
+      final mountElement = Element.div();
+      final mountElement2 = Element.div();
 
       react_dom.render(
         react.div({

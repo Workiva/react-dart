@@ -34,7 +34,7 @@ dynamic convertArgsToChildren(List childrenArgs) {
 Function unconvertJsEventHandler(Function jsConvertedEventHandler) => null;
 
 void convertRefValue(Map args) {
-  var ref = args['ref'];
+  final ref = args['ref'];
   if (ref is Ref) {
     args['ref'] = ref.jsRef;
   }
@@ -48,7 +48,7 @@ void convertRefValue2(
   final refKeys = ['ref', ...additionalRefPropKeys];
 
   for (final refKey in refKeys) {
-    var ref = args[refKey];
+    final ref = args[refKey];
     if (ref is Ref) {
       args[refKey] = ref.jsRef;
       // If the ref is a callback, pass ReactJS a function that will call it

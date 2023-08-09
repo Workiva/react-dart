@@ -36,7 +36,7 @@ main() {
     test('passes the key properly onto the fragment', () {
       var callCount = 0;
 
-      var mountElement = Element.div();
+      final mountElement = Element.div();
 
       react_dom.render(
           react.Fragment({

@@ -21,7 +21,7 @@ class SimpleComponent extends react.Component {
 
 void main() {
   print('What');
-  var mountedNode = querySelector('#content');
+  final mountedNode = querySelector('#content');
 
   querySelector('#mount').onClick.listen((_) => react_dom.render(simpleComponent({}), mountedNode));
 

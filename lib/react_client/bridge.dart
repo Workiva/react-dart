@@ -125,9 +125,9 @@ class Component2BridgeImpl extends Component2Bridge {
         String secret,
       ) {
         // Create a Dart consumable version of the JsMap.
-        var convertedProps = JsBackedMap.fromJs(props);
+        final convertedProps = JsBackedMap.fromJs(props);
         // Call the users validator with the newly wrapped props.
-        var error = validator(
+        final error = validator(
             convertedProps,
             PropValidatorInfo(
               propName: propName,

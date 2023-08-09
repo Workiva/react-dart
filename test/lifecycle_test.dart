@@ -43,8 +43,8 @@ main() {
 
       test('throws when setState is called with something other than a Map or Function that accepts two parameters',
           () {
-        var mountNode = DivElement();
-        var renderedInstance = react_dom.render(components.SetStateTest({}), mountNode);
+        final mountNode = DivElement();
+        final renderedInstance = react_dom.render(components.SetStateTest({}), mountNode);
         LifecycleTestHelper component = getDartComponent(renderedInstance);
 
         expect(() => component.setState(Map()), returnsNormally);
@@ -135,7 +135,7 @@ main() {
         String consoleErrorMessage;
         JsFunction originalConsoleError;
         DivElement mountNode;
-        final String expectedWarningPrefix = 'Warning: Failed prop type: Invalid argument(s): intProp should be int. ';
+        final expectedWarningPrefix = 'Warning: Failed prop type: Invalid argument(s): intProp should be int. ';
 
         setUp(() {
           consoleErrorCalled = false;
@@ -187,10 +187,10 @@ main() {
               contains(expectedWarningPrefix),
               reason: 'Did the warning message change? This test will break if the format cannot be converted to json.',
             );
-            RegExp regExp = RegExp(r'.*?({.*}).*', multiLine: true);
-            var matches = regExp.allMatches(consoleErrorMessage);
+            final regExp = RegExp(r'.*?({.*}).*', multiLine: true);
+            final matches = regExp.allMatches(consoleErrorMessage);
             expect(matches, hasLength(1), reason: 'Should have found a json structure in the error.');
-            var match = matches.elementAt(0); // => extract the first (and only) match
+            final match = matches.elementAt(0); // => extract the first (and only) match
             Map errorArgs = json.decode(match.group(1));
             expect(errorArgs, {
               'props': '{intProp: test, children: []}',
@@ -208,10 +208,10 @@ main() {
           'initialState': 'initial',
         };
 
-        final Map initialProps =
+        final initialProps =
             unmodifiableMap({'getInitialState': (_) => initialState, 'initialState': (_) => initialState});
 
-        final Map expectedProps = unmodifiableMap(defaultProps, initialProps, emptyChildrenProps);
+        final expectedProps = unmodifiableMap(defaultProps, initialProps, emptyChildrenProps);
 
         LifecycleTestHelper component = getDartComponent(render(components2.LifecycleTest(initialProps)));
 
@@ -258,19 +258,19 @@ main() {
             'initialDerivedState': 'updated',
           };
 
-          final Map initialProps = unmodifiableMap({
+          final initialProps = unmodifiableMap({
             'getDerivedStateFromProps': (_, __, ___) => initialDerivedState,
             'defaultProp': 'default',
             'children': []
           });
 
-          final Map updatedProps = unmodifiableMap({
+          final updatedProps = unmodifiableMap({
             'getDerivedStateFromProps': (_, __, ___) => updatedDerivedState,
             'defaultProp': 'default',
             'children': []
           });
 
-          var mountNode = DivElement();
+          final mountNode = DivElement();
           var instance = react_dom.render(components2.LifecycleTest(initialProps), mountNode);
 
           LifecycleTestHelper component = getDartComponent(instance);
@@ -304,16 +304,16 @@ main() {
           const Map initialState = {
             'foo': 'sudo',
           };
-          final Map initialProps = unmodifiableMap({
+          final initialProps = unmodifiableMap({
             'getDerivedStateFromProps': (_, __, ___) => null,
             'getInitialState': (_) => initialState,
             'initialState': (_) => initialState,
           });
 
-          final Map expectedProps = unmodifiableMap(defaultProps, initialProps, emptyChildrenProps);
+          final expectedProps = unmodifiableMap(defaultProps, initialProps, emptyChildrenProps);
 
-          var mountNode = DivElement();
-          var instance = react_dom.render(components2.LifecycleTest(initialProps), mountNode);
+          final mountNode = DivElement();
+          final instance = react_dom.render(components2.LifecycleTest(initialProps), mountNode);
 
           LifecycleTestHelper component = getDartComponent(instance);
 
@@ -333,8 +333,8 @@ main() {
       });
 
       test('triggers error lifecycle events when an error is thrown', () {
-        var mountNode = DivElement();
-        var renderedInstance = react_dom.render(components2.SetStateTest({}), mountNode);
+        final mountNode = DivElement();
+        final renderedInstance = react_dom.render(components2.SetStateTest({}), mountNode);
         LifecycleTestHelper component = getDartComponent(renderedInstance);
         LifecycleTestHelper.staticLifecycleCalls.clear();
         component.setState({'shouldThrow': true});
@@ -371,7 +371,7 @@ main() {
           'originalState': true,
         };
         var _shouldThrow = true;
-        final Map initialProps = unmodifiableMap({
+        final initialProps = unmodifiableMap({
           'initialState': (_) => initialState,
           'getDerivedStateFromError': (_, __) => null,
           'render': (_) {
@@ -407,7 +407,7 @@ main() {
           'originalState': true,
         };
         var _shouldThrow = true;
-        final Map initialProps = unmodifiableMap({
+        final initialProps = unmodifiableMap({
           'initialState': (_) => initialState,
           'render': (_) {
             if (_shouldThrow) {
@@ -441,8 +441,8 @@ main() {
       });
 
       test('error lifecycle methods get passed Dartified Error/Exception when an error is thrown', () {
-        var mountNode = DivElement();
-        var renderedInstance = react_dom.render(components2.SetStateTest({}), mountNode);
+        final mountNode = DivElement();
+        final renderedInstance = react_dom.render(components2.SetStateTest({}), mountNode);
         LifecycleTestHelper component = getDartComponent(renderedInstance);
         LifecycleTestHelper.staticLifecycleCalls.clear();
         component.setState({'shouldThrow': true});
@@ -459,8 +459,8 @@ main() {
       });
 
       test('can skip methods passed into _registerComponent2', () {
-        var mountNode = DivElement();
-        var renderedInstance = react_dom.render(components2.SkipMethodsTest({}), mountNode);
+        final mountNode = DivElement();
+        final renderedInstance = react_dom.render(components2.SkipMethodsTest({}), mountNode);
         LifecycleTestHelper component = getDartComponent(renderedInstance);
         LifecycleTestHelper.staticLifecycleCalls.clear();
         component.setState({'shouldThrow': true});
@@ -486,8 +486,8 @@ main() {
       });
 
       test('passes the correct error/info to lifecycle methods when an error is thrown', () {
-        var mountNode = DivElement();
-        var renderedInstance = react_dom.render(components2.SetStateTest({}), mountNode);
+        final mountNode = DivElement();
+        final renderedInstance = react_dom.render(components2.SetStateTest({}), mountNode);
         LifecycleTestHelper component = getDartComponent(renderedInstance);
         Element renderedNode = react_dom.findDOMNode(renderedInstance);
         LifecycleTestHelper.staticLifecycleCalls.clear();
@@ -505,10 +505,10 @@ main() {
       });
 
       test('defaults toward not being an error boundary', () {
-        var mountNode = DivElement();
+        final mountNode = DivElement();
 
         expect(() {
-          var renderedInstance = react_dom.render(components2.DefaultSkipMethodsTest({}), mountNode);
+          final renderedInstance = react_dom.render(components2.DefaultSkipMethodsTest({}), mountNode);
           LifecycleTestHelper component = getDartComponent(renderedInstance);
           LifecycleTestHelper.staticLifecycleCalls.clear();
           component.setState({'shouldThrow': true});
@@ -533,14 +533,14 @@ main() {
         });
 
         test('renders correctly', () {
-          var testProps = {'testProp': 'test'};
+          final testProps = {'testProp': 'test'};
           react_dom.render(PropsTest(testProps, ['Child']), mountNode);
           expect(mountNode.innerHtml, 'testChild');
         });
 
         test('updates on rerender with new props', () {
-          var testProps = {'testProp': 'test'};
-          var updatedProps = {'testProp': 'test2'};
+          final testProps = {'testProp': 'test'};
+          final updatedProps = {'testProp': 'test2'};
           react_dom.render(PropsTest(testProps, ['Child']), mountNode);
           expect(mountNode.innerHtml, 'testChild');
           react_dom.render(PropsTest(updatedProps, ['Child']), mountNode);
@@ -594,7 +594,7 @@ void sharedLifecycleTests<T extends react.Component>({
         // Need to run registerComponent in this test, which is what calls getDefaultProps.
         ReactDartComponentFactoryProxy DefaultPropsTest =
             react.registerComponent(defaultPropsCachingTestComponentFactory);
-        var components = [
+        final components = [
           render(DefaultPropsTest({})),
           render(DefaultPropsTest({})),
           render(DefaultPropsTest({})),
@@ -606,17 +606,17 @@ void sharedLifecycleTests<T extends react.Component>({
 
       group('are merged into props when the ReactElement is created when', () {
         test('the specified props are empty', () {
-          var props = getDartElementProps(DefaultPropsTest({}));
+          final props = getDartElementProps(DefaultPropsTest({}));
           expect(props, containsPair('defaultProp', 'default'));
         });
 
         test('the default props are overridden', () {
-          var props = getDartElementProps(DefaultPropsTest({'defaultProp': 'overridden'}));
+          final props = getDartElementProps(DefaultPropsTest({'defaultProp': 'overridden'}));
           expect(props, containsPair('defaultProp', 'overridden'));
         });
 
         test('non-default props are added', () {
-          var props = getDartElementProps(DefaultPropsTest({'otherProp': 'other'}));
+          final props = getDartElementProps(DefaultPropsTest({'otherProp': 'other'}));
           expect(props, containsPair('defaultProp', 'default'));
           expect(props, containsPair('otherProp', 'other'));
         });
@@ -624,17 +624,17 @@ void sharedLifecycleTests<T extends react.Component>({
 
       group('are merged into props by the time the Dart Component is rendered when', () {
         test('the specified props are empty', () {
-          var props = getDartComponentProps(render(DefaultPropsTest({})));
+          final props = getDartComponentProps(render(DefaultPropsTest({})));
           expect(props, containsPair('defaultProp', 'default'));
         });
 
         test('the default props are overridden', () {
-          var props = getDartComponentProps(render(DefaultPropsTest({'defaultProp': 'overridden'})));
+          final props = getDartComponentProps(render(DefaultPropsTest({'defaultProp': 'overridden'})));
           expect(props, containsPair('defaultProp', 'overridden'));
         });
 
         test('non-default props are added', () {
-          var props = getDartComponentProps(render(DefaultPropsTest({'otherProp': 'other'})));
+          final props = getDartComponentProps(render(DefaultPropsTest({'otherProp': 'other'})));
           expect(props, containsPair('defaultProp', 'default'));
           expect(props, containsPair('otherProp', 'other'));
         });
@@ -665,8 +665,8 @@ void sharedLifecycleTests<T extends react.Component>({
     });
 
     test('receives correct lifecycle calls on component unmount order', () {
-      var mountNode = DivElement();
-      var instance = react_dom.render(LifecycleTest({}), mountNode);
+      final mountNode = DivElement();
+      final instance = react_dom.render(LifecycleTest({}), mountNode);
       LifecycleTestHelper component = getDartComponent(instance);
 
       component.lifecycleCalls.clear();
@@ -682,8 +682,8 @@ void sharedLifecycleTests<T extends react.Component>({
 
     if (!isComponent2) {
       test('does not call getChildContext when childContextKeys is empty', () {
-        var mountNode = DivElement();
-        var instance =
+        final mountNode = DivElement();
+        final instance =
             react_dom.render(ContextWrapperWithoutKeys({'foo': false}, LifecycleTestWithContext({})), mountNode);
         LifecycleTestHelper component = getDartComponent(instance);
 
@@ -698,8 +698,8 @@ void sharedLifecycleTests<T extends react.Component>({
       });
 
       test('calls getChildContext when childContextKeys exist', () {
-        var mountNode = DivElement();
-        var instance = react_dom.render(ContextWrapper({'foo': false}, LifecycleTestWithContext({})), mountNode);
+        final mountNode = DivElement();
+        final instance = react_dom.render(ContextWrapper({'foo': false}, LifecycleTestWithContext({})), mountNode);
         LifecycleTestHelper component = getDartComponent(instance);
 
         expect(
@@ -723,10 +723,10 @@ void sharedLifecycleTests<T extends react.Component>({
           'newProp': 'new',
         };
 
-        final Map initialPropsWithDefaults = unmodifiableMap({}
+        final initialPropsWithDefaults = unmodifiableMap({}
           ..addAll(defaultProps)
           ..addAll(initialProps));
-        final Map newPropsWithDefaults = unmodifiableMap({}
+        final newPropsWithDefaults = unmodifiableMap({}
           ..addAll(defaultProps)
           ..addAll(newProps));
 
@@ -741,11 +741,11 @@ void sharedLifecycleTests<T extends react.Component>({
         };
 
         // Add the 'ref' prop separately so it isn't an expected prop since React removes it internally
-        var initialPropsWithRef = Map.from(initialProps)..addAll(refMap);
-        var newPropsWithRef = Map.from(newPropsWithDefaults)..addAll(refMap);
+        final initialPropsWithRef = Map.from(initialProps)..addAll(refMap);
+        final newPropsWithRef = Map.from(newPropsWithDefaults)..addAll(refMap);
 
         // Render the initial instance
-        var mountNode = DivElement();
+        final mountNode = DivElement();
         react_dom.render(ContextWrapper({'foo': false}, LifecycleTestWithContext(initialPropsWithRef)), mountNode);
 
         // Verify initial context/setup
@@ -811,12 +811,12 @@ void sharedLifecycleTests<T extends react.Component>({
           'ref': ((ref) => component = ref),
         };
 
-        var initialProps = Map.from(defaultProps)..addAll({'children': const []});
+        final initialProps = Map.from(defaultProps)..addAll({'children': const []});
         // Add the 'ref' prop separately so it isn't an expected prop since React removes it internally
-        var initialPropsWithRef = Map.from(initialProps)..addAll(refMap);
+        final initialPropsWithRef = Map.from(initialProps)..addAll(refMap);
 
         // Render the initial instance
-        var mountNode = DivElement();
+        final mountNode = DivElement();
         react_dom.render(
             ContextWrapper(
               {'foo': false},
@@ -875,15 +875,15 @@ void sharedLifecycleTests<T extends react.Component>({
           'ref': ((ref) => component = ref),
         };
 
-        var initialProps = Map.from(defaultProps)
+        final initialProps = Map.from(defaultProps)
           ..addAll(initialContext)
           ..addAll({'children': const []});
         // Add the 'ref' prop separately so it isn't an expected prop since React removes it internally
-        var initialPropsWithRef = Map.from(initialProps)..addAll(refMap);
+        final initialPropsWithRef = Map.from(initialProps)..addAll(refMap);
 
-        var expectedProps = Map.from(initialProps)..addAll(expectedContext);
+        final expectedProps = Map.from(initialProps)..addAll(expectedContext);
         // Render the initial instance
-        var mountNode = DivElement();
+        final mountNode = DivElement();
         react_dom.render(
             ContextWrapper(
               initialContext,
@@ -941,10 +941,10 @@ void sharedLifecycleTests<T extends react.Component>({
       const Map initialProps = {'initialProp': 'initial', 'children': []};
       const Map newProps = {'newProp': 'new', 'children': []};
 
-      final Map initialPropsWithDefaults = unmodifiableMap({}
+      final initialPropsWithDefaults = unmodifiableMap({}
         ..addAll(defaultProps)
         ..addAll(initialProps));
-      final Map newPropsWithDefaults = unmodifiableMap({}
+      final newPropsWithDefaults = unmodifiableMap({}
         ..addAll(defaultProps)
         ..addAll(newProps));
 
@@ -952,8 +952,8 @@ void sharedLifecycleTests<T extends react.Component>({
       final dynamic expectedContext = isComponent2 ? null : const {};
       const Null expectedSnapshot = null;
 
-      var mountNode = DivElement();
-      var instance = react_dom.render(LifecycleTest(initialProps), mountNode);
+      final mountNode = DivElement();
+      final instance = react_dom.render(LifecycleTest(initialProps), mountNode);
       LifecycleTestHelper component = getDartComponent(instance);
 
       component.lifecycleCalls.clear();
@@ -1003,8 +1003,8 @@ void sharedLifecycleTests<T extends react.Component>({
           'initialState': 'initial',
         };
 
-        final Map initialProps = unmodifiableMap({'initialState': (_) => initialState});
-        final Map expectedProps = unmodifiableMap(defaultProps, initialProps, emptyChildrenProps);
+        final initialProps = unmodifiableMap({'initialState': (_) => initialState});
+        final expectedProps = unmodifiableMap(defaultProps, initialProps, emptyChildrenProps);
         LifecycleTestHelper component = getDartComponent(render(LifecycleTest(initialProps)));
 
         expect(
@@ -1050,7 +1050,7 @@ void sharedLifecycleTests<T extends react.Component>({
       });
 
       tearDown(() {
-        var expectedState = updatingStateWithNull ? initialState : newState;
+        final expectedState = updatingStateWithNull ? initialState : newState;
         expect(
             component.lifecycleCalls,
             (updatingStateWithNull && isComponent2)
@@ -1085,7 +1085,7 @@ void sharedLifecycleTests<T extends react.Component>({
       });
 
       test('setState with updater argument', () {
-        var calls = [];
+        final calls = [];
         Map stateUpdater(Map prevState, Map props) {
           calls.add({
             'name': 'stateUpdater',
@@ -1118,7 +1118,7 @@ void sharedLifecycleTests<T extends react.Component>({
 
       test('setStateWithUpdater argument that returns null (no re-render)', () {
         updatingStateWithNull = true;
-        var calls = [];
+        final calls = [];
         Map stateUpdater(Map prevState, Map props) {
           calls.add({
             'name': 'stateUpdater',
@@ -1155,12 +1155,12 @@ void sharedLifecycleTests<T extends react.Component>({
         'initialState': 'initial',
       };
 
-      final Map initialProps =
+      final initialProps =
           unmodifiableMap({'initialState': (_) => initialState, 'getInitialState': (_) => initialState});
 
       final dynamic newContext = isComponent2 ? null : const {};
 
-      final Map expectedProps = unmodifiableMap(defaultProps, initialProps, emptyChildrenProps);
+      final expectedProps = unmodifiableMap(defaultProps, initialProps, emptyChildrenProps);
 
       final Null expectedSnapshot = null;
 
@@ -1278,20 +1278,20 @@ void sharedLifecycleTests<T extends react.Component>({
         };
         const Map expectedContext = {};
 
-        final Map lifecycleTestProps = unmodifiableMap({
+        final lifecycleTestProps = unmodifiableMap({
           'getInitialState': (_) => initialState,
           'componentWillReceiveProps': (LifecycleTestHelper component, Map props) {
             component.setState(stateDelta);
           },
         });
-        final Map initialProps = unmodifiableMap({'initialProp': 'initial'}, lifecycleTestProps);
-        final Map newProps = unmodifiableMap({'newProp': 'new'}, lifecycleTestProps);
+        final initialProps = unmodifiableMap({'initialProp': 'initial'}, lifecycleTestProps);
+        final newProps = unmodifiableMap({'newProp': 'new'}, lifecycleTestProps);
 
-        final Map initialPropsWithDefaults = unmodifiableMap(defaultProps, initialProps, emptyChildrenProps);
-        final Map newPropsWithDefaults = unmodifiableMap(defaultProps, newProps, emptyChildrenProps);
+        final initialPropsWithDefaults = unmodifiableMap(defaultProps, initialProps, emptyChildrenProps);
+        final newPropsWithDefaults = unmodifiableMap(defaultProps, newProps, emptyChildrenProps);
 
-        var mountNode = DivElement();
-        var instance = react_dom.render(LifecycleTest(initialProps), mountNode);
+        final mountNode = DivElement();
+        final instance = react_dom.render(LifecycleTest(initialProps), mountNode);
         LifecycleTestHelper component = getDartComponent(instance);
 
         component.lifecycleCalls.clear();
@@ -1334,7 +1334,7 @@ void sharedLifecycleTests<T extends react.Component>({
     void testShouldUpdates({bool shouldComponentUpdateWithContext, bool shouldComponentUpdate}) {
       test('receives updated props with correct lifecycle calls and does not rerender', () {
         final dynamic expectedContext = isComponent2 ? null : const {};
-        final Map initialProps = unmodifiableMap({
+        final initialProps = unmodifiableMap({
           'shouldComponentUpdate': (_, __, ___) => shouldComponentUpdate,
           'shouldComponentUpdateWithContext': (_, __, ___, ____) => shouldComponentUpdateWithContext,
           'initialProp': 'initial',
@@ -1342,13 +1342,13 @@ void sharedLifecycleTests<T extends react.Component>({
         });
         const Map newProps = {'newProp': 'new', 'children': []};
 
-        final Map initialPropsWithDefaults = unmodifiableMap(defaultProps, initialProps);
-        final Map newPropsWithDefaults = unmodifiableMap(defaultProps, newProps);
+        final initialPropsWithDefaults = unmodifiableMap(defaultProps, initialProps);
+        final newPropsWithDefaults = unmodifiableMap(defaultProps, newProps);
 
         const Map expectedState = {};
 
-        var mountNode = DivElement();
-        var instance = react_dom.render(LifecycleTest(initialProps), mountNode);
+        final mountNode = DivElement();
+        final instance = react_dom.render(LifecycleTest(initialProps), mountNode);
         LifecycleTestHelper component = getDartComponent(instance);
 
         component.lifecycleCalls.clear();
@@ -1395,14 +1395,14 @@ void sharedLifecycleTests<T extends react.Component>({
           'newState': 'new',
         };
 
-        final Map initialProps = unmodifiableMap({
+        final initialProps = unmodifiableMap({
           'getInitialState': (_) => initialState,
           'initialState': (_) => initialState,
           'shouldComponentUpdate': (_, __, ___) => shouldComponentUpdate,
           'shouldComponentUpdateWithContext': (_, __, ___, ____) => shouldComponentUpdateWithContext,
         });
 
-        final Map expectedProps = unmodifiableMap(defaultProps, initialProps, emptyChildrenProps);
+        final expectedProps = unmodifiableMap(defaultProps, initialProps, emptyChildrenProps);
 
         LifecycleTestHelper component = getDartComponent(render(LifecycleTest(initialProps)));
         component.lifecycleCalls.clear();
@@ -1444,7 +1444,7 @@ void sharedLifecycleTests<T extends react.Component>({
             'newState': 'new',
           };
 
-          final Map lifecycleTestProps = unmodifiableMap({
+          final lifecycleTestProps = unmodifiableMap({
             'shouldComponentUpdate': (_, __, ___) => shouldComponentUpdate,
             'shouldComponentUpdateWithContext': (_, __, ___, ____) => shouldComponentUpdateWithContext,
             'getInitialState': (_) => initialState,
@@ -1452,16 +1452,16 @@ void sharedLifecycleTests<T extends react.Component>({
               component.setState(stateDelta);
             },
           });
-          final Map initialProps = unmodifiableMap({'initialProp': 'initial'}, lifecycleTestProps);
-          final Map newProps = unmodifiableMap({'newProp': 'new'}, lifecycleTestProps);
+          final initialProps = unmodifiableMap({'initialProp': 'initial'}, lifecycleTestProps);
+          final newProps = unmodifiableMap({'newProp': 'new'}, lifecycleTestProps);
 
-          final Map initialPropsWithDefaults = unmodifiableMap(defaultProps, initialProps, emptyChildrenProps);
-          final Map newPropsWithDefaults = unmodifiableMap(defaultProps, newProps, emptyChildrenProps);
+          final initialPropsWithDefaults = unmodifiableMap(defaultProps, initialProps, emptyChildrenProps);
+          final newPropsWithDefaults = unmodifiableMap(defaultProps, newProps, emptyChildrenProps);
 
           final Map expectedContext = const {};
 
-          var mountNode = DivElement();
-          var instance = react_dom.render(LifecycleTest(initialProps), mountNode);
+          final mountNode = DivElement();
+          final instance = react_dom.render(LifecycleTest(initialProps), mountNode);
           LifecycleTestHelper component = getDartComponent(instance);
 
           component.lifecycleCalls.clear();
@@ -1511,8 +1511,8 @@ void sharedLifecycleTests<T extends react.Component>({
       LifecycleTestHelper component;
 
       setUp(() {
-        var mountNode = DivElement();
-        var renderedInstance = react_dom.render(SetStateTest({}), mountNode);
+        final mountNode = DivElement();
+        final renderedInstance = react_dom.render(SetStateTest({}), mountNode);
         component = getDartComponent(renderedInstance);
         component.lifecycleCalls.clear();
       });
@@ -1540,8 +1540,8 @@ void sharedLifecycleTests<T extends react.Component>({
 
     group('calls the setState callback, and transactional setState callback in the correct order', () {
       test('when shouldComponentUpdate returns false', () {
-        var mountNode = DivElement();
-        var renderedInstance = react_dom.render(SetStateTest({'shouldUpdate': false}), mountNode);
+        final mountNode = DivElement();
+        final renderedInstance = react_dom.render(SetStateTest({'shouldUpdate': false}), mountNode);
         Element renderedNode = react_dom.findDOMNode(renderedInstance);
         LifecycleTestHelper component = getDartComponent(renderedInstance);
 
@@ -1563,8 +1563,8 @@ void sharedLifecycleTests<T extends react.Component>({
       });
 
       test('when shouldComponentUpdate returns true', () {
-        var mountNode = DivElement();
-        var renderedInstance = react_dom.render(SetStateTest({}), mountNode);
+        final mountNode = DivElement();
+        final renderedInstance = react_dom.render(SetStateTest({}), mountNode);
         Element renderedNode = react_dom.findDOMNode(renderedInstance);
         LifecycleTestHelper component = getDartComponent(renderedInstance);
 

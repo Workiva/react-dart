@@ -43,7 +43,7 @@ dynamic listifyChildren(dynamic children) {
 /// If `style` is specified in props, then it too is shallow-converted and included
 /// in the returned Map.
 Map unconvertJsProps(/* ReactElement|ReactComponent */ instance) {
-  var props = Map.from(JsBackedMap.backedBy(instance.props));
+  final props = Map.from(JsBackedMap.backedBy(instance.props));
 
   // Catch if a Dart component has been passed in. Component (version 1) can be identified by having the "internal"
   // prop. Component2, however, does not have that but can be detected by checking whether or not the style prop is a
@@ -55,7 +55,7 @@ Map unconvertJsProps(/* ReactElement|ReactComponent */ instance) {
   }
 
   // Convert the nested style map so it can be read by Dart code.
-  var style = props['style'];
+  final style = props['style'];
   if (style != null) {
     props['style'] = Map<String, dynamic>.from(JsBackedMap.backedBy(style));
   }
@@ -67,8 +67,8 @@ Map unconvertJsProps(/* ReactElement|ReactComponent */ instance) {
 mixin JsBackedMapComponentFactoryMixin on ReactComponentFactoryProxy {
   @override
   ReactElement build(Map props, [List childrenArgs = const []]) {
-    var children = generateChildren(childrenArgs, shouldAlwaysBeList: true);
-    var convertedProps = generateExtendedJsProps(props);
+    final children = generateChildren(childrenArgs, shouldAlwaysBeList: true);
+    final convertedProps = generateExtendedJsProps(props);
     return React.createElement(type, convertedProps, children);
   }
 
@@ -117,7 +117,7 @@ class ReactDartComponentFactoryProxy<TComponent extends Component> extends React
     // 3. Remove "reserved" props that should not be visible to the rendered component.
 
     // [1]
-    Map extendedProps = (defaultProps != null ? Map.from(defaultProps) : {})
+    final extendedProps = (defaultProps != null ? Map.from(defaultProps) : {})
       // [2]
       ..addAll(props)
       ..['children'] = children
@@ -125,9 +125,9 @@ class ReactDartComponentFactoryProxy<TComponent extends Component> extends React
       ..remove('key')
       ..remove('ref');
 
-    var internal = ReactDartComponentInternal()..props = extendedProps;
+    final internal = ReactDartComponentInternal()..props = extendedProps;
 
-    var interopProps = InteropProps(internal: internal);
+    final interopProps = InteropProps(internal: internal);
 
     // Don't pass a key into InteropProps if one isn't defined, so that the value will
     // be `undefined` in the JS, which is ignored by React, whereas `null` isn't.
@@ -136,7 +136,7 @@ class ReactDartComponentFactoryProxy<TComponent extends Component> extends React
     }
 
     if (props.containsKey('ref')) {
-      var ref = props['ref'];
+      final ref = props['ref'];
 
       // If the ref is a callback, pass ReactJS a function that will call it
       // with the Dart Component instance, not the ReactComponent instance.
@@ -233,7 +233,7 @@ class ReactJsContextComponentFactoryProxy extends ReactJsComponentFactoryProxy {
   /// Returns a JavaScript version of the specified [props], preprocessed for consumption by ReactJS and prepared for
   /// consumption by the `react` library internals.
   JsMap generateExtendedJsProps(Map props) {
-    JsBackedMap propsForJs = JsBackedMap.from(props);
+    final propsForJs = JsBackedMap.from(props);
 
     if (isProvider) {
       propsForJs['value'] = ContextHelpers.jsifyNewContext(propsForJs['value']);
@@ -279,7 +279,7 @@ class ReactJsComponentFactoryProxy extends ReactComponentFactoryProxy {
   @override
   ReactElement build(Map props, [List childrenArgs]) {
     dynamic children = generateChildren(childrenArgs, shouldAlwaysBeList: alwaysReturnChildrenAsList);
-    JsMap convertedProps =
+    final convertedProps =
         generateJsProps(props, convertCallbackRefValue: false, additionalRefPropKeys: _additionalRefPropKeys);
     return React.createElement(type, convertedProps, children);
   }
@@ -304,8 +304,8 @@ class ReactDomComponentFactoryProxy extends ReactComponentFactoryProxy {
 
   @override
   ReactElement build(Map props, [List childrenArgs = const []]) {
-    var children = generateChildren(childrenArgs);
-    var convertedProps = generateJsProps(props, convertCallbackRefValue: false, wrapWithJsify: true);
+    final children = generateChildren(childrenArgs);
+    final convertedProps = generateJsProps(props, convertCallbackRefValue: false, wrapWithJsify: true);
     return React.createElement(type, convertedProps, children);
   }
 

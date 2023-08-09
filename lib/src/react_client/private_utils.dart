@@ -14,7 +14,7 @@ bool _isJsApiValid = false;
 
 @Deprecated('7.0.0')
 InteropContextValue jsifyContext(Map<String, dynamic> context) {
-  var interopContext = InteropContextValue();
+  final interopContext = InteropContextValue();
   context.forEach((key, value) {
     // ignore: argument_type_not_assignable
     setProperty(interopContext, key, ReactDartContextInternal(value));

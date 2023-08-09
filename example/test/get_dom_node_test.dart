@@ -87,6 +87,6 @@ class SimpleComponent extends react.Component {
 var mountedNode = querySelector('#content');
 
 void main() {
-  var component = simpleComponent({});
+  final component = simpleComponent({});
   react_dom.render(component, mountedNode);
 }

@@ -29,7 +29,7 @@ class _NsmEmulatedFunctionWithNameProperty implements Function {
 final bool isBugPresent = (() {
   const testValue = 'test value';
 
-  var testObject = _NsmEmulatedFunctionWithNameProperty();
+  final testObject = _NsmEmulatedFunctionWithNameProperty();
 
   try {
     // In the DDC, this throws:
@@ -73,7 +73,7 @@ external void _defineProperty(dynamic object, String propertyName, _PropertyDesc
 void patchName(dynamic object) {
   var current = object;
   while ((current = _getPrototypeOf(current)) != null) {
-    var nameDescriptor = _getOwnPropertyDescriptor(current, 'name');
+    final nameDescriptor = _getOwnPropertyDescriptor(current, 'name');
 
     if (nameDescriptor != null) {
       _defineProperty(object, 'name', nameDescriptor);

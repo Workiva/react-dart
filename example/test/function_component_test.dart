@@ -114,7 +114,7 @@ Map reducer(Map state, Map action) {
 }
 
 UseReducerTestComponent(Map props) {
-  final ReducerHook<Map, Map, int> state = useReducerLazy(reducer, props['initialCount'], initializeCount);
+  final state = useReducerLazy(reducer, props['initialCount'], initializeCount);
 
   return react.Fragment({}, [
     state.state['count'],
@@ -149,11 +149,11 @@ UseCallbackTestComponent(Map props) {
   final count = useState(0);
   final delta = useState(1);
 
-  var increment = useCallback((_) {
+  final increment = useCallback((_) {
     count.setWithUpdater((prev) => prev + delta.value);
   }, [delta.value]);
 
-  var incrementDelta = useCallback((_) {
+  final incrementDelta = useCallback((_) {
     delta.setWithUpdater((prev) => prev + 1);
   }, []);
 
@@ -178,7 +178,7 @@ UseContextTestComponent(Map props) {
 }
 
 int calculateChangedBits(currentValue, nextValue) {
-  int result = 1 << 1;
+  var result = 1 << 1;
   if (nextValue['renderCount'] % 2 == 0) {
     result |= 1 << 2;
   }
@@ -297,7 +297,7 @@ final randomUseLayoutEffectTestComponent =
     react.registerFunctionComponent(RandomUseLayoutEffectTestComponent, displayName: 'randomUseLayoutEffectTest');
 
 RandomUseLayoutEffectTestComponent(Map props) {
-  StateHook<double> value = useState(0);
+  final value = useState(0);
 
   useLayoutEffect(() {
     if (value.value == 0) {
@@ -317,7 +317,7 @@ final randomUseEffectTestComponent =
     react.registerFunctionComponent(RandomUseEffectTestComponent, displayName: 'randomUseEffectTest');
 
 RandomUseEffectTestComponent(Map props) {
-  StateHook<double> value = useState(0);
+  final value = useState(0);
 
   useEffect(() {
     if (value.value == 0) {

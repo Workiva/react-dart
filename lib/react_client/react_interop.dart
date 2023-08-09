@@ -256,7 +256,7 @@ ReactJsComponentFactoryProxy forwardRef(
       }));
   defineProperty(wrappedComponent, 'displayName', JsPropertyDescriptor(value: displayName));
 
-  var hoc = React.forwardRef(wrappedComponent);
+  final hoc = React.forwardRef(wrappedComponent);
   // ignore: invalid_use_of_protected_member
   setProperty(hoc, 'dartComponentVersion', ReactDartComponentVersion.component2);
 

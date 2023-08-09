@@ -53,8 +53,8 @@ class _Hello extends react.Component {
   @override
   render() {
     timeprint('rendering start');
-    var data = props['data'];
-    var children = [];
+    final data = props['data'];
+    final children = [];
     for (final elem in data) {
       children.add(react.div({
         'key': elem[0]
@@ -72,7 +72,7 @@ class _Hello extends react.Component {
 //        ]))
 //    );
     timeprint('rendering almost ends');
-    var res = react.div({}, children);
+    final res = react.div({}, children);
     timeprint('rendering ends');
     return res;
   }
@@ -81,7 +81,7 @@ class _Hello extends react.Component {
 var Hello = react.registerComponent(() => _Hello());
 
 void main() {
-  var data = [];
+  final data = [];
   for (num i = 0; i < 1000; i++) {
     data.add(['name_$i', 'value_$i']);
   }

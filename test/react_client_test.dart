@@ -19,8 +19,8 @@ import 'package:react/src/react_client/event_prop_key_to_event_factory.dart';
 
 main() {
   group('unconvertJsProps', () {
-    const List testChildren = ['child1', 'child2'];
-    const Map<String, dynamic> testStyle = {'background': 'white'};
+    const testChildren = ['child1', 'child2'];
+    const testStyle = <String, dynamic>{'background': 'white'};
 
     test('returns props for a composite JS component ReactElement', () {
       ReactElement instance = testJsComponentFactory({
@@ -58,7 +58,7 @@ main() {
     });
 
     test('returns props for a composite JS ReactComponent', () {
-      var mountNode = DivElement();
+      final mountNode = DivElement();
       ReactComponent renderedInstance = react_dom.render(
           testJsComponentFactory({
             'jsProp': 'js',
@@ -77,7 +77,7 @@ main() {
     });
 
     test('returns props for a composite JS ReactComponent, even when the props change', () {
-      var mountNode = DivElement();
+      final mountNode = DivElement();
       ReactComponent renderedInstance = react_dom.render(
           testJsComponentFactory({
             'jsProp': 'js',
@@ -142,8 +142,8 @@ main() {
       });
 
       test('for a DOM element', () {
-        var component = react.div(props);
-        var jsProps = unconvertJsProps(component);
+        final component = react.div(props);
+        final jsProps = unconvertJsProps(component);
         for (final key in knownEventKeys) {
           expect(jsProps[key], isNotNull, reason: 'JS event handler prop should not be null');
           expect(jsProps[key], anyOf(same(originalHandlers[key]), same(allowInterop(originalHandlers[key]))),
@@ -152,8 +152,8 @@ main() {
       });
 
       test(', except for a JS composite component (handlers should already be unconverted)', () {
-        var component = testJsComponentFactory(props);
-        var jsProps = unconvertJsProps(component);
+        final component = testJsComponentFactory(props);
+        final jsProps = unconvertJsProps(component);
         for (final key in knownEventKeys) {
           expect(jsProps[key], isNotNull, reason: 'JS event handler prop should not be null');
           expect(jsProps[key], same(allowInterop(originalHandlers[key])),

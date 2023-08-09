@@ -30,7 +30,7 @@ class _HelloGreeter extends react.Component {
   getInitialState() => {'name': 'World'};
 
   onInputChange(e) {
-    var input = react_dom.findDOMNode(myInput);
+    final input = react_dom.findDOMNode(myInput);
     print(input.borderEdge);
     setState({'name': e.target.value});
   }
@@ -105,7 +105,7 @@ class _ClockComponent extends react.Component {
 
   @override
   void componentDidMount() {
-    var rootNode = react_dom.findDOMNode(this);
+    final rootNode = react_dom.findDOMNode(this);
     rootNode.style.backgroundColor = '#FFAAAA';
   }
 
@@ -160,14 +160,14 @@ class _ListComponent extends react.Component {
   int iterator = 3;
 
   void addItem(event) {
-    List items = List.from(state['items']);
+    final items = List.from(state['items']);
     items.add(++iterator);
     setState({'items': items});
   }
 
   @override
   dynamic render() {
-    List<dynamic> items = [];
+    final items = <dynamic>[];
     for (final item in state['items']) {
       items.add(react.li({'key': item}, '$item'));
     }
@@ -286,7 +286,7 @@ class _NewContextRefComponent extends react.Component2 {
 var newContextRefComponent = react.registerComponent(() => _NewContextRefComponent());
 
 int calculateChangedBits(currentValue, nextValue) {
-  int result = 1 << 1;
+  var result = 1 << 1;
   if (nextValue['renderCount'] % 2 == 0) {
     result |= 1 << 2;
   }
@@ -457,13 +457,13 @@ class _Component2TestComponent extends react.Component2 with react.TypedSnapshot
   }
 
   void removeItem(event) {
-    List items = List.from(state['items']);
+    final items = List.from(state['items']);
     items.removeAt(items.length - 1);
     setState({'items': items});
   }
 
   void addItem(event) {
-    List items = List.from(state['items']);
+    final items = List.from(state['items']);
     items.add(items.length);
     setState({'items': items});
   }

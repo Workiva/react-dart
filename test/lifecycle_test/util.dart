@@ -40,7 +40,7 @@ mixin LifecycleTestHelper on Component {
       'context': context,
     });
 
-    var lifecycleCallback = props == null
+    final lifecycleCallback = props == null
         ? staticProps == null
             ? null
             : staticProps[memberName]

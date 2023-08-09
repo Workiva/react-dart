@@ -355,7 +355,7 @@ abstract class Component {
   /// > Use [setState] instead.
   @Deprecated('7.0.0')
   void replaceState(Map newState, [callback()]) {
-    Map nextState = newState == null ? {} : Map.from(newState);
+    final nextState = newState == null ? {} : Map.from(newState);
     _nextState = nextState;
     if (callback != null) _setStateCallbacks.add(callback);
 

@@ -160,7 +160,7 @@ class _GeocodesForm extends react.Component {
     event.preventDefault();
     InputElement inputElement = react_dom.findDOMNode(searchInputInstance);
     // The input's value is accessed.
-    var address = inputElement.value;
+    final address = inputElement.value;
     inputElement.value = '';
     // Call the callback from the parent element is called.
     props['submitter'](address);
@@ -247,15 +247,15 @@ class _GeocodesApp extends react.Component {
   /// Sends the [addressQuery] to the API and processes the result
   newQuery(String addressQuery) async {
     // Once the query is being sent, it appears in the history and is given an id.
-    var id = addQueryToHistory(addressQuery);
+    final id = addQueryToHistory(addressQuery);
 
     // Prepare the URL
     addressQuery = Uri.encodeQueryComponent(addressQuery);
-    var path = 'https://maps.googleapis.com/maps/api/geocode/json?address=$addressQuery';
+    final path = 'https://maps.googleapis.com/maps/api/geocode/json?address=$addressQuery';
 
     try {
       // Send the request
-      var raw = await HttpRequest.getString(path);
+      final raw = await HttpRequest.getString(path);
       // Delay the answer 2 more seconds, for test purposes
       await Future.delayed(Duration(seconds: 2));
       // Is this the answer to the last request?
@@ -263,7 +263,7 @@ class _GeocodesApp extends react.Component {
         // If yes, query was `OK` and `shown_addresses` are replaced
         state['history'][id]['status'] = 'OK';
 
-        var data = json.decode(raw);
+        final data = json.decode(raw);
 
         // Calling `setState` will update the state and then repaint the component.
         //
@@ -291,7 +291,7 @@ class _GeocodesApp extends react.Component {
 
   /// Add a new [addressQuery] to the `state.history` Map with its status set to 'pending', then return its `id`.
   addQueryToHistory(String addressQuery) {
-    var id = ++last_id;
+    final id = ++last_id;
 
     state['history'][id] = {'query': addressQuery, 'status': 'pending'};
 

@@ -99,10 +99,10 @@ main() {
     }
 
     test('wrapNativeKeyboardEvent', () {
-      var nativeKeyboardEvent = MockKeyboardEvent();
-      var currentTarget = DivElement();
-      var target = DivElement();
-      var calls = <String>[];
+      final nativeKeyboardEvent = MockKeyboardEvent();
+      final currentTarget = DivElement();
+      final target = DivElement();
+      final calls = <String>[];
 
       when(nativeKeyboardEvent.bubbles).thenReturn(true);
       when(nativeKeyboardEvent.cancelable).thenReturn(true);
@@ -125,7 +125,7 @@ main() {
 
       expect(nativeKeyboardEvent.defaultPrevented, isFalse);
 
-      var syntheticKeyboardEvent = wrapNativeKeyboardEvent(nativeKeyboardEvent);
+      final syntheticKeyboardEvent = wrapNativeKeyboardEvent(nativeKeyboardEvent);
 
       expect(syntheticKeyboardEvent, isA<SyntheticKeyboardEvent>());
 
@@ -157,11 +157,11 @@ main() {
     });
 
     test('wrapNativeMouseEvent', () {
-      var nativeMouseEvent = MockMouseEvent();
-      var currentTarget = DivElement();
-      var target = DivElement();
-      var relatedTarget = DivElement();
-      var calls = <String>[];
+      final nativeMouseEvent = MockMouseEvent();
+      final currentTarget = DivElement();
+      final target = DivElement();
+      final relatedTarget = DivElement();
+      final calls = <String>[];
 
       when(nativeMouseEvent.bubbles).thenReturn(true);
       when(nativeMouseEvent.cancelable).thenReturn(true);
@@ -183,7 +183,7 @@ main() {
       when(nativeMouseEvent.page).thenReturn(Point(3, 4));
       when(nativeMouseEvent.screen).thenReturn(Point(5, 6));
 
-      var syntheticMouseEvent = wrapNativeMouseEvent(nativeMouseEvent);
+      final syntheticMouseEvent = wrapNativeMouseEvent(nativeMouseEvent);
 
       expect(syntheticMouseEvent, isA<SyntheticMouseEvent>());
 
@@ -218,8 +218,8 @@ main() {
     });
 
     test('fakeSyntheticFormEvent', () {
-      var element = DivElement();
-      var fakeEvent = fakeSyntheticFormEvent(element, 'change');
+      final element = DivElement();
+      final fakeEvent = fakeSyntheticFormEvent(element, 'change');
 
       expect(fakeEvent, isA<SyntheticFormEvent>());
 

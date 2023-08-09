@@ -15,7 +15,7 @@ import 'package:react/src/js_interop_util.dart';
 import 'package:test/test.dart';
 
 Map getProps(dynamic elementOrComponent) {
-  var props = elementOrComponent.props;
+  final props = elementOrComponent.props;
 
   return Map.fromIterable(objectKeys(props), value: (key) => getProperty(props, key));
 }
@@ -46,7 +46,7 @@ ReactComponent render(ReactElement reactElement) {
 
 /// Returns a new [Map.unmodifiable] with all argument maps merged in.
 Map unmodifiableMap([Map map1, Map map2, Map map3, Map map4]) {
-  var merged = {};
+  final merged = {};
   if (map1 != null) merged.addAll(map1);
   if (map2 != null) merged.addAll(map2);
   if (map3 != null) merged.addAll(map3);
@@ -55,7 +55,7 @@ Map unmodifiableMap([Map map1, Map map2, Map map3, Map map4]) {
 }
 
 bool assertsEnabled() {
-  bool assertsEnabled = false;
+  var assertsEnabled = false;
   assert(assertsEnabled = true);
   return assertsEnabled;
 }

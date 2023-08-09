@@ -35,7 +35,7 @@ void commonFactoryTests(ReactComponentFactoryProxy factory,
   );
 
   test('renders an instance with the corresponding `type`', () {
-    var instance = factory({});
+    final instance = factory({});
 
     expect(instance.type, equals(factory.type));
   });
@@ -83,7 +83,7 @@ void commonFactoryTests(ReactComponentFactoryProxy factory,
     });
 
     test('a List', () {
-      var instance = factory(props, [
+      final instance = factory(props, [
         'one',
         'two',
       ]);
@@ -91,17 +91,17 @@ void commonFactoryTests(ReactComponentFactoryProxy factory,
     });
 
     test('an empty List', () {
-      var instance = factory(props, []);
+      final instance = factory(props, []);
       expect(getChildren(instance), equals([]));
     });
 
     test('an Iterable', () {
-      var instance = factory(props, Iterable.generate(3, (int i) => '$i'));
+      final instance = factory(props, Iterable.generate(3, (int i) => '$i'));
       expect(getChildren(instance), equals(['0', '1', '2']));
     });
 
     test('an empty Iterable', () {
-      var instance = factory(props, Iterable.empty());
+      final instance = factory(props, Iterable.empty());
       expect(getChildren(instance), equals([]));
     });
   }
@@ -404,7 +404,7 @@ void refTests<T>(
     }
 
     test('string refs', () {
-      ReactComponent renderedInstance = _renderWithStringRefSupportingOwner(() => factory({'ref': 'test'}));
+      final renderedInstance = _renderWithStringRefSupportingOwner(() => factory({'ref': 'test'}));
 
       // ignore: deprecated_member_use_from_same_package
       verifyRefValue(renderedInstance.dartComponent.ref('test'));
@@ -418,7 +418,7 @@ void refTests<T>(
       if (!name.contains('callback ref')) {
         test(name, () {
           final testCase = testCaseCollection.createCaseByName(name);
-          var ForwardRefTestComponent = forwardRef((props, ref) {
+          final ForwardRefTestComponent = forwardRef((props, ref) {
             return factory({'ref': ref});
           });
 
@@ -436,7 +436,7 @@ void refTests<T>(
     for (final name in testCaseCollection.allTestCaseNames) {
       test(name, () {
         final testCase = testCaseCollection.createCaseByName(name);
-        var ForwardRefTestComponent = forwardRef2((props, ref) {
+        final ForwardRefTestComponent = forwardRef2((props, ref) {
           return factory({'ref': ref});
         });
 

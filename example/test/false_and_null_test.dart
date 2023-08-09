@@ -18,7 +18,7 @@ class _Component extends react.Component {
 var component = react.registerComponent(() => _Component());
 
 void main() {
-  var content = react.div({}, [
+  final content = react.div({}, [
     react.p({}, 'Testing a dynamic return value of "null"...'),
     component({'returnValue': null, 'key': 0}),
     react.p({}, 'Testing a hard-coded return value of "null"...'),

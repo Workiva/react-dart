@@ -72,7 +72,7 @@ var ParentComponent = react.registerComponent(() => _ParentComponent());
 class _ParentComponent extends react.Component {
   // String refs
   showInputValue(_) {
-    var input = react_dom.findDOMNode(ref('inputRef')) as InputElement;
+    final input = react_dom.findDOMNode(ref('inputRef')) as InputElement;
     print(input.value);
   }
 
@@ -88,7 +88,7 @@ class _ParentComponent extends react.Component {
   InputElement _inputCallbackRef;
   _ChildComponent _childCallbackRef;
   showInputCallbackRefValue(_) {
-    var input = react_dom.findDOMNode(_inputCallbackRef);
+    final input = react_dom.findDOMNode(_inputCallbackRef);
     print(input.value);
   }
 
@@ -105,7 +105,7 @@ class _ParentComponent extends react.Component {
   final Ref<_ChildComponent> _childCreateRef = react.createRef();
 
   showInputCreateRefValue(_) {
-    var input = react_dom.findDOMNode(_inputCreateRef.current);
+    final input = react_dom.findDOMNode(_inputCreateRef.current);
     print(input.value);
   }
 
@@ -233,6 +233,6 @@ class _ParentComponent extends react.Component {
 
 var mountedNode = querySelector('#content');
 void main() {
-  var component = ParentComponent({});
+  final component = ParentComponent({});
   react_dom.render(component, mountedNode);
 }

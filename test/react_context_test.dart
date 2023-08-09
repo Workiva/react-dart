@@ -14,7 +14,7 @@ import 'shared_type_tester.dart';
 
 main() {
   void testTypeValue(dynamic typeToTest) {
-    var mountNode = html.DivElement();
+    final mountNode = html.DivElement();
     var contextTypeRef;
     var consumerRef;
     react_dom.render(
@@ -45,7 +45,7 @@ main() {
     });
 
     group('calculateChangeBits argument functions correctly', () {
-      var mountNode = html.DivElement();
+      final mountNode = html.DivElement();
       _ContextProviderWrapper providerRef;
       _ContextConsumerWrapper consumerEvenRef;
       _ContextConsumerWrapper consumerOddRef;
@@ -100,7 +100,7 @@ main() {
 }
 
 int calculateChangedBits(currentValue, nextValue) {
-  int result = 0;
+  var result = 0;
   if (nextValue % 2 == 0) {
     // Bit for even values
     result |= 1 << 2;

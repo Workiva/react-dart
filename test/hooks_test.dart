@@ -25,7 +25,7 @@ main() {
       ButtonElement setWithUpdaterButtonRef;
 
       setUpAll(() {
-        var mountNode = DivElement();
+        final mountNode = DivElement();
 
         UseStateTest = react.registerFunctionComponent((Map props) {
           final text = useStateLazy(() {
@@ -115,7 +115,7 @@ main() {
       }
 
       setUpAll(() {
-        var mountNode = DivElement();
+        final mountNode = DivElement();
 
         UseReducerTest = react.registerFunctionComponent((Map props) {
           final state = useReducer(reducer, {
@@ -209,10 +209,10 @@ main() {
         }
 
         setUpAll(() {
-          var mountNode = DivElement();
+          final mountNode = DivElement();
 
           UseReducerTest = react.registerFunctionComponent((Map props) {
-            final ReducerHook<Map, Map, int> state = useReducerLazy(reducer2, props['initialCount'], initializeCount);
+            final state = useReducerLazy(reducer2, props['initialCount'], initializeCount);
 
             return react.div({}, [
               react.div({
@@ -282,21 +282,21 @@ main() {
       ButtonElement incrementDeltaButtonRef;
 
       setUpAll(() {
-        var mountNode = DivElement();
+        final mountNode = DivElement();
 
         UseCallbackTest = react.registerFunctionComponent((Map props) {
           final count = useState(0);
           final delta = useState(1);
 
-          var incrementNoDep = useCallback((_) {
+          final incrementNoDep = useCallback((_) {
             count.setWithUpdater((prev) => prev + delta.value);
           }, []);
 
-          var incrementWithDep = useCallback((_) {
+          final incrementWithDep = useCallback((_) {
             count.setWithUpdater((prev) => prev + delta.value);
           }, [delta.value]);
 
-          var incrementDelta = useCallback((_) {
+          final incrementDelta = useCallback((_) {
             delta.setWithUpdater((prev) => prev + 1);
           }, []);
 
@@ -376,7 +376,7 @@ main() {
     group('useContext -', () {
       DivElement mountNode;
       _ContextProviderWrapper providerRef;
-      int currentCount = 0;
+      var currentCount = 0;
       Context<int> testContext;
       Function useContextTestFunctionComponent;
 
@@ -436,7 +436,7 @@ main() {
     });
 
     group('useRef -', () {
-      var mountNode = DivElement();
+      final mountNode = DivElement();
       ReactDartFunctionComponentFactoryProxy UseRefTest;
       ButtonElement reRenderButton;
       var noInitRef;
@@ -521,9 +521,9 @@ main() {
       ButtonElement incrementButtonRef;
 
       // Count how many times createFunction() is called for each variation of dependencies.
-      int createFunctionCallCountWithDeps = 0;
-      int createFunctionCallCountNoDeps = 0;
-      int createFunctionCallCountEmptyDeps = 0;
+      var createFunctionCallCountWithDeps = 0;
+      var createFunctionCallCountNoDeps = 0;
+      var createFunctionCallCountEmptyDeps = 0;
 
       // Keeps track of return value of useMemo() for each variation of dependencies.
       int returnValueWithDeps;
@@ -644,7 +644,7 @@ main() {
 
     group('useImperativeHandle -', () {
       group('updates `ref.current` to the return value of `createHandle()`', () {
-        var mountNode = DivElement();
+        final mountNode = DivElement();
         ReactDartFunctionComponentFactoryProxy UseImperativeHandleTest;
         ButtonElement incrementButton;
         ButtonElement reRenderButtonRef1;
@@ -655,7 +655,7 @@ main() {
         StateHook<int> count;
 
         setUpAll(() {
-          var NoDepsComponent = react.forwardRef2((props, ref) {
+          final NoDepsComponent = react.forwardRef2((props, ref) {
             count = useState(0);
 
             useImperativeHandle(
@@ -666,8 +666,8 @@ main() {
             return react.div({'ref': ref}, count.value);
           });
 
-          var EmptyDepsComponent = react.forwardRef2((props, ref) {
-            var count = useState(0);
+          final EmptyDepsComponent = react.forwardRef2((props, ref) {
+            final count = useState(0);
 
             useImperativeHandle(ref, () => count.value, []);
 
@@ -680,8 +680,8 @@ main() {
             ]);
           });
 
-          var DepsComponent = react.forwardRef2((props, ref) {
-            var count = useState(0);
+          final DepsComponent = react.forwardRef2((props, ref) {
+            final count = useState(0);
 
             useImperativeHandle(ref, () => count.value, [count.value]);
 
@@ -694,8 +694,8 @@ main() {
             ]);
           });
 
-          var NullRefComponent = react.registerFunctionComponent((props) {
-            var count = useState(0);
+          final NullRefComponent = react.registerFunctionComponent((props) {
+            final count = useState(0);
             Ref someRefThatIsNotSet = props['someRefThatIsNotSet'];
 
             useImperativeHandle(someRefThatIsNotSet, () => count.value, [count.value]);

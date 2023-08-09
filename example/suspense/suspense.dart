@@ -32,7 +32,7 @@ ReactJsComponentFactoryProxy lazy(Future<ReactComponentFactoryProxy> factory()) 
     );
 
 main() {
-  var content = wrapper({});
+  final content = wrapper({});
 
   react_dom.render(content, querySelector('#content'));
 }
