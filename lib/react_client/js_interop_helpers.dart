@@ -75,7 +75,7 @@ int _anonymousJsObjectOrFrozenObjectHashCode(Object _) => 0;
 /// methods in this library. Only use this method as a last resort.
 ///
 /// Recursively converts a JSON-like collection of Dart objects to a
-/// collection of JavaScript objects and returns a [JsObject] proxy to it.
+/// collection of JavaScript objects and returns a `JsObject` proxy to it.
 ///
 /// [object] must be a [Map] or [Iterable], the contents of which are also
 /// converted. Maps and Iterables are copied to a new JavaScript object.
@@ -123,5 +123,5 @@ _convertDataTree(data) {
 
 /// Keeps track of functions found when converting JS props to Dart props.
 ///
-/// See: [forwardRef] for usage / context.
+/// See: [forwardRef2] for usage / context.
 final isRawJsFunctionFromProps = Expando<bool>();

@@ -374,7 +374,7 @@ abstract class PropTypes {
 /// To be used as the value of [ReactElement.type], which is set upon initialization
 /// by a component factory or by [React.createElement].
 ///
-/// See: <http://facebook.github.io/react/docs/top-level-api.html#react.createclass>
+/// See: <https://reactjs.org/docs/react-api.html#components>
 @JS()
 @anonymous
 class ReactClass {
@@ -388,14 +388,14 @@ class ReactClass {
 
   /// The `displayName` string is used in debugging messages.
   ///
-  /// See: <http://facebook.github.io/react/docs/component-specs.html#displayname>
+  /// See: <https://reactjs.org/docs/react-component.html#displayname>
   external String get displayName;
   external set displayName(String value);
 
   /// The cached, unmodifiable copy of [Component.getDefaultProps] computed in
   /// [registerComponent].
   ///
-  /// For use in [ReactDartComponentFactoryProxy] when creating new [ReactElement]s,
+  /// For use in `ReactDartComponentFactoryProxy` when creating new [ReactElement]s,
   /// or for external use involving inspection of Dart prop defaults.
   @Deprecated('7.0.0`')
   external Map get dartDefaultProps;
@@ -447,7 +447,7 @@ abstract class ReactDartComponentVersion {
 
 /// A JS interop class used as an argument to [React.createClass].
 ///
-/// See: <http://facebook.github.io/react/docs/top-level-api.html#react.createclass>.
+/// See: <https://reactjs.org/docs/react-api.html#components>.
 ///
 /// > __DEPRECATED.__
 /// >
@@ -475,7 +475,7 @@ class ReactClassConfig {
 
   /// The `displayName` string is used in debugging messages.
   ///
-  /// See: <http://facebook.github.io/react/docs/component-specs.html#displayname>
+  /// See: <https://reactjs.org/docs/react-component.html#displayname>
   external String get displayName;
   external set displayName(String value);
 }
@@ -555,7 +555,7 @@ class ReactPortal {
 
 /// The JavaScript component instance, which backs each react-dart [Component].
 ///
-/// See: <http://facebook.github.io/react/docs/glossary.html#react-components>
+/// See: <https://reactjs.org/docs/glossary.html#react-components>
 @JS()
 @anonymous
 class ReactComponent {
@@ -812,9 +812,9 @@ class ComponentStatics {
 /// An object that stores static methods and information for a specific component class.
 ///
 /// This object is made accessible to a component's JS ReactClass config, which
-/// passes it to certain methods in [ReactDartInteropStatics2].
+/// passes it to certain methods in `ReactDartInteropStatics2`.
 ///
-/// See [ReactDartInteropStatics2], [createReactDartComponentClass2].
+/// See `ReactDartInteropStatics2`, [createReactDartComponentClass2].
 class ComponentStatics2 {
   final ComponentFactory<Component2> componentFactory;
   final Component2 instanceForStaticMethods;

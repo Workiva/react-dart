@@ -165,10 +165,10 @@ void useEffect(dynamic Function() sideEffect, [List<Object> dependencies]) {
 ///
 /// Learn more: <https://reactjs.org/docs/hooks-reference.html#usereducer>.
 class ReducerHook<TState, TAction, TInit> {
-  /// The first item of the pair returned by [React.userReducer].
+  /// The first item of the pair returned by [React.useReducer].
   TState _state;
 
-  /// The second item in the pair returned by [React.userReducer].
+  /// The second item in the pair returned by [React.useReducer].
   void Function(TAction) _dispatch;
 
   ReducerHook(TState Function(TState state, TAction action) reducer, TState initialState) {
@@ -201,7 +201,7 @@ class ReducerHook<TState, TAction, TInit> {
   void dispatch(TAction action) => _dispatch(action);
 }
 
-/// Initializes state of a [DartFunctionComponent] to [initialState] and creates [dispatch] method.
+/// Initializes state of a [DartFunctionComponent] to [initialState] and creates a `dispatch` method.
 ///
 /// __Example__:
 ///
@@ -241,7 +241,7 @@ ReducerHook<TState, TAction, TInit> useReducer<TState, TAction, TInit>(
         TState Function(TState state, TAction action) reducer, TState initialState) =>
     ReducerHook(reducer, initialState);
 
-/// Initializes state of a [DartFunctionComponent] to [init(initialArg)] and creates [dispatch] method.
+/// Initializes state of a [DartFunctionComponent] to `init(initialArg)` and creates `dispatch` method.
 ///
 /// __Example__:
 ///
@@ -581,7 +581,7 @@ void useImperativeHandle(dynamic ref, dynamic Function() createHandle, [List<dyn
 ///   return isOnline;
 /// }
 ///
-/// final FriendListItem = react.registerFunctionComponent((Map props) {
+/// final FriendListItem = react.registerFunctionComponent((props) {
 ///   final isOnline = useFriendStatus(props['friend']['id']);
 ///
 ///   return react.li({

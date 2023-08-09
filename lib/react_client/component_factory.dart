@@ -19,7 +19,7 @@ import 'package:react/src/react_client/factory_util.dart';
 export 'package:react/src/react_client/factory_util.dart' show generateJsProps, unconvertJsEventHandler;
 
 /// Prepares [children] to be passed to the ReactJS [React.createElement] and
-/// the Dart [react.Component].
+/// the Dart [Component2].
 ///
 /// Currently only involves converting a top-level non-[List] [Iterable] to
 /// a non-growable [List], but this may be updated in the future to support

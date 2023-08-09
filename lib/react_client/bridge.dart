@@ -39,7 +39,7 @@ abstract class Component2Bridge {
   /// Returns the bridge instance associated with the given [component].
   ///
   /// This will only be available for components that are instantiated by the
-  /// [ReactDartComponentFactoryProxy2], and not when manually instantiated.
+  /// `ReactDartComponentFactoryProxy2`, and not when manually instantiated.
   ///
   /// __For internal/advanced use only.__
   static Component2Bridge forComponent(Component2 component) => bridgeForComponent[component];

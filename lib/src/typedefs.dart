@@ -5,7 +5,7 @@ import 'package:react/react_client/js_backed_map.dart';
 
 /// The type of `Component.ref` specified as a callback.
 ///
-/// See: <https://facebook.github.io/react/docs/more-about-refs.html#the-ref-callback-attribute>
+/// See: <https://reactjs.org/docs/refs-and-the-dom.html#the-ref-callback-attribute>
 typedef CallbackRef<T> = Function(T componentOrDomNode);
 
 /// The function signature for ReactJS Function Components.

@@ -48,7 +48,7 @@ List<String> _filterSkipMethods(Iterable<String> methods) {
 }
 
 /// Creates and returns a new [ReactDartComponentFactoryProxy] from the provided [componentFactory]
-/// which produces a new JS [`ReactClass` component class](https://facebook.github.io/react/docs/top-level-api.html#react.createclass).
+/// which produces a new JS `ReactClass` component class.
 @Deprecated('7.0.0')
 ReactDartComponentFactoryProxy registerComponent(
   ComponentFactory componentFactory, [
@@ -70,7 +70,7 @@ ReactDartComponentFactoryProxy registerComponent(
 
     final displayName = componentInstance.displayName;
 
-    /// Create the JS [`ReactClass` component class](https://facebook.github.io/react/docs/top-level-api.html#react.createclass)
+    /// Create the JS `ReactClass` component class
     /// with custom JS lifecycle methods.
     final reactComponentClass = createReactDartComponentClass(dartInteropStatics, componentStatics, jsConfig)
       // ignore: invalid_use_of_protected_member
@@ -96,7 +96,7 @@ ReactDartComponentFactoryProxy registerComponent(
 }
 
 /// Creates and returns a new factory proxy from the provided [componentFactory]
-/// which produces a new JS [`ReactClass` component class](https://facebook.github.io/react/docs/top-level-api.html#react.createclass).
+/// which produces a new JS `ReactClass` component class.
 ReactDartComponentFactoryProxy2 registerComponent2(
   ComponentFactory<Component2> componentFactory, {
   Iterable<String> skipMethods = const ['getDerivedStateFromError', 'componentDidCatch'],
@@ -147,7 +147,7 @@ ReactDartComponentFactoryProxy2 registerComponent2(
 
     final displayName = componentInstance.displayName;
 
-    /// Create the JS [`ReactClass` component class](https://facebook.github.io/react/docs/top-level-api.html#react.createclass)
+    /// Create the JS `ReactClass` component class
     /// with custom JS lifecycle methods.
     final reactComponentClass =
         createReactDartComponentClass2(ReactDartInteropStatics2.staticsForJs, componentStatics, jsConfig2)
