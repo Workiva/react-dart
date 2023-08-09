@@ -26,13 +26,13 @@ class _IndexComponent extends react.Component2 {
       };
 
   handleClose(_) {
-    this.setState({
+    setState({
       'open': false,
     });
   }
 
   handleClick(_) {
-    this.setState({
+    setState({
       'open': true,
     });
     print(simpleRef.getFoo());

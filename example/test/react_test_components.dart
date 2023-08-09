@@ -57,7 +57,7 @@ class _CheckBoxComponent extends react.Component {
   getInitialState() => {'checked': false};
 
   _handleChange(e) {
-    this.setState({'checked': e.target.checked});
+    setState({'checked': e.target.checked});
   }
 
   @override
@@ -76,7 +76,7 @@ class _CheckBoxComponent extends react.Component {
       react.label({
         'htmlFor': 'doTheDishes',
         'key': 'label',
-        'className': 'form-check-label ' + (this.state['checked'] ? 'striked' : 'not-striked')
+        'className': 'form-check-label ' + (state['checked'] ? 'striked' : 'not-striked')
       }, 'do the dishes'),
     ]);
   }
@@ -95,7 +95,7 @@ class _ClockComponent extends react.Component {
 
   @override
   void componentWillMount() {
-    timer = Timer.periodic(Duration(milliseconds: this.props['refreshRate']), this.tick);
+    timer = Timer.periodic(Duration(milliseconds: props['refreshRate']), tick);
   }
 
   @override
@@ -206,7 +206,7 @@ class _LegacyContextComponent extends react.Component {
   Map<String, dynamic> getChildContext() => {
         'foo': {'object': 'with value'},
         'bar': true,
-        'renderCount': this.state['renderCount']
+        'renderCount': state['renderCount']
       };
 
   @override
@@ -225,7 +225,7 @@ class _LegacyContextComponent extends react.Component {
   }
 
   _onButtonClick(event) {
-    this.setState({'renderCount': (this.state['renderCount'] ?? 0) + 1});
+    setState({'renderCount': (state['renderCount'] ?? 0) + 1});
   }
 }
 
@@ -307,7 +307,7 @@ class _NewContextProviderComponent extends react.Component2 {
 
   @override
   render() {
-    final provideMap = {'renderCount': this.state['renderCount']};
+    final provideMap = {'renderCount': state['renderCount']};
 
     final complexValues = {
       'callback': printMe,
@@ -358,11 +358,11 @@ class _NewContextProviderComponent extends react.Component2 {
   }
 
   _onComplexClick(event) {
-    this.setState({'complexMap': true, 'renderCount': this.state['renderCount'] + 1});
+    setState({'complexMap': true, 'renderCount': state['renderCount'] + 1});
   }
 
   _onButtonClick(event) {
-    this.setState({'renderCount': this.state['renderCount'] + 1, 'complexMap': false});
+    setState({'renderCount': state['renderCount'] + 1, 'complexMap': false});
   }
 }
 
@@ -411,11 +411,11 @@ class _NewContextTypeConsumerComponent extends react.Component2 {
 
   @override
   render() {
-    this.context['componentRef']?.test();
+    context['componentRef']?.test();
     return react.ul({
       'key': 'ul3'
     }, [
-      'Using Component.contextType: this.context = ${this.context}',
+      'Using Component.contextType: this.context = ${context}',
     ]);
   }
 }

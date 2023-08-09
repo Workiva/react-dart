@@ -231,16 +231,16 @@ abstract class Component {
     /// [nextContext]s typing was loosened from Map to dynamic to support the new context API in [Component2]
     /// which extends from [Component]. Only "legacy" context APIs are supported in [Component] - which means
     /// it will still be expected to be a Map.
-    this.nextContext = Map.from(this.context ?? const {});
+    nextContext = Map.from(this.context ?? const {});
   }
 
   _initProps(props) {
     this.props = Map.from(props);
-    this.nextProps = this.props;
+    nextProps = this.props;
   }
 
   initStateInternal() {
-    this.state = Map.from(getInitialState());
+    state = Map.from(getInitialState());
 
     // Call `transferComponentState` to get state also to `_prevState`
     transferComponentState();

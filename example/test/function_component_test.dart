@@ -46,24 +46,24 @@ class _MemoTestDemoWrapper extends react.Component2 {
     return react.div(
       {'key': 'mtdw'},
       MemoTest({
-        'localCount': this.state['localCount'],
-        'someKeyThatMemoShouldIgnore': this.state['someKeyThatMemoShouldIgnore'],
+        'localCount': state['localCount'],
+        'someKeyThatMemoShouldIgnore': state['someKeyThatMemoShouldIgnore'],
       }),
       react.button({
         'type': 'button',
         'className': 'btn btn-primary',
         'style': {'marginRight': '10px'},
         'onClick': (_) {
-          this.setState({'localCount': this.state['localCount'] + 1});
+          setState({'localCount': state['localCount'] + 1});
         },
-      }, 'Update MemoTest props.localCount value (${this.state['localCount']})'),
+      }, 'Update MemoTest props.localCount value (${state['localCount']})'),
       react.button({
         'type': 'button',
         'className': 'btn btn-primary',
         'onClick': (_) {
-          this.setState({'someKeyThatMemoShouldIgnore': this.state['someKeyThatMemoShouldIgnore'] + 1});
+          setState({'someKeyThatMemoShouldIgnore': state['someKeyThatMemoShouldIgnore'] + 1});
         },
-      }, 'Update prop value that MemoTest will ignore (${this.state['someKeyThatMemoShouldIgnore']})'),
+      }, 'Update prop value that MemoTest will ignore (${state['someKeyThatMemoShouldIgnore']})'),
     );
   }
 }
@@ -195,7 +195,7 @@ class _NewContextProviderComponent extends react.Component2 {
 
   @override
   render() {
-    final provideMap = {'renderCount': this.state['renderCount']};
+    final provideMap = {'renderCount': state['renderCount']};
 
     return react.div({
       'key': 'ulasda',
@@ -221,7 +221,7 @@ class _NewContextProviderComponent extends react.Component2 {
   }
 
   _onButtonClick(event) {
-    this.setState({'renderCount': this.state['renderCount'] + 1, 'complexMap': false});
+    setState({'renderCount': state['renderCount'] + 1, 'complexMap': false});
   }
 }
 

@@ -48,7 +48,7 @@ class SimpleComponent extends react.Component {
   componentDidMount() {
     customAssert('ref to span return span ', refToSpan.text == 'Test');
     customAssert('findDOMNode works on this', react_dom.findDOMNode(this) != null);
-    customAssert('random ref resolves to null', this.ref('someRandomRef') == null);
+    customAssert('random ref resolves to null', ref('someRandomRef') == null);
   }
 
   var counter = 0;

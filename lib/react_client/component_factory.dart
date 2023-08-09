@@ -89,8 +89,8 @@ class ReactDartComponentFactoryProxy<TComponent extends Component> extends React
   final Map defaultProps;
 
   ReactDartComponentFactoryProxy(ReactClass reactClass)
-      : this.reactClass = reactClass,
-        this.defaultProps = reactClass.dartDefaultProps;
+      : reactClass = reactClass,
+        defaultProps = reactClass.dartDefaultProps;
 
   @override
   ReactClass get type => reactClass;
@@ -183,8 +183,8 @@ class ReactDartComponentFactoryProxy2<TComponent extends Component2> extends Rea
   final Map defaultProps;
 
   ReactDartComponentFactoryProxy2(ReactClass reactClass)
-      : this.reactClass = reactClass,
-        this.defaultProps = JsBackedMap.fromJs(reactClass.defaultProps);
+      : reactClass = reactClass,
+        defaultProps = JsBackedMap.fromJs(reactClass.defaultProps);
 
   @override
   ReactClass get type => reactClass;
@@ -211,7 +211,7 @@ class ReactJsContextComponentFactoryProxy extends ReactJsComponentFactoryProxy {
     this.shouldConvertDomProps = true,
     this.isConsumer = false,
     this.isProvider = false,
-  })  : this.type = jsClass,
+  })  : type = jsClass,
         super(jsClass, shouldConvertDomProps: shouldConvertDomProps);
 
   @override
@@ -268,8 +268,8 @@ class ReactJsComponentFactoryProxy extends ReactComponentFactoryProxy {
     this.shouldConvertDomProps = true,
     this.alwaysReturnChildrenAsList = false,
     List<String> additionalRefPropKeys = const [],
-  })  : this.type = jsClass,
-        this._additionalRefPropKeys = additionalRefPropKeys {
+  })  : type = jsClass,
+        _additionalRefPropKeys = additionalRefPropKeys {
     if (jsClass == null) {
       throw ArgumentError('`jsClass` must not be null. '
           'Ensure that the JS component class you\'re referencing is available and being accessed correctly.');
@@ -324,8 +324,8 @@ class ReactDartFunctionComponentFactoryProxy extends ReactComponentFactoryProxy 
   final JsFunctionComponent reactFunction;
 
   ReactDartFunctionComponentFactoryProxy(DartFunctionComponent dartFunctionComponent, {String displayName})
-      : this.displayName = displayName ?? _getJsFunctionName(dartFunctionComponent),
-        this.reactFunction = _wrapFunctionComponent(dartFunctionComponent,
+      : displayName = displayName ?? _getJsFunctionName(dartFunctionComponent),
+        reactFunction = _wrapFunctionComponent(dartFunctionComponent,
             displayName: displayName ?? _getJsFunctionName(dartFunctionComponent));
 
   @override
@@ -342,7 +342,7 @@ class ReactDartWrappedComponentFactoryProxy extends ReactComponentFactoryProxy w
 
   ReactDartWrappedComponentFactoryProxy.forwardRef(DartForwardRefFunctionComponent dartFunctionComponent,
       {String displayName})
-      : this.type = _wrapForwardRefFunctionComponent(dartFunctionComponent,
+      : type = _wrapForwardRefFunctionComponent(dartFunctionComponent,
             displayName: displayName ?? _getJsFunctionName(dartFunctionComponent));
 }
 

@@ -856,7 +856,7 @@ class _ContextProviderWrapper extends react.Component2 {
   }
 
   increment() {
-    this.setState({'counter': state['counter'] + 1});
+    setState({'counter': state['counter'] + 1});
   }
 
   @override

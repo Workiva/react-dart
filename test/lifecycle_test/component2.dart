@@ -52,7 +52,7 @@ class _SetStateTest extends react.Component2 with LifecycleTestHelper {
   @override
   componentDidCatch(dynamic error, ReactErrorInfo info) {
     lifecycleCall('componentDidCatch', arguments: [error, info]);
-    this.setState({'error': error, 'info': info.componentStack});
+    setState({'error': error, 'info': info.componentStack});
   }
 
   @override

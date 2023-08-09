@@ -187,15 +187,15 @@ class _MemoTestWrapperComponent extends react.Component2 {
   }
 
   void increaseLocalCount() {
-    this.setState({'localCount': this.state['localCount'] + 1});
+    setState({'localCount': state['localCount'] + 1});
   }
 
   void increaseValueMemoShouldIgnoreViaAreEqual() {
-    this.setState({'valueMemoShouldIgnoreViaAreEqual': this.state['valueMemoShouldIgnoreViaAreEqual'] + 1});
+    setState({'valueMemoShouldIgnoreViaAreEqual': state['valueMemoShouldIgnoreViaAreEqual'] + 1});
   }
 
   void increaseValueMemoShouldNotKnowAbout() {
-    this.setState({'valueMemoShouldNotKnowAbout': this.state['valueMemoShouldNotKnowAbout'] + 1});
+    setState({'valueMemoShouldNotKnowAbout': state['valueMemoShouldNotKnowAbout'] + 1});
   }
 
   @override
@@ -203,8 +203,8 @@ class _MemoTestWrapperComponent extends react.Component2 {
     return react.div(
       {},
       props['memoComponentFactory']({
-        'localCount': this.state['localCount'],
-        'valueMemoShouldIgnoreViaAreEqual': this.state['valueMemoShouldIgnoreViaAreEqual'],
+        'localCount': state['localCount'],
+        'valueMemoShouldIgnoreViaAreEqual': state['valueMemoShouldIgnoreViaAreEqual'],
       }),
     );
   }
