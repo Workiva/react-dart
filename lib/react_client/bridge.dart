@@ -3,7 +3,6 @@ import 'package:meta/meta.dart';
 import 'package:react/react.dart';
 import 'package:react/react_client/js_backed_map.dart';
 import 'package:react/react_client/react_interop.dart';
-import 'package:react/src/prop_validator.dart';
 import 'package:react/src/typedefs.dart';
 
 /// A function that returns a bridge instance for use with a given [component].

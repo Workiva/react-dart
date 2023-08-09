@@ -9,7 +9,6 @@ import 'dart:js_util';
 
 import 'package:js/js.dart';
 import 'package:meta/meta.dart';
-import 'package:react/react_client/component_factory.dart';
 import 'package:react/react_client/js_backed_map.dart';
 import 'package:react/react_client/js_interop_helpers.dart';
 import 'package:test/test.dart';

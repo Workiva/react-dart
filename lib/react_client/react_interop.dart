@@ -15,7 +15,6 @@ import 'package:js/js_util.dart';
 import 'package:meta/meta.dart';
 import 'package:react/hooks.dart';
 import 'package:react/react.dart';
-import 'package:react/react_client.dart' show ComponentFactory;
 import 'package:react/react_client/bridge.dart';
 import 'package:react/react_client/js_backed_map.dart';
 import 'package:react/react_client/component_factory.dart'

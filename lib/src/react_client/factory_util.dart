@@ -1,7 +1,6 @@
 @JS()
 library react_client_factory_utils;
 
-import 'dart:js';
 
 import 'package:js/js.dart';
 

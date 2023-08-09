@@ -7,7 +7,6 @@ import 'package:react/react.dart';
 import 'package:react/react_client/js_interop_helpers.dart';
 import 'package:react/react_dom.dart';
 import 'package:react/react_test_utils.dart';
-import 'package:react/src/react_client/event_helpers.dart';
 import 'package:test/test.dart';
 import 'package:mockito/mockito.dart';
 
