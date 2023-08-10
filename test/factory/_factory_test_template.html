@@ -20,6 +20,8 @@
       window._JsFooFunction = React.forwardRef((props, ref) => (
         React.createElement("div", {...props, ref: ref})
       ));
+
+      window.hasUndefinedChildren = (reactElement) => reactElement.props.children === undefined;
     </script>
 
     <!-- Every template must include this placeholder. -->

@@ -814,8 +814,12 @@ void sharedLifecycleTests<T extends react.Component>({
           'newProp': 'new',
         };
 
-        final Map initialPropsWithDefaults = unmodifiableMap({}..addAll(defaultProps)..addAll(initialProps));
-        final Map newPropsWithDefaults = unmodifiableMap({}..addAll(defaultProps)..addAll(newProps));
+        final Map initialPropsWithDefaults = unmodifiableMap({}
+          ..addAll(defaultProps)
+          ..addAll(initialProps));
+        final Map newPropsWithDefaults = unmodifiableMap({}
+          ..addAll(defaultProps)
+          ..addAll(newProps));
 
         const Map expectedState = const {};
 
@@ -1017,8 +1021,12 @@ void sharedLifecycleTests<T extends react.Component>({
       const Map initialProps = const {'initialProp': 'initial', 'children': const []};
       const Map newProps = const {'newProp': 'new', 'children': const []};
 
-      final Map initialPropsWithDefaults = unmodifiableMap({}..addAll(defaultProps)..addAll(initialProps));
-      final Map newPropsWithDefaults = unmodifiableMap({}..addAll(defaultProps)..addAll(newProps));
+      final Map initialPropsWithDefaults = unmodifiableMap({}
+        ..addAll(defaultProps)
+        ..addAll(initialProps));
+      final Map newPropsWithDefaults = unmodifiableMap({}
+        ..addAll(defaultProps)
+        ..addAll(newProps));
 
       const Map expectedState = const {};
       final dynamic expectedContext = isComponent2 ? null : const {};
@@ -1300,8 +1308,12 @@ void sharedLifecycleTests<T extends react.Component>({
         initialProps = unmodifiableMap({'getInitialState': (_) => initialState, 'initialState': (_) => initialState});
         newState1 = {'foo': 'bar'};
         newState2 = {'baz': 'foobar'};
-        expectedState1 = {}..addAll(initialState)..addAll(newState1);
-        expectedState2 = {}..addAll(expectedState1)..addAll(newState2);
+        expectedState1 = {}
+          ..addAll(initialState)
+          ..addAll(newState1);
+        expectedState2 = {}
+          ..addAll(expectedState1)
+          ..addAll(newState2);
 
         root = react_dom.createRoot(DivElement());
         componentRef = react.createRef();

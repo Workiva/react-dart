@@ -124,41 +124,31 @@ class Simulate {
 /// Included in Dart for completeness
 @JS('React.addons.TestUtils.findAllInRenderedTree')
 @Deprecated('Use the react_testing_library package instead.')
-external List<dynamic> findAllInRenderedTree(
-    /* [1] */ tree,
-    ComponentTestFunction test);
+external List<dynamic> findAllInRenderedTree(/* [1] */ tree, ComponentTestFunction test);
 
 /// Like scryRenderedDOMComponentsWithClass() but expects there to be one
 /// result, and returns that one result, or throws exception if there is
 /// any other number of matches besides one.
 @JS('React.addons.TestUtils.findRenderedDOMComponentWithClass')
 @Deprecated('Use the react_testing_library package instead.')
-external dynamic /* [1] */ findRenderedDOMComponentWithClass(
-    /* [1] */ tree,
-    String className);
+external dynamic /* [1] */ findRenderedDOMComponentWithClass(/* [1] */ tree, String className);
 
 /// Like scryRenderedDOMComponentsWithTag() but expects there to be one result,
 /// and returns that one result, or throws exception if there is any other
 /// number of matches besides one.
 @JS('React.addons.TestUtils.findRenderedDOMComponentWithTag')
 @Deprecated('Use the react_testing_library package instead.')
-external dynamic /* [1] */ findRenderedDOMComponentWithTag(
-    /* [1] */ tree,
-    String tag);
+external dynamic /* [1] */ findRenderedDOMComponentWithTag(/* [1] */ tree, String tag);
 
 @JS('React.addons.TestUtils.findRenderedComponentWithType')
 @Deprecated('Use the react_testing_library package instead.')
-external dynamic /* [1] */ _findRenderedComponentWithType(
-    /* [1] */ tree,
-    dynamic type);
+external dynamic /* [1] */ _findRenderedComponentWithType(/* [1] */ tree, dynamic type);
 
 /// Same as [scryRenderedComponentsWithTypeV2] but expects there to be one result
 /// and returns that one result, or throws exception if there is any other
 /// number of matches besides one.
 @Deprecated('Use the react_testing_library package instead.')
-/* [1] */ findRenderedComponentWithTypeV2(
-    /* [1] */ tree,
-    ReactComponentFactoryProxy componentFactory) {
+/* [1] */ findRenderedComponentWithTypeV2(/* [1] */ tree, ReactComponentFactoryProxy componentFactory) {
   return _findRenderedComponentWithType(tree, getComponentTypeV2(componentFactory));
 }
 
@@ -188,16 +178,12 @@ external bool isElement(dynamic object);
 final isElementOfTypeV2 = itu.isElementOfTypeV2;
 
 @JS('React.addons.TestUtils.scryRenderedComponentsWithType')
-external List<dynamic> /* [1] */ _scryRenderedComponentsWithType(
-    /* [1] */ tree,
-    dynamic type);
+external List<dynamic> /* [1] */ _scryRenderedComponentsWithType(/* [1] */ tree, dynamic type);
 
 /// Finds all instances within the provided [tree]
 /// that are of the [ReactComponentFactoryProxy.type] of the provided [componentFactory].
 @Deprecated('Use the react_testing_library package instead.')
-List<dynamic> /* [1] */ scryRenderedComponentsWithTypeV2(
-    /* [1] */ tree,
-    ReactComponentFactoryProxy componentFactory) {
+List<dynamic> /* [1] */ scryRenderedComponentsWithTypeV2(/* [1] */ tree, ReactComponentFactoryProxy componentFactory) {
   return _scryRenderedComponentsWithType(tree, getComponentTypeV2(componentFactory));
 }
 
@@ -206,18 +192,14 @@ List<dynamic> /* [1] */ scryRenderedComponentsWithTypeV2(
 /// Finds all instances of components in the rendered tree that are DOM
 /// components with the class name matching className.
 @Deprecated('Use the react_testing_library package instead.')
-external List<dynamic> scryRenderedDOMComponentsWithClass(
-    /* [1] */ tree,
-    String className);
+external List<dynamic> scryRenderedDOMComponentsWithClass(/* [1] */ tree, String className);
 
 @JS('React.addons.TestUtils.scryRenderedDOMComponentsWithTag')
 
 /// Finds all instances of components in the rendered tree that are DOM
 /// components with the tag name matching tagName.
 @Deprecated('Use the react_testing_library package instead.')
-external List<dynamic> scryRenderedDOMComponentsWithTag(
-    /* [1] */ tree,
-    String tagName);
+external List<dynamic> scryRenderedDOMComponentsWithTag(/* [1] */ tree, String tagName);
 
 /// Render a Component into a detached DOM node in the document.
 @JS('React.addons.TestUtils.renderIntoDocument')
