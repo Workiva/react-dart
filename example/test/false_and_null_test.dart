@@ -1,10 +1,9 @@
-// ignore_for_file: deprecated_member_use_from_same_package
 import 'dart:html';
 
 import 'package:react/react.dart' as react;
 import 'package:react/react_dom.dart' as react_dom;
 
-class _Component extends react.Component {
+class _Component extends react.Component2 {
   render() {
     if (props['hardCodedNullReturn'] == true) {
       return null;
@@ -14,9 +13,10 @@ class _Component extends react.Component {
   }
 }
 
-var component = react.registerComponent(() => new _Component());
+var component = react.registerComponent2(() => new _Component());
 
 void main() {
+  final root = react_dom.createRoot(querySelector('#content'));
   var content = react.div({}, [
     react.p({}, 'Testing a dynamic return value of "null"...'),
     component({'returnValue': null, 'key': 0}),
@@ -26,5 +26,5 @@ void main() {
     component({'returnValue': false, 'key': 2}),
   ]);
 
-  react_dom.render(content, querySelector('#content'));
+  root.render(content);
 }

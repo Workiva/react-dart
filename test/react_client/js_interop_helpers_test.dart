@@ -29,7 +29,7 @@
 
 @JS()
 @TestOn('browser')
-library react.js_interop_helpers_test;
+library react.test.react_client.js_interop_helpers_test;
 
 import 'dart:js_util';
 

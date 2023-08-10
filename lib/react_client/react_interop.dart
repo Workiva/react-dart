@@ -58,6 +58,7 @@ abstract class React {
   external static ReactClass get StrictMode;
   external static ReactClass get Suspense;
   external static ReactClass get Fragment;
+  external static ReactClass get Suspense;
 
   external static List<dynamic> useState(dynamic value);
   external static void useEffect(dynamic Function() sideEffect, [List<Object> dependencies]);
@@ -70,6 +71,10 @@ abstract class React {
   external static void useImperativeHandle(dynamic ref, dynamic Function() createHandle, [List<dynamic> dependencies]);
   // NOTE: The use of generics on the `useDebugValue` interop will break the hook.
   external static dynamic useDebugValue(dynamic value, [Function format]);
+  external static String useId();
+  external static void startTransition(void Function() scope);
+  external static List<dynamic> useTransition();
+  external static dynamic useDeferredValue(dynamic value);
 }
 
 /// Creates a [Ref] object that can be attached to a [ReactElement] via the ref prop.
@@ -333,8 +338,13 @@ ReactJsComponentFactoryProxy memo(ReactDartFunctionComponentFactoryProxy factory
 }
 
 abstract class ReactDom {
+  @Deprecated('Deprecated in ReactJS v18.')
   static Element findDOMNode(object) => ReactDOM.findDOMNode(object);
+  @Deprecated(
+      'Deprecated in ReactJS v18. Use createRoot instead. See: https://github.com/reactwg/react-18/discussions/5')
   static ReactComponent render(ReactElement component, Element element) => ReactDOM.render(component, element);
+  @Deprecated(
+      'Deprecated in ReactJS v18. Call root.unmount() after assigning root to the return value of createRoot().')
   static bool unmountComponentAtNode(Element element) => ReactDOM.unmountComponentAtNode(element);
 
   /// Returns a a portal that renders [children] into a [container].

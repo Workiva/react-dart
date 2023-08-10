@@ -1,11 +1,13 @@
 @JS()
 library react_client_private_utils;
 
+import 'dart:html';
 import 'dart:js_util';
 
 import 'package:js/js.dart';
 import 'package:react/react_client/react_interop.dart';
 import 'package:react/src/js_interop_util.dart';
+import 'package:react/src/react_client/js_interop/react_dom_client.dart' show ReactDOMClient;
 
 /// A flag used to cache whether React is accessible.
 ///
@@ -48,14 +50,17 @@ void validateJsApi() {
     // Attempt to invoke JS interop methods, which will throw if the
     // corresponding JS functions are not available.
     React.isValidElement(null);
+    // ignore: deprecated_member_use_from_same_package
     ReactDom.findDOMNode(null);
+    ReactDOMClient.createRoot(document.createElement('div'));
     // ignore: deprecated_member_use_from_same_package
     createReactDartComponentClass(null, null, null);
     createReactDartComponentClass2(null, null, null);
     _isJsApiValid = true;
-  } on NoSuchMethodError catch (_) {
+  } on NoSuchMethodError catch (e) {
     throw new Exception('react.js and react_dom.js must be loaded.');
   } catch (_) {
+    rethrow;
     throw new Exception('Loaded react.js must include react-dart JS interop helpers.');
   }
 }

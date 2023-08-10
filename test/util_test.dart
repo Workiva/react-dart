@@ -1,15 +1,13 @@
 @TestOn('browser')
-library react.util_test;
-
 import 'dart:js';
 
 import 'package:react/react_client.dart';
 import 'package:react/react_client/react_interop.dart';
 import 'package:test/test.dart';
 import 'package:react/react.dart' as react;
-import 'util.dart';
+import 'fixtures/util.dart';
 
-// ignore_for_file: deprecated_member_use_from_same_package, invalid_use_of_protected_member
+// ignore_for_file: invalid_use_of_protected_member
 
 void main() {
   group('util test', () {
@@ -53,8 +51,10 @@ _FunctionFoo(Map props) {
   return react.div({});
 }
 
+// ignore: deprecated_member_use_from_same_package
 final Foo = react.registerComponent(() => new _Foo());
 
+// ignore: deprecated_member_use_from_same_package
 class _Foo extends react.Component {
   @override
   render() => react.div({});
@@ -67,6 +67,7 @@ class _Foo2 extends react.Component2 {
   render() => react.div({});
 }
 
+// ignore: deprecated_member_use_from_same_package
 final JsFoo = ReactJsComponentFactoryProxy(React.createClass(ReactClassConfig(
   displayName: 'JsFoo',
   render: allowInterop(() => react.div({})),

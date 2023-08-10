@@ -1,8 +1,4 @@
 // ignore_for_file: deprecated_member_use_from_same_package
-@JS()
-library react.lifecycle_test.component;
-
-import "package:js/js.dart";
 import 'package:react/react.dart' as react;
 import 'package:react/react_client.dart';
 

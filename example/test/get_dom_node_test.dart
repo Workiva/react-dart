@@ -1,4 +1,3 @@
-// ignore_for_file: deprecated_member_use_from_same_package
 import "dart:html";
 
 import "package:react/react.dart" as react;
@@ -11,9 +10,9 @@ customAssert(text, condition) {
     throw (text);
 }
 
-var ChildComponent = react.registerComponent(() => new _ChildComponent());
+var ChildComponent = react.registerComponent2(() => _ChildComponent());
 
-class _ChildComponent extends react.Component {
+class _ChildComponent extends react.Component2 {
   var counter = 0;
 
   render() => react.div({}, [
@@ -25,25 +24,26 @@ class _ChildComponent extends react.Component {
           'className': 'btn btn-primary',
           'onClick': (_) {
             counter++;
-            redraw();
+            setState({});
           },
         }, 'Increase counter')
       ]);
 }
 
-var simpleComponent = react.registerComponent(() => new SimpleComponent());
+var SimpleComponent = react.registerComponent2(() => _SimpleComponent());
 
-class SimpleComponent extends react.Component {
+class _SimpleComponent extends react.Component2 {
   var refToSpan;
   var refToElement;
-
-  componentWillMount() => print("mount");
 
   componentWillUnmount() => print("unmount");
 
   componentDidMount() {
+    print("mount");
     customAssert("ref to span return span ", refToSpan.text == "Test");
+    // ignore: deprecated_member_use_from_same_package
     customAssert("findDOMNode works on this", react_dom.findDOMNode(this) != null);
+    // ignore: deprecated_member_use_from_same_package
     customAssert("random ref resolves to null", this.ref("someRandomRef") == null);
   }
 
@@ -61,6 +61,7 @@ class SimpleComponent extends react.Component {
           'type': 'button',
           'key': 'button1',
           'className': 'btn btn-primary',
+          // ignore: deprecated_member_use_from_same_package
           'onClick': (_) => (react_dom.findDOMNode(this) as HtmlElement).children.first.text = (++counter).toString()
         }, 'Increase counter'),
         react.br({'key': 'br'}),
@@ -79,9 +80,7 @@ class SimpleComponent extends react.Component {
       ]);
 }
 
-var mountedNode = querySelector('#content');
-
 void main() {
-  var component = simpleComponent({});
-  react_dom.render(component, mountedNode);
+  final root = react_dom.createRoot(querySelector('#content'));
+  root.render(SimpleComponent({}));
 }

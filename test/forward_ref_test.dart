@@ -1,6 +1,4 @@
 @TestOn('browser')
-library react.forward_ref_test;
-
 // ignore_for_file: deprecated_member_use_from_same_package
 import 'dart:js_util';
 
@@ -13,7 +11,6 @@ import 'factory/common_factory_tests.dart';
 main() {
   group('forwardRef', () {
     group('- common factory behavior -', () {
-      // ignore: deprecated_member_use_from_same_package
       final ForwardRefTest = react.forwardRef((props, ref) {
         props['onDartRender']?.call(props);
         return react.div({...props, 'ref': ref});

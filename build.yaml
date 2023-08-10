@@ -1,6 +1,25 @@
 targets:
   $default:
     builders:
+      test_html_builder:
+        options:
+          templates:
+            "test/js_builds/templates/js_dev.html":
+              - "test/js_builds/js_dev_test.dart"
+            "test/js_builds/templates/js_dev_with_addons.html":
+              - "test/js_builds/js_dev_with_addons_test.dart"
+            "test/js_builds/templates/js_prod_combined.html":
+              - "test/js_builds/js_prod_combined_test.dart"
+            "test/js_builds/templates/js_prod.html":
+              - "test/js_builds/js_prod_test.dart"
+            "test/factory/_factory_test_template.html":
+              - "test/factory/**_test.dart"
+            "test/lifecycle/_react_lifecycle_test_template.html":
+              - "test/lifecycle/**_test.dart"
+            "test/react_client/_react_client_test_template.html":
+              - "test/react_client/**_test.dart"
+            "test/_react_test_template.html":
+              - "test/*_test.dart"
       # mockito's builder is expensive and is not needed until this package is
       # migrated to null-safety. At that point, it should be scoped only to
       # relevant files.

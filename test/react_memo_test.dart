@@ -1,12 +1,11 @@
 @TestOn('browser')
-library react.react_memo_test;
-
 import 'dart:html';
 
 import 'package:react/react.dart' as react;
 import 'package:react/react_client.dart';
 import 'package:react/react_client/react_interop.dart';
-import 'package:react/react_test_utils.dart' as rtu;
+import 'package:react/react_dom.dart' as react_dom;
+import 'package:react_testing_library/react_testing_library.dart' as rtl;
 import 'package:test/test.dart';
 
 import 'factory/common_factory_tests.dart';
@@ -40,7 +39,7 @@ main() {
     test('can be passed a forwardRef component (regression test)', () {
       ReactComponentFactoryProxy factory;
       expect(() => factory = react.memo2(react.forwardRef2((props, ref) => 'foo')), returnsNormally);
-      expect(() => rtu.renderIntoDocument(factory({})), returnsNormally);
+      expect(() => rtl.render(factory({})), returnsNormally);
     });
 
     group('- common factory behavior -', () {
@@ -95,7 +94,7 @@ void sharedMemoTests(MemoFunction memoFunction) {
       );
     }), areEqual: customAreEqualFn);
 
-    rtu.renderIntoDocument(MemoTestWrapper({
+    rtl.render(MemoTestWrapper({
       'ref': memoTestWrapperComponentRef,
       'memoComponentFactory': MemoTest,
     }));
@@ -128,14 +127,15 @@ void sharedMemoTests(MemoFunction memoFunction) {
     test('', () {
       renderMemoTest();
 
-      memoTestWrapperComponentRef.current.increaseLocalCount();
+      react_dom.ReactTestUtils.act(() => memoTestWrapperComponentRef.current.increaseLocalCount());
       expect(memoTestWrapperComponentRef.current.state['localCount'], 1, reason: 'test setup sanity check');
       expect(memoTestWrapperComponentRef.current.redrawCount, 1, reason: 'test setup sanity check');
 
       expect(childMemoRenderCount, 2);
       expect(localCountDisplayRef.current.text, '1');
 
-      memoTestWrapperComponentRef.current.increaseValueMemoShouldIgnoreViaAreEqual();
+      react_dom.ReactTestUtils.act(
+          () => memoTestWrapperComponentRef.current.increaseValueMemoShouldIgnoreViaAreEqual());
       expect(memoTestWrapperComponentRef.current.state['valueMemoShouldIgnoreViaAreEqual'], 1,
           reason: 'test setup sanity check');
       expect(memoTestWrapperComponentRef.current.redrawCount, 2, reason: 'test setup sanity check');
@@ -147,7 +147,8 @@ void sharedMemoTests(MemoFunction memoFunction) {
     test('unless the areEqual argument is set to a function that customizes when re-renders occur', () {
       renderMemoTest(testAreEqual: true);
 
-      memoTestWrapperComponentRef.current.increaseValueMemoShouldIgnoreViaAreEqual();
+      react_dom.ReactTestUtils.act(
+          () => memoTestWrapperComponentRef.current.increaseValueMemoShouldIgnoreViaAreEqual());
       expect(memoTestWrapperComponentRef.current.state['valueMemoShouldIgnoreViaAreEqual'], 1,
           reason: 'test setup sanity check');
       expect(memoTestWrapperComponentRef.current.redrawCount, 1, reason: 'test setup sanity check');
@@ -160,7 +161,7 @@ void sharedMemoTests(MemoFunction memoFunction) {
   test('does not re-render its child component when parent updates and props remain the same', () {
     renderMemoTest();
 
-    memoTestWrapperComponentRef.current.increaseValueMemoShouldNotKnowAbout();
+    react_dom.ReactTestUtils.act(() => memoTestWrapperComponentRef.current.increaseValueMemoShouldNotKnowAbout());
     expect(memoTestWrapperComponentRef.current.state['valueMemoShouldNotKnowAbout'], 1,
         reason: 'test setup sanity check');
     expect(memoTestWrapperComponentRef.current.redrawCount, 1, reason: 'test setup sanity check');
