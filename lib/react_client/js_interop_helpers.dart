@@ -7,6 +7,7 @@ import 'dart:collection';
 import 'dart:js_util';
 
 import 'package:js/js.dart';
+import 'package:react/react_client/react_interop.dart' show forwardRef2;
 
 import 'js_backed_map.dart';
 

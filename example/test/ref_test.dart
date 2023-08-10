@@ -88,7 +88,7 @@ class _ParentComponent extends react.Component {
   InputElement _inputCallbackRef;
   _ChildComponent _childCallbackRef;
   showInputCallbackRefValue(_) {
-    final input = react_dom.findDOMNode(_inputCallbackRef);
+    final input = react_dom.findDOMNode(_inputCallbackRef) as InputElement;
     print(input.value);
   }
 
@@ -105,7 +105,7 @@ class _ParentComponent extends react.Component {
   final Ref<_ChildComponent> _childCreateRef = react.createRef();
 
   showInputCreateRefValue(_) {
-    final input = react_dom.findDOMNode(_inputCreateRef.current);
+    final input = react_dom.findDOMNode(_inputCreateRef.current) as InputElement;
     print(input.value);
   }
 
@@ -176,7 +176,7 @@ class _ParentComponent extends react.Component {
             react.input({
               'key': 'callback-input',
               'className': 'form-control',
-              'ref': (instance) => _inputCallbackRef = instance,
+              'ref': (instance) => _inputCallbackRef = instance as InputElement,
             }),
             '\u00a0',
             react.button({
@@ -193,7 +193,7 @@ class _ParentComponent extends react.Component {
           }, [
             ChildComponent({
               'key': 'callback-child',
-              'ref': (instance) => _childCallbackRef = instance,
+              'ref': (instance) => _childCallbackRef = instance as _ChildComponent,
             }),
             '\u00a0',
             react.button({

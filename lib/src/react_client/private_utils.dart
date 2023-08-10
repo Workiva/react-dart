@@ -33,8 +33,7 @@ T validateJsApiThenReturn<T>(T Function() computeReturn) {
 Map<String, dynamic> unjsifyContext(InteropContextValue interopContext) {
   // TODO consider using `contextKeys` for this if perf of objectKeys is bad.
   return Map.fromIterable(objectKeys(interopContext), value: (key) {
-    // ignore: argument_type_not_assignable
-    ReactDartContextInternal internal = getProperty(interopContext, key);
+    final internal = getProperty(interopContext, key) as ReactDartContextInternal;
     return internal?.value;
   });
 }

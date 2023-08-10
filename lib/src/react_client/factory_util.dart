@@ -102,7 +102,7 @@ dynamic generateChildren(List childrenArgs, {bool shouldAlwaysBeList = false}) {
 
   if (children == null) {
     children = shouldAlwaysBeList ? childrenArgs.map(listifyChildren).toList() : childrenArgs;
-    markChildrenValidated(children);
+    markChildrenValidated(children as List);
   }
 
   return children;
@@ -120,5 +120,5 @@ JsMap generateJsProps(Map props,
         convertCallbackRefValue: convertCallbackRefValue, additionalRefPropKeys: additionalRefPropKeys);
   }
 
-  return wrapWithJsify ? jsifyAndAllowInterop(propsForJs) : propsForJs.jsObject;
+  return wrapWithJsify ? jsifyAndAllowInterop(propsForJs) as JsMap : propsForJs.jsObject;
 }

@@ -3,11 +3,13 @@
 @JS()
 library react.test.util;
 
+import 'dart:html';
 import 'dart:js_util' show getProperty;
 
 import 'package:js/js.dart';
 import 'package:meta/meta.dart';
 import 'package:react/react.dart' as react;
+import 'package:react/react_dom.dart' as react_dom;
 import 'package:react/react_client/js_backed_map.dart';
 import 'package:react/react_client/react_interop.dart';
 import 'package:react/react_test_utils.dart' as rtu;
@@ -28,11 +30,11 @@ bool isDartComponent2(ReactElement element) =>
 
 bool isDartComponent(ReactElement element) => ReactDartComponentVersion.fromType(element.type) != null;
 
-T getDartComponent<T extends react.Component>(ReactComponent dartComponent) {
-  return dartComponent.dartComponent as T;
+T getDartComponent<T extends react.Component>(dynamic dartComponent) {
+  return (dartComponent as ReactComponent).dartComponent as T;
 }
 
-Map getDartComponentProps(ReactComponent dartComponent) {
+Map getDartComponentProps(dynamic dartComponent) {
   return getDartComponent(dartComponent).props;
 }
 
@@ -41,8 +43,11 @@ Map getDartElementProps(ReactElement dartElement) {
 }
 
 ReactComponent render(ReactElement reactElement) {
-  return rtu.renderIntoDocument(reactElement);
+  return rtu.renderIntoDocument(reactElement) as ReactComponent;
 }
+
+// Same as the public API but with tightened types to help fix implicit casts
+Element findDomNode(dynamic component) => react_dom.findDOMNode(component) as Element;
 
 /// Returns a new [Map.unmodifiable] with all argument maps merged in.
 Map unmodifiableMap([Map map1, Map map2, Map map3, Map map4]) {

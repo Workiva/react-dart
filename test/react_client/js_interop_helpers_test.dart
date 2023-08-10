@@ -70,8 +70,8 @@ main() {
       final set = {1, 2, 3, 4, 5, 6, 7, 8};
       final array = jsifyAndAllowInterop(set);
       expect(array is List, isTrue);
-      expect(array.length, equals(set.length));
-      for (var i = 0; i < array.length; i++) {
+      expect((array as List).length, equals(set.length));
+      for (var i = 0; i < (array as List).length; i++) {
         expect(set.contains(array[i]), isTrue);
       }
     });

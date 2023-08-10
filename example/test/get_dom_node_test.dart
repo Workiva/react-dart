@@ -4,11 +4,12 @@ import 'dart:html';
 import 'package:react/react.dart' as react;
 import 'package:react/react_dom.dart' as react_dom;
 
-customAssert(text, condition) {
+// ignore: avoid_positional_boolean_parameters
+void customAssert(String text, bool condition) {
   if (condition) {
     print('$text passed');
   } else {
-    throw text;
+    throw Exception(text);
   }
 }
 

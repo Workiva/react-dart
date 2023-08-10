@@ -31,7 +31,7 @@ mixin LifecycleTestHelper on Component {
         return call['memberName'];
       }).toList();
 
-  dynamic lifecycleCall(String memberName, {List arguments = const [], Function() defaultReturnValue, Map staticProps}) {
+  T lifecycleCall<T>(String memberName, {List arguments = const [], T Function() defaultReturnValue, Map staticProps}) {
     lifecycleCalls.add({
       'memberName': memberName,
       'arguments': arguments,
@@ -46,11 +46,7 @@ mixin LifecycleTestHelper on Component {
             : staticProps[memberName]
         : props[memberName];
     if (lifecycleCallback != null) {
-      return Function.apply(
-          lifecycleCallback,
-          [this, ...arguments]
-            
-            );
+      return Function.apply(lifecycleCallback as Function, [this, ...arguments]) as T;
     }
 
     if (defaultReturnValue != null) {

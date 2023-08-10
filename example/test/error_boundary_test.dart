@@ -54,7 +54,7 @@ class _ErrorBoundaryComponent extends react.Component2 {
 
   @override
   render() {
-    return state['hasError'] ? 'Error boundary caught an error' : props['children'];
+    return (state['hasError'] as bool) ? 'Error boundary caught an error' : props['children'];
   }
 }
 
@@ -66,7 +66,7 @@ class _ThrowingComponentComponent2 extends react.Component2 {
 
   @override
   render() {
-    if (state['shouldThrow']) {
+    if (state['shouldThrow'] as bool) {
       throw Exception();
     }
 

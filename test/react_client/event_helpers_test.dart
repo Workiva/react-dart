@@ -1991,7 +1991,7 @@ main() {
 
         Element renderAndGetRootNode() {
           final mountNode = Element.div();
-          final content = div({'onDrag': (e) => event = e, 'draggable': true}, []);
+          final content = div({'onDrag': (SyntheticMouseEvent e) => event = e, 'draggable': true}, []);
           render(content, mountNode);
           return mountNode.children.single;
         }

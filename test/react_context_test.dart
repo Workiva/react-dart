@@ -56,7 +56,7 @@ main() {
               'contextToUse': TestCalculateChangedBitsContext,
               'mode': 'increment',
               'ref': (ref) {
-                providerRef = ref;
+                providerRef = ref as _ContextProviderWrapper;
               }
             }, [
               ContextConsumerWrapper({
@@ -64,7 +64,7 @@ main() {
                 'contextToUse': TestCalculateChangedBitsContext,
                 'unstable_observedBits': 1 << 2,
                 'ref': (ref) {
-                  consumerEvenRef = ref;
+                  consumerEvenRef = ref as _ContextConsumerWrapper;
                 }
               }),
               ContextConsumerWrapper({
@@ -72,7 +72,7 @@ main() {
                 'contextToUse': TestCalculateChangedBitsContext,
                 'unstable_observedBits': 1 << 3,
                 'ref': (ref) {
-                  consumerOddRef = ref;
+                  consumerOddRef = ref as _ContextConsumerWrapper;
                 }
               })
             ]),
@@ -131,7 +131,7 @@ class _ContextProviderWrapper extends react.Component2 {
   @override
   render() {
     return react.div({}, [
-      props['contextToUse']
+      (props['contextToUse'] as react.Context)
           .Provider({'value': props['mode'] == 'increment' ? state['counter'] : props['value']}, props['children'])
     ]);
   }
@@ -143,7 +143,8 @@ class _ContextConsumerWrapper extends react.Component2 {
   dynamic latestValue;
   @override
   render() {
-    return props['contextToUse'].Consumer({'unstable_observedBits': props['unstable_observedBits']}, (value) {
+    return (props['contextToUse'] as react.Context).Consumer({'unstable_observedBits': props['unstable_observedBits']},
+        (value) {
       latestValue = value;
       return react.div({}, '$value');
     });

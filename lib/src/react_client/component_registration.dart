@@ -19,7 +19,7 @@ import '../js_interop_util.dart';
 /// important ones. If an important lifecycle event was set for skipping, a
 /// warning is issued.
 List<String> _filterSkipMethods(Iterable<String> methods) {
-  final finalList = List<String>.from(methods);
+  final finalList = List.of(methods);
   var shouldWarn = false;
 
   if (finalList.contains('shouldComponentUpdate')) {
@@ -58,7 +58,7 @@ ReactDartComponentFactoryProxy registerComponent(
     final componentInstance = componentFactory();
 
     if (componentInstance is Component2) {
-      return registerComponent2(componentFactory, skipMethods: skipMethods);
+      return registerComponent2(() => componentFactory() as Component2, skipMethods: skipMethods);
     }
 
     final componentStatics = ComponentStatics(componentFactory);

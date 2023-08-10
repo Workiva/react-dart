@@ -13,6 +13,7 @@ import 'package:react/react_client/react_interop.dart';
 import 'package:react/react_client/zone.dart';
 
 import 'package:react/src/react_client/private_utils.dart';
+import 'package:react/src/typedefs.dart';
 
 /// The static methods that proxy JS component lifecycle methods to Dart components.
 @Deprecated('7.0.0')
@@ -27,14 +28,15 @@ final ReactDartInteropStatics dartInteropStatics = (() {
           jsThis.setState(newObject());
         }
 
-        getRef(name) {
+        // ignore: omit_local_variable_types, prefer_function_declarations_over_variables
+        final RefMethod getRef = (name) {
           final ref = getProperty(jsThis.refs, name);
           if (ref == null) return null;
           if (ref is Element) return ref;
           if (ref is ReactComponent) return ref.dartComponent ?? ref;
 
           return ref;
-        }
+        };
 
         final component = componentStatics.componentFactory()
           ..initComponentInternal(internal.props, jsRedraw, getRef, jsThis, unjsifyContext(context))
@@ -95,7 +97,8 @@ final ReactDartInteropStatics dartInteropStatics = (() {
     final nextState = component.nextState;
     final props = UnmodifiableMapView(component.props);
 
-    for (final callback in component.transactionalSetStateCallbacks) {
+    for (final _callback in component.transactionalSetStateCallbacks) {
+      final callback = _callback as StateUpdaterCallback;
       final stateUpdates = callback(nextState, props);
       if (stateUpdates != null) nextState.addAll(stateUpdates);
     }
@@ -204,11 +207,9 @@ abstract class ReactDartInteropStatics2 {
   static Component2 initComponent(ReactComponent jsThis, ComponentStatics2 componentStatics) => // dartfmt
       // ignore: invalid_use_of_visible_for_testing_member
       componentZone.run(() {
-        final component = componentStatics.componentFactory();
-        // Return the component so that the JS proxying component can store it,
-        // avoiding an interceptor lookup.
-
-        component
+        final component = componentStatics.componentFactory()
+          // Return the component so that the JS proxying component can store it,
+          // avoiding an interceptor lookup.
           ..jsThis = jsThis
           ..props = JsBackedMap.backedBy(jsThis.props)
           ..context = ContextHelpers.unjsifyNewContext(jsThis.context);
@@ -331,5 +332,5 @@ abstract class ReactDartInteropStatics2 {
     'handleComponentDidCatch': handleComponentDidCatch,
     'handleGetDerivedStateFromError': handleGetDerivedStateFromError,
     'handleRender': handleRender,
-  });
+  }) as JsMap;
 }

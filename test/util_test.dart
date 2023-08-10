@@ -11,6 +11,9 @@ import 'util.dart';
 
 // ignore_for_file: deprecated_member_use_from_same_package, invalid_use_of_protected_member
 
+// Public APIs with tightened types to help fix implicit casts
+final div = react.div as ReactDomComponentFactoryProxy;
+
 void main() {
   group('util test', () {
     test('ReactDartComponentVersion.fromType', () {
@@ -22,7 +25,7 @@ void main() {
     });
 
     test('isDartComponent2', () {
-      expect(isDartComponent2(react.div({})), isFalse);
+      expect(isDartComponent2(div({})), isFalse);
       expect(isDartComponent2(JsFoo({})), isFalse);
       expect(isDartComponent2(Foo({})), isFalse);
       expect(isDartComponent2(Foo2({})), isTrue);
@@ -30,7 +33,7 @@ void main() {
     });
 
     test('isDartComponent1', () {
-      expect(isDartComponent1(react.div({})), isFalse);
+      expect(isDartComponent1(div({})), isFalse);
       expect(isDartComponent1(JsFoo({})), isFalse);
       expect(isDartComponent1(Foo({})), isTrue);
       expect(isDartComponent1(Foo2({})), isFalse);
@@ -38,7 +41,7 @@ void main() {
     });
 
     test('isDartComponent', () {
-      expect(isDartComponent(react.div({})), isFalse);
+      expect(isDartComponent(div({})), isFalse);
       expect(isDartComponent(JsFoo({})), isFalse);
       expect(isDartComponent(Foo({})), isTrue);
       expect(isDartComponent(Foo2({})), isTrue);
@@ -53,7 +56,7 @@ _FunctionFoo(Map props) {
   return react.div({});
 }
 
-final Foo = react.registerComponent(() => _Foo());
+final Foo = react.registerComponent(() => _Foo()) as ReactDartComponentFactoryProxy;
 
 class _Foo extends react.Component {
   @override

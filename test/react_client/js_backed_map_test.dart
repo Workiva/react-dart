@@ -29,7 +29,7 @@ main() {
       });
 
       test('.backedBy creates a new instance backed by a given JS map', () {
-        final jsMap = jsify({'foo': 1});
+        final jsMap = jsify({'foo': 1}) as JsMap;
         final jsBackedMap = JsBackedMap.backedBy(jsMap);
         expect(jsBackedMap, containsPair('foo', 1));
 
@@ -47,7 +47,7 @@ main() {
       });
 
       test('.fromJs creates a new instance with all key-value pairs from another JS map', () {
-        final otherJsMap = jsify({'foo': 1});
+        final otherJsMap = jsify({'foo': 1}) as JsMap;
         final jsBackedMap = JsBackedMap.fromJs(otherJsMap);
         expect(jsBackedMap, containsPair('foo', 1));
         expect(jsBackedMap.jsObject, isNot(otherJsMap));
@@ -61,11 +61,11 @@ main() {
       final jsMap = JsBackedMap.from({
         'foo': 1,
         'bar': 2,
-      });
-      jsMap.addAllFromJs(jsify({
-        'foo': 'overwritten',
-        'baz': 3,
-      }));
+      })
+        ..addAllFromJs(jsify({
+          'foo': 'overwritten',
+          'baz': 3,
+        }) as JsMap);
       expect(jsMap, {
         'foo': 'overwritten',
         'bar': 2,

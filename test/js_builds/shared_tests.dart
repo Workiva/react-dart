@@ -91,9 +91,9 @@ void sharedConsoleWarnTests({@required bool expectDeduplicateSyntheticEventWarni
 
       // Adapted from reduced test case in https://github.com/dart-lang/sdk/issues/43939
       // ignore: prefer_function_declarations_over_variables
-      dynamic function = (react.SyntheticEvent event) {};
+      final function = (react.SyntheticEvent event) {} as dynamic;
       // ignore: unused_local_variable
-      dynamic Function(T) function2 = function;
+      final function2 = function as dynamic Function(T);
     }
 
     group('(DDC only)', () {
@@ -207,7 +207,7 @@ class _ErrorBoundaryComponent extends react.Component2 {
 
   @override
   render() {
-    return state['hasError'] ? null : props['children'];
+    return (state['hasError'] as bool) ? null : props['children'];
   }
 }
 

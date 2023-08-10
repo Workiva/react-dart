@@ -156,7 +156,7 @@ class _GeocodesForm extends react.Component {
   /// Handle form submission via `props.onSubmit`
   onFormSubmit(react.SyntheticEvent event) {
     event.preventDefault();
-    InputElement inputElement = react_dom.findDOMNode(searchInputInstance);
+    final inputElement = react_dom.findDOMNode(searchInputInstance);
     // The input's value is accessed.
     final address = inputElement.value;
     inputElement.value = '';
@@ -201,7 +201,7 @@ class _GeocodesHistoryList extends react.Component {
         {
           'key': 'list',
         },
-        List.from(props['data'].keys.map((key) => geocodesHistoryItem({
+        List.from((props['data'] as Map).keys.map((key) => geocodesHistoryItem({
               'key': key,
               'query': props['data'][key]['query'],
               'status': props['data'][key]['status'],

@@ -154,7 +154,7 @@ abstract class Component {
   /// >
   /// > It is strongly recommended that you migrate to [Component2] and use [Component2.context] instead.
   @experimental
-  set context(dynamic value) => _context = value;
+  set context(dynamic value) => _context = value as Map;
 
   /// ReactJS [Component] props.
   ///
@@ -229,16 +229,16 @@ abstract class Component {
     /// [context]s typing was loosened from Map to dynamic to support the new context API in [Component2]
     /// which extends from [Component]. Only "legacy" context APIs are supported in [Component] - which means
     /// it will still be expected to be a Map.
-    this.context = Map.from(context ?? const {});
+    this.context = Map.from(context as Map ?? const {});
 
     /// [nextContext]s typing was loosened from Map to dynamic to support the new context API in [Component2]
     /// which extends from [Component]. Only "legacy" context APIs are supported in [Component] - which means
     /// it will still be expected to be a Map.
-    nextContext = Map.from(this.context ?? const {});
+    nextContext = Map.from(this.context as Map ?? const {});
   }
 
   _initProps(props) {
-    this.props = Map.from(props);
+    this.props = Map.from(props as Map);
     nextProps = this.props;
   }
 
@@ -683,7 +683,7 @@ abstract class Component2 implements Component {
   /// name of the proxying JS component defined in _dart_helpers.js).
   @override
   String get displayName {
-    var value;
+    String value;
     assert(() {
       value = runtimeType.toString();
       return true;

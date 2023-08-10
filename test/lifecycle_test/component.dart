@@ -8,14 +8,14 @@ import 'package:react/react_client.dart';
 
 import 'util.dart';
 
-ReactDartComponentFactoryProxy SetStateTest = react.registerComponent(() => _SetStateTest());
+final SetStateTest = react.registerComponent(() => _SetStateTest()) as ReactDartComponentFactoryProxy;
 
 class _SetStateTest extends react.Component with LifecycleTestHelper {
   @override
-  Map getDefaultProps() => {'shouldUpdate': true};
+  Map getDefaultProps() => const {'shouldUpdate': true};
 
   @override
-  getInitialState() => {'counter': 1};
+  getInitialState() => const {'counter': 1};
 
   @override
   componentWillReceiveProps(_) {
@@ -93,16 +93,16 @@ class _DefaultPropsCachingTest extends react.Component implements DefaultPropsCa
   set staticGetDefaultPropsCallCount(int value) => getDefaultPropsCallCount = value;
 
   @override
-  Map getDefaultProps() {
+  getDefaultProps() {
     getDefaultPropsCallCount++;
     return {'getDefaultPropsCallCount': getDefaultPropsCallCount};
   }
 
   @override
-  render() => false;
+  render() => null;
 }
 
-ReactDartComponentFactoryProxy DefaultPropsTest = react.registerComponent(() => _DefaultPropsTest());
+final DefaultPropsTest = react.registerComponent(() => _DefaultPropsTest()) as ReactDartComponentFactoryProxy;
 
 class _DefaultPropsTest extends react.Component {
   static int getDefaultPropsCallCount = 0;
@@ -112,14 +112,14 @@ class _DefaultPropsTest extends react.Component {
   int get staticGetDefaultPropsCallCount => getDefaultPropsCallCount;
 
   @override
-  Map getDefaultProps() => {'defaultProp': 'default'};
+  getDefaultProps() => {'defaultProp': 'default'};
 
   @override
-  render() => false;
+  render() => null;
 }
 
-ReactDartComponentFactoryProxy ContextWrapperWithoutKeys =
-    react.registerComponent(() => _ContextWrapperWithoutKeys());
+final ContextWrapperWithoutKeys =
+    react.registerComponent(() => _ContextWrapperWithoutKeys()) as ReactDartComponentFactoryProxy;
 
 class _ContextWrapperWithoutKeys extends react.Component with LifecycleTestHelper {
   @override
@@ -135,10 +135,10 @@ class _ContextWrapperWithoutKeys extends react.Component with LifecycleTestHelpe
   }
 
   @override
-  dynamic render() => react.div({}, props['children']);
+  render() => react.div({}, props['children']);
 }
 
-ReactDartComponentFactoryProxy ContextWrapper = react.registerComponent(() => _ContextWrapper());
+final ContextWrapper = react.registerComponent(() => _ContextWrapper()) as ReactDartComponentFactoryProxy;
 
 class _ContextWrapper extends react.Component with LifecycleTestHelper {
   @override
@@ -154,18 +154,18 @@ class _ContextWrapper extends react.Component with LifecycleTestHelper {
   }
 
   @override
-  dynamic render() => react.div({}, props['children']);
+  render() => react.div({}, props['children']);
 }
 
-ReactDartComponentFactoryProxy LifecycleTestWithContext =
-    react.registerComponent(() => _LifecycleTestWithContext());
+final LifecycleTestWithContext =
+    react.registerComponent(() => _LifecycleTestWithContext()) as ReactDartComponentFactoryProxy;
 
 class _LifecycleTestWithContext extends _LifecycleTest {
   @override
   Iterable<String> get contextKeys => const ['foo']; // only listening to one context key
 }
 
-ReactDartComponentFactoryProxy LifecycleTest = react.registerComponent(() => _LifecycleTest());
+final LifecycleTest = react.registerComponent(() => _LifecycleTest()) as ReactDartComponentFactoryProxy;
 
 class _LifecycleTest extends react.Component with LifecycleTestHelper {
   @override
@@ -182,7 +182,7 @@ class _LifecycleTest extends react.Component with LifecycleTestHelper {
   @override
   void componentWillReceivePropsWithContext(newProps, newContext) =>
       lifecycleCall('componentWillReceivePropsWithContext',
-          arguments: [Map.from(newProps), Map.from(newContext)]);
+          arguments: [Map.from(newProps), Map.from(newContext as Map)]);
 
   @override
   void componentWillUpdate(nextProps, nextState) =>
@@ -204,17 +204,16 @@ class _LifecycleTest extends react.Component with LifecycleTestHelper {
   @override
   bool shouldComponentUpdateWithContext(nextProps, nextState, nextContext) =>
       lifecycleCall('shouldComponentUpdateWithContext',
-          arguments: [Map.from(nextProps), Map.from(nextState), Map.from(nextContext)],
-          defaultReturnValue: () => true);
+          arguments: [Map.from(nextProps), Map.from(nextState), Map.from(nextContext)], defaultReturnValue: () => true);
 
   @override
-  dynamic render() => lifecycleCall('render', defaultReturnValue: () => react.div({}));
+  render() => lifecycleCall('render', defaultReturnValue: () => react.div({}));
 
   @override
-  Map getInitialState() => lifecycleCall('getInitialState', defaultReturnValue: () => {});
+  getInitialState() => lifecycleCall('getInitialState', defaultReturnValue: () => {});
 
   @override
-  Map getDefaultProps() {
+  getDefaultProps() {
     lifecycleCall('getDefaultProps');
 
     return {'defaultProp': 'default'};

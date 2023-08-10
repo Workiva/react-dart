@@ -79,7 +79,7 @@ class Component2BridgeImpl extends Component2Bridge {
     // Short-circuit to match the ReactJS 16 behavior of not re-rendering the component if newState is null.
     if (newState == null) return;
 
-    dynamic firstArg = jsBackingMapOrJsCopy(newState);
+    final firstArg = jsBackingMapOrJsCopy(newState);
 
     if (callback == null) {
       component.jsThis.setState(firstArg);

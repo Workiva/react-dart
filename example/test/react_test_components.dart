@@ -8,7 +8,7 @@ class _HelloComponent extends react.Component2 {
   @override
   get propTypes => {
         'name': (Map props, info) {
-          String propValue = props[info.propName];
+          final propValue = props[info.propName] as String;
           if (propValue.length > 20) {
             return ArgumentError('($propValue) is too long. $propValue has a max length of 20 characters.');
           }
@@ -56,6 +56,8 @@ class _CheckBoxComponent extends react.Component {
   @override
   getInitialState() => {'checked': false};
 
+  bool get checked => state['checked'] as bool;
+
   _handleChange(e) {
     setState({'checked': e.target.checked});
   }
@@ -70,13 +72,13 @@ class _CheckBoxComponent extends react.Component {
         'key': 'input',
         'className': 'form-check-input',
         'type': 'checkbox',
-        'checked': state['checked'],
+        'checked': checked,
         'onChange': _handleChange,
       }),
       react.label({
         'htmlFor': 'doTheDishes',
         'key': 'label',
-        'className': 'form-check-label ' + (state['checked'] ? 'striked' : 'not-striked')
+        'className': 'form-check-label ${checked ? 'striked' : 'not-striked'}'
       }, 'do the dishes'),
     ]);
   }
@@ -91,11 +93,11 @@ class _ClockComponent extends react.Component {
   getInitialState() => {'secondsElapsed': 0};
 
   @override
-  Map getDefaultProps() => {'refreshRate': 1000};
+  getDefaultProps() => {'refreshRate': 1000};
 
   @override
   void componentWillMount() {
-    timer = Timer.periodic(Duration(milliseconds: props['refreshRate']), tick);
+    timer = Timer.periodic(Duration(milliseconds: props['refreshRate'] as int), tick);
   }
 
   @override
@@ -137,7 +139,7 @@ var clockComponent = react.registerComponent(() => _ClockComponent());
 
 class _ListComponent extends react.Component {
   @override
-  Map getInitialState() {
+  getInitialState() {
     return {
       'items': List.from([0, 1, 2, 3])
     };
@@ -145,29 +147,28 @@ class _ListComponent extends react.Component {
 
   @override
   void componentWillUpdate(nextProps, nextState) {
-    if (nextState['items'].length > state['items'].length) {
-      print('Adding ' + nextState['items'].last.toString());
+    if ((nextState['items'] as List).length > (state['items'] as List).length) {
+      print('Adding ' + (nextState['items'] as List).last.toString());
     }
   }
 
   @override
   void componentDidUpdate(prevProps, prevState) {
-    if (prevState['items'].length > state['items'].length) {
-      print('Removed ' + prevState['items'].first.toString());
+    if ((prevState['items'] as List).length > (state['items'] as List).length) {
+      print('Removed ' + (prevState['items'] as List).first.toString());
     }
   }
 
   int iterator = 3;
 
   void addItem(event) {
-    final items = List.from(state['items']);
-    items.add(++iterator);
+    final items = [...state['items'] as List, ++iterator];
     setState({'items': items});
   }
 
   @override
-  dynamic render() {
-    final items = <dynamic>[];
+  render() {
+    final items = [];
     for (final item in state['items']) {
       items.add(react.li({'key': item}, '$item'));
     }
@@ -319,14 +320,14 @@ class _NewContextProviderComponent extends react.Component2 {
       'componentRef': componentRef,
     };
 
-    if (state['complexMap']) {
+    if (state['complexMap'] as bool) {
       provideMap.addAll(complexValues);
     }
 
-    Map newContextRefComponentProps = {
+    final newContextRefComponentProps = {
       'key': 'ref2',
       'ref': (ref) {
-        componentRef = ref;
+        componentRef = ref as _NewContextRefComponent;
       }
     };
 
@@ -402,8 +403,7 @@ class _NewContextConsumerObservedBitsComponent extends react.Component2 {
   }
 }
 
-var newContextConsumerObservedBitsComponent =
-    react.registerComponent(() => _NewContextConsumerObservedBitsComponent());
+var newContextConsumerObservedBitsComponent = react.registerComponent(() => _NewContextConsumerObservedBitsComponent());
 
 class _NewContextTypeConsumerComponent extends react.Component2 {
   @override
@@ -428,8 +428,8 @@ class _Component2TestComponent extends react.Component2 with react.TypedSnapshot
   get initialState => {'defaultState': true, 'items': []};
 
   @override
-  Map getDerivedStateFromProps(nextProps, prevState) {
-    final prevItems = prevState['items'];
+  getDerivedStateFromProps(nextProps, prevState) {
+    final prevItems = prevState['items'] as List;
     if (prevItems.isEmpty || prevItems[0] != 3) {
       return {
         'items': List.from([3, 1, 2, 0])
@@ -440,36 +440,36 @@ class _Component2TestComponent extends react.Component2 with react.TypedSnapshot
 
   @override
   String getSnapshotBeforeUpdate(nextProps, prevState) {
-    if (prevState['items'].length > state['items'].length) {
-      return 'removed ' + prevState['items'].last.toString();
+    if ((prevState['items'] as List).length > (state['items'] as List).length) {
+      return 'removed ' + (prevState['items'].last as List).toString();
     } else {
-      return 'added ' + state['items'].last.toString();
+      return 'added ' + (state['items'].last as List).toString();
     }
   }
 
   @override
   void componentDidUpdate(prevProps, prevState, [String snapshot]) {
     if (snapshot != null) {
-      print('Updated DOM and ' + snapshot);
+      print('Updated DOM and $snapshot');
       return;
     }
     print('No Snapshot');
   }
 
   void removeItem(event) {
-    final items = List.from(state['items']);
+    final items = List.from(state['items'] as List);
     items.removeAt(items.length - 1);
     setState({'items': items});
   }
 
   void addItem(event) {
-    final items = List.from(state['items']);
+    final items = List.from(state['items'] as List);
     items.add(items.length);
     setState({'items': items});
   }
 
   @override
-  dynamic render() {
+  render() {
     // Used to generate unique keys even when the list contains duplicate items
     final itemCounts = <dynamic, int>{};
     final items = [];
@@ -502,16 +502,16 @@ var component2TestComponent = react.registerComponent(() => _Component2TestCompo
 class _ErrorComponent extends react.Component2 {
   @override
   void componentDidMount() {
-    if (!props['errored']) {
+    if (!(props['errored'] as bool)) {
       throw _CustomException('It broke!', 2);
     }
   }
 
   @override
-  dynamic render() {
+  render() {
     return react.div(
         {'key': 'eb-d1-e'},
-        "Oh no, I'm an error! Check your "
+        'Oh no, I\'m an error! Check your '
         'console.');
   }
 }
@@ -539,7 +539,7 @@ class _CustomException implements Exception {
 
 class _Component2ErrorTestComponent extends react.Component2 {
   @override
-  Map get initialState => {
+  get initialState => {
         'clicked': false,
         'errored': false,
         'error': null,
@@ -551,15 +551,12 @@ class _Component2ErrorTestComponent extends react.Component2 {
       print(info.dartStackTrace);
       setState({'error': error.randomMessage});
     } else {
-      setState({
-        'error': 'We can capture the error, store it in state and '
-            'display it here.'
-      });
+      setState({'error': 'We can capture the error, store it in state and display it here.'});
     }
   }
 
   @override
-  Map getDerivedStateFromError(error) {
+  getDerivedStateFromError(error) {
     return {'errored': true};
   }
 
@@ -572,31 +569,28 @@ class _Component2ErrorTestComponent extends react.Component2 {
   }
 
   @override
-  dynamic render() {
-    dynamic errorMessage = state['error'] ?? 'No error yet';
+  render() {
+    final errorMessage = state['error'] ?? 'No error yet';
 
     return react.div({
       'key': 'e-cont'
     }, [
       react.h3({'key': 'e-header'}, 'Error Boundary Test'),
-      state['clicked'] ? ErrorComponent({'key': 'ec-1', 'errored': state['errored']}) : null,
+      state['clicked'] as bool ? ErrorComponent({'key': 'ec-1', 'errored': state['errored']}) : null,
       errorMessage != null ? react.div({'key': 'ec-m-1'}, '$errorMessage') : null,
-      !state['errored']
-          ? react.button({
-              'type': 'button',
-              'key': 'c3-r-button',
-              'className': 'btn btn-primary',
-              'onClick': error,
-            }, 'Trigger Error')
-          : null,
-      state['errored']
+      state['errored'] as bool
           ? react.button({
               'type': 'button',
               'key': 'c3-c-button',
               'className': 'btn btn-primary',
               'onClick': clearError,
             }, 'Clear Error')
-          : null,
+          : react.button({
+              'type': 'button',
+              'key': 'c3-r-button',
+              'className': 'btn btn-primary',
+              'onClick': error,
+            }, 'Trigger Error'),
       react.hr({'key': 'e-hr'}),
     ]);
   }
