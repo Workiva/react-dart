@@ -22,5 +22,3 @@ tags:
   # These tests pass in later Dart SDKs, so we ignore them when running in 2.7.
   "dart-2-7-dart2js-variadic-issues":
 
-custom_html_template_path: test/_react_test_template.html
-

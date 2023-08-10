@@ -1,11 +1,11 @@
 @TestOn('browser')
+library react.react_memo_test;
+
 import 'dart:html';
 
 import 'package:react/react.dart' as react;
 import 'package:react/react_client.dart';
 import 'package:react/react_client/react_interop.dart';
-import 'package:react/react_dom.dart' as react_dom;
-// ignore: deprecated_member_use_from_same_package
 import 'package:react/react_test_utils.dart' as rtu;
 import 'package:test/test.dart';
 
@@ -128,15 +128,14 @@ void sharedMemoTests(MemoFunction memoFunction) {
     test('', () {
       renderMemoTest();
 
-      react_dom.ReactTestUtils.act(() => memoTestWrapperComponentRef.current.increaseLocalCount());
+      memoTestWrapperComponentRef.current.increaseLocalCount();
       expect(memoTestWrapperComponentRef.current.state['localCount'], 1, reason: 'test setup sanity check');
       expect(memoTestWrapperComponentRef.current.redrawCount, 1, reason: 'test setup sanity check');
 
       expect(childMemoRenderCount, 2);
       expect(localCountDisplayRef.current.text, '1');
 
-      react_dom.ReactTestUtils.act(
-          () => memoTestWrapperComponentRef.current.increaseValueMemoShouldIgnoreViaAreEqual());
+      memoTestWrapperComponentRef.current.increaseValueMemoShouldIgnoreViaAreEqual();
       expect(memoTestWrapperComponentRef.current.state['valueMemoShouldIgnoreViaAreEqual'], 1,
           reason: 'test setup sanity check');
       expect(memoTestWrapperComponentRef.current.redrawCount, 2, reason: 'test setup sanity check');
@@ -148,8 +147,7 @@ void sharedMemoTests(MemoFunction memoFunction) {
     test('unless the areEqual argument is set to a function that customizes when re-renders occur', () {
       renderMemoTest(testAreEqual: true);
 
-      react_dom.ReactTestUtils.act(
-          () => memoTestWrapperComponentRef.current.increaseValueMemoShouldIgnoreViaAreEqual());
+      memoTestWrapperComponentRef.current.increaseValueMemoShouldIgnoreViaAreEqual();
       expect(memoTestWrapperComponentRef.current.state['valueMemoShouldIgnoreViaAreEqual'], 1,
           reason: 'test setup sanity check');
       expect(memoTestWrapperComponentRef.current.redrawCount, 1, reason: 'test setup sanity check');
@@ -162,7 +160,7 @@ void sharedMemoTests(MemoFunction memoFunction) {
   test('does not re-render its child component when parent updates and props remain the same', () {
     renderMemoTest();
 
-    react_dom.ReactTestUtils.act(() => memoTestWrapperComponentRef.current.increaseValueMemoShouldNotKnowAbout());
+    memoTestWrapperComponentRef.current.increaseValueMemoShouldNotKnowAbout();
     expect(memoTestWrapperComponentRef.current.state['valueMemoShouldNotKnowAbout'], 1,
         reason: 'test setup sanity check');
     expect(memoTestWrapperComponentRef.current.redrawCount, 1, reason: 'test setup sanity check');

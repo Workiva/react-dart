@@ -1,7 +1,4 @@
-@JS()
-library react.test.lifecycle.util;
-
-import 'package:js/js.dart';
+// ignore_for_file: deprecated_member_use_from_same_package
 import 'package:matcher/matcher.dart';
 import 'package:react/react.dart';
 
@@ -19,7 +16,6 @@ Map matchCall(String memberName, {args: anything, props: anything, state: anythi
 }
 
 /// A test helper to record lifecycle calls
-// ignore: deprecated_member_use_from_same_package
 mixin LifecycleTestHelper on Component {
   static List staticLifecycleCalls = [];
 
@@ -69,47 +65,7 @@ mixin LifecycleTestHelper on Component {
   }
 }
 
-// ignore: deprecated_member_use_from_same_package
 abstract class DefaultPropsCachingTestHelper implements Component {
   int get staticGetDefaultPropsCallCount;
   set staticGetDefaultPropsCallCount(int value);
 }
-
-@JS()
-external List getUpdatingSetStateLifeCycleCalls();
-
-@JS()
-external List getComponent2UpdatingSetStateLifeCycleCalls();
-
-@JS()
-external List getNonUpdatingSetStateLifeCycleCalls();
-
-@JS()
-external List getComponent2NonUpdatingSetStateLifeCycleCalls();
-
-@JS()
-external int getLatestJSCounter();
-
-@JS()
-external int getComponent2LatestJSCounter();
-
-@JS()
-external String getUpdatingRenderedCounter();
-
-@JS()
-external String getComponent2UpdatingRenderedCounter();
-
-@JS()
-external String getNonUpdatingRenderedCounter();
-
-@JS()
-external String getComponent2NonUpdatingRenderedCounter();
-
-@JS()
-external String getComponent2ErrorMessage();
-
-@JS()
-external dynamic getComponent2ErrorInfo();
-
-@JS()
-external String getComponent2ErrorFromDerivedState();

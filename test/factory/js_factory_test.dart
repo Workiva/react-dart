@@ -1,6 +1,6 @@
 @JS()
 @TestOn('browser')
-library react.test.factory.js_factory_test;
+library react.js_factory_test;
 
 import 'dart:html';
 
@@ -8,7 +8,7 @@ import 'package:js/js.dart';
 import 'package:react/react.dart' as react;
 import 'package:react/react_client.dart';
 import 'package:react/react_client/react_interop.dart';
-import 'package:react/src/react_test_utils/internal_test_utils.dart';
+import 'package:react/react_test_utils.dart';
 import 'package:test/test.dart';
 
 import 'common_factory_tests.dart';

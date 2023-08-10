@@ -1,15 +1,19 @@
 @TestOn('browser')
+@JS()
+library hooks_test;
+
 import 'dart:html';
 
+import "package:js/js.dart";
 import 'package:react/hooks.dart';
 import 'package:react/react.dart' as react;
+import 'package:react/react.dart';
 import 'package:react/react_client.dart';
 import 'package:react/react_dom.dart' as react_dom;
+import 'package:react/react_test_utils.dart' as react_test_utils;
 import 'package:test/test.dart';
 
-import 'factory/common_factory_tests.dart' show refTests;
-
-final _act = react_dom.ReactTestUtils.act;
+import 'factory/common_factory_tests.dart';
 
 main() {
   group('React Hooks: ', () {
@@ -19,15 +23,9 @@ main() {
       DivElement countRef;
       ButtonElement setButtonRef;
       ButtonElement setWithUpdaterButtonRef;
-      react_dom.ReactRoot root;
-
-      tearDownAll(() {
-        root.unmount();
-      });
 
       setUpAll(() {
         var mountNode = DivElement();
-        root = react_dom.createRoot(mountNode);
 
         UseStateTest = react.registerFunctionComponent((Map props) {
           final text = useStateLazy(() {
@@ -69,7 +67,7 @@ main() {
           ]);
         });
 
-        _act(() => root.render(UseStateTest({})));
+        react_dom.render(UseStateTest({}), mountNode);
       });
 
       test('initializes state correctly', () {
@@ -81,12 +79,12 @@ main() {
       });
 
       test('StateHook.set updates state correctly', () {
-        _act(setButtonRef.click);
+        react_test_utils.Simulate.click(setButtonRef);
         expect(textRef.text, 'newValue');
       });
 
       test('StateHook.setWithUpdater updates state correctly', () {
-        _act(setWithUpdaterButtonRef.click);
+        react_test_utils.Simulate.click(setWithUpdaterButtonRef);
         expect(countRef.text, '1');
       });
     });
@@ -102,7 +100,6 @@ main() {
       ButtonElement addButtonRef;
       ButtonElement subtractButtonRef;
       ButtonElement textButtonRef;
-      react_dom.ReactRoot root;
 
       Map reducer(Map state, Map action) {
         switch (action['type']) {
@@ -119,7 +116,6 @@ main() {
 
       setUpAll(() {
         var mountNode = DivElement();
-        root = react_dom.createRoot(mountNode);
 
         UseReducerTest = react.registerFunctionComponent((Map props) {
           final state = useReducer(reducer, {
@@ -169,11 +165,10 @@ main() {
           ]);
         });
 
-        _act(() => root.render(UseReducerTest({})));
+        react_dom.render(UseReducerTest({}), mountNode);
       });
 
       tearDownAll(() {
-        root.unmount();
         UseReducerTest = null;
       });
 
@@ -183,19 +178,18 @@ main() {
       });
 
       test('dispatch updates states correctly', () {
-        _act(textButtonRef.click);
+        react_test_utils.Simulate.click(textButtonRef);
         expect(textRef.text, 'newValue');
 
-        _act(addButtonRef.click);
+        react_test_utils.Simulate.click(addButtonRef);
         expect(countRef.text, '1');
 
-        _act(subtractButtonRef.click);
+        react_test_utils.Simulate.click(subtractButtonRef);
         expect(countRef.text, '0');
       });
 
       group('useReducerLazy', () {
         ButtonElement resetButtonRef;
-        react_dom.ReactRoot root;
 
         Map initializeCount(int initialValue) {
           return {'count': initialValue};
@@ -216,7 +210,6 @@ main() {
 
         setUpAll(() {
           var mountNode = DivElement();
-          root = react_dom.createRoot(mountNode);
 
           UseReducerTest = react.registerFunctionComponent((Map props) {
             final ReducerHook<Map, Map, int> state = useReducerLazy(reducer2, props['initialCount'], initializeCount);
@@ -256,11 +249,10 @@ main() {
             ]);
           });
 
-          _act(() => root.render(UseReducerTest({'initialCount': 10})));
+          react_dom.render(UseReducerTest({'initialCount': 10}), mountNode);
         });
 
         tearDownAll(() {
-          root.unmount();
           UseReducerTest = null;
         });
 
@@ -269,13 +261,13 @@ main() {
         });
 
         test('dispatch updates states correctly', () {
-          _act(addButtonRef.click);
+          react_test_utils.Simulate.click(addButtonRef);
           expect(countRef.text, '11');
 
-          _act(resetButtonRef.click);
+          react_test_utils.Simulate.click(resetButtonRef);
           expect(countRef.text, '10');
 
-          _act(subtractButtonRef.click);
+          react_test_utils.Simulate.click(subtractButtonRef);
           expect(countRef.text, '9');
         });
       });
@@ -288,15 +280,9 @@ main() {
       ButtonElement incrementWithDepButtonRef;
       ButtonElement incrementNoDepButtonRef;
       ButtonElement incrementDeltaButtonRef;
-      react_dom.ReactRoot root;
-
-      tearDownAll(() {
-        root.unmount();
-      });
 
       setUpAll(() {
         var mountNode = DivElement();
-        root = react_dom.createRoot(mountNode);
 
         UseCallbackTest = react.registerFunctionComponent((Map props) {
           final count = useState(0);
@@ -356,32 +342,32 @@ main() {
           ]);
         });
 
-        _act(() => root.render(UseCallbackTest({})));
+        react_dom.render(UseCallbackTest({}), mountNode);
       });
 
       test('callback is called correctly', () {
         expect(countRef.text, '0');
         expect(deltaRef.text, '1');
 
-        _act(incrementNoDepButtonRef.click);
+        react_test_utils.Simulate.click(incrementNoDepButtonRef);
         expect(countRef.text, '1');
 
-        _act(incrementWithDepButtonRef.click);
+        react_test_utils.Simulate.click(incrementWithDepButtonRef);
         expect(countRef.text, '2');
       });
 
       group('after depending state changes,', () {
         setUpAll(() {
-          _act(incrementDeltaButtonRef.click);
+          react_test_utils.Simulate.click(incrementDeltaButtonRef);
         });
 
         test('callback stays the same if state not in dependency list', () {
-          _act(incrementNoDepButtonRef.click);
+          react_test_utils.Simulate.click(incrementNoDepButtonRef);
           expect(countRef.text, '3', reason: 'still increments by 1 because delta not in dependency list');
         });
 
         test('callback updates if state is in dependency list', () {
-          _act(incrementWithDepButtonRef.click);
+          react_test_utils.Simulate.click(incrementWithDepButtonRef);
           expect(countRef.text, '5', reason: 'increments by 2 because delta updated');
         });
       });
@@ -391,13 +377,11 @@ main() {
       DivElement mountNode;
       _ContextProviderWrapper providerRef;
       int currentCount = 0;
-      react.Context<int> testContext;
+      Context<int> testContext;
       Function useContextTestFunctionComponent;
-      react_dom.ReactRoot root;
 
       setUp(() {
         mountNode = DivElement();
-        root = react_dom.createRoot(mountNode);
 
         UseContextTestComponent(Map props) {
           final context = useContext(testContext);
@@ -413,7 +397,8 @@ main() {
         useContextTestFunctionComponent =
             react.registerFunctionComponent(UseContextTestComponent, displayName: 'useContextTest');
 
-        _act(() => root.render(ContextProviderWrapper({
+        react_dom.render(
+            ContextProviderWrapper({
               'contextToUse': testContext,
               'mode': 'increment',
               'ref': (ref) {
@@ -421,11 +406,12 @@ main() {
               }
             }, [
               useContextTestFunctionComponent({'key': 't1'}, []),
-            ])));
+            ]),
+            mountNode);
       });
 
       tearDown(() {
-        root.unmount();
+        react_dom.unmountComponentAtNode(mountNode);
         mountNode = null;
         currentCount = 0;
         testContext = null;
@@ -439,19 +425,18 @@ main() {
         });
 
         test('on value updates', () {
-          _act(providerRef.increment);
+          providerRef.increment();
           expect(currentCount, 2);
-          _act(providerRef.increment);
+          providerRef.increment();
           expect(currentCount, 3);
-          _act(providerRef.increment);
+          providerRef.increment();
           expect(currentCount, 4);
         });
       });
     });
 
     group('useRef -', () {
-      Element mountNode;
-      react_dom.ReactRoot root;
+      var mountNode = DivElement();
       ReactDartFunctionComponentFactoryProxy UseRefTest;
       ButtonElement reRenderButton;
       var noInitRef;
@@ -461,14 +446,7 @@ main() {
       var refFromUseRef;
       var refFromCreateRef;
 
-      tearDownAll(() {
-        root.unmount();
-      });
-
       setUpAll(() {
-        mountNode = DivElement();
-        root = react_dom.createRoot(mountNode);
-
         UseRefTest = react.registerFunctionComponent((Map props) {
           noInitRef = useRef();
           initRef = useRef(mountNode);
@@ -500,7 +478,7 @@ main() {
           ]);
         });
 
-        _act(() => root.render(UseRefTest({})));
+        react_dom.render(UseRefTest({}), mountNode);
       });
 
       group('correctly initializes a Ref object', () {
@@ -525,7 +503,7 @@ main() {
           expect(refFromUseRef.current, 1, reason: 'Ref object initially created on first render');
           expect(refFromCreateRef.current, 1);
 
-          _act(reRenderButton.click);
+          react_test_utils.Simulate.click(reRenderButton);
 
           expect(renderIndex.value, 2);
           expect(refFromUseRef.current, 1,
@@ -537,7 +515,6 @@ main() {
     });
 
     group('useMemo -', () {
-      react_dom.ReactRoot root;
       ReactDartFunctionComponentFactoryProxy UseMemoTest;
       StateHook<int> count;
       ButtonElement reRenderButtonRef;
@@ -560,13 +537,8 @@ main() {
         return fibonacci(n - 1) + fibonacci(n - 2);
       }
 
-      tearDownAll(() {
-        root.unmount();
-      });
-
       setUpAll(() {
         final mountNode = DivElement();
-        root = react_dom.createRoot(mountNode);
 
         UseMemoTest = react.registerFunctionComponent((Map props) {
           final reRender = useState(0);
@@ -608,7 +580,7 @@ main() {
           ]);
         });
 
-        _act(() => root.render(UseMemoTest({})));
+        react_dom.render(UseMemoTest({}), mountNode);
       });
 
       test('correctly initializes memoized value', () {
@@ -625,7 +597,7 @@ main() {
 
       group('after depending state changes,', () {
         setUpAll(() {
-          _act(incrementButtonRef.click);
+          react_test_utils.Simulate.click(incrementButtonRef);
         });
 
         test('createFunction does not run if state not in dependency list', () {
@@ -646,7 +618,7 @@ main() {
 
       group('after component re-renders,', () {
         setUpAll(() {
-          _act(reRenderButtonRef.click);
+          react_test_utils.Simulate.click(reRenderButtonRef);
         });
 
         test('createFunction re-runs if there is no dependency list', () {
@@ -672,7 +644,7 @@ main() {
 
     group('useImperativeHandle -', () {
       group('updates `ref.current` to the return value of `createHandle()`', () {
-        Element mountNode;
+        var mountNode = DivElement();
         ReactDartFunctionComponentFactoryProxy UseImperativeHandleTest;
         ButtonElement incrementButton;
         ButtonElement reRenderButtonRef1;
@@ -681,16 +653,8 @@ main() {
         Ref emptyDepsRef;
         Ref depsRef;
         StateHook<int> count;
-        react_dom.ReactRoot root;
-
-        tearDownAll(() {
-          root.unmount();
-        });
 
         setUpAll(() {
-          mountNode = DivElement();
-          root = react_dom.createRoot(mountNode);
-
           var NoDepsComponent = react.forwardRef2((props, ref) {
             count = useState(0);
 
@@ -745,8 +709,9 @@ main() {
             ]);
           });
 
-          expect(() => _act(() => root.render(NullRefComponent({}, []))), returnsNormally,
+          expect(() => react_dom.render(NullRefComponent({}, []), mountNode), returnsNormally,
               reason: 'Hook should not throw if the ref is null');
+          react_dom.unmountComponentAtNode(mountNode);
 
           UseImperativeHandleTest = react.registerFunctionComponent((Map props) {
             noDepsRef = useRef();
@@ -766,7 +731,7 @@ main() {
             ]);
           });
 
-          _act(() => root.render(UseImperativeHandleTest({})));
+          react_dom.render(UseImperativeHandleTest({}), mountNode);
         });
 
         test('(with no dependency list)', () {
@@ -774,7 +739,7 @@ main() {
           expect(noDepsRef.current['increment'], isA<Function>());
           expect(count.value, 0);
 
-          _act(incrementButton.click);
+          react_test_utils.Simulate.click(incrementButton);
           expect(count.value, 1);
         });
 
@@ -783,7 +748,7 @@ main() {
               reason: 'useImperativeHandle overrides the existing ref.current value');
           expect(emptyDepsRef.current, 0);
 
-          _act(reRenderButtonRef1.click);
+          react_test_utils.Simulate.click(reRenderButtonRef1);
           expect(emptyDepsRef.current, 0,
               reason: 'current value does not update because count.value is not in dependency list');
         });
@@ -792,7 +757,7 @@ main() {
           expect(depsRef.current, isA<int>(), reason: 'useImperativeHandle overrides the existing ref.current value');
           expect(depsRef.current, 0);
 
-          _act(reRenderButtonRef2.click);
+          react_test_utils.Simulate.click(reRenderButtonRef2);
           expect(depsRef.current, 1, reason: 'current value updates because count.value is in dependency list');
         });
       });
@@ -811,7 +776,6 @@ main() {
     });
 
     group('useDebugValue -', () {
-      react_dom.ReactRoot root;
       ReactDartFunctionComponentFactoryProxy UseDebugValueTest1;
       ReactDartFunctionComponentFactoryProxy UseDebugValueTest2;
       StateHook<bool> isOnline1;
@@ -833,13 +797,8 @@ main() {
         return isOnline;
       }
 
-      tearDownAll(() {
-        root.unmount();
-      });
-
       setUpAll(() {
         final mountNode = DivElement();
-        root = react_dom.createRoot(mountNode);
 
         UseDebugValueTest1 = react.registerFunctionComponent((Map props) {
           isOnline1 = useFriendStatus();
@@ -861,7 +820,8 @@ main() {
           ]);
         });
 
-        _act(() => root.render(react.Fragment({}, [
+        react_dom.render(
+            react.Fragment({}, [
               UseDebugValueTest1({
                 'key': 'friend1',
                 'friend': {'id': 1, 'name': 'user 1'},
@@ -870,7 +830,8 @@ main() {
                 'key': 'friend2',
                 'friend': {'id': 2, 'name': 'user 2'},
               }),
-            ])));
+            ]),
+            mountNode);
       });
 
       test('does not cause errors when used', () {
@@ -910,7 +871,6 @@ void testEffectHook(Function effectHook) {
   ButtonElement countButtonRef;
   DivElement countRef;
   DivElement mountNode;
-  react_dom.ReactRoot root;
   int useEffectCallCount;
   int useEffectCleanupCallCount;
   int useEffectWithDepsCallCount;
@@ -922,7 +882,6 @@ void testEffectHook(Function effectHook) {
 
   setUpAll(() {
     mountNode = DivElement();
-    root = react_dom.createRoot(mountNode);
     useEffectCallCount = 0;
     useEffectCleanupCallCount = 0;
     useEffectWithDepsCallCount = 0;
@@ -985,7 +944,7 @@ void testEffectHook(Function effectHook) {
       ]);
     });
 
-    _act(() => root.render(UseEffectTest({})));
+    react_dom.render(UseEffectTest({}), mountNode);
   });
 
   test('side effect (no dependency list) is called after the first render', () {
@@ -1010,7 +969,7 @@ void testEffectHook(Function effectHook) {
 
   group('after state change,', () {
     setUpAll(() {
-      _act(countButtonRef.click);
+      react_test_utils.Simulate.click(countButtonRef);
     });
 
     test('side effect (no dependency list) is called again', () {
@@ -1039,7 +998,7 @@ void testEffectHook(Function effectHook) {
 
   group('after component is unmounted,', () {
     setUpAll(() {
-      root.unmount();
+      react_dom.unmountComponentAtNode(mountNode);
     });
 
     test('cleanup (no dependency list) is called', () {

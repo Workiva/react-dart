@@ -1,6 +1,10 @@
 @TestOn('browser')
+@JS()
+library react_test_utils_test;
+
 import 'dart:html' as html;
 
+import 'package:js/js.dart';
 import 'package:test/test.dart';
 
 import 'package:react/react.dart' as react;
@@ -8,16 +12,13 @@ import 'package:react/react_dom.dart' as react_dom;
 
 import 'shared_type_tester.dart';
 
-final _act = react_dom.ReactTestUtils.act;
-
-// FIXME (adl): Get rid of all the root.render usage in tests and use rtl render instead
 main() {
-  react_dom.ReactRoot root;
-
   void testTypeValue(dynamic typeToTest) {
+    var mountNode = new html.DivElement();
     var contextTypeRef;
     var consumerRef;
-    _act(() => root.render(ContextProviderWrapper({
+    react_dom.render(
+        ContextProviderWrapper({
           'contextToUse': TestContext,
           'value': typeToTest,
         }, [
@@ -32,22 +33,68 @@ main() {
               consumerRef = ref;
             }
           })
-        ])));
+        ]),
+        mountNode);
     expect(contextTypeRef.context, same(typeToTest));
     expect(consumerRef.latestValue, same(typeToTest));
   }
 
   group('New Context API (Component2 only)', () {
-    setUp(() {
-      root = react_dom.createRoot(html.DivElement());
-    });
-
-    tearDown(() {
-      root.unmount();
-    });
-
     group('sets and retrieves values correctly:', () {
       sharedTypeTests(testTypeValue);
+    });
+
+    group('calculateChangeBits argument functions correctly', () {
+      var mountNode = new html.DivElement();
+      _ContextProviderWrapper providerRef;
+      _ContextConsumerWrapper consumerEvenRef;
+      _ContextConsumerWrapper consumerOddRef;
+
+      setUp(() {
+        react_dom.render(
+            ContextProviderWrapper({
+              'contextToUse': TestCalculateChangedBitsContext,
+              'mode': 'increment',
+              'ref': (ref) {
+                providerRef = ref;
+              }
+            }, [
+              ContextConsumerWrapper({
+                'key': 'EvenContextConsumer',
+                'contextToUse': TestCalculateChangedBitsContext,
+                'unstable_observedBits': 1 << 2,
+                'ref': (ref) {
+                  consumerEvenRef = ref;
+                }
+              }),
+              ContextConsumerWrapper({
+                'key': 'OddContextConsumer',
+                'contextToUse': TestCalculateChangedBitsContext,
+                'unstable_observedBits': 1 << 3,
+                'ref': (ref) {
+                  consumerOddRef = ref;
+                }
+              })
+            ]),
+            mountNode);
+      });
+
+      test('on first render', () {
+        expect(consumerEvenRef.latestValue, 1);
+        expect(consumerOddRef.latestValue, 1);
+      });
+
+      test('on value updates', () {
+        providerRef.increment();
+        expect(consumerEvenRef.latestValue, 2);
+        expect(consumerOddRef.latestValue, 1);
+        providerRef.increment();
+        expect(consumerEvenRef.latestValue, 2);
+        expect(consumerOddRef.latestValue, 3);
+        providerRef.increment();
+        expect(consumerEvenRef.latestValue, 4);
+        expect(consumerOddRef.latestValue, 3);
+      });
     });
   });
 }

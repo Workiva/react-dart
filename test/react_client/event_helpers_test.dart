@@ -1,12 +1,13 @@
 @TestOn('browser')
+library react.event_helpers_test;
+
 import 'dart:html';
 
 import 'package:react/react.dart';
 import 'package:react/react_client/js_interop_helpers.dart';
-import 'package:react/react_dom.dart' as react_dom;
+import 'package:react/react_dom.dart';
+import 'package:react/react_test_utils.dart';
 import 'package:react/src/react_client/event_helpers.dart';
-// ignore: deprecated_member_use_from_same_package
-import 'package:react/react_test_utils.dart' as rtu;
 import 'package:test/test.dart';
 import 'package:mockito/mockito.dart';
 
@@ -1981,23 +1982,15 @@ main() {
     group('DataTransferHelper', () {
       group('dataTransfer', () {
         SyntheticMouseEvent event;
-        react_dom.ReactRoot root;
-        Element mountNode;
-
-        setUp(() {
-          mountNode = Element.div();
-          root = react_dom.createRoot(mountNode);
-        });
 
         tearDown(() {
           event = null;
-          root.unmount();
-          mountNode = null;
         });
 
         Element renderAndGetRootNode() {
+          final mountNode = Element.div();
           final content = div({'onDrag': (e) => event = e, 'draggable': true}, []);
-          react_dom.ReactTestUtils.act(() => root.render(content));
+          render(content, mountNode);
           return mountNode.children.single;
         }
 
@@ -2015,8 +2008,7 @@ main() {
             };
 
             final node = renderAndGetRootNode();
-            // ignore: deprecated_member_use_from_same_package
-            rtu.Simulate.drag(node, eventData);
+            Simulate.drag(node, eventData);
 
             final dataTransfer = event.dataTransfer;
 
@@ -2034,8 +2026,7 @@ main() {
             final eventData = {'dataTransfer': {}};
 
             final node = renderAndGetRootNode();
-            // ignore: deprecated_member_use_from_same_package
-            rtu.Simulate.drag(node, eventData);
+            Simulate.drag(node, eventData);
 
             final dataTransfer = event.dataTransfer;
 
@@ -2056,8 +2047,7 @@ main() {
             };
 
             final node = renderAndGetRootNode();
-            // ignore: deprecated_member_use_from_same_package
-            rtu.Simulate.drag(node, eventData);
+            Simulate.drag(node, eventData);
 
             final dataTransfer = event.dataTransfer;
 

@@ -1,10 +1,13 @@
 @TestOn('browser')
+@JS()
+library react.js_backed_map_test.dart;
+
+import 'package:js/js.dart';
 import 'package:js/js_util.dart';
 import 'package:react/react_client/js_backed_map.dart';
 import 'package:test/test.dart';
 
 import '../shared_type_tester.dart';
-import 'util.dart';
 
 main() {
   group('JsBackedMap', () {
@@ -92,7 +95,7 @@ main() {
 
       test('frozen JS objects', () {
         final jsBackedMap = JsBackedMap();
-        objectFreeze(jsBackedMap.jsObject);
+        _objectFreeze(jsBackedMap.jsObject);
         try {
           // This throws only in strict-mode JS, meaning it throws in DDC and not in dart2js.
           jsBackedMap['foo'] = 'bar';
@@ -176,3 +179,6 @@ main() {
     });
   });
 }
+
+@JS('Object.freeze')
+external void _objectFreeze(JsMap object);

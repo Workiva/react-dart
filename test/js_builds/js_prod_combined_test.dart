@@ -12,7 +12,7 @@ main() {
 
     sharedJsFunctionTests();
 
-    sharedErrorBoundaryComponentNameTests(usingProdBundle: true);
+    sharedErrorBoundaryComponentNameTests();
 
     test('inReactDevMode', () {
       expect(inReactDevMode, isFalse);

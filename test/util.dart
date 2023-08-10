@@ -1,3 +1,8 @@
+// ignore_for_file: deprecated_member_use_from_same_package
+// ignore_for_file: invalid_use_of_protected_member
+@JS()
+library react.test.util;
+
 import 'dart:js_util' show getProperty;
 
 import 'package:js/js.dart';
@@ -5,6 +10,7 @@ import 'package:meta/meta.dart';
 import 'package:react/react.dart' as react;
 import 'package:react/react_client/js_backed_map.dart';
 import 'package:react/react_client/react_interop.dart';
+import 'package:react/react_test_utils.dart' as rtu;
 import 'package:react/src/js_interop_util.dart';
 import 'package:test/test.dart';
 
@@ -15,17 +21,13 @@ Map getProps(dynamic elementOrComponent) {
 }
 
 bool isDartComponent1(ReactElement element) =>
-    // ignore: invalid_use_of_protected_member
     ReactDartComponentVersion.fromType(element.type) == ReactDartComponentVersion.component;
 
 bool isDartComponent2(ReactElement element) =>
-    // ignore: invalid_use_of_protected_member
     ReactDartComponentVersion.fromType(element.type) == ReactDartComponentVersion.component2;
 
-// ignore: invalid_use_of_protected_member
 bool isDartComponent(ReactElement element) => ReactDartComponentVersion.fromType(element.type) != null;
 
-// ignore: deprecated_member_use_from_same_package
 T getDartComponent<T extends react.Component>(ReactComponent dartComponent) {
   return dartComponent.dartComponent as T;
 }
@@ -35,8 +37,11 @@ Map getDartComponentProps(ReactComponent dartComponent) {
 }
 
 Map getDartElementProps(ReactElement dartElement) {
-  // ignore: deprecated_member_use_from_same_package
   return isDartComponent2(dartElement) ? new JsBackedMap.fromJs(dartElement.props) : dartElement.props.internal.props;
+}
+
+ReactComponent render(ReactElement reactElement) {
+  return rtu.renderIntoDocument(reactElement);
 }
 
 /// Returns a new [Map.unmodifiable] with all argument maps merged in.

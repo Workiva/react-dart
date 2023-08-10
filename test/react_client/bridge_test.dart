@@ -1,27 +1,27 @@
 @TestOn('browser')
+library react.bridge_test;
+
 import 'package:react/react.dart' as react;
 import 'package:react/react_client/bridge.dart';
-// ignore: deprecated_member_use_from_same_package
-import 'package:react/react_test_utils.dart' as rtu;
 import 'package:test/test.dart';
+
+import '../util.dart';
 
 main() {
   // Test behavior that isn't functionally tested via component lifecycle tests.
   group('Component2Bridge', () {
     group('.forComponent returns the bridge used by that mounted component, which', () {
       test('by default is a const instance of Component2BridgeImpl', () {
-        final componentRef = react.createRef<react.Component2>();
-        rtu.renderIntoDocument(Foo({'ref': componentRef}));
-        expect(Component2Bridge.forComponent(componentRef.current), same(const Component2BridgeImpl()));
+        final instance = getDartComponent<_Foo>(render(Foo({})));
+        expect(Component2Bridge.forComponent(instance), same(const Component2BridgeImpl()));
       });
 
       test('can be a custom bridge specified via registerComponent2', () {
         customBridgeCalls = [];
         addTearDown(() => customBridgeCalls = null);
 
-        final componentRef = react.createRef<react.Component2>();
-        rtu.renderIntoDocument(BridgeTest({'ref': componentRef}));
-        final bridge = Component2Bridge.forComponent(componentRef.current);
+        final instance = getDartComponent<_BridgeTest>(render(BridgeTest({})));
+        final bridge = Component2Bridge.forComponent(instance);
         expect(bridge, isNotNull);
         expect(
           customBridgeCalls,
@@ -29,7 +29,7 @@ main() {
           // adding entries to customBridgeCalls.
           // `equals` is needed otherwise deep matching with matchers won't work
           contains(equals({
-            'component': same(componentRef.current),
+            'component': same(instance),
             'returnedBridge': same(bridge),
           })),
         );

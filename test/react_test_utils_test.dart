@@ -1,5 +1,6 @@
 @TestOn('browser')
-// ignore_for_file: deprecated_member_use_from_same_package
+library react_test_utils_test;
+
 import 'dart:html';
 import 'dart:js_util';
 
@@ -10,9 +11,9 @@ import 'package:react/react_test_utils.dart';
 import 'package:test/test.dart';
 
 import 'react_client/event_helpers_test.dart';
-import 'fixtures/test_components.dart' as component1;
-import 'fixtures/test_components2.dart' as component2;
-import 'fixtures/util.dart';
+import 'test_components.dart' as component1;
+import 'test_components2.dart' as component2;
+import 'util.dart';
 
 void main() {
   testUtils(
