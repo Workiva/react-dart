@@ -1,7 +1,8 @@
 @TestOn('browser')
 import 'package:react/react.dart' as react;
 import 'package:react/react_client/bridge.dart';
-import 'package:react_testing_library/react_testing_library.dart' as rtl;
+// ignore: deprecated_member_use_from_same_package
+import 'package:react/react_test_utils.dart' as rtu;
 import 'package:test/test.dart';
 
 main() {
@@ -10,7 +11,7 @@ main() {
     group('.forComponent returns the bridge used by that mounted component, which', () {
       test('by default is a const instance of Component2BridgeImpl', () {
         final componentRef = react.createRef<react.Component2>();
-        rtl.render(Foo({'ref': componentRef}));
+        rtu.renderIntoDocument(Foo({'ref': componentRef}));
         expect(Component2Bridge.forComponent(componentRef.current), same(const Component2BridgeImpl()));
       });
 
@@ -19,7 +20,7 @@ main() {
         addTearDown(() => customBridgeCalls = null);
 
         final componentRef = react.createRef<react.Component2>();
-        rtl.render(BridgeTest({'ref': componentRef}));
+        rtu.renderIntoDocument(BridgeTest({'ref': componentRef}));
         final bridge = Component2Bridge.forComponent(componentRef.current);
         expect(bridge, isNotNull);
         expect(

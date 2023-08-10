@@ -13,7 +13,8 @@ import 'package:react/react_client/js_backed_map.dart';
 import 'package:react/react_client/react_interop.dart' as react_interop;
 import 'package:react/react_dom.dart' as react_dom;
 import 'package:react/src/react_test_utils/internal_test_utils.dart';
-import 'package:react_testing_library/react_testing_library.dart' as rtl;
+// ignore: deprecated_member_use_from_same_package
+import 'package:react/react_test_utils.dart' as rtu;
 import 'package:test/test.dart';
 
 import 'component.dart' as components;
@@ -236,7 +237,7 @@ main() {
         final Map expectedProps = unmodifiableMap(defaultProps, initialProps, emptyChildrenProps);
 
         final componentRef = react.createRef<LifecycleTestHelper>();
-        rtl.render(components2.LifecycleTest({...initialProps, 'ref': componentRef}));
+        rtu.renderIntoDocument(components2.LifecycleTest({...initialProps, 'ref': componentRef}));
 
         componentRef.current.lifecycleCalls.clear();
 
@@ -255,7 +256,7 @@ main() {
       group('componentDidUpdate receives the same value created in getSnapshotBeforeUpdate when snapshot is', () {
         void testSnapshotType(dynamic expectedSnapshot) {
           final componentRef = react.createRef<LifecycleTestHelper>();
-          rtl.render(components2.LifecycleTest({
+          rtu.renderIntoDocument(components2.LifecycleTest({
             'getSnapshotBeforeUpdate': (_, __, ___) => expectedSnapshot,
             'ref': componentRef,
           }));

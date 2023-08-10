@@ -19,8 +19,6 @@ import 'package:react/react_client/react_interop.dart';
 import 'package:react/src/react_test_utils/internal_test_utils.dart';
 // ignore: deprecated_member_use_from_same_package
 import 'package:react/react_test_utils.dart' as rtu;
-import 'package:react_testing_library/react_testing_library.dart' as rtl;
-import 'package:react_testing_library/user_event.dart' as rtl;
 
 import '../shared_type_tester.dart';
 import '../fixtures/util.dart';
@@ -126,7 +124,7 @@ void commonFactoryTests(ReactComponentFactoryProxy factory,
       dynamic getDartChildren(ReactElement instance) {
         // Set to a value that won't ever be equal to children, so we can tell whether it was called.
         childrenFromLastRender = notCalledSentinelValue;
-        rtl.render(instance);
+        rtu.renderIntoDocument(instance);
         final children = childrenFromLastRender;
         if (childrenFromLastRender == notCalledSentinelValue) {
           throw StateError('onDartRender was not called when rendering `instance`. '
@@ -147,7 +145,7 @@ void commonFactoryTests(ReactComponentFactoryProxy factory,
     if (!isDartComponent1(factory({}))) {
       test('passes through props as a JsBackedMap:', () {
         dynamic receivedProps;
-        rtl.render(factory({
+        rtu.renderIntoDocument(factory({
           'onDartRender': (Map props) {
             receivedProps = props;
           }
@@ -162,7 +160,7 @@ void commonFactoryTests(ReactComponentFactoryProxy factory,
         sharedTypeTests((dynamic testValue) {
           dynamic receivedValue;
 
-          rtl.render(factory({
+          rtu.renderIntoDocument(factory({
             'testValue': testValue,
             'onDartRender': (Map props) {
               receivedValue = props['testValue'];
@@ -184,7 +182,7 @@ void commonFactoryTests(ReactComponentFactoryProxy factory,
           reason: 'test setup: component zone should be different than the zone used to render it');
 
       Zone renderZone;
-      rtl.render(factory({
+      rtu.renderIntoDocument(factory({
         'onDartRender': (_) {
           renderZone = Zone.current;
         }
@@ -198,6 +196,8 @@ void commonFactoryTests(ReactComponentFactoryProxy factory,
 void domEventHandlerWrappingTests(ReactComponentFactoryProxy factory) {
   Element renderAndGetRootNode(ReactElement content) {
     final mountNode = Element.div();
+    document.body.append(mountNode);
+    addTearDown(mountNode.remove);
     final root = react_dom.createRoot(mountNode);
     react_dom.ReactTestUtils.act(() => root.render(content));
     return mountNode.children.single;
@@ -212,7 +212,7 @@ void domEventHandlerWrappingTests(ReactComponentFactoryProxy factory) {
       }
     }));
 
-    rtl.UserEvent.click(nodeWithClickHandler);
+    nodeWithClickHandler.click();
 
     expect(called, isTrue,
         reason: 'this set of tests assumes that the factory '
@@ -284,7 +284,7 @@ void domEventHandlerWrappingTests(ReactComponentFactoryProxy factory) {
 
         react.SyntheticMouseEvent event;
         final divRef = react.createRef<DivElement>();
-        rtl.render(react.div({
+        rtu.renderIntoDocument(react.div({
           'ref': divRef,
           'onClick': (e) => event = e,
         }));
@@ -313,7 +313,7 @@ void domEventHandlerWrappingTests(ReactComponentFactoryProxy factory) {
       }
     }));
 
-    rtl.UserEvent.click(nodeWithClickHandler);
+    nodeWithClickHandler.click();
     // ignore: deprecated_member_use_from_same_package
     expect(actualEvent.isPersistent, isA<bool>());
   });
@@ -321,7 +321,7 @@ void domEventHandlerWrappingTests(ReactComponentFactoryProxy factory) {
   test('doesn\'t wrap the handler if it is null', () {
     final nodeWithClickHandler = renderAndGetRootNode(factory({'onClick': null}));
 
-    expect(() => rtl.UserEvent.click(nodeWithClickHandler), returnsNormally);
+    expect(() => nodeWithClickHandler.click(), returnsNormally);
   });
 
   group('calls the handler in the zone the event was dispatched from', () {
@@ -402,7 +402,7 @@ void refTests<T>(
     for (final name in testCaseCollection.allTestCaseNames) {
       test(name, () {
         final testCase = testCaseCollection.createCaseByName(name);
-        rtl.render(factory({
+        rtu.renderIntoDocument(factory({
           'ref': testCase.ref,
         }));
         final verifyFunction = testCase.isJs ? verifyJsRefValue : verifyRefValue;
@@ -430,7 +430,7 @@ void refTests<T>(
             return factory({'ref': ref});
           });
 
-          rtl.render(ForwardRefTestComponent({
+          rtu.renderIntoDocument(ForwardRefTestComponent({
             'ref': testCase.ref,
           }));
           final verifyFunction = testCase.isJs ? verifyJsRefValue : verifyRefValue;
@@ -448,7 +448,7 @@ void refTests<T>(
           return factory({'ref': ref});
         });
 
-        rtl.render(ForwardRefTestComponent({
+        rtu.renderIntoDocument(ForwardRefTestComponent({
           'ref': testCase.ref,
         }));
         final verifyFunction = testCase.isJs ? verifyJsRefValue : verifyRefValue;
@@ -462,7 +462,7 @@ void refTests<T>(
       final testCases = testCaseCollection.createAllCases();
 
       final refSpy = createRef<T>();
-      rtl.render(factory({
+      rtu.renderIntoDocument(factory({
         'ref': chainRefList([
           refSpy,
           null,
@@ -495,7 +495,7 @@ void refTests<T>(
         }).toList();
 
         final refSpy = createRef<T>();
-        rtl.render(factory({
+        rtu.renderIntoDocument(factory({
           'ref': chainRefList([
             refSpy,
             null,
@@ -532,7 +532,7 @@ void refTests<T>(
               }, props['children']);
             });
 
-            rtl.render(wrapperFactory({
+            rtu.renderIntoDocument(wrapperFactory({
               'ref': testCase.ref,
             }));
 
