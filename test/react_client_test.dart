@@ -217,7 +217,7 @@ final testJsComponentFactory = (() {
 
 class ThrowsInDefaultPropsComponent extends Component {
   @override
-  Map getDefaultProps() => throw StateError('bad default props');
+  getDefaultProps() => throw StateError('bad default props');
 
   @override
   render() {

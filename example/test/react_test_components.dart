@@ -96,30 +96,30 @@ class _ClockComponent extends react.Component {
   getDefaultProps() => {'refreshRate': 1000};
 
   @override
-  void componentWillMount() {
+  componentWillMount() {
     timer = Timer.periodic(Duration(milliseconds: props['refreshRate'] as int), tick);
   }
 
   @override
-  void componentWillUnmount() {
+  componentWillUnmount() {
     timer.cancel();
   }
 
   @override
-  void componentDidMount() {
+  componentDidMount() {
     final rootNode = react_dom.findDOMNode(this);
     rootNode.style.backgroundColor = '#FFAAAA';
   }
 
   @override
-  bool shouldComponentUpdate(nextProps, nextState) {
+  shouldComponentUpdate(nextProps, nextState) {
     //print("Next state: $nextState, props: $nextProps");
     //print("Old state: $state, props: $props");
     return nextState['secondsElapsed'] % 2 == 1;
   }
 
   @override
-  void componentWillReceiveProps(nextProps) {
+  componentWillReceiveProps(nextProps) {
     print('Received props: $nextProps');
   }
 
@@ -146,14 +146,14 @@ class _ListComponent extends react.Component {
   }
 
   @override
-  void componentWillUpdate(nextProps, nextState) {
+  componentWillUpdate(nextProps, nextState) {
     if ((nextState['items'] as List).length > (state['items'] as List).length) {
       print('Adding ' + (nextState['items'] as List).last.toString());
     }
   }
 
   @override
-  void componentDidUpdate(prevProps, prevState) {
+  componentDidUpdate(prevProps, prevState) {
     if ((prevState['items'] as List).length > (state['items'] as List).length) {
       print('Removed ' + (prevState['items'] as List).first.toString());
     }
@@ -204,7 +204,7 @@ class _LegacyContextComponent extends react.Component {
   Iterable<String> get childContextKeys => const ['foo', 'bar', 'renderCount'];
 
   @override
-  Map<String, dynamic> getChildContext() => {
+  getChildContext() => {
         'foo': {'object': 'with value'},
         'bar': true,
         'renderCount': state['renderCount']
@@ -439,7 +439,7 @@ class _Component2TestComponent extends react.Component2 with react.TypedSnapshot
   }
 
   @override
-  String getSnapshotBeforeUpdate(nextProps, prevState) {
+  getSnapshotBeforeUpdate(nextProps, prevState) {
     if ((prevState['items'] as List).length > (state['items'] as List).length) {
       return 'removed ' + (prevState['items'].last as List).toString();
     } else {
@@ -448,7 +448,7 @@ class _Component2TestComponent extends react.Component2 with react.TypedSnapshot
   }
 
   @override
-  void componentDidUpdate(prevProps, prevState, [String snapshot]) {
+  componentDidUpdate(prevProps, prevState, [String snapshot]) {
     if (snapshot != null) {
       print('Updated DOM and $snapshot');
       return;
@@ -501,7 +501,7 @@ var component2TestComponent = react.registerComponent(() => _Component2TestCompo
 
 class _ErrorComponent extends react.Component2 {
   @override
-  void componentDidMount() {
+  componentDidMount() {
     if (!(props['errored'] as bool)) {
       throw _CustomException('It broke!', 2);
     }
@@ -546,7 +546,7 @@ class _Component2ErrorTestComponent extends react.Component2 {
       };
 
   @override
-  void componentDidCatch(error, info) {
+  componentDidCatch(error, info) {
     if (error is _CustomException) {
       print(info.dartStackTrace);
       setState({'error': error.randomMessage});

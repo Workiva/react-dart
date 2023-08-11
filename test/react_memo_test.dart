@@ -182,7 +182,7 @@ class _MemoTestWrapperComponent extends react.Component2 {
       };
 
   @override
-  void componentDidUpdate(Map prevProps, Map prevState, [dynamic snapshot]) {
+  componentDidUpdate(Map prevProps, Map prevState, [dynamic snapshot]) {
     redrawCount++;
   }
 

@@ -12,7 +12,7 @@ final SetStateTest = react.registerComponent(() => _SetStateTest()) as ReactDart
 
 class _SetStateTest extends react.Component with LifecycleTestHelper {
   @override
-  Map getDefaultProps() => const {'shouldUpdate': true};
+  getDefaultProps() => const {'shouldUpdate': true};
 
   @override
   getInitialState() => const {'counter': 1};
@@ -126,7 +126,7 @@ class _ContextWrapperWithoutKeys extends react.Component with LifecycleTestHelpe
   Iterable<String> get childContextKeys => const [];
 
   @override
-  Map<String, dynamic> getChildContext() {
+  getChildContext() {
     lifecycleCall('getChildContext');
     return {
       'foo': props['foo'],
@@ -145,7 +145,7 @@ class _ContextWrapper extends react.Component with LifecycleTestHelper {
   Iterable<String> get childContextKeys => const ['foo', 'extraContext'];
 
   @override
-  Map<String, dynamic> getChildContext() {
+  getChildContext() {
     lifecycleCall('getChildContext');
     return {
       'foo': props['foo'],
@@ -169,40 +169,40 @@ final LifecycleTest = react.registerComponent(() => _LifecycleTest()) as ReactDa
 
 class _LifecycleTest extends react.Component with LifecycleTestHelper {
   @override
-  void componentWillMount() => lifecycleCall('componentWillMount');
+  componentWillMount() => lifecycleCall('componentWillMount');
   @override
-  void componentDidMount() => lifecycleCall('componentDidMount');
+  componentDidMount() => lifecycleCall('componentDidMount');
   @override
-  void componentWillUnmount() => lifecycleCall('componentWillUnmount');
+  componentWillUnmount() => lifecycleCall('componentWillUnmount');
 
   @override
-  void componentWillReceiveProps(newProps) =>
+  componentWillReceiveProps(newProps) =>
       lifecycleCall('componentWillReceiveProps', arguments: [Map.from(newProps)]);
 
   @override
-  void componentWillReceivePropsWithContext(newProps, newContext) =>
+  componentWillReceivePropsWithContext(newProps, newContext) =>
       lifecycleCall('componentWillReceivePropsWithContext',
           arguments: [Map.from(newProps), Map.from(newContext as Map)]);
 
   @override
-  void componentWillUpdate(nextProps, nextState) =>
+  componentWillUpdate(nextProps, nextState) =>
       lifecycleCall('componentWillUpdate', arguments: [Map.from(nextProps), Map.from(nextState)]);
 
   @override
-  void componentWillUpdateWithContext(nextProps, nextState, nextContext) =>
+  componentWillUpdateWithContext(nextProps, nextState, nextContext) =>
       lifecycleCall('componentWillUpdateWithContext',
           arguments: [Map.from(nextProps), Map.from(nextState), Map.from(nextContext)]);
 
   @override
-  void componentDidUpdate(prevProps, prevState) =>
+  componentDidUpdate(prevProps, prevState) =>
       lifecycleCall('componentDidUpdate', arguments: [Map.from(prevProps), Map.from(prevState)]);
 
   @override
-  bool shouldComponentUpdate(nextProps, nextState) => lifecycleCall('shouldComponentUpdate',
+  shouldComponentUpdate(nextProps, nextState) => lifecycleCall('shouldComponentUpdate',
       arguments: [Map.from(nextProps), Map.from(nextState)], defaultReturnValue: () => true);
 
   @override
-  bool shouldComponentUpdateWithContext(nextProps, nextState, nextContext) =>
+  shouldComponentUpdateWithContext(nextProps, nextState, nextContext) =>
       lifecycleCall('shouldComponentUpdateWithContext',
           arguments: [Map.from(nextProps), Map.from(nextState), Map.from(nextContext)], defaultReturnValue: () => true);
 

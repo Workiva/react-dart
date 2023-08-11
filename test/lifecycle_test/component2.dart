@@ -28,7 +28,7 @@ class _SetStateTest extends react.Component2 with LifecycleTestHelper {
       };
 
   @override
-  Map getDerivedStateFromProps(_, __) {
+  getDerivedStateFromProps(_, __) {
     lifecycleCall('getDerivedStateFromProps');
     return {};
   }
@@ -56,7 +56,7 @@ class _SetStateTest extends react.Component2 with LifecycleTestHelper {
   }
 
   @override
-  Map getDerivedStateFromError(error) {
+  getDerivedStateFromError(error) {
     lifecycleCall('getDerivedStateFromError', arguments: [error]);
     return {'shouldThrow': false, 'errorFromGetDerivedState': error};
   }
@@ -176,7 +176,7 @@ final ContextConsumerWrapper = react.registerComponent2(() => _ContextConsumerWr
 
 class _ContextConsumerWrapper extends react.Component2 with LifecycleTestHelper {
   @override
-  dynamic render() {
+  render() {
     return LifecycleTestContext.Consumer({}, props['children'].first);
   }
 }
@@ -185,7 +185,7 @@ final ContextWrapper = react.registerComponent2(() => _ContextWrapper());
 
 class _ContextWrapper extends react.Component2 with LifecycleTestHelper {
   @override
-  dynamic render() {
+  render() {
     return LifecycleTestContext.Provider(
       {
         'value': {'foo': props['foo']}
@@ -233,34 +233,34 @@ final LifecycleTest = react.registerComponent2(() => _LifecycleTest());
 
 class _LifecycleTest extends react.Component2 with LifecycleTestHelper {
   @override
-  void componentDidMount() => lifecycleCall('componentDidMount');
+  componentDidMount() => lifecycleCall('componentDidMount');
   @override
-  void componentWillUnmount() => lifecycleCall('componentWillUnmount');
+  componentWillUnmount() => lifecycleCall('componentWillUnmount');
 
   @override
-  Map getDerivedStateFromProps(nextProps, prevState) => lifecycleCall('getDerivedStateFromProps',
+  getDerivedStateFromProps(nextProps, prevState) => lifecycleCall('getDerivedStateFromProps',
       arguments: [Map.from(nextProps), Map.from(prevState)], staticProps: nextProps);
 
   @override
-  dynamic getSnapshotBeforeUpdate(prevProps, prevState) =>
+  getSnapshotBeforeUpdate(prevProps, prevState) =>
       lifecycleCall('getSnapshotBeforeUpdate', arguments: [Map.from(prevProps), Map.from(prevState)]);
 
   @override
-  void componentDidUpdate(prevProps, prevState, [snapshot]) =>
+  componentDidUpdate(prevProps, prevState, [snapshot]) =>
       lifecycleCall('componentDidUpdate', arguments: [Map.from(prevProps), Map.from(prevState), snapshot]);
 
   @override
-  void componentDidCatch(error, info) => lifecycleCall('componentDidCatch', arguments: [error, info]);
+  componentDidCatch(error, info) => lifecycleCall('componentDidCatch', arguments: [error, info]);
 
   @override
-  Map getDerivedStateFromError(error) => lifecycleCall('getDerivedStateFromError', arguments: [error]);
+  getDerivedStateFromError(error) => lifecycleCall('getDerivedStateFromError', arguments: [error]);
 
   @override
-  bool shouldComponentUpdate(nextProps, nextState) => lifecycleCall('shouldComponentUpdate',
+  shouldComponentUpdate(nextProps, nextState) => lifecycleCall('shouldComponentUpdate',
       arguments: [Map.from(nextProps), Map.from(nextState)], defaultReturnValue: () => true);
 
   @override
-  dynamic render() => lifecycleCall('render', defaultReturnValue: () => react.div({}));
+  render() => lifecycleCall('render', defaultReturnValue: () => react.div({}));
 
   @override
   Map get initialState => lifecycleCall('initialState', defaultReturnValue: () => {});
@@ -274,31 +274,31 @@ final NoGetDerivedStateFromErrorLifecycleTest =
 
 class _NoGetDerivedStateFromErrorLifecycleTest extends react.Component2 with LifecycleTestHelper {
   @override
-  void componentDidMount() => lifecycleCall('componentDidMount');
+  componentDidMount() => lifecycleCall('componentDidMount');
   @override
-  void componentWillUnmount() => lifecycleCall('componentWillUnmount');
+  componentWillUnmount() => lifecycleCall('componentWillUnmount');
 
   @override
-  Map getDerivedStateFromProps(nextProps, prevState) => lifecycleCall('getDerivedStateFromProps',
+  getDerivedStateFromProps(nextProps, prevState) => lifecycleCall('getDerivedStateFromProps',
       arguments: [Map.from(nextProps), Map.from(prevState)], staticProps: nextProps);
 
   @override
-  dynamic getSnapshotBeforeUpdate(prevProps, prevState) =>
+  getSnapshotBeforeUpdate(prevProps, prevState) =>
       lifecycleCall('getSnapshotBeforeUpdate', arguments: [Map.from(prevProps), Map.from(prevState)]);
 
   @override
-  void componentDidUpdate(prevProps, prevState, [snapshot]) =>
+  componentDidUpdate(prevProps, prevState, [snapshot]) =>
       lifecycleCall('componentDidUpdate', arguments: [Map.from(prevProps), Map.from(prevState), snapshot]);
 
   @override
-  void componentDidCatch(error, info) => lifecycleCall('componentDidCatch', arguments: [error, info]);
+  componentDidCatch(error, info) => lifecycleCall('componentDidCatch', arguments: [error, info]);
 
   @override
-  bool shouldComponentUpdate(nextProps, nextState) => lifecycleCall('shouldComponentUpdate',
+  shouldComponentUpdate(nextProps, nextState) => lifecycleCall('shouldComponentUpdate',
       arguments: [Map.from(nextProps), Map.from(nextState)], defaultReturnValue: () => true);
 
   @override
-  dynamic render() => lifecycleCall('render', defaultReturnValue: () => react.div({}));
+  render() => lifecycleCall('render', defaultReturnValue: () => react.div({}));
 
   @override
   Map get initialState => lifecycleCall('initialState', defaultReturnValue: () => {});

@@ -45,10 +45,10 @@ class _ErrorBoundaryComponent extends react.Component2 {
   Map get initialState => {'hasError': false};
 
   @override
-  Map getDerivedStateFromError(dynamic error) => {'hasError': true};
+  getDerivedStateFromError(dynamic error) => {'hasError': true};
 
   @override
-  void componentDidCatch(dynamic error, ReactErrorInfo info) {
+  componentDidCatch(dynamic error, ReactErrorInfo info) {
     props['onComponentDidCatch']?.call(error, info);
   }
 

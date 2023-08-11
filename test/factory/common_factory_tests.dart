@@ -651,7 +651,7 @@ class EventTestCase {
   void simulate(Element node) => callMethod(_Simulate, _camelCaseEventName, [node]);
 
   @override
-  String toString() => 'EventHelper: ($eventPropKey) $description';
+  toString() => 'EventHelper: ($eventPropKey) $description';
 }
 
 extension on String {
