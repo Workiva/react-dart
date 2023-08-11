@@ -87,8 +87,7 @@ class ReactDartComponentFactoryProxy<TComponent extends Component> extends React
   /// into [generateExtendedJsProps] upon [ReactElement] creation.
   final Map defaultProps;
 
-  ReactDartComponentFactoryProxy(this.reactClass)
-      : defaultProps = reactClass.dartDefaultProps;
+  ReactDartComponentFactoryProxy(this.reactClass) : defaultProps = reactClass.dartDefaultProps;
 
   @override
   ReactClass get type => reactClass;
@@ -181,8 +180,7 @@ class ReactDartComponentFactoryProxy2<TComponent extends Component2> extends Rea
   @override
   final Map defaultProps;
 
-  ReactDartComponentFactoryProxy2(this.reactClass)
-      : defaultProps = JsBackedMap.fromJs(reactClass.defaultProps);
+  ReactDartComponentFactoryProxy2(this.reactClass) : defaultProps = JsBackedMap.fromJs(reactClass.defaultProps);
 
   @override
   ReactClass get type => reactClass;

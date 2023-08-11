@@ -55,8 +55,8 @@ typedef ComponentRegistrar2 = ReactDartComponentFactoryProxy2 Function(
   Component2BridgeFactory bridgeFactory,
 });
 
-typedef FunctionComponentRegistrar = ReactDartFunctionComponentFactoryProxy Function(DartFunctionComponent componentFactory,
-    {String displayName});
+typedef FunctionComponentRegistrar = ReactDartFunctionComponentFactoryProxy
+    Function(DartFunctionComponent componentFactory, {String displayName});
 
 /// Fragment component that allows the wrapping of children without the necessity of using
 /// an element that adds an additional layer to the DOM (div, span, etc).
@@ -1162,8 +1162,7 @@ abstract class Component2 implements Component {
   // Other deprecated and unsupported members
   // ******************************************************************************************************************
 
-  UnsupportedError _unsupportedError(String memberName) =>
-      UnsupportedError('Component2 drops support for $memberName');
+  UnsupportedError _unsupportedError(String memberName) => UnsupportedError('Component2 drops support for $memberName');
 
   /// Do not use.
   ///

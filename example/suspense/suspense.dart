@@ -18,7 +18,8 @@ external ReactClass jsLazy(Promise Function() factory);
 // Only intended for testing purposes, Please do not copy/paste this into repo.
 // This will most likely be added to the PUBLIC api in the future,
 // but needs more testing and Typing decisions to be made first.
-ReactJsComponentFactoryProxy lazy(Future<ReactComponentFactoryProxy> Function() factory) => ReactJsComponentFactoryProxy(
+ReactJsComponentFactoryProxy lazy(Future<ReactComponentFactoryProxy> Function() factory) =>
+    ReactJsComponentFactoryProxy(
       jsLazy(
         allowInterop(
           () => futureToPromise(
