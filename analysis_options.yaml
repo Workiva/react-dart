@@ -11,6 +11,7 @@ analyzer:
     always_declare_return_types: ignore
     # We very often need to annotate parameters when they're embedded in Maps
     # with dynamic values, so this lint is noisy and wrong in those cases.
+    # See: https://github.com/dart-lang/linter/issues/1099
     avoid_types_on_closure_parameters: ignore
     # This makes string concatenation less readable in some cases
     prefer_interpolation_to_compose_strings: ignore

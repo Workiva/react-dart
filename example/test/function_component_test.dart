@@ -68,7 +68,7 @@ class _MemoTestDemoWrapper extends react.Component2 {
   }
 }
 
-final MemoTest = react.memo2(react.registerFunctionComponent((Map props) {
+final MemoTest = react.memo2(react.registerFunctionComponent((props) {
   final context = useContext(TestNewContext);
   return react.div(
     {},

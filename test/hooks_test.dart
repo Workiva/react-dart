@@ -27,7 +27,7 @@ main() {
       setUpAll(() {
         final mountNode = DivElement();
 
-        UseStateTest = react.registerFunctionComponent((Map props) {
+        UseStateTest = react.registerFunctionComponent((props) {
           final text = useStateLazy(() {
             return 'initialValue';
           });
@@ -117,7 +117,7 @@ main() {
       setUpAll(() {
         final mountNode = DivElement();
 
-        UseReducerTest = react.registerFunctionComponent((Map props) {
+        UseReducerTest = react.registerFunctionComponent((props) {
           final state = useReducer(reducer, {
             'text': 'initialValue',
             'count': 0,
@@ -211,7 +211,7 @@ main() {
         setUpAll(() {
           final mountNode = DivElement();
 
-          UseReducerTest = react.registerFunctionComponent((Map props) {
+          UseReducerTest = react.registerFunctionComponent((props) {
             final state = useReducerLazy(reducer2, props['initialCount'] as int, initializeCount);
 
             return react.div({}, [
@@ -284,7 +284,7 @@ main() {
       setUpAll(() {
         final mountNode = DivElement();
 
-        UseCallbackTest = react.registerFunctionComponent((Map props) {
+        UseCallbackTest = react.registerFunctionComponent((props) {
           final count = useState(0);
           final delta = useState(1);
 
@@ -447,7 +447,7 @@ main() {
       var refFromCreateRef;
 
       setUpAll(() {
-        UseRefTest = react.registerFunctionComponent((Map props) {
+        UseRefTest = react.registerFunctionComponent((props) {
           noInitRef = useRef();
           initRef = useRef(mountNode);
           domElementRef = useRef();
@@ -540,7 +540,7 @@ main() {
       setUpAll(() {
         final mountNode = DivElement();
 
-        UseMemoTest = react.registerFunctionComponent((Map props) {
+        UseMemoTest = react.registerFunctionComponent((props) {
           final reRender = useState(0);
           count = useState(5);
 
@@ -800,7 +800,7 @@ main() {
       setUpAll(() {
         final mountNode = DivElement();
 
-        UseDebugValueTest1 = react.registerFunctionComponent((Map props) {
+        UseDebugValueTest1 = react.registerFunctionComponent((props) {
           isOnline1 = useFriendStatus();
 
           return react.li({
@@ -810,7 +810,7 @@ main() {
           ]);
         });
 
-        UseDebugValueTest2 = react.registerFunctionComponent((Map props) {
+        UseDebugValueTest2 = react.registerFunctionComponent((props) {
           isOnline2 = useFriendStatusWithFormatFunction();
 
           return react.li({
@@ -893,7 +893,7 @@ void testEffectHook(Function effectHook) {
     useEffectWithEmptyDepsCallCount = 0;
     useEffectCleanupWithEmptyDepsCallCount = 0;
 
-    UseEffectTest = react.registerFunctionComponent((Map props) {
+    UseEffectTest = react.registerFunctionComponent((props) {
       final count = useState(0);
       final countDown = useState(0);
 

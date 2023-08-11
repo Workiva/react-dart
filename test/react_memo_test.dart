@@ -80,7 +80,7 @@ void sharedMemoTests(MemoFunction memoFunction) {
             return prevProps['localCount'] == nextProps['localCount'];
           };
 
-    final MemoTest = memoFunction(react.registerFunctionComponent((Map props) {
+    final MemoTest = memoFunction(react.registerFunctionComponent((props) {
       childMemoRenderCount++;
       return react.div(
         {},
