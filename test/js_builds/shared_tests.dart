@@ -195,7 +195,7 @@ final _ErrorBoundary = react.registerComponent2(() => _ErrorBoundaryComponent(),
 
 class _ErrorBoundaryComponent extends react.Component2 {
   @override
-  Map get initialState => {'hasError': false};
+  get initialState => {'hasError': false};
 
   @override
   getDerivedStateFromError(dynamic error) => {'hasError': true};
@@ -215,7 +215,7 @@ final _ThrowingComponent = react.registerComponent(() => _ThrowingComponentCompo
 
 class _ThrowingComponentComponent extends react.Component {
   @override
-  String get displayName => r'DisplayName$_ThrowingComponentComponent';
+  get displayName => r'DisplayName$_ThrowingComponentComponent';
 
   @override
   render() {
@@ -227,7 +227,7 @@ final _ThrowingComponent2 = react.registerComponent2(() => _ThrowingComponent2Co
 
 class _ThrowingComponent2Component extends react.Component2 {
   @override
-  String get displayName => r'DisplayName$_ThrowingComponent2Component';
+  get displayName => r'DisplayName$_ThrowingComponent2Component';
 
   @override
   render() {

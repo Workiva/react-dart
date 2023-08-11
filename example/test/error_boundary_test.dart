@@ -42,7 +42,7 @@ final _ErrorBoundary = react.registerComponent2(() => _ErrorBoundaryComponent(),
 
 class _ErrorBoundaryComponent extends react.Component2 {
   @override
-  Map get initialState => {'hasError': false};
+  get initialState => {'hasError': false};
 
   @override
   getDerivedStateFromError(dynamic error) => {'hasError': true};
@@ -62,7 +62,7 @@ final _ThrowingComponent = react.registerComponent2(() => _ThrowingComponentComp
 
 class _ThrowingComponentComponent2 extends react.Component2 {
   @override
-  Map get initialState => {'shouldThrow': false};
+  get initialState => {'shouldThrow': false};
 
   @override
   render() {

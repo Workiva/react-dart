@@ -126,7 +126,7 @@ class _DefaultPropsCachingTest extends react.Component2 implements DefaultPropsC
   static int getDefaultPropsCallCount = 0;
 
   @override
-  int get staticGetDefaultPropsCallCount => getDefaultPropsCallCount;
+  get staticGetDefaultPropsCallCount => getDefaultPropsCallCount;
 
   @override
   set staticGetDefaultPropsCallCount(int value) => getDefaultPropsCallCount = value;
@@ -145,7 +145,7 @@ final DefaultPropsTest = react.registerComponent2(() => _DefaultPropsTest());
 
 class _DefaultPropsTest extends react.Component2 {
   @override
-  Map get defaultProps => {'defaultProp': 'default'};
+  get defaultProps => {'defaultProp': 'default'};
 
   @override
   render() => false;
@@ -263,10 +263,10 @@ class _LifecycleTest extends react.Component2 with LifecycleTestHelper {
   render() => lifecycleCall('render', defaultReturnValue: () => react.div({}));
 
   @override
-  Map get initialState => lifecycleCall('initialState', defaultReturnValue: () => {});
+  get initialState => lifecycleCall('initialState', defaultReturnValue: () => {});
 
   @override
-  Map get defaultProps => lifecycleCall('defaultProps', defaultReturnValue: () => {'defaultProp': 'default'});
+  get defaultProps => lifecycleCall('defaultProps', defaultReturnValue: () => {'defaultProp': 'default'});
 }
 
 final NoGetDerivedStateFromErrorLifecycleTest =
@@ -301,8 +301,8 @@ class _NoGetDerivedStateFromErrorLifecycleTest extends react.Component2 with Lif
   render() => lifecycleCall('render', defaultReturnValue: () => react.div({}));
 
   @override
-  Map get initialState => lifecycleCall('initialState', defaultReturnValue: () => {});
+  get initialState => lifecycleCall('initialState', defaultReturnValue: () => {});
 
   @override
-  Map get defaultProps => lifecycleCall('defaultProps', defaultReturnValue: () => {'defaultProp': 'default'});
+  get defaultProps => lifecycleCall('defaultProps', defaultReturnValue: () => {'defaultProp': 'default'});
 }

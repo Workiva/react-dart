@@ -201,7 +201,7 @@ var mainComponent = react.registerComponent(() => _MainComponent());
 /////
 class _LegacyContextComponent extends react.Component {
   @override
-  Iterable<String> get childContextKeys => const ['foo', 'bar', 'renderCount'];
+  get childContextKeys => const ['foo', 'bar', 'renderCount'];
 
   @override
   getChildContext() => {
@@ -234,7 +234,7 @@ var legacyContextComponent = react.registerComponent(() => _LegacyContextCompone
 
 class _LegacyContextConsumerComponent extends react.Component {
   @override
-  Iterable<String> get contextKeys => const ['foo'];
+  get contextKeys => const ['foo'];
 
   @override
   render() {
@@ -254,7 +254,7 @@ var legacyContextConsumerComponent = react.registerComponent(() => _LegacyContex
 
 class _GrandchildLegacyContextConsumerComponent extends react.Component {
   @override
-  Iterable<String> get contextKeys => const ['renderCount'];
+  get contextKeys => const ['renderCount'];
 
   @override
   render() {

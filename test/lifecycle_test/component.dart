@@ -87,7 +87,7 @@ class _DefaultPropsCachingTest extends react.Component implements DefaultPropsCa
   static int getDefaultPropsCallCount = 0;
 
   @override
-  int get staticGetDefaultPropsCallCount => getDefaultPropsCallCount;
+  get staticGetDefaultPropsCallCount => getDefaultPropsCallCount;
 
   @override
   set staticGetDefaultPropsCallCount(int value) => getDefaultPropsCallCount = value;
@@ -123,7 +123,7 @@ final ContextWrapperWithoutKeys =
 
 class _ContextWrapperWithoutKeys extends react.Component with LifecycleTestHelper {
   @override
-  Iterable<String> get childContextKeys => const [];
+  get childContextKeys => const [];
 
   @override
   getChildContext() {
@@ -142,7 +142,7 @@ final ContextWrapper = react.registerComponent(() => _ContextWrapper()) as React
 
 class _ContextWrapper extends react.Component with LifecycleTestHelper {
   @override
-  Iterable<String> get childContextKeys => const ['foo', 'extraContext'];
+  get childContextKeys => const ['foo', 'extraContext'];
 
   @override
   getChildContext() {
@@ -162,7 +162,7 @@ final LifecycleTestWithContext =
 
 class _LifecycleTestWithContext extends _LifecycleTest {
   @override
-  Iterable<String> get contextKeys => const ['foo']; // only listening to one context key
+  get contextKeys => const ['foo']; // only listening to one context key
 }
 
 final LifecycleTest = react.registerComponent(() => _LifecycleTest()) as ReactDartComponentFactoryProxy;
