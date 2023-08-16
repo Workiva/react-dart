@@ -2,6 +2,7 @@
 library react.event_helpers_test;
 
 import 'dart:html';
+import 'dart:js_util';
 
 import 'package:react/react.dart';
 import 'package:react/react_client/js_interop_helpers.dart';
@@ -1695,6 +1696,13 @@ main() {
             expect(eventTypeTester(createSyntheticEvent()),
                 currentEventTypeBeingTested == SyntheticEventType.syntheticFormEvent ? isTrue : isFalse,
                 reason: 'The `SyntheticEvent` base class is considered a Form Event via Duck Typing.');
+          });
+
+          // This case shouldn't happen, but there may be consumers relying on this behavior.
+          test(
+              'when the argument is a non-event JS object casted to SyntheticEvent, and has a null `type` property',
+              () {
+            expect(eventTypeTester(newObject() as SyntheticEvent), isFalse);
           });
         });
       }
