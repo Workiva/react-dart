@@ -28,17 +28,27 @@ void sharedJsFunctionTests() {
     });
 
     group('createReactDartComponentClass', () {
-      test('is function that does not throw when called', () {
-        expect(() => createReactDartComponentClass(null, null), returnsNormally);
+      test('is a function that does not throw when called (indirectly tested by registering a Component)', () {
+        expect(() => react.registerComponent(() => DummyComponent()), returnsNormally);
       });
     });
 
     group('createReactDartComponentClass2', () {
-      test('is function that does not throw when called', () {
-        expect(() => createReactDartComponentClass2(null, null, JsComponentConfig2(skipMethods: [])), returnsNormally);
+      test('is function that does not throw when called (indirectly tested by registering a Component2)', () {
+        expect(() => react.registerComponent(() => DummyComponent2()), returnsNormally);
       });
     });
   });
+}
+
+class DummyComponent extends react.Component {
+  @override
+  render() => null;
+}
+
+class DummyComponent2 extends react.Component2 {
+  @override
+  render() => null;
 }
 
 /// The arguments corresponding to each call of `console.warn`,

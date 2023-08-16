@@ -4,8 +4,10 @@ library react_client_private_utils;
 import 'dart:js_util';
 
 import 'package:js/js.dart';
+import 'package:react/react.dart' show Component2;
 import 'package:react/react_client/react_interop.dart';
 import 'package:react/src/js_interop_util.dart';
+import 'package:react/src/react_client/component_registration.dart' show registerComponent2;
 
 /// A flag used to cache whether React is accessible.
 ///
@@ -48,16 +50,19 @@ void validateJsApi() {
     // corresponding JS functions are not available.
     React.isValidElement(null);
     ReactDom.findDOMNode(null);
-    // ignore: deprecated_member_use_from_same_package
-    // fixme validate the bundle another way so we don't have to make these null
-    // createReactDartComponentClass(null, null, null);
-    // createReactDartComponentClass2(null, null, null);
+    // This indirectly calls createReactDartComponentClass2
+    registerComponent2(() => _DummyComponent2());
     _isJsApiValid = true;
   } on NoSuchMethodError catch (_) {
     throw Exception('react.js and react_dom.js must be loaded.');
   } catch (_) {
     throw Exception('Loaded react.js must include react-dart JS interop helpers.');
   }
+}
+
+class _DummyComponent2 extends Component2 {
+  @override
+  render() => null;
 }
 
 /// A wrapper around a value that can't be stored in its raw form
