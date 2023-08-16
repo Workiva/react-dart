@@ -31,7 +31,7 @@ typedef JsPropValidator = dynamic Function(
 @JS()
 abstract class React {
   external static String get version;
-  external static ReactElement cloneElement(ReactElement element, [JsMap? props, dynamic? children]);
+  external static ReactElement cloneElement(ReactElement element, [JsMap? props, Object? children]);
   external static ReactContext createContext([
     dynamic defaultValue,
     int Function(dynamic currentValue, dynamic nextValue)? calculateChangedBits,
@@ -40,7 +40,7 @@ abstract class React {
   external static ReactClass createClass(ReactClassConfig reactClassConfig);
   @Deprecated('7.0.0')
   external static ReactJsComponentFactory createFactory(type);
-  external static ReactElement createElement(dynamic type, props, [dynamic? children]);
+  external static ReactElement createElement(dynamic type, props, [Object? children]);
   external static JsRef createRef();
   external static ReactClass forwardRef(Function(JsMap props, dynamic ref) wrapperFunction);
   external static ReactClass memo(
@@ -59,7 +59,7 @@ abstract class React {
   external static List<dynamic> useReducer(Function reducer, dynamic initialState, [Function? init]);
   external static Function useCallback(Function callback, List<Object?> dependencies);
   external static ReactContext useContext(ReactContext context);
-  external static JsRef useRef([dynamic? initialValue]);
+  external static JsRef useRef([Object? initialValue]);
   external static dynamic useMemo(dynamic Function() createFunction, [List<Object?>? dependencies]);
   external static void useLayoutEffect(dynamic Function() sideEffect, [List<Object?>? dependencies]);
   external static void useImperativeHandle(dynamic ref, dynamic Function() createHandle, [List<Object?>? dependencies]);
@@ -532,7 +532,7 @@ class ReactComponent {
   external Component? get dartComponent;
   // TODO how to make this JsMap without breaking stuff?
   external InteropProps get props;
-  external dynamic? get context;
+  external dynamic/*?*/ get context;
   external JsMap? get state;
   external set state(JsMap? value);
   external get refs;
@@ -595,11 +595,11 @@ class InteropProps implements JsMap {
   /// Will be removed alongside `Component` in the `7.0.0` release.
   @Deprecated('7.0.0')
   external ReactDartComponentInternal get internal;
-  external dynamic? get key;
-  external dynamic? get ref;
+  external dynamic/*?*/ get key;
+  external dynamic/*?*/ get ref;
 
-  external set key(dynamic? value);
-  external set ref(dynamic? value);
+  external set key(dynamic/*?*/ value);
+  external set ref(dynamic/*?*/ value);
 
   /// __Deprecated.__
   ///
@@ -612,7 +612,7 @@ class InteropProps implements JsMap {
   external factory InteropProps({
     ReactDartComponentInternal? internal,
     String? key,
-    dynamic? ref,
+    Object? ref,
   });
 }
 

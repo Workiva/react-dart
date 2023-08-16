@@ -58,7 +58,7 @@ class JsBackedMap extends MapBase<dynamic, dynamic> {
   // ----------------------------------
 
   @override
-  dynamic? operator [](Object? key) {
+  dynamic/*?*/ operator [](Object? key) {
     // Cast key as dynamic to work around https://github.com/dart-lang/sdk/issues/45219
     return DartValueWrapper.unwrapIfNeeded(js_util.getProperty(jsObject, key as dynamic));
   }
@@ -72,7 +72,7 @@ class JsBackedMap extends MapBase<dynamic, dynamic> {
   Iterable<dynamic> get keys => _keys;
 
   @override
-  dynamic? remove(Object? key) {
+  dynamic/*?*/ remove(Object? key) {
     final value = this[key];
     _Reflect.deleteProperty(jsObject, key);
     return value;
