@@ -51,7 +51,7 @@ class _Foo extends react.Component2 {
   render() => react.div({});
 }
 
-List<Map> customBridgeCalls;
+List<Map>? customBridgeCalls;
 
 final BridgeTest = react.registerComponent2(() => _BridgeTest(), bridgeFactory: (component) {
   final returnedBridge = CustomComponent2Bridge();

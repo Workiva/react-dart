@@ -852,7 +852,7 @@ main() {
           expect(baseEvent.clientX, 100);
           expect(baseEvent.clientY, 200);
           expect(baseEvent.ctrlKey, isTrue);
-          expect(baseEvent.dataTransfer.dropEffect, testString);
+          expect(baseEvent.dataTransfer!.dropEffect, testString);
           expect(baseEvent.metaKey, isTrue);
           expect(baseEvent.pageX, 300);
           expect(baseEvent.pageY, 400);
@@ -899,7 +899,7 @@ main() {
           expect(newEvent.clientX, 200);
           expect(newEvent.clientY, 300);
           expect(newEvent.ctrlKey, isFalse);
-          expect(newEvent.dataTransfer.dropEffect, updatedTestString);
+          expect(newEvent.dataTransfer!.dropEffect, updatedTestString);
           expect(newEvent.metaKey, isFalse);
           expect(newEvent.pageX, 400);
           expect(newEvent.pageY, 500);
@@ -948,7 +948,7 @@ main() {
           expect(baseEvent.clientX, 100);
           expect(baseEvent.clientY, 200);
           expect(baseEvent.ctrlKey, isTrue);
-          expect(baseEvent.dataTransfer.dropEffect, testString);
+          expect(baseEvent.dataTransfer!.dropEffect, testString);
           expect(baseEvent.metaKey, isTrue);
           expect(baseEvent.pageX, 300);
           expect(baseEvent.pageY, 400);
@@ -965,7 +965,7 @@ main() {
           expect(newEvent.clientX, 100);
           expect(newEvent.clientY, 200);
           expect(newEvent.ctrlKey, isTrue);
-          expect(newEvent.dataTransfer.dropEffect, testString);
+          expect(newEvent.dataTransfer!.dropEffect, testString);
           expect(newEvent.metaKey, isTrue);
           expect(newEvent.pageX, 300);
           expect(newEvent.pageY, 400);
@@ -1688,10 +1688,6 @@ main() {
                 currentEventTypeBeingTested == SyntheticEventType.syntheticFormEvent ? isTrue : isFalse,
                 reason: 'The `SyntheticEvent` base class is considered a Form Event via Duck Typing.');
           });
-
-          test('when the event is null', () {
-            expect(eventTypeTester(null), isFalse);
-          });
         });
       }
 
@@ -1983,7 +1979,7 @@ main() {
 
     group('DataTransferHelper', () {
       group('dataTransfer', () {
-        SyntheticMouseEvent event;
+        SyntheticMouseEvent? event;
 
         tearDown(() {
           event = null;
@@ -2012,11 +2008,11 @@ main() {
             final node = renderAndGetRootNode();
             Simulate.drag(node, eventData);
 
-            final dataTransfer = event.dataTransfer;
+            final dataTransfer = event!.dataTransfer;
 
             expect(dataTransfer, isNotNull);
 
-            final fileNames = dataTransfer.files.map((file) => (file as File).name);
+            final fileNames = dataTransfer!.files.map((file) => (file as File).name);
 
             expect(fileNames, containsAll(['name1', 'name2', 'name3']));
             expect(dataTransfer.types, containsAll(['d', 'e', 'f']));
@@ -2030,10 +2026,10 @@ main() {
             final node = renderAndGetRootNode();
             Simulate.drag(node, eventData);
 
-            final dataTransfer = event.dataTransfer;
+            final dataTransfer = event!.dataTransfer;
 
             expect(dataTransfer, isNotNull);
-            expect(dataTransfer.files, isNotNull);
+            expect(dataTransfer!.files, isNotNull);
             expect(dataTransfer.files, isEmpty);
             expect(dataTransfer.types, isNotNull);
             expect(dataTransfer.types, isEmpty);
@@ -2051,10 +2047,10 @@ main() {
             final node = renderAndGetRootNode();
             Simulate.drag(node, eventData);
 
-            final dataTransfer = event.dataTransfer;
+            final dataTransfer = event!.dataTransfer;
 
             expect(dataTransfer, isNotNull);
-            expect(dataTransfer.files, isNotNull);
+            expect(dataTransfer!.files, isNotNull);
             expect(dataTransfer.files, isEmpty);
             expect(dataTransfer.types, isNotNull);
             expect(dataTransfer.types, isEmpty);

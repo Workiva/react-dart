@@ -33,7 +33,7 @@ T validateJsApiThenReturn<T>(T Function() computeReturn) {
 Map<String, dynamic> unjsifyContext(InteropContextValue interopContext) {
   // TODO consider using `contextKeys` for this if perf of objectKeys is bad.
   return Map.fromIterable(objectKeys(interopContext), value: (key) {
-    final internal = getProperty(interopContext, key) as ReactDartContextInternal;
+    final internal = getProperty(interopContext, key) as ReactDartContextInternal?;
     return internal?.value;
   });
 }
@@ -49,8 +49,9 @@ void validateJsApi() {
     React.isValidElement(null);
     ReactDom.findDOMNode(null);
     // ignore: deprecated_member_use_from_same_package
-    createReactDartComponentClass(null, null, null);
-    createReactDartComponentClass2(null, null, null);
+    // fixme validate the bundle another way so we don't have to make these null
+    // createReactDartComponentClass(null, null, null);
+    // createReactDartComponentClass2(null, null, null);
     _isJsApiValid = true;
   } on NoSuchMethodError catch (_) {
     throw Exception('react.js and react_dom.js must be loaded.');
@@ -62,18 +63,18 @@ void validateJsApi() {
 /// A wrapper around a value that can't be stored in its raw form
 /// within a JS object (e.g., a Dart function).
 class DartValueWrapper {
-  final dynamic value;
+  final Object? value;
 
   const DartValueWrapper(this.value);
 
-  static dynamic wrapIfNeeded(dynamic value) {
+  static dynamic wrapIfNeeded(Object? value) {
     if (value is Function && !identical(allowInterop(value), value)) {
       return DartValueWrapper(value);
     }
     return value;
   }
 
-  static dynamic unwrapIfNeeded(dynamic value) {
+  static dynamic unwrapIfNeeded(Object? value) {
     if (value is DartValueWrapper) {
       return value.value;
     }

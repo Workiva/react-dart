@@ -8,14 +8,15 @@ typedef PropValidator<T> = Error Function(T props, PropValidatorInfo info);
 /// Metadata about a prop being validated by a [PropValidator].
 class PropValidatorInfo {
   final String propName;
-  final String componentName;
+  final String? componentName;
   final String location;
-  final String propFullName;
+  final String? propFullName;
 
+  // FIXME this is a public API; can we make these required?
   const PropValidatorInfo({
-    this.propName,
-    this.componentName,
-    this.location,
-    this.propFullName,
+    required this.propName,
+    required this.componentName,
+    required this.location,
+    required this.propFullName,
   });
 }

@@ -191,7 +191,7 @@ class _LifecycleTest extends react.Component with LifecycleTestHelper {
   @override
   componentWillUpdateWithContext(nextProps, nextState, nextContext) =>
       lifecycleCall('componentWillUpdateWithContext',
-          arguments: [Map.from(nextProps), Map.from(nextState), Map.from(nextContext)]);
+          arguments: [Map.from(nextProps), Map.from(nextState), Map.from(nextContext as Map)]);
 
   @override
   componentDidUpdate(prevProps, prevState) =>

@@ -71,7 +71,7 @@ main() {
       final array = jsifyAndAllowInterop(set);
       expect(array is List, isTrue);
       expect((array as List).length, equals(set.length));
-      for (var i = 0; i < (array as List).length; i++) {
+      for (var i = 0; i < array.length; i++) {
         expect(set.contains(array[i]), isTrue);
       }
     });
@@ -82,7 +82,7 @@ main() {
       expect(jsMap is List, isFalse);
       expect(jsMap is Map, isFalse);
       for (final key in map.keys) {
-        expect(checkMap(jsMap, key, map[key]), isTrue);
+        expect(checkMap(jsMap, key, map[key]!), isTrue);
       }
     });
 

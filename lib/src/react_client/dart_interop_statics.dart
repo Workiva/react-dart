@@ -30,7 +30,7 @@ final ReactDartInteropStatics dartInteropStatics = (() {
 
         // ignore: omit_local_variable_types, prefer_function_declarations_over_variables
         final RefMethod getRef = (name) {
-          final ref = getProperty(jsThis.refs, name);
+          final ref = getProperty(jsThis.refs as Object, name);
           if (ref == null) return null;
           if (ref is Element) return ref;
           if (ref is ReactComponent) return ref.dartComponent ?? ref;
@@ -75,7 +75,7 @@ final ReactDartInteropStatics dartInteropStatics = (() {
   /// 3. Update [Component.state] by calling [Component.transferComponentState]
   void _afterPropsChange(Component component, InteropContextValue nextContext) {
     component
-      ..props = component.nextProps // [1]
+      ..props = component.nextProps! // [1]
       ..context = component.nextContext // [2]
       ..transferComponentState(); // [3]
   }
@@ -125,10 +125,10 @@ final ReactDartInteropStatics dartInteropStatics = (() {
 
         // If shouldComponentUpdateWithContext returns a valid bool (default implementation returns null),
         // then don't bother calling `shouldComponentUpdate` and have it trump.
-        var shouldUpdate =
-            component.shouldComponentUpdateWithContext(component.nextProps, component.nextState, component.nextContext);
+        var shouldUpdate = component.shouldComponentUpdateWithContext(
+            component.nextProps!, component.nextState, component.nextContext!);
 
-        shouldUpdate ??= component.shouldComponentUpdate(component.nextProps, component.nextState);
+        shouldUpdate ??= component.shouldComponentUpdate(component.nextProps!, component.nextState);
 
         if (shouldUpdate) {
           return true;
@@ -146,8 +146,8 @@ final ReactDartInteropStatics dartInteropStatics = (() {
   void handleComponentWillUpdate(Component component, InteropContextValue nextContext) => zone.run(() {
         /// Call `componentWillUpdate` and the context variant
         component
-          ..componentWillUpdate(component.nextProps, component.nextState)
-          ..componentWillUpdateWithContext(component.nextProps, component.nextState, component.nextContext);
+          ..componentWillUpdate(component.nextProps!, component.nextState)
+          ..componentWillUpdateWithContext(component.nextProps!, component.nextState, component.nextContext);
 
         _afterPropsChange(component, nextContext);
       });
@@ -159,7 +159,7 @@ final ReactDartInteropStatics dartInteropStatics = (() {
         final prevInternalProps = prevInternal.props;
 
         /// Call `componentDidUpdate` and the context variant
-        component.componentDidUpdate(prevInternalProps, component.prevState);
+        component.componentDidUpdate(prevInternalProps!, component.prevState!);
 
         _callSetStateCallbacks(component);
         // Clear out prevState after it's done being used so it's not retained
@@ -216,7 +216,7 @@ abstract class ReactDartInteropStatics2 {
 
         jsThis.state = jsBackingMapOrJsCopy(component.initialState);
 
-        component.state = JsBackedMap.backedBy(jsThis.state);
+        component.state = JsBackedMap.backedBy(jsThis.state!);
 
         // ignore: invalid_use_of_protected_member
         Component2Bridge.bridgeForComponent[component] = componentStatics.bridgeFactory(component);
@@ -244,7 +244,7 @@ abstract class ReactDartInteropStatics2 {
         return value;
       });
 
-  static JsMap handleGetDerivedStateFromProps(
+  static JsMap? handleGetDerivedStateFromProps(
           ComponentStatics2 componentStatics, JsMap jsNextProps, JsMap jsPrevState) => // dartfmt
       // ignore: invalid_use_of_visible_for_testing_member
       componentZone.run(() {
@@ -299,7 +299,7 @@ abstract class ReactDartInteropStatics2 {
         }
       });
 
-  static JsMap handleGetDerivedStateFromError(ComponentStatics2 componentStatics, dynamic error) => // dartfmt
+  static JsMap? handleGetDerivedStateFromError(ComponentStatics2 componentStatics, dynamic error) => // dartfmt
       // ignore: invalid_use_of_visible_for_testing_member
       componentZone.run(() {
         // Due to the error object being passed in from ReactJS it is a javascript object that does not get dartified.

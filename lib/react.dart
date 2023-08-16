@@ -26,7 +26,7 @@ export 'package:react/src/react_client/synthetic_event_wrappers.dart' hide NonNa
 export 'package:react/src/react_client/synthetic_data_transfer.dart' show SyntheticDataTransfer;
 export 'package:react/src/react_client/event_helpers.dart';
 
-typedef PropValidator<TProps> = Error Function(TProps props, PropValidatorInfo info);
+typedef PropValidator<TProps> = Error? Function(TProps props, PropValidatorInfo info);
 
 /// A React component declared using a function that takes in [props] and returns rendered output.
 ///
@@ -52,11 +52,11 @@ typedef ComponentRegistrar = ReactComponentFactoryProxy Function(ComponentFactor
 typedef ComponentRegistrar2 = ReactDartComponentFactoryProxy2 Function(
   ComponentFactory<Component2> componentFactory, {
   Iterable<String> skipMethods,
-  Component2BridgeFactory bridgeFactory,
+  Component2BridgeFactory? bridgeFactory,
 });
 
 typedef FunctionComponentRegistrar = ReactDartFunctionComponentFactoryProxy
-    Function(DartFunctionComponent componentFactory, {String displayName});
+    Function(DartFunctionComponent componentFactory, {String? displayName});
 
 /// Fragment component that allows the wrapping of children without the necessity of using
 /// an element that adds an additional layer to the DOM (div, span, etc).
@@ -109,7 +109,7 @@ var StrictMode = ReactJsComponentFactoryProxy(React.StrictMode);
 /// __Deprecated. Use [Component2] instead.__
 @Deprecated('7.0.0')
 abstract class Component {
-  Map _context;
+  Map? _context;
 
   /// A private field that backs [props], which is exposed via getter/setter so
   /// it can be overridden in strong mode.
@@ -118,7 +118,7 @@ abstract class Component {
   /// [doesn't work for overriding fields](https://github.com/dart-lang/sdk/issues/27452).
   ///
   /// TODO: Switch back to a plain field once this issue is fixed.
-  Map _props;
+  late Map _props;
 
   /// A private field that backs [state], which is exposed via getter/setter so
   /// it can be overridden in strong mode.
@@ -136,7 +136,7 @@ abstract class Component {
   /// [doesn't work for overriding fields](https://github.com/dart-lang/sdk/issues/27452).
   ///
   /// TODO: Switch back to a plain field once this issue is fixed.
-  RefMethod _ref;
+  late RefMethod _ref;
 
   /// The React context map of this component, passed down from its ancestors' [getChildContext] value.
   ///
@@ -192,15 +192,13 @@ abstract class Component {
   @Deprecated('7.0.0')
   set ref(RefMethod value) => _ref = value;
 
-  dynamic _jsRedraw;
+  late Function _jsRedraw;
 
-  dynamic _jsThis;
+  late Object _jsThis;
 
-  // ignore: prefer_final_fields
-  List<SetStateCallback> _setStateCallbacks = [];
+  final List<SetStateCallback> _setStateCallbacks = [];
 
-  // ignore: prefer_final_fields
-  List<StateUpdaterCallback> _transactionalSetStateCallbacks = [];
+  final List<StateUpdaterCallback> _transactionalSetStateCallbacks = [];
 
   /// The List of callbacks to be called after the component has been updated from a call to [setState].
   List get setStateCallbacks => _setStateCallbacks;
@@ -214,11 +212,11 @@ abstract class Component {
 
   /// Allows the [ReactJS `displayName` property](https://reactjs.org/docs/react-component.html#displayname)
   /// to be set for debugging purposes.
-  String get displayName => runtimeType.toString();
+  String? get displayName => runtimeType.toString();
 
-  initComponentInternal(props, _jsRedraw, [RefMethod ref, _jsThis, context]) {
+  initComponentInternal(props, _jsRedraw, [RefMethod? ref, _jsThis, context]) {
     this._jsRedraw = _jsRedraw;
-    this.ref = ref;
+    this.ref = ref ?? (_) {};
     this._jsThis = _jsThis;
     _initContext(context);
     _initProps(props);
@@ -229,12 +227,12 @@ abstract class Component {
     /// [context]s typing was loosened from Map to dynamic to support the new context API in [Component2]
     /// which extends from [Component]. Only "legacy" context APIs are supported in [Component] - which means
     /// it will still be expected to be a Map.
-    this.context = Map.from(context as Map ?? const {});
+    this.context = Map.from(context as Map? ?? const {});
 
     /// [nextContext]s typing was loosened from Map to dynamic to support the new context API in [Component2]
     /// which extends from [Component]. Only "legacy" context APIs are supported in [Component] - which means
     /// it will still be expected to be a Map.
-    nextContext = Map.from(this.context as Map ?? const {});
+    nextContext = Map.from(this.context as Map? ?? const {});
   }
 
   _initProps(props) {
@@ -260,12 +258,12 @@ abstract class Component {
   /// >
   /// > This will be completely removed when the JS side of it is slated for removal (ReactJS 18 / react.dart 7.0.0)
   @Deprecated('7.0.0')
-  Map nextContext;
+  Map? nextContext;
 
   /// Private reference to the value of [state] for the upcoming render cycle.
   ///
   /// Useful for ReactJS lifecycle methods [shouldComponentUpdate], [componentWillUpdate] and [componentDidUpdate].
-  Map _nextState;
+  Map? _nextState;
 
   /// Reference to the value of [context] from the previous render cycle, used internally for proxying
   /// the ReactJS lifecycle method.
@@ -279,7 +277,7 @@ abstract class Component {
   /// >
   /// > This will be completely removed when the JS side of it is slated for removal (ReactJS 18 / react.dart 7.0.0)
   @Deprecated('7.0.0')
-  Map prevContext;
+  Map? prevContext;
 
   /// Reference to the value of [state] from the previous render cycle, used internally for proxying
   /// the ReactJS lifecycle method and [componentDidUpdate].
@@ -287,7 +285,7 @@ abstract class Component {
   /// Not available after [componentDidUpdate] is called.
   ///
   /// __DO NOT set__ from anywhere outside react-dart lifecycle internals.
-  Map prevState;
+  Map? prevState;
 
   /// Public getter for [_nextState].
   ///
@@ -300,7 +298,7 @@ abstract class Component {
   /// [componentWillUpdate] as well as the context-specific variants.
   ///
   /// __DO NOT set__ from anywhere outside react-dart lifecycle internals.
-  Map nextProps;
+  Map? nextProps;
 
   /// Transfers `Component` [_nextState] to [state], and [state] to [prevState].
   ///
@@ -313,7 +311,7 @@ abstract class Component {
   void transferComponentState() {
     prevState = state;
     if (_nextState != null) {
-      state = _nextState;
+      state = _nextState!;
     }
     _nextState = Map.from(state);
   }
@@ -321,7 +319,7 @@ abstract class Component {
   /// Force a call to [render] by calling [setState], which effectively "redraws" the `Component`.
   ///
   /// Optionally accepts a [callback] that gets called after the component updates.
-  void redraw([Function() callback]) {
+  void redraw([Function()? callback]) {
     setState({}, callback);
   }
 
@@ -332,9 +330,9 @@ abstract class Component {
   /// Also allows [newState] to be used as a transactional `setState` callback.
   ///
   /// See: <https://reactjs.org/docs/react-component.html#setstate>
-  void setState(covariant dynamic newState, [Function() callback]) {
+  void setState(covariant dynamic newState, [Function()? callback]) {
     if (newState is Map) {
-      _nextState.addAll(newState);
+      _nextState!.addAll(newState);
     } else if (newState is StateUpdaterCallback) {
       _transactionalSetStateCallbacks.add(newState);
     } else if (newState != null) {
@@ -357,7 +355,7 @@ abstract class Component {
   /// >
   /// > Use [setState] instead.
   @Deprecated('7.0.0')
-  void replaceState(Map newState, [Function() callback]) {
+  void replaceState(Map? newState, [Function()? callback]) {
     final nextState = newState == null ? {} : Map.from(newState);
     _nextState = nextState;
     if (callback != null) _setStateCallbacks.add(callback);
@@ -425,7 +423,7 @@ abstract class Component {
   /// > This will be completely removed when the JS side of it is slated for removal (ReactJS 18 / react.dart 7.0.0)
   @Deprecated('7.0.0')
   // ignore: avoid_returning_null
-  bool shouldComponentUpdateWithContext(Map nextProps, Map nextState, Map nextContext) => null;
+  bool? shouldComponentUpdateWithContext(Map nextProps, Map nextState, Map nextContext) => null;
 
   /// ReactJS lifecycle method that is invoked immediately before rendering when [nextProps] or [nextState] are being
   /// received.
@@ -457,7 +455,7 @@ abstract class Component {
   /// >
   /// > This will be completely removed when the JS side of it is slated for removal (ReactJS 18 / react.dart 7.0.0)
   @Deprecated('7.0.0')
-  void componentWillUpdateWithContext(Map nextProps, Map nextState, Map nextContext) {}
+  void componentWillUpdateWithContext(Map nextProps, Map nextState, Map? nextContext) {}
 
   /// ReactJS lifecycle method that is invoked immediately after the `Component`'s updates are flushed to the DOM.
   ///
@@ -587,7 +585,7 @@ abstract class Component2 implements Component {
   ///     }
   ///
   /// See: <https://reactjs.org/docs/context.html#classcontexttype>
-  Context get contextType => null;
+  Context? get contextType => null;
 
   /// Invoked once and cached when [registerComponent] is called. Values in the mapping will be set on [props]
   /// if that prop is not specified by the parent component.
@@ -656,10 +654,10 @@ abstract class Component2 implements Component {
   dynamic context;
 
   @override
-  Map props;
+  late Map props;
 
   @override
-  Map state;
+  late Map state;
 
   @override
   @Deprecated('7.0.0')
@@ -671,7 +669,7 @@ abstract class Component2 implements Component {
   /// The JavaScript [`ReactComponent`](https://reactjs.org/docs/react-api.html#reactdom.render)
   /// instance of this `Component` returned by [render].
   @override
-  ReactComponent jsThis;
+  late ReactComponent jsThis;
 
   /// Allows the [ReactJS `displayName` property](https://reactjs.org/docs/react-component.html#displayname)
   /// to be set for debugging purposes.
@@ -682,8 +680,8 @@ abstract class Component2 implements Component {
   /// This will result in the dart2js name being `ReactDartComponent2` (the
   /// name of the proxying JS component defined in _dart_helpers.js).
   @override
-  String get displayName {
-    String value;
+  String? get displayName {
+    String? value;
     assert(() {
       value = runtimeType.toString();
       return true;
@@ -701,7 +699,7 @@ abstract class Component2 implements Component {
   ///
   /// See: <https://reactjs.org/docs/react-component.html#setstate>
   @override
-  void setState(Map newState, [SetStateCallback callback]) {
+  void setState(Map? newState, [SetStateCallback? callback]) {
     _bridge.setState(this, newState, callback);
   }
 
@@ -711,14 +709,14 @@ abstract class Component2 implements Component {
   /// Optionally accepts a [callback] that gets called after the component updates.
   ///
   /// See: <https://reactjs.org/docs/react-component.html#setstate>
-  void setStateWithUpdater(StateUpdaterCallback updater, [SetStateCallback callback]) {
+  void setStateWithUpdater(StateUpdaterCallback updater, [SetStateCallback? callback]) {
     _bridge.setStateWithUpdater(this, updater, callback);
   }
 
   /// Causes [render] to be called, skipping [shouldComponentUpdate].
   ///
   /// > See: <https://reactjs.org/docs/react-component.html#forceupdate>
-  void forceUpdate([SetStateCallback callback]) {
+  void forceUpdate([SetStateCallback? callback]) {
     _bridge.forceUpdate(this, callback);
   }
 
@@ -770,7 +768,7 @@ abstract class Component2 implements Component {
   /// > [Consider recommended alternative solutions first!](https://reactjs.org/blog/2018/06/07/you-probably-dont-need-derived-state.html#preferred-solutions)
   ///
   /// See: <https://reactjs.org/docs/react-component.html#static-getderivedstatefromprops>
-  Map getDerivedStateFromProps(Map nextProps, Map prevState) => null;
+  Map? getDerivedStateFromProps(Map nextProps, Map prevState) => null;
 
   /// ReactJS lifecycle method that is invoked before rendering when [nextProps] and/or [nextState] are being received.
   ///
@@ -877,7 +875,7 @@ abstract class Component2 implements Component {
   /// [getDerivedStateFromError] will be ignored.
   ///
   /// See: <https://reactjs.org/docs/react-component.html#static-getderivedstatefromerror>
-  Map getDerivedStateFromError(dynamic error) => null;
+  Map? getDerivedStateFromError(dynamic error) => null;
 
   /// Allows usage of PropValidator functions to check the validity of a prop within the props passed to it.
   ///
@@ -960,7 +958,7 @@ abstract class Component2 implements Component {
   /// See: <https://reactjs.org/docs/react-component.html#forceupdate>
   @override
   @Deprecated('7.0.0')
-  void redraw([SetStateCallback callback]) {
+  void redraw([SetStateCallback? callback]) {
     setState({}, callback);
   }
 
@@ -1169,7 +1167,7 @@ abstract class Component2 implements Component {
   /// Will be removed when [Component] is removed in the `7.0.0` release.
   @override
   @Deprecated('7.0.0')
-  void replaceState(Map newState, [SetStateCallback callback]) => throw _unsupportedError('replaceState');
+  void replaceState(Map? newState, [SetStateCallback? callback]) => throw _unsupportedError('replaceState');
 
   /// Do not use.
   ///
@@ -1190,7 +1188,7 @@ abstract class Component2 implements Component {
   /// Will be removed when [Component] is removed in the `7.0.0` release.
   @override
   @Deprecated('7.0.0')
-  initComponentInternal(props, _jsRedraw, [RefMethod ref, _jsThis, context]) =>
+  initComponentInternal(props, _jsRedraw, [RefMethod? ref, _jsThis, context]) =>
       throw _unsupportedError('initComponentInternal');
 
   /// Do not use.
@@ -1279,35 +1277,35 @@ abstract class Component2 implements Component {
 
   @override
   @Deprecated('7.0.0')
-  Map _context;
+  Map? _context;
 
   @override
   @Deprecated('7.0.0')
-  var _jsRedraw;
+  late var _jsRedraw;
 
   @override
   @Deprecated('7.0.0')
-  Map _nextState;
+  Map? _nextState;
 
   @override
   @Deprecated('7.0.0')
-  Map _props;
+  late Map _props;
 
   @override
   @Deprecated('7.0.0')
-  RefMethod _ref;
+  late RefMethod _ref;
 
   @override
   @Deprecated('7.0.0')
-  List<SetStateCallback> _setStateCallbacks;
+  late List<SetStateCallback> _setStateCallbacks;
 
   @override
   @Deprecated('7.0.0')
-  Map _state;
+  late Map _state;
 
   @override
   @Deprecated('7.0.0')
-  List<StateUpdaterCallback> _transactionalSetStateCallbacks;
+  late List<StateUpdaterCallback> _transactionalSetStateCallbacks;
 
   @override
   @Deprecated('7.0.0')
@@ -1367,12 +1365,12 @@ abstract class ReactComponentFactoryProxy implements Function {
   ///
   /// Necessary to work around DDC `dart.dcall` issues in <https://github.com/dart-lang/sdk/issues/29904>,
   /// since invoking the function directly doesn't work.
-  dynamic /*ReactElement*/ build(Map props, [List childrenArgs]);
+  ReactElement build(Map props, [List childrenArgs]);
 
   /// Returns a new rendered component instance with the specified [props] and `children` ([c1], [c2], et. al.).
   ///
   /// > The additional children arguments (c2, c3, et. al.) are a workaround for <https://github.com/dart-lang/sdk/issues/16030>.
-  dynamic /*ReactElement*/ call(Map props,
+  ReactElement call(Map props,
       [c1 = _notSpecified,
       c2 = _notSpecified,
       c3 = _notSpecified,
@@ -1701,7 +1699,7 @@ dynamic li = validateJsApiThenReturn(() => ReactDomComponentFactoryProxy('li'));
 dynamic link = validateJsApiThenReturn(() => ReactDomComponentFactoryProxy('link'));
 
 /// The HTML `<main>` `Element`.
-dynamic main = validateJsApiThenReturn(() => ReactDomComponentFactoryProxy('main'));
+dynamic htmlMain = validateJsApiThenReturn(() => ReactDomComponentFactoryProxy('main'));
 
 /// The HTML `<map>` `MapElement`.
 dynamic map = validateJsApiThenReturn(() => ReactDomComponentFactoryProxy('map'));

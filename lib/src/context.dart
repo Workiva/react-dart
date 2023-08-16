@@ -103,13 +103,13 @@ class Context<T> {
 ///
 /// Learn more: https://reactjs.org/docs/context.html#reactcreatecontext
 Context<TValue> createContext<TValue>([
-  TValue defaultValue,
-  int Function(TValue currentValue, TValue nextValue) calculateChangedBits,
+  TValue? defaultValue,
+  int Function(TValue? currentValue, TValue? nextValue)? calculateChangedBits,
 ]) {
   int jsifyCalculateChangedBitsArgs(currentValue, nextValue) {
-    return calculateChangedBits(
-      ContextHelpers.unjsifyNewContext(currentValue) as TValue,
-      ContextHelpers.unjsifyNewContext(nextValue) as TValue,
+    return calculateChangedBits!(
+      ContextHelpers.unjsifyNewContext(currentValue) as TValue?,
+      ContextHelpers.unjsifyNewContext(nextValue) as TValue?,
     );
   }
 
@@ -124,7 +124,7 @@ Context<TValue> createContext<TValue>([
 
 // A JavaScript symbol that we use as the key in a JS Object to wrap the Dart.
 @JS()
-external get _reactDartContextSymbol;
+external Object get _reactDartContextSymbol;
 
 /// A context utility for assisting with common needs of ReactDartContext.
 ///
@@ -132,8 +132,8 @@ external get _reactDartContextSymbol;
 abstract class ContextHelpers {
   // Wraps context value in a JS Object for use on the JS side.
   // It is wrapped so that the same Dart value can be retrieved from Dart with [_unjsifyNewContext].
-  static dynamic jsifyNewContext(dynamic context) {
-    final jsContextHolder = newObject();
+  static dynamic jsifyNewContext(Object? context) {
+    final jsContextHolder = newObject() as Object;
     setProperty(jsContextHolder, _reactDartContextSymbol, DartValueWrapper.wrapIfNeeded(context));
     return jsContextHolder;
   }
@@ -141,7 +141,7 @@ abstract class ContextHelpers {
   // Unwraps context value from a JS Object for use on the Dart side.
   // The value is unwrapped so that the same Dart value can be passed through js and retrived by Dart
   // when used with [_jsifyNewContext].
-  static dynamic unjsifyNewContext(dynamic interopContext) {
+  static dynamic unjsifyNewContext(Object? interopContext) {
     if (interopContext != null && hasProperty(interopContext, _reactDartContextSymbol)) {
       return DartValueWrapper.unwrapIfNeeded(getProperty(interopContext, _reactDartContextSymbol));
     }

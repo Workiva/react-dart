@@ -87,7 +87,7 @@ class _CheckBoxComponent extends react.Component {
 var checkBoxComponent = react.registerComponent(() => _CheckBoxComponent());
 
 class _ClockComponent extends react.Component {
-  Timer timer;
+  late Timer timer;
 
   @override
   getInitialState() => {'secondsElapsed': 0};
@@ -297,7 +297,7 @@ int calculateChangedBits(currentValue, nextValue) {
 var TestNewContext = react.createContext<Map>({'renderCount': 0}, calculateChangedBits);
 
 class _NewContextProviderComponent extends react.Component2 {
-  _NewContextRefComponent componentRef;
+  _NewContextRefComponent? componentRef;
 
   @override
   get initialState => {'renderCount': 0, 'complexMap': false};
@@ -448,7 +448,7 @@ class _Component2TestComponent extends react.Component2 with react.TypedSnapshot
   }
 
   @override
-  componentDidUpdate(prevProps, prevState, [String snapshot]) {
+  componentDidUpdate(prevProps, prevState, [String? snapshot]) {
     if (snapshot != null) {
       print('Updated DOM and $snapshot');
       return;
@@ -519,20 +519,20 @@ class _ErrorComponent extends react.Component2 {
 var ErrorComponent = react.registerComponent(() => _ErrorComponent());
 
 class _CustomException implements Exception {
-  int code;
-  String message;
-  String randomMessage;
+  final int code;
+  final String message;
+  final String randomMessage;
 
-  _CustomException(this.message, this.code) {
+  _CustomException(this.message, this.code) : randomMessage = _getRandomMessage(code);
+
+  static String _getRandomMessage(code) {
     switch (code) {
       case 1:
-        randomMessage = 'The code is a 1';
-        break;
+        return 'The code is a 1';
       case 2:
-        randomMessage = 'The Code is a 2';
-        break;
+        return 'The Code is a 2';
       default:
-        randomMessage = 'Default Error Code';
+        return 'Default Error Code';
     }
   }
 }

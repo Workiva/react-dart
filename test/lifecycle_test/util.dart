@@ -31,20 +31,36 @@ mixin LifecycleTestHelper on Component {
         return call['memberName'];
       }).toList();
 
-  T lifecycleCall<T>(String memberName, {List arguments = const [], T Function() defaultReturnValue, Map staticProps}) {
+  static bool _throwsLateInitializationError(void Function() accessLateVariable) {
+    try {
+      accessLateVariable();
+    } catch (e) {
+      if (e.toString().contains('LateInitializationError')) {
+        return true;
+      } else {
+        rethrow;
+      }
+    }
+
+    return false;
+  }
+
+  T lifecycleCall<T>(String memberName,
+      {List arguments = const [], T Function()? defaultReturnValue, Map? staticProps}) {
+    // If this is false and we access late variables, such as jsThis/props/state, we'll get a LateInitializationError
+    // fixme rethink this solution, since it's gross and also might not work in dart2js or mixed mode; perhaps conditionally don't try to access props/state in early lifecycle methods
+    final hasPropsInitialized = !_throwsLateInitializationError(() => props);
+    final hasStateInitialized = !_throwsLateInitializationError(() => state);
+
     lifecycleCalls.add({
       'memberName': memberName,
       'arguments': arguments,
-      'props': props == null ? null : Map.from(props),
-      'state': state == null ? null : Map.from(state),
+      'props': hasPropsInitialized ? Map.from(props) : null,
+      'state': hasStateInitialized ? Map.from(state) : null,
       'context': context,
     });
 
-    final lifecycleCallback = props == null
-        ? staticProps == null
-            ? null
-            : staticProps[memberName]
-        : props[memberName];
+    final lifecycleCallback = (staticProps ?? (hasPropsInitialized ? props : {}))[memberName];
     if (lifecycleCallback != null) {
       return Function.apply(lifecycleCallback as Function, [this, ...arguments]) as T;
     }
@@ -53,7 +69,7 @@ mixin LifecycleTestHelper on Component {
       return defaultReturnValue();
     }
 
-    return null;
+    return null as T;
   }
 
   void callSetStateWithNullValue() {

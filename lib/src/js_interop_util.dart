@@ -6,7 +6,7 @@ import 'dart:js_util';
 import 'package:js/js.dart';
 
 @JS('Object.keys')
-external List<String> objectKeys(Object object);
+external List<Object?> objectKeys(Object object);
 
 @JS()
 @anonymous
@@ -17,8 +17,8 @@ class JsPropertyDescriptor {
 @JS('Object.defineProperty')
 external void defineProperty(dynamic object, String propertyName, JsPropertyDescriptor descriptor);
 
-String getJsFunctionName(Function object) =>
-    (getProperty(object, 'name') ?? getProperty(object, '\$static_name')) as String;
+String? getJsFunctionName(Function object) =>
+    (getProperty(object, 'name') ?? getProperty(object, '\$static_name')) as String?;
 
 /// Creates JS `Promise` which is resolved when [future] completes.
 ///

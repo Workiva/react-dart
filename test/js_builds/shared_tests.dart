@@ -6,7 +6,6 @@ import 'dart:html';
 import 'dart:js_util';
 
 import 'package:js/js.dart';
-import 'package:meta/meta.dart';
 import 'package:react/react.dart' as react;
 import 'package:react/react_dom.dart' as react_dom;
 import 'package:react/react_client/react_interop.dart';
@@ -45,15 +44,15 @@ void sharedJsFunctionTests() {
 /// The arguments corresponding to each call of `console.warn`,
 /// collected via a spy set up in console_spy_include_this_js_first.js
 @JS()
-external List<List<dynamic>> get consoleWarnCalls;
+external List<List<Object?>> get consoleWarnCalls;
 @JS()
-external set consoleWarnCalls(List<dynamic> value);
+external set consoleWarnCalls(List<Object?> value);
 
 /// Like window.console.warn, but allows more than one argument.
 @JS('console.warn')
 external void consoleWarn([a, b, c, d]);
 
-void sharedConsoleWarnTests({@required bool expectDeduplicateSyntheticEventWarnings}) {
+void sharedConsoleWarnTests({required bool expectDeduplicateSyntheticEventWarnings}) {
   group('console.warn wrapper (or lack thereof)', () {
     void clearConsoleWarnCalls() => consoleWarnCalls = [];
 
@@ -148,7 +147,7 @@ void sharedConsoleWarnTests({@required bool expectDeduplicateSyntheticEventWarni
 
 void sharedErrorBoundaryComponentNameTests() {
   group('includes the Dart component displayName in error boundary errors for', () {
-    void expectRenderErrorWithComponentName(ReactElement element, {@required String expectedComponentName}) {
+    void expectRenderErrorWithComponentName(ReactElement element, {required String expectedComponentName}) {
       final capturedInfos = <ReactErrorInfo>[];
       react_dom.render(
           _ErrorBoundary({

@@ -29,7 +29,7 @@ dynamic convertArgsToChildren(List childrenArgs) {
 }
 
 @Deprecated('Event handlers are no longer converted. This will be removed in 7.0.0.')
-Function unconvertJsEventHandler(Function jsConvertedEventHandler) => null;
+Function? unconvertJsEventHandler(Function jsConvertedEventHandler) => null;
 
 void convertRefValue(Map args) {
   final ref = args['ref'];
@@ -101,7 +101,7 @@ dynamic generateChildren(List childrenArgs, {bool shouldAlwaysBeList = false}) {
 
   if (children == null) {
     children = shouldAlwaysBeList ? childrenArgs.map(listifyChildren).toList() : childrenArgs;
-    markChildrenValidated(children as List);
+    markChildrenValidated(children);
   }
 
   return children;

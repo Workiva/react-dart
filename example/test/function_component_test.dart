@@ -240,7 +240,7 @@ UseRefTestComponent(Map props) {
   return react.Fragment({}, [
     react.p({'key': 'urtKey1'}, ['Current Input: ${inputValue.value}, Previous Input: ${prevInputValueRef.current}']),
     react.input({'key': 'urtKey2', 'ref': inputRef}),
-    react.button({'key': 'urtKey3', 'onClick': (_) => inputValue.set(inputRef.current.value)}, ['Update']),
+    react.button({'key': 'urtKey3', 'onClick': (_) => inputValue.set(inputRef.current!.value!)}, ['Update']),
   ]);
 }
 
@@ -377,14 +377,14 @@ UseImperativeHandleTestComponent(Map props) {
     if (!RegExp(r'^[a-zA-Z]+$').hasMatch(city.value)) {
       message.set('Invalid form!');
       error.set('city');
-      cityRef.current.focus();
+      cityRef.current!.focus();
       return;
     }
 
     if (!RegExp(r'^[a-zA-Z]+$').hasMatch(state.value)) {
       message.set('Invalid form!');
       error.set('state');
-      stateRef.current.focus();
+      stateRef.current!.focus();
       return;
     }
 
@@ -453,13 +453,13 @@ UseImperativeHandleTestComponent2(Map props) {
     }, []),
     react.button({
       'key': 'button1',
-      'onClick': (_) => fancyCounterRef.current['increment'](),
+      'onClick': (_) => fancyCounterRef.current!['increment'](),
     }, [
       'Increment by ${diff.value}'
     ]),
     react.button({
       'key': 'button2',
-      'onClick': (_) => fancyCounterRef.current['decrement'](),
+      'onClick': (_) => fancyCounterRef.current!['decrement'](),
     }, [
       'Decrement by ${diff.value}'
     ]),

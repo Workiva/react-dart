@@ -8,7 +8,7 @@ import 'package:react/react_client/react_interop.dart';
 
 import 'util.dart';
 
-final SetStateTest = react.registerComponent2(() => _SetStateTest(), skipMethods: [null]);
+final SetStateTest = react.registerComponent2(() => _SetStateTest(), skipMethods: []);
 final DefaultSkipMethodsTest = react.registerComponent2(() => _SetStateTest());
 final SkipMethodsTest = react.registerComponent2(() => _SetStateTest(), skipMethods: ['getSnapshotBeforeUpdate']);
 

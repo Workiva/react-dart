@@ -22,6 +22,8 @@ class SyntheticEvent {
   /// Use `createSyntheticEvent` instead.
   external factory SyntheticEvent._();
 
+  // FIXME do most of these need to be nullable because of simulate not populating all fields? 🤢
+
   /// Indicates whether the [Event] bubbles up through the DOM or not.
   ///
   /// See: <https://developer.mozilla.org/en-US/docs/Web/API/Event/bubbles>
