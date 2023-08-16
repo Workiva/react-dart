@@ -169,7 +169,7 @@ class _ListComponent extends react.Component {
   @override
   render() {
     final items = [];
-    for (final item in state['items']) {
+    for (final item in state['items'] as List) {
       items.add(react.li({'key': item}, '$item'));
     }
 
@@ -473,7 +473,7 @@ class _Component2TestComponent extends react.Component2 with react.TypedSnapshot
     // Used to generate unique keys even when the list contains duplicate items
     final itemCounts = <dynamic, int>{};
     final items = [];
-    for (final item in state['items']) {
+    for (final item in state['items'] as List) {
       final count = itemCounts[item] = (itemCounts[item] ?? 0) + 1;
       items.add(react.li({'key': 'c2-$item-$count'}, '$item'));
     }

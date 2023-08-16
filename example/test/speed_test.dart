@@ -53,7 +53,7 @@ class _Hello extends react.Component {
   @override
   render() {
     timeprint('rendering start');
-    final data = props['data'];
+    final data = props['data'] as List;
     final children = [];
     for (final elem in data) {
       children.add(react.div({
