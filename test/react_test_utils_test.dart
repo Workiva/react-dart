@@ -32,8 +32,8 @@ void main() {
       wrapperComponent: component2.wrapperComponent);
 }
 
-testUtils({
-  bool isComponent2 = false,
+void testUtils({
+  required bool isComponent2,
   required ReactComponentFactoryProxy eventComponent,
   required ReactComponentFactoryProxy sampleComponent,
   required ReactComponentFactoryProxy wrapperComponent,
