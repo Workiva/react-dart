@@ -31,26 +31,21 @@ mixin LifecycleTestHelper on Component {
         return call['memberName'];
       }).toList();
 
-  static bool _throwsLateInitializationError(void Function() accessLateVariable) {
-    try {
-      accessLateVariable();
-    } catch (e) {
-      if (e.toString().contains('LateInitializationError')) {
-        return true;
-      } else {
-        rethrow;
-      }
-    }
-
-    return false;
-  }
-
   T lifecycleCall<T>(String memberName,
       {List arguments = const [], T Function()? defaultReturnValue, Map? staticProps}) {
-    // If this is false and we access late variables, such as jsThis/props/state, we'll get a LateInitializationError
-    // fixme rethink this solution, since it's gross and also might not work in dart2js or mixed mode; perhaps conditionally don't try to access props/state in early lifecycle methods
-    final hasPropsInitialized = !_throwsLateInitializationError(() => props);
-    final hasStateInitialized = !_throwsLateInitializationError(() => state);
+    // Don't try to access late variables props/state/jsThis before they're initialized.
+    const staticLifecycleMethods = {
+      'defaultProps',
+      'getDefaultProps',
+      'getDerivedStateFromProps',
+      'getDerivedStateFromError',
+    };
+    final hasPropsInitialized = !staticLifecycleMethods.contains(memberName);
+    final hasStateInitialized = !{
+      ...staticLifecycleMethods,
+      'initialState',
+      'getInitialState',
+    }.contains(memberName);
 
     lifecycleCalls.add({
       'memberName': memberName,
