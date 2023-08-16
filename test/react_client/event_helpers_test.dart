@@ -10,6 +10,8 @@ import 'package:react/react_test_utils.dart';
 import 'package:test/test.dart';
 import 'package:mockito/mockito.dart';
 
+import '../mockito.mocks.dart';
+
 main() {
   group('Synthetic event helpers', () {
     const testString = 'test';
@@ -163,6 +165,9 @@ main() {
       final relatedTarget = DivElement();
       final calls = <String>[];
 
+      final dataTransfer = MockDataTransfer();
+      when(dataTransfer.dropEffect).thenReturn('move');
+
       when(nativeMouseEvent.bubbles).thenReturn(true);
       when(nativeMouseEvent.cancelable).thenReturn(true);
       when(nativeMouseEvent.currentTarget).thenReturn(currentTarget);
@@ -177,6 +182,7 @@ main() {
       when(nativeMouseEvent.button).thenReturn(0);
       when(nativeMouseEvent.ctrlKey).thenReturn(false);
       when(nativeMouseEvent.metaKey).thenReturn(false);
+      when(nativeMouseEvent.dataTransfer).thenReturn(dataTransfer);
       when(nativeMouseEvent.relatedTarget).thenReturn(relatedTarget);
       when(nativeMouseEvent.shiftKey).thenReturn(false);
       when(nativeMouseEvent.client).thenReturn(Point(1, 2));
@@ -208,10 +214,12 @@ main() {
       expect(syntheticMouseEvent.clientX, 1);
       expect(syntheticMouseEvent.clientY, 2);
       expect(syntheticMouseEvent.ctrlKey, isFalse);
-      expect(syntheticMouseEvent.dataTransfer, isNull);
       expect(syntheticMouseEvent.metaKey, isFalse);
       expect(syntheticMouseEvent.pageX, 3);
       expect(syntheticMouseEvent.pageY, 4);
+      // This getter returns an equivalent SyntheticDataTransfer,
+      // so we can't just use equality here.
+      expect(syntheticMouseEvent.dataTransfer?.dropEffect, dataTransfer.dropEffect);
       expect(syntheticMouseEvent.relatedTarget, relatedTarget);
       expect(syntheticMouseEvent.screenX, 5);
       expect(syntheticMouseEvent.screenY, 6);
@@ -2062,12 +2070,6 @@ main() {
     });
   });
 }
-
-// ignore: avoid_implementing_value_types
-class MockKeyboardEvent extends Mock implements KeyboardEvent {}
-
-// ignore: avoid_implementing_value_types
-class MockMouseEvent extends Mock implements MouseEvent {}
 
 enum SyntheticEventType {
   syntheticClipboardEvent,
