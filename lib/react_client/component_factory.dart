@@ -10,7 +10,6 @@ import 'package:react/react_client.dart';
 import 'package:react/react_client/js_backed_map.dart';
 import 'package:react/react_client/react_interop.dart';
 
-import 'package:react/src/ddc_emulated_function_name_bug.dart' as ddc_emulated_function_name_bug;
 import 'package:react/src/js_interop_util.dart';
 import 'package:react/src/typedefs.dart';
 import 'package:react/src/react_client/factory_util.dart';
@@ -288,12 +287,7 @@ class ReactDomComponentFactoryProxy extends ReactComponentFactoryProxy {
   /// E.g. `'div'`, `'a'`, `'h1'`
   final String name;
 
-  ReactDomComponentFactoryProxy(this.name) {
-    // TODO: Should we remove this once we validate that the bug is gone in Dart 2 DDC?
-    if (ddc_emulated_function_name_bug.isBugPresent) {
-      ddc_emulated_function_name_bug.patchName(this);
-    }
-  }
+  ReactDomComponentFactoryProxy(this.name);
 
   @override
   String get type => name;
