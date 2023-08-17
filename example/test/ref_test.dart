@@ -3,7 +3,6 @@ import 'dart:html';
 
 import 'package:react/react.dart' as react;
 import 'package:react/react_dom.dart' as react_dom;
-import 'package:react/react_client.dart';
 
 var ChildComponent = react.registerComponent(() => _ChildComponent());
 
@@ -101,8 +100,8 @@ class _ParentComponent extends react.Component {
   }
 
   // Create refs
-  final Ref<InputElement> _inputCreateRef = react.createRef();
-  final Ref<_ChildComponent> _childCreateRef = react.createRef();
+  final _inputCreateRef = react.createRef<InputElement>();
+  final _childCreateRef = react.createRef<_ChildComponent>();
 
   showInputCreateRefValue(_) {
     final input = react_dom.findDOMNode(_inputCreateRef.current) as InputElement;

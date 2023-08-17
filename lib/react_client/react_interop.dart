@@ -82,9 +82,10 @@ abstract class React {
 ///     }
 ///
 /// Learn more: <https://reactjs.org/docs/refs-and-the-dom.html#creating-refs>.
-Ref<T> createRef<T>() {
-  return Ref<T>();
-}
+// This return type must always be nullable since the ref is always initially empty,
+// and in most usages represents a component ref object which could be null.
+// useRef2 on the other hand, can be made non-nullable.
+Ref<T?> createRef<T>() => Ref<T?>.fromJs(React.createRef());
 
 /// When this is provided as the ref prop, a reference to the rendered component
 /// will be available via [current].
@@ -94,19 +95,12 @@ class Ref<T> {
   /// A JavaScript ref object returned by [React.createRef].
   final JsRef jsRef;
 
-  Ref() : jsRef = React.createRef();
-
-  /// Constructor for [useRef], calls [React.useRef] to initialize [current] to [initialValue].
-  ///
-  /// See: <https://reactjs.org/docs/hooks-reference.html#useref>.
-  Ref.useRefInit(T initialValue) : jsRef = React.useRef(initialValue);
-
   Ref.fromJs(this.jsRef);
 
   /// A reference to the latest instance of the rendered component.
   ///
   /// See [createRef] for usage examples and more info.
-  T? get current {
+  T get current {
     final jsCurrent = jsRef.current;
 
     // Note: this ReactComponent check will pass for many types of JS objects,
@@ -124,7 +118,7 @@ class Ref<T> {
   /// Sets the value of [current].
   ///
   /// See: <https://reactjs.org/docs/hooks-faq.html#is-there-something-like-instance-variables>.
-  set current(T? value) {
+  set current(T value) {
     if (value is Component) {
       jsRef.current = value.jsThis;
     } else {

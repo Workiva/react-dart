@@ -392,8 +392,44 @@ T useContext<T>(Context<T> context) => ContextHelpers.unjsifyNewContext(React.us
 /// ```
 ///
 /// Learn more: <https://reactjs.org/docs/hooks-reference.html#useref>.
-// FIXME should we make a non-nullable version of this?
-Ref<T?> useRef<T>([T? initialValue]) => Ref.useRefInit(initialValue);
+@Deprecated('Use useRef2 instead, which supports non-nullable values. For component/element refs, pass `null` as the initial value: `useRef2<MyComponent?>(null)`.')
+Ref<T?> useRef<T>([T? initialValue]) => useRef2(initialValue);
+
+/// Returns a mutable [Ref] object with [Ref.current] property initialized to [initialValue].
+///
+/// Changes to the [Ref.current] property do not cause the containing [DartFunctionComponent] to re-render.
+///
+/// The returned [Ref] object will persist for the full lifetime of the [DartFunctionComponent].
+/// Compare to [createRef] which returns a new [Ref] object on each render.
+///
+/// > __Note:__ there are two [rules for using Hooks](https://reactjs.org/docs/hooks-rules.html):
+/// >
+/// > * Only call Hooks at the top level.
+/// > * Only call Hooks from inside a [DartFunctionComponent].
+///
+/// __Example__:
+///
+/// ```dart
+/// UseRefTestComponent(Map props) {
+///   final inputValue = useState('');
+///
+///   final inputRef = useRef2<InputElement?>(null);
+///   final prevInputValueRef = useRef2<String?>(null);
+///
+///   useEffect(() {
+///     prevInputValueRef.current = inputValue.value;
+///   });
+///
+///   return react.Fragment({}, [
+///     react.p({}, ['Current Input: ${inputValue.value}, Previous Input: ${prevInputValueRef.current}']),
+///     react.input({'ref': inputRef}),
+///     react.button({'onClick': (_) => inputValue.set(inputRef.current.value)}, ['Update']),
+///   ]);
+/// }
+/// ```
+///
+/// Learn more: <https://reactjs.org/docs/hooks-reference.html#useref>.
+Ref<T> useRef2<T>(T initialValue) => Ref.fromJs(React.useRef(initialValue));
 
 /// Returns a memoized version of the return value of [createFunction].
 ///

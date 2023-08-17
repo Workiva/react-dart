@@ -62,9 +62,9 @@ typedef MemoFunction = react.ReactComponentFactoryProxy Function(ReactDartFuncti
     {bool Function(Map, Map)? areEqual});
 
 void sharedMemoTests(MemoFunction memoFunction) {
-  late Ref<_MemoTestWrapperComponent> memoTestWrapperComponentRef;
-  late Ref<Element> localCountDisplayRef;
-  late Ref<Element> valueMemoShouldIgnoreViaAreEqualDisplayRef;
+  late Ref<_MemoTestWrapperComponent?> memoTestWrapperComponentRef;
+  late Ref<Element?> localCountDisplayRef;
+  late Ref<Element?> valueMemoShouldIgnoreViaAreEqualDisplayRef;
   late int childMemoRenderCount;
 
   void renderMemoTest({
