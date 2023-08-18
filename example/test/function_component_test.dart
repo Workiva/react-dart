@@ -230,8 +230,8 @@ var useRefTestFunctionComponent = react.registerFunctionComponent(UseRefTestComp
 UseRefTestComponent(Map props) {
   final inputValue = useState('');
 
-  final inputRef = useRef<InputElement>();
-  final prevInputValueRef = useRef<String>();
+  final inputRef = useRef2<InputElement?>(null);
+  final prevInputValueRef = useRef2<String?>(null);
 
   useEffect(() {
     prevInputValueRef.current = inputValue.value;
@@ -338,13 +338,13 @@ class FancyInputApi {
 }
 
 final FancyInput = react.forwardRef2((props, ref) {
-  final inputRef = useRef();
+  final inputRef = useRef2<InputElement?>(null);
 
   useImperativeHandle(
     ref,
     () {
       print('FancyInput: useImperativeHandle re-assigns ref.current');
-      return FancyInputApi(() => inputRef.current.focus());
+      return FancyInputApi(() => inputRef.current!.focus());
     },
 
     /// Because the return value of createHandle never changes, it is not necessary for ref.current
@@ -370,8 +370,8 @@ UseImperativeHandleTestComponent(Map props) {
   final error = useState('');
   final message = useState('');
 
-  final cityRef = useRef<FancyInputApi>();
-  final stateRef = useRef<FancyInputApi>();
+  final cityRef = useRef2<FancyInputApi?>(null);
+  final stateRef = useRef2<FancyInputApi?>(null);
 
   validate(_) {
     if (!RegExp(r'^[a-zA-Z]+$').hasMatch(city.value)) {
@@ -443,7 +443,7 @@ final useImperativeHandleTestFunctionComponent2 =
 UseImperativeHandleTestComponent2(Map props) {
   final diff = useState(1);
 
-  final fancyCounterRef = useRef<Map>();
+  final fancyCounterRef = useRef2<Map?>(null);
 
   return react.Fragment({}, [
     FancyCounter({

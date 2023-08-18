@@ -433,11 +433,15 @@ main() {
         mountNode = DivElement();
 
         final UseRefTest = react.registerFunctionComponent((props) {
+          // ignore: deprecated_member_use_from_same_package
           noInitRef = useRef();
+          // ignore: deprecated_member_use_from_same_package
           initRef = useRef(mountNode);
+          // ignore: deprecated_member_use_from_same_package
           domElementRef = useRef();
 
           renderIndex = useState(1);
+          // ignore: deprecated_member_use_from_same_package
           refFromUseRef = useRef();
           refFromCreateRef = react.createRef();
 
@@ -466,6 +470,82 @@ main() {
         test('with current property set to null if no initial value given', () {
           expect(noInitRef, isA<Ref>());
           expect(noInitRef.current, null);
+        });
+
+        test('with current property set to the initial value given', () {
+          expect(initRef, isA<Ref>());
+          expect(initRef.current, mountNode);
+        });
+      });
+
+      group('the returned Ref', () {
+        test('can be attached to elements via the ref attribute', () {
+          expect(domElementRef.current, isA<InputElement>());
+        });
+
+        test('will persist even after the component re-renders', () {
+          expect(renderIndex.value, 1);
+          expect(refFromUseRef.current, 1, reason: 'Ref object initially created on first render');
+          expect(refFromCreateRef.current, 1);
+
+          react_test_utils.Simulate.click(reRenderButton);
+
+          expect(renderIndex.value, 2);
+          expect(refFromUseRef.current, 1,
+              reason: 'useRef returns the same Ref object on every render for the full lifetime of the component');
+          expect(refFromCreateRef.current, 2,
+              reason: 'compare to createRef which creates a new Ref object on every render');
+        });
+      });
+    });
+
+    group('useRef2 -', () {
+      late DivElement mountNode;
+      ButtonElement? reRenderButton;
+      late Ref nullInitRef;
+      late Ref initRef;
+      late Ref domElementRef;
+      late StateHook<int> renderIndex;
+      late Ref refFromUseRef;
+      late Ref refFromCreateRef;
+
+      setUpAll(() {
+        mountNode = DivElement();
+
+        final UseRefTest = react.registerFunctionComponent((props) {
+          nullInitRef = useRef2(null);
+          initRef = useRef2(mountNode);
+          domElementRef = useRef2(null);
+
+          renderIndex = useState(1);
+          refFromUseRef = useRef2(null);
+          refFromCreateRef = react.createRef();
+
+          refFromUseRef.current ??= renderIndex.value;
+
+          refFromCreateRef.current ??= renderIndex.value;
+
+          return react.Fragment({}, [
+            react.input({'ref': domElementRef}),
+            react.p({}, [renderIndex.value]),
+            react.p({}, [refFromUseRef.current]),
+            react.p({}, [refFromCreateRef.current]),
+            react.button({
+              'ref': (ref) => reRenderButton = ref as ButtonElement?,
+              'onClick': (_) => renderIndex.setWithUpdater((prev) => prev + 1)
+            }, [
+              're-render'
+            ]),
+          ]);
+        });
+
+        react_dom.render(UseRefTest({}), mountNode);
+      });
+
+      group('correctly initializes a Ref object', () {
+        test('with current property set to null if no initial value given', () {
+          expect(nullInitRef, isA<Ref>());
+          expect(nullInitRef.current, null);
         });
 
         test('with current property set to the initial value given', () {
@@ -697,9 +777,9 @@ main() {
           react_dom.unmountComponentAtNode(mountNode);
 
           final UseImperativeHandleTest = react.registerFunctionComponent((props) {
-            noDepsRef = useRef();
-            emptyDepsRef = useRef();
-            depsRef = useRef();
+            noDepsRef = useRef2(null);
+            emptyDepsRef = useRef2(null);
+            depsRef = useRef2(null);
 
             return react.Fragment({}, [
               NoDepsComponent({'ref': noDepsRef}, []),
