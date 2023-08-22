@@ -28,6 +28,8 @@ final ReactDartInteropStatics dartInteropStatics = (() {
           jsThis.setState(newObject());
         }
 
+        // Use a LHS type to ensure this has the same exact static type
+        // (including arguments and return types) as initComponentInternal expects.
         // ignore: omit_local_variable_types, prefer_function_declarations_over_variables
         final RefMethod getRef = (name) {
           final ref = getProperty(jsThis.refs, name);
