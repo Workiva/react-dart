@@ -194,7 +194,7 @@ abstract class Component {
 
   late Function _jsRedraw;
 
-  late Object _jsThis;
+  late dynamic _jsThis;
 
   final List<SetStateCallback> _setStateCallbacks = [];
 
@@ -214,29 +214,27 @@ abstract class Component {
   /// to be set for debugging purposes.
   String? get displayName => runtimeType.toString();
 
-  initComponentInternal(props, _jsRedraw, [RefMethod? ref, _jsThis, context]) {
+  static dynamic _defaultRef(String _) => null;
+
+  initComponentInternal(Map props, Function _jsRedraw, [RefMethod? ref, dynamic _jsThis, Map? context]) {
     this._jsRedraw = _jsRedraw;
-    this.ref = ref ?? (_) {};
+    this.ref = ref ?? _defaultRef;
     this._jsThis = _jsThis;
     _initContext(context);
     _initProps(props);
   }
 
   /// Initializes context
-  _initContext(context) {
-    /// [context]s typing was loosened from Map to dynamic to support the new context API in [Component2]
+  _initContext(Map? context) {
+    /// [context]'s and [nextContext]'ss typings were loosened from Map to dynamic to support the new context API in [Component2]
     /// which extends from [Component]. Only "legacy" context APIs are supported in [Component] - which means
     /// it will still be expected to be a Map.
-    this.context = Map.from(context as Map? ?? const {});
-
-    /// [nextContext]s typing was loosened from Map to dynamic to support the new context API in [Component2]
-    /// which extends from [Component]. Only "legacy" context APIs are supported in [Component] - which means
-    /// it will still be expected to be a Map.
-    nextContext = Map.from(this.context as Map? ?? const {});
+    this.context = {...?context};
+    nextContext = {...?context};
   }
 
-  _initProps(props) {
-    this.props = Map.from(props as Map);
+  _initProps(Map props) {
+    this.props = Map.from(props);
     nextProps = this.props;
   }
 

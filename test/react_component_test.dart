@@ -53,7 +53,7 @@ main() {
         expect(() => component.contextKeys, throwsUnsupportedError);
       });
       test('initComponentInternal', () {
-        expect(() => component.initComponentInternal(null, null), throwsUnsupportedError);
+        expect(() => component.initComponentInternal({}, () {}), throwsUnsupportedError);
       });
       test('initStateInternal', () {
         expect(() => component.initStateInternal(), throwsUnsupportedError);
