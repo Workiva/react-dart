@@ -213,9 +213,9 @@ abstract class ReactDartInteropStatics2 {
           ..props = JsBackedMap.backedBy(jsThis.props)
           ..context = ContextHelpers.unjsifyNewContext(jsThis.context);
 
-        jsThis.state = jsBackingMapOrJsCopy(component.initialState);
-
-        component.state = JsBackedMap.backedBy(jsThis.state!);
+        final jsState = jsBackingMapOrJsCopy(component.initialState);
+        jsThis.state = jsState;
+        component.state = JsBackedMap.backedBy(jsState);
 
         // ignore: invalid_use_of_protected_member
         Component2Bridge.bridgeForComponent[component] = componentStatics.bridgeFactory(component);
