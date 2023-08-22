@@ -2,8 +2,8 @@ import 'dart:io';
 
 import 'package:args/args.dart';
 
-Future<Null> main(List<String> args) async {
-  final parser = new ArgParser()
+Future<void> main(List<String> args) async {
+  final parser = ArgParser()
     ..addOption('repoName')
     ..addOption('orgName')
     ..addOption('testCmd')
@@ -22,10 +22,10 @@ Future<Null> main(List<String> args) async {
     throw ProcessException('consumer_tests.dart', parsedArgs.arguments, '--testCmd must be provided', -1);
   }
 
-  final String repoName = parsedArgs['repoName'];
-  final String orgName = parsedArgs['orgName'];
-  final String testCmdStr = parsedArgs['testCmd'];
-  final String packageName = parsedArgs['packageName'] ?? parsedArgs['repoName'];
+  final repoName = parsedArgs['repoName'] as String;
+  final orgName = parsedArgs['orgName'] as String;
+  final testCmdStr = parsedArgs['testCmd'] as String;
+  final packageName = parsedArgs['packageName'] ?? parsedArgs['repoName'] as String;
 
   final reactGitSha = Process.runSync('git', ['rev-parse', 'HEAD']).stdout;
   print('Running $packageName tests while consuming react-dart at $reactGitSha ...\n');

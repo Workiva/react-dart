@@ -66,11 +66,11 @@ main() {
 
 @JS()
 external ReactClass get _JsFoo;
-final JsFoo = new ReactJsComponentFactoryProxy(_JsFoo);
+final JsFoo = ReactJsComponentFactoryProxy(_JsFoo);
 
 @JS()
 external ReactClass get _JsFooFunction;
-final JsFooFunction = new ReactJsComponentFactoryProxy(_JsFooFunction);
+final JsFooFunction = ReactJsComponentFactoryProxy(_JsFooFunction);
 
 @JS()
 external bool Function(ReactElement) get hasUndefinedChildren;

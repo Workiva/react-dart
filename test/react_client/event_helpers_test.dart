@@ -7,7 +7,6 @@ import 'package:react/react.dart';
 import 'package:react/react_client/js_interop_helpers.dart';
 import 'package:react/react_dom.dart';
 import 'package:react/react_test_utils.dart';
-import 'package:react/src/react_client/event_helpers.dart';
 import 'package:test/test.dart';
 import 'package:mockito/mockito.dart';
 
@@ -99,10 +98,10 @@ main() {
     }
 
     test('wrapNativeKeyboardEvent', () {
-      var nativeKeyboardEvent = MockKeyboardEvent();
-      var currentTarget = DivElement();
-      var target = DivElement();
-      var calls = <String>[];
+      final nativeKeyboardEvent = MockKeyboardEvent();
+      final currentTarget = DivElement();
+      final target = DivElement();
+      final calls = <String>[];
 
       when(nativeKeyboardEvent.bubbles).thenReturn(true);
       when(nativeKeyboardEvent.cancelable).thenReturn(true);
@@ -125,7 +124,7 @@ main() {
 
       expect(nativeKeyboardEvent.defaultPrevented, isFalse);
 
-      var syntheticKeyboardEvent = wrapNativeKeyboardEvent(nativeKeyboardEvent);
+      final syntheticKeyboardEvent = wrapNativeKeyboardEvent(nativeKeyboardEvent);
 
       expect(syntheticKeyboardEvent, isA<SyntheticKeyboardEvent>());
 
@@ -133,6 +132,7 @@ main() {
       expect(syntheticKeyboardEvent.cancelable, isTrue);
       expect(syntheticKeyboardEvent.currentTarget, currentTarget);
       expect(syntheticKeyboardEvent.defaultPrevented, isFalse);
+      // ignore: unnecessary_lambdas
       expect(() => syntheticKeyboardEvent.preventDefault(), returnsNormally);
       expect(calls, contains('preventDefault'));
       expect(() => syntheticKeyboardEvent.stopPropagation(), returnsNormally);
@@ -157,11 +157,11 @@ main() {
     });
 
     test('wrapNativeMouseEvent', () {
-      var nativeMouseEvent = MockMouseEvent();
-      var currentTarget = DivElement();
-      var target = DivElement();
-      var relatedTarget = DivElement();
-      var calls = <String>[];
+      final nativeMouseEvent = MockMouseEvent();
+      final currentTarget = DivElement();
+      final target = DivElement();
+      final relatedTarget = DivElement();
+      final calls = <String>[];
 
       when(nativeMouseEvent.bubbles).thenReturn(true);
       when(nativeMouseEvent.cancelable).thenReturn(true);
@@ -183,7 +183,7 @@ main() {
       when(nativeMouseEvent.page).thenReturn(Point(3, 4));
       when(nativeMouseEvent.screen).thenReturn(Point(5, 6));
 
-      var syntheticMouseEvent = wrapNativeMouseEvent(nativeMouseEvent);
+      final syntheticMouseEvent = wrapNativeMouseEvent(nativeMouseEvent);
 
       expect(syntheticMouseEvent, isA<SyntheticMouseEvent>());
 
@@ -191,6 +191,7 @@ main() {
       expect(syntheticMouseEvent.cancelable, isTrue);
       expect(syntheticMouseEvent.currentTarget, currentTarget);
       expect(syntheticMouseEvent.defaultPrevented, isFalse);
+      // ignore: unnecessary_lambdas
       expect(() => syntheticMouseEvent.preventDefault(), returnsNormally);
       expect(calls, contains('preventDefault'));
       expect(() => syntheticMouseEvent.stopPropagation(), returnsNormally);
@@ -218,8 +219,8 @@ main() {
     });
 
     test('fakeSyntheticFormEvent', () {
-      var element = DivElement();
-      var fakeEvent = fakeSyntheticFormEvent(element, 'change');
+      final element = DivElement();
+      final fakeEvent = fakeSyntheticFormEvent(element, 'change');
 
       expect(fakeEvent, isA<SyntheticFormEvent>());
 
@@ -227,6 +228,7 @@ main() {
       expect(fakeEvent.cancelable, isFalse);
       expect(fakeEvent.currentTarget, element);
       expect(fakeEvent.defaultPrevented, false);
+      // ignore: unnecessary_lambdas
       expect(() => fakeEvent.preventDefault(), returnsNormally);
       expect(() => fakeEvent.stopPropagation(), returnsNormally);
       expect(fakeEvent.eventPhase, Event.AT_TARGET);
@@ -1989,7 +1991,7 @@ main() {
 
         Element renderAndGetRootNode() {
           final mountNode = Element.div();
-          final content = div({'onDrag': (e) => event = e, 'draggable': true}, []);
+          final content = div({'onDrag': (SyntheticMouseEvent e) => event = e, 'draggable': true}, []);
           render(content, mountNode);
           return mountNode.children.single;
         }

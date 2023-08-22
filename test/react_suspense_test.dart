@@ -22,7 +22,8 @@ external ReactClass jsLazy(Promise Function() factory);
 // Only intended for testing purposes, Please do not copy/paste this into repo.
 // This will most likely be added to the PUBLIC api in the future,
 // but needs more testing and Typing decisions to be made first.
-ReactJsComponentFactoryProxy lazy(Future<ReactComponentFactoryProxy> factory()) => ReactJsComponentFactoryProxy(
+ReactJsComponentFactoryProxy lazy(Future<ReactComponentFactoryProxy> Function() factory) =>
+    ReactJsComponentFactoryProxy(
       jsLazy(
         allowInterop(
           () => futureToPromise(
@@ -44,7 +45,7 @@ main() {
         return simple.SimpleFunctionComponent;
       });
       var wrappingDivRef;
-      var mountElement = new Element.div();
+      final mountElement = Element.div();
       react_dom.render(
         react.div({
           'ref': (ref) {
@@ -78,8 +79,8 @@ main() {
       });
       var wrappingDivRef;
       var wrappingDivRef2;
-      var mountElement = new Element.div();
-      var mountElement2 = new Element.div();
+      final mountElement = Element.div();
+      final mountElement2 = Element.div();
 
       react_dom.render(
         react.div({

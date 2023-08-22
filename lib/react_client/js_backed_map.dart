@@ -26,16 +26,16 @@ class JsBackedMap extends MapBase<dynamic, dynamic> {
   final JsMap jsObject;
 
   /// Creates a JsBackedMap instance backed by a new [jsObject].
-  JsBackedMap() : jsObject = new JsMap();
+  JsBackedMap() : jsObject = JsMap();
 
   /// Creates a JsBackedMap instance backed by [jsObject].
   JsBackedMap.backedBy(this.jsObject);
 
   /// Creates a JsBackedMap instance that contains all key/value pairs of [other].
-  factory JsBackedMap.from(Map other) => new JsBackedMap()..addAll(other);
+  factory JsBackedMap.from(Map other) => JsBackedMap()..addAll(other);
 
   /// Creates a JsBackedMap instance that contains all key/value pairs of the JS object [jsOther].
-  factory JsBackedMap.fromJs(JsMap jsOther) => new JsBackedMap()..addAllFromJs(jsOther);
+  factory JsBackedMap.fromJs(JsMap jsOther) => JsBackedMap()..addAllFromJs(jsOther);
 
   // Private helpers with narrower typing than we want to expose, for use in other methods
   List<dynamic> get _keys => _Object.keys(jsObject);
@@ -79,7 +79,7 @@ class JsBackedMap extends MapBase<dynamic, dynamic> {
 
   @override
   void clear() {
-    for (var key in _keys) {
+    for (final key in _keys) {
       _Reflect.deleteProperty(jsObject, key);
     }
   }
@@ -150,7 +150,7 @@ JsMap jsBackingMapOrJsCopy(Map map) {
   if (map is JsBackedMap) {
     return map.jsObject;
   } else {
-    return new JsBackedMap.from(map).jsObject;
+    return JsBackedMap.from(map).jsObject;
   }
 }
 
@@ -158,7 +158,6 @@ JsMap jsBackingMapOrJsCopy(Map map) {
 abstract class _Object {
   external static void assign(JsMap to, JsMap from);
   external static List<dynamic> keys(JsMap object);
-  external static List<dynamic> values(JsMap object);
 }
 
 @JS('Reflect')

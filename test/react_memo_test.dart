@@ -80,7 +80,7 @@ void sharedMemoTests(MemoFunction memoFunction) {
             return prevProps['localCount'] == nextProps['localCount'];
           };
 
-    final MemoTest = memoFunction(react.registerFunctionComponent((Map props) {
+    final MemoTest = memoFunction(react.registerFunctionComponent((props) {
       childMemoRenderCount++;
       return react.div(
         {},
@@ -174,6 +174,7 @@ final MemoTestWrapper = react.registerComponent2(() => _MemoTestWrapperComponent
 class _MemoTestWrapperComponent extends react.Component2 {
   int redrawCount = 0;
 
+  @override
   get initialState => {
         'localCount': 0,
         'valueMemoShouldIgnoreViaAreEqual': 0,
@@ -181,20 +182,20 @@ class _MemoTestWrapperComponent extends react.Component2 {
       };
 
   @override
-  void componentDidUpdate(Map prevProps, Map prevState, [dynamic snapshot]) {
+  componentDidUpdate(Map prevProps, Map prevState, [dynamic snapshot]) {
     redrawCount++;
   }
 
   void increaseLocalCount() {
-    this.setState({'localCount': this.state['localCount'] + 1});
+    setState({'localCount': state['localCount'] + 1});
   }
 
   void increaseValueMemoShouldIgnoreViaAreEqual() {
-    this.setState({'valueMemoShouldIgnoreViaAreEqual': this.state['valueMemoShouldIgnoreViaAreEqual'] + 1});
+    setState({'valueMemoShouldIgnoreViaAreEqual': state['valueMemoShouldIgnoreViaAreEqual'] + 1});
   }
 
   void increaseValueMemoShouldNotKnowAbout() {
-    this.setState({'valueMemoShouldNotKnowAbout': this.state['valueMemoShouldNotKnowAbout'] + 1});
+    setState({'valueMemoShouldNotKnowAbout': state['valueMemoShouldNotKnowAbout'] + 1});
   }
 
   @override
@@ -202,8 +203,8 @@ class _MemoTestWrapperComponent extends react.Component2 {
     return react.div(
       {},
       props['memoComponentFactory']({
-        'localCount': this.state['localCount'],
-        'valueMemoShouldIgnoreViaAreEqual': this.state['valueMemoShouldIgnoreViaAreEqual'],
+        'localCount': state['localCount'],
+        'valueMemoShouldIgnoreViaAreEqual': state['valueMemoShouldIgnoreViaAreEqual'],
       }),
     );
   }

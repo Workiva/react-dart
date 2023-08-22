@@ -42,19 +42,19 @@ final _ErrorBoundary = react.registerComponent2(() => _ErrorBoundaryComponent(),
 
 class _ErrorBoundaryComponent extends react.Component2 {
   @override
-  Map get initialState => {'hasError': false};
+  get initialState => {'hasError': false};
 
   @override
-  Map getDerivedStateFromError(dynamic error) => {'hasError': true};
+  getDerivedStateFromError(dynamic error) => {'hasError': true};
 
   @override
-  void componentDidCatch(dynamic error, ReactErrorInfo info) {
+  componentDidCatch(dynamic error, ReactErrorInfo info) {
     props['onComponentDidCatch']?.call(error, info);
   }
 
   @override
   render() {
-    return state['hasError'] ? 'Error boundary caught an error' : props['children'];
+    return (state['hasError'] as bool) ? 'Error boundary caught an error' : props['children'];
   }
 }
 
@@ -62,11 +62,11 @@ final _ThrowingComponent = react.registerComponent2(() => _ThrowingComponentComp
 
 class _ThrowingComponentComponent2 extends react.Component2 {
   @override
-  Map get initialState => {'shouldThrow': false};
+  get initialState => {'shouldThrow': false};
 
   @override
   render() {
-    if (state['shouldThrow']) {
+    if (state['shouldThrow'] as bool) {
       throw Exception();
     }
 

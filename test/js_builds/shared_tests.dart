@@ -13,11 +13,11 @@ import 'package:react/react_client/react_interop.dart';
 import 'package:test/test.dart';
 
 void verifyJsFileLoaded(String filename) {
-  var isLoaded = document.getElementsByTagName('script').any((script) {
+  final isLoaded = document.getElementsByTagName('script').any((script) {
     return Uri.parse((script as ScriptElement).src).pathSegments.last == filename;
   });
 
-  if (!isLoaded) throw new Exception('$filename is not loaded');
+  if (!isLoaded) throw Exception('$filename is not loaded');
 }
 
 void sharedJsFunctionTests() {
@@ -57,9 +57,7 @@ void sharedConsoleWarnTests({@required bool expectDeduplicateSyntheticEventWarni
   group('console.warn wrapper (or lack thereof)', () {
     void clearConsoleWarnCalls() => consoleWarnCalls = [];
 
-    setUp(() {
-      clearConsoleWarnCalls();
-    });
+    setUp(clearConsoleWarnCalls);
 
     test('warns as expected with any number of arguments', () {
       consoleWarn('foo');
@@ -88,13 +86,14 @@ void sharedConsoleWarnTests({@required bool expectDeduplicateSyntheticEventWarni
 
     void triggerRealDdcSyntheticEventWarning<T extends react.SyntheticEvent>() {
       if (T == react.SyntheticEvent) {
-        throw ArgumentError("T must a subclass of SyntheticEvent, not SyntheticEvent itself, for this to reproduce.");
+        throw ArgumentError('T must a subclass of SyntheticEvent, not SyntheticEvent itself, for this to reproduce.');
       }
 
       // Adapted from reduced test case in https://github.com/dart-lang/sdk/issues/43939
-      dynamic function = (react.SyntheticEvent event) {};
+      // ignore: prefer_function_declarations_over_variables
+      final function = (react.SyntheticEvent event) {} as dynamic;
       // ignore: unused_local_variable
-      dynamic Function(T) function2 = function;
+      final function2 = function as dynamic Function(T);
     }
 
     group('(DDC only)', () {
@@ -196,19 +195,19 @@ final _ErrorBoundary = react.registerComponent2(() => _ErrorBoundaryComponent(),
 
 class _ErrorBoundaryComponent extends react.Component2 {
   @override
-  Map get initialState => {'hasError': false};
+  get initialState => {'hasError': false};
 
   @override
-  Map getDerivedStateFromError(dynamic error) => {'hasError': true};
+  getDerivedStateFromError(dynamic error) => {'hasError': true};
 
   @override
-  void componentDidCatch(dynamic error, ReactErrorInfo info) {
+  componentDidCatch(dynamic error, ReactErrorInfo info) {
     props['onComponentDidCatch'](error, info);
   }
 
   @override
   render() {
-    return state['hasError'] ? null : props['children'];
+    return (state['hasError'] as bool) ? null : props['children'];
   }
 }
 
@@ -216,7 +215,7 @@ final _ThrowingComponent = react.registerComponent(() => _ThrowingComponentCompo
 
 class _ThrowingComponentComponent extends react.Component {
   @override
-  String get displayName => r'DisplayName$_ThrowingComponentComponent';
+  get displayName => r'DisplayName$_ThrowingComponentComponent';
 
   @override
   render() {
@@ -228,7 +227,7 @@ final _ThrowingComponent2 = react.registerComponent2(() => _ThrowingComponent2Co
 
 class _ThrowingComponent2Component extends react.Component2 {
   @override
-  String get displayName => r'DisplayName$_ThrowingComponent2Component';
+  get displayName => r'DisplayName$_ThrowingComponent2Component';
 
   @override
   render() {
