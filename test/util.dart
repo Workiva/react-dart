@@ -38,7 +38,7 @@ Map getDartComponentProps(dynamic dartComponent) {
 }
 
 Map getDartElementProps(ReactElement dartElement) {
-  return isDartComponent2(dartElement) ? JsBackedMap.fromJs(dartElement.props) : dartElement.props.internal.props!;
+  return isDartComponent2(dartElement) ? JsBackedMap.fromJs(dartElement.props) : dartElement.props.internal.props;
 }
 
 ReactComponent render(ReactElement reactElement) {

@@ -120,7 +120,7 @@ class ReactDartComponentFactoryProxy<TComponent extends Component> extends React
       ..remove('key')
       ..remove('ref');
 
-    final internal = ReactDartComponentInternal()..props = extendedProps;
+    final internal = ReactDartComponentInternal(extendedProps);
 
     final interopProps = InteropProps(internal: internal);
 

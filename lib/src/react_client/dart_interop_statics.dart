@@ -64,8 +64,7 @@ final ReactDartInteropStatics dartInteropStatics = (() {
       });
 
   Map _getNextProps(Component component, ReactDartComponentInternal nextInternal) {
-    final newProps = nextInternal.props;
-    return newProps != null ? Map.from(newProps) : {};
+    return Map.of(nextInternal.props);
   }
 
   /// 1. Update [Component.props] using the value stored to [Component.nextProps]
@@ -159,7 +158,7 @@ final ReactDartInteropStatics dartInteropStatics = (() {
         final prevInternalProps = prevInternal.props;
 
         /// Call `componentDidUpdate` and the context variant
-        component.componentDidUpdate(prevInternalProps!, component.prevState!);
+        component.componentDidUpdate(prevInternalProps, component.prevState!);
 
         _callSetStateCallbacks(component);
         // Clear out prevState after it's done being used so it's not retained

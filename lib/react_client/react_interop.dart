@@ -628,7 +628,9 @@ class ReactDartComponentInternal {
   ///
   /// For a `ReactComponent`, this is the props the component was last rendered with,
   /// and is used within props-related lifecycle internals.
-  Map? props;
+  final Map props;
+
+  ReactDartComponentInternal(this.props);
 }
 
 /// Internal react-dart information used to proxy React JS lifecycle to Dart
