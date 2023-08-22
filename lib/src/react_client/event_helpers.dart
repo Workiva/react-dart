@@ -761,7 +761,7 @@ SyntheticWheelEvent createSyntheticWheelEvent({
 
 extension SyntheticEventTypeHelpers on SyntheticEvent {
   // Use getProperty(this, 'type') since, although statically we may be dealing with a SyntheticEvent,
-  // this could be a non-event object casted to SyntheticEvent with a null `type`.
+  // this could be a non-event JS object cast to SyntheticEvent with a null `type`.
   // This is unlikely, but is possible, and before the null safety migration this method
   // gracefully returned false instead of throwing.
   bool _checkEventType(List<String> types) => getProperty(this, 'type') != null && types.any((t) => type.contains(t));
