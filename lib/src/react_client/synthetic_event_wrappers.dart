@@ -15,7 +15,7 @@ import 'package:js/js.dart';
 ///
 /// See: <https://reactjs.org/docs/events.html#syntheticevent>
 @JS()
-// TODO make @anonymous once https://github.com/dart-lang/sdk/issues/43939 is fixed
+@anonymous
 class SyntheticEvent {
   /// [SyntheticEvent]s cannot be manually instantiated.
   ///
@@ -150,7 +150,7 @@ class SyntheticEvent {
 ///
 /// See <https://developer.mozilla.org/en-US/docs/Web/API/ClipboardEvent/clipboardData>
 @JS()
-// TODO make @anonymous once https://github.com/dart-lang/sdk/issues/43939 is fixed
+@anonymous
 class SyntheticClipboardEvent extends SyntheticEvent {
   /// [SyntheticClipboardEvent]s cannot be manually instantiated.
   ///
@@ -171,7 +171,7 @@ class SyntheticClipboardEvent extends SyntheticEvent {
 ///
 /// See <https://developer.mozilla.org/en-US/docs/Web/API/KeyboardEvent>
 @JS()
-// TODO make @anonymous once https://github.com/dart-lang/sdk/issues/43939 is fixed
+@anonymous
 class SyntheticKeyboardEvent extends SyntheticEvent {
   /// [SyntheticKeyboardEvent]s cannot be manually instantiated.
   ///
@@ -244,7 +244,7 @@ class SyntheticKeyboardEvent extends SyntheticEvent {
 ///
 /// See <https://developer.mozilla.org/en-US/docs/Web/API/CompositionEvent>
 @JS()
-// TODO make @anonymous once https://github.com/dart-lang/sdk/issues/43939 is fixed
+@anonymous
 class SyntheticCompositionEvent extends SyntheticEvent {
   /// [SyntheticCompositionEvent]s cannot be manually instantiated.
   ///
@@ -262,7 +262,7 @@ class SyntheticCompositionEvent extends SyntheticEvent {
 ///
 /// See <https://developer.mozilla.org/en-US/docs/Web/API/FocusEvent>
 @JS()
-// TODO make @anonymous once https://github.com/dart-lang/sdk/issues/43939 is fixed
+@anonymous
 class SyntheticFocusEvent extends SyntheticEvent {
   /// [SyntheticFocusEvent]s cannot be manually instantiated.
   ///
@@ -279,7 +279,7 @@ class SyntheticFocusEvent extends SyntheticEvent {
 
 /// A [SyntheticEvent] wrapper that represents a form event.
 @JS()
-// TODO make @anonymous once https://github.com/dart-lang/sdk/issues/43939 is fixed
+@anonymous
 class SyntheticFormEvent extends SyntheticEvent {
   /// [SyntheticFormEvent]s cannot be manually instantiated.
   ///
@@ -289,7 +289,7 @@ class SyntheticFormEvent extends SyntheticEvent {
 
 /// A JS object that looks like a [DataTransfer] but isn't one.
 @JS()
-// TODO make @anonymous once https://github.com/dart-lang/sdk/issues/43939 is fixed
+@anonymous
 class NonNativeDataTransfer {
   /// The type of drag-and-drop operation currently selected or sets the operation to a new type.
   ///
@@ -322,7 +322,7 @@ class NonNativeDataTransfer {
 ///
 /// See <https://developer.mozilla.org/en-US/docs/Web/API/MouseEvent>
 @JS()
-// TODO make @anonymous once https://github.com/dart-lang/sdk/issues/43939 is fixed
+@anonymous
 class SyntheticMouseEvent extends SyntheticEvent {
   /// [SyntheticMouseEvent]s cannot be manually instantiated.
   ///
@@ -399,7 +399,7 @@ class SyntheticMouseEvent extends SyntheticEvent {
 ///
 /// See <https://developer.mozilla.org/en-US/docs/Web/API/PointerEvent>
 @JS()
-// TODO make @anonymous once https://github.com/dart-lang/sdk/issues/43939 is fixed
+@anonymous
 class SyntheticPointerEvent extends SyntheticEvent {
   /// [SyntheticPointerEvent]s cannot be manually instantiated.
   ///
@@ -466,7 +466,7 @@ class SyntheticPointerEvent extends SyntheticEvent {
 ///
 /// See <https://developer.mozilla.org/en-US/docs/Web/API/TouchEvent>
 @JS()
-// TODO make @anonymous once https://github.com/dart-lang/sdk/issues/43939 is fixed
+@anonymous
 class SyntheticTouchEvent extends SyntheticEvent {
   /// [SyntheticTouchEvent]s cannot be manually instantiated.
   ///
@@ -516,7 +516,7 @@ class SyntheticTouchEvent extends SyntheticEvent {
 ///
 /// See <https://developer.mozilla.org/en-US/docs/Web/API/TransitionEvent>
 @JS()
-// TODO make @anonymous once https://github.com/dart-lang/sdk/issues/43939 is fixed
+@anonymous
 class SyntheticTransitionEvent extends SyntheticEvent {
   /// [SyntheticTransitionEvent]s cannot be manually instantiated.
   ///
@@ -545,7 +545,7 @@ class SyntheticTransitionEvent extends SyntheticEvent {
 ///
 /// See <https://developer.mozilla.org/en-US/docs/Web/API/AnimationEvent>
 @JS()
-// TODO make @anonymous once https://github.com/dart-lang/sdk/issues/43939 is fixed
+@anonymous
 class SyntheticAnimationEvent extends SyntheticEvent {
   /// [SyntheticAnimationEvent]s cannot be manually instantiated.
   ///
@@ -578,7 +578,7 @@ class SyntheticAnimationEvent extends SyntheticEvent {
 ///
 /// See <https://developer.mozilla.org/en-US/docs/Web/API/UIEvent>
 @JS()
-// TODO make @anonymous once https://github.com/dart-lang/sdk/issues/43939 is fixed
+@anonymous
 class SyntheticUIEvent extends SyntheticEvent {
   /// [SyntheticUIEvent]s cannot be manually instantiated.
   ///
@@ -598,7 +598,7 @@ class SyntheticUIEvent extends SyntheticEvent {
 ///
 /// See <https://developer.mozilla.org/en-US/docs/Web/API/WheelEvent>
 @JS()
-// TODO make @anonymous once https://github.com/dart-lang/sdk/issues/43939 is fixed
+@anonymous
 class SyntheticWheelEvent extends SyntheticEvent {
   /// [SyntheticWheelEvent]s cannot be manually instantiated.
   ///
