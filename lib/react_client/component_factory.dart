@@ -178,7 +178,11 @@ class ReactDartComponentFactoryProxy2<TComponent extends Component2> extends Rea
   @override
   final Map defaultProps;
 
-  ReactDartComponentFactoryProxy2(this.reactClass) : defaultProps = JsBackedMap.fromJs(reactClass.defaultProps!);
+  ReactDartComponentFactoryProxy2(this.reactClass)
+      // While .defaultProps will be non-null on all Dart components created via registerComponent2,
+      // there are some valid usages of ReactDartComponentFactoryProxy2 (such as within over_react's connect)
+      // where we're dealing with other components, so we can't assume this is non-null
+      : defaultProps = JsBackedMap.fromJs(reactClass.defaultProps ?? JsMap());
 
   @override
   ReactClass get type => reactClass;
