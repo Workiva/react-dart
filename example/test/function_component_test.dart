@@ -230,8 +230,8 @@ var useRefTestFunctionComponent = react.registerFunctionComponent(UseRefTestComp
 UseRefTestComponent(Map props) {
   final inputValue = useState('');
 
-  final inputRef = useRef2<InputElement?>(null);
-  final prevInputValueRef = useRef2<String?>(null);
+  final inputRef = useRef<InputElement>();
+  final prevInputValueRef = useRef<String>();
 
   useEffect(() {
     prevInputValueRef.current = inputValue.value;
@@ -338,7 +338,7 @@ class FancyInputApi {
 }
 
 final FancyInput = react.forwardRef2((props, ref) {
-  final inputRef = useRef2<InputElement?>(null);
+  final inputRef = useRef<InputElement>();
 
   useImperativeHandle(
     ref,
@@ -370,8 +370,8 @@ UseImperativeHandleTestComponent(Map props) {
   final error = useState('');
   final message = useState('');
 
-  final cityRef = useRef2<FancyInputApi?>(null);
-  final stateRef = useRef2<FancyInputApi?>(null);
+  final cityRef = useRef<FancyInputApi>();
+  final stateRef = useRef<FancyInputApi>();
 
   validate(_) {
     if (!RegExp(r'^[a-zA-Z]+$').hasMatch(city.value)) {
@@ -443,7 +443,7 @@ final useImperativeHandleTestFunctionComponent2 =
 UseImperativeHandleTestComponent2(Map props) {
   final diff = useState(1);
 
-  final fancyCounterRef = useRef2<Map?>(null);
+  final fancyCounterRef = useRef<Map>();
 
   return react.Fragment({}, [
     FancyCounter({

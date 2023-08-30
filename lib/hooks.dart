@@ -358,7 +358,9 @@ T useCallback<T extends Function>(T callback, List dependencies) =>
 /// Learn more: <https://reactjs.org/docs/hooks-reference.html#usecontext>.
 T useContext<T>(Context<T> context) => ContextHelpers.unjsifyNewContext(React.useContext(context.jsThis)) as T;
 
-/// Returns a mutable [Ref] object with [Ref.current] property initialized to [initialValue].
+/// Returns an empty mutable [Ref] object.
+///
+/// To initialize a ref with a value, use [useRefInit] instead.
 ///
 /// Changes to the [Ref.current] property do not cause the containing [DartFunctionComponent] to re-render.
 ///
@@ -392,8 +394,12 @@ T useContext<T>(Context<T> context) => ContextHelpers.unjsifyNewContext(React.us
 /// ```
 ///
 /// Learn more: <https://reactjs.org/docs/hooks-reference.html#useref>.
-@Deprecated('Use useRef2 instead, which supports non-nullable values. For component/element refs, pass `null` as the initial value: `useRef2<MyComponent?>(null)`.')
-Ref<T?> useRef<T>([T? initialValue]) => useRef2(initialValue);
+Ref<T?> useRef<T>([
+  @Deprecated('Use `useRefInit` instead to create a ref with an initial value, because unlike this function, '
+      'the generic parameter of the Ref returned by `useRefInit` can be non-nullable.')
+      T? initialValue,
+]) =>
+    useRefInit(null);
 
 /// Returns a mutable [Ref] object with [Ref.current] property initialized to [initialValue].
 ///
@@ -411,25 +417,21 @@ Ref<T?> useRef<T>([T? initialValue]) => useRef2(initialValue);
 ///
 /// ```dart
 /// UseRefTestComponent(Map props) {
-///   final inputValue = useState('');
+///   final countRef = useRefInit(1);
 ///
-///   final inputRef = useRef2<InputElement?>(null);
-///   final prevInputValueRef = useRef2<String?>(null);
-///
-///   useEffect(() {
-///     prevInputValueRef.current = inputValue.value;
-///   });
+///   handleClick([_]) {
+///     ref.current = ref.current + 1;
+///     window.alert('You clicked ${ref.current} times!');
+///   }
 ///
 ///   return react.Fragment({}, [
-///     react.p({}, ['Current Input: ${inputValue.value}, Previous Input: ${prevInputValueRef.current}']),
-///     react.input({'ref': inputRef}),
-///     react.button({'onClick': (_) => inputValue.set(inputRef.current.value)}, ['Update']),
+///     react.button({'onClick': handleClick}, ['Click me!']),
 ///   ]);
 /// }
 /// ```
 ///
 /// Learn more: <https://reactjs.org/docs/hooks-reference.html#useref>.
-Ref<T> useRef2<T>(T initialValue) => Ref.fromJs(React.useRef(initialValue));
+Ref<T> useRefInit<T>(T initialValue) => Ref.fromJs(React.useRef(initialValue));
 
 /// Returns a memoized version of the return value of [createFunction].
 ///

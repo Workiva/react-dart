@@ -499,37 +499,22 @@ main() {
       });
     });
 
-    group('useRef2 -', () {
+    group('useRefInit -', () {
       late DivElement mountNode;
       ButtonElement? reRenderButton;
-      late Ref nullInitRef;
       late Ref initRef;
-      late Ref domElementRef;
       late StateHook<int> renderIndex;
-      late Ref refFromUseRef;
-      late Ref refFromCreateRef;
 
       setUpAll(() {
         mountNode = DivElement();
 
         final UseRefTest = react.registerFunctionComponent((props) {
-          nullInitRef = useRef2(null);
-          initRef = useRef2(mountNode);
-          domElementRef = useRef2(null);
+          initRef = useRefInit(mountNode);
 
           renderIndex = useState(1);
-          refFromUseRef = useRef2(null);
-          refFromCreateRef = react.createRef();
-
-          refFromUseRef.current ??= renderIndex.value;
-
-          refFromCreateRef.current ??= renderIndex.value;
 
           return react.Fragment({}, [
-            react.input({'ref': domElementRef}),
             react.p({}, [renderIndex.value]),
-            react.p({}, [refFromUseRef.current]),
-            react.p({}, [refFromCreateRef.current]),
             react.button({
               'ref': (ref) => reRenderButton = ref as ButtonElement?,
               'onClick': (_) => renderIndex.setWithUpdater((prev) => prev + 1)
@@ -543,11 +528,6 @@ main() {
       });
 
       group('correctly initializes a Ref object', () {
-        test('with current property set to null if no initial value given', () {
-          expect(nullInitRef, isA<Ref>());
-          expect(nullInitRef.current, null);
-        });
-
         test('with current property set to the initial value given', () {
           expect(initRef, isA<Ref>());
           expect(initRef.current, mountNode);
@@ -555,22 +535,15 @@ main() {
       });
 
       group('the returned Ref', () {
-        test('can be attached to elements via the ref attribute', () {
-          expect(domElementRef.current, isA<InputElement>());
-        });
-
         test('will persist even after the component re-renders', () {
           expect(renderIndex.value, 1);
-          expect(refFromUseRef.current, 1, reason: 'Ref object initially created on first render');
-          expect(refFromCreateRef.current, 1);
+          expect(initRef.current, mountNode, reason: 'Ref object initially created on first render');
 
           react_test_utils.Simulate.click(reRenderButton);
 
           expect(renderIndex.value, 2);
-          expect(refFromUseRef.current, 1,
+          expect(initRef.current, mountNode,
               reason: 'useRef returns the same Ref object on every render for the full lifetime of the component');
-          expect(refFromCreateRef.current, 2,
-              reason: 'compare to createRef which creates a new Ref object on every render');
         });
       });
     });
@@ -777,9 +750,9 @@ main() {
           react_dom.unmountComponentAtNode(mountNode);
 
           final UseImperativeHandleTest = react.registerFunctionComponent((props) {
-            noDepsRef = useRef2(null);
-            emptyDepsRef = useRef2(null);
-            depsRef = useRef2(null);
+            noDepsRef = useRef();
+            emptyDepsRef = useRef();
+            depsRef = useRef();
 
             return react.Fragment({}, [
               NoDepsComponent({'ref': noDepsRef}, []),
