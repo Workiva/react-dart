@@ -399,7 +399,7 @@ Ref<T?> useRef<T>([
       'the generic parameter of the Ref returned by `useRefInit` can be non-nullable.')
       T? initialValue,
 ]) =>
-    useRefInit(null);
+    useRefInit(initialValue);
 
 /// Returns a mutable [Ref] object with [Ref.current] property initialized to [initialValue].
 ///
