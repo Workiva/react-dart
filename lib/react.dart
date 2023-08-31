@@ -26,8 +26,6 @@ export 'package:react/src/react_client/synthetic_event_wrappers.dart' hide NonNa
 export 'package:react/src/react_client/synthetic_data_transfer.dart' show SyntheticDataTransfer;
 export 'package:react/src/react_client/event_helpers.dart';
 
-typedef PropValidator<TProps> = Error? Function(TProps props, PropValidatorInfo info);
-
 /// A React component declared using a function that takes in [props] and returns rendered output.
 ///
 /// See <https://reactjs.org/docs/components-and-props.html#function-and-class-components>.
