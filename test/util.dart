@@ -70,9 +70,6 @@ bool assertsEnabled() {
 /// Test cases should not be reused within a test or across multiple tests, to avoid
 /// the [ref] from being used by multiple components and its value being polluted.
 class RefTestCase {
-  /// The name of the test case.
-  final String name;
-
   /// The ref to be passed into a component.
   final dynamic ref;
 
@@ -82,16 +79,13 @@ class RefTestCase {
   /// Returns the current value of the ref.
   final dynamic Function() getCurrent;
 
-  /// Whether the ref is a non-Dart object, such as a ref originating from outside of Dart code
-  /// or a JS-converted Dart ref.
-  final bool isJs;
+  final RefTestCaseMeta meta;
 
   RefTestCase({
-    required this.name,
     required this.ref,
     required this.verifyRefWasUpdated,
     required this.getCurrent,
-    this.isJs = false,
+    required this.meta,
   });
 }
 
@@ -106,60 +100,90 @@ class RefTestCaseCollection<T> {
     }
   }
 
+  static const untypedCallbackRefCaseName = 'untyped callback ref';
+
   RefTestCase createUntypedCallbackRefCase() {
-    const name = 'untyped callback ref';
+    const name = untypedCallbackRefCaseName;
     final calls = [];
     return RefTestCase(
-      name: name,
-      ref: calls.add,
+      // Use a lambda instead of a tearoff since we want to explicitly verify
+      // a function with a certain argument type.
+      // ignore: unnecessary_lambdas
+      ref: (value) => calls.add(value),
       verifyRefWasUpdated: (actualValue) => expect(calls, [same(actualValue)], reason: _reasonMessage(name)),
       getCurrent: () => calls.single,
+      meta: RefTestCaseMeta(name, RefKind.callback, isJs: false, isStronglyTyped: false),
     );
   }
+
+  static const typedCallbackRefCaseName = 'typed callback ref';
 
   RefTestCase createTypedCallbackRefCase() {
-    const name = 'typed callback ref';
+    const name = typedCallbackRefCaseName;
     final calls = [];
     return RefTestCase(
-      name: name,
-      ref: calls.add,
+      // Use a lambda instead of a tearoff since we want to explicitly verify
+      // a function with a certain argument type.
+      // ignore: unnecessary_lambdas, avoid_types_on_closure_parameters
+      ref: (T? value) => calls.add(value),
       verifyRefWasUpdated: (actualValue) => expect(calls, [same(actualValue)], reason: _reasonMessage(name)),
       getCurrent: () => calls.single,
+      meta: RefTestCaseMeta(name, RefKind.callback, isJs: false, isStronglyTyped: true),
     );
   }
+
+  static const untypedRefObjectCaseName = 'untyped ref object';
+
+  RefTestCase createUntypedRefObjectCase() {
+    const name = untypedRefObjectCaseName;
+    final ref = createRef();
+    return RefTestCase(
+      ref: ref,
+      verifyRefWasUpdated: (actualValue) => expect(ref.current, same(actualValue), reason: _reasonMessage(name)),
+      getCurrent: () => ref.current,
+      meta: RefTestCaseMeta(name, RefKind.object, isJs: false, isStronglyTyped: false),
+    );
+  }
+
+  static const refObjectCaseName = 'ref object';
 
   RefTestCase createRefObjectCase() {
-    const name = 'ref object';
+    const name = refObjectCaseName;
     final ref = createRef<T>();
     return RefTestCase(
-      name: name,
       ref: ref,
       verifyRefWasUpdated: (actualValue) => expect(ref.current, same(actualValue), reason: _reasonMessage(name)),
       getCurrent: () => ref.current,
+      meta: RefTestCaseMeta(name, RefKind.object, isJs: false, isStronglyTyped: true),
     );
   }
+
+  static const jsCallbackRefCaseName = 'JS callback ref';
 
   RefTestCase createJsCallbackRefCase() {
-    const name = 'JS callback ref';
+    const name = jsCallbackRefCaseName;
     final calls = [];
     return RefTestCase(
-      name: name,
-      ref: allowInterop(calls.add),
+      // Use a lambda instead of a tearoff since we want to explicitly verify
+      // a function with a certain argument type.
+      // ignore: unnecessary_lambdas
+      ref: allowInterop((value) => calls.add(value)),
       verifyRefWasUpdated: (actualValue) => expect(calls, [same(actualValue)], reason: _reasonMessage(name)),
       getCurrent: () => calls.single,
-      isJs: true,
+      meta: RefTestCaseMeta(name, RefKind.callback, isJs: true, isStronglyTyped: false),
     );
   }
 
+  static const jsRefObjectCaseName = 'JS ref object';
+
   RefTestCase createJsRefObjectCase() {
-    const name = 'JS ref object';
+    const name = jsRefObjectCaseName;
     final ref = React.createRef();
     return RefTestCase(
-      name: name,
       ref: ref,
       verifyRefWasUpdated: (actualValue) => expect(ref.current, same(actualValue), reason: _reasonMessage(name)),
       getCurrent: () => ref.current,
-      isJs: true,
+      meta: RefTestCaseMeta(name, RefKind.object, isJs: true, isStronglyTyped: false),
     );
   }
 
@@ -174,12 +198,45 @@ class RefTestCaseCollection<T> {
   List<RefTestCase> createAllCases() => [
         createUntypedCallbackRefCase(),
         createTypedCallbackRefCase(),
+        createUntypedRefObjectCase(),
         createRefObjectCase(),
         if (includeJsCallbackRefCase) createJsCallbackRefCase(),
         createJsRefObjectCase(),
       ];
 
-  RefTestCase createCaseByName(String name) => createAllCases().singleWhere((c) => c.name == name);
+  RefTestCase createCaseByName(String name) => createAllCases().singleWhere((c) => c.meta.name == name);
 
-  List<String> get allTestCaseNames => createAllCases().map((c) => c.name).toList();
+  RefTestCaseMeta testCaseMetaByName(String name) => createCaseByName(name).meta;
+
+  List<String> get allTestCaseNames => allTestCaseMetas.map((m) => m.name).toList();
+
+  List<RefTestCaseMeta> get allTestCaseMetas => createAllCases().map((c) => c.meta).toList();
+}
+
+class RefTestCaseMeta {
+  final String name;
+
+  final RefKind kind;
+
+  /// Whether the ref is a non-Dart object, such as a ref originating from outside of Dart code
+  /// or a JS-converted Dart ref.
+  final bool isJs;
+
+  final bool isStronglyTyped;
+
+  const RefTestCaseMeta(this.name, this.kind, {this.isJs = false, this.isStronglyTyped = false});
+
+  @override
+  String toString() => '$name ($kind, isJs: $isJs, isStronglyTyped: $isStronglyTyped)';
+}
+
+enum RefKind {
+  object,
+  callback,
+}
+
+extension RefKindBooleans on RefKind {
+  bool get isObject => this == RefKind.object;
+
+  bool get isCallback => this == RefKind.callback;
 }

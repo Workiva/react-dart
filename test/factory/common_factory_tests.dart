@@ -394,7 +394,7 @@ void refTests<T>(
         rtu.renderIntoDocument(factory({
           'ref': testCase.ref,
         }));
-        final verifyFunction = testCase.isJs ? verifyJsRefValue! : verifyRefValue;
+        final verifyFunction = testCase.meta.isJs ? verifyJsRefValue! : verifyRefValue;
         verifyFunction(testCase.getCurrent());
       });
     }
@@ -417,7 +417,7 @@ void refTests<T>(
         rtu.renderIntoDocument(ForwardRefTestComponent({
           'ref': testCase.ref,
         }));
-        final verifyFunction = testCase.isJs ? verifyJsRefValue! : verifyRefValue;
+        final verifyFunction = testCase.meta.isJs ? verifyJsRefValue! : verifyRefValue;
         verifyFunction(testCase.getCurrent());
       });
     }
@@ -438,8 +438,8 @@ void refTests<T>(
       }));
 
       for (final testCase in testCases) {
-        final verifyFunction = testCase.isJs ? verifyJsRefValue! : verifyRefValue;
-        final valueToVerify = testCase.isJs ? refSpy.jsRef.current : refSpy.current;
+        final verifyFunction = testCase.meta.isJs ? verifyJsRefValue! : verifyRefValue;
+        final valueToVerify = testCase.meta.isJs ? refSpy.jsRef.current : refSpy.current;
 
         // Test setup check: verify refValue is correct,
         // which we'll use below to verify refs were updated.
@@ -452,11 +452,10 @@ void refTests<T>(
       test('ReactElement.ref', () {
         final testCases = testCaseCollection.createAllCases().map((testCase) {
           return RefTestCase(
-            name: testCase.name,
             ref: (factory({'ref': testCase.ref}) as ReactElement).ref,
             verifyRefWasUpdated: testCase.verifyRefWasUpdated,
             getCurrent: testCase.getCurrent,
-            isJs: testCase.isJs,
+            meta: testCase.meta,
           );
         }).toList();
 
@@ -471,8 +470,8 @@ void refTests<T>(
         }));
 
         for (final testCase in testCases) {
-          final verifyFunction = testCase.isJs ? verifyJsRefValue! : verifyRefValue;
-          final valueToVerify = testCase.isJs ? refSpy.jsRef.current : refSpy.current;
+          final verifyFunction = testCase.meta.isJs ? verifyJsRefValue! : verifyRefValue;
+          final valueToVerify = testCase.meta.isJs ? refSpy.jsRef.current : refSpy.current;
 
           // Test setup check: verify refValue is correct,
           // which we'll use below to verify refs were updated.
@@ -502,8 +501,8 @@ void refTests<T>(
               'ref': testCase.ref,
             }));
 
-            final verifyFunction = testCase.isJs ? verifyJsRefValue! : verifyRefValue;
-            final valueToVerify = testCase.isJs ? refSpy.jsRef.current : refSpy.current;
+            final verifyFunction = testCase.meta.isJs ? verifyJsRefValue! : verifyRefValue;
+            final valueToVerify = testCase.meta.isJs ? refSpy.jsRef.current : refSpy.current;
 
             // Test setup check: verify refValue is correct,
             // which we'll use below to verify refs were updated.
