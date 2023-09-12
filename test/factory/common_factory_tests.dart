@@ -362,7 +362,7 @@ void domEventHandlerWrappingTests(ReactComponentFactoryProxy factory) {
 /// JS (e.g., react.Component vs ReactComponent for class based-components).
 /// If omitted, it defaults to [verifyRefValue].
 /// It will be called with the actual ref value for JS refs, (e.g., JS ref objects as opposed to Dart objects)
-void refTests<T>(
+void refTests<T extends Object>(
   ReactComponentFactoryProxy factory, {
   required void Function(dynamic refValue) verifyRefValue,
   void Function(dynamic refValue)? verifyJsRefValue,
@@ -405,6 +405,10 @@ void refTests<T>(
       verifyRefValue(renderedInstance.dartComponent!.ref('test'));
     });
   });
+
+  test('asserts that callback ref arguments are nullable on ReactElement creation', () {
+    expect(() => factory({'ref': nonNullableCallbackRef}), throwsNonNullableCallbackRefAssertionError);
+  }, tags: 'no-dart2js');
 
   group('forwardRef2 function passes a ref through a component to one of its children, when the ref is a:', () {
     for (final name in testCaseCollection.allTestCaseNames) {

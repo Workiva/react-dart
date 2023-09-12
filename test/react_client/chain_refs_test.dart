@@ -32,7 +32,7 @@ main() {
     });
 
     group('chainRefList', () {
-      // Chaining is tested functionally in refTests with each component type.
+      // Chaining is tested functionally in refTests with each component type and each ref type.
 
       group('skips chaining and passes through arguments when', () {
         test('the list is empty', () {
@@ -73,6 +73,10 @@ main() {
         // test JS interop objects since type-checking anonymous interop objects
         test('non-createRef JS interop objects', () {
           expect(() => chainRefList([testRef, JsType()]), throwsA(isA<AssertionError>()));
+        });
+
+        test('callback refs with non-nullable arguments', () {
+          expect(() => chainRefList([testRef, nonNullableCallbackRef]), throwsNonNullableCallbackRefAssertionError);
         });
       }, tags: 'no-dart2js');
 

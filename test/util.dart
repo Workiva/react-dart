@@ -13,6 +13,7 @@ import 'package:react/react_client/js_backed_map.dart';
 import 'package:react/react_client/react_interop.dart';
 import 'package:react/react_test_utils.dart' as rtu;
 import 'package:react/src/js_interop_util.dart';
+import 'package:react/src/react_client/factory_util.dart';
 import 'package:test/test.dart';
 
 Map getProps(dynamic elementOrComponent) {
@@ -91,7 +92,7 @@ class RefTestCase {
 
 /// A collection of methods that create [RefTestCase]s, combined into a class so that they can easily share a
 /// generic parameter [T] (the type of the Dart ref value).
-class RefTestCaseCollection<T> {
+class RefTestCaseCollection<T extends Object> {
   final bool includeJsCallbackRefCase;
 
   RefTestCaseCollection({this.includeJsCallbackRefCase = true}) {
@@ -240,3 +241,8 @@ extension RefKindBooleans on RefKind {
 
   bool get isCallback => this == RefKind.callback;
 }
+
+final throwsNonNullableCallbackRefAssertionError = throwsA(isA<AssertionError>()
+    .having((e) => e.message, 'message', allOf(contains(nonNullableCallbackRefArgMessage))));
+
+void nonNullableCallbackRef(Object ref) {}
