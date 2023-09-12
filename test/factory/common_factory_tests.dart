@@ -280,7 +280,7 @@ void domEventHandlerWrappingTests(ReactComponentFactoryProxy factory) {
         render(react.div({
           'ref': divRef,
           'onClick': (react.SyntheticMouseEvent e) => event = e,
-        }) as ReactElement);
+        }));
         rtu.Simulate.click(divRef);
 
         final dummyEvent = event;

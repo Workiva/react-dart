@@ -4,8 +4,7 @@ library react_test_utils_test;
 import 'dart:html';
 import 'dart:js_util';
 
-import 'package:react/react.dart' hide div, span;
-import 'package:react/react.dart' as react;
+import 'package:react/react.dart';
 import 'package:react/react_client.dart';
 import 'package:react/react_test_utils.dart';
 import 'package:test/test.dart';
@@ -14,10 +13,6 @@ import 'react_client/event_helpers_test.dart';
 import 'test_components.dart' as component1;
 import 'test_components2.dart' as component2;
 import 'util.dart';
-
-// Public APIs with tightened types to help fix implicit casts
-final div = react.div as ReactDomComponentFactoryProxy;
-final span = react.span as ReactDomComponentFactoryProxy;
 
 void main() {
   testUtils(
