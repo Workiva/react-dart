@@ -57,7 +57,7 @@ external dynamic createArray();
 Object jsifyAndAllowInteropAsObject(Object value) => jsifyAndAllowInterop(value) as Object;
 
 main() {
-  group('jsifyAndAllowInteropAsObject', () {
+  group('jsifyAndAllowInterop', () {
     test('converts a List', () {
       final list = [1, 2, 3, 4, 5, 6, 7, 8];
       final array = jsifyAndAllowInteropAsObject(list);
