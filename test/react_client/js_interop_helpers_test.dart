@@ -90,6 +90,15 @@ main() {
       }
     });
 
+    test('converts a Map with `null` as a key (which gets coerced to a string)', () {
+      final map = {'a': 1, null: 2};
+      final jsMap = jsifyAndAllowInteropAsObject(map);
+      expect(jsMap is List, isFalse);
+      expect(jsMap is Map, isFalse);
+      checkMap(jsMap, 'a', map['a']!);
+      checkMap(jsMap, 'null', map[null]!);
+    });
+
     test('converts nested Functions', () {
       function() {}
       final converted = jsifyAndAllowInteropAsObject({'function': function});
