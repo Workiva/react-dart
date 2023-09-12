@@ -257,7 +257,7 @@ void testUtils({
     });
 
     test('returns false when element is not a composite component (created with React.createClass())', () {
-      final component = renderIntoDocument(div({}) as ReactElement);
+      final component = renderIntoDocument(div({}));
 
       expect(isCompositeComponent(component), isFalse);
     });

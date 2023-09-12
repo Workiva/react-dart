@@ -456,7 +456,7 @@ void refTests<T extends Object>(
       test('ReactElement.ref', () {
         final testCases = testCaseCollection.createAllCases().map((testCase) {
           return RefTestCase(
-            ref: (factory({'ref': testCase.ref}) as ReactElement).ref,
+            ref: factory({'ref': testCase.ref}).ref,
             verifyRefWasUpdated: testCase.verifyRefWasUpdated,
             getCurrent: testCase.getCurrent,
             meta: testCase.meta,
