@@ -1352,7 +1352,7 @@ mixin TypedSnapshot<TSnapshot> {
 }
 
 /// Creates a ReactJS virtual DOM instance ([ReactElement] on the client).
-abstract class ReactComponentFactoryProxy implements Function {
+abstract class ReactComponentFactoryProxy {
   /// The type of component created by this factory.
   get type;
 
