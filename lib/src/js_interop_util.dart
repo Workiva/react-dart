@@ -37,3 +37,15 @@ abstract class Promise {
 
   external Promise then(dynamic Function(dynamic value) onFulfilled, [dynamic Function(dynamic error) onRejected]);
 }
+
+/// Converts an arbitrary [key] into a value that can be passed into `dart:js_util` methods
+/// such as [getProperty] and [setProperty], which only accept non-nullable
+/// `name` arguments.
+///
+/// This function converts `null` to the string `'null'`, which is what JavaScript does under
+/// the hood when `null` is used as an object property. Source: the ES6 spec:
+/// - https://262.ecma-international.org/6.0/#sec-property-accessors-runtime-semantics-evaluation
+/// - https://262.ecma-international.org/6.0/#sec-topropertykey
+///
+/// See also: https://github.com/dart-lang/sdk/issues/45219
+Object nonNullableJsPropertyName(Object? key) => key ?? 'null';

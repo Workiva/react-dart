@@ -6,6 +6,7 @@ import 'dart:core';
 import 'dart:js_util' as js_util;
 
 import 'package:js/js.dart';
+import 'package:react/src/js_interop_util.dart';
 import 'package:react/src/react_client/private_utils.dart';
 
 /// A view into a JavaScript object ([jsObject]) that conforms to the Dart [Map] interface.
@@ -13,11 +14,10 @@ import 'package:react/src/react_client/private_utils.dart';
 /// The keys are all enumerable properties of the [jsObject], though non-enumerable properties may also be accessed.
 /// For this reason, it is recommended to use plain, simple JavaScript objects.
 ///
-/// Keys should be of primitive types (String, num, bool, null), as any non-primitive Dart objects will be
-/// canonicalized to their JavaScript string representations upon read/write.
-/// For performance reasons, keys are not validated.
+/// Keys should be strings, as any other object (primitive or non-primitive), will be coerced by JavaScript
+/// to a string upon read/write. This includes `null`, which gets coerced to the string `'null'`.
 ///
-/// `null` is allowed as a key.
+/// For performance reasons, keys are not validated.
 ///
 /// Iteration order is arbitrary, and is based on the current browser's implementation.
 ///
@@ -38,7 +38,7 @@ class JsBackedMap extends MapBase<dynamic, dynamic> {
   factory JsBackedMap.fromJs(JsMap jsOther) => JsBackedMap()..addAllFromJs(jsOther);
 
   // Private helpers with narrower typing than we want to expose, for use in other methods
-  List<dynamic> get _keys => _Object.keys(jsObject);
+  List<String> get _keys => objectKeys(jsObject);
   // Use keys to access the value instead oof `Object.values` since MSIE 11 doesn't support it
   List<dynamic> get _values => _keys.map((key) => this[key]).toList();
 
@@ -58,14 +58,13 @@ class JsBackedMap extends MapBase<dynamic, dynamic> {
   // ----------------------------------
 
   @override
-  dynamic/*?*/ operator [](Object? key) {
-    // Cast key as dynamic to work around https://github.com/dart-lang/sdk/issues/45219
-    return DartValueWrapper.unwrapIfNeeded(js_util.getProperty(jsObject, key as dynamic));
+  dynamic /*?*/ operator [](Object? key) {
+    return DartValueWrapper.unwrapIfNeeded(js_util.getProperty(jsObject, nonNullableJsPropertyName(key)));
   }
 
   @override
   void operator []=(dynamic key, dynamic value) {
-    js_util.setProperty(jsObject, key, DartValueWrapper.wrapIfNeeded(value));
+    js_util.setProperty(jsObject, nonNullableJsPropertyName(key), DartValueWrapper.wrapIfNeeded(value));
   }
 
   @override
@@ -100,8 +99,7 @@ class JsBackedMap extends MapBase<dynamic, dynamic> {
   }
 
   @override
-  // Cast key as dynamic to work around https://github.com/dart-lang/sdk/issues/45219
-  bool containsKey(Object? key) => js_util.hasProperty(jsObject, key as dynamic);
+  bool containsKey(Object? key) => js_util.hasProperty(jsObject, nonNullableJsPropertyName(key));
 
   @override
   Iterable<dynamic> get values => _values;
@@ -159,7 +157,6 @@ JsMap jsBackingMapOrJsCopy(Map map) {
 @JS('Object')
 abstract class _Object {
   external static void assign(JsMap to, JsMap from);
-  external static List<dynamic> keys(JsMap object);
 }
 
 @JS('Reflect')
