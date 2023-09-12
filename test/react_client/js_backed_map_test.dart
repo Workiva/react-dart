@@ -19,6 +19,34 @@ main() {
       }
 
       sharedTypeTests(testTypeValue);
+
+      group('works as expected with different key types, coercing non-string keys to JS strings:', () {
+        const testValue = 'testValue';
+
+        void sharedTest(dynamic key, String expectedKeyString) {
+          final jsBackedMap = JsBackedMap();
+          jsBackedMap[key] = testValue;
+          expect(jsBackedMap.keys, [expectedKeyString]);
+          expect(jsBackedMap[key], testValue);
+          expect(jsBackedMap[expectedKeyString], testValue);
+          // We want to explicitly test containsKey implementation instead of using the `contains` matcher,
+          // which may or may not call that method under the hood.
+          expect(jsBackedMap.containsKey(key), isTrue);
+          expect(jsBackedMap.containsKey(expectedKeyString), isTrue);
+          jsBackedMap.remove(key);
+          expect(jsBackedMap, isEmpty);
+        }
+
+        test('string', () => sharedTest('testKey', 'testKey'));
+
+        test('null', () => sharedTest(null, 'null'));
+
+        test('numbers', () => sharedTest(123, '123'));
+
+        test('booleans', () => sharedTest(true, 'true'));
+
+        test('other objects', () => sharedTest(TestObject(), TestObject().toString()));
+      });
     });
 
     group('constructor', () {
@@ -179,6 +207,8 @@ main() {
     });
   });
 }
+
+class TestObject {}
 
 @JS('Object.freeze')
 external void _objectFreeze(JsMap object);
