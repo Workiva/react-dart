@@ -172,7 +172,7 @@ void sharedErrorBoundaryComponentNameTests() {
 
     test('Component components', () {
       expectRenderErrorWithComponentName(
-        _ThrowingComponent({}),
+        _ThrowingComponent({}) as ReactElement,
         expectedComponentName: r'DisplayName$_ThrowingComponent',
       );
     });

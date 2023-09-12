@@ -70,7 +70,7 @@ void testUtils({
     late Element domNode;
 
     setUp(() {
-      component = renderIntoDocument(eventComponent({}));
+      component = renderIntoDocument(eventComponent({})) as Object;
       domNode = findDomNode(component);
       expect(domNode.text, equals(''));
     });
@@ -231,14 +231,14 @@ void testUtils({
 
   test('findRenderedDOMComponentWithClass on a Component${isComponent2 ? "2" : ""}', () {
     final component = renderIntoDocument(sampleComponent({}));
-    final spanComponent = findRenderedDOMComponentWithClass(component, 'span1');
+    final spanComponent = findRenderedDOMComponentWithClass(component, 'span1') as Element;
 
     expect(getProperty(spanComponent, 'tagName'), equals('SPAN'));
   });
 
   test('findRenderedDOMComponentWithTag on a Component${isComponent2 ? "2" : ""}', () {
     final component = renderIntoDocument(sampleComponent({}));
-    final h1Component = findRenderedDOMComponentWithTag(component, 'h1');
+    final h1Component = findRenderedDOMComponentWithTag(component, 'h1') as Element;
 
     expect(getProperty(h1Component, 'tagName'), equals('H1'));
   });
@@ -329,22 +329,22 @@ void testUtils({
       span({})
     ]));
 
-    final results = scryRenderedDOMComponentsWithClass(component, 'divClass');
+    final results = scryRenderedDOMComponentsWithClass(component, 'divClass').cast<Element>();
 
     expect(results.length, 2);
-    expect(getProperty(results[0], 'tagName'), equals('DIV'));
-    expect(getProperty(results[1], 'tagName'), equals('DIV'));
+    expect(results[0].tagName, equals('DIV'));
+    expect(results[1].tagName, equals('DIV'));
   });
 
   test('scryRenderedDOMComponentsWithTag', () {
     final component = renderIntoDocument(wrapperComponent({}, [div({}), div({}), span({})]));
 
-    final results = scryRenderedDOMComponentsWithTag(component, 'div');
+    final results = scryRenderedDOMComponentsWithTag(component, 'div').cast<Element>();
 
     expect(results.length, 3);
-    expect(getProperty(results[0], 'tagName'), equals('DIV'));
-    expect(getProperty(results[1], 'tagName'), equals('DIV'));
-    expect(getProperty(results[2], 'tagName'), equals('DIV'));
+    expect(results[0].tagName, equals('DIV'));
+    expect(results[1].tagName, equals('DIV'));
+    expect(results[2].tagName, equals('DIV'));
   });
 
   test('renderIntoDocument with a Component${isComponent2 ? "2" : ""}', () {

@@ -6,7 +6,7 @@ import 'dart:js_util';
 import 'package:js/js.dart';
 
 @JS('Object.keys')
-external List<Object?> objectKeys(Object object);
+external List<String> objectKeys(Object object);
 
 @JS()
 @anonymous

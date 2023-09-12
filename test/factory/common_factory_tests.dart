@@ -638,4 +638,4 @@ extension on String {
 }
 
 @JS('React.addons.TestUtils.Simulate')
-external dynamic get _Simulate;
+external Object get _Simulate;

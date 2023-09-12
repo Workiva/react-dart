@@ -34,10 +34,10 @@ T validateJsApiThenReturn<T>(T Function() computeReturn) {
 @Deprecated('7.0.0')
 Map<String, dynamic> unjsifyContext(InteropContextValue interopContext) {
   // TODO consider using `contextKeys` for this if perf of objectKeys is bad.
-  return Map.fromIterable(objectKeys(interopContext), value: (key) {
-    final internal = getProperty(interopContext, key) as ReactDartContextInternal?;
-    return internal?.value;
-  });
+  return {
+    for (final key in objectKeys(interopContext))
+      key: (getProperty(interopContext, key) as ReactDartContextInternal?)?.value
+  };
 }
 
 /// Validates that React JS has been loaded and its APIs made available on the window,

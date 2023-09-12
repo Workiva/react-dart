@@ -4,7 +4,6 @@
 library react.test.util;
 
 import 'dart:html';
-import 'dart:js_util' show getProperty;
 
 import 'package:js/js.dart';
 import 'package:react/react.dart' as react;
@@ -12,14 +11,17 @@ import 'package:react/react_dom.dart' as react_dom;
 import 'package:react/react_client/js_backed_map.dart';
 import 'package:react/react_client/react_interop.dart';
 import 'package:react/react_test_utils.dart' as rtu;
-import 'package:react/src/js_interop_util.dart';
 import 'package:react/src/react_client/factory_util.dart';
 import 'package:test/test.dart';
 
 Map getProps(dynamic elementOrComponent) {
-  final props = elementOrComponent.props;
-
-  return Map.fromIterable(objectKeys(props), value: (key) => getProperty(props, key));
+  InteropProps props;
+  if (React.isValidElement(elementOrComponent)) {
+    props = (elementOrComponent as ReactElement).props;
+  } else {
+    props = (elementOrComponent as ReactComponent).props;
+  }
+  return JsBackedMap.backedBy(props);
 }
 
 bool isDartComponent1(ReactElement element) =>
