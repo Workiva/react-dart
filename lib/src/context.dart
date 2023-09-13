@@ -106,15 +106,22 @@ Context<TValue> createContext<TValue>([
   TValue? defaultValue,
   int Function(TValue? currentValue, TValue? nextValue)? calculateChangedBits,
 ]) {
-  int jsifyCalculateChangedBitsArgs(currentValue, nextValue) {
-    return calculateChangedBits!(
-      ContextHelpers.unjsifyNewContext(currentValue) as TValue?,
-      ContextHelpers.unjsifyNewContext(nextValue) as TValue?,
-    );
+  final jsDefaultValue = ContextHelpers.jsifyNewContext(defaultValue);
+
+  ReactContext JSContext;
+  if (calculateChangedBits != null) {
+    int jsifyCalculateChangedBitsArgs(currentValue, nextValue) {
+      return calculateChangedBits(
+        ContextHelpers.unjsifyNewContext(currentValue) as TValue?,
+        ContextHelpers.unjsifyNewContext(nextValue) as TValue?,
+      );
+    }
+
+    JSContext = React.createContext(jsDefaultValue, allowInterop(jsifyCalculateChangedBitsArgs));
+  } else {
+    JSContext = React.createContext(jsDefaultValue);
   }
 
-  final JSContext = React.createContext(ContextHelpers.jsifyNewContext(defaultValue),
-      calculateChangedBits != null ? allowInterop(jsifyCalculateChangedBitsArgs) : null);
   return Context(
     ReactJsContextComponentFactoryProxy(JSContext.Provider, isProvider: true),
     ReactJsContextComponentFactoryProxy(JSContext.Consumer, isConsumer: true),
