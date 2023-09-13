@@ -685,7 +685,7 @@ abstract class Component2 implements Component {
     return value;
   }
 
-  Component2Bridge get _bridge => Component2Bridge.forComponent(this);
+  Component2Bridge get _bridge => Component2Bridge.forComponent(this)!;
 
   /// Triggers a rerender with new state obtained by shallow-merging [newState] into the current [state].
   ///

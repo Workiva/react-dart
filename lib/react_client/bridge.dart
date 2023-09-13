@@ -42,7 +42,7 @@ abstract class Component2Bridge {
   /// `ReactDartComponentFactoryProxy2`, and not when manually instantiated.
   ///
   /// __For internal/advanced use only.__
-  static Component2Bridge forComponent(Component2 component) => bridgeForComponent[component]!;
+  static Component2Bridge? forComponent(Component2 component) => bridgeForComponent[component];
 
   void setState(Component2 component, Map? newState, SetStateCallback? callback);
   void setStateWithUpdater(Component2 component, StateUpdaterCallback stateUpdater, SetStateCallback? callback);
