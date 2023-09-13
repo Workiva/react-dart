@@ -12,7 +12,6 @@ class PropValidatorInfo {
   final String location;
   final String? propFullName;
 
-  // FIXME this is a public API; can we make these required?
   const PropValidatorInfo({
     required this.propName,
     required this.componentName,
