@@ -1,4 +1,4 @@
-FROM drydock-prod.workiva.net/workiva/dart2_base_image:1 as dart2
+FROM drydock-prod.workiva.net/workiva/dart2_base_image:0.0.0-dart2.18.7gha3 as dart2
 
 RUN dart --version
 
