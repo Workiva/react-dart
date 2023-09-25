@@ -1,3 +1,6 @@
+## [6.2.1](https://github.com/Workiva/react-dart/compare/6.2.0...6.2.1)
+- [#366] Fix lints and eliminate most implicit casts 
+
 ## [6.2.0](https://github.com/cleandart/react-dart/compare/6.1.8...6.2.0)
 - [#357] Export Suspense component
 - [#354] Raise analyzer minimum & unpin meta
