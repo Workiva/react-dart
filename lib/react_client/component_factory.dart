@@ -74,10 +74,8 @@ mixin JsBackedMapComponentFactoryMixin on ReactComponentFactoryProxy {
   static JsMap generateExtendedJsProps(Map props) => generateJsProps(props, wrapWithJsify: false);
 }
 
-/// Use [ReactDartComponentFactoryProxy2] instead by calling [registerComponent2].
-///
-/// Will be removed when [Component] is removed in the `7.0.0` release.
-@Deprecated('7.0.0')
+@Deprecated('Only used with the deprecated Component base class and not Component2,'
+    ' which uses ReactDartComponentFactoryProxy2. Will be removed along with Component.')
 class ReactDartComponentFactoryProxy<TComponent extends Component> extends ReactComponentFactoryProxy {
   /// The ReactJS class used as the type for all [ReactElement]s built by
   /// this factory.
