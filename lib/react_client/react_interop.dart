@@ -24,6 +24,7 @@ import 'package:react/src/js_interop_util.dart';
 import 'package:react/src/react_client/dart2_interop_workaround_bindings.dart';
 
 typedef ReactJsComponentFactory = ReactElement Function(dynamic props, dynamic children);
+@Deprecated('For internal use only. Will be made private in 7.0.0.')
 typedef JsPropValidator = dynamic Function(
     JsMap props, String propName, String componentName, String location, String propFullName, String secret);
 
@@ -706,6 +707,7 @@ external void markChildValidated(child);
 /// Mark each child in [children] as validated so that React doesn't emit key warnings.
 ///
 /// ___Only for use with variadic children.___
+@Deprecated('For internal use only. Will be made private in 7.0.0.')
 void markChildrenValidated(List<dynamic> children) {
   for (final child in children) {
     // Use `isValidElement` since `is ReactElement` doesn't behave as expected.
@@ -730,6 +732,7 @@ external ReactClass createReactDartComponentClass(
 ///
 /// See `_ReactDartInteropStatics2.staticsForJs`]` for an example implementation.
 @JS('_createReactDartComponentClass2')
+@Deprecated('For internal use only. Will be made private in 7.0.0.')
 external ReactClass createReactDartComponentClass2(JsMap dartInteropStatics, ComponentStatics2 componentStatics,
     [JsComponentConfig2 jsConfig]);
 
@@ -784,6 +787,7 @@ class ReactDartInteropStatics {
 /// passes it to certain methods in [ReactDartInteropStatics].
 ///
 /// See [ReactDartInteropStatics], [createReactDartComponentClass].
+@Deprecated('For internal use only. Will be made private in 7.0.0.')
 class ComponentStatics {
   final ComponentFactory<Component> componentFactory;
   ComponentStatics(this.componentFactory);
@@ -795,6 +799,7 @@ class ComponentStatics {
 /// passes it to certain methods in `ReactDartInteropStatics2`.
 ///
 /// See `ReactDartInteropStatics2`, [createReactDartComponentClass2].
+@Deprecated('For internal use only. Will be made private in 7.0.0.')
 class ComponentStatics2 {
   final ComponentFactory<Component2> componentFactory;
   final Component2 instanceForStaticMethods;
@@ -829,6 +834,7 @@ class JsComponentConfig {
 
 /// Additional configuration passed to [createReactDartComponentClass2]
 /// that needs to be directly accessible by that JS code.
+@Deprecated('For internal use only. Will be made private in 7.0.0.')
 @JS()
 @anonymous
 class JsComponentConfig2 {
