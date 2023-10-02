@@ -98,11 +98,13 @@ class Ref<T> {
   /// A JavaScript ref object returned by [React.createRef].
   final JsRef jsRef;
 
+  @Deprecated('Use createRef instead. Will be removed in 7.0.0.')
   Ref() : jsRef = React.createRef();
 
   /// Constructor for [useRef], calls [React.useRef] to initialize [current] to [initialValue].
   ///
   /// See: <https://reactjs.org/docs/hooks-reference.html#useref>.
+  @Deprecated('Use useRef or useRefInit instead. Will be removed in 7.0.0.')
   Ref.useRefInit(T initialValue) : jsRef = React.useRef(initialValue);
 
   Ref.fromJs(this.jsRef);
@@ -650,6 +652,9 @@ class InteropProps implements JsMap {
 /// > __For internal/advanced use only.__
 @Deprecated('Only used with the deprecated Component base class and not Component2.')
 class ReactDartComponentInternal {
+  @Deprecated('For internal use only. Will have a required argument in 7.0.0.')
+  ReactDartComponentInternal();
+
   /// For a `ReactElement`, this is the initial props with defaults merged.
   ///
   /// For a `ReactComponent`, this is the props the component was last rendered with,

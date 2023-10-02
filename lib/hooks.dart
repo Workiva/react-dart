@@ -23,6 +23,7 @@ class StateHook<T> {
   /// The second item in the pair returned by [React.useState].
   void Function(dynamic) _setValue;
 
+  @Deprecated('Use useState instead. Will be removed in 7.0.0.')
   StateHook(T initialValue) {
     final result = React.useState(initialValue);
     _value = result[0] as T;
@@ -33,6 +34,7 @@ class StateHook<T> {
   /// initialize [_value] to the return value of [init].
   ///
   /// See: <https://reactjs.org/docs/hooks-reference.html#lazy-initial-state>.
+  @Deprecated('Use useStateLazy instead. Will be removed in 7.0.0.')
   StateHook.lazy(T Function() init) {
     final result = React.useState(allowInterop(init));
     _value = result[0] as T;
@@ -171,6 +173,7 @@ class ReducerHook<TState, TAction, TInit> {
   /// The second item in the pair returned by [React.useReducer].
   void Function(TAction) _dispatch;
 
+  @Deprecated('Use useReducer instead. Will be removed in 7.0.0.')
   ReducerHook(TState Function(TState state, TAction action) reducer, TState initialState) {
     final result = React.useReducer(allowInterop(reducer), initialState);
     _state = result[0] as TState;
@@ -181,6 +184,7 @@ class ReducerHook<TState, TAction, TInit> {
   /// initialize [_state] to the return value of [init(initialArg)].
   ///
   /// See: <https://reactjs.org/docs/hooks-reference.html#lazy-initialization>.
+  @Deprecated('Use useReducerLazy instead. Will be removed in 7.0.0.')
   ReducerHook.lazy(
       TState Function(TState state, TAction action) reducer, TInit initialArg, TState Function(TInit) init) {
     final result = React.useReducer(allowInterop(reducer), initialArg, allowInterop(init));
