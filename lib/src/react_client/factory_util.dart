@@ -70,8 +70,10 @@ void convertRefValue2(
 }
 
 const nonNullableCallbackRefArgMessage =
-    'Arguments to callback ref functions must not be non-nullable, Since React null to callback refs when they\'re detached.'
-    '\nInstead of: `(MyComponent ref) { myComponentRef = ref; }`'
+    'Arguments to callback ref functions must not be non-nullable, since React passes null to callback refs'
+    ' when they\'re detached. For instance, the callback will be called with `null` when the component is unmounted,'
+    ' and also when the owner component rerenders when using a non-memoized callback ref.'
+    '\n\nInstead of: `(MyComponent ref) { myComponentRef = ref; }`'
     '\nDo either:'
     '\n- `(MyComponent? ref) { myComponentRef = ref; }`'
     '\n- `(ref) { myComponentRef = ref as MyComponent?; }';
