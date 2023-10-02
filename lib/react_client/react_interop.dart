@@ -526,7 +526,7 @@ class ReactComponent {
   external Component? get dartComponent;
   // TODO how to make this JsMap without breaking stuff?
   external InteropProps get props;
-  external dynamic/*?*/ get context;
+  external dynamic /*?*/ get context;
   external JsMap? get state;
   external set state(JsMap? value);
   external get refs;
@@ -589,11 +589,11 @@ class InteropProps implements JsMap {
   /// Will be removed alongside `Component` in the `7.0.0` release.
   @Deprecated('7.0.0')
   external ReactDartComponentInternal get internal;
-  external dynamic/*?*/ get key;
-  external dynamic/*?*/ get ref;
+  external dynamic /*?*/ get key;
+  external dynamic /*?*/ get ref;
 
-  external set key(dynamic/*?*/ value);
-  external set ref(dynamic/*?*/ value);
+  external set key(dynamic /*?*/ value);
+  external set ref(dynamic /*?*/ value);
 
   /// __Deprecated.__
   ///

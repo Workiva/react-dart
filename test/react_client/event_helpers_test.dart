@@ -1699,8 +1699,7 @@ main() {
           });
 
           // This case shouldn't happen, but there may be consumers relying on this behavior.
-          test(
-              'when the argument is a non-event JS object casted to SyntheticEvent, and has a null `type` property',
+          test('when the argument is a non-event JS object casted to SyntheticEvent, and has a null `type` property',
               () {
             expect(eventTypeTester(newObject() as SyntheticEvent), isFalse);
           });

@@ -244,7 +244,7 @@ extension RefKindBooleans on RefKind {
   bool get isCallback => this == RefKind.callback;
 }
 
-final throwsNonNullableCallbackRefAssertionError = throwsA(isA<AssertionError>()
-    .having((e) => e.message, 'message', allOf(contains(nonNullableCallbackRefArgMessage))));
+final throwsNonNullableCallbackRefAssertionError = throwsA(
+    isA<AssertionError>().having((e) => e.message, 'message', allOf(contains(nonNullableCallbackRefArgMessage))));
 
 void nonNullableCallbackRef(Object ref) {}

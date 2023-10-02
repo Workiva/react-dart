@@ -71,7 +71,7 @@ class JsBackedMap extends MapBase<dynamic, dynamic> {
   Iterable<dynamic> get keys => _keys;
 
   @override
-  dynamic/*?*/ remove(Object? key) {
+  dynamic /*?*/ remove(Object? key) {
     final value = this[key];
     _Reflect.deleteProperty(jsObject, key);
     return value;

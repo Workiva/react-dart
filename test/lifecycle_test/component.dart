@@ -176,22 +176,19 @@ class _LifecycleTest extends react.Component with LifecycleTestHelper {
   componentWillUnmount() => lifecycleCall('componentWillUnmount');
 
   @override
-  componentWillReceiveProps(newProps) =>
-      lifecycleCall('componentWillReceiveProps', arguments: [Map.from(newProps)]);
+  componentWillReceiveProps(newProps) => lifecycleCall('componentWillReceiveProps', arguments: [Map.from(newProps)]);
 
   @override
-  componentWillReceivePropsWithContext(newProps, newContext) =>
-      lifecycleCall('componentWillReceivePropsWithContext',
-          arguments: [Map.from(newProps), Map.from(newContext as Map)]);
+  componentWillReceivePropsWithContext(newProps, newContext) => lifecycleCall('componentWillReceivePropsWithContext',
+      arguments: [Map.from(newProps), Map.from(newContext as Map)]);
 
   @override
   componentWillUpdate(nextProps, nextState) =>
       lifecycleCall('componentWillUpdate', arguments: [Map.from(nextProps), Map.from(nextState)]);
 
   @override
-  componentWillUpdateWithContext(nextProps, nextState, nextContext) =>
-      lifecycleCall('componentWillUpdateWithContext',
-          arguments: [Map.from(nextProps), Map.from(nextState), Map.from(nextContext as Map)]);
+  componentWillUpdateWithContext(nextProps, nextState, nextContext) => lifecycleCall('componentWillUpdateWithContext',
+      arguments: [Map.from(nextProps), Map.from(nextState), Map.from(nextContext as Map)]);
 
   @override
   componentDidUpdate(prevProps, prevState) =>
