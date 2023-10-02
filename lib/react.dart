@@ -1699,8 +1699,11 @@ dynamic li = validateJsApiThenReturn(() => ReactDomComponentFactoryProxy('li'));
 /// The HTML `<link>` `LinkElement`.
 dynamic link = validateJsApiThenReturn(() => ReactDomComponentFactoryProxy('link'));
 
+@Deprecated('Use htmlMain instead. To be removed in react 7.0.0.')
+dynamic main = htmlMain;
+
 /// The HTML `<main>` `Element`.
-dynamic main = validateJsApiThenReturn(() => ReactDomComponentFactoryProxy('main'));
+dynamic htmlMain = validateJsApiThenReturn(() => ReactDomComponentFactoryProxy('main'));
 
 /// The HTML `<map>` `MapElement`.
 dynamic map = validateJsApiThenReturn(() => ReactDomComponentFactoryProxy('map'));
