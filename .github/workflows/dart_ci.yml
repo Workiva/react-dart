@@ -35,7 +35,7 @@ jobs:
         if: always() && steps.install.outcome == 'success'
 
       - name: Verify formatting
-        run: dart format --output=none --line-length=120 --set-exit-if-changed .
+        run: dart run dart_dev format --check
         if: ${{ matrix.sdk == '2.18.7' }}
 
       - name: Analyze project source
