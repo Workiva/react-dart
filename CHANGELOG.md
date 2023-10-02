@@ -1,3 +1,45 @@
+## 7.0.0-wip
+
+- Migrate to null safety
+
+#### Deprecated API removals
+- forwardRef (use forwardRef2 instead)
+- memo (use memo2 instead)
+- main (use htmlMain instead)
+- Ref class constructors: default and `useRefInit` (use useRef/createRef instead)
+- ReducerHook and StateHook class constructors (use hook functions instead).
+- APIs that have been no-ops since react-dart 6.0.0
+    - SyntheticEvent members `persist` and `isPersistent`
+    - unconvertJsEventHandler 
+- APIs that were never intended for public use:
+    - JsPropValidator
+    - dartInteropStatics
+    - ComponentStatics(2)
+    - createReactDartComponentClass(2)
+    - JsComponentConfig(2)
+    - ReactDartInteropStatics
+    - InteropContextValue
+    - markChildrenValidated
+
+#### Other API breakages
+- ReducerHook and StateHook have no public constructors and can no longer be extended
+- Ref.fromJs is now a factory constructor, meaning the Ref class can no longer be extended
+- ReactComponentFactoryProxy.call and .build return type changed from dynamic to ReactElement
+    - This matches the type returned from `build` for all subclasses, which is what’s returned by call, and reflects the type returned at runtime
+    - Has potential to cause some static analysis issues, but for the most part should not affect anything since ReactElement is typically treated as an opaque type
+        - Needs consumer tests
+    - Top-level component factories are typed as ReactDomComponentFactoryProxy instead of being `dynamic`: react.div
+- All PropValidatorInfo arguments are required
+- Changes to public but internal code that should not affect consumers:
+    - ReactDartComponentInternal
+        - Constructor now takes a required argument, props is final
+    - initComponentInternal arguments are typed to reflect runtime assumptions
+- ReactComponentFactoryProxy no longer `implements Function`
+    - This should not be a breakage, since as of Dart 2.0 inheriting from Function has had no effect
+
+#### Potential behavior breakages
+- Component and Component2 members `props`/`state`/`jsThis` are late, will now throw instead of being null if accessed before initialized (e.g., in a constructor, final class field, or static lifecycle method).
+
 ## [6.2.1](https://github.com/Workiva/react-dart/compare/6.2.0...6.2.1)
 - [#366] Fix lints and eliminate most implicit casts 
 
