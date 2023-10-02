@@ -49,7 +49,7 @@ List<String> _filterSkipMethods(Iterable<String> methods) {
 
 /// Creates and returns a new [ReactDartComponentFactoryProxy] from the provided [componentFactory]
 /// which produces a new JS `ReactClass` component class.
-@Deprecated('7.0.0')
+@Deprecated('Migrate to Component2 and use registerComponent2 instead.')
 ReactDartComponentFactoryProxy registerComponent(
   ComponentFactory componentFactory, [
   Iterable<String> skipMethods = const ['getDerivedStateFromError', 'componentDidCatch'],

@@ -23,6 +23,7 @@ class StateHook<T> {
   /// The second item in the pair returned by [React.useState].
   final void Function(dynamic) _setValue;
 
+  @Deprecated('Use useState instead. Will be removed in 7.0.0.')
   factory StateHook(T initialValue) {
     final result = React.useState(initialValue);
     return StateHook._(result[0] as T, result[1] as void Function(dynamic));
@@ -32,6 +33,7 @@ class StateHook<T> {
   /// initialize [_value] to the return value of [init].
   ///
   /// See: <https://reactjs.org/docs/hooks-reference.html#lazy-initial-state>.
+  @Deprecated('Use useStateLazy instead. Will be removed in 7.0.0.')
   factory StateHook.lazy(T Function() init) {
     final result = React.useState(allowInterop(init));
     return StateHook._(result[0] as T, result[1] as void Function(dynamic));
@@ -171,6 +173,7 @@ class ReducerHook<TState, TAction, TInit> {
   /// The second item in the pair returned by [React.useReducer].
   final void Function(TAction) _dispatch;
 
+  @Deprecated('Use useReducer instead. Will be removed in 7.0.0.')
   factory ReducerHook(TState Function(TState state, TAction action) reducer, TState initialState) {
     final result = React.useReducer(allowInterop(reducer), initialState);
     return ReducerHook._(result[0] as TState, result[1] as void Function(TAction));
@@ -180,6 +183,7 @@ class ReducerHook<TState, TAction, TInit> {
   /// initialize [_state] to the return value of [init(initialArg)].
   ///
   /// See: <https://reactjs.org/docs/hooks-reference.html#lazy-initialization>.
+  @Deprecated('Use useReducerLazy instead. Will be removed in 7.0.0.')
   factory ReducerHook.lazy(
       TState Function(TState state, TAction action) reducer, TInit initialArg, TState Function(TInit) init) {
     final result = React.useReducer(allowInterop(reducer), initialArg, allowInterop(init));
@@ -395,8 +399,9 @@ T useContext<T>(Context<T> context) => ContextHelpers.unjsifyNewContext(React.us
 ///
 /// Learn more: <https://reactjs.org/docs/hooks-reference.html#useref>.
 Ref<T?> useRef<T>([
-  @Deprecated('Use `useRefInit` instead to create a ref with an initial value, because unlike this function, '
-      'the generic parameter of the Ref returned by `useRefInit` can be non-nullable.')
+  @Deprecated('Use `useRefInit` instead to create refs with initial values.'
+      ' Since the argument to useRefInit is required, it can be used to create a Ref that holds a non-nullable type,'
+      ' whereas this function can only create Refs with nullable type arguments.')
       T? initialValue,
 ]) =>
     useRefInit(initialValue);

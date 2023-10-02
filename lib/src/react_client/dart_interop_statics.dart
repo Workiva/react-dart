@@ -16,7 +16,7 @@ import 'package:react/src/react_client/private_utils.dart';
 import 'package:react/src/typedefs.dart';
 
 /// The static methods that proxy JS component lifecycle methods to Dart components.
-@Deprecated('7.0.0')
+@Deprecated('Only used with the deprecated Component base class and not Component2.')
 final ReactDartInteropStatics dartInteropStatics = (() {
   final zone = Zone.current;
 
@@ -28,6 +28,8 @@ final ReactDartInteropStatics dartInteropStatics = (() {
           jsThis.setState(newObject());
         }
 
+        // Use a LHS type to ensure this has the same exact static type
+        // (including arguments and return types) as initComponentInternal expects.
         // ignore: omit_local_variable_types, prefer_function_declarations_over_variables
         final RefMethod getRef = (name) {
           final ref = getProperty(jsThis.refs as Object, name);
