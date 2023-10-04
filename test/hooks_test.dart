@@ -510,6 +510,55 @@ main() {
       });
     });
 
+    group('useRefInit -', () {
+      DivElement mountNode;
+      ButtonElement reRenderButton;
+      Ref initRef;
+      StateHook<int> renderIndex;
+
+      setUpAll(() {
+        mountNode = DivElement();
+
+        final UseRefTest = react.registerFunctionComponent((props) {
+          initRef = useRefInit(mountNode);
+
+          renderIndex = useState(1);
+
+          return react.Fragment({}, [
+            react.p({}, [renderIndex.value]),
+            react.button({
+              'ref': (ref) => reRenderButton = ref as ButtonElement,
+              'onClick': (_) => renderIndex.setWithUpdater((prev) => prev + 1)
+            }, [
+              're-render'
+            ]),
+          ]);
+        });
+
+        react_dom.render(UseRefTest({}), mountNode);
+      });
+
+      group('correctly initializes a Ref object', () {
+        test('with current property set to the initial value given', () {
+          expect(initRef, isA<Ref>());
+          expect(initRef.current, mountNode);
+        });
+      });
+
+      group('the returned Ref', () {
+        test('will persist even after the component re-renders', () {
+          expect(renderIndex.value, 1);
+          expect(initRef.current, mountNode, reason: 'Ref object initially created on first render');
+
+          react_test_utils.Simulate.click(reRenderButton);
+
+          expect(renderIndex.value, 2);
+          expect(initRef.current, mountNode,
+              reason: 'useRef returns the same Ref object on every render for the full lifetime of the component');
+        });
+      });
+    });
+
     group('useMemo -', () {
       ReactDartFunctionComponentFactoryProxy UseMemoTest;
       StateHook<int> count;

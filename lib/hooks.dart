@@ -23,6 +23,7 @@ class StateHook<T> {
   /// The second item in the pair returned by [React.useState].
   void Function(dynamic) _setValue;
 
+  @Deprecated('Use useState instead. Will be removed in 7.0.0.')
   StateHook(T initialValue) {
     final result = React.useState(initialValue);
     _value = result[0] as T;
@@ -33,6 +34,7 @@ class StateHook<T> {
   /// initialize [_value] to the return value of [init].
   ///
   /// See: <https://reactjs.org/docs/hooks-reference.html#lazy-initial-state>.
+  @Deprecated('Use useStateLazy instead. Will be removed in 7.0.0.')
   StateHook.lazy(T Function() init) {
     final result = React.useState(allowInterop(init));
     _value = result[0] as T;
@@ -171,6 +173,7 @@ class ReducerHook<TState, TAction, TInit> {
   /// The second item in the pair returned by [React.useReducer].
   void Function(TAction) _dispatch;
 
+  @Deprecated('Use useReducer instead. Will be removed in 7.0.0.')
   ReducerHook(TState Function(TState state, TAction action) reducer, TState initialState) {
     final result = React.useReducer(allowInterop(reducer), initialState);
     _state = result[0] as TState;
@@ -181,6 +184,7 @@ class ReducerHook<TState, TAction, TInit> {
   /// initialize [_state] to the return value of [init(initialArg)].
   ///
   /// See: <https://reactjs.org/docs/hooks-reference.html#lazy-initialization>.
+  @Deprecated('Use useReducerLazy instead. Will be removed in 7.0.0.')
   ReducerHook.lazy(
       TState Function(TState state, TAction action) reducer, TInit initialArg, TState Function(TInit) init) {
     final result = React.useReducer(allowInterop(reducer), initialArg, allowInterop(init));
@@ -392,7 +396,46 @@ T useContext<T>(Context<T> context) => ContextHelpers.unjsifyNewContext(React.us
 /// ```
 ///
 /// Learn more: <https://reactjs.org/docs/hooks-reference.html#useref>.
-Ref<T> useRef<T>([T initialValue]) => Ref.useRefInit(initialValue);
+Ref<T> useRef<T>([
+  // This will eventually be deprecated, but not just yet.
+  // @Deprecated('Use `useRefInit` instead to create refs with initial values.'
+  //     ' Since the argument to useRefInit is required, it can be used to create a Ref that holds a non-nullable type,'
+  //     ' whereas this function can only create Refs with nullable type arguments.')
+  T initialValue,
+]) =>
+    useRefInit(initialValue);
+
+/// Returns a mutable [Ref] object with [Ref.current] property initialized to [initialValue].
+///
+/// Changes to the [Ref.current] property do not cause the containing [DartFunctionComponent] to re-render.
+///
+/// The returned [Ref] object will persist for the full lifetime of the [DartFunctionComponent].
+/// Compare to [createRef] which returns a new [Ref] object on each render.
+///
+/// > __Note:__ there are two [rules for using Hooks](https://reactjs.org/docs/hooks-rules.html):
+/// >
+/// > * Only call Hooks at the top level.
+/// > * Only call Hooks from inside a [DartFunctionComponent].
+///
+/// __Example__:
+///
+/// ```dart
+/// UseRefTestComponent(Map props) {
+///   final countRef = useRefInit(0);
+///
+///   handleClick([_]) {
+///     ref.current = ref.current + 1;
+///     window.alert('You clicked ${ref.current} times!');
+///   }
+///
+///   return react.Fragment({}, [
+///     react.button({'onClick': handleClick}, ['Click me!']),
+///   ]);
+/// }
+/// ```
+///
+/// Learn more: <https://reactjs.org/docs/hooks-reference.html#useref>.
+Ref<T> useRefInit<T>(T initialValue) => Ref.useRefInit(initialValue);
 
 /// Returns a memoized version of the return value of [createFunction].
 ///
