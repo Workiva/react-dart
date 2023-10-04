@@ -92,6 +92,7 @@ Ref<T?> createRef<T>() => Ref<T?>.fromJs(React.createRef());
 /// will be available via [current].
 ///
 /// See [createRef] for usage examples and more info.
+@sealed
 class Ref<T> {
   /// A JavaScript ref object returned by [React.createRef].
   final JsRef jsRef;

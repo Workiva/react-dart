@@ -22,8 +22,7 @@
     - markChildrenValidated
 
 #### Other API breakages
-- ReducerHook and StateHook have no public constructors and can no longer be extended
-- Ref.fromJs is now a factory constructor, meaning the Ref class can no longer be extended
+- `ReducerHook`, `StateHook`, and `Ref` are now `@sealed` and may not be inherited from
 - ReactComponentFactoryProxy.call and .build return type changed from dynamic to ReactElement
     - This matches the type returned from `build` for all subclasses, which is what’s returned by call, and reflects the type returned at runtime
     - Has potential to cause some static analysis issues, but for the most part should not affect anything since ReactElement is typically treated as an opaque type

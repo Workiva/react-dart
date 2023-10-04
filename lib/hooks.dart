@@ -2,6 +2,7 @@
 library hooks;
 
 import 'package:js/js.dart';
+import 'package:meta/meta.dart';
 import 'package:react/react.dart';
 import 'package:react/react_client/react_interop.dart';
 
@@ -16,6 +17,7 @@ import 'package:react/react_client/react_interop.dart';
 /// > * Only call Hooks from inside a [DartFunctionComponent].
 ///
 /// Learn more: <https://reactjs.org/docs/hooks-state.html>.
+@sealed
 class StateHook<T> {
   /// The first item of the pair returned by [React.useState].
   final T _value;
@@ -156,6 +158,7 @@ void useEffect(dynamic Function() sideEffect, [List<Object?>? dependencies]) {
 /// > * Only call Hooks from inside a [DartFunctionComponent].
 ///
 /// Learn more: <https://reactjs.org/docs/hooks-reference.html#usereducer>.
+@sealed
 class ReducerHook<TState, TAction, TInit> {
   /// The first item of the pair returned by [React.useReducer].
   final TState _state;
