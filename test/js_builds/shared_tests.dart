@@ -7,6 +7,7 @@ import 'dart:js_util';
 
 import 'package:js/js.dart';
 import 'package:react/react.dart' as react;
+import 'package:react/react_client/component_factory.dart';
 import 'package:react/react_dom.dart' as react_dom;
 import 'package:react/react_client/react_interop.dart';
 import 'package:test/test.dart';
@@ -172,7 +173,7 @@ void sharedErrorBoundaryComponentNameTests() {
 
     test('Component components', () {
       expectRenderErrorWithComponentName(
-        _ThrowingComponent({}) as ReactElement,
+        _ThrowingComponent({}),
         expectedComponentName: r'DisplayName$_ThrowingComponent',
       );
     });
@@ -220,7 +221,8 @@ class _ErrorBoundaryComponent extends react.Component2 {
   }
 }
 
-final _ThrowingComponent = react.registerComponent(() => _ThrowingComponentComponent());
+final _ThrowingComponent =
+    react.registerComponent(() => _ThrowingComponentComponent()) as ReactDartComponentFactoryProxy;
 
 class _ThrowingComponentComponent extends react.Component {
   @override
