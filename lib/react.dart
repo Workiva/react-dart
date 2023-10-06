@@ -301,6 +301,7 @@ abstract class Component {
   /// > This was never designed for public consumption, and there will be no replacement implementation in `Component2`.
   /// >
   /// > Will be removed when `Component` is removed in a future major release.
+  @Deprecated('For internal use only.')
   void transferComponentState() {
     prevState = state;
     if (_nextState != null) {
