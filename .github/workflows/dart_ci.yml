@@ -15,8 +15,7 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        # Can't run on `stable` (Dart 3) until we're fully null-safe.
-        sdk: [2.18.7, 2.19.6]
+        sdk: [2.18.7, 2.19.6, stable]
     steps:
       - uses: actions/checkout@v2
       - uses: dart-lang/setup-dart@v1
@@ -25,6 +24,13 @@ jobs:
 
       - name: Print Dart SDK version
         run: dart --version
+
+      - name: Delete test code opting out of null safety (for Dart 3 only, since all code must be null-safe)
+        run:
+          rm test/nullable_callback_detection/nullable_callback_detection_unsound_test.dart
+          rm test/nullable_callback_detection/nullable_callback_detection_unsound_test.html
+          rm test/nullable_callback_detection/non_null_safe_refs.dart
+        if: ${{ matrix.sdk == 'stable' }}
 
       - id: install
         name: Install dependencies
