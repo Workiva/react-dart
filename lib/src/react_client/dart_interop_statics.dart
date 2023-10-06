@@ -15,6 +15,8 @@ import 'package:react/react_client/zone.dart';
 import 'package:react/src/react_client/private_utils.dart';
 import 'package:react/src/typedefs.dart';
 
+// ignore_for_file: deprecated_member_use_from_same_package
+
 /// The static methods that proxy JS component lifecycle methods to Dart components.
 @Deprecated('Only used with the deprecated Component base class and not Component2.')
 final ReactDartInteropStatics dartInteropStatics = (() {

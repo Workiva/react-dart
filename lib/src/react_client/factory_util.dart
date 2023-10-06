@@ -8,6 +8,8 @@ import 'package:react/react_client/js_backed_map.dart';
 import 'package:react/react_client/js_interop_helpers.dart';
 import 'package:react/react_client/react_interop.dart';
 
+// ignore_for_file: deprecated_member_use_from_same_package
+
 /// Converts a list of variadic children arguments to children that should be passed to ReactJS.
 ///
 /// Returns:

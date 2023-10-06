@@ -10,6 +10,8 @@ import 'package:react/src/react_client/dart_interop_statics.dart';
 
 import '../js_interop_util.dart';
 
+// ignore_for_file: deprecated_member_use_from_same_package
+
 /// Util used with `registerComponent2` to ensure no important lifecycle
 /// events are skipped. This includes `shouldComponentUpdate`,
 /// `componentDidUpdate`, and `render` because they utilize
