@@ -19,7 +19,12 @@
     - JsComponentConfig(2)
     - ReactDartInteropStatics
     - InteropContextValue
+    - markChildValidated
     - markChildrenValidated
+    - React.createFactory
+    - ReactElementStore
+    - ReactDartContextInternal
+    - JsError
 
 #### Other API breakages
 - `ReducerHook`, `StateHook`, and `Ref` are now `@sealed` and may not be inherited from
