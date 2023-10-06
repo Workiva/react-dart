@@ -422,17 +422,6 @@ class ReactClassConfig {
   external set displayName(String value);
 }
 
-/// Interop class for the data structure at `ReactElement._store`.
-///
-/// Used to validate variadic children before they get to [React.createElement].
-@Deprecated('For internal use only. Will be made private in 7.0.0.')
-@JS()
-@anonymous
-class ReactElementStore {
-  external bool get validated;
-  external set validated(bool value);
-}
-
 /// A virtual DOM element representing an instance of a DOM element,
 /// React component, or fragment.
 ///
@@ -453,8 +442,6 @@ class ReactElementStore {
 @JS()
 @anonymous
 class ReactElement {
-  external ReactElementStore get _store; // ignore: unused_element
-
   /// The type of this element.
   ///
   /// For DOM components, this will be a [String] tagName (e.g., `'div'`, `'a'`).
@@ -581,13 +568,6 @@ class ReactDartComponentInternal {
   final Map props;
 }
 
-/// Creates a new JS Error object with the provided message.
-@Deprecated('For internal use only. Will be made private in 7.0.0.')
-@JS('Error')
-class JsError {
-  external JsError(message);
-}
-
 /// A JS variable that can be used with Dart interop in order to force returning a JavaScript `null`.
 /// Use this if dart2js is possibly converting Dart `null` into `undefined`.
 @JS('_jsNull')
@@ -602,14 +582,6 @@ external get jsUndefined;
 /// This allows us to catch the error in dart which re-dartifies the js errors/exceptions.
 @JS('_throwErrorFromJS')
 external Never throwErrorFromJS(error);
-
-/// Marks [child] as validated, as if it were passed into [React.createElement]
-/// as a variadic child.
-///
-/// Offloaded to the JS to avoid dart2js interceptor lookup.
-@Deprecated('For internal use only. Will be made private in 7.0.0.')
-@JS('_markChildValidated')
-external void markChildValidated(child);
 
 @JS('React.__isDevelopment')
 external bool get _inReactDevMode;

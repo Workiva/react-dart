@@ -10,7 +10,7 @@ import 'package:react/react.dart' show Component, Component2, ComponentFactory;
 import 'package:react/react_client/bridge.dart';
 import 'package:react/react_client/js_backed_map.dart';
 import 'package:react/react_client/react_interop.dart'
-    show React, ReactClass, ReactComponent, ReactDartComponentInternal, markChildValidated;
+    show React, ReactClass, ReactComponent, ReactDartComponentInternal;
 
 /// A JavaScript interop class representing a value in a React JS `context` object.
 ///
@@ -49,6 +49,14 @@ class ReactDartContextInternal {
 
   ReactDartContextInternal(this.value);
 }
+
+/// Marks [child] as validated, as if it were passed into [React.createElement]
+/// as a variadic child.
+///
+/// Offloaded to the JS to avoid dart2js interceptor lookup.
+@JS('_markChildValidated')
+@internal
+external void markChildValidated(child);
 
 /// Mark each child in [children] as validated so that React doesn't emit key warnings.
 ///
