@@ -12,19 +12,19 @@
     - SyntheticEvent members `persist` and `isPersistent`
     - unconvertJsEventHandler 
 - APIs that were never intended for public use:
-    - JsPropValidator
-    - dartInteropStatics
     - ComponentStatics(2)
-    - createReactDartComponentClass(2)
-    - JsComponentConfig(2)
-    - ReactDartInteropStatics
     - InteropContextValue
+    - JsComponentConfig(2)
+    - JsError
+    - JsPropValidator
+    - React.createFactory
+    - ReactDartContextInternal
+    - ReactDartInteropStatics
+    - ReactElementStore
+    - createReactDartComponentClass(2)
+    - dartInteropStatics
     - markChildValidated
     - markChildrenValidated
-    - React.createFactory
-    - ReactElementStore
-    - ReactDartContextInternal
-    - JsError
 
 #### Other API breakages
 - `ReducerHook`, `StateHook`, and `Ref` are now `@sealed` and may not be inherited from
