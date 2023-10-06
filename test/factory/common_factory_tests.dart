@@ -294,20 +294,6 @@ void domEventHandlerWrappingTests(ReactComponentFactoryProxy factory) {
     }
   });
 
-  test('event has .persist and .isPersistent methods that can be called', () {
-    late react.SyntheticMouseEvent actualEvent;
-
-    final nodeWithClickHandler = renderAndGetRootNode(factory({
-      'onClick': (react.SyntheticMouseEvent event) {
-        expect(() => event.persist(), returnsNormally);
-        actualEvent = event;
-      }
-    }));
-
-    rtu.Simulate.click(nodeWithClickHandler);
-    expect(actualEvent.isPersistent, isA<bool>());
-  });
-
   test('doesn\'t wrap the handler if it is null', () {
     final nodeWithClickHandler = renderAndGetRootNode(factory({'onClick': null}));
 

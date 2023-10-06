@@ -21,9 +21,6 @@ import 'package:react/react_client/component_factory.dart'
 import 'package:react/src/react_client/dart2_interop_workaround_bindings.dart';
 
 typedef ReactJsComponentFactory = ReactElement Function(dynamic props, dynamic children);
-@Deprecated('For internal use only. Will be made private in 7.0.0.')
-typedef JsPropValidator = dynamic Function(
-    JsMap props, String propName, String componentName, String location, String propFullName, String secret);
 
 // ----------------------------------------------------------------------------
 //   Top-level API
@@ -39,8 +36,6 @@ abstract class React {
   ]);
   @Deprecated('For internal use only.')
   external static ReactClass createClass(ReactClassConfig reactClassConfig);
-  @Deprecated('Use createElement instead. To be removed in 7.0.0.')
-  external static ReactJsComponentFactory createFactory(type);
   external static ReactElement createElement(dynamic type, props, [Object? children]);
   external static JsRef createRef();
   external static ReactClass forwardRef(Function(JsMap props, dynamic ref) wrapperFunction);
@@ -278,22 +273,6 @@ ReactComponentFactoryProxy memo2(ReactComponentFactoryProxy factory,
   setProperty(hoc, 'dartComponentVersion', ReactDartComponentVersion.component2);
 
   return ReactDartWrappedComponentFactoryProxy(hoc);
-}
-
-@Deprecated('Use memo2')
-ReactJsComponentFactoryProxy memo(ReactDartFunctionComponentFactoryProxy factory,
-    {bool Function(Map prevProps, Map nextProps)? areEqual}) {
-  final _areEqual = areEqual == null
-      ? null
-      : allowInterop((JsMap prevProps, JsMap nextProps) {
-          final dartPrevProps = JsBackedMap.backedBy(prevProps);
-          final dartNextProps = JsBackedMap.backedBy(nextProps);
-          return areEqual(dartPrevProps, dartNextProps);
-        });
-  final hoc = React.memo(factory.type, _areEqual);
-  setProperty(hoc, 'dartComponentVersion', ReactDartComponentVersion.component2);
-
-  return ReactJsComponentFactoryProxy(hoc, alwaysReturnChildrenAsList: true);
 }
 
 abstract class ReactDom {

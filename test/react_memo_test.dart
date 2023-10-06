@@ -12,28 +12,6 @@ import 'package:test/test.dart';
 import 'factory/common_factory_tests.dart';
 
 main() {
-  group('memo', () {
-    // ignore: deprecated_member_use_from_same_package
-    sharedMemoTests(react.memo);
-
-    group('- common factory behavior -', () {
-      // ignore: deprecated_member_use_from_same_package
-      final MemoTest = react.memo(react.registerFunctionComponent((props) {
-        props['onDartRender']?.call(props);
-        return react.div({...props});
-      }));
-
-      commonFactoryTests(
-        MemoTest,
-        // ignore: invalid_use_of_protected_member
-        dartComponentVersion: ReactDartComponentVersion.component2,
-        // Dart props passed to memo get converted when they shouldn't, so these tests fail.
-        // This is part of why memo is deprecated.
-        skipPropValuesTest: true,
-      );
-    });
-  });
-
   group('memo2', () {
     sharedMemoTests(react.memo2);
 

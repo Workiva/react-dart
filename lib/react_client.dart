@@ -11,7 +11,6 @@ export 'package:react/react_client/component_factory.dart'
     show
         listifyChildren,
         unconvertJsProps,
-        unconvertJsEventHandler,
         ReactDomComponentFactoryProxy,
         ReactJsComponentFactoryProxy,
         ReactDartComponentFactoryProxy,

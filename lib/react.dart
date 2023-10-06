@@ -21,7 +21,7 @@ import 'package:react/src/react_client/private_utils.dart' show validateJsApi, v
 export 'package:react/src/context.dart';
 export 'package:react/src/prop_validator.dart';
 export 'package:react/src/react_client/event_helpers.dart';
-export 'package:react/react_client/react_interop.dart' show forwardRef2, createRef, memo, memo2;
+export 'package:react/react_client/react_interop.dart' show forwardRef2, createRef, memo2;
 export 'package:react/src/react_client/synthetic_event_wrappers.dart' hide NonNativeDataTransfer;
 export 'package:react/src/react_client/synthetic_data_transfer.dart' show SyntheticDataTransfer;
 export 'package:react/src/react_client/event_helpers.dart';
