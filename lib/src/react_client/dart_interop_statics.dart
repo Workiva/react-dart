@@ -11,6 +11,7 @@ import 'package:react/react_client/js_backed_map.dart';
 import 'package:react/react_client/js_interop_helpers.dart';
 import 'package:react/react_client/react_interop.dart';
 import 'package:react/react_client/zone.dart';
+import 'package:react/src/react_client/internal_react_interop.dart';
 
 import 'package:react/src/react_client/private_utils.dart';
 import 'package:react/src/typedefs.dart';
