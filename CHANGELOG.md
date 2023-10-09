@@ -40,6 +40,12 @@
 #### Potential behavior breakages
 - Component and Component2 members `props`/`state`/`jsThis` are late, will now throw instead of being null if accessed before initialized (e.g., in a constructor, final class field, or static lifecycle method).
 
+## [6.3.0](https://github.com/Workiva/react-dart/compare/6.2.1...6.3.0)
+- [#372], [#374] Add and update deprecations in preparation for 7.0.0 release, add WIP changelog
+- [#372] Add APIs in preparation for null safety:
+    - `htmlMain` - replacement for deprecated `react.main`, to be removed in 7.0.0
+    - `useRefInit` - `useRef` can't be used to create non-nullable-typed refs, but `useRefInit` can
+
 ## [6.2.1](https://github.com/Workiva/react-dart/compare/6.2.0...6.2.1)
 - [#366] Fix lints and eliminate most implicit casts 
 

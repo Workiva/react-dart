@@ -486,6 +486,7 @@ class ReactClassConfig {
 /// Interop class for the data structure at `ReactElement._store`.
 ///
 /// Used to validate variadic children before they get to [React.createElement].
+@Deprecated('For internal use only. Will be made private in 7.0.0.')
 @JS()
 @anonymous
 class ReactElementStore {
@@ -681,6 +682,7 @@ class ReactDartContextInternal {
 }
 
 /// Creates a new JS Error object with the provided message.
+@Deprecated('For internal use only. Will be made private in 7.0.0.')
 @JS('Error')
 class JsError {
   external JsError(message);
@@ -706,6 +708,7 @@ external void throwErrorFromJS(error);
 /// as a variadic child.
 ///
 /// Offloaded to the JS to avoid dart2js interceptor lookup.
+@Deprecated('For internal use only. Will be made private in 7.0.0.')
 @JS('_markChildValidated')
 external void markChildValidated(child);
 
