@@ -6,6 +6,15 @@ import 'package:meta/meta.dart';
 import 'package:react/react.dart';
 import 'package:react/react_client/react_interop.dart';
 
+/// A setter function returned as the second item in the result of a JS useState call,
+/// which accepts either a value or an updater function.
+///
+/// If Dart had type unions, the typing would be: `void Function(T|(T Function(T)) valueOrUpdater)`
+///
+/// We could make this generic, but the generic value wouldn't be used at all since the argument
+/// can only be expressed as `dynamic`.
+typedef _JsStateHookSetter/*<T>*/ = void Function(dynamic /*T|(T Function(T))*/ valueOrUpdater);
+
 /// The return value of [useState].
 ///
 /// The current value of the state is available via [value] and
@@ -23,7 +32,7 @@ class StateHook<T> {
   final T _value;
 
   /// The second item in the pair returned by [React.useState].
-  final void Function(dynamic) _setValue;
+  final _JsStateHookSetter _setValue;
 
   StateHook._(this._value, this._setValue);
 
@@ -67,7 +76,7 @@ class StateHook<T> {
 /// Learn more: <https://reactjs.org/docs/hooks-state.html>.
 StateHook<T> useState<T>(T initialValue) {
   final result = React.useState(initialValue);
-  return StateHook._(result[0] as T, result[1] as void Function(dynamic));
+  return StateHook._(result[0] as T, result[1] as _JsStateHookSetter);
 }
 
 /// Adds local state to a [DartFunctionComponent]
@@ -93,7 +102,7 @@ StateHook<T> useState<T>(T initialValue) {
 /// Learn more: <https://reactjs.org/docs/hooks-reference.html#lazy-initial-state>.
 StateHook<T> useStateLazy<T>(T Function() init) {
   final result = React.useState(allowInterop(init));
-  return StateHook._(result[0] as T, result[1] as void Function(dynamic));
+  return StateHook._(result[0] as T, result[1] as _JsStateHookSetter);
 }
 
 /// Runs [sideEffect] after every completed render of a [DartFunctionComponent].
