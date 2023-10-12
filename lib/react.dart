@@ -431,7 +431,7 @@ abstract class Component {
   @Deprecated('This legacy, unstable context API is only supported in the deprecated Component, and not Component2.'
       ' Instead, use Component2.context, Context.Consumer, or useContext.')
   // ignore: avoid_returning_null
-  bool? shouldComponentUpdateWithContext(Map nextProps, Map nextState, Map nextContext) => null;
+  bool? shouldComponentUpdateWithContext(Map nextProps, Map nextState, Map? nextContext) => null;
 
   /// ReactJS lifecycle method that is invoked immediately before rendering when [nextProps] or [nextState] are being
   /// received.
