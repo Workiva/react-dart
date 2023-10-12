@@ -8,7 +8,7 @@ import 'null_safe_refs.dart' as null_safe_refs;
 import 'sound_null_safety_detection.dart';
 
 main() {
-  // This test ths the counterpart to nullable_callback_detection_unsound_test.dart,
+  // This test is the counterpart to nullable_callback_detection_unsound_test.dart,
   // to verify expected behavior under sound null safety.
   // See that file for more info.
   group('nullable callback detection, when compiled with sound null safety:', () {
