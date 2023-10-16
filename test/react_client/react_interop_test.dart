@@ -10,7 +10,7 @@ import 'package:test/test.dart';
 main() {
   group('ReactDom.createPortal', () {
     group('creates a portal ReactNode that renders correctly', () {
-      Element mountNode;
+      late Element mountNode;
 
       setUp(() {
         mountNode = DivElement();

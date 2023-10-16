@@ -32,7 +32,7 @@ main() {
     });
 
     group('chainRefList', () {
-      // Chaining is tested functionally in refTests with each component type.
+      // Chaining is tested functionally in refTests with each component type and each ref type.
 
       group('skips chaining and passes through arguments when', () {
         test('the list is empty', () {
@@ -54,25 +54,34 @@ main() {
 
       group('raises an assertion when inputs are invalid:', () {
         test('strings', () {
-          expect(() => chainRefList([testRef, 'bad ref']), throwsA(isA<AssertionError>()));
+          expect(() => chainRefList([testRef, 'bad ref']),
+              throwsA(isA<AssertionError>().havingMessage('String refs cannot be chained')));
         });
 
         test('unsupported function types', () {
-          expect(() => chainRefList([testRef, () {}]), throwsA(isA<AssertionError>()));
+          expect(() => chainRefList([testRef, () {}]),
+              throwsA(isA<AssertionError>().havingMessage('callback refs must take a single argument')));
         });
 
         test('other objects', () {
-          expect(() => chainRefList([testRef, Object()]), throwsA(isA<AssertionError>()));
+          expect(() => chainRefList([testRef, Object()]),
+              throwsA(isA<AssertionError>().havingMessage(contains('Invalid ref type'))));
         });
 
         // test JS interop objects since type-checking anonymous interop objects
         test('non-createRef anonymous JS interop objects', () {
-          expect(() => chainRefList([testRef, JsTypeAnonymous()]), throwsA(isA<AssertionError>()));
+          expect(() => chainRefList([testRef, JsTypeAnonymous()]),
+              throwsA(isA<AssertionError>().havingMessage(contains('Invalid ref type'))));
         });
 
         // test JS interop objects since type-checking anonymous interop objects
         test('non-createRef JS interop objects', () {
-          expect(() => chainRefList([testRef, JsType()]), throwsA(isA<AssertionError>()));
+          expect(() => chainRefList([testRef, JsType()]),
+              throwsA(isA<AssertionError>().havingMessage(contains('Invalid ref type'))));
+        });
+
+        test('callback refs with non-nullable arguments', () {
+          expect(() => chainRefList([testRef, nonNullableCallbackRef]), throwsNonNullableCallbackRefAssertionError);
         });
       }, tags: 'no-dart2js');
 
@@ -93,4 +102,8 @@ class JsTypeAnonymous {
 @JS()
 class JsType {
   external JsType();
+}
+
+extension<T extends AssertionError> on TypeMatcher<T> {
+  TypeMatcher<T> havingMessage(dynamic matcher) => having((e) => e.message, 'message', matcher);
 }

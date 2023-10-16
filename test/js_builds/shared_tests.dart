@@ -6,8 +6,8 @@ import 'dart:html';
 import 'dart:js_util';
 
 import 'package:js/js.dart';
-import 'package:meta/meta.dart';
 import 'package:react/react.dart' as react;
+import 'package:react/react_client/component_factory.dart';
 import 'package:react/react_dom.dart' as react_dom;
 import 'package:react/react_client/react_interop.dart';
 import 'package:test/test.dart';
@@ -29,31 +29,41 @@ void sharedJsFunctionTests() {
     });
 
     group('createReactDartComponentClass', () {
-      test('is function that does not throw when called', () {
-        expect(() => createReactDartComponentClass(null, null), returnsNormally);
+      test('is a function that does not throw when called (indirectly tested by registering a Component)', () {
+        expect(() => react.registerComponent(() => DummyComponent()), returnsNormally);
       });
     });
 
     group('createReactDartComponentClass2', () {
-      test('is function that does not throw when called', () {
-        expect(() => createReactDartComponentClass2(null, null, JsComponentConfig2(skipMethods: [])), returnsNormally);
+      test('is function that does not throw when called (indirectly tested by registering a Component2)', () {
+        expect(() => react.registerComponent(() => DummyComponent2()), returnsNormally);
       });
     });
   });
 }
 
+class DummyComponent extends react.Component {
+  @override
+  render() => null;
+}
+
+class DummyComponent2 extends react.Component2 {
+  @override
+  render() => null;
+}
+
 /// The arguments corresponding to each call of `console.warn`,
 /// collected via a spy set up in console_spy_include_this_js_first.js
 @JS()
-external List<List<dynamic>> get consoleWarnCalls;
+external List<List<Object?>> get consoleWarnCalls;
 @JS()
-external set consoleWarnCalls(List<dynamic> value);
+external set consoleWarnCalls(List<Object?> value);
 
 /// Like window.console.warn, but allows more than one argument.
 @JS('console.warn')
 external void consoleWarn([a, b, c, d]);
 
-void sharedConsoleWarnTests({@required bool expectDeduplicateSyntheticEventWarnings}) {
+void sharedConsoleWarnTests({required bool expectDeduplicateSyntheticEventWarnings}) {
   group('console.warn wrapper (or lack thereof)', () {
     void clearConsoleWarnCalls() => consoleWarnCalls = [];
 
@@ -148,7 +158,7 @@ void sharedConsoleWarnTests({@required bool expectDeduplicateSyntheticEventWarni
 
 void sharedErrorBoundaryComponentNameTests() {
   group('includes the Dart component displayName in error boundary errors for', () {
-    void expectRenderErrorWithComponentName(ReactElement element, {@required String expectedComponentName}) {
+    void expectRenderErrorWithComponentName(ReactElement element, {required String expectedComponentName}) {
       final capturedInfos = <ReactErrorInfo>[];
       react_dom.render(
           _ErrorBoundary({
@@ -211,7 +221,8 @@ class _ErrorBoundaryComponent extends react.Component2 {
   }
 }
 
-final _ThrowingComponent = react.registerComponent(() => _ThrowingComponentComponent());
+final _ThrowingComponent =
+    react.registerComponent(() => _ThrowingComponentComponent()) as ReactDartComponentFactoryProxy;
 
 class _ThrowingComponentComponent extends react.Component {
   @override

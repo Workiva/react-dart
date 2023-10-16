@@ -16,17 +16,15 @@ import 'package:react/react_client.dart';
 import 'package:react/react_client/react_interop.dart';
 import 'package:react/src/context.dart';
 import 'package:react/src/react_client/component_registration.dart' as registration_utils;
-import 'package:react/src/react_client/private_utils.dart' show validateJsApiThenReturn;
+import 'package:react/src/react_client/private_utils.dart' show validateJsApi, validateJsApiThenReturn;
 
 export 'package:react/src/context.dart';
 export 'package:react/src/prop_validator.dart';
 export 'package:react/src/react_client/event_helpers.dart';
-export 'package:react/react_client/react_interop.dart' show forwardRef, forwardRef2, createRef, memo, memo2;
+export 'package:react/react_client/react_interop.dart' show forwardRef2, createRef, memo, memo2;
 export 'package:react/src/react_client/synthetic_event_wrappers.dart' hide NonNativeDataTransfer;
 export 'package:react/src/react_client/synthetic_data_transfer.dart' show SyntheticDataTransfer;
 export 'package:react/src/react_client/event_helpers.dart';
-
-typedef PropValidator<TProps> = Error Function(TProps props, PropValidatorInfo info);
 
 /// A React component declared using a function that takes in [props] and returns rendered output.
 ///
@@ -52,11 +50,11 @@ typedef ComponentRegistrar = ReactComponentFactoryProxy Function(ComponentFactor
 typedef ComponentRegistrar2 = ReactDartComponentFactoryProxy2 Function(
   ComponentFactory<Component2> componentFactory, {
   Iterable<String> skipMethods,
-  Component2BridgeFactory bridgeFactory,
+  Component2BridgeFactory? bridgeFactory,
 });
 
 typedef FunctionComponentRegistrar = ReactDartFunctionComponentFactoryProxy
-    Function(DartFunctionComponent componentFactory, {String displayName});
+    Function(DartFunctionComponent componentFactory, {String? displayName});
 
 /// Fragment component that allows the wrapping of children without the necessity of using
 /// an element that adds an additional layer to the DOM (div, span, etc).
@@ -103,6 +101,22 @@ var Suspense = ReactJsComponentFactoryProxy(React.Suspense);
 /// See: <https://reactjs.org/docs/strict-mode.html>
 var StrictMode = ReactJsComponentFactoryProxy(React.StrictMode);
 
+// -------------------------------------------------------------------------------------------------------------------
+// [1] While these fields are always initialized upon mount immediately after the class is instantiated,
+//     since they're not passed into a Dart constructor, they can't be initialized during instantiation,
+//     forcing us to make them either `late` or nullable.
+//
+//     Since we want them to be non-nullable, we'll opt for `late`.
+//
+//     These fields only haven't been initialized:
+//      - for mounting component instances:
+//         - in component class constructors (which we don't encourage)
+//         - in component class field initializers (except for lazy `late` ones)
+//      - in "static" lifecycle methods like `getDerivedStateFromProps` and `defaultProps`
+//
+//     So, this shouldn't pose a problem for consumers.
+// -------------------------------------------------------------------------------------------------------------------
+
 /// Top-level ReactJS [Component class](https://reactjs.org/docs/react-component.html)
 /// which provides the [ReactJS Component API](https://reactjs.org/docs/react-component.html#reference)
 ///
@@ -113,7 +127,7 @@ var StrictMode = ReactJsComponentFactoryProxy(React.StrictMode);
     'The Component base class only supports unsafe lifecycle methods, which React JS will remove support for in a future major version.'
     ' Migrate components to Component2, which only supports safe lifecycle methods.')
 abstract class Component {
-  Map _context;
+  Map? _context;
 
   /// A private field that backs [props], which is exposed via getter/setter so
   /// it can be overridden in strong mode.
@@ -122,7 +136,7 @@ abstract class Component {
   /// [doesn't work for overriding fields](https://github.com/dart-lang/sdk/issues/27452).
   ///
   /// TODO: Switch back to a plain field once this issue is fixed.
-  Map _props;
+  late Map _props; // [1]
 
   /// A private field that backs [state], which is exposed via getter/setter so
   /// it can be overridden in strong mode.
@@ -140,7 +154,7 @@ abstract class Component {
   /// [doesn't work for overriding fields](https://github.com/dart-lang/sdk/issues/27452).
   ///
   /// TODO: Switch back to a plain field once this issue is fixed.
-  RefMethod _ref;
+  late RefMethod _ref; // [1]
 
   /// The React context map of this component, passed down from its ancestors' [getChildContext] value.
   ///
@@ -192,15 +206,13 @@ abstract class Component {
       'Only supported in the deprecated Component, and not Component2. Use createRef or a ref callback instead.')
   set ref(RefMethod value) => _ref = value;
 
-  dynamic _jsRedraw;
+  late void Function() _jsRedraw; // [1]
 
-  dynamic _jsThis;
+  late dynamic _jsThis; // [1]
 
-  // ignore: prefer_final_fields
-  List<SetStateCallback> _setStateCallbacks = [];
+  final List<SetStateCallback> _setStateCallbacks = [];
 
-  // ignore: prefer_final_fields
-  List<StateUpdaterCallback> _transactionalSetStateCallbacks = [];
+  final List<StateUpdaterCallback> _transactionalSetStateCallbacks = [];
 
   /// The List of callbacks to be called after the component has been updated from a call to [setState].
   List get setStateCallbacks => _setStateCallbacks;
@@ -214,31 +226,30 @@ abstract class Component {
 
   /// Allows the [ReactJS `displayName` property](https://reactjs.org/docs/react-component.html#displayname)
   /// to be set for debugging purposes.
-  String get displayName => runtimeType.toString();
+  // This return type is nullable since Component2's override will return null in certain cases.
+  String? get displayName => runtimeType.toString();
 
-  initComponentInternal(props, _jsRedraw, [RefMethod ref, _jsThis, context]) {
+  static dynamic _defaultRef(String _) => null;
+
+  initComponentInternal(Map props, void Function() _jsRedraw, [RefMethod? ref, dynamic _jsThis, Map? context]) {
     this._jsRedraw = _jsRedraw;
-    this.ref = ref;
+    this.ref = ref ?? _defaultRef;
     this._jsThis = _jsThis;
     _initContext(context);
     _initProps(props);
   }
 
   /// Initializes context
-  _initContext(context) {
-    /// [context]s typing was loosened from Map to dynamic to support the new context API in [Component2]
+  _initContext(Map? context) {
+    /// [context]'s and [nextContext]'ss typings were loosened from Map to dynamic to support the new context API in [Component2]
     /// which extends from [Component]. Only "legacy" context APIs are supported in [Component] - which means
     /// it will still be expected to be a Map.
-    this.context = Map.from(context as Map ?? const {});
-
-    /// [nextContext]s typing was loosened from Map to dynamic to support the new context API in [Component2]
-    /// which extends from [Component]. Only "legacy" context APIs are supported in [Component] - which means
-    /// it will still be expected to be a Map.
-    nextContext = Map.from(this.context as Map ?? const {});
+    this.context = {...?context};
+    nextContext = {...?context};
   }
 
-  _initProps(props) {
-    this.props = Map.from(props as Map);
+  _initProps(Map props) {
+    this.props = Map.from(props);
     nextProps = this.props;
   }
 
@@ -259,12 +270,12 @@ abstract class Component {
   /// > in ReactJS 16.
   @Deprecated('This legacy, unstable context API is only supported in the deprecated Component, and not Component2.'
       ' Instead, use Component2.context, Context.Consumer, or useContext.')
-  Map nextContext;
+  Map? nextContext;
 
   /// Private reference to the value of [state] for the upcoming render cycle.
   ///
   /// Useful for ReactJS lifecycle methods [shouldComponentUpdate], [componentWillUpdate] and [componentDidUpdate].
-  Map _nextState;
+  Map? _nextState;
 
   /// Reference to the value of [context] from the previous render cycle, used internally for proxying
   /// the ReactJS lifecycle method.
@@ -277,7 +288,7 @@ abstract class Component {
   /// > in ReactJS 16.
   @Deprecated('This legacy, unstable context API is only supported in the deprecated Component, and not Component2.'
       ' Instead, use Component2.context, Context.Consumer, or useContext.')
-  Map prevContext;
+  Map? prevContext;
 
   /// Reference to the value of [state] from the previous render cycle, used internally for proxying
   /// the ReactJS lifecycle method and [componentDidUpdate].
@@ -285,7 +296,7 @@ abstract class Component {
   /// Not available after [componentDidUpdate] is called.
   ///
   /// __DO NOT set__ from anywhere outside react-dart lifecycle internals.
-  Map prevState;
+  Map? prevState;
 
   /// Public getter for [_nextState].
   ///
@@ -298,7 +309,7 @@ abstract class Component {
   /// [componentWillUpdate] as well as the context-specific variants.
   ///
   /// __DO NOT set__ from anywhere outside react-dart lifecycle internals.
-  Map nextProps;
+  Map? nextProps;
 
   /// Transfers `Component` [_nextState] to [state], and [state] to [prevState].
   ///
@@ -311,7 +322,7 @@ abstract class Component {
   void transferComponentState() {
     prevState = state;
     if (_nextState != null) {
-      state = _nextState;
+      state = _nextState!;
     }
     _nextState = Map.from(state);
   }
@@ -319,7 +330,7 @@ abstract class Component {
   /// Force a call to [render] by calling [setState], which effectively "redraws" the `Component`.
   ///
   /// Optionally accepts a [callback] that gets called after the component updates.
-  void redraw([Function() callback]) {
+  void redraw([Function()? callback]) {
     setState({}, callback);
   }
 
@@ -330,9 +341,9 @@ abstract class Component {
   /// Also allows [newState] to be used as a transactional `setState` callback.
   ///
   /// See: <https://reactjs.org/docs/react-component.html#setstate>
-  void setState(covariant dynamic newState, [Function() callback]) {
+  void setState(covariant dynamic newState, [Function()? callback]) {
     if (newState is Map) {
-      _nextState.addAll(newState);
+      _nextState!.addAll(newState);
     } else if (newState is StateUpdaterCallback) {
       _transactionalSetStateCallbacks.add(newState);
     } else if (newState != null) {
@@ -351,7 +362,7 @@ abstract class Component {
   ///
   /// See: <https://reactjs.org/docs/react-component.html#setstate>
   @Deprecated('Use setState instead.')
-  void replaceState(Map newState, [Function() callback]) {
+  void replaceState(Map? newState, [Function()? callback]) {
     final nextState = newState == null ? {} : Map.from(newState);
     _nextState = nextState;
     if (callback != null) _setStateCallbacks.add(callback);
@@ -421,7 +432,7 @@ abstract class Component {
   @Deprecated('This legacy, unstable context API is only supported in the deprecated Component, and not Component2.'
       ' Instead, use Component2.context, Context.Consumer, or useContext.')
   // ignore: avoid_returning_null
-  bool shouldComponentUpdateWithContext(Map nextProps, Map nextState, Map nextContext) => null;
+  bool? shouldComponentUpdateWithContext(Map nextProps, Map nextState, Map? nextContext) => null;
 
   /// ReactJS lifecycle method that is invoked immediately before rendering when [nextProps] or [nextState] are being
   /// received.
@@ -454,7 +465,7 @@ abstract class Component {
   /// > This will be completely removed alongside the Component class.
   @Deprecated('This legacy, unstable context API is only supported in the deprecated Component, and not Component2.'
       ' Instead, use Component2.context, Context.Consumer, or useContext.')
-  void componentWillUpdateWithContext(Map nextProps, Map nextState, Map nextContext) {}
+  void componentWillUpdateWithContext(Map nextProps, Map nextState, Map? nextContext) {}
 
   /// ReactJS lifecycle method that is invoked immediately after the `Component`'s updates are flushed to the DOM.
   ///
@@ -587,7 +598,7 @@ abstract class Component2 implements Component {
   ///     }
   ///
   /// See: <https://reactjs.org/docs/context.html#classcontexttype>
-  Context get contextType => null;
+  Context? get contextType => null;
 
   /// Invoked once and cached when [registerComponent] is called. Values in the mapping will be set on [props]
   /// if that prop is not specified by the parent component.
@@ -656,10 +667,10 @@ abstract class Component2 implements Component {
   dynamic context;
 
   @override
-  Map props;
+  late Map props; // [1]
 
   @override
-  Map state;
+  late Map state; // [1]
 
   @override
   @Deprecated('Only supported in the deprecated Component, and not in Component2. See doc comment for more info.')
@@ -671,7 +682,7 @@ abstract class Component2 implements Component {
   /// The JavaScript [`ReactComponent`](https://reactjs.org/docs/react-api.html#reactdom.render)
   /// instance of this `Component` returned by [render].
   @override
-  ReactComponent jsThis;
+  late ReactComponent jsThis; // [1]
 
   /// Allows the [ReactJS `displayName` property](https://reactjs.org/docs/react-component.html#displayname)
   /// to be set for debugging purposes.
@@ -682,8 +693,8 @@ abstract class Component2 implements Component {
   /// This will result in the dart2js name being `ReactDartComponent2` (the
   /// name of the proxying JS component defined in _dart_helpers.js).
   @override
-  String get displayName {
-    String value;
+  String? get displayName {
+    String? value;
     assert(() {
       value = runtimeType.toString();
       return true;
@@ -691,7 +702,7 @@ abstract class Component2 implements Component {
     return value;
   }
 
-  Component2Bridge get _bridge => Component2Bridge.forComponent(this);
+  Component2Bridge get _bridge => Component2Bridge.forComponent(this)!;
 
   /// Triggers a rerender with new state obtained by shallow-merging [newState] into the current [state].
   ///
@@ -701,7 +712,7 @@ abstract class Component2 implements Component {
   ///
   /// See: <https://reactjs.org/docs/react-component.html#setstate>
   @override
-  void setState(Map newState, [SetStateCallback callback]) {
+  void setState(Map? newState, [SetStateCallback? callback]) {
     _bridge.setState(this, newState, callback);
   }
 
@@ -711,14 +722,14 @@ abstract class Component2 implements Component {
   /// Optionally accepts a [callback] that gets called after the component updates.
   ///
   /// See: <https://reactjs.org/docs/react-component.html#setstate>
-  void setStateWithUpdater(StateUpdaterCallback updater, [SetStateCallback callback]) {
+  void setStateWithUpdater(StateUpdaterCallback updater, [SetStateCallback? callback]) {
     _bridge.setStateWithUpdater(this, updater, callback);
   }
 
   /// Causes [render] to be called, skipping [shouldComponentUpdate].
   ///
   /// > See: <https://reactjs.org/docs/react-component.html#forceupdate>
-  void forceUpdate([SetStateCallback callback]) {
+  void forceUpdate([SetStateCallback? callback]) {
     _bridge.forceUpdate(this, callback);
   }
 
@@ -770,7 +781,7 @@ abstract class Component2 implements Component {
   /// > [Consider recommended alternative solutions first!](https://reactjs.org/blog/2018/06/07/you-probably-dont-need-derived-state.html#preferred-solutions)
   ///
   /// See: <https://reactjs.org/docs/react-component.html#static-getderivedstatefromprops>
-  Map getDerivedStateFromProps(Map nextProps, Map prevState) => null;
+  Map? getDerivedStateFromProps(Map nextProps, Map prevState) => null;
 
   /// ReactJS lifecycle method that is invoked before rendering when [nextProps] and/or [nextState] are being received.
   ///
@@ -877,7 +888,7 @@ abstract class Component2 implements Component {
   /// [getDerivedStateFromError] will be ignored.
   ///
   /// See: <https://reactjs.org/docs/react-component.html#static-getderivedstatefromerror>
-  Map getDerivedStateFromError(dynamic error) => null;
+  Map? getDerivedStateFromError(dynamic error) => null;
 
   /// Allows usage of PropValidator functions to check the validity of a prop within the props passed to it.
   ///
@@ -920,8 +931,7 @@ abstract class Component2 implements Component {
   /// ```
   ///
   /// See: <https://reactjs.org/docs/typechecking-with-proptypes.html#proptypes>
-  // ignore: prefer_void_to_null
-  Map<String, PropValidator<Null>> get propTypes => {};
+  Map<String, PropValidator<Never>> get propTypes => {};
 
   /// Examines [props] and [state] and returns one of the following types:
   ///
@@ -960,7 +970,7 @@ abstract class Component2 implements Component {
   /// See: <https://reactjs.org/docs/react-component.html#forceupdate>
   @override
   @Deprecated('Use forceUpdate or setState({}) instead. Will be removed when Component is removed.')
-  void redraw([SetStateCallback callback]) {
+  void redraw([SetStateCallback? callback]) {
     setState({}, callback);
   }
 
@@ -1169,7 +1179,7 @@ abstract class Component2 implements Component {
   /// Will be removed when [Component] is removed in a future major release.
   @override
   @Deprecated('Only supported in the deprecated Component, and not in Component2. See doc comment for more info.')
-  void replaceState(Map newState, [SetStateCallback callback]) => throw _unsupportedError('replaceState');
+  void replaceState(Map? newState, [SetStateCallback? callback]) => throw _unsupportedError('replaceState');
 
   /// Do not use.
   ///
@@ -1190,7 +1200,7 @@ abstract class Component2 implements Component {
   /// Will be removed when [Component] is removed in a future major release.
   @override
   @Deprecated('Only supported in the deprecated Component, and not in Component2. See doc comment for more info.')
-  initComponentInternal(props, _jsRedraw, [RefMethod ref, _jsThis, context]) =>
+  initComponentInternal(props, _jsRedraw, [RefMethod? ref, _jsThis, context]) =>
       throw _unsupportedError('initComponentInternal');
 
   /// Do not use.
@@ -1279,35 +1289,35 @@ abstract class Component2 implements Component {
 
   @override
   @Deprecated('Only supported in the deprecated Component, and not in Component2.')
-  Map _context;
+  Map? _context;
 
   @override
   @Deprecated('Only supported in the deprecated Component, and not in Component2.')
-  var _jsRedraw;
+  late void Function() _jsRedraw;
 
   @override
   @Deprecated('Only supported in the deprecated Component, and not in Component2.')
-  Map _nextState;
+  Map? _nextState;
 
   @override
   @Deprecated('Only supported in the deprecated Component, and not in Component2.')
-  Map _props;
+  late Map _props;
 
   @override
   @Deprecated('Only supported in the deprecated Component, and not in Component2.')
-  RefMethod _ref;
+  late RefMethod _ref;
 
   @override
   @Deprecated('Only supported in the deprecated Component, and not in Component2.')
-  List<SetStateCallback> _setStateCallbacks;
+  late List<SetStateCallback> _setStateCallbacks;
 
   @override
   @Deprecated('Only supported in the deprecated Component, and not in Component2.')
-  Map _state;
+  late Map _state;
 
   @override
   @Deprecated('Only supported in the deprecated Component, and not in Component2.')
-  List<StateUpdaterCallback> _transactionalSetStateCallbacks;
+  late List<StateUpdaterCallback> _transactionalSetStateCallbacks;
 
   @override
   @Deprecated('Only supported in the deprecated Component, and not in Component2.')
@@ -1359,7 +1369,7 @@ mixin TypedSnapshot<TSnapshot> {
 }
 
 /// Creates a ReactJS virtual DOM instance ([ReactElement] on the client).
-abstract class ReactComponentFactoryProxy implements Function {
+abstract class ReactComponentFactoryProxy {
   /// The type of component created by this factory.
   get type;
 
@@ -1367,12 +1377,12 @@ abstract class ReactComponentFactoryProxy implements Function {
   ///
   /// Necessary to work around DDC `dart.dcall` issues in <https://github.com/dart-lang/sdk/issues/29904>,
   /// since invoking the function directly doesn't work.
-  dynamic /*ReactElement*/ build(Map props, [List childrenArgs]);
+  ReactElement build(Map props, [List childrenArgs]);
 
   /// Returns a new rendered component instance with the specified [props] and `children` ([c1], [c2], et. al.).
   ///
   /// > The additional children arguments (c2, c3, et. al.) are a workaround for <https://github.com/dart-lang/sdk/issues/16030>.
-  dynamic /*ReactElement*/ call(Map props,
+  ReactElement call(Map props,
       [c1 = _notSpecified,
       c2 = _notSpecified,
       c3 = _notSpecified,
@@ -1520,601 +1530,603 @@ ComponentRegistrar2 registerComponent2 = validateJsApiThenReturn(() => registrat
 FunctionComponentRegistrar registerFunctionComponent =
     validateJsApiThenReturn(() => registration_utils.registerFunctionComponent);
 
+ReactDomComponentFactoryProxy _createDomFactory(String tagName) {
+  validateJsApi();
+  return ReactDomComponentFactoryProxy(tagName);
+}
+
 /// The HTML `<a>` `AnchorElement`.
-dynamic a = validateJsApiThenReturn(() => ReactDomComponentFactoryProxy('a'));
+ReactDomComponentFactoryProxy a = _createDomFactory('a');
 
 /// The HTML `<abbr>` `Element`.
-dynamic abbr = validateJsApiThenReturn(() => ReactDomComponentFactoryProxy('abbr'));
+ReactDomComponentFactoryProxy abbr = _createDomFactory('abbr');
 
 /// The HTML `<address>` `Element`.
-dynamic address = validateJsApiThenReturn(() => ReactDomComponentFactoryProxy('address'));
+ReactDomComponentFactoryProxy address = _createDomFactory('address');
 
 /// The HTML `<area>` `AreaElement`.
-dynamic area = validateJsApiThenReturn(() => ReactDomComponentFactoryProxy('area'));
+ReactDomComponentFactoryProxy area = _createDomFactory('area');
 
 /// The HTML `<article>` `Element`.
-dynamic article = validateJsApiThenReturn(() => ReactDomComponentFactoryProxy('article'));
+ReactDomComponentFactoryProxy article = _createDomFactory('article');
 
 /// The HTML `<aside>` `Element`.
-dynamic aside = validateJsApiThenReturn(() => ReactDomComponentFactoryProxy('aside'));
+ReactDomComponentFactoryProxy aside = _createDomFactory('aside');
 
 /// The HTML `<audio>` `AudioElement`.
-dynamic audio = validateJsApiThenReturn(() => ReactDomComponentFactoryProxy('audio'));
+ReactDomComponentFactoryProxy audio = _createDomFactory('audio');
 
 /// The HTML `<b>` `Element`.
-dynamic b = validateJsApiThenReturn(() => ReactDomComponentFactoryProxy('b'));
+ReactDomComponentFactoryProxy b = _createDomFactory('b');
 
 /// The HTML `<base>` `BaseElement`.
-dynamic base = validateJsApiThenReturn(() => ReactDomComponentFactoryProxy('base'));
+ReactDomComponentFactoryProxy base = _createDomFactory('base');
 
 /// The HTML `<bdi>` `Element`.
-dynamic bdi = validateJsApiThenReturn(() => ReactDomComponentFactoryProxy('bdi'));
+ReactDomComponentFactoryProxy bdi = _createDomFactory('bdi');
 
 /// The HTML `<bdo>` `Element`.
-dynamic bdo = validateJsApiThenReturn(() => ReactDomComponentFactoryProxy('bdo'));
+ReactDomComponentFactoryProxy bdo = _createDomFactory('bdo');
 
 /// The HTML `<big>` `Element`.
-dynamic big = validateJsApiThenReturn(() => ReactDomComponentFactoryProxy('big'));
+ReactDomComponentFactoryProxy big = _createDomFactory('big');
 
 /// The HTML `<blockquote>` `Element`.
-dynamic blockquote = validateJsApiThenReturn(() => ReactDomComponentFactoryProxy('blockquote'));
+ReactDomComponentFactoryProxy blockquote = _createDomFactory('blockquote');
 
 /// The HTML `<body>` `BodyElement`.
-dynamic body = validateJsApiThenReturn(() => ReactDomComponentFactoryProxy('body'));
+ReactDomComponentFactoryProxy body = _createDomFactory('body');
 
 /// The HTML `<br>` `BRElement`.
-dynamic br = validateJsApiThenReturn(() => ReactDomComponentFactoryProxy('br'));
+ReactDomComponentFactoryProxy br = _createDomFactory('br');
 
 /// The HTML `<button>` `ButtonElement`.
-dynamic button = validateJsApiThenReturn(() => ReactDomComponentFactoryProxy('button'));
+ReactDomComponentFactoryProxy button = _createDomFactory('button');
 
 /// The HTML `<canvas>` `CanvasElement`.
-dynamic canvas = validateJsApiThenReturn(() => ReactDomComponentFactoryProxy('canvas'));
+ReactDomComponentFactoryProxy canvas = _createDomFactory('canvas');
 
 /// The HTML `<caption>` `Element`.
-dynamic caption = validateJsApiThenReturn(() => ReactDomComponentFactoryProxy('caption'));
+ReactDomComponentFactoryProxy caption = _createDomFactory('caption');
 
 /// The HTML `<cite>` `Element`.
-dynamic cite = validateJsApiThenReturn(() => ReactDomComponentFactoryProxy('cite'));
+ReactDomComponentFactoryProxy cite = _createDomFactory('cite');
 
 /// The HTML `<code>` `Element`.
-dynamic code = validateJsApiThenReturn(() => ReactDomComponentFactoryProxy('code'));
+ReactDomComponentFactoryProxy code = _createDomFactory('code');
 
 /// The HTML `<col>` `Element`.
-dynamic col = validateJsApiThenReturn(() => ReactDomComponentFactoryProxy('col'));
+ReactDomComponentFactoryProxy col = _createDomFactory('col');
 
 /// The HTML `<colgroup>` `Element`.
-dynamic colgroup = validateJsApiThenReturn(() => ReactDomComponentFactoryProxy('colgroup'));
+ReactDomComponentFactoryProxy colgroup = _createDomFactory('colgroup');
 
 /// The HTML `<data>` `Element`.
-dynamic data = validateJsApiThenReturn(() => ReactDomComponentFactoryProxy('data'));
+ReactDomComponentFactoryProxy data = _createDomFactory('data');
 
 /// The HTML `<datalist>` `DataListElement`.
-dynamic datalist = validateJsApiThenReturn(() => ReactDomComponentFactoryProxy('datalist'));
+ReactDomComponentFactoryProxy datalist = _createDomFactory('datalist');
 
 /// The HTML `<dd>` `Element`.
-dynamic dd = validateJsApiThenReturn(() => ReactDomComponentFactoryProxy('dd'));
+ReactDomComponentFactoryProxy dd = _createDomFactory('dd');
 
 /// The HTML `<del>` `Element`.
-dynamic del = validateJsApiThenReturn(() => ReactDomComponentFactoryProxy('del'));
+ReactDomComponentFactoryProxy del = _createDomFactory('del');
 
 /// The HTML `<details>` `DetailsElement`.
-dynamic details = validateJsApiThenReturn(() => ReactDomComponentFactoryProxy('details'));
+ReactDomComponentFactoryProxy details = _createDomFactory('details');
 
 /// The HTML `<dfn>` `Element`.
-dynamic dfn = validateJsApiThenReturn(() => ReactDomComponentFactoryProxy('dfn'));
+ReactDomComponentFactoryProxy dfn = _createDomFactory('dfn');
 
 /// The HTML `<dialog>` `DialogElement`.
-dynamic dialog = validateJsApiThenReturn(() => ReactDomComponentFactoryProxy('dialog'));
+ReactDomComponentFactoryProxy dialog = _createDomFactory('dialog');
 
 /// The HTML `<div>` `DivElement`.
-dynamic div = validateJsApiThenReturn(() => ReactDomComponentFactoryProxy('div'));
+ReactDomComponentFactoryProxy div = _createDomFactory('div');
 
 /// The HTML `<dl>` `DListElement`.
-dynamic dl = validateJsApiThenReturn(() => ReactDomComponentFactoryProxy('dl'));
+ReactDomComponentFactoryProxy dl = _createDomFactory('dl');
 
 /// The HTML `<dt>` `Element`.
-dynamic dt = validateJsApiThenReturn(() => ReactDomComponentFactoryProxy('dt'));
+ReactDomComponentFactoryProxy dt = _createDomFactory('dt');
 
 /// The HTML `<em>` `Element`.
-dynamic em = validateJsApiThenReturn(() => ReactDomComponentFactoryProxy('em'));
+ReactDomComponentFactoryProxy em = _createDomFactory('em');
 
 /// The HTML `<embed>` `EmbedElement`.
-dynamic embed = validateJsApiThenReturn(() => ReactDomComponentFactoryProxy('embed'));
+ReactDomComponentFactoryProxy embed = _createDomFactory('embed');
 
 /// The HTML `<fieldset>` `FieldSetElement`.
-dynamic fieldset = validateJsApiThenReturn(() => ReactDomComponentFactoryProxy('fieldset'));
+ReactDomComponentFactoryProxy fieldset = _createDomFactory('fieldset');
 
 /// The HTML `<figcaption>` `Element`.
-dynamic figcaption = validateJsApiThenReturn(() => ReactDomComponentFactoryProxy('figcaption'));
+ReactDomComponentFactoryProxy figcaption = _createDomFactory('figcaption');
 
 /// The HTML `<figure>` `Element`.
-dynamic figure = validateJsApiThenReturn(() => ReactDomComponentFactoryProxy('figure'));
+ReactDomComponentFactoryProxy figure = _createDomFactory('figure');
 
 /// The HTML `<footer>` `Element`.
-dynamic footer = validateJsApiThenReturn(() => ReactDomComponentFactoryProxy('footer'));
+ReactDomComponentFactoryProxy footer = _createDomFactory('footer');
 
 /// The HTML `<form>` `FormElement`.
-dynamic form = validateJsApiThenReturn(() => ReactDomComponentFactoryProxy('form'));
+ReactDomComponentFactoryProxy form = _createDomFactory('form');
 
 /// The HTML `<h1>` `HeadingElement`.
-dynamic h1 = validateJsApiThenReturn(() => ReactDomComponentFactoryProxy('h1'));
+ReactDomComponentFactoryProxy h1 = _createDomFactory('h1');
 
 /// The HTML `<h2>` `HeadingElement`.
-dynamic h2 = validateJsApiThenReturn(() => ReactDomComponentFactoryProxy('h2'));
+ReactDomComponentFactoryProxy h2 = _createDomFactory('h2');
 
 /// The HTML `<h3>` `HeadingElement`.
-dynamic h3 = validateJsApiThenReturn(() => ReactDomComponentFactoryProxy('h3'));
+ReactDomComponentFactoryProxy h3 = _createDomFactory('h3');
 
 /// The HTML `<h4>` `HeadingElement`.
-dynamic h4 = validateJsApiThenReturn(() => ReactDomComponentFactoryProxy('h4'));
+ReactDomComponentFactoryProxy h4 = _createDomFactory('h4');
 
 /// The HTML `<h5>` `HeadingElement`.
-dynamic h5 = validateJsApiThenReturn(() => ReactDomComponentFactoryProxy('h5'));
+ReactDomComponentFactoryProxy h5 = _createDomFactory('h5');
 
 /// The HTML `<h6>` `HeadingElement`.
-dynamic h6 = validateJsApiThenReturn(() => ReactDomComponentFactoryProxy('h6'));
+ReactDomComponentFactoryProxy h6 = _createDomFactory('h6');
 
 /// The HTML `<head>` `HeadElement`.
-dynamic head = validateJsApiThenReturn(() => ReactDomComponentFactoryProxy('head'));
+ReactDomComponentFactoryProxy head = _createDomFactory('head');
 
 /// The HTML `<header>` `Element`.
-dynamic header = validateJsApiThenReturn(() => ReactDomComponentFactoryProxy('header'));
+ReactDomComponentFactoryProxy header = _createDomFactory('header');
 
 /// The HTML `<hr>` `HRElement`.
-dynamic hr = validateJsApiThenReturn(() => ReactDomComponentFactoryProxy('hr'));
+ReactDomComponentFactoryProxy hr = _createDomFactory('hr');
 
 /// The HTML `<html>` `HtmlHtmlElement`.
-dynamic html = validateJsApiThenReturn(() => ReactDomComponentFactoryProxy('html'));
+ReactDomComponentFactoryProxy html = _createDomFactory('html');
 
 /// The HTML `<i>` `Element`.
-dynamic i = validateJsApiThenReturn(() => ReactDomComponentFactoryProxy('i'));
+ReactDomComponentFactoryProxy i = _createDomFactory('i');
 
 /// The HTML `<iframe>` `IFrameElement`.
-dynamic iframe = validateJsApiThenReturn(() => ReactDomComponentFactoryProxy('iframe'));
+ReactDomComponentFactoryProxy iframe = _createDomFactory('iframe');
 
 /// The HTML `<img>` `ImageElement`.
-dynamic img = validateJsApiThenReturn(() => ReactDomComponentFactoryProxy('img'));
+ReactDomComponentFactoryProxy img = _createDomFactory('img');
 
 /// The HTML `<input>` `InputElement`.
-dynamic input = validateJsApiThenReturn(() => ReactDomComponentFactoryProxy('input'));
+ReactDomComponentFactoryProxy input = _createDomFactory('input');
 
 /// The HTML `<ins>` `Element`.
-dynamic ins = validateJsApiThenReturn(() => ReactDomComponentFactoryProxy('ins'));
+ReactDomComponentFactoryProxy ins = _createDomFactory('ins');
 
 /// The HTML `<kbd>` `Element`.
-dynamic kbd = validateJsApiThenReturn(() => ReactDomComponentFactoryProxy('kbd'));
+ReactDomComponentFactoryProxy kbd = _createDomFactory('kbd');
 
 /// The HTML `<keygen>` `KeygenElement`.
-dynamic keygen = validateJsApiThenReturn(() => ReactDomComponentFactoryProxy('keygen'));
+ReactDomComponentFactoryProxy keygen = _createDomFactory('keygen');
 
 /// The HTML `<label>` `LabelElement`.
-dynamic label = validateJsApiThenReturn(() => ReactDomComponentFactoryProxy('label'));
+ReactDomComponentFactoryProxy label = _createDomFactory('label');
 
 /// The HTML `<legend>` `LegendElement`.
-dynamic legend = validateJsApiThenReturn(() => ReactDomComponentFactoryProxy('legend'));
+ReactDomComponentFactoryProxy legend = _createDomFactory('legend');
 
 /// The HTML `<li>` `LIElement`.
-dynamic li = validateJsApiThenReturn(() => ReactDomComponentFactoryProxy('li'));
+ReactDomComponentFactoryProxy li = _createDomFactory('li');
 
 /// The HTML `<link>` `LinkElement`.
-dynamic link = validateJsApiThenReturn(() => ReactDomComponentFactoryProxy('link'));
-
-@Deprecated('Use htmlMain instead. To be removed in react 7.0.0.')
-dynamic main = htmlMain;
+ReactDomComponentFactoryProxy link = _createDomFactory('link');
 
 /// The HTML `<main>` `Element`.
-dynamic htmlMain = validateJsApiThenReturn(() => ReactDomComponentFactoryProxy('main'));
+ReactDomComponentFactoryProxy htmlMain = _createDomFactory('main');
 
 /// The HTML `<map>` `MapElement`.
-dynamic map = validateJsApiThenReturn(() => ReactDomComponentFactoryProxy('map'));
+ReactDomComponentFactoryProxy map = _createDomFactory('map');
 
 /// The HTML `<mark>` `Element`.
-dynamic mark = validateJsApiThenReturn(() => ReactDomComponentFactoryProxy('mark'));
+ReactDomComponentFactoryProxy mark = _createDomFactory('mark');
 
 /// The HTML `<menu>` `MenuElement`.
-dynamic menu = validateJsApiThenReturn(() => ReactDomComponentFactoryProxy('menu'));
+ReactDomComponentFactoryProxy menu = _createDomFactory('menu');
 
 /// The HTML `<menuitem>` `MenuItemElement`.
-dynamic menuitem = validateJsApiThenReturn(() => ReactDomComponentFactoryProxy('menuitem'));
+ReactDomComponentFactoryProxy menuitem = _createDomFactory('menuitem');
 
 /// The HTML `<meta>` `MetaElement`.
-dynamic meta = validateJsApiThenReturn(() => ReactDomComponentFactoryProxy('meta'));
+ReactDomComponentFactoryProxy meta = _createDomFactory('meta');
 
 /// The HTML `<meter>` `MeterElement`.
-dynamic meter = validateJsApiThenReturn(() => ReactDomComponentFactoryProxy('meter'));
+ReactDomComponentFactoryProxy meter = _createDomFactory('meter');
 
 /// The HTML `<nav>` `Element`.
-dynamic nav = validateJsApiThenReturn(() => ReactDomComponentFactoryProxy('nav'));
+ReactDomComponentFactoryProxy nav = _createDomFactory('nav');
 
 /// The HTML `<noscript>` `Element`.
-dynamic noscript = validateJsApiThenReturn(() => ReactDomComponentFactoryProxy('noscript'));
+ReactDomComponentFactoryProxy noscript = _createDomFactory('noscript');
 
 /// The HTML `<object>` `ObjectElement`.
-dynamic object = validateJsApiThenReturn(() => ReactDomComponentFactoryProxy('object'));
+ReactDomComponentFactoryProxy object = _createDomFactory('object');
 
 /// The HTML `<ol>` `OListElement`.
-dynamic ol = validateJsApiThenReturn(() => ReactDomComponentFactoryProxy('ol'));
+ReactDomComponentFactoryProxy ol = _createDomFactory('ol');
 
 /// The HTML `<optgroup>` `OptGroupElement`.
-dynamic optgroup = validateJsApiThenReturn(() => ReactDomComponentFactoryProxy('optgroup'));
+ReactDomComponentFactoryProxy optgroup = _createDomFactory('optgroup');
 
 /// The HTML `<option>` `OptionElement`.
-dynamic option = validateJsApiThenReturn(() => ReactDomComponentFactoryProxy('option'));
+ReactDomComponentFactoryProxy option = _createDomFactory('option');
 
 /// The HTML `<output>` `OutputElement`.
-dynamic output = validateJsApiThenReturn(() => ReactDomComponentFactoryProxy('output'));
+ReactDomComponentFactoryProxy output = _createDomFactory('output');
 
 /// The HTML `<p>` `ParagraphElement`.
-dynamic p = validateJsApiThenReturn(() => ReactDomComponentFactoryProxy('p'));
+ReactDomComponentFactoryProxy p = _createDomFactory('p');
 
 /// The HTML `<param>` `ParamElement`.
-dynamic param = validateJsApiThenReturn(() => ReactDomComponentFactoryProxy('param'));
+ReactDomComponentFactoryProxy param = _createDomFactory('param');
 
 /// The HTML `<picture>` `PictureElement`.
-dynamic picture = validateJsApiThenReturn(() => ReactDomComponentFactoryProxy('picture'));
+ReactDomComponentFactoryProxy picture = _createDomFactory('picture');
 
 /// The HTML `<pre>` `PreElement`.
-dynamic pre = validateJsApiThenReturn(() => ReactDomComponentFactoryProxy('pre'));
+ReactDomComponentFactoryProxy pre = _createDomFactory('pre');
 
 /// The HTML `<progress>` `ProgressElement`.
-dynamic progress = validateJsApiThenReturn(() => ReactDomComponentFactoryProxy('progress'));
+ReactDomComponentFactoryProxy progress = _createDomFactory('progress');
 
 /// The HTML `<q>` `QuoteElement`.
-dynamic q = validateJsApiThenReturn(() => ReactDomComponentFactoryProxy('q'));
+ReactDomComponentFactoryProxy q = _createDomFactory('q');
 
 /// The HTML `<rp>` `Element`.
-dynamic rp = validateJsApiThenReturn(() => ReactDomComponentFactoryProxy('rp'));
+ReactDomComponentFactoryProxy rp = _createDomFactory('rp');
 
 /// The HTML `<rt>` `Element`.
-dynamic rt = validateJsApiThenReturn(() => ReactDomComponentFactoryProxy('rt'));
+ReactDomComponentFactoryProxy rt = _createDomFactory('rt');
 
 /// The HTML `<ruby>` `Element`.
-dynamic ruby = validateJsApiThenReturn(() => ReactDomComponentFactoryProxy('ruby'));
+ReactDomComponentFactoryProxy ruby = _createDomFactory('ruby');
 
 /// The HTML `<s>` `Element`.
-dynamic s = validateJsApiThenReturn(() => ReactDomComponentFactoryProxy('s'));
+ReactDomComponentFactoryProxy s = _createDomFactory('s');
 
 /// The HTML `<samp>` `Element`.
-dynamic samp = validateJsApiThenReturn(() => ReactDomComponentFactoryProxy('samp'));
+ReactDomComponentFactoryProxy samp = _createDomFactory('samp');
 
 /// The HTML `<script>` `ScriptElement`.
-dynamic script = validateJsApiThenReturn(() => ReactDomComponentFactoryProxy('script'));
+ReactDomComponentFactoryProxy script = _createDomFactory('script');
 
 /// The HTML `<section>` `Element`.
-dynamic section = validateJsApiThenReturn(() => ReactDomComponentFactoryProxy('section'));
+ReactDomComponentFactoryProxy section = _createDomFactory('section');
 
 /// The HTML `<select>` `SelectElement`.
-dynamic select = validateJsApiThenReturn(() => ReactDomComponentFactoryProxy('select'));
+ReactDomComponentFactoryProxy select = _createDomFactory('select');
 
 /// The HTML `<small>` `Element`.
-dynamic small = validateJsApiThenReturn(() => ReactDomComponentFactoryProxy('small'));
+ReactDomComponentFactoryProxy small = _createDomFactory('small');
 
 /// The HTML `<source>` `SourceElement`.
-dynamic source = validateJsApiThenReturn(() => ReactDomComponentFactoryProxy('source'));
+ReactDomComponentFactoryProxy source = _createDomFactory('source');
 
 /// The HTML `<span>` `SpanElement`.
-dynamic span = validateJsApiThenReturn(() => ReactDomComponentFactoryProxy('span'));
+ReactDomComponentFactoryProxy span = _createDomFactory('span');
 
 /// The HTML `<strong>` `Element`.
-dynamic strong = validateJsApiThenReturn(() => ReactDomComponentFactoryProxy('strong'));
+ReactDomComponentFactoryProxy strong = _createDomFactory('strong');
 
 /// The HTML `<style>` `StyleElement`.
-dynamic style = validateJsApiThenReturn(() => ReactDomComponentFactoryProxy('style'));
+ReactDomComponentFactoryProxy style = _createDomFactory('style');
 
 /// The HTML `<sub>` `Element`.
-dynamic sub = validateJsApiThenReturn(() => ReactDomComponentFactoryProxy('sub'));
+ReactDomComponentFactoryProxy sub = _createDomFactory('sub');
 
 /// The HTML `<summary>` `Element`.
-dynamic summary = validateJsApiThenReturn(() => ReactDomComponentFactoryProxy('summary'));
+ReactDomComponentFactoryProxy summary = _createDomFactory('summary');
 
 /// The HTML `<sup>` `Element`.
-dynamic sup = validateJsApiThenReturn(() => ReactDomComponentFactoryProxy('sup'));
+ReactDomComponentFactoryProxy sup = _createDomFactory('sup');
 
 /// The HTML `<table>` `TableElement`.
-dynamic table = validateJsApiThenReturn(() => ReactDomComponentFactoryProxy('table'));
+ReactDomComponentFactoryProxy table = _createDomFactory('table');
 
 /// The HTML `<tbody>` `TableSectionElement`.
-dynamic tbody = validateJsApiThenReturn(() => ReactDomComponentFactoryProxy('tbody'));
+ReactDomComponentFactoryProxy tbody = _createDomFactory('tbody');
 
 /// The HTML `<td>` `TableCellElement`.
-dynamic td = validateJsApiThenReturn(() => ReactDomComponentFactoryProxy('td'));
+ReactDomComponentFactoryProxy td = _createDomFactory('td');
 
 /// The HTML `<textarea>` `TextAreaElement`.
-dynamic textarea = validateJsApiThenReturn(() => ReactDomComponentFactoryProxy('textarea'));
+ReactDomComponentFactoryProxy textarea = _createDomFactory('textarea');
 
 /// The HTML `<tfoot>` `TableSectionElement`.
-dynamic tfoot = validateJsApiThenReturn(() => ReactDomComponentFactoryProxy('tfoot'));
+ReactDomComponentFactoryProxy tfoot = _createDomFactory('tfoot');
 
 /// The HTML `<th>` `TableCellElement`.
-dynamic th = validateJsApiThenReturn(() => ReactDomComponentFactoryProxy('th'));
+ReactDomComponentFactoryProxy th = _createDomFactory('th');
 
 /// The HTML `<thead>` `TableSectionElement`.
-dynamic thead = validateJsApiThenReturn(() => ReactDomComponentFactoryProxy('thead'));
+ReactDomComponentFactoryProxy thead = _createDomFactory('thead');
 
 /// The HTML `<time>` `TimeInputElement`.
-dynamic time = validateJsApiThenReturn(() => ReactDomComponentFactoryProxy('time'));
+ReactDomComponentFactoryProxy time = _createDomFactory('time');
 
 /// The HTML `<title>` `TitleElement`.
-dynamic title = validateJsApiThenReturn(() => ReactDomComponentFactoryProxy('title'));
+ReactDomComponentFactoryProxy title = _createDomFactory('title');
 
 /// The HTML `<tr>` `TableRowElement`.
-dynamic tr = validateJsApiThenReturn(() => ReactDomComponentFactoryProxy('tr'));
+ReactDomComponentFactoryProxy tr = _createDomFactory('tr');
 
 /// The HTML `<track>` `TrackElement`.
-dynamic track = validateJsApiThenReturn(() => ReactDomComponentFactoryProxy('track'));
+ReactDomComponentFactoryProxy track = _createDomFactory('track');
 
 /// The HTML `<u>` `Element`.
-dynamic u = validateJsApiThenReturn(() => ReactDomComponentFactoryProxy('u'));
+ReactDomComponentFactoryProxy u = _createDomFactory('u');
 
 /// The HTML `<ul>` `UListElement`.
-dynamic ul = validateJsApiThenReturn(() => ReactDomComponentFactoryProxy('ul'));
+ReactDomComponentFactoryProxy ul = _createDomFactory('ul');
 
 /// The HTML `<var>` `Element`.
 ///
 /// _Named variable because `var` is a reserved word in Dart._
-dynamic variable = validateJsApiThenReturn(() => ReactDomComponentFactoryProxy('var'));
+ReactDomComponentFactoryProxy variable = _createDomFactory('var');
 
 /// The HTML `<video>` `VideoElement`.
-dynamic video = validateJsApiThenReturn(() => ReactDomComponentFactoryProxy('video'));
+ReactDomComponentFactoryProxy video = _createDomFactory('video');
 
 /// The HTML `<wbr>` `Element`.
-dynamic wbr = validateJsApiThenReturn(() => ReactDomComponentFactoryProxy('wbr'));
+ReactDomComponentFactoryProxy wbr = _createDomFactory('wbr');
 
 /// The SVG `<altGlyph>` `AltGlyphElement`.
-dynamic altGlyph = validateJsApiThenReturn(() => ReactDomComponentFactoryProxy('altGlyph'));
+ReactDomComponentFactoryProxy altGlyph = _createDomFactory('altGlyph');
 
 /// The SVG `<altGlyphDef>` `AltGlyphDefElement`.
-dynamic altGlyphDef = validateJsApiThenReturn(() => ReactDomComponentFactoryProxy('altGlyphDef'));
+ReactDomComponentFactoryProxy altGlyphDef = _createDomFactory('altGlyphDef');
 
 /// The SVG `<altGlyphItem>` `AltGlyphItemElement`.
-dynamic altGlyphItem = validateJsApiThenReturn(() => ReactDomComponentFactoryProxy('altGlyphItem'));
+ReactDomComponentFactoryProxy altGlyphItem = _createDomFactory('altGlyphItem');
 
 /// The SVG `<animate>` `AnimateElement`.
-dynamic animate = validateJsApiThenReturn(() => ReactDomComponentFactoryProxy('animate'));
+ReactDomComponentFactoryProxy animate = _createDomFactory('animate');
 
 /// The SVG `<animateColor>` `AnimateColorElement`.
-dynamic animateColor = validateJsApiThenReturn(() => ReactDomComponentFactoryProxy('animateColor'));
+ReactDomComponentFactoryProxy animateColor = _createDomFactory('animateColor');
 
 /// The SVG `<animateMotion>` `AnimateMotionElement`.
-dynamic animateMotion = validateJsApiThenReturn(() => ReactDomComponentFactoryProxy('animateMotion'));
+ReactDomComponentFactoryProxy animateMotion = _createDomFactory('animateMotion');
 
 /// The SVG `<animateTransform>` `AnimateTransformElement`.
-dynamic animateTransform = validateJsApiThenReturn(() => ReactDomComponentFactoryProxy('animateTransform'));
+ReactDomComponentFactoryProxy animateTransform = _createDomFactory('animateTransform');
 
 /// The SVG `<circle>` `CircleElement`.
-dynamic circle = validateJsApiThenReturn(() => ReactDomComponentFactoryProxy('circle'));
+ReactDomComponentFactoryProxy circle = _createDomFactory('circle');
 
 /// The SVG `<clipPath>` `ClipPathElement`.
-dynamic clipPath = validateJsApiThenReturn(() => ReactDomComponentFactoryProxy('clipPath'));
+ReactDomComponentFactoryProxy clipPath = _createDomFactory('clipPath');
 
 /// The SVG `<color-profile>` `ColorProfileElement`.
-dynamic colorProfile = validateJsApiThenReturn(() => ReactDomComponentFactoryProxy('color-profile'));
+ReactDomComponentFactoryProxy colorProfile = _createDomFactory('color-profile');
 
 /// The SVG `<cursor>` `CursorElement`.
-dynamic cursor = validateJsApiThenReturn(() => ReactDomComponentFactoryProxy('cursor'));
+ReactDomComponentFactoryProxy cursor = _createDomFactory('cursor');
 
 /// The SVG `<defs>` `DefsElement`.
-dynamic defs = validateJsApiThenReturn(() => ReactDomComponentFactoryProxy('defs'));
+ReactDomComponentFactoryProxy defs = _createDomFactory('defs');
 
 /// The SVG `<desc>` `DescElement`.
-dynamic desc = validateJsApiThenReturn(() => ReactDomComponentFactoryProxy('desc'));
+ReactDomComponentFactoryProxy desc = _createDomFactory('desc');
 
 /// The SVG `<discard>` `DiscardElement`.
-dynamic discard = validateJsApiThenReturn(() => ReactDomComponentFactoryProxy('discard'));
+ReactDomComponentFactoryProxy discard = _createDomFactory('discard');
 
 /// The SVG `<ellipse>` `EllipseElement`.
-dynamic ellipse = validateJsApiThenReturn(() => ReactDomComponentFactoryProxy('ellipse'));
+ReactDomComponentFactoryProxy ellipse = _createDomFactory('ellipse');
 
 /// The SVG `<feBlend>` `FeBlendElement`.
-dynamic feBlend = validateJsApiThenReturn(() => ReactDomComponentFactoryProxy('feBlend'));
+ReactDomComponentFactoryProxy feBlend = _createDomFactory('feBlend');
 
 /// The SVG `<feColorMatrix>` `FeColorMatrixElement`.
-dynamic feColorMatrix = validateJsApiThenReturn(() => ReactDomComponentFactoryProxy('feColorMatrix'));
+ReactDomComponentFactoryProxy feColorMatrix = _createDomFactory('feColorMatrix');
 
 /// The SVG `<feComponentTransfer>` `FeComponentTransferElement`.
-dynamic feComponentTransfer = validateJsApiThenReturn(() => ReactDomComponentFactoryProxy('feComponentTransfer'));
+ReactDomComponentFactoryProxy feComponentTransfer = _createDomFactory('feComponentTransfer');
 
 /// The SVG `<feComposite>` `FeCompositeElement`.
-dynamic feComposite = validateJsApiThenReturn(() => ReactDomComponentFactoryProxy('feComposite'));
+ReactDomComponentFactoryProxy feComposite = _createDomFactory('feComposite');
 
 /// The SVG `<feConvolveMatrix>` `FeConvolveMatrixElement`.
-dynamic feConvolveMatrix = validateJsApiThenReturn(() => ReactDomComponentFactoryProxy('feConvolveMatrix'));
+ReactDomComponentFactoryProxy feConvolveMatrix = _createDomFactory('feConvolveMatrix');
 
 /// The SVG `<feDiffuseLighting>` `FeDiffuseLightingElement`.
-dynamic feDiffuseLighting = validateJsApiThenReturn(() => ReactDomComponentFactoryProxy('feDiffuseLighting'));
+ReactDomComponentFactoryProxy feDiffuseLighting = _createDomFactory('feDiffuseLighting');
 
 /// The SVG `<feDisplacementMap>` `FeDisplacementMapElement`.
-dynamic feDisplacementMap = validateJsApiThenReturn(() => ReactDomComponentFactoryProxy('feDisplacementMap'));
+ReactDomComponentFactoryProxy feDisplacementMap = _createDomFactory('feDisplacementMap');
 
 /// The SVG `<feDistantLight>` `FeDistantLightElement`.
-dynamic feDistantLight = validateJsApiThenReturn(() => ReactDomComponentFactoryProxy('feDistantLight'));
+ReactDomComponentFactoryProxy feDistantLight = _createDomFactory('feDistantLight');
 
 /// The SVG `<feDropShadow>` `FeDropShadowElement`.
-dynamic feDropShadow = validateJsApiThenReturn(() => ReactDomComponentFactoryProxy('feDropShadow'));
+ReactDomComponentFactoryProxy feDropShadow = _createDomFactory('feDropShadow');
 
 /// The SVG `<feFlood>` `FeFloodElement`.
-dynamic feFlood = validateJsApiThenReturn(() => ReactDomComponentFactoryProxy('feFlood'));
+ReactDomComponentFactoryProxy feFlood = _createDomFactory('feFlood');
 
 /// The SVG `<feFuncA>` `FeFuncAElement`.
-dynamic feFuncA = validateJsApiThenReturn(() => ReactDomComponentFactoryProxy('feFuncA'));
+ReactDomComponentFactoryProxy feFuncA = _createDomFactory('feFuncA');
 
 /// The SVG `<feFuncB>` `FeFuncBElement`.
-dynamic feFuncB = validateJsApiThenReturn(() => ReactDomComponentFactoryProxy('feFuncB'));
+ReactDomComponentFactoryProxy feFuncB = _createDomFactory('feFuncB');
 
 /// The SVG `<feFuncG>` `FeFuncGElement`.
-dynamic feFuncG = validateJsApiThenReturn(() => ReactDomComponentFactoryProxy('feFuncG'));
+ReactDomComponentFactoryProxy feFuncG = _createDomFactory('feFuncG');
 
 /// The SVG `<feFuncR>` `FeFuncRElement`.
-dynamic feFuncR = validateJsApiThenReturn(() => ReactDomComponentFactoryProxy('feFuncR'));
+ReactDomComponentFactoryProxy feFuncR = _createDomFactory('feFuncR');
 
 /// The SVG `<feGaussianBlur>` `FeGaussianBlurElement`.
-dynamic feGaussianBlur = validateJsApiThenReturn(() => ReactDomComponentFactoryProxy('feGaussianBlur'));
+ReactDomComponentFactoryProxy feGaussianBlur = _createDomFactory('feGaussianBlur');
 
 /// The SVG `<feImage>` `FeImageElement`.
-dynamic feImage = validateJsApiThenReturn(() => ReactDomComponentFactoryProxy('feImage'));
+ReactDomComponentFactoryProxy feImage = _createDomFactory('feImage');
 
 /// The SVG `<feMerge>` `FeMergeElement`.
-dynamic feMerge = validateJsApiThenReturn(() => ReactDomComponentFactoryProxy('feMerge'));
+ReactDomComponentFactoryProxy feMerge = _createDomFactory('feMerge');
 
 /// The SVG `<feMergeNode>` `FeMergeNodeElement`.
-dynamic feMergeNode = validateJsApiThenReturn(() => ReactDomComponentFactoryProxy('feMergeNode'));
+ReactDomComponentFactoryProxy feMergeNode = _createDomFactory('feMergeNode');
 
 /// The SVG `<feMorphology>` `FeMorphologyElement`.
-dynamic feMorphology = validateJsApiThenReturn(() => ReactDomComponentFactoryProxy('feMorphology'));
+ReactDomComponentFactoryProxy feMorphology = _createDomFactory('feMorphology');
 
 /// The SVG `<feOffset>` `FeOffsetElement`.
-dynamic feOffset = validateJsApiThenReturn(() => ReactDomComponentFactoryProxy('feOffset'));
+ReactDomComponentFactoryProxy feOffset = _createDomFactory('feOffset');
 
 /// The SVG `<fePointLight>` `FePointLightElement`.
-dynamic fePointLight = validateJsApiThenReturn(() => ReactDomComponentFactoryProxy('fePointLight'));
+ReactDomComponentFactoryProxy fePointLight = _createDomFactory('fePointLight');
 
 /// The SVG `<feSpecularLighting>` `FeSpecularLightingElement`.
-dynamic feSpecularLighting = validateJsApiThenReturn(() => ReactDomComponentFactoryProxy('feSpecularLighting'));
+ReactDomComponentFactoryProxy feSpecularLighting = _createDomFactory('feSpecularLighting');
 
 /// The SVG `<feSpotLight>` `FeSpotLightElement`.
-dynamic feSpotLight = validateJsApiThenReturn(() => ReactDomComponentFactoryProxy('feSpotLight'));
+ReactDomComponentFactoryProxy feSpotLight = _createDomFactory('feSpotLight');
 
 /// The SVG `<feTile>` `FeTileElement`.
-dynamic feTile = validateJsApiThenReturn(() => ReactDomComponentFactoryProxy('feTile'));
+ReactDomComponentFactoryProxy feTile = _createDomFactory('feTile');
 
 /// The SVG `<feTurbulence>` `FeTurbulenceElement`.
-dynamic feTurbulence = validateJsApiThenReturn(() => ReactDomComponentFactoryProxy('feTurbulence'));
+ReactDomComponentFactoryProxy feTurbulence = _createDomFactory('feTurbulence');
 
 /// The SVG `<filter>` `FilterElement`.
-dynamic filter = validateJsApiThenReturn(() => ReactDomComponentFactoryProxy('filter'));
+ReactDomComponentFactoryProxy filter = _createDomFactory('filter');
 
 /// The SVG `<font>` `FontElement`.
-dynamic font = validateJsApiThenReturn(() => ReactDomComponentFactoryProxy('font'));
+ReactDomComponentFactoryProxy font = _createDomFactory('font');
 
 /// The SVG `<font-face>` `FontFaceElement`.
-dynamic fontFace = validateJsApiThenReturn(() => ReactDomComponentFactoryProxy('font-face'));
+ReactDomComponentFactoryProxy fontFace = _createDomFactory('font-face');
 
 /// The SVG `<font-face-format>` `FontFaceFormatElement`.
-dynamic fontFaceFormat = validateJsApiThenReturn(() => ReactDomComponentFactoryProxy('font-face-format'));
+ReactDomComponentFactoryProxy fontFaceFormat = _createDomFactory('font-face-format');
 
 /// The SVG `<font-face-name>` `FontFaceNameElement`.
-dynamic fontFaceName = validateJsApiThenReturn(() => ReactDomComponentFactoryProxy('font-face-name'));
+ReactDomComponentFactoryProxy fontFaceName = _createDomFactory('font-face-name');
 
 /// The SVG `<font-face-src>` `FontFaceSrcElement`.
-dynamic fontFaceSrc = validateJsApiThenReturn(() => ReactDomComponentFactoryProxy('font-face-src'));
+ReactDomComponentFactoryProxy fontFaceSrc = _createDomFactory('font-face-src');
 
 /// The SVG `<font-face-uri>` `FontFaceUriElement`.
-dynamic fontFaceUri = validateJsApiThenReturn(() => ReactDomComponentFactoryProxy('font-face-uri'));
+ReactDomComponentFactoryProxy fontFaceUri = _createDomFactory('font-face-uri');
 
 /// The SVG `<foreignObject>` `ForeignObjectElement`.
-dynamic foreignObject = validateJsApiThenReturn(() => ReactDomComponentFactoryProxy('foreignObject'));
+ReactDomComponentFactoryProxy foreignObject = _createDomFactory('foreignObject');
 
 /// The SVG `<g>` `GElement`.
-dynamic g = validateJsApiThenReturn(() => ReactDomComponentFactoryProxy('g'));
+ReactDomComponentFactoryProxy g = _createDomFactory('g');
 
 /// The SVG `<glyph>` `GlyphElement`.
-dynamic glyph = validateJsApiThenReturn(() => ReactDomComponentFactoryProxy('glyph'));
+ReactDomComponentFactoryProxy glyph = _createDomFactory('glyph');
 
 /// The SVG `<glyphRef>` `GlyphRefElement`.
-dynamic glyphRef = validateJsApiThenReturn(() => ReactDomComponentFactoryProxy('glyphRef'));
+ReactDomComponentFactoryProxy glyphRef = _createDomFactory('glyphRef');
 
 /// The SVG `<hatch>` `HatchElement`.
-dynamic hatch = validateJsApiThenReturn(() => ReactDomComponentFactoryProxy('hatch'));
+ReactDomComponentFactoryProxy hatch = _createDomFactory('hatch');
 
 /// The SVG `<hatchpath>` `HatchpathElement`.
-dynamic hatchpath = validateJsApiThenReturn(() => ReactDomComponentFactoryProxy('hatchpath'));
+ReactDomComponentFactoryProxy hatchpath = _createDomFactory('hatchpath');
 
 /// The SVG `<hkern>` `HkernElement`.
-dynamic hkern = validateJsApiThenReturn(() => ReactDomComponentFactoryProxy('hkern'));
+ReactDomComponentFactoryProxy hkern = _createDomFactory('hkern');
 
 /// The SVG `<image>` `ImageElement`.
-dynamic image = validateJsApiThenReturn(() => ReactDomComponentFactoryProxy('image'));
+ReactDomComponentFactoryProxy image = _createDomFactory('image');
 
 /// The SVG `<line>` `LineElement`.
-dynamic line = validateJsApiThenReturn(() => ReactDomComponentFactoryProxy('line'));
+ReactDomComponentFactoryProxy line = _createDomFactory('line');
 
 /// The SVG `<linearGradient>` `LinearGradientElement`.
-dynamic linearGradient = validateJsApiThenReturn(() => ReactDomComponentFactoryProxy('linearGradient'));
+ReactDomComponentFactoryProxy linearGradient = _createDomFactory('linearGradient');
 
 /// The SVG `<marker>` `MarkerElement`.
-dynamic marker = validateJsApiThenReturn(() => ReactDomComponentFactoryProxy('marker'));
+ReactDomComponentFactoryProxy marker = _createDomFactory('marker');
 
 /// The SVG `<mask>` `MaskElement`.
-dynamic mask = validateJsApiThenReturn(() => ReactDomComponentFactoryProxy('mask'));
+ReactDomComponentFactoryProxy mask = _createDomFactory('mask');
 
 /// The SVG `<mesh>` `MeshElement`.
-dynamic mesh = validateJsApiThenReturn(() => ReactDomComponentFactoryProxy('mesh'));
+ReactDomComponentFactoryProxy mesh = _createDomFactory('mesh');
 
 /// The SVG `<meshgradient>` `MeshgradientElement`.
-dynamic meshgradient = validateJsApiThenReturn(() => ReactDomComponentFactoryProxy('meshgradient'));
+ReactDomComponentFactoryProxy meshgradient = _createDomFactory('meshgradient');
 
 /// The SVG `<meshpatch>` `MeshpatchElement`.
-dynamic meshpatch = validateJsApiThenReturn(() => ReactDomComponentFactoryProxy('meshpatch'));
+ReactDomComponentFactoryProxy meshpatch = _createDomFactory('meshpatch');
 
 /// The SVG `<meshrow>` `MeshrowElement`.
-dynamic meshrow = validateJsApiThenReturn(() => ReactDomComponentFactoryProxy('meshrow'));
+ReactDomComponentFactoryProxy meshrow = _createDomFactory('meshrow');
 
 /// The SVG `<metadata>` `MetadataElement`.
-dynamic metadata = validateJsApiThenReturn(() => ReactDomComponentFactoryProxy('metadata'));
+ReactDomComponentFactoryProxy metadata = _createDomFactory('metadata');
 
 /// The SVG `<missing-glyph>` `MissingGlyphElement`.
-dynamic missingGlyph = validateJsApiThenReturn(() => ReactDomComponentFactoryProxy('missing-glyph'));
+ReactDomComponentFactoryProxy missingGlyph = _createDomFactory('missing-glyph');
 
 /// The SVG `<mpath>` `MpathElement`.
-dynamic mpath = validateJsApiThenReturn(() => ReactDomComponentFactoryProxy('mpath'));
+ReactDomComponentFactoryProxy mpath = _createDomFactory('mpath');
 
 /// The SVG `<path>` `PathElement`.
-dynamic path = validateJsApiThenReturn(() => ReactDomComponentFactoryProxy('path'));
+ReactDomComponentFactoryProxy path = _createDomFactory('path');
 
 /// The SVG `<pattern>` `PatternElement`.
-dynamic pattern = validateJsApiThenReturn(() => ReactDomComponentFactoryProxy('pattern'));
+ReactDomComponentFactoryProxy pattern = _createDomFactory('pattern');
 
 /// The SVG `<polygon>` `PolygonElement`.
-dynamic polygon = validateJsApiThenReturn(() => ReactDomComponentFactoryProxy('polygon'));
+ReactDomComponentFactoryProxy polygon = _createDomFactory('polygon');
 
 /// The SVG `<polyline>` `PolylineElement`.
-dynamic polyline = validateJsApiThenReturn(() => ReactDomComponentFactoryProxy('polyline'));
+ReactDomComponentFactoryProxy polyline = _createDomFactory('polyline');
 
 /// The SVG `<radialGradient>` `RadialGradientElement`.
-dynamic radialGradient = validateJsApiThenReturn(() => ReactDomComponentFactoryProxy('radialGradient'));
+ReactDomComponentFactoryProxy radialGradient = _createDomFactory('radialGradient');
 
 /// The SVG `<rect>` `RectElement`.
-dynamic rect = validateJsApiThenReturn(() => ReactDomComponentFactoryProxy('rect'));
+ReactDomComponentFactoryProxy rect = _createDomFactory('rect');
 
 /// The SVG `<set>` `SetElement`.
-dynamic svgSet = validateJsApiThenReturn(() => ReactDomComponentFactoryProxy('set'));
+ReactDomComponentFactoryProxy svgSet = _createDomFactory('set');
 
 /// The SVG `<solidcolor>` `SolidcolorElement`.
-dynamic solidcolor = validateJsApiThenReturn(() => ReactDomComponentFactoryProxy('solidcolor'));
+ReactDomComponentFactoryProxy solidcolor = _createDomFactory('solidcolor');
 
 /// The SVG `<stop>` `StopElement`.
-dynamic stop = validateJsApiThenReturn(() => ReactDomComponentFactoryProxy('stop'));
+ReactDomComponentFactoryProxy stop = _createDomFactory('stop');
 
 /// The SVG `<svg>` `SvgSvgElement`.
-dynamic svg = validateJsApiThenReturn(() => ReactDomComponentFactoryProxy('svg'));
+ReactDomComponentFactoryProxy svg = _createDomFactory('svg');
 
 /// The SVG `<switch>` `SwitchElement`.
-dynamic svgSwitch = validateJsApiThenReturn(() => ReactDomComponentFactoryProxy('switch'));
+ReactDomComponentFactoryProxy svgSwitch = _createDomFactory('switch');
 
 /// The SVG `<symbol>` `SymbolElement`.
-dynamic symbol = validateJsApiThenReturn(() => ReactDomComponentFactoryProxy('symbol'));
+ReactDomComponentFactoryProxy symbol = _createDomFactory('symbol');
 
 /// The SVG `<text>` `TextElement`.
-dynamic text = validateJsApiThenReturn(() => ReactDomComponentFactoryProxy('text'));
+ReactDomComponentFactoryProxy text = _createDomFactory('text');
 
 /// The SVG `<textPath>` `TextPathElement`.
-dynamic textPath = validateJsApiThenReturn(() => ReactDomComponentFactoryProxy('textPath'));
+ReactDomComponentFactoryProxy textPath = _createDomFactory('textPath');
 
 /// The SVG `<tref>` `TrefElement`.
-dynamic tref = validateJsApiThenReturn(() => ReactDomComponentFactoryProxy('tref'));
+ReactDomComponentFactoryProxy tref = _createDomFactory('tref');
 
 /// The SVG `<tspan>` `TSpanElement`.
-dynamic tspan = validateJsApiThenReturn(() => ReactDomComponentFactoryProxy('tspan'));
+ReactDomComponentFactoryProxy tspan = _createDomFactory('tspan');
 
 /// The SVG `<unknown>` `UnknownElement`.
-dynamic unknown = validateJsApiThenReturn(() => ReactDomComponentFactoryProxy('unknown'));
+ReactDomComponentFactoryProxy unknown = _createDomFactory('unknown');
 
 /// The SVG `<use>` `UseElement`.
-dynamic use = validateJsApiThenReturn(() => ReactDomComponentFactoryProxy('use'));
+ReactDomComponentFactoryProxy use = _createDomFactory('use');
 
 /// The SVG `<view>` `ViewElement`.
-dynamic view = validateJsApiThenReturn(() => ReactDomComponentFactoryProxy('view'));
+ReactDomComponentFactoryProxy view = _createDomFactory('view');
 
 /// The SVG `<vkern>` `VkernElement`.
-dynamic vkern = validateJsApiThenReturn(() => ReactDomComponentFactoryProxy('vkern'));
+ReactDomComponentFactoryProxy vkern = _createDomFactory('vkern');

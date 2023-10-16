@@ -18,9 +18,6 @@ import 'package:react/react_client/bridge.dart';
 import 'package:react/react_client/js_backed_map.dart';
 import 'package:react/react_client/component_factory.dart'
     show ReactDartWrappedComponentFactoryProxy, ReactDartFunctionComponentFactoryProxy, ReactJsComponentFactoryProxy;
-import 'package:react/react_client/js_interop_helpers.dart';
-import 'package:react/react_client/zone.dart';
-import 'package:react/src/js_interop_util.dart';
 import 'package:react/src/react_client/dart2_interop_workaround_bindings.dart';
 
 typedef ReactJsComponentFactory = ReactElement Function(dynamic props, dynamic children);
@@ -35,21 +32,21 @@ typedef JsPropValidator = dynamic Function(
 @JS()
 abstract class React {
   external static String get version;
-  external static ReactElement cloneElement(ReactElement element, [JsMap props, dynamic children]);
+  external static ReactElement cloneElement(ReactElement element, [JsMap? props, Object? children]);
   external static ReactContext createContext([
     dynamic defaultValue,
-    int Function(dynamic currentValue, dynamic nextValue) calculateChangedBits,
+    int Function(dynamic currentValue, dynamic nextValue)? calculateChangedBits,
   ]);
   @Deprecated('For internal use only.')
   external static ReactClass createClass(ReactClassConfig reactClassConfig);
   @Deprecated('Use createElement instead. To be removed in 7.0.0.')
   external static ReactJsComponentFactory createFactory(type);
-  external static ReactElement createElement(dynamic type, props, [dynamic children]);
+  external static ReactElement createElement(dynamic type, props, [Object? children]);
   external static JsRef createRef();
   external static ReactClass forwardRef(Function(JsMap props, dynamic ref) wrapperFunction);
   external static ReactClass memo(
     dynamic wrapperFunction, [
-    bool Function(JsMap prevProps, JsMap nextProps) areEqual,
+    bool Function(JsMap prevProps, JsMap nextProps)? areEqual,
   ]);
 
   external static bool isValidElement(dynamic object);
@@ -59,16 +56,16 @@ abstract class React {
   external static ReactClass get Fragment;
 
   external static List<dynamic> useState(dynamic value);
-  external static void useEffect(dynamic Function() sideEffect, [List<Object> dependencies]);
-  external static List<dynamic> useReducer(Function reducer, dynamic initialState, [Function init]);
-  external static Function useCallback(Function callback, List dependencies);
+  external static void useEffect(dynamic Function() sideEffect, [List<Object?>? dependencies]);
+  external static List<dynamic> useReducer(Function reducer, dynamic initialState, [Function? init]);
+  external static Function useCallback(Function callback, List<Object?> dependencies);
   external static ReactContext useContext(ReactContext context);
-  external static JsRef useRef([dynamic initialValue]);
-  external static dynamic useMemo(dynamic Function() createFunction, [List<dynamic> dependencies]);
-  external static void useLayoutEffect(dynamic Function() sideEffect, [List<Object> dependencies]);
-  external static void useImperativeHandle(dynamic ref, dynamic Function() createHandle, [List<dynamic> dependencies]);
+  external static JsRef useRef([Object? initialValue]);
+  external static dynamic useMemo(dynamic Function() createFunction, [List<Object?>? dependencies]);
+  external static void useLayoutEffect(dynamic Function() sideEffect, [List<Object?>? dependencies]);
+  external static void useImperativeHandle(dynamic ref, dynamic Function() createHandle, [List<Object?>? dependencies]);
   // NOTE: The use of generics on the `useDebugValue` interop will break the hook.
-  external static dynamic useDebugValue(dynamic value, [Function format]);
+  external static dynamic useDebugValue(dynamic value, [Function? format]);
 }
 
 /// Creates a [Ref] object that can be attached to a [ReactElement] via the ref prop.
@@ -86,26 +83,19 @@ abstract class React {
 ///     }
 ///
 /// Learn more: <https://reactjs.org/docs/refs-and-the-dom.html#creating-refs>.
-Ref<T> createRef<T>() {
-  return Ref<T>();
-}
+// This return type must always be nullable since the ref is always initially empty,
+// and in most usages represents a component ref object which could be null.
+// useRef2 on the other hand, can be made non-nullable.
+Ref<T?> createRef<T>() => Ref<T?>.fromJs(React.createRef());
 
 /// When this is provided as the ref prop, a reference to the rendered component
 /// will be available via [current].
 ///
 /// See [createRef] for usage examples and more info.
+@sealed
 class Ref<T> {
   /// A JavaScript ref object returned by [React.createRef].
   final JsRef jsRef;
-
-  @Deprecated('Use createRef instead. Will be removed in 7.0.0.')
-  Ref() : jsRef = React.createRef();
-
-  /// Constructor for [useRef], calls [React.useRef] to initialize [current] to [initialValue].
-  ///
-  /// See: <https://reactjs.org/docs/hooks-reference.html#useref>.
-  @Deprecated('Use useRef or useRefInit instead. Will be removed in 7.0.0.')
-  Ref.useRefInit(T initialValue) : jsRef = React.useRef(initialValue);
 
   Ref.fromJs(this.jsRef);
 
@@ -233,37 +223,9 @@ class JsRef {
 /// See: <https://reactjs.org/docs/forwarding-refs.html>.
 ReactComponentFactoryProxy forwardRef2(
   DartForwardRefFunctionComponent wrapperFunction, {
-  String displayName,
+  String? displayName,
 }) =>
     ReactDartWrappedComponentFactoryProxy.forwardRef(wrapperFunction, displayName: displayName);
-
-@Deprecated('Use forwardRef2')
-ReactJsComponentFactoryProxy forwardRef(
-  Function(Map props, Ref ref) wrapperFunction, {
-  String displayName = 'Anonymous',
-}) {
-  // ignore: invalid_use_of_visible_for_testing_member
-  final wrappedComponent = allowInterop((JsMap props, ref) => componentZone.run(() {
-        final dartProps = JsBackedMap.backedBy(props);
-        for (final value in dartProps.values) {
-          if (value is Function) {
-            // Tag functions that came straight from the JS
-            // so that we know to pass them through as-is during prop conversion.
-            isRawJsFunctionFromProps[value] = true;
-          }
-        }
-
-        final dartRef = Ref.fromJs(ref as JsRef);
-        return wrapperFunction(dartProps, dartRef);
-      }));
-  defineProperty(wrappedComponent, 'displayName', JsPropertyDescriptor(value: displayName));
-
-  final hoc = React.forwardRef(wrappedComponent);
-  // ignore: invalid_use_of_protected_member
-  setProperty(hoc, 'dartComponentVersion', ReactDartComponentVersion.component2);
-
-  return ReactJsComponentFactoryProxy(hoc, alwaysReturnChildrenAsList: true);
-}
 
 /// A [higher order component](https://reactjs.org/docs/higher-order-components.html) for function components
 /// that behaves similar to the way [`React.PureComponent`](https://reactjs.org/docs/react-api.html#reactpurecomponent)
@@ -304,7 +266,7 @@ ReactJsComponentFactoryProxy forwardRef(
 ///
 /// See: <https://reactjs.org/docs/react-api.html#reactmemo>.
 ReactComponentFactoryProxy memo2(ReactComponentFactoryProxy factory,
-    {bool Function(Map prevProps, Map nextProps) areEqual}) {
+    {bool Function(Map prevProps, Map nextProps)? areEqual}) {
   final _areEqual = areEqual == null
       ? null
       : allowInterop((JsMap prevProps, JsMap nextProps) {
@@ -320,7 +282,7 @@ ReactComponentFactoryProxy memo2(ReactComponentFactoryProxy factory,
 
 @Deprecated('Use memo2')
 ReactJsComponentFactoryProxy memo(ReactDartFunctionComponentFactoryProxy factory,
-    {bool Function(Map prevProps, Map nextProps) areEqual}) {
+    {bool Function(Map prevProps, Map nextProps)? areEqual}) {
   final _areEqual = areEqual == null
       ? null
       : allowInterop((JsMap prevProps, JsMap nextProps) {
@@ -386,14 +348,14 @@ class ReactClass {
   ///
   /// For use in `ReactDartComponentFactoryProxy2` when creating new [ReactElement]s,
   /// or for external use involving inspection of Dart prop defaults.
-  external JsMap get defaultProps;
-  external set defaultProps(JsMap value);
+  external JsMap? get defaultProps;
+  external set defaultProps(JsMap? value);
 
   /// The `displayName` string is used in debugging messages.
   ///
   /// See: <https://reactjs.org/docs/react-component.html#displayname>
-  external String get displayName;
-  external set displayName(String value);
+  external String? get displayName;
+  external set displayName(String? value);
 
   /// The cached, unmodifiable copy of [Component.getDefaultProps] computed in
   /// [registerComponent].
@@ -401,9 +363,9 @@ class ReactClass {
   /// For use in `ReactDartComponentFactoryProxy` when creating new [ReactElement]s,
   /// or for external use involving inspection of Dart prop defaults.
   @Deprecated('Only used with the deprecated Component base class and not Component2.')
-  external Map get dartDefaultProps;
+  external Map? get dartDefaultProps;
   @Deprecated('Only used with the deprecated Component base class and not Component2.')
-  external set dartDefaultProps(Map value);
+  external set dartDefaultProps(Map? value);
 
   /// A string to distinguish between different Dart component implementations / base classes.
   ///
@@ -411,9 +373,9 @@ class ReactClass {
   ///
   /// __For internal use only.__
   @protected
-  external String get dartComponentVersion;
+  external String? get dartComponentVersion;
   @protected
-  external set dartComponentVersion(String value);
+  external set dartComponentVersion(String? value);
 }
 
 /// Constants for use with [ReactClass.dartComponentVersion] to distinguish
@@ -434,14 +396,14 @@ abstract class ReactDartComponentVersion {
   /// Returns [ReactClass.dartComponentVersion] if [type] is the [ReactClass] for a Dart component
   /// (a react-dart [ReactElement] or [ReactComponent]), and null otherwise.
   @protected
-  static String fromType(dynamic type) {
+  static String? fromType(dynamic type) {
     // This check doesn't do much since ReactClass is an anonymous JS object,
     // but it lets us safely cast to ReactClass.
     if (type is ReactClass) {
       return type.dartComponentVersion;
     }
     if (type is Function) {
-      return getProperty(type, 'dartComponentVersion') as String;
+      return getProperty(type, 'dartComponentVersion') as String?;
     }
 
     return null;
@@ -460,20 +422,20 @@ abstract class ReactDartComponentVersion {
 @anonymous
 class ReactClassConfig {
   external factory ReactClassConfig({
-    String displayName,
-    List mixins,
-    Function componentWillMount,
-    Function componentDidMount,
-    Function componentWillReceiveProps,
-    Function shouldComponentUpdate,
-    Function componentWillUpdate,
-    Function componentDidUpdate,
-    Function componentWillUnmount,
-    Function getChildContext,
-    Map<String, dynamic> childContextTypes,
-    Function getDefaultProps,
-    Function getInitialState,
-    Function render,
+    String? displayName,
+    List? mixins,
+    Function? componentWillMount,
+    Function? componentDidMount,
+    Function? componentWillReceiveProps,
+    Function? shouldComponentUpdate,
+    Function? componentWillUpdate,
+    Function? componentDidUpdate,
+    Function? componentWillUnmount,
+    Function? getChildContext,
+    Map<String, dynamic>? childContextTypes,
+    Function? getDefaultProps,
+    Function? getInitialState,
+    Function? render,
   });
 
   /// The `displayName` string is used in debugging messages.
@@ -562,12 +524,12 @@ class ReactPortal {
 @JS()
 @anonymous
 class ReactComponent {
-  external Component get dartComponent;
+  external Component? get dartComponent;
   // TODO how to make this JsMap without breaking stuff?
   external InteropProps get props;
-  external dynamic get context;
-  external JsMap get state;
-  external set state(JsMap value);
+  external dynamic /*?*/ get context;
+  external JsMap? get state;
+  external set state(JsMap? value);
   external get refs;
   external void setState(state, [callback]);
   external void forceUpdate([callback]);
@@ -624,17 +586,17 @@ class InteropProps implements JsMap {
   @Deprecated('Only used with the deprecated Component base class and not Component2,'
       ' which stores props as properties on this object.')
   external ReactDartComponentInternal get internal;
-  external dynamic get key;
-  external dynamic get ref;
+  external dynamic /*?*/ get key;
+  external dynamic /*?*/ get ref;
 
-  external set key(dynamic value);
-  external set ref(dynamic value);
+  external set key(dynamic /*?*/ value);
+  external set ref(dynamic /*?*/ value);
 
   @Deprecated('For internal use only. Only used with the deprecated Component base class and not Component2.')
   external factory InteropProps({
-    ReactDartComponentInternal internal,
-    String key,
-    dynamic ref,
+    ReactDartComponentInternal? internal,
+    String? key,
+    Object? ref,
   });
 }
 
@@ -652,14 +614,13 @@ class InteropProps implements JsMap {
 /// > __For internal/advanced use only.__
 @Deprecated('Only used with the deprecated Component base class and not Component2.')
 class ReactDartComponentInternal {
-  @Deprecated('For internal use only. Will have a required argument in 7.0.0.')
-  ReactDartComponentInternal();
+  ReactDartComponentInternal(this.props);
 
   /// For a `ReactElement`, this is the initial props with defaults merged.
   ///
   /// For a `ReactComponent`, this is the props the component was last rendered with,
   /// and is used within props-related lifecycle internals.
-  Map props;
+  final Map props;
 }
 
 /// Internal react-dart information used to proxy React JS lifecycle to Dart
@@ -698,9 +659,8 @@ external get jsUndefined;
 
 /// Throws the error passed to it from Javascript.
 /// This allows us to catch the error in dart which re-dartifies the js errors/exceptions.
-@alwaysThrows
 @JS('_throwErrorFromJS')
-external void throwErrorFromJS(error);
+external Never throwErrorFromJS(error);
 
 /// Marks [child] as validated, as if it were passed into [React.createElement]
 /// as a variadic child.
@@ -729,7 +689,7 @@ void markChildrenValidated(List<dynamic> children) {
 @Deprecated('For internal use only. Will be made private in 7.0.0.')
 external ReactClass createReactDartComponentClass(
     ReactDartInteropStatics dartInteropStatics, ComponentStatics componentStatics,
-    [JsComponentConfig jsConfig]);
+    [JsComponentConfig? jsConfig]);
 
 /// Returns a new JS [ReactClass] for a component that uses
 /// [dartInteropStatics] and [componentStatics] internally to proxy between
@@ -739,7 +699,7 @@ external ReactClass createReactDartComponentClass(
 @JS('_createReactDartComponentClass2')
 @Deprecated('For internal use only. Will be made private in 7.0.0.')
 external ReactClass createReactDartComponentClass2(JsMap dartInteropStatics, ComponentStatics2 componentStatics,
-    [JsComponentConfig2 jsConfig]);
+    [JsComponentConfig2? jsConfig]);
 
 @JS('React.__isDevelopment')
 external bool get _inReactDevMode;
@@ -811,9 +771,9 @@ class ComponentStatics2 {
   final Component2BridgeFactory bridgeFactory;
 
   ComponentStatics2({
-    @required this.componentFactory,
-    @required this.instanceForStaticMethods,
-    @required this.bridgeFactory,
+    required this.componentFactory,
+    required this.instanceForStaticMethods,
+    required this.bridgeFactory,
   });
 }
 
@@ -832,8 +792,8 @@ class ComponentStatics2 {
 @anonymous
 class JsComponentConfig {
   external factory JsComponentConfig({
-    Iterable<String> childContextKeys,
-    Iterable<String> contextKeys,
+    Iterable<String>? childContextKeys,
+    Iterable<String>? contextKeys,
   });
 }
 
@@ -844,7 +804,7 @@ class JsComponentConfig {
 @anonymous
 class JsComponentConfig2 {
   external factory JsComponentConfig2({
-    @required List<String> skipMethods,
+    required List<String> skipMethods,
     dynamic contextType,
     JsMap defaultProps,
     JsMap propTypes,

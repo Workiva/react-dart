@@ -31,20 +31,31 @@ mixin LifecycleTestHelper on Component {
         return call['memberName'];
       }).toList();
 
-  T lifecycleCall<T>(String memberName, {List arguments = const [], T Function() defaultReturnValue, Map staticProps}) {
+  T lifecycleCall<T>(String memberName,
+      {List arguments = const [], T Function()? defaultReturnValue, Map? staticProps}) {
+    // Don't try to access late variables props/state/jsThis before they're initialized.
+    const staticLifecycleMethods = {
+      'defaultProps',
+      'getDefaultProps',
+      'getDerivedStateFromProps',
+      'getDerivedStateFromError',
+    };
+    final hasPropsInitialized = !staticLifecycleMethods.contains(memberName);
+    final hasStateInitialized = !{
+      ...staticLifecycleMethods,
+      'initialState',
+      'getInitialState',
+    }.contains(memberName);
+
     lifecycleCalls.add({
       'memberName': memberName,
       'arguments': arguments,
-      'props': props == null ? null : Map.from(props),
-      'state': state == null ? null : Map.from(state),
+      'props': hasPropsInitialized ? Map.from(props) : null,
+      'state': hasStateInitialized ? Map.from(state) : null,
       'context': context,
     });
 
-    final lifecycleCallback = props == null
-        ? staticProps == null
-            ? null
-            : staticProps[memberName]
-        : props[memberName];
+    final lifecycleCallback = (hasPropsInitialized ? props : (staticProps ?? {}))[memberName];
     if (lifecycleCallback != null) {
       return Function.apply(lifecycleCallback as Function, [this, ...arguments]) as T;
     }
@@ -53,7 +64,7 @@ mixin LifecycleTestHelper on Component {
       return defaultReturnValue();
     }
 
-    return null;
+    return null as T;
   }
 
   void callSetStateWithNullValue() {

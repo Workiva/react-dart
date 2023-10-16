@@ -42,11 +42,11 @@ abstract class Component2Bridge {
   /// `ReactDartComponentFactoryProxy2`, and not when manually instantiated.
   ///
   /// __For internal/advanced use only.__
-  static Component2Bridge forComponent(Component2 component) => bridgeForComponent[component];
+  static Component2Bridge? forComponent(Component2 component) => bridgeForComponent[component];
 
-  void setState(Component2 component, Map newState, SetStateCallback callback);
-  void setStateWithUpdater(Component2 component, StateUpdaterCallback stateUpdater, SetStateCallback callback);
-  void forceUpdate(Component2 component, SetStateCallback callback);
+  void setState(Component2 component, Map? newState, SetStateCallback? callback);
+  void setStateWithUpdater(Component2 component, StateUpdaterCallback stateUpdater, SetStateCallback? callback);
+  void forceUpdate(Component2 component, SetStateCallback? callback);
   JsMap jsifyPropTypes(
       covariant Component2 component, covariant Map<String, /*PropValidator<UiProps>*/ Function> propTypes);
 }
@@ -66,7 +66,7 @@ class Component2BridgeImpl extends Component2Bridge {
   static Component2BridgeImpl bridgeFactory(Component2 _) => const Component2BridgeImpl();
 
   @override
-  void forceUpdate(Component2 component, SetStateCallback callback) {
+  void forceUpdate(Component2 component, SetStateCallback? callback) {
     if (callback == null) {
       component.jsThis.forceUpdate();
     } else {
@@ -75,7 +75,7 @@ class Component2BridgeImpl extends Component2Bridge {
   }
 
   @override
-  void setState(Component2 component, Map newState, SetStateCallback callback) {
+  void setState(Component2 component, Map? newState, SetStateCallback? callback) {
     // Short-circuit to match the ReactJS 16 behavior of not re-rendering the component if newState is null.
     if (newState == null) return;
 
@@ -91,7 +91,7 @@ class Component2BridgeImpl extends Component2Bridge {
   }
 
   @override
-  void setStateWithUpdater(Component2 component, StateUpdaterCallback stateUpdater, SetStateCallback callback) {
+  void setStateWithUpdater(Component2 component, StateUpdaterCallback stateUpdater, SetStateCallback? callback) {
     final firstArg = allowInterop((JsMap jsPrevState, JsMap jsProps, [_]) {
       final value = stateUpdater(
         JsBackedMap.backedBy(jsPrevState),
@@ -118,11 +118,11 @@ class Component2BridgeImpl extends Component2Bridge {
       dynamic handlePropValidator(
         JsMap props,
         String propName,
-        String componentName,
+        String? componentName,
         String location,
-        String propFullName,
+        String? propFullName,
         // This is a required argument of PropTypes but is usually hidden from the JS consumer.
-        String secret,
+        String? secret,
       ) {
         // Create a Dart consumable version of the JsMap.
         final convertedProps = JsBackedMap.fromJs(props);

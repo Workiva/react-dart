@@ -8,8 +8,6 @@ import 'package:react/react_client/js_backed_map.dart';
 import 'package:react/react_client/js_interop_helpers.dart';
 import 'package:react/react_client/react_interop.dart';
 
-import 'package:react/src/typedefs.dart';
-
 /// Converts a list of variadic children arguments to children that should be passed to ReactJS.
 ///
 /// Returns:
@@ -29,7 +27,7 @@ dynamic convertArgsToChildren(List childrenArgs) {
 }
 
 @Deprecated('This is no longer necessary since event handlers are no longer converted.')
-Function unconvertJsEventHandler(Function jsConvertedEventHandler) => null;
+Function? unconvertJsEventHandler(Function jsConvertedEventHandler) => null;
 
 void convertRefValue(Map args) {
   final ref = args['ref'];
@@ -56,7 +54,8 @@ void convertRefValue2(
       // would fail the `is _CallbackRef<dynamic>` check.
       // See https://github.com/dart-lang/sdk/issues/34593 for more information on arity checks.
       // ignore: prefer_void_to_null
-    } else if (ref is CallbackRef<Null> && convertCallbackRefValue) {
+    } else if (ref is Function(Never) && convertCallbackRefValue) {
+      assert(!isRefArgumentDefinitelyNonNullable(ref), nonNullableCallbackRefArgMessage);
       args[refKey] = allowInterop((dynamic instance) {
         // Call as dynamic to perform dynamic dispatch, since we can't cast to _CallbackRef<dynamic>,
         // and since calling with non-null values will fail at runtime due to the _CallbackRef<Null> typing.
@@ -68,6 +67,29 @@ void convertRefValue2(
       });
     }
   }
+}
+
+const nonNullableCallbackRefArgMessage =
+    'Arguments to callback ref functions must not be non-nullable, since React passes null to callback refs'
+    ' when they\'re detached. For instance, the callback will be called with `null` when the component is unmounted,'
+    ' and also when the owner component rerenders when using a non-memoized callback ref.'
+    '\n\nInstead of: `(MyComponent ref) { myComponentRef = ref; }`'
+    '\nDo either:'
+    '\n- `(MyComponent? ref) { myComponentRef = ref; }`'
+    '\n- `(ref) { myComponentRef = ref as MyComponent?; }';
+
+/// Returns whether [props] contains a ref that is a callback ref with a non-nullable argument.
+bool mapHasCallbackRefWithDefinitelyNonNullableArgument(Map props) {
+  final ref = props['ref'];
+  return ref is Function(Never) && isRefArgumentDefinitelyNonNullable(ref);
+}
+
+/// Returns whether the argument to [callbackRef] is definitely a non-nullable type.
+///
+/// "Definitely", since function will always return `false` when running under unsound null safety,
+/// even if the ref argument is typed as non-nullable.
+bool isRefArgumentDefinitelyNonNullable(Function(Never) callbackRef) {
+  return callbackRef is! Function(Null);
 }
 
 /// Converts a list of variadic children arguments to children that should be passed to ReactJS.
@@ -101,7 +123,7 @@ dynamic generateChildren(List childrenArgs, {bool shouldAlwaysBeList = false}) {
 
   if (children == null) {
     children = shouldAlwaysBeList ? childrenArgs.map(listifyChildren).toList() : childrenArgs;
-    markChildrenValidated(children as List);
+    markChildrenValidated(children);
   }
 
   return children;
@@ -118,6 +140,8 @@ JsMap generateJsProps(Map props,
     convertRefValue2(propsForJs,
         convertCallbackRefValue: convertCallbackRefValue, additionalRefPropKeys: additionalRefPropKeys);
   }
+
+  assert(!mapHasCallbackRefWithDefinitelyNonNullableArgument(propsForJs), nonNullableCallbackRefArgMessage);
 
   return wrapWithJsify ? jsifyAndAllowInterop(propsForJs) as JsMap : propsForJs.jsObject;
 }

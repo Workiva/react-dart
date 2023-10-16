@@ -4,8 +4,10 @@ library react_client_private_utils;
 import 'dart:js_util';
 
 import 'package:js/js.dart';
+import 'package:react/react.dart' show Component2;
 import 'package:react/react_client/react_interop.dart';
 import 'package:react/src/js_interop_util.dart';
+import 'package:react/src/react_client/component_registration.dart' show registerComponent2;
 
 /// A flag used to cache whether React is accessible.
 ///
@@ -34,10 +36,10 @@ T validateJsApiThenReturn<T>(T Function() computeReturn) {
     'This is only used with the legacy context APIs in the deprecated Component, and will be removed along with them.')
 Map<String, dynamic> unjsifyContext(InteropContextValue interopContext) {
   // TODO consider using `contextKeys` for this if perf of objectKeys is bad.
-  return Map.fromIterable(objectKeys(interopContext), value: (key) {
-    final internal = getProperty(interopContext, key) as ReactDartContextInternal;
-    return internal?.value;
-  });
+  return {
+    for (final key in objectKeys(interopContext).cast<String>())
+      key: (getProperty(interopContext, key) as ReactDartContextInternal?)?.value
+  };
 }
 
 /// Validates that React JS has been loaded and its APIs made available on the window,
@@ -50,9 +52,8 @@ void validateJsApi() {
     // corresponding JS functions are not available.
     React.isValidElement(null);
     ReactDom.findDOMNode(null);
-    // ignore: deprecated_member_use_from_same_package
-    createReactDartComponentClass(null, null, null);
-    createReactDartComponentClass2(null, null, null);
+    // This indirectly calls createReactDartComponentClass2
+    registerComponent2(() => _DummyComponent2());
     _isJsApiValid = true;
   } on NoSuchMethodError catch (_) {
     throw Exception('react.js and react_dom.js must be loaded.');
@@ -61,21 +62,26 @@ void validateJsApi() {
   }
 }
 
+class _DummyComponent2 extends Component2 {
+  @override
+  render() => null;
+}
+
 /// A wrapper around a value that can't be stored in its raw form
 /// within a JS object (e.g., a Dart function).
 class DartValueWrapper {
-  final dynamic value;
+  final Object? value;
 
   const DartValueWrapper(this.value);
 
-  static dynamic wrapIfNeeded(dynamic value) {
+  static dynamic wrapIfNeeded(Object? value) {
     if (value is Function && !identical(allowInterop(value), value)) {
       return DartValueWrapper(value);
     }
     return value;
   }
 
-  static dynamic unwrapIfNeeded(dynamic value) {
+  static dynamic unwrapIfNeeded(Object? value) {
     if (value is DartValueWrapper) {
       return value.value;
     }

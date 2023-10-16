@@ -13,14 +13,14 @@ class SyntheticDataTransfer {
   /// The value must be `none`, `copy`, `link` or `move`.
   ///
   /// See <https://developer.mozilla.org/en-US/docs/Web/API/DataTransfer/dropEffect>
-  final String dropEffect;
+  final String? dropEffect;
 
   /// Provides all of the types of operations that are possible.
   ///
   /// Must be one of `none`, `copy`, `copyLink`, `copyMove`, `link`, `linkMove`, `move`, `all` or `uninitialized`.
   ///
   /// See <https://developer.mozilla.org/en-US/docs/Web/API/DataTransfer/effectAllowed>
-  final String effectAllowed;
+  final String? effectAllowed;
 
   /// Contains a list of all the local files available on the data transfer.
   ///
@@ -41,7 +41,7 @@ class SyntheticDataTransfer {
 ///
 /// [dt] is typed as Object instead of [dynamic] to avoid dynamic calls in the method body,
 /// ensuring the code is statically sound.
-SyntheticDataTransfer syntheticDataTransferFactory(Object dt) {
+SyntheticDataTransfer? syntheticDataTransferFactory(Object? dt) {
   if (dt == null) return null;
 
   // `SyntheticDataTransfer` is possible because `createSyntheticMouseEvent` can take in an event that already
@@ -49,11 +49,11 @@ SyntheticDataTransfer syntheticDataTransferFactory(Object dt) {
   // already a `SyntheticDataTransfer` event and should just be returned.
   if (dt is SyntheticDataTransfer) return dt;
 
-  List rawFiles;
-  List rawTypes;
+  List? rawFiles;
+  List? rawTypes;
 
-  String effectAllowed;
-  String dropEffect;
+  String? effectAllowed;
+  String? dropEffect;
 
   // Handle `dt` being either a native DOM DataTransfer object or a JS object that looks like it (events.NonNativeDataTransfer).
   // Casting a JS object to DataTransfer fails intermittently in dart2js, and vice-versa fails intermittently in either DDC or dart2js.
