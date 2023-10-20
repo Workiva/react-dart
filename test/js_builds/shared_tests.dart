@@ -10,6 +10,7 @@ import 'package:react/react.dart' as react;
 import 'package:react/react_client/component_factory.dart';
 import 'package:react/react_dom.dart' as react_dom;
 import 'package:react/react_client/react_interop.dart';
+import 'package:react/src/react_client/internal_react_interop.dart';
 import 'package:test/test.dart';
 
 void verifyJsFileLoaded(String filename) {

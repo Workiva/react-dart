@@ -1,8 +1,10 @@
+@JS()
+library react.react_client.bridge;
+
 import 'package:js/js.dart';
 import 'package:meta/meta.dart';
 import 'package:react/react.dart';
 import 'package:react/react_client/js_backed_map.dart';
-import 'package:react/react_client/react_interop.dart';
 import 'package:react/src/typedefs.dart';
 
 /// A function that returns a bridge instance for use with a given [component].
@@ -135,10 +137,15 @@ class Component2BridgeImpl extends Component2Bridge {
               location: location,
               propFullName: propFullName,
             ));
-        return error == null ? null : JsError(error.toString());
+        return error == null ? null : _JsError(error.toString());
       }
 
       return MapEntry(propKey, allowInterop(handlePropValidator));
     })).jsObject;
   }
+}
+
+@JS('Error')
+class _JsError {
+  external _JsError(message);
 }

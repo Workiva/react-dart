@@ -7,6 +7,7 @@ import 'package:react/react_client/react_interop.dart';
 import 'package:react/react_client/component_factory.dart';
 
 import 'package:react/src/react_client/dart_interop_statics.dart';
+import 'package:react/src/react_client/internal_react_interop.dart';
 
 import '../js_interop_util.dart';
 

@@ -767,12 +767,6 @@ extension SyntheticEventTypeHelpers on SyntheticEvent {
   bool _checkEventType(List<String> types) => getProperty(this, 'type') != null && types.any((t) => type.contains(t));
   bool _hasProperty(String propertyName) => hasProperty(this, propertyName);
 
-  /// Whether the event instance has been removed from the ReactJS event pool.
-  ///
-  /// > See: [persist]
-  @Deprecated('The modern event system does not use pooling. This always returns true, and will be removed.')
-  bool get isPersistent => true;
-
   /// Uses Duck Typing to detect if the event instance is a [SyntheticClipboardEvent].
   bool get isClipboardEvent => _hasProperty('clipboardData') || _checkEventType(const ['copy', 'paste', 'cut']);
 
