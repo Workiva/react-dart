@@ -6,7 +6,8 @@ import 'dart:js_util';
 import 'package:js/js.dart';
 
 @JS('Object.keys')
-external List<String> objectKeys(Object object);
+// We can't type this as List<String> due to https://github.com/dart-lang/sdk/issues/37676
+external List<dynamic /*String*/ > objectKeys(Object object);
 
 @JS()
 @anonymous

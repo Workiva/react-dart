@@ -128,7 +128,7 @@ final ReactDartInteropStatics dartInteropStatics = (() {
         // If shouldComponentUpdateWithContext returns a valid bool (default implementation returns null),
         // then don't bother calling `shouldComponentUpdate` and have it trump.
         var shouldUpdate = component.shouldComponentUpdateWithContext(
-            component.nextProps!, component.nextState, component.nextContext!);
+            component.nextProps!, component.nextState, component.nextContext);
 
         shouldUpdate ??= component.shouldComponentUpdate(component.nextProps!, component.nextState);
 

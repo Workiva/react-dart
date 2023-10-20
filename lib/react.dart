@@ -101,6 +101,22 @@ var Suspense = ReactJsComponentFactoryProxy(React.Suspense);
 /// See: <https://reactjs.org/docs/strict-mode.html>
 var StrictMode = ReactJsComponentFactoryProxy(React.StrictMode);
 
+// -------------------------------------------------------------------------------------------------------------------
+// [1] While these fields are always initialized upon mount immediately after the class is instantiated,
+//     since they're not passed into a Dart constructor, they can't be initialized during instantiation,
+//     forcing us to make them either `late` or nullable.
+//
+//     Since we want them to be non-nullable, we'll opt for `late`.
+//
+//     These fields only haven't been initialized:
+//      - for mounting component instances:
+//         - in component class constructors (which we don't encourage)
+//         - in component class field initializers (except for lazy `late` ones)
+//      - in "static" lifecycle methods like `getDerivedStateFromProps` and `defaultProps`
+//
+//     So, this shouldn't pose a problem for consumers.
+// -------------------------------------------------------------------------------------------------------------------
+
 /// Top-level ReactJS [Component class](https://reactjs.org/docs/react-component.html)
 /// which provides the [ReactJS Component API](https://reactjs.org/docs/react-component.html#reference)
 ///
@@ -120,7 +136,7 @@ abstract class Component {
   /// [doesn't work for overriding fields](https://github.com/dart-lang/sdk/issues/27452).
   ///
   /// TODO: Switch back to a plain field once this issue is fixed.
-  late Map _props;
+  late Map _props; // [1]
 
   /// A private field that backs [state], which is exposed via getter/setter so
   /// it can be overridden in strong mode.
@@ -138,7 +154,7 @@ abstract class Component {
   /// [doesn't work for overriding fields](https://github.com/dart-lang/sdk/issues/27452).
   ///
   /// TODO: Switch back to a plain field once this issue is fixed.
-  late RefMethod _ref;
+  late RefMethod _ref; // [1]
 
   /// The React context map of this component, passed down from its ancestors' [getChildContext] value.
   ///
@@ -190,9 +206,9 @@ abstract class Component {
       'Only supported in the deprecated Component, and not Component2. Use createRef or a ref callback instead.')
   set ref(RefMethod value) => _ref = value;
 
-  late Function _jsRedraw;
+  late void Function() _jsRedraw; // [1]
 
-  late dynamic _jsThis;
+  late dynamic _jsThis; // [1]
 
   final List<SetStateCallback> _setStateCallbacks = [];
 
@@ -210,11 +226,12 @@ abstract class Component {
 
   /// Allows the [ReactJS `displayName` property](https://reactjs.org/docs/react-component.html#displayname)
   /// to be set for debugging purposes.
+  // This return type is nullable since Component2's override will return null in certain cases.
   String? get displayName => runtimeType.toString();
 
   static dynamic _defaultRef(String _) => null;
 
-  initComponentInternal(Map props, Function _jsRedraw, [RefMethod? ref, dynamic _jsThis, Map? context]) {
+  initComponentInternal(Map props, void Function() _jsRedraw, [RefMethod? ref, dynamic _jsThis, Map? context]) {
     this._jsRedraw = _jsRedraw;
     this.ref = ref ?? _defaultRef;
     this._jsThis = _jsThis;
@@ -415,7 +432,7 @@ abstract class Component {
   @Deprecated('This legacy, unstable context API is only supported in the deprecated Component, and not Component2.'
       ' Instead, use Component2.context, Context.Consumer, or useContext.')
   // ignore: avoid_returning_null
-  bool? shouldComponentUpdateWithContext(Map nextProps, Map nextState, Map nextContext) => null;
+  bool? shouldComponentUpdateWithContext(Map nextProps, Map nextState, Map? nextContext) => null;
 
   /// ReactJS lifecycle method that is invoked immediately before rendering when [nextProps] or [nextState] are being
   /// received.
@@ -650,10 +667,10 @@ abstract class Component2 implements Component {
   dynamic context;
 
   @override
-  late Map props;
+  late Map props; // [1]
 
   @override
-  late Map state;
+  late Map state; // [1]
 
   @override
   @Deprecated('Only supported in the deprecated Component, and not in Component2. See doc comment for more info.')
@@ -665,7 +682,7 @@ abstract class Component2 implements Component {
   /// The JavaScript [`ReactComponent`](https://reactjs.org/docs/react-api.html#reactdom.render)
   /// instance of this `Component` returned by [render].
   @override
-  late ReactComponent jsThis;
+  late ReactComponent jsThis; // [1]
 
   /// Allows the [ReactJS `displayName` property](https://reactjs.org/docs/react-component.html#displayname)
   /// to be set for debugging purposes.
@@ -1276,7 +1293,7 @@ abstract class Component2 implements Component {
 
   @override
   @Deprecated('Only supported in the deprecated Component, and not in Component2.')
-  late var _jsRedraw;
+  late void Function() _jsRedraw;
 
   @override
   @Deprecated('Only supported in the deprecated Component, and not in Component2.')

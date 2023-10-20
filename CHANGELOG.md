@@ -41,8 +41,39 @@
 - ReactComponentFactoryProxy no longer `implements Function`
     - This should not be a breakage, since as of Dart 2.0 inheriting from Function has had no effect
 
-#### Potential behavior breakages
-- Component and Component2 members `props`/`state`/`jsThis` are late, will now throw instead of being null if accessed before initialized (e.g., in a constructor, final class field, or static lifecycle method).
+#### Behavior breakages unlikely to cause issues
+- Component and Component2 members `props`/`state`/`jsThis` are now [late](https://dart.dev/language/variables#late-variables), and will now throw instead of being null if accessed before initialized.
+
+    It should be very uncommon for components to be affected by this change, and any affected components are likely doing something wrong to begin with. 
+
+    These fields are only uninitialized:
+     - for mounting component instances: 
+        - in component class constructors (which we don't encourage)
+        - in component class field initializers (except for lazy `late` ones)
+     - in "static" lifecycle methods like `getDerivedStateFromProps` and `defaultProps`
+
+    Examples of code affected:
+    ```dart
+    class FooComponent extends Component2 {
+      // `props` would have always been null when this is initialized, but in 7.0.0 accessing it throws.
+      final something = (props ?? {})['something'];
+
+      // We strongly discourage declaring Dart constructors in component classes;
+      // for initialization logic, use componentDidMount instead. 
+      FooComponent() {
+        // `props` would have always been null here, but in 7.0.0 accessing it throws.
+        print(props);
+      }
+
+      @override
+      getDerivedStateFromProps(nextProps, prevState)  {
+        // `props` would have always been null here, but in 7.0.0 accessing it throws.
+        print(props);
+        return {};
+      }
+    }
+    ```
+
 
 ## [6.2.1](https://github.com/Workiva/react-dart/compare/6.2.0...6.2.1)
 - [#366] Fix lints and eliminate most implicit casts 
