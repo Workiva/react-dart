@@ -5,11 +5,11 @@
 - Minor API breakages to support null safety migration and improve typing (see below)
 
 ## Deprecated API removals
-- `forwardRef` (use `forwardRef2` instead)
-- `memo` (use `memo2` instead)
-- `main` (use `htmlMain` instead)
-- `Ref` class constructors: default and `useRefInit` (use `createRef` and `useRef` instead)
 - `ReducerHook` and `StateHook` class constructors (use hook functions instead)
+- `Ref` class constructors: default and `useRefInit` (use `createRef` and `useRef` instead)
+- `forwardRef` (use `forwardRef2` instead)
+- `main` (use `htmlMain` instead)
+- `memo` (use `memo2` instead)
 - APIs that have been no-ops since react-dart 6.0.0
     - `SyntheticEvent` members `persist` and `isPersistent`
     - `unconvertJsEventHandler` 
