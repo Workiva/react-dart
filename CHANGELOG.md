@@ -24,7 +24,6 @@
     - `ReactDartInteropStatics`
     - `ReactElementStore`
     - `createReactDartComponentClass`, `createReactDartComponentClass2`
-    - `dartInteropStatics`
     - `markChildValidated`
     - `markChildrenValidated`
 

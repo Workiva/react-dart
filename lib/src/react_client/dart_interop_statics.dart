@@ -5,6 +5,7 @@ import 'dart:js';
 import 'dart:js_util';
 
 import 'package:js/js.dart';
+import 'package:meta/meta.dart';
 import 'package:react/react.dart';
 import 'package:react/react_client/bridge.dart';
 import 'package:react/react_client/js_backed_map.dart';
@@ -17,6 +18,7 @@ import 'package:react/src/react_client/private_utils.dart';
 import 'package:react/src/typedefs.dart';
 
 /// The static methods that proxy JS component lifecycle methods to Dart components.
+@internal
 @Deprecated('Only used with the deprecated Component base class and not Component2.')
 final ReactDartInteropStatics dartInteropStatics = (() {
   final zone = Zone.current;
