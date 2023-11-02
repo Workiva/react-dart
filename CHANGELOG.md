@@ -1,8 +1,10 @@
-## 7.0.0-wip
+## 7.0.0
 
 - Migrate to null safety
+- Remove deprecated APIs (see below)
+- Minor API breakages to support null safety migration and improve typing (see below)
 
-#### Deprecated API removals
+## Deprecated API removals
 - forwardRef (use forwardRef2 instead)
 - memo (use memo2 instead)
 - main (use htmlMain instead)
@@ -26,22 +28,22 @@
     - markChildValidated
     - markChildrenValidated
 
-#### Other API breakages
-- `ReducerHook`, `StateHook`, and `Ref` are now `@sealed` and may not be inherited from
-- ReactComponentFactoryProxy.call and .build return type changed from dynamic to ReactElement
-    - This matches the type returned from `build` for all subclasses, which is what’s returned by call, and reflects the type returned at runtime
-    - Has potential to cause some static analysis issues, but for the most part should not affect anything since ReactElement is typically treated as an opaque type
-        - Needs consumer tests
-    - Top-level component factories are typed as ReactDomComponentFactoryProxy instead of being `dynamic`: react.div
-- All PropValidatorInfo arguments are required
-- Changes to public but internal code that should not affect consumers:
-    - ReactDartComponentInternal
-        - Constructor now takes a required argument, props is final
-    - initComponentInternal arguments are typed to reflect runtime assumptions
-- ReactComponentFactoryProxy no longer `implements Function`
-    - This should not be a breakage, since as of Dart 2.0 inheriting from Function has had no effect
+### Other API breakages
 
-#### Behavior breakages unlikely to cause issues
+#### Miscellaneous:
+- `ReducerHook`, `StateHook`, and `Ref` are now `@sealed` and may not be inherited from
+- All PropValidatorInfo arguments are required
+
+#### Typing improvements:
+  - Top-level DOM factories exported from `package:react/react.dart` (`react.div`, `react.span`, etc.) are typed as ReactDomComponentFactoryProxy instead of being `dynamic` 
+  - ReactComponentFactoryProxy.call and .build return type changed from dynamic to ReactElement
+      - This matches the type returned from `build` for all subclasses, which is what’s returned by call, and reflects the type returned at runtime
+      - Has potential to cause some static analysis issues, but for the most part should not affect anything since ReactElement is typically treated as an opaque type
+
+#### Changes very unlikely to affect consumers:
+- Changes to public-but-internal APIs:
+    - ReactDartComponentInternal constructor now takes a required argument, props field is final
+    - initComponentInternal arguments are typed to reflect runtime assumptions
 - Component and Component2 members `props`/`state`/`jsThis` are now [late](https://dart.dev/language/variables#late-variables), and will now throw instead of being null if accessed before initialized.
 
     It should be very uncommon for components to be affected by this change, and any affected components are likely doing something wrong to begin with. 
