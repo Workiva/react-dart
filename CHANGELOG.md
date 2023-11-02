@@ -5,46 +5,46 @@
 - Minor API breakages to support null safety migration and improve typing (see below)
 
 ## Deprecated API removals
-- forwardRef (use forwardRef2 instead)
-- memo (use memo2 instead)
-- main (use htmlMain instead)
-- Ref class constructors: default and `useRefInit` (use useRef/createRef instead)
-- ReducerHook and StateHook class constructors (use hook functions instead).
+- `forwardRef` (use `forwardRef2` instead)
+- `memo` (use `memo2` instead)
+- `main` (use `htmlMain` instead)
+- `Ref` class constructors: default and `useRefInit` (use `createRef` and `useRef` instead)
+- `ReducerHook` and `StateHook` class constructors (use hook functions instead)
 - APIs that have been no-ops since react-dart 6.0.0
-    - SyntheticEvent members `persist` and `isPersistent`
-    - unconvertJsEventHandler 
+    - `SyntheticEvent` members `persist` and `isPersistent`
+    - `unconvertJsEventHandler` 
 - APIs that were never intended for public use:
-    - ComponentStatics(2)
-    - InteropContextValue
-    - JsComponentConfig(2)
-    - JsError
-    - JsPropValidator
-    - React.createFactory
-    - ReactDartContextInternal
-    - ReactDartInteropStatics
-    - ReactElementStore
-    - createReactDartComponentClass(2)
-    - dartInteropStatics
-    - markChildValidated
-    - markChildrenValidated
+    - `ComponentStatics`, `ComponentStatics2`
+    - `InteropContextValue`
+    - `JsComponentConfig`, `JsComponentConfig2`
+    - `JsError`
+    - `JsPropValidator`
+    - `React.createFactory`
+    - `ReactDartContextInternal`
+    - `ReactDartInteropStatics`
+    - `ReactElementStore`
+    - `createReactDartComponentClass`, `createReactDartComponentClass2`
+    - `dartInteropStatics`
+    - `markChildValidated`
+    - `markChildrenValidated`
 
 ### Other API breakages
 
 #### Miscellaneous:
 - `ReducerHook`, `StateHook`, and `Ref` are now `@sealed` and may not be inherited from
-- All PropValidatorInfo arguments are required
+- All `PropValidatorInfo` arguments are required
 
 #### Typing improvements:
-  - Top-level DOM factories exported from `package:react/react.dart` (`react.div`, `react.span`, etc.) are typed as ReactDomComponentFactoryProxy instead of being `dynamic` 
-  - ReactComponentFactoryProxy.call and .build return type changed from dynamic to ReactElement
+  - Top-level DOM factories exported from `package:react/react.dart` (`react.div`, `react.span`, etc.) are now typed as `ReactDomComponentFactoryProxy` instead of `dynamic` 
+  - The return types of `ReactComponentFactoryProxy` methods `call` and `build` are now `ReactElement` instead of `dynamic`
       - This matches the type returned from `build` for all subclasses, which is what’s returned by call, and reflects the type returned at runtime
-      - Has potential to cause some static analysis issues, but for the most part should not affect anything since ReactElement is typically treated as an opaque type
+      - Has potential to cause some static analysis issues, but for the most part should not affect anything since `ReactElement` is typically treated as an opaque type
 
 #### Changes very unlikely to affect consumers:
 - Changes to public-but-internal APIs:
-    - ReactDartComponentInternal constructor now takes a required argument, props field is final
-    - initComponentInternal arguments are typed to reflect runtime assumptions
-- Component and Component2 members `props`/`state`/`jsThis` are now [late](https://dart.dev/language/variables#late-variables), and will now throw instead of being null if accessed before initialized.
+    - `ReactDartComponentInternal` constructor now takes a required argument, `props` field is `final`
+    - `initComponentInternal` arguments are typed to reflect runtime assumptions
+- `Component` and `Component2` members `props`/`state`/`jsThis` are now [late](https://dart.dev/language/variables#late-variables), and will now throw instead of being null if accessed before initialized.
 
     It should be very uncommon for components to be affected by this change, and any affected components are likely doing something wrong to begin with. 
 
