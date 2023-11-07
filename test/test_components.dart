@@ -1,10 +1,13 @@
 // ignore_for_file: deprecated_member_use_from_same_package
 import 'package:react/react.dart';
+import 'package:react/react_client/component_factory.dart';
 
 /// Base component for event handling classes used in test cases.
 class EventComponent extends Component {
+  @override
   getInitialState() => {'text': ''};
   onEvent(SyntheticEvent e) => setState({'text': '${e.type} ${e.timeStamp}'});
+  @override
   render() => div({
         'onAnimationEnd': onEvent,
         'onAnimationIteration': onEvent,
@@ -61,6 +64,7 @@ class EventComponent extends Component {
 }
 
 class SampleComponent extends Component {
+  @override
   render() => div(props, [
         h1({}, 'A header'),
         div({'className': 'div1'}, 'First div'),
@@ -70,11 +74,12 @@ class SampleComponent extends Component {
 }
 
 class WrapperComponent extends Component {
+  @override
   render() => div(props, props['children']);
 }
 
-final eventComponent = registerComponent(() => new EventComponent());
+final eventComponent = registerComponent(() => EventComponent()) as ReactDartComponentFactoryProxy;
 
-final sampleComponent = registerComponent(() => new SampleComponent());
+final sampleComponent = registerComponent(() => SampleComponent()) as ReactDartComponentFactoryProxy;
 
-final wrapperComponent = registerComponent(() => new WrapperComponent());
+final wrapperComponent = registerComponent(() => WrapperComponent()) as ReactDartComponentFactoryProxy;

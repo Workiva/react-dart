@@ -1,8 +1,6 @@
 @JS()
 library react_client_factory_utils;
 
-import 'dart:js';
-
 import 'package:js/js.dart';
 
 import 'package:react/react_client/component_factory.dart';
@@ -30,11 +28,11 @@ dynamic convertArgsToChildren(List childrenArgs) {
   }
 }
 
-@Deprecated('Event handlers are no longer converted. This will be removed in 7.0.0.')
+@Deprecated('This is no longer necessary since event handlers are no longer converted.')
 Function unconvertJsEventHandler(Function jsConvertedEventHandler) => null;
 
 void convertRefValue(Map args) {
-  var ref = args['ref'];
+  final ref = args['ref'];
   if (ref is Ref) {
     args['ref'] = ref.jsRef;
   }
@@ -48,7 +46,7 @@ void convertRefValue2(
   final refKeys = ['ref', ...additionalRefPropKeys];
 
   for (final refKey in refKeys) {
-    var ref = args[refKey];
+    final ref = args[refKey];
     if (ref is Ref) {
       args[refKey] = ref.jsRef;
       // If the ref is a callback, pass ReactJS a function that will call it
@@ -57,6 +55,7 @@ void convertRefValue2(
       // Use _CallbackRef<Null> to check arity, since parameters could be non-dynamic, and thus
       // would fail the `is _CallbackRef<dynamic>` check.
       // See https://github.com/dart-lang/sdk/issues/34593 for more information on arity checks.
+      // ignore: prefer_void_to_null
     } else if (ref is CallbackRef<Null> && convertCallbackRefValue) {
       args[refKey] = allowInterop((dynamic instance) {
         // Call as dynamic to perform dynamic dispatch, since we can't cast to _CallbackRef<dynamic>,
@@ -102,7 +101,7 @@ dynamic generateChildren(List childrenArgs, {bool shouldAlwaysBeList = false}) {
 
   if (children == null) {
     children = shouldAlwaysBeList ? childrenArgs.map(listifyChildren).toList() : childrenArgs;
-    markChildrenValidated(children);
+    markChildrenValidated(children as List);
   }
 
   return children;
@@ -120,5 +119,5 @@ JsMap generateJsProps(Map props,
         convertCallbackRefValue: convertCallbackRefValue, additionalRefPropKeys: additionalRefPropKeys);
   }
 
-  return wrapWithJsify ? jsifyAndAllowInterop(propsForJs) : propsForJs.jsObject;
+  return wrapWithJsify ? jsifyAndAllowInterop(propsForJs) as JsMap : propsForJs.jsObject;
 }

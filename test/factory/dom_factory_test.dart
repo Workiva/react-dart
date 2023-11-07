@@ -3,31 +3,36 @@ library react.dom_factory_test;
 
 import 'dart:html';
 
+import 'package:react/react_client.dart';
 import 'package:test/test.dart';
 
 import 'package:react/react.dart' as react;
 
 import 'common_factory_tests.dart';
 
+// Public APIs with tightened types to help fix implicit casts
+final div = react.div as ReactDomComponentFactoryProxy;
+final span = react.span as ReactDomComponentFactoryProxy;
+
 main() {
   group('ReactDomComponentFactoryProxy', () {
     group('- common factory behavior -', () {
-      commonFactoryTests(react.div);
+      commonFactoryTests(div);
     });
 
     group('- dom event handler wrapping -', () {
-      domEventHandlerWrappingTests(react.div);
+      domEventHandlerWrappingTests(div);
     });
 
     group('- refs -', () {
-      refTests<SpanElement>(react.span, verifyRefValue: (ref) {
+      refTests<SpanElement>(span, verifyRefValue: (ref) {
         expect(ref, TypeMatcher<SpanElement>());
       });
     });
 
     test('has a type corresponding to the DOM tagName', () {
-      expect(react.div.type, 'div');
-      expect(react.span.type, 'span');
+      expect(div.type, 'div');
+      expect(span.type, 'span');
     });
   });
 }

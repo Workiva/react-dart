@@ -1,18 +1,21 @@
 // ignore_for_file: deprecated_member_use_from_same_package
-import "dart:html";
+import 'dart:html';
 
-import "package:react/react.dart" as react;
-import "package:react/react_dom.dart" as react_dom;
+import 'package:react/react.dart' as react;
+import 'package:react/react_dom.dart' as react_dom;
 
 var SimpleComponent = react.registerComponent2(() => _SimpleComponent());
 
 class _SimpleComponent extends react.Component2 {
+  @override
   componentDidMount() => print("mount");
 
-  componentWillUnmount() => print("unmount");
+  @override
+  componentWillUnmount() => print('unmount');
 
+  @override
   render() => react.div({}, [
-        "Simple component",
+        'Simple component',
       ]);
 }
 

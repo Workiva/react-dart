@@ -14,12 +14,13 @@ import 'package:react/src/react_client/js_interop/react_dom_client.dart' show Re
 /// This is used when setting environment variables to ensure they can be set properly.
 bool _isJsApiValid = false;
 
-@Deprecated('7.0.0')
+@Deprecated(
+    'This is only used with the legacy context APIs in the deprecated Component, and will be removed along with them.')
 InteropContextValue jsifyContext(Map<String, dynamic> context) {
-  var interopContext = new InteropContextValue();
+  final interopContext = InteropContextValue();
   context.forEach((key, value) {
     // ignore: argument_type_not_assignable
-    setProperty(interopContext, key, new ReactDartContextInternal(value));
+    setProperty(interopContext, key, ReactDartContextInternal(value));
   });
 
   return interopContext;
@@ -31,12 +32,12 @@ T validateJsApiThenReturn<T>(T Function() computeReturn) {
   return computeReturn();
 }
 
-@Deprecated('7.0.0')
+@Deprecated(
+    'This is only used with the legacy context APIs in the deprecated Component, and will be removed along with them.')
 Map<String, dynamic> unjsifyContext(InteropContextValue interopContext) {
   // TODO consider using `contextKeys` for this if perf of objectKeys is bad.
-  return new Map.fromIterable(objectKeys(interopContext), value: (key) {
-    // ignore: argument_type_not_assignable
-    ReactDartContextInternal internal = getProperty(interopContext, key);
+  return Map.fromIterable(objectKeys(interopContext), value: (key) {
+    final internal = getProperty(interopContext, key) as ReactDartContextInternal;
     return internal?.value;
   });
 }
@@ -58,10 +59,10 @@ void validateJsApi() {
     createReactDartComponentClass2(null, null, null);
     _isJsApiValid = true;
   } on NoSuchMethodError catch (e) {
-    throw new Exception('react.js and react_dom.js must be loaded.');
+    throw Exception('react.js and react_dom.js must be loaded.');
   } catch (_) {
     rethrow;
-    throw new Exception('Loaded react.js must include react-dart JS interop helpers.');
+    throw Exception('Loaded react.js must include react-dart JS interop helpers.');
   }
 }
 

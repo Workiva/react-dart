@@ -40,7 +40,7 @@ import 'package:react/src/react_test_utils/internal_test_utils.dart' as itu;
 final getComponentTypeV2 = itu.getComponentTypeV2;
 
 @Deprecated('Use the react_testing_library package instead.')
-typedef bool ComponentTestFunction(/* [1] */ component);
+typedef ComponentTestFunction = bool Function(dynamic /* [1] */ component);
 
 dynamic _jsifyEventData(Map eventData) => jsifyAndAllowInterop(eventData ?? const {});
 
@@ -52,7 +52,7 @@ dynamic _jsifyEventData(Map eventData) => jsifyAndAllowInterop(eventData ?? cons
 ///   Simulate.{eventName}(Element node, [Map] eventData)
 ///
 /// This should include all events documented at:
-/// http://facebook.github.io/react/docs/events.html
+/// https://reactjs.org/docs/events.html
 @Deprecated('Use the UserEvent or fireEvent utilities from the react_testing_library package instead.')
 class Simulate {
   static void animationEnd(/* [1] */ node, [Map eventData]) =>
@@ -216,7 +216,7 @@ external ReactClass mockComponent(ReactClass componentClass, String mockTagName)
 
 /// Returns a ReactShallowRenderer instance
 ///
-/// More info on using shallow rendering: https://facebook.github.io/react/docs/test-utils.html#shallow-rendering
+/// More info on using shallow rendering: https://reactjs.org/docs/test-renderer.html
 @JS('React.addons.TestUtils.createRenderer')
 external ReactShallowRenderer createRenderer();
 

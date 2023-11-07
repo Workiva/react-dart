@@ -3,7 +3,6 @@ import 'dart:math';
 
 import 'package:react/hooks.dart';
 import 'package:react/react.dart' as react;
-import 'package:react/react_client/react_interop.dart';
 import 'package:react/react_dom.dart' as react_dom;
 
 var hookTestFunctionComponent = react.registerFunctionComponent(HookTestComponent, displayName: 'useStateTest');
@@ -46,29 +45,29 @@ class _MemoTestDemoWrapper extends react.Component2 {
     return react.div(
       {'key': 'mtdw'},
       MemoTest({
-        'localCount': this.state['localCount'],
-        'someKeyThatMemoShouldIgnore': this.state['someKeyThatMemoShouldIgnore'],
+        'localCount': state['localCount'],
+        'someKeyThatMemoShouldIgnore': state['someKeyThatMemoShouldIgnore'],
       }),
       react.button({
         'type': 'button',
         'className': 'btn btn-primary',
         'style': {'marginRight': '10px'},
         'onClick': (_) {
-          this.setState({'localCount': this.state['localCount'] + 1});
+          setState({'localCount': state['localCount'] + 1});
         },
-      }, 'Update MemoTest props.localCount value (${this.state['localCount']})'),
+      }, 'Update MemoTest props.localCount value (${state['localCount']})'),
       react.button({
         'type': 'button',
         'className': 'btn btn-primary',
         'onClick': (_) {
-          this.setState({'someKeyThatMemoShouldIgnore': this.state['someKeyThatMemoShouldIgnore'] + 1});
+          setState({'someKeyThatMemoShouldIgnore': state['someKeyThatMemoShouldIgnore'] + 1});
         },
-      }, 'Update prop value that MemoTest will ignore (${this.state['someKeyThatMemoShouldIgnore']})'),
+      }, 'Update prop value that MemoTest will ignore (${state['someKeyThatMemoShouldIgnore']})'),
     );
   }
 }
 
-final MemoTest = react.memo2(react.registerFunctionComponent((Map props) {
+final MemoTest = react.memo2(react.registerFunctionComponent((props) {
   final context = useContext(TestNewContext);
   return react.div(
     {},
@@ -107,14 +106,15 @@ Map reducer(Map state, Map action) {
     case 'decrement':
       return {...state, 'count': state['count'] - 1};
     case 'reset':
-      return initializeCount(action['payload']);
+      return initializeCount(action['payload'] as int);
     default:
       return state;
   }
 }
 
 UseReducerTestComponent(Map props) {
-  final ReducerHook<Map, Map, int> state = useReducerLazy(reducer, props['initialCount'], initializeCount);
+  final initialCount = props['initialCount'] as int;
+  final state = useReducerLazy(reducer, initialCount, initializeCount);
 
   return react.Fragment({}, [
     state.state['count'],
@@ -134,7 +134,7 @@ UseReducerTestComponent(Map props) {
       'key': 'urt3',
       'onClick': (_) => state.dispatch({
             'type': 'reset',
-            'payload': props['initialCount'],
+            'payload': initialCount,
           })
     }, [
       'reset'
@@ -149,11 +149,11 @@ UseCallbackTestComponent(Map props) {
   final count = useState(0);
   final delta = useState(1);
 
-  var increment = useCallback((_) {
+  final increment = useCallback((_) {
     count.setWithUpdater((prev) => prev + delta.value);
   }, [delta.value]);
 
-  var incrementDelta = useCallback((_) {
+  final incrementDelta = useCallback((_) {
     delta.setWithUpdater((prev) => prev + 1);
   }, []);
 
@@ -178,7 +178,7 @@ UseContextTestComponent(Map props) {
 }
 
 int calculateChangedBits(currentValue, nextValue) {
-  int result = 1 << 1;
+  var result = 1 << 1;
   if (nextValue['renderCount'] % 2 == 0) {
     result |= 1 << 2;
   }
@@ -190,10 +190,12 @@ var TestNewContext = react.createContext<Map>({'renderCount': 0}, calculateChang
 var newContextProviderComponent = react.registerComponent2(() => _NewContextProviderComponent());
 
 class _NewContextProviderComponent extends react.Component2 {
+  @override
   get initialState => {'renderCount': 0, 'complexMap': false};
 
+  @override
   render() {
-    final provideMap = {'renderCount': this.state['renderCount']};
+    final provideMap = {'renderCount': state['renderCount']};
 
     return react.div({
       'key': 'ulasda',
@@ -208,7 +210,7 @@ class _NewContextProviderComponent extends react.Component2 {
         'onClick': _onButtonClick,
       }, 'Redraw'),
       react.br({'key': 'break1'}),
-      'TestContext.Provider props.value: ${provideMap}',
+      'TestContext.Provider props.value: $provideMap',
       react.br({'key': 'break2'}),
       react.br({'key': 'break3'}),
       TestNewContext.Provider(
@@ -219,7 +221,7 @@ class _NewContextProviderComponent extends react.Component2 {
   }
 
   _onButtonClick(event) {
-    this.setState({'renderCount': this.state['renderCount'] + 1, 'complexMap': false});
+    setState({'renderCount': state['renderCount'] + 1, 'complexMap': false});
   }
 }
 
@@ -283,7 +285,7 @@ UseMemoTestComponent2(Map props) {
   final fib = fibonacci(count.value);
 
   return react.Fragment({}, [
-    react.div({'key': 'div'}, ['Fibonacci of ${count.value} is ${fib}']),
+    react.div({'key': 'div'}, ['Fibonacci of ${count.value} is $fib']),
     react.button({'key': 'button1', 'onClick': (_) => count.setWithUpdater((prev) => prev + 1)}, ['+']),
     react.button({'key': 'button2', 'onClick': (_) => reRender.setWithUpdater((prev) => prev + 1)}, ['re-render']),
   ]);
@@ -295,7 +297,7 @@ final randomUseLayoutEffectTestComponent =
     react.registerFunctionComponent(RandomUseLayoutEffectTestComponent, displayName: 'randomUseLayoutEffectTest');
 
 RandomUseLayoutEffectTestComponent(Map props) {
-  StateHook<double> value = useState(0);
+  final value = useState<double>(0);
 
   useLayoutEffect(() {
     if (value.value == 0) {
@@ -315,7 +317,7 @@ final randomUseEffectTestComponent =
     react.registerFunctionComponent(RandomUseEffectTestComponent, displayName: 'randomUseEffectTest');
 
 RandomUseEffectTestComponent(Map props) {
-  StateHook<double> value = useState(0);
+  final value = useState<double>(0);
 
   useEffect(() {
     if (value.value == 0) {
@@ -355,7 +357,7 @@ final FancyInput = react.forwardRef2((props, ref) {
     'value': props['value'],
     'onChange': (e) => props['update'](e.target.value),
     'placeholder': props['placeholder'],
-    'style': {'borderColor': props['hasError'] ? 'crimson' : '#999'},
+    'style': {'borderColor': (props['hasError'] as bool) ? 'crimson' : '#999'},
   });
 });
 
@@ -368,8 +370,8 @@ UseImperativeHandleTestComponent(Map props) {
   final error = useState('');
   final message = useState('');
 
-  Ref cityRef = useRef<FancyInputApi>();
-  Ref stateRef = useRef<FancyInputApi>();
+  final cityRef = useRef<FancyInputApi>();
+  final stateRef = useRef<FancyInputApi>();
 
   validate(_) {
     if (!RegExp(r'^[a-zA-Z]+$').hasMatch(city.value)) {
@@ -413,21 +415,23 @@ UseImperativeHandleTestComponent(Map props) {
 }
 
 final FancyCounter = react.forwardRef2((props, ref) {
-  final count = useState(0);
+  final diff = props['diff'] as num;
+
+  final count = useState<num>(0);
 
   useImperativeHandle(
     ref,
     () {
       print('FancyCounter: useImperativeHandle re-assigns ref.current');
       return {
-        'increment': () => count.setWithUpdater((prev) => prev + props['diff']),
-        'decrement': () => count.setWithUpdater((prev) => prev - props['diff']),
+        'increment': () => count.setWithUpdater((prev) => prev + diff),
+        'decrement': () => count.setWithUpdater((prev) => prev - diff),
       };
     },
 
     /// This dependency prevents unnecessary calls of createHandle, by only re-assigning
-    /// ref.current when `props['diff']` changes.
-    [props['diff']],
+    /// ref.current when `diff` changes.
+    [diff],
   );
 
   return react.div({}, count.value);
@@ -465,7 +469,7 @@ UseImperativeHandleTestComponent2(Map props) {
 
 class ChatAPI {
   static void subscribeToFriendStatus(int id, Function handleStatusChange) =>
-      handleStatusChange({'isOnline': id % 2 == 0 ? true : false});
+      handleStatusChange({'isOnline': id % 2 == 0});
 
   static void unsubscribeFromFriendStatus(int id, Function handleStatusChange) =>
       handleStatusChange({'isOnline': false});
@@ -476,7 +480,7 @@ StateHook<bool> useFriendStatus(int friendID) {
   final isOnline = useState(false);
 
   void handleStatusChange(Map status) {
-    isOnline.set(status['isOnline']);
+    isOnline.set(status['isOnline'] as bool);
   }
 
   useEffect(() {
@@ -492,8 +496,8 @@ StateHook<bool> useFriendStatus(int friendID) {
   return isOnline;
 }
 
-final FriendListItem = react.registerFunctionComponent((Map props) {
-  final isOnline = useFriendStatus(props['friend']['id']);
+final FriendListItem = react.registerFunctionComponent((props) {
+  final isOnline = useFriendStatus(props['friend']['id'] as int);
 
   return react.li({
     'style': {'color': isOnline.value ? 'green' : 'black'}
@@ -503,7 +507,7 @@ final FriendListItem = react.registerFunctionComponent((Map props) {
 }, displayName: 'FriendListItem');
 
 final UseDebugValueTestComponent = react.registerFunctionComponent(
-    (Map props) => react.Fragment({}, [
+    (props) => react.Fragment({}, [
           FriendListItem({
             'key': 'friend1',
             'friend': {'id': 1, 'name': 'user 1'},

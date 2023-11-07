@@ -1,9 +1,10 @@
-import "dart:html";
+import 'dart:html';
 
-import "package:react/react_dom.dart" as react_dom;
-import "package:react/react.dart" as react;
+import 'package:react/react_dom.dart' as react_dom;
+import 'package:react/react.dart' as react;
 
 class _CustomComponent extends react.Component2 {
+  @override
   render() {
     return react.div({}, props['children']);
   }

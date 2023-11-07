@@ -4,6 +4,7 @@ import 'package:react/react.dart' as react;
 import 'package:react/react_dom.dart' as react_dom;
 
 class _Component extends react.Component2 {
+  @override
   render() {
     if (props['hardCodedNullReturn'] == true) {
       return null;
@@ -13,11 +14,11 @@ class _Component extends react.Component2 {
   }
 }
 
-var component = react.registerComponent2(() => new _Component());
+var component = react.registerComponent2(() => _Component());
 
 void main() {
   final root = react_dom.createRoot(querySelector('#content'));
-  var content = react.div({}, [
+  final content = react.div({}, [
     react.p({}, 'Testing a dynamic return value of "null"...'),
     component({'returnValue': null, 'key': 0}),
     react.p({}, 'Testing a hard-coded return value of "null"...'),

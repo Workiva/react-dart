@@ -15,10 +15,10 @@ import 'package:react/src/react_client/private_utils.dart' show validateJsApiThe
 export 'package:react/src/react_client/create_root.dart' show ReactRoot, createRoot, CreateRootOptions;
 export 'package:react/src/react_client/js_interop/react_test_utils.dart' show ReactTestUtils;
 
-/// Renders a ReactElement into the DOM in the supplied [container] and return a reference to the [component]
+/// Renders a `ReactElement` into the DOM in the supplied `container` and returns a reference to the component
 /// (or returns null for stateless components).
 ///
-/// If the ReactElement was previously rendered into the [container], this will perform an update on it and only
+/// If the `ReactElement` was previously rendered into the `container`, this will perform an update on it and only
 /// mutate the DOM as necessary to reflect the latest React component.
 ///
 /// Deprecated in ReactJS v18. Use [createRoot] instead. See: https://github.com/reactwg/react-18/discussions/5
@@ -33,7 +33,7 @@ Function render = validateJsApiThenReturn(() => ReactDom.render);
 @Deprecated('Deprecated in ReactJS v18. Call root.unmount() after assigning root to the return value of createRoot().')
 Function unmountComponentAtNode = validateJsApiThenReturn(() => ReactDom.unmountComponentAtNode);
 
-/// If the component has been mounted into the DOM, this returns the corresponding native browser DOM [Element].
+/// If the component has been mounted into the DOM, this returns the corresponding native browser DOM `Element`.
 @Deprecated('Deprecated in ReactJS v18.')
 Function findDOMNode = validateJsApiThenReturn(() => _findDomNode);
 

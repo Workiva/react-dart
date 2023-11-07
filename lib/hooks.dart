@@ -24,20 +24,22 @@ class StateHook<T> {
   /// The second item in the pair returned by [React.useState].
   void Function(dynamic) _setValue;
 
+  @Deprecated('Use useState instead. Will be removed in 7.0.0.')
   StateHook(T initialValue) {
     final result = React.useState(initialValue);
-    _value = result[0];
-    _setValue = result[1];
+    _value = result[0] as T;
+    _setValue = result[1] as void Function(dynamic);
   }
 
   /// Constructor for [useStateLazy], calls lazy version of [React.useState] to
   /// initialize [_value] to the return value of [init].
   ///
   /// See: <https://reactjs.org/docs/hooks-reference.html#lazy-initial-state>.
-  StateHook.lazy(T init()) {
+  @Deprecated('Use useStateLazy instead. Will be removed in 7.0.0.')
+  StateHook.lazy(T Function() init) {
     final result = React.useState(allowInterop(init));
-    _value = result[0];
-    _setValue = result[1];
+    _value = result[0] as T;
+    _setValue = result[1] as void Function(dynamic);
   }
 
   /// The current value of the state.
@@ -53,7 +55,7 @@ class StateHook<T> {
   /// Updates [value] to the return value of [computeNewValue].
   ///
   /// See: <https://reactjs.org/docs/hooks-reference.html#functional-updates>.
-  void setWithUpdater(T computeNewValue(T oldValue)) => _setValue(allowInterop(computeNewValue));
+  void setWithUpdater(T Function(T oldValue) computeNewValue) => _setValue(allowInterop(computeNewValue));
 }
 
 /// Adds local state to a [DartFunctionComponent]
@@ -101,7 +103,7 @@ StateHook<T> useState<T>(T initialValue) => StateHook(initialValue);
 /// ```
 ///
 /// Learn more: <https://reactjs.org/docs/hooks-reference.html#lazy-initial-state>.
-StateHook<T> useStateLazy<T>(T init()) => StateHook.lazy(init);
+StateHook<T> useStateLazy<T>(T Function() init) => StateHook.lazy(init);
 
 /// Runs [sideEffect] after every completed render of a [DartFunctionComponent].
 ///
@@ -142,8 +144,8 @@ StateHook<T> useStateLazy<T>(T init()) => StateHook.lazy(init);
 ///
 /// See: <https://reactjs.org/docs/hooks-effect.html#tip-optimizing-performance-by-skipping-effects>.
 void useEffect(dynamic Function() sideEffect, [List<Object> dependencies]) {
-  var wrappedSideEffect = allowInterop(() {
-    var result = sideEffect();
+  final wrappedSideEffect = allowInterop(() {
+    final result = sideEffect();
     if (result is Function) {
       return allowInterop(result);
     }
@@ -166,27 +168,29 @@ void useEffect(dynamic Function() sideEffect, [List<Object> dependencies]) {
 ///
 /// Learn more: <https://reactjs.org/docs/hooks-reference.html#usereducer>.
 class ReducerHook<TState, TAction, TInit> {
-  /// The first item of the pair returned by [React.userReducer].
+  /// The first item of the pair returned by [React.useReducer].
   TState _state;
 
-  /// The second item in the pair returned by [React.userReducer].
+  /// The second item in the pair returned by [React.useReducer].
   void Function(TAction) _dispatch;
 
+  @Deprecated('Use useReducer instead. Will be removed in 7.0.0.')
   ReducerHook(TState Function(TState state, TAction action) reducer, TState initialState) {
     final result = React.useReducer(allowInterop(reducer), initialState);
-    _state = result[0];
-    _dispatch = result[1];
+    _state = result[0] as TState;
+    _dispatch = result[1] as void Function(TAction);
   }
 
   /// Constructor for [useReducerLazy], calls lazy version of [React.useReducer] to
   /// initialize [_state] to the return value of [init(initialArg)].
   ///
   /// See: <https://reactjs.org/docs/hooks-reference.html#lazy-initialization>.
+  @Deprecated('Use useReducerLazy instead. Will be removed in 7.0.0.')
   ReducerHook.lazy(
       TState Function(TState state, TAction action) reducer, TInit initialArg, TState Function(TInit) init) {
     final result = React.useReducer(allowInterop(reducer), initialArg, allowInterop(init));
-    _state = result[0];
-    _dispatch = result[1];
+    _state = result[0] as TState;
+    _dispatch = result[1] as void Function(TAction);
   }
 
   /// The current state map of the component.
@@ -202,7 +206,7 @@ class ReducerHook<TState, TAction, TInit> {
   void dispatch(TAction action) => _dispatch(action);
 }
 
-/// Initializes state of a [DartFunctionComponent] to [initialState] and creates [dispatch] method.
+/// Initializes state of a [DartFunctionComponent] to [initialState] and creates a `dispatch` method.
 ///
 /// __Example__:
 ///
@@ -242,7 +246,7 @@ ReducerHook<TState, TAction, TInit> useReducer<TState, TAction, TInit>(
         TState Function(TState state, TAction action) reducer, TState initialState) =>
     ReducerHook(reducer, initialState);
 
-/// Initializes state of a [DartFunctionComponent] to [init(initialArg)] and creates [dispatch] method.
+/// Initializes state of a [DartFunctionComponent] to `init(initialArg)` and creates `dispatch` method.
 ///
 /// __Example__:
 ///
@@ -329,7 +333,7 @@ ReducerHook<TState, TAction, TInit> useReducerLazy<TState, TAction, TInit>(
 ///
 /// Learn more: <https://reactjs.org/docs/hooks-reference.html#usecallback>.
 T useCallback<T extends Function>(T callback, List dependencies) =>
-    React.useCallback(allowInterop(callback), dependencies);
+    React.useCallback(allowInterop(callback), dependencies) as T;
 
 /// Returns the value of the nearest [Context.Provider] for the provided [context] object every time that context is
 /// updated.
@@ -393,7 +397,46 @@ T useContext<T>(Context<T> context) => ContextHelpers.unjsifyNewContext(React.us
 /// ```
 ///
 /// Learn more: <https://reactjs.org/docs/hooks-reference.html#useref>.
-Ref<T> useRef<T>([T initialValue]) => Ref.useRefInit(initialValue);
+Ref<T> useRef<T>([
+  // This will eventually be deprecated, but not just yet.
+  // @Deprecated('Use `useRefInit` instead to create refs with initial values.'
+  //     ' Since the argument to useRefInit is required, it can be used to create a Ref that holds a non-nullable type,'
+  //     ' whereas this function can only create Refs with nullable type arguments.')
+  T initialValue,
+]) =>
+    useRefInit(initialValue);
+
+/// Returns a mutable [Ref] object with [Ref.current] property initialized to [initialValue].
+///
+/// Changes to the [Ref.current] property do not cause the containing [DartFunctionComponent] to re-render.
+///
+/// The returned [Ref] object will persist for the full lifetime of the [DartFunctionComponent].
+/// Compare to [createRef] which returns a new [Ref] object on each render.
+///
+/// > __Note:__ there are two [rules for using Hooks](https://reactjs.org/docs/hooks-rules.html):
+/// >
+/// > * Only call Hooks at the top level.
+/// > * Only call Hooks from inside a [DartFunctionComponent].
+///
+/// __Example__:
+///
+/// ```dart
+/// UseRefTestComponent(Map props) {
+///   final countRef = useRefInit(0);
+///
+///   handleClick([_]) {
+///     ref.current = ref.current + 1;
+///     window.alert('You clicked ${ref.current} times!');
+///   }
+///
+///   return react.Fragment({}, [
+///     react.button({'onClick': handleClick}, ['Click me!']),
+///   ]);
+/// }
+/// ```
+///
+/// Learn more: <https://reactjs.org/docs/hooks-reference.html#useref>.
+Ref<T> useRefInit<T>(T initialValue) => Ref.useRefInit(initialValue);
 
 /// Returns a memoized version of the return value of [createFunction].
 ///
@@ -427,7 +470,7 @@ Ref<T> useRef<T>([T initialValue]) => Ref.useRefInit(initialValue);
 ///
 /// Learn more: <https://reactjs.org/docs/hooks-reference.html#usememo>.
 T useMemo<T>(T Function() createFunction, [List<dynamic> dependencies]) =>
-    React.useMemo(allowInterop(createFunction), dependencies);
+    React.useMemo(allowInterop(createFunction), dependencies) as T;
 
 /// A React hook that generates and returns a unique id on both the client-side and server-side.
 ///
@@ -641,7 +684,7 @@ void useImperativeHandle(dynamic ref, dynamic Function() createHandle, [List<dyn
 ///   return isOnline;
 /// }
 ///
-/// final FriendListItem = react.registerFunctionComponent((Map props) {
+/// final FriendListItem = react.registerFunctionComponent((props) {
 ///   final isOnline = useFriendStatus(props['friend']['id']);
 ///
 ///   return react.li({
