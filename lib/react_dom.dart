@@ -5,8 +5,6 @@
 library react_dom;
 
 // ignore: deprecated_member_use_from_same_package
-import 'dart:html';
-
 import 'package:react/react.dart' show Component;
 import 'package:react/react_client/react_interop.dart' show ReactDom;
 import 'package:react/src/react_client/create_root.dart' show ReactRoot, createRoot;

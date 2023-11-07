@@ -8,7 +8,7 @@ var SimpleComponent = react.registerComponent2(() => _SimpleComponent());
 
 class _SimpleComponent extends react.Component2 {
   @override
-  componentDidMount() => print("mount");
+  componentDidMount() => print('mount');
 
   @override
   componentWillUnmount() => print('unmount');

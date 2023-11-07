@@ -40,11 +40,11 @@ class _SimpleComponent extends react.Component2 {
   var refToElement;
 
   @override
-  componentWillUnmount() => print("unmount");
+  componentWillUnmount() => print('unmount');
 
   @override
   componentDidMount() {
-    print("mount");
+    print('mount');
     customAssert('ref to span return span ', refToSpan.text == 'Test');
     // ignore: deprecated_member_use_from_same_package
     customAssert('findDOMNode works on this', react_dom.findDOMNode(this) != null);

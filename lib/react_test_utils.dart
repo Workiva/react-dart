@@ -37,7 +37,7 @@ import 'package:react/src/react_test_utils/internal_test_utils.dart' as itu;
 /// * For DOM components, this with return the String corresponding to its tagName ('div', 'a', etc.).
 /// * For custom composite components React.createClass()-based components, this will return the [ReactClass].
 @Deprecated('Use the react_testing_library package instead.')
-final getComponentTypeV2 = itu.getComponentTypeV2;
+const getComponentTypeV2 = itu.getComponentTypeV2;
 
 @Deprecated('Use the react_testing_library package instead.')
 typedef ComponentTestFunction = bool Function(dynamic /* [1] */ component);
@@ -155,17 +155,17 @@ external dynamic /* [1] */ _findRenderedComponentWithType(/* [1] */ tree, dynami
 /// Returns true if element is a composite component.
 /// (created with React.createClass()).
 @Deprecated('Use the react_testing_library package instead.')
-final isCompositeComponent = itu.isCompositeComponent;
+const isCompositeComponent = itu.isCompositeComponent;
 
 /// Returns `true` if instance is a custom composite component created using `React.createClass()`
 /// that is of the [ReactComponentFactoryProxy.type] of the provided [componentFactory].
 @Deprecated('Use the react_testing_library package instead.')
-final isCompositeComponentWithTypeV2 = itu.isCompositeComponentWithTypeV2;
+const isCompositeComponentWithTypeV2 = itu.isCompositeComponentWithTypeV2;
 
 /// Returns true if instance is a DOM component (such as a <div> or <span>).
 @JS('React.addons.TestUtils.isDOMComponent')
 @Deprecated('Use the react_testing_library package instead.')
-final isDOMComponent = itu.isDOMComponent;
+const isDOMComponent = itu.isDOMComponent;
 
 /// Returns true if [object] is a valid React component.
 @JS('React.addons.TestUtils.isElement')
@@ -175,7 +175,7 @@ external bool isElement(dynamic object);
 /// Returns `true` if [element] is a [ReactElement]
 /// that is of the [ReactComponentFactoryProxy.type] of the provided [componentFactory].
 @Deprecated('Use the react_testing_library package instead.')
-final isElementOfTypeV2 = itu.isElementOfTypeV2;
+const isElementOfTypeV2 = itu.isElementOfTypeV2;
 
 @JS('React.addons.TestUtils.scryRenderedComponentsWithType')
 external List<dynamic> /* [1] */ _scryRenderedComponentsWithType(/* [1] */ tree, dynamic type);
