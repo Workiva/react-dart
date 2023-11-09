@@ -760,11 +760,25 @@ SyntheticWheelEvent createSyntheticWheelEvent({
 }
 
 extension SyntheticEventTypeHelpers on SyntheticEvent {
-  // Use getProperty(this, 'type') since, although statically we may be dealing with a SyntheticEvent,
-  // this could be a non-event JS object cast to SyntheticEvent with a null `type`.
-  // This is unlikely, but is possible, and before the null safety migration this method
-  // gracefully returned false instead of throwing.
-  bool _checkEventType(List<String> types) => getProperty(this, 'type') != null && types.any((t) => type.contains(t));
+  // Access `type` in a try-catch since, although statically we may be dealing with a SyntheticEvent,
+  // this could be an object with a `null` `type` which would cause a type error since `type` is non-nullable.
+  //
+  // Cases where this could occur:
+  // - non-event JS object cast to SyntheticEvent
+  // - a mock class that hasn't mocked `type`
+  //
+  // We could use `getProperty(this, 'type')` to handle the JS object case, but for mock classes it would bypass the
+  // `type` getter and not behave as expected.
+  bool _checkEventType(List<String> types) {
+    String? type;
+    try {
+      // This is typed as null statically, but if it's not, it will probably throw (depending on the compiler).
+      type = this.type;
+    } catch (_) {}
+
+    return type != null && types.any(type.contains);
+  }
+
   bool _hasProperty(String propertyName) => hasProperty(this, propertyName);
 
   /// Uses Duck Typing to detect if the event instance is a [SyntheticClipboardEvent].
