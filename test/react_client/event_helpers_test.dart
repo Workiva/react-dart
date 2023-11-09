@@ -1703,6 +1703,18 @@ main() {
               () {
             expect(eventTypeTester(newObject() as SyntheticEvent), isFalse);
           });
+
+          test('when the argument is a mocked event object with no mocked `type` property, and does not throw', () {
+            // Typically consumers would mock a specific SyntheticEvent subtype, but creating null-safe mocks for those
+            // causes property checks like `_hasProperty('button')` in helper methods to return true in DDC
+            // (e.g., `.isMouseEvent` for a `MockSyntheticMouseEvent` would return true).
+            //
+            // We really just want to check the `type` behavior here, especially for non-null-safe mocks, so we'll use
+            // the generic MockSyntheticEvent.
+            //
+            // *See other test with similar note to this one.*
+            expect(eventTypeTester(MockSyntheticEvent()), isFalse);
+          });
         });
       }
 
@@ -1989,6 +2001,23 @@ main() {
             commonFalseTests((e) => e.isWheelEvent, SyntheticEventType.syntheticWheelEvent);
           });
         });
+      });
+
+      // Regression test for Mock class behavior consumers rely on.
+      //
+      // Typically consumers would mock a specific SyntheticEvent subtype, but creating null-safe mocks for those
+      // causes property checks like `_hasProperty('button')` in helper methods to return true in DDC
+      // (e.g., `.isMouseEvent` for a `MockSyntheticMouseEvent` would return true).
+      //
+      // We really just want to check the `type` behavior here, especially for non-null-safe mocks, so we'll use
+      // the generic MockSyntheticEvent.
+      //
+      // *See other test with similar note to this one.*
+      test('checks types correctly for Mock objects with `type` mocked', () {
+        final mockEvent = MockSyntheticEvent();
+        when(mockEvent.type).thenReturn('click');
+        expect(mockEvent.isMouseEvent, isTrue);
+        expect(mockEvent.isKeyboardEvent, false);
       });
     });
 

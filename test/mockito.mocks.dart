@@ -7,6 +7,7 @@ import 'dart:html' as _i2;
 import 'dart:math' as _i3;
 
 import 'package:mockito/mockito.dart' as _i1;
+import 'package:react/src/react_client/synthetic_event_wrappers.dart' as _i4;
 
 // ignore_for_file: type=lint
 // ignore_for_file: avoid_redundant_argument_values
@@ -439,6 +440,62 @@ class MockMouseEvent extends _i1.Mock implements _i2.MouseEvent {
   void stopPropagation() => super.noSuchMethod(
         Invocation.method(
           #stopPropagation,
+          [],
+        ),
+        returnValueForMissingStub: null,
+      );
+}
+
+/// A class which mocks [SyntheticEvent].
+///
+/// See the documentation for Mockito's code generation for more information.
+class MockSyntheticEvent extends _i1.Mock implements _i4.SyntheticEvent {
+  @override
+  bool get bubbles => (super.noSuchMethod(
+        Invocation.getter(#bubbles),
+        returnValue: false,
+        returnValueForMissingStub: false,
+      ) as bool);
+  @override
+  bool get cancelable => (super.noSuchMethod(
+        Invocation.getter(#cancelable),
+        returnValue: false,
+        returnValueForMissingStub: false,
+      ) as bool);
+  @override
+  bool get defaultPrevented => (super.noSuchMethod(
+        Invocation.getter(#defaultPrevented),
+        returnValue: false,
+        returnValueForMissingStub: false,
+      ) as bool);
+  @override
+  num get eventPhase => (super.noSuchMethod(
+        Invocation.getter(#eventPhase),
+        returnValue: 0,
+        returnValueForMissingStub: 0,
+      ) as num);
+  @override
+  bool get isTrusted => (super.noSuchMethod(
+        Invocation.getter(#isTrusted),
+        returnValue: false,
+        returnValueForMissingStub: false,
+      ) as bool);
+  @override
+  num get timeStamp => (super.noSuchMethod(
+        Invocation.getter(#timeStamp),
+        returnValue: 0,
+        returnValueForMissingStub: 0,
+      ) as num);
+  @override
+  String get type => (super.noSuchMethod(
+        Invocation.getter(#type),
+        returnValue: '',
+        returnValueForMissingStub: '',
+      ) as String);
+  @override
+  void preventDefault() => super.noSuchMethod(
+        Invocation.method(
+          #preventDefault,
           [],
         ),
         returnValueForMissingStub: null,
