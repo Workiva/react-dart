@@ -11,6 +11,6 @@ import 'package:react/src/react_client/synthetic_event_wrappers.dart';
   MockSpec<KeyboardEvent>(),
   MockSpec<DataTransfer>(),
   MockSpec<MouseEvent>(),
-  MockSpec<SyntheticMouseEvent>(),
+  MockSpec<SyntheticEvent>(),
 ])
 main() {}

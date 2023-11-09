@@ -446,83 +446,10 @@ class MockMouseEvent extends _i1.Mock implements _i2.MouseEvent {
       );
 }
 
-/// A class which mocks [SyntheticMouseEvent].
+/// A class which mocks [SyntheticEvent].
 ///
 /// See the documentation for Mockito's code generation for more information.
-class MockSyntheticMouseEvent extends _i1.Mock
-    implements _i4.SyntheticMouseEvent {
-  @override
-  bool get altKey => (super.noSuchMethod(
-        Invocation.getter(#altKey),
-        returnValue: false,
-        returnValueForMissingStub: false,
-      ) as bool);
-  @override
-  num get button => (super.noSuchMethod(
-        Invocation.getter(#button),
-        returnValue: 0,
-        returnValueForMissingStub: 0,
-      ) as num);
-  @override
-  num get buttons => (super.noSuchMethod(
-        Invocation.getter(#buttons),
-        returnValue: 0,
-        returnValueForMissingStub: 0,
-      ) as num);
-  @override
-  num get clientX => (super.noSuchMethod(
-        Invocation.getter(#clientX),
-        returnValue: 0,
-        returnValueForMissingStub: 0,
-      ) as num);
-  @override
-  num get clientY => (super.noSuchMethod(
-        Invocation.getter(#clientY),
-        returnValue: 0,
-        returnValueForMissingStub: 0,
-      ) as num);
-  @override
-  bool get ctrlKey => (super.noSuchMethod(
-        Invocation.getter(#ctrlKey),
-        returnValue: false,
-        returnValueForMissingStub: false,
-      ) as bool);
-  @override
-  bool get metaKey => (super.noSuchMethod(
-        Invocation.getter(#metaKey),
-        returnValue: false,
-        returnValueForMissingStub: false,
-      ) as bool);
-  @override
-  num get pageX => (super.noSuchMethod(
-        Invocation.getter(#pageX),
-        returnValue: 0,
-        returnValueForMissingStub: 0,
-      ) as num);
-  @override
-  num get pageY => (super.noSuchMethod(
-        Invocation.getter(#pageY),
-        returnValue: 0,
-        returnValueForMissingStub: 0,
-      ) as num);
-  @override
-  num get screenX => (super.noSuchMethod(
-        Invocation.getter(#screenX),
-        returnValue: 0,
-        returnValueForMissingStub: 0,
-      ) as num);
-  @override
-  num get screenY => (super.noSuchMethod(
-        Invocation.getter(#screenY),
-        returnValue: 0,
-        returnValueForMissingStub: 0,
-      ) as num);
-  @override
-  bool get shiftKey => (super.noSuchMethod(
-        Invocation.getter(#shiftKey),
-        returnValue: false,
-        returnValueForMissingStub: false,
-      ) as bool);
+class MockSyntheticEvent extends _i1.Mock implements _i4.SyntheticEvent {
   @override
   bool get bubbles => (super.noSuchMethod(
         Invocation.getter(#bubbles),
