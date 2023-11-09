@@ -1703,6 +1703,10 @@ main() {
               () {
             expect(eventTypeTester(newObject() as SyntheticEvent), isFalse);
           });
+
+          test('when the argument is a mocked event object with no mocked `type` property, and does not throw', () {
+            expect(eventTypeTester(MockSyntheticMouseEvent()), isFalse);
+          });
         });
       }
 
@@ -1989,6 +1993,14 @@ main() {
             commonFalseTests((e) => e.isWheelEvent, SyntheticEventType.syntheticWheelEvent);
           });
         });
+      });
+
+      // Regression test for Mock class behavior consumers rely on.
+      test('checks types correctly for Mock objects with `type` mocked', () {
+        final mockEvent = MockSyntheticMouseEvent();
+        when(mockEvent.type).thenReturn('click');
+        expect(mockEvent.isMouseEvent, isTrue);
+        expect(mockEvent.isKeyboardEvent, false);
       });
     });
 

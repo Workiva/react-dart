@@ -7,6 +7,7 @@ import 'dart:html' as _i2;
 import 'dart:math' as _i3;
 
 import 'package:mockito/mockito.dart' as _i1;
+import 'package:react/src/react_client/synthetic_event_wrappers.dart' as _i4;
 
 // ignore_for_file: type=lint
 // ignore_for_file: avoid_redundant_argument_values
@@ -439,6 +440,135 @@ class MockMouseEvent extends _i1.Mock implements _i2.MouseEvent {
   void stopPropagation() => super.noSuchMethod(
         Invocation.method(
           #stopPropagation,
+          [],
+        ),
+        returnValueForMissingStub: null,
+      );
+}
+
+/// A class which mocks [SyntheticMouseEvent].
+///
+/// See the documentation for Mockito's code generation for more information.
+class MockSyntheticMouseEvent extends _i1.Mock
+    implements _i4.SyntheticMouseEvent {
+  @override
+  bool get altKey => (super.noSuchMethod(
+        Invocation.getter(#altKey),
+        returnValue: false,
+        returnValueForMissingStub: false,
+      ) as bool);
+  @override
+  num get button => (super.noSuchMethod(
+        Invocation.getter(#button),
+        returnValue: 0,
+        returnValueForMissingStub: 0,
+      ) as num);
+  @override
+  num get buttons => (super.noSuchMethod(
+        Invocation.getter(#buttons),
+        returnValue: 0,
+        returnValueForMissingStub: 0,
+      ) as num);
+  @override
+  num get clientX => (super.noSuchMethod(
+        Invocation.getter(#clientX),
+        returnValue: 0,
+        returnValueForMissingStub: 0,
+      ) as num);
+  @override
+  num get clientY => (super.noSuchMethod(
+        Invocation.getter(#clientY),
+        returnValue: 0,
+        returnValueForMissingStub: 0,
+      ) as num);
+  @override
+  bool get ctrlKey => (super.noSuchMethod(
+        Invocation.getter(#ctrlKey),
+        returnValue: false,
+        returnValueForMissingStub: false,
+      ) as bool);
+  @override
+  bool get metaKey => (super.noSuchMethod(
+        Invocation.getter(#metaKey),
+        returnValue: false,
+        returnValueForMissingStub: false,
+      ) as bool);
+  @override
+  num get pageX => (super.noSuchMethod(
+        Invocation.getter(#pageX),
+        returnValue: 0,
+        returnValueForMissingStub: 0,
+      ) as num);
+  @override
+  num get pageY => (super.noSuchMethod(
+        Invocation.getter(#pageY),
+        returnValue: 0,
+        returnValueForMissingStub: 0,
+      ) as num);
+  @override
+  num get screenX => (super.noSuchMethod(
+        Invocation.getter(#screenX),
+        returnValue: 0,
+        returnValueForMissingStub: 0,
+      ) as num);
+  @override
+  num get screenY => (super.noSuchMethod(
+        Invocation.getter(#screenY),
+        returnValue: 0,
+        returnValueForMissingStub: 0,
+      ) as num);
+  @override
+  bool get shiftKey => (super.noSuchMethod(
+        Invocation.getter(#shiftKey),
+        returnValue: false,
+        returnValueForMissingStub: false,
+      ) as bool);
+  @override
+  bool get bubbles => (super.noSuchMethod(
+        Invocation.getter(#bubbles),
+        returnValue: false,
+        returnValueForMissingStub: false,
+      ) as bool);
+  @override
+  bool get cancelable => (super.noSuchMethod(
+        Invocation.getter(#cancelable),
+        returnValue: false,
+        returnValueForMissingStub: false,
+      ) as bool);
+  @override
+  bool get defaultPrevented => (super.noSuchMethod(
+        Invocation.getter(#defaultPrevented),
+        returnValue: false,
+        returnValueForMissingStub: false,
+      ) as bool);
+  @override
+  num get eventPhase => (super.noSuchMethod(
+        Invocation.getter(#eventPhase),
+        returnValue: 0,
+        returnValueForMissingStub: 0,
+      ) as num);
+  @override
+  bool get isTrusted => (super.noSuchMethod(
+        Invocation.getter(#isTrusted),
+        returnValue: false,
+        returnValueForMissingStub: false,
+      ) as bool);
+  @override
+  num get timeStamp => (super.noSuchMethod(
+        Invocation.getter(#timeStamp),
+        returnValue: 0,
+        returnValueForMissingStub: 0,
+      ) as num);
+  @override
+  String get type => (super.noSuchMethod(
+        Invocation.getter(#type),
+        returnValue: '',
+        returnValueForMissingStub: '',
+      ) as String);
+  @override
+  void preventDefault() => super.noSuchMethod(
+        Invocation.method(
+          #preventDefault,
           [],
         ),
         returnValueForMissingStub: null,
