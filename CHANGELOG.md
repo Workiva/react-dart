@@ -1,44 +1,80 @@
-## 7.0.0-wip
+## 7.0.0
 
 - Migrate to null safety
+- Remove deprecated APIs (see below)
+- Minor API breakages to support null safety migration and improve typing (see below)
 
-#### Deprecated API removals
-- forwardRef (use forwardRef2 instead)
-- memo (use memo2 instead)
-- main (use htmlMain instead)
-- Ref class constructors: default and `useRefInit` (use useRef/createRef instead)
-- ReducerHook and StateHook class constructors (use hook functions instead).
+## Deprecated API removals
+- `ReducerHook` and `StateHook` class constructors (use hook functions instead)
+- `Ref` class constructors: default and `useRefInit` (use `createRef` and `useRef` instead)
+- `forwardRef` (use `forwardRef2` instead)
+- `main` (use `htmlMain` instead)
+- `memo` (use `memo2` instead)
 - APIs that have been no-ops since react-dart 6.0.0
-    - SyntheticEvent members `persist` and `isPersistent`
-    - unconvertJsEventHandler 
+    - `SyntheticEvent` members `persist` and `isPersistent`
+    - `unconvertJsEventHandler` 
 - APIs that were never intended for public use:
-    - JsPropValidator
-    - dartInteropStatics
-    - ComponentStatics(2)
-    - createReactDartComponentClass(2)
-    - JsComponentConfig(2)
-    - ReactDartInteropStatics
-    - InteropContextValue
-    - markChildrenValidated
+    - `ComponentStatics`, `ComponentStatics2`
+    - `InteropContextValue`
+    - `JsComponentConfig`, `JsComponentConfig2`
+    - `JsError`
+    - `JsPropValidator`
+    - `React.createFactory`
+    - `ReactDartContextInternal`
+    - `ReactDartInteropStatics`
+    - `ReactElementStore`
+    - `createReactDartComponentClass`, `createReactDartComponentClass2`
+    - `markChildValidated`
+    - `markChildrenValidated`
 
-#### Other API breakages
-- ReducerHook and StateHook have no public constructors and can no longer be extended
-- Ref.fromJs is now a factory constructor, meaning the Ref class can no longer be extended
-- ReactComponentFactoryProxy.call and .build return type changed from dynamic to ReactElement
-    - This matches the type returned from `build` for all subclasses, which is what’s returned by call, and reflects the type returned at runtime
-    - Has potential to cause some static analysis issues, but for the most part should not affect anything since ReactElement is typically treated as an opaque type
-        - Needs consumer tests
-    - Top-level component factories are typed as ReactDomComponentFactoryProxy instead of being `dynamic`: react.div
-- All PropValidatorInfo arguments are required
-- Changes to public but internal code that should not affect consumers:
-    - ReactDartComponentInternal
-        - Constructor now takes a required argument, props is final
-    - initComponentInternal arguments are typed to reflect runtime assumptions
-- ReactComponentFactoryProxy no longer `implements Function`
-    - This should not be a breakage, since as of Dart 2.0 inheriting from Function has had no effect
+### Other API breakages
 
-#### Potential behavior breakages
-- Component and Component2 members `props`/`state`/`jsThis` are late, will now throw instead of being null if accessed before initialized (e.g., in a constructor, final class field, or static lifecycle method).
+#### Miscellaneous:
+- `ReducerHook`, `StateHook`, and `Ref` are now `@sealed` and may not be inherited from
+- All `PropValidatorInfo` arguments are required
+
+#### Typing improvements:
+  - Top-level DOM factories exported from `package:react/react.dart` (`react.div`, `react.span`, etc.) are now typed as `ReactDomComponentFactoryProxy` instead of `dynamic` 
+  - The return types of `ReactComponentFactoryProxy` methods `call` and `build` are now `ReactElement` instead of `dynamic`
+      - This matches the type returned from `build` for all subclasses, which is what’s returned by call, and reflects the type returned at runtime
+      - Has potential to cause some static analysis issues, but for the most part should not affect anything since `ReactElement` is typically treated as an opaque type
+
+#### Changes very unlikely to affect consumers:
+- Changes to public-but-internal APIs:
+    - `ReactDartComponentInternal` constructor now takes a required argument, `props` field is `final`
+    - `initComponentInternal` arguments are typed to reflect runtime assumptions
+- `Component` and `Component2` members `props`/`state`/`jsThis` are now [late](https://dart.dev/language/variables#late-variables), and will now throw instead of being null if accessed before initialized.
+
+    It should be very uncommon for components to be affected by this change, and any affected components are likely doing something wrong to begin with. 
+
+    These fields are only uninitialized:
+     - for mounting component instances: 
+        - in component class constructors (which we don't encourage)
+        - in component class field initializers (except for lazy `late` ones)
+     - in "static" lifecycle methods like `getDerivedStateFromProps` and `defaultProps`
+
+    Examples of code affected:
+    ```dart
+    class FooComponent extends Component2 {
+      // `props` would have always been null when this is initialized, but in 7.0.0 accessing it throws.
+      final something = (props ?? {})['something'];
+
+      // We strongly discourage declaring Dart constructors in component classes;
+      // for initialization logic, use componentDidMount instead. 
+      FooComponent() {
+        // `props` would have always been null here, but in 7.0.0 accessing it throws.
+        print(props);
+      }
+
+      @override
+      getDerivedStateFromProps(nextProps, prevState)  {
+        // `props` would have always been null here, but in 7.0.0 accessing it throws.
+        print(props);
+        return {};
+      }
+    }
+    ```
+
 
 ## [6.3.0](https://github.com/Workiva/react-dart/compare/6.2.1...6.3.0)
 - [#372], [#374] Add and update deprecations in preparation for 7.0.0 release, add WIP changelog

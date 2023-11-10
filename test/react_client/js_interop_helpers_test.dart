@@ -53,12 +53,16 @@ class Foo {
 @JS()
 external dynamic createArray();
 
+/// Like jsifyAndAllowInterop, but casts to Object
+Object jsifyAndAllowInteropAsObject(Object value) => jsifyAndAllowInterop(value) as Object;
+
 main() {
   group('jsifyAndAllowInterop', () {
     test('converts a List', () {
       final list = [1, 2, 3, 4, 5, 6, 7, 8];
-      final array = jsifyAndAllowInterop(list);
+      final array = jsifyAndAllowInteropAsObject(list);
       expect(array is List, isTrue);
+      array as List;
       expect(identical(array, list), isFalse);
       expect(array.length, equals(list.length));
       for (var i = 0; i < list.length; i++) {
@@ -68,27 +72,36 @@ main() {
 
     test('converts an Iterable', () {
       final set = {1, 2, 3, 4, 5, 6, 7, 8};
-      final array = jsifyAndAllowInterop(set);
+      final array = jsifyAndAllowInteropAsObject(set);
       expect(array is List, isTrue);
       expect((array as List).length, equals(set.length));
-      for (var i = 0; i < (array as List).length; i++) {
+      for (var i = 0; i < array.length; i++) {
         expect(set.contains(array[i]), isTrue);
       }
     });
 
     test('converts a Map', () {
       final map = {'a': 1, 'b': 2, 'c': 3};
-      final jsMap = jsifyAndAllowInterop(map);
+      final jsMap = jsifyAndAllowInteropAsObject(map);
       expect(jsMap is List, isFalse);
       expect(jsMap is Map, isFalse);
       for (final key in map.keys) {
-        expect(checkMap(jsMap, key, map[key]), isTrue);
+        expect(checkMap(jsMap, key, map[key]!), isTrue);
       }
+    });
+
+    test('converts a Map with `null` as a key (which gets coerced to a string)', () {
+      final map = {'a': 1, null: 2};
+      final jsMap = jsifyAndAllowInteropAsObject(map);
+      expect(jsMap is List, isFalse);
+      expect(jsMap is Map, isFalse);
+      checkMap(jsMap, 'a', map['a']!);
+      checkMap(jsMap, 'null', map[null]!);
     });
 
     test('converts nested Functions', () {
       function() {}
-      final converted = jsifyAndAllowInterop({'function': function});
+      final converted = jsifyAndAllowInteropAsObject({'function': function});
       expect(getProperty(converted, 'function'), same(allowInterop(function)));
     });
 
@@ -101,14 +114,14 @@ main() {
         'b': {'c': 3, 'd': Foo(42)},
         'e': null
       } as dynamic;
-      final jsObject = jsifyAndAllowInterop(object);
+      final jsObject = jsifyAndAllowInterop(object) as Object;
       expect(getProperty(jsObject, 'a')[0], equals(object['a'][0]));
       expect(getProperty(jsObject, 'a')[1][0], equals(object['a'][1][0]));
       expect(getProperty(jsObject, 'a')[1][1], equals(object['a'][1][1]));
 
-      final b = getProperty(jsObject, 'b');
+      final b = getProperty(jsObject, 'b') as Object;
       expect(getProperty(b, 'c'), equals(object['b']['c']));
-      final d = getProperty(b, 'd');
+      final d = getProperty(b, 'd') as Object;
       expect(d, equals(object['b']['d']));
       expect(getProperty(d, 'a'), equals(42));
       expect(callMethod(d, 'bar', []), equals(42));
@@ -117,21 +130,21 @@ main() {
     });
 
     test('throws if object is not a Map or Iterable', () {
-      expect(() => jsifyAndAllowInterop('a'), throwsArgumentError);
+      expect(() => jsifyAndAllowInteropAsObject('a'), throwsArgumentError);
     });
 
     test('does not result in unwanted properties (e.g., \$identityHash) being added to converted JS objects', () {
-      final nestedJsObject = jsifyAndAllowInterop({'foo': 'bar'});
+      final nestedJsObject = jsifyAndAllowInteropAsObject({'foo': 'bar'});
       const expectedProperties = ['foo'];
       expect(objectKeys(nestedJsObject), expectedProperties, reason: 'test setup check');
 
-      // We want to include a JS object in jsifyAndAllowInterop
-      final jsObject = jsifyAndAllowInterop({
+      // We want to include a JS object in jsifyAndAllowInteropAsObject
+      final jsObject = jsifyAndAllowInteropAsObject({
         'nestedJsObject': nestedJsObject,
       });
       final convertedNestedJsObject = getProperty(jsObject, 'nestedJsObject');
       expect(convertedNestedJsObject, same(nestedJsObject), reason: 'JS object should have just gotten passed through');
-      expect(objectKeys(convertedNestedJsObject), expectedProperties,
+      expect(objectKeys(convertedNestedJsObject as Object), expectedProperties,
           reason: 'JS object should not have any additional properties');
     });
 
@@ -144,9 +157,9 @@ main() {
         _freeze(frozenAnonymousObject);
         expect(_isFrozen(frozenAnonymousObject), isTrue, reason: 'test setup check; should have frozen');
 
-        dynamic jsObject;
+        late Object jsObject;
         expect(() {
-          jsObject = jsifyAndAllowInterop({
+          jsObject = jsifyAndAllowInteropAsObject({
             'frozenObject': frozenAnonymousObject,
           });
         }, returnsNormally, reason: 'should not throw when it encounters a frozen object');
@@ -163,9 +176,9 @@ main() {
         _freeze(frozenNonAnynymousObject);
         expect(_isFrozen(frozenNonAnynymousObject), isTrue, reason: 'test setup check; should have frozen');
 
-        dynamic jsObject;
+        late Object jsObject;
         expect(() {
-          jsObject = jsifyAndAllowInterop({
+          jsObject = jsifyAndAllowInteropAsObject({
             'frozenObject': frozenNonAnynymousObject,
           });
         }, returnsNormally, reason: 'should not throw when it encounters a frozen object');
@@ -183,9 +196,9 @@ main() {
         _freeze(frozenArray);
         expect(_isFrozen(frozenArray), isTrue, reason: 'test setup check; should have frozen');
 
-        dynamic jsObject;
+        late Object jsObject;
         expect(() {
-          jsObject = jsifyAndAllowInterop({
+          jsObject = jsifyAndAllowInteropAsObject({
             'frozenArray': frozenArray,
           });
         }, returnsNormally, reason: 'should not throw when it encounters a frozen object');
@@ -206,10 +219,10 @@ external dynamic get _objectPrototype;
 external dynamic get _arrayPrototype;
 
 @JS('Object.freeze')
-external void _freeze(Object object);
+external void _freeze(dynamic object);
 
 @JS('Object.isFrozen')
-external bool _isFrozen(Object object);
+external bool _isFrozen(dynamic object);
 
 @JS('Object.getPrototypeOf')
-external dynamic _getPrototypeOf(Object object);
+external dynamic _getPrototypeOf(dynamic);

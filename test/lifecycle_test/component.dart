@@ -180,7 +180,7 @@ class _LifecycleTest extends react.Component with LifecycleTestHelper {
 
   @override
   componentWillReceivePropsWithContext(newProps, newContext) => lifecycleCall('componentWillReceivePropsWithContext',
-      arguments: [Map.from(newProps), Map.from(newContext as Map)]);
+      arguments: [Map.from(newProps), copyMapIfNotNull(newContext as Map?)]);
 
   @override
   componentWillUpdate(nextProps, nextState) =>
@@ -188,7 +188,7 @@ class _LifecycleTest extends react.Component with LifecycleTestHelper {
 
   @override
   componentWillUpdateWithContext(nextProps, nextState, nextContext) => lifecycleCall('componentWillUpdateWithContext',
-      arguments: [Map.from(nextProps), Map.from(nextState), Map.from(nextContext)]);
+      arguments: [Map.from(nextProps), Map.from(nextState), copyMapIfNotNull(nextContext)]);
 
   @override
   componentDidUpdate(prevProps, prevState) =>
@@ -201,7 +201,8 @@ class _LifecycleTest extends react.Component with LifecycleTestHelper {
   @override
   shouldComponentUpdateWithContext(nextProps, nextState, nextContext) =>
       lifecycleCall('shouldComponentUpdateWithContext',
-          arguments: [Map.from(nextProps), Map.from(nextState), Map.from(nextContext)], defaultReturnValue: () => true);
+          arguments: [Map.from(nextProps), Map.from(nextState), copyMapIfNotNull(nextContext)],
+          defaultReturnValue: () => true);
 
   @override
   render() => lifecycleCall('render', defaultReturnValue: () => react.div({}));
@@ -216,3 +217,5 @@ class _LifecycleTest extends react.Component with LifecycleTestHelper {
     return {'defaultProp': 'default'};
   }
 }
+
+Map<K, V>? copyMapIfNotNull<K, V>(Map<K, V>? map) => map == null ? null : {...map};

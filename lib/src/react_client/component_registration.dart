@@ -7,6 +7,7 @@ import 'package:react/react_client/react_interop.dart';
 import 'package:react/react_client/component_factory.dart';
 
 import 'package:react/src/react_client/dart_interop_statics.dart';
+import 'package:react/src/react_client/internal_react_interop.dart';
 
 import '../js_interop_util.dart';
 
@@ -100,7 +101,7 @@ ReactDartComponentFactoryProxy registerComponent(
 ReactDartComponentFactoryProxy2 registerComponent2(
   ComponentFactory<Component2> componentFactory, {
   Iterable<String> skipMethods = const ['getDerivedStateFromError', 'componentDidCatch'],
-  Component2BridgeFactory bridgeFactory,
+  Component2BridgeFactory? bridgeFactory,
 }) {
   var errorPrinted = false;
   try {
@@ -125,11 +126,11 @@ ReactDartComponentFactoryProxy2 registerComponent2(
       rethrow;
     }
 
-    JsMap jsPropTypes;
+    JsMap? jsPropTypes;
     try {
       // Access `componentInstance.propTypes` within an assert so they get tree-shaken out of dart2js builds.
       assert(() {
-        jsPropTypes = bridgeFactory(componentInstance).jsifyPropTypes(componentInstance, componentInstance.propTypes);
+        jsPropTypes = bridgeFactory!(componentInstance).jsifyPropTypes(componentInstance, componentInstance.propTypes);
         return true;
       }());
     } catch (e, stack) {
@@ -172,5 +173,5 @@ ReactDartComponentFactoryProxy2 registerComponent2(
 /// Creates and returns a new `ReactDartFunctionComponentFactoryProxy` from the provided [dartFunctionComponent]
 /// which produces a new `JsFunctionComponent`.
 ReactDartFunctionComponentFactoryProxy registerFunctionComponent(DartFunctionComponent dartFunctionComponent,
-        {String displayName}) =>
+        {String? displayName}) =>
     ReactDartFunctionComponentFactoryProxy(dartFunctionComponent, displayName: displayName);

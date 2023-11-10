@@ -8,7 +8,6 @@ import 'dart:js';
 import 'dart:js_util';
 
 import 'package:js/js.dart';
-import 'package:meta/meta.dart';
 import 'package:react/react_client/js_backed_map.dart';
 import 'package:react/react_client/js_interop_helpers.dart';
 import 'package:test/test.dart';
@@ -27,7 +26,7 @@ import '../util.dart';
 /// [dartComponentVersion] should be specified for all components with Dart render code in order to
 /// properly test `props.children`, forwardRef compatibility, etc.
 void commonFactoryTests(ReactComponentFactoryProxy factory,
-    {String dartComponentVersion, bool skipPropValuesTest = false}) {
+    {String? dartComponentVersion, bool skipPropValuesTest = false}) {
   _childKeyWarningTests(
     factory,
     renderWithUniqueOwnerName: _renderWithUniqueOwnerName,
@@ -45,7 +44,7 @@ void commonFactoryTests(ReactComponentFactoryProxy factory,
   });
 
   void sharedChildrenTests(dynamic Function(ReactElement instance) getChildren,
-      {@required bool shouldAlwaysBeList, Map props = const {}}) {
+      {required bool shouldAlwaysBeList, Map props = const {}}) {
     // There are different code paths for 0, 1, 2, 3, 4, 5, 6, and 6+ arguments.
     // Test all of them.
     group('a number of variadic children:', () {
@@ -180,7 +179,7 @@ void commonFactoryTests(ReactComponentFactoryProxy factory,
       expect(componentZone, isNot(Zone.current),
           reason: 'test setup: component zone should be different than the zone used to render it');
 
-      Zone renderZone;
+      Zone? renderZone;
       rtu.renderIntoDocument(factory({
         'onDartRender': (_) {
           renderZone = Zone.current;
@@ -221,17 +220,15 @@ void domEventHandlerWrappingTests(ReactComponentFactoryProxy factory) {
     const jsCloned = EventTestCase.js('onClick', 'cloned onto component ');
     const eventCases = {dart, jsCloned, dartCloned};
 
-    Element node;
-    Map<EventTestCase, dynamic> events;
-    Map propsFromDartRender;
+    late Element node;
+    late Map<EventTestCase, dynamic> events;
+    late Map propsFromDartRender;
 
     setUpAll(() {
       expect(eventCases.map((h) => h.eventPropKey).toSet(), hasLength(eventCases.length),
           reason: 'test setup: each helper should have a unique event key');
 
-      node = null;
       events = {};
-      propsFromDartRender = null;
 
       var element = factory({
         'onDartRender': (Map p) {
@@ -278,12 +275,12 @@ void domEventHandlerWrappingTests(ReactComponentFactoryProxy factory) {
               reason: 'test setup: component must pass props into props.onDartRender');
         });
 
-        react.SyntheticMouseEvent event;
+        late react.SyntheticMouseEvent event;
         final divRef = react.createRef<DivElement>();
         render(react.div({
           'ref': divRef,
           'onClick': (react.SyntheticMouseEvent e) => event = e,
-        }) as ReactElement);
+        }));
         rtu.Simulate.click(divRef);
 
         final dummyEvent = event;
@@ -297,20 +294,6 @@ void domEventHandlerWrappingTests(ReactComponentFactoryProxy factory) {
     }
   });
 
-  test('event has .persist and .isPersistent methods that can be called', () {
-    react.SyntheticMouseEvent actualEvent;
-
-    final nodeWithClickHandler = renderAndGetRootNode(factory({
-      'onClick': (react.SyntheticMouseEvent event) {
-        expect(() => event.persist(), returnsNormally);
-        actualEvent = event;
-      }
-    }));
-
-    rtu.Simulate.click(nodeWithClickHandler);
-    expect(actualEvent.isPersistent, isA<bool>());
-  });
-
   test('doesn\'t wrap the handler if it is null', () {
     final nodeWithClickHandler = renderAndGetRootNode(factory({'onClick': null}));
 
@@ -321,7 +304,7 @@ void domEventHandlerWrappingTests(ReactComponentFactoryProxy factory) {
     test('(simulated event)', () {
       final testZone = Zone.current;
 
-      Element nodeWithClickHandler;
+      late Element nodeWithClickHandler;
       // Run the ReactElement creation and rendering in a separate zone to
       // ensure the component lifecycle isn't run in the testZone, which could
       // create false positives in the `expect`.
@@ -339,7 +322,7 @@ void domEventHandlerWrappingTests(ReactComponentFactoryProxy factory) {
     test('(native event)', () {
       final testZone = Zone.current;
 
-      Element nodeWithClickHandler;
+      late Element nodeWithClickHandler;
       // Run the ReactElement creation and rendering in a separate zone to
       // ensure the component lifecycle isn't run in the testZone, which could
       // create false positives in the `expect`.
@@ -365,10 +348,10 @@ void domEventHandlerWrappingTests(ReactComponentFactoryProxy factory) {
 /// JS (e.g., react.Component vs ReactComponent for class based-components).
 /// If omitted, it defaults to [verifyRefValue].
 /// It will be called with the actual ref value for JS refs, (e.g., JS ref objects as opposed to Dart objects)
-void refTests<T>(
+void refTests<T extends Object>(
   ReactComponentFactoryProxy factory, {
-  @required void Function(dynamic refValue) verifyRefValue,
-  void Function(dynamic refValue) verifyJsRefValue,
+  required void Function(dynamic refValue) verifyRefValue,
+  void Function(dynamic refValue)? verifyJsRefValue,
 }) {
   if (T == dynamic) {
     throw ArgumentError('Generic parameter T must be specified');
@@ -397,7 +380,7 @@ void refTests<T>(
         rtu.renderIntoDocument(factory({
           'ref': testCase.ref,
         }));
-        final verifyFunction = testCase.isJs ? verifyJsRefValue : verifyRefValue;
+        final verifyFunction = testCase.meta.isJs ? verifyJsRefValue! : verifyRefValue;
         verifyFunction(testCase.getCurrent());
       });
     }
@@ -405,30 +388,13 @@ void refTests<T>(
     test('string refs', () {
       final renderedInstance = _renderWithStringRefSupportingOwner(() => factory({'ref': 'test'}));
 
-      verifyRefValue(renderedInstance.dartComponent.ref('test'));
+      verifyRefValue(renderedInstance.dartComponent!.ref('test'));
     });
   });
 
-  group('forwardRef function passes a ref through a component to one of its children, when the ref is a:', () {
-    for (final name in testCaseCollection.allTestCaseNames) {
-      // Callback refs don't work properly with forwardRef.
-      // This is part of why forwardRef is deprecated.
-      if (!name.contains('callback ref')) {
-        test(name, () {
-          final testCase = testCaseCollection.createCaseByName(name);
-          final ForwardRefTestComponent = forwardRef((props, ref) {
-            return factory({'ref': ref});
-          });
-
-          rtu.renderIntoDocument(ForwardRefTestComponent({
-            'ref': testCase.ref,
-          }));
-          final verifyFunction = testCase.isJs ? verifyJsRefValue : verifyRefValue;
-          verifyFunction(testCase.getCurrent());
-        });
-      }
-    }
-  });
+  test('asserts that callback ref arguments are nullable on ReactElement creation', () {
+    expect(() => factory({'ref': nonNullableCallbackRef}), throwsNonNullableCallbackRefAssertionError);
+  }, tags: 'no-dart2js');
 
   group('forwardRef2 function passes a ref through a component to one of its children, when the ref is a:', () {
     for (final name in testCaseCollection.allTestCaseNames) {
@@ -441,7 +407,7 @@ void refTests<T>(
         rtu.renderIntoDocument(ForwardRefTestComponent({
           'ref': testCase.ref,
         }));
-        final verifyFunction = testCase.isJs ? verifyJsRefValue : verifyRefValue;
+        final verifyFunction = testCase.meta.isJs ? verifyJsRefValue! : verifyRefValue;
         verifyFunction(testCase.getCurrent());
       });
     }
@@ -462,8 +428,8 @@ void refTests<T>(
       }));
 
       for (final testCase in testCases) {
-        final verifyFunction = testCase.isJs ? verifyJsRefValue : verifyRefValue;
-        final valueToVerify = testCase.isJs ? refSpy.jsRef.current : refSpy.current;
+        final verifyFunction = testCase.meta.isJs ? verifyJsRefValue! : verifyRefValue;
+        final valueToVerify = testCase.meta.isJs ? refSpy.jsRef.current : refSpy.current;
 
         // Test setup check: verify refValue is correct,
         // which we'll use below to verify refs were updated.
@@ -476,11 +442,10 @@ void refTests<T>(
       test('ReactElement.ref', () {
         final testCases = testCaseCollection.createAllCases().map((testCase) {
           return RefTestCase(
-            name: testCase.name,
-            ref: (factory({'ref': testCase.ref}) as ReactElement).ref,
+            ref: factory({'ref': testCase.ref}).ref,
             verifyRefWasUpdated: testCase.verifyRefWasUpdated,
             getCurrent: testCase.getCurrent,
-            isJs: testCase.isJs,
+            meta: testCase.meta,
           );
         }).toList();
 
@@ -495,8 +460,8 @@ void refTests<T>(
         }));
 
         for (final testCase in testCases) {
-          final verifyFunction = testCase.isJs ? verifyJsRefValue : verifyRefValue;
-          final valueToVerify = testCase.isJs ? refSpy.jsRef.current : refSpy.current;
+          final verifyFunction = testCase.meta.isJs ? verifyJsRefValue! : verifyRefValue;
+          final valueToVerify = testCase.meta.isJs ? refSpy.jsRef.current : refSpy.current;
 
           // Test setup check: verify refValue is correct,
           // which we'll use below to verify refs were updated.
@@ -526,8 +491,8 @@ void refTests<T>(
               'ref': testCase.ref,
             }));
 
-            final verifyFunction = testCase.isJs ? verifyJsRefValue : verifyRefValue;
-            final valueToVerify = testCase.isJs ? refSpy.jsRef.current : refSpy.current;
+            final verifyFunction = testCase.meta.isJs ? verifyJsRefValue! : verifyRefValue;
+            final valueToVerify = testCase.meta.isJs ? refSpy.jsRef.current : refSpy.current;
 
             // Test setup check: verify refValue is correct,
             // which we'll use below to verify refs were updated.
@@ -543,11 +508,11 @@ void refTests<T>(
 }
 
 void _childKeyWarningTests(ReactComponentFactoryProxy factory,
-    {Function(ReactElement Function()) renderWithUniqueOwnerName}) {
+    {required Function(ReactElement Function()) renderWithUniqueOwnerName}) {
   group('key/children validation', () {
-    bool consoleErrorCalled;
+    late bool consoleErrorCalled;
     var consoleErrorMessage;
-    JsFunction originalConsoleError;
+    late JsFunction originalConsoleError;
 
     setUp(() {
       consoleErrorCalled = false;
@@ -659,4 +624,4 @@ extension on String {
 }
 
 @JS('React.addons.TestUtils.Simulate')
-external dynamic get _Simulate;
+external Object get _Simulate;

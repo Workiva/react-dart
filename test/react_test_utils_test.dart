@@ -4,8 +4,7 @@ library react_test_utils_test;
 import 'dart:html';
 import 'dart:js_util';
 
-import 'package:react/react.dart' hide div, span;
-import 'package:react/react.dart' as react;
+import 'package:react/react.dart';
 import 'package:react/react_client.dart';
 import 'package:react/react_test_utils.dart';
 import 'package:test/test.dart';
@@ -14,10 +13,6 @@ import 'react_client/event_helpers_test.dart';
 import 'test_components.dart' as component1;
 import 'test_components2.dart' as component2;
 import 'util.dart';
-
-// Public APIs with tightened types to help fix implicit casts
-final div = react.div as ReactDomComponentFactoryProxy;
-final span = react.span as ReactDomComponentFactoryProxy;
 
 void main() {
   testUtils(
@@ -32,23 +27,15 @@ void main() {
       wrapperComponent: component2.wrapperComponent);
 }
 
-testUtils({
-  bool isComponent2 = false,
-  ReactComponentFactoryProxy eventComponent,
-  ReactComponentFactoryProxy sampleComponent,
-  ReactComponentFactoryProxy wrapperComponent,
+void testUtils({
+  required bool isComponent2,
+  required ReactComponentFactoryProxy eventComponent,
+  required ReactComponentFactoryProxy sampleComponent,
+  required ReactComponentFactoryProxy wrapperComponent,
 }) {
-  var component;
-  Element domNode;
-
-  tearDown(() {
-    component = null;
-    domNode = null;
-  });
-
   group('Shallow Rendering with a Component${isComponent2 ? "2" : ""}', () {
-    ReactElement content;
-    ReactShallowRenderer shallowRenderer;
+    late ReactElement content;
+    late ReactShallowRenderer shallowRenderer;
 
     setUp(() {
       content = sampleComponent({'className': 'test', 'id': 'createRendererTest'});
@@ -74,8 +61,11 @@ testUtils({
   });
 
   group('Simulate on a Component${isComponent2 ? "2" : ""}', () {
+    late Object component;
+    late Element domNode;
+
     setUp(() {
-      component = renderIntoDocument(eventComponent({}));
+      component = renderIntoDocument(eventComponent({})) as Object;
       domNode = findDomNode(component);
       expect(domNode.text, equals(''));
     });
@@ -87,8 +77,8 @@ testUtils({
     ) {
       final eventHandlerName = 'on${eventName[0].toUpperCase() + eventName.substring(1)}';
       eventName = eventName.toLowerCase();
-      Map eventData;
-      int fakeTimeStamp;
+      late Map eventData;
+      late int fakeTimeStamp;
 
       setUp(() {
         fakeTimeStamp = eventName.hashCode;
@@ -107,27 +97,26 @@ testUtils({
         expect(domNode.text, equals('$eventName $fakeTimeStamp'));
       });
 
-      if (expectEventType != null) {
-        test('with correct type', () {
-          SyntheticEvent capturedEvent;
-          final ref = createRef<DivElement>();
+      test('with correct type', () {
+        SyntheticEvent? capturedEvent;
+        final ref = createRef<DivElement>();
 
-          renderIntoDocument(div({
-            eventHandlerName: (SyntheticEvent e) {
-              capturedEvent = e;
-            },
-            'ref': ref,
-          }));
+        renderIntoDocument(div({
+          eventHandlerName: (SyntheticEvent e) {
+            capturedEvent = e;
+          },
+          'ref': ref,
+        }));
 
-          event(ref.current, eventData);
-          expectEventType(capturedEvent);
-        });
-      }
+        event(ref.current, eventData);
+        expect(capturedEvent, isNotNull);
+        expectEventType(capturedEvent!);
+      });
     }
 
     group('event', () {
       void Function(SyntheticEvent) _expectEventType(SyntheticEventType type) {
-        return (SyntheticEvent event) {
+        return (event) {
           expect(event.isClipboardEvent, type == SyntheticEventType.syntheticClipboardEvent);
           expect(event.isKeyboardEvent, type == SyntheticEventType.syntheticKeyboardEvent);
           expect(event.isCompositionEvent, type == SyntheticEventType.syntheticCompositionEvent);
@@ -213,7 +202,7 @@ testUtils({
     test('passes in and jsifies eventData properly', () {
       const testKeyCode = 42;
 
-      String callInfo;
+      String? callInfo;
       var wasStopPropagationCalled = false;
 
       final renderedNode = renderIntoDocument(div({
@@ -236,34 +225,34 @@ testUtils({
   });
 
   test('findRenderedDOMComponentWithClass on a Component${isComponent2 ? "2" : ""}', () {
-    component = renderIntoDocument(sampleComponent({}));
-    final spanComponent = findRenderedDOMComponentWithClass(component, 'span1');
+    final component = renderIntoDocument(sampleComponent({}));
+    final spanComponent = findRenderedDOMComponentWithClass(component, 'span1') as Element;
 
     expect(getProperty(spanComponent, 'tagName'), equals('SPAN'));
   });
 
   test('findRenderedDOMComponentWithTag on a Component${isComponent2 ? "2" : ""}', () {
-    component = renderIntoDocument(sampleComponent({}));
-    final h1Component = findRenderedDOMComponentWithTag(component, 'h1');
+    final component = renderIntoDocument(sampleComponent({}));
+    final h1Component = findRenderedDOMComponentWithTag(component, 'h1') as Element;
 
     expect(getProperty(h1Component, 'tagName'), equals('H1'));
   });
 
   test('findRenderedComponentWithTypeV2 on a Component${isComponent2 ? "2" : ""}', () {
-    component = renderIntoDocument(wrapperComponent({}, [sampleComponent({})]));
+    final component = renderIntoDocument(wrapperComponent({}, [sampleComponent({})]));
     final result = findRenderedComponentWithTypeV2(component, sampleComponent);
     expect(isCompositeComponentWithTypeV2(result, sampleComponent), isTrue);
   });
 
   group('isCompositeComponent on a Component${isComponent2 ? "2" : ""}', () {
     test('returns true when element is a composite component (created with React.createClass())', () {
-      component = renderIntoDocument(eventComponent({}));
+      final component = renderIntoDocument(eventComponent({}));
 
       expect(isCompositeComponent(component), isTrue);
     });
 
     test('returns false when element is not a composite component (created with React.createClass())', () {
-      component = renderIntoDocument(div({}));
+      final component = renderIntoDocument(div({}));
 
       expect(isCompositeComponent(component), isFalse);
     });
@@ -286,7 +275,7 @@ testUtils({
 
   group('isDOMComponent on a Component${isComponent2 ? "2" : ""}', () {
     test('returns true when argument is a DOM component', () {
-      component = renderIntoDocument(sampleComponent({}));
+      final component = renderIntoDocument(sampleComponent({}));
       final h1Element = findRenderedDOMComponentWithTag(component, 'h1');
 
       expect(isDOMComponent(h1Element), isTrue);
@@ -318,7 +307,7 @@ testUtils({
   });
 
   test('scryRenderedComponentsWithTypeV2 on a Component${isComponent2 ? "2" : ""}', () {
-    component =
+    final component =
         renderIntoDocument(wrapperComponent({}, [sampleComponent({}), sampleComponent({}), eventComponent({})]));
 
     final results = scryRenderedComponentsWithTypeV2(component, sampleComponent);
@@ -329,28 +318,28 @@ testUtils({
   });
 
   test('scryRenderedDOMComponentsWithClass', () {
-    component = renderIntoDocument(wrapperComponent({}, [
+    final component = renderIntoDocument(wrapperComponent({}, [
       div({'className': 'divClass'}),
       div({'className': 'divClass'}),
       span({})
     ]));
 
-    final results = scryRenderedDOMComponentsWithClass(component, 'divClass');
+    final results = scryRenderedDOMComponentsWithClass(component, 'divClass').cast<Element>();
 
     expect(results.length, 2);
-    expect(getProperty(results[0], 'tagName'), equals('DIV'));
-    expect(getProperty(results[1], 'tagName'), equals('DIV'));
+    expect(results[0].tagName, equals('DIV'));
+    expect(results[1].tagName, equals('DIV'));
   });
 
   test('scryRenderedDOMComponentsWithTag', () {
-    component = renderIntoDocument(wrapperComponent({}, [div({}), div({}), span({})]));
+    final component = renderIntoDocument(wrapperComponent({}, [div({}), div({}), span({})]));
 
-    final results = scryRenderedDOMComponentsWithTag(component, 'div');
+    final results = scryRenderedDOMComponentsWithTag(component, 'div').cast<Element>();
 
     expect(results.length, 3);
-    expect(getProperty(results[0], 'tagName'), equals('DIV'));
-    expect(getProperty(results[1], 'tagName'), equals('DIV'));
-    expect(getProperty(results[2], 'tagName'), equals('DIV'));
+    expect(results[0].tagName, equals('DIV'));
+    expect(results[1].tagName, equals('DIV'));
+    expect(results[2].tagName, equals('DIV'));
   });
 
   test('renderIntoDocument with a Component${isComponent2 ? "2" : ""}', () {

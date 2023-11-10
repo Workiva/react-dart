@@ -18,7 +18,7 @@ main() {
 var IndexComponent = react.registerComponent2(() => _IndexComponent());
 
 class _IndexComponent extends react.Component2 {
-  SimpleCustomComponent simpleRef;
+  SimpleCustomComponent? simpleRef;
 
   @override
   get initialState => {
@@ -35,7 +35,7 @@ class _IndexComponent extends react.Component2 {
     setState({
       'open': true,
     });
-    print(simpleRef.getFoo());
+    print(simpleRef!.getFoo());
   }
 
   @override

@@ -2,6 +2,7 @@
 library react.event_helpers_test;
 
 import 'dart:html';
+import 'dart:js_util';
 
 import 'package:react/react.dart';
 import 'package:react/react_client/js_interop_helpers.dart';
@@ -9,6 +10,8 @@ import 'package:react/react_dom.dart';
 import 'package:react/react_test_utils.dart';
 import 'package:test/test.dart';
 import 'package:mockito/mockito.dart';
+
+import '../mockito.mocks.dart';
 
 main() {
   group('Synthetic event helpers', () {
@@ -163,6 +166,9 @@ main() {
       final relatedTarget = DivElement();
       final calls = <String>[];
 
+      final dataTransfer = MockDataTransfer();
+      when(dataTransfer.dropEffect).thenReturn('move');
+
       when(nativeMouseEvent.bubbles).thenReturn(true);
       when(nativeMouseEvent.cancelable).thenReturn(true);
       when(nativeMouseEvent.currentTarget).thenReturn(currentTarget);
@@ -177,6 +183,7 @@ main() {
       when(nativeMouseEvent.button).thenReturn(0);
       when(nativeMouseEvent.ctrlKey).thenReturn(false);
       when(nativeMouseEvent.metaKey).thenReturn(false);
+      when(nativeMouseEvent.dataTransfer).thenReturn(dataTransfer);
       when(nativeMouseEvent.relatedTarget).thenReturn(relatedTarget);
       when(nativeMouseEvent.shiftKey).thenReturn(false);
       when(nativeMouseEvent.client).thenReturn(Point(1, 2));
@@ -208,10 +215,12 @@ main() {
       expect(syntheticMouseEvent.clientX, 1);
       expect(syntheticMouseEvent.clientY, 2);
       expect(syntheticMouseEvent.ctrlKey, isFalse);
-      expect(syntheticMouseEvent.dataTransfer, isNull);
       expect(syntheticMouseEvent.metaKey, isFalse);
       expect(syntheticMouseEvent.pageX, 3);
       expect(syntheticMouseEvent.pageY, 4);
+      // This getter returns an equivalent SyntheticDataTransfer,
+      // so we can't just use equality here.
+      expect(syntheticMouseEvent.dataTransfer?.dropEffect, dataTransfer.dropEffect);
       expect(syntheticMouseEvent.relatedTarget, relatedTarget);
       expect(syntheticMouseEvent.screenX, 5);
       expect(syntheticMouseEvent.screenY, 6);
@@ -852,7 +861,7 @@ main() {
           expect(baseEvent.clientX, 100);
           expect(baseEvent.clientY, 200);
           expect(baseEvent.ctrlKey, isTrue);
-          expect(baseEvent.dataTransfer.dropEffect, testString);
+          expect(baseEvent.dataTransfer!.dropEffect, testString);
           expect(baseEvent.metaKey, isTrue);
           expect(baseEvent.pageX, 300);
           expect(baseEvent.pageY, 400);
@@ -899,7 +908,7 @@ main() {
           expect(newEvent.clientX, 200);
           expect(newEvent.clientY, 300);
           expect(newEvent.ctrlKey, isFalse);
-          expect(newEvent.dataTransfer.dropEffect, updatedTestString);
+          expect(newEvent.dataTransfer!.dropEffect, updatedTestString);
           expect(newEvent.metaKey, isFalse);
           expect(newEvent.pageX, 400);
           expect(newEvent.pageY, 500);
@@ -948,7 +957,7 @@ main() {
           expect(baseEvent.clientX, 100);
           expect(baseEvent.clientY, 200);
           expect(baseEvent.ctrlKey, isTrue);
-          expect(baseEvent.dataTransfer.dropEffect, testString);
+          expect(baseEvent.dataTransfer!.dropEffect, testString);
           expect(baseEvent.metaKey, isTrue);
           expect(baseEvent.pageX, 300);
           expect(baseEvent.pageY, 400);
@@ -965,7 +974,7 @@ main() {
           expect(newEvent.clientX, 100);
           expect(newEvent.clientY, 200);
           expect(newEvent.ctrlKey, isTrue);
-          expect(newEvent.dataTransfer.dropEffect, testString);
+          expect(newEvent.dataTransfer!.dropEffect, testString);
           expect(newEvent.metaKey, isTrue);
           expect(newEvent.pageX, 300);
           expect(newEvent.pageY, 400);
@@ -1689,8 +1698,22 @@ main() {
                 reason: 'The `SyntheticEvent` base class is considered a Form Event via Duck Typing.');
           });
 
-          test('when the event is null', () {
-            expect(eventTypeTester(null), isFalse);
+          // This case shouldn't happen, but there may be consumers relying on this behavior.
+          test('when the argument is a non-event JS object casted to SyntheticEvent, and has a null `type` property',
+              () {
+            expect(eventTypeTester(newObject() as SyntheticEvent), isFalse);
+          });
+
+          test('when the argument is a mocked event object with no mocked `type` property, and does not throw', () {
+            // Typically consumers would mock a specific SyntheticEvent subtype, but creating null-safe mocks for those
+            // causes property checks like `_hasProperty('button')` in helper methods to return true in DDC
+            // (e.g., `.isMouseEvent` for a `MockSyntheticMouseEvent` would return true).
+            //
+            // We really just want to check the `type` behavior here, especially for non-null-safe mocks, so we'll use
+            // the generic MockSyntheticEvent.
+            //
+            // *See other test with similar note to this one.*
+            expect(eventTypeTester(MockSyntheticEvent()), isFalse);
           });
         });
       }
@@ -1979,11 +2002,28 @@ main() {
           });
         });
       });
+
+      // Regression test for Mock class behavior consumers rely on.
+      //
+      // Typically consumers would mock a specific SyntheticEvent subtype, but creating null-safe mocks for those
+      // causes property checks like `_hasProperty('button')` in helper methods to return true in DDC
+      // (e.g., `.isMouseEvent` for a `MockSyntheticMouseEvent` would return true).
+      //
+      // We really just want to check the `type` behavior here, especially for non-null-safe mocks, so we'll use
+      // the generic MockSyntheticEvent.
+      //
+      // *See other test with similar note to this one.*
+      test('checks types correctly for Mock objects with `type` mocked', () {
+        final mockEvent = MockSyntheticEvent();
+        when(mockEvent.type).thenReturn('click');
+        expect(mockEvent.isMouseEvent, isTrue);
+        expect(mockEvent.isKeyboardEvent, false);
+      });
     });
 
     group('DataTransferHelper', () {
       group('dataTransfer', () {
-        SyntheticMouseEvent event;
+        SyntheticMouseEvent? event;
 
         tearDown(() {
           event = null;
@@ -2012,11 +2052,11 @@ main() {
             final node = renderAndGetRootNode();
             Simulate.drag(node, eventData);
 
-            final dataTransfer = event.dataTransfer;
+            final dataTransfer = event!.dataTransfer;
 
             expect(dataTransfer, isNotNull);
 
-            final fileNames = dataTransfer.files.map((file) => (file as File).name);
+            final fileNames = dataTransfer!.files.map((file) => (file as File).name);
 
             expect(fileNames, containsAll(['name1', 'name2', 'name3']));
             expect(dataTransfer.types, containsAll(['d', 'e', 'f']));
@@ -2030,10 +2070,10 @@ main() {
             final node = renderAndGetRootNode();
             Simulate.drag(node, eventData);
 
-            final dataTransfer = event.dataTransfer;
+            final dataTransfer = event!.dataTransfer;
 
             expect(dataTransfer, isNotNull);
-            expect(dataTransfer.files, isNotNull);
+            expect(dataTransfer!.files, isNotNull);
             expect(dataTransfer.files, isEmpty);
             expect(dataTransfer.types, isNotNull);
             expect(dataTransfer.types, isEmpty);
@@ -2051,10 +2091,10 @@ main() {
             final node = renderAndGetRootNode();
             Simulate.drag(node, eventData);
 
-            final dataTransfer = event.dataTransfer;
+            final dataTransfer = event!.dataTransfer;
 
             expect(dataTransfer, isNotNull);
-            expect(dataTransfer.files, isNotNull);
+            expect(dataTransfer!.files, isNotNull);
             expect(dataTransfer.files, isEmpty);
             expect(dataTransfer.types, isNotNull);
             expect(dataTransfer.types, isEmpty);
@@ -2066,12 +2106,6 @@ main() {
     });
   });
 }
-
-// ignore: avoid_implementing_value_types
-class MockKeyboardEvent extends Mock implements KeyboardEvent {}
-
-// ignore: avoid_implementing_value_types
-class MockMouseEvent extends Mock implements MouseEvent {}
 
 enum SyntheticEventType {
   syntheticClipboardEvent,
