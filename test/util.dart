@@ -49,7 +49,7 @@ ReactComponent render(ReactElement reactElement) {
 }
 
 // Same as the public API but with tightened types to help fix implicit casts
-Element findDomNode(dynamic component) => react_dom.findDOMNode(component) as Element;
+Element? findDomNode(dynamic component) => react_dom.findDOMNode(component) as Element?;
 
 /// Returns a new [Map.unmodifiable] with all argument maps merged in.
 Map unmodifiableMap([Map? map1, Map? map2, Map? map3, Map? map4]) {

@@ -480,7 +480,7 @@ main() {
         final mountNode = DivElement();
         final renderedInstance = react_dom.render(components2.SetStateTest({}), mountNode);
         final component = getDartComponent<LifecycleTestHelper>(renderedInstance);
-        final renderedNode = findDomNode(renderedInstance);
+        final renderedNode = findDomNode(renderedInstance)!;
         LifecycleTestHelper.staticLifecycleCalls.clear();
         component.setState({'shouldThrow': true});
 
@@ -1518,7 +1518,7 @@ void sharedLifecycleTests<T extends react.Component>({
       test('when shouldComponentUpdate returns false', () {
         final mountNode = DivElement();
         final renderedInstance = react_dom.render(SetStateTest({'shouldUpdate': false}), mountNode);
-        final renderedNode = findDomNode(renderedInstance);
+        final renderedNode = findDomNode(renderedInstance)!;
         final component = getDartComponent<LifecycleTestHelper>(renderedInstance);
 
         react_test_utils.Simulate.click(renderedNode.children.first);
@@ -1541,7 +1541,7 @@ void sharedLifecycleTests<T extends react.Component>({
       test('when shouldComponentUpdate returns true', () {
         final mountNode = DivElement();
         final renderedInstance = react_dom.render(SetStateTest({}), mountNode);
-        final renderedNode = findDomNode(renderedInstance);
+        final renderedNode = findDomNode(renderedInstance)!;
         final component = getDartComponent<LifecycleTestHelper>(renderedInstance);
 
         react_test_utils.Simulate.click(renderedNode.children.first);

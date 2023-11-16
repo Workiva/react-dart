@@ -66,7 +66,7 @@ void testUtils({
 
     setUp(() {
       component = renderIntoDocument(eventComponent({})) as Object;
-      domNode = findDomNode(component);
+      domNode = findDomNode(component)!;
       expect(domNode.text, equals(''));
     });
 
@@ -350,12 +350,12 @@ void testUtils({
 
     expect(divElements.length, equals(3));
     // First div should be the parent div created by renderIntoDocument()
-    expect(findDomNode(divElements[0]).text, equals('A headerFirst divSecond div'));
-    expect(findDomNode(divElements[1]).text, equals('First div'));
-    expect(findDomNode(divElements[2]).text, equals('Second div'));
+    expect(findDomNode(divElements[0])!.text, equals('A headerFirst divSecond div'));
+    expect(findDomNode(divElements[1])!.text, equals('First div'));
+    expect(findDomNode(divElements[2])!.text, equals('Second div'));
     expect(h1Elements.length, equals(1));
-    expect(findDomNode(h1Elements[0]).text, equals('A header'));
+    expect(findDomNode(h1Elements[0])!.text, equals('A header'));
     expect(spanElements.length, equals(1));
-    expect(findDomNode(spanElements[0]).text, equals(''));
+    expect(findDomNode(spanElements[0])!.text, equals(''));
   });
 }
