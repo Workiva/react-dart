@@ -33,7 +33,7 @@ bool isDartComponent2(ReactElement element) =>
 bool isDartComponent(ReactElement element) => ReactDartComponentVersion.fromType(element.type) != null;
 
 T getDartComponent<T extends react.Component>(dynamic dartComponent) {
-  return (dartComponent as ReactComponent).dartComponent as T;
+  return (dartComponent as ReactComponent).dartComponent! as T;
 }
 
 Map getDartComponentProps(dynamic dartComponent) {
