@@ -1,3 +1,22 @@
+## 7.0.1
+
+Breaking change - fix nullability/typings for `ReactDom.findDomNode` and `ReactDom.render` from `package:react/react_client/react_interop.dart`:
+```diff
+-Element findDOMNode(dynamic object);
++Element? findDOMNode(dynamic object);
+
+-ReactComponent render(ReactElement component, Element element);
++dynamic render(dynamic component, Element element);
+```
+
+The previous typings were incorrect:
+- `findDOMNode` returns null in many cases, but its return type was incorrectly non-nullable.
+- `render` returns null for some cases (function components, `null`), `Element` for DOM components, and `CharacterData` for strings and numbers, but was incorrectly typed as non-nullable `ReactComponent`. The `component` argument also accepts `null` and other "ReactNode" arguments to rendered, but its type is incorrectly non-nullable and restricted to just `ReactElement`.
+
+These typings only affect these APIs under the `ReactDom` class in package:react/react_client/react_interop.dart, and not the top-level `Function`-typed `findDOMNode` and `render` APIs exported from `package:react/react_dom.dart`, which most consumers use.
+
+Because these typings were incorrect and will lead to runtime errors in some cases, and the changes have a low likelihood of causing breakages, we feel it's appropriate to release these changes as a patch. 
+
 ## 7.0.0
 
 - Migrate to null safety
