@@ -31,6 +31,13 @@ void main() {
           expect(result, isA<ReactComponent>().having((c) => c.dartComponent, 'dartComponent', isA<_ClassComponent>()));
         });
 
+        test('ReactElement for a function component', () {
+          final mountNode = DivElement();
+          final result = react_dom.render(functionComponent({}), mountNode);
+          expect(mountNode.innerText, 'function component content');
+          expect(result, isNull);
+        });
+
         group('other "ReactNode" types:', () {
           test('string', () {
             final mountNode = DivElement();
@@ -175,6 +182,10 @@ class _ClassComponentThatRendersNothing extends react.Component2 {
   @override
   Object? render() => null;
 }
+
+final functionComponent = react.registerFunctionComponent((props) {
+  return react.pre({}, 'function component content');
+});
 
 extension<T> on TypeMatcher<T> {
   TypeMatcher<T> havingToStringValue(dynamic matcher) => having((o) => o.toString(), 'toString() value', matcher);
