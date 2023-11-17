@@ -275,7 +275,7 @@ ReactComponentFactoryProxy memo2(ReactComponentFactoryProxy factory,
 
 abstract class ReactDom {
   static Element? findDOMNode(dynamic object) => ReactDOM.findDOMNode(object);
-  static ReactComponent render(dynamic component, Element element) => ReactDOM.render(component, element);
+  static dynamic render(dynamic component, Element element) => ReactDOM.render(component, element);
   static bool unmountComponentAtNode(Element element) => ReactDOM.unmountComponentAtNode(element);
 
   /// Returns a a portal that renders [children] into a [container].
