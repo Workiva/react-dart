@@ -3,7 +3,6 @@ import 'dart:html';
 
 import 'package:react/react.dart' as react;
 import 'package:react/react_dom.dart' as react_dom;
-import 'package:react/react_client.dart';
 
 var ChildComponent = react.registerComponent(() => _ChildComponent());
 
@@ -85,24 +84,24 @@ class _ParentComponent extends react.Component {
   }
 
   // Callback refs
-  InputElement _inputCallbackRef;
-  _ChildComponent _childCallbackRef;
+  InputElement? _inputCallbackRef;
+  _ChildComponent? _childCallbackRef;
   showInputCallbackRefValue(_) {
     final input = react_dom.findDOMNode(_inputCallbackRef) as InputElement;
     print(input.value);
   }
 
   showChildCallbackRefValue(_) {
-    print(_childCallbackRef.somevalue);
+    print(_childCallbackRef!.somevalue);
   }
 
   incrementChildCallbackRefValue(_) {
-    _childCallbackRef.incrementValue();
+    _childCallbackRef!.incrementValue();
   }
 
   // Create refs
-  final Ref<InputElement> _inputCreateRef = react.createRef();
-  final Ref<_ChildComponent> _childCreateRef = react.createRef();
+  final _inputCreateRef = react.createRef<InputElement>();
+  final _childCreateRef = react.createRef<_ChildComponent>();
 
   showInputCreateRefValue(_) {
     final input = react_dom.findDOMNode(_inputCreateRef.current) as InputElement;
@@ -110,11 +109,11 @@ class _ParentComponent extends react.Component {
   }
 
   showChildCreateRefValue(_) {
-    print(_childCreateRef.current.somevalue);
+    print(_childCreateRef.current!.somevalue);
   }
 
   incrementChildCreateRefValue(_) {
-    _childCreateRef.current.incrementValue();
+    _childCreateRef.current!.incrementValue();
   }
 
   @override

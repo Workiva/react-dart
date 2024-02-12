@@ -1,6 +1,7 @@
 import 'package:js/js_util.dart';
 import 'package:react/react.dart' as react;
 import 'package:react/react_client/react_interop.dart';
+import 'package:react/src/react_client/factory_util.dart';
 
 /// Returns a ref that updates both [ref1] and [ref2], effectively
 /// allowing you to set multiple refs.
@@ -84,10 +85,15 @@ dynamic chainRefList(List<dynamic> refs) {
 }
 
 void _validateChainRefsArg(dynamic ref) {
-  if (ref is Function(Null) ||
-      ref is Ref ||
-      // Need to duck-type since `is JsRef` will return true for most JS objects.
-      (ref is JsRef && hasProperty(ref, 'current'))) {
+  if (ref is Function(Never)) {
+    if (isRefArgumentDefinitelyNonNullable(ref)) {
+      throw AssertionError(nonNullableCallbackRefArgMessage);
+    }
+    return;
+  }
+
+  // Need to duck-type since `is JsRef` will return true for most JS objects.
+  if (ref is Ref || (ref is JsRef && hasProperty(ref, 'current'))) {
     return;
   }
 

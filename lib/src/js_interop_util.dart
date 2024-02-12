@@ -6,7 +6,8 @@ import 'dart:js_util';
 import 'package:js/js.dart';
 
 @JS('Object.keys')
-external List<String> objectKeys(Object object);
+// We can't type this as List<String> due to https://github.com/dart-lang/sdk/issues/37676
+external List<dynamic /*String*/ > objectKeys(Object object);
 
 @JS()
 @anonymous
@@ -17,8 +18,8 @@ class JsPropertyDescriptor {
 @JS('Object.defineProperty')
 external void defineProperty(dynamic object, String propertyName, JsPropertyDescriptor descriptor);
 
-String getJsFunctionName(Function object) =>
-    (getProperty(object, 'name') ?? getProperty(object, '\$static_name')) as String;
+String? getJsFunctionName(Function object) =>
+    (getProperty(object, 'name') ?? getProperty(object, '\$static_name')) as String?;
 
 /// Creates JS `Promise` which is resolved when [future] completes.
 ///
@@ -37,3 +38,15 @@ abstract class Promise {
 
   external Promise then(dynamic Function(dynamic value) onFulfilled, [dynamic Function(dynamic error) onRejected]);
 }
+
+/// Converts an arbitrary [key] into a value that can be passed into `dart:js_util` methods
+/// such as [getProperty] and [setProperty], which only accept non-nullable
+/// `name` arguments.
+///
+/// This function converts `null` to the string `'null'`, which is what JavaScript does under
+/// the hood when `null` is used as an object property. Source: the ES6 spec:
+/// - https://262.ecma-international.org/6.0/#sec-property-accessors-runtime-semantics-evaluation
+/// - https://262.ecma-international.org/6.0/#sec-topropertykey
+///
+/// See also: https://github.com/dart-lang/sdk/issues/45219
+Object nonNullableJsPropertyName(Object? key) => key ?? 'null';

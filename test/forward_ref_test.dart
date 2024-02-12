@@ -11,39 +11,6 @@ import 'package:test/test.dart';
 import 'factory/common_factory_tests.dart';
 
 main() {
-  group('forwardRef', () {
-    group('- common factory behavior -', () {
-      final ForwardRefTest = react.forwardRef((props, ref) {
-        props['onDartRender']?.call(props);
-        return react.div({...props, 'ref': ref});
-      });
-
-      commonFactoryTests(
-        ForwardRefTest,
-        // ignore: invalid_use_of_protected_member
-        dartComponentVersion: ReactDartComponentVersion.component2,
-        // Dart props passed to forwardRef get converted when they shouldn't, so these tests fail.
-        // This is part of why forwardRef is deprecated.
-        skipPropValuesTest: true,
-      );
-    });
-
-    // Ref behavior is tested functionally for all factory types in commonFactoryTests
-
-    group('sets displayName on the rendered component as expected', () {
-      test('falling back to "Anonymous" when the displayName argument is not passed to forwardRef', () {
-        final ForwardRefTestComponent = forwardRef((props, ref) {});
-        expect(getProperty(getProperty(ForwardRefTestComponent.type, 'render'), 'displayName'), 'Anonymous');
-      });
-
-      test('when displayName argument is passed to forwardRef', () {
-        const name = 'ForwardRefTestComponent';
-        final ForwardRefTestComponent = forwardRef((props, ref) {}, displayName: name);
-        expect(getProperty(getProperty(ForwardRefTestComponent.type, 'render'), 'displayName'), name);
-      });
-    });
-  });
-
   group('forwardRef2', () {
     group('- common factory behavior -', () {
       final ForwardRef2Test = react.forwardRef2((props, ref) {
@@ -64,13 +31,13 @@ main() {
     group('sets name on the rendered component as expected', () {
       test('unless the displayName argument is not passed to forwardRef2', () {
         final ForwardRefTestComponent = forwardRef2((props, ref) {});
-        expect(getProperty(getProperty(ForwardRefTestComponent.type, 'render'), 'name'), anyOf('', isNull));
+        expect(getProperty(getProperty(ForwardRefTestComponent.type as Object, 'render'), 'name'), anyOf('', isNull));
       });
 
       test('when displayName argument is passed to forwardRef2', () {
         const name = 'ForwardRefTestComponent';
         final ForwardRefTestComponent = forwardRef2((props, ref) {}, displayName: name);
-        expect(getProperty(getProperty(ForwardRefTestComponent.type, 'render'), 'name'), name);
+        expect(getProperty(getProperty(ForwardRefTestComponent.type as Object, 'render'), 'name'), name);
       });
     });
   });
