@@ -22,7 +22,7 @@ bool isCompositeComponent(/* [1] */ instance) {
   return _isCompositeComponent(instance)
       // Workaround for DOM components being detected as composite: https://github.com/facebook/react/pull/3839
       &&
-      getProperty(instance, 'tagName') == null;
+      getProperty(instance as Object, 'tagName') == null;
 }
 
 @JS('React.addons.TestUtils.isCompositeComponentWithType')
