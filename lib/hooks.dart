@@ -4,7 +4,6 @@ library hooks;
 import 'package:js/js.dart';
 import 'package:meta/meta.dart';
 import 'package:react/react.dart';
-import 'package:react/react_client/js_interop_helpers.dart';
 import 'package:react/react_client/react_interop.dart';
 
 /// A setter function returned as the second item in the result of a JS useState call,
@@ -475,7 +474,7 @@ String useId() => React.useId();
 /// See: https://reactjs.org/docs/concurrent-mode-reference.html#usedeferredvalue
 ///
 /// FIXME: Add unit tests
-T useDeferredValue<T>(T value) => React.useDeferredValue(jsifyAndAllowInterop(value));
+T useDeferredValue<T>(T value) => React.useDeferredValue(value) as T;
 
 /// Similar to the [useTransition] hook but allows uses where hooks are not available.
 ///
@@ -498,27 +497,29 @@ void startTransition(void Function() scope) => React.startTransition(allowIntero
 /// See: https://reactjs.org/docs/concurrent-mode-reference.html#usetransition
 ///
 /// FIXME: Add unit tests
-TransitionHook useTransition() => TransitionHook._();
+TransitionHook useTransition() {
+  final result = React.useTransition();
+  final isPending = result[0] as bool;
+  final jsStartTransition = result[1] as Function(Function());
+  return TransitionHook._(
+    isPending: isPending,
+    startTransition: (start) => jsStartTransition(allowInterop(start)),
+  );
+}
 
 /// https://reactjs.org/docs/hooks-reference.html#usetransition
 class TransitionHook {
   /// Whether we’re waiting for the transition to finish.
   ///
   /// See: https://reactjs.org/docs/hooks-reference.html#usetransition
-  bool get isPending => _isPending;
-  bool _isPending;
+  final bool isPending;
 
   /// A callback to use to tell React which state to defer.
   ///
   /// See: https://reactjs.org/docs/hooks-reference.html#usetransition
-  void Function(Function() start) get startTransition => _startTransition;
-  void Function(Function() start) _startTransition;
+  final void Function(Function() start) startTransition;
 
-  TransitionHook._() {
-    final result = React.useTransition();
-    _isPending = result[0];
-    _startTransition = allowInterop(result[1]);
-  }
+  TransitionHook._({required this.isPending, required this.startTransition});
 }
 
 /// Runs [sideEffect] synchronously after a [DartFunctionComponent] renders, but before the screen is updated.
