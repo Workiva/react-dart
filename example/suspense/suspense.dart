@@ -35,7 +35,7 @@ ReactJsComponentFactoryProxy lazy(Future<ReactComponentFactoryProxy> Function() 
 main() {
   final content = wrapper({});
 
-  react_dom.render(content, querySelector('#content'));
+  react_dom.render(content, querySelector('#content')!);
 }
 
 final lazyComponent = lazy(() async {
