@@ -13,7 +13,7 @@ class _CustomComponent extends react.Component2 {
 var customComponent = react.registerComponent2(() => _CustomComponent());
 
 void main() {
-  final root = react_dom.createRoot(querySelector('#content'));
+  final root = react_dom.createRoot(querySelector('#content')!);
   root.render(
     react.div({}, [
       react.div({'key': 'noChildren'}),

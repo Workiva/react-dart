@@ -20,12 +20,12 @@ class _SimpleComponent extends react.Component2 {
 }
 
 void main() {
-  var root = react_dom.createRoot(querySelector('#content'));
+  var root = react_dom.createRoot(querySelector('#content')!);
 
   querySelector('#mount')!.onClick.listen((_) => root.render(SimpleComponent({})));
 
   querySelector('#unmount')!.onClick.listen((_) {
     root.unmount();
-    root = react_dom.createRoot(querySelector('#content'));
+    root = react_dom.createRoot(querySelector('#content')!);
   });
 }

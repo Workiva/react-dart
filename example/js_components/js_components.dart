@@ -12,7 +12,7 @@ import 'package:react/react_dom.dart' as react_dom;
 main() {
   final content = IndexComponent({});
 
-  final root = react_dom.createRoot(querySelector('#content'));
+  final root = react_dom.createRoot(querySelector('#content')!);
 
   root.render(react.StrictMode({}, content));
 }

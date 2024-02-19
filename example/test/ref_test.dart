@@ -231,6 +231,6 @@ class _ParentComponent extends react.Component {
 }
 
 void main() {
-  final root = react_dom.createRoot(querySelector('#content'));
+  final root = react_dom.createRoot(querySelector('#content')!);
   root.render(ParentComponent({}));
 }

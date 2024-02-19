@@ -11,7 +11,7 @@ const containerStyle = {
 };
 
 void main() {
-  final root = react_dom.createRoot(querySelector('#content'));
+  final root = react_dom.createRoot(querySelector('#content')!);
   final content = react.div(
     {},
     _ErrorBoundary(

@@ -87,6 +87,6 @@ class _SimpleComponent extends react.Component2 {
 }
 
 void main() {
-  final root = react_dom.createRoot(querySelector('#content'));
+  final root = react_dom.createRoot(querySelector('#content')!);
   root.render(SimpleComponent({}));
 }

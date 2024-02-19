@@ -5,7 +5,7 @@ import 'package:react/react_dom.dart' as react_dom;
 import 'react_test_components.dart';
 
 void main() {
-  final root = react_dom.createRoot(querySelector('#content'));
+  final root = react_dom.createRoot(querySelector('#content')!);
   root.render(mainComponent({}, [
     helloGreeter({'key': 'hello'}, []),
     listComponent({'key': 'list'}, []),

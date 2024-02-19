@@ -17,7 +17,7 @@ class _Component extends react.Component2 {
 var component = react.registerComponent2(() => _Component());
 
 void main() {
-  final root = react_dom.createRoot(querySelector('#content'));
+  final root = react_dom.createRoot(querySelector('#content')!);
   final content = react.div({}, [
     react.p({}, 'Testing a dynamic return value of "null"...'),
     component({'returnValue': null, 'key': 0}),

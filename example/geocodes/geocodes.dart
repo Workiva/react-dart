@@ -155,7 +155,7 @@ class _GeocodesForm extends react.Component2 {
   /// Handle form submission via `props.onSubmit`
   onFormSubmit(react.SyntheticEvent event) {
     event.preventDefault();
-    final inputElement = searchInputRef.current;
+    final inputElement = searchInputRef.current!;
     // The input's value is accessed.
     final address = inputElement.value;
     inputElement.value = '';
@@ -327,6 +327,6 @@ var GeocodesApp = react.registerComponent2(() => _GeocodesApp());
 ///
 /// Select the root of the app and the place in the DOM where it should be mounted.
 void main() {
-  final root = react_dom.createRoot(querySelector('#content'));
+  final root = react_dom.createRoot(querySelector('#content')!);
   root.render(GeocodesApp({}));
 }

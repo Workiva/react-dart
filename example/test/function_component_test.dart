@@ -528,7 +528,7 @@ final UseDebugValueTestComponent = react.registerFunctionComponent(
     displayName: 'useDebugValueTest');
 
 void main() {
-  final root = react_dom.createRoot(querySelector('#content'));
+  final root = react_dom.createRoot(querySelector('#content')!);
   root.render(react.Fragment({}, [
     react.h1({'key': 'functionComponentTestLabel'}, ['Function Component Tests']),
     react.h2({'key': 'useStateTestLabel'}, ['useState & useEffect Hook Test']),

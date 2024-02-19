@@ -41,6 +41,6 @@ class _List extends react.Component2 {
 var list = react.registerComponent2(() => _List());
 
 void main() {
-  final root = react_dom.createRoot(querySelector('#content'));
+  final root = react_dom.createRoot(querySelector('#content')!);
   root.render(list({}));
 }
