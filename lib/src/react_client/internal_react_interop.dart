@@ -11,6 +11,7 @@ import 'package:react/react_client/bridge.dart';
 import 'package:react/react_client/js_backed_map.dart';
 import 'package:react/react_client/react_interop.dart'
     show React, ReactClass, ReactComponent, ReactDartComponentInternal;
+import 'package:react/src/typedefs.dart';
 
 /// A JavaScript interop class representing a value in a React JS `context` object.
 ///
@@ -116,7 +117,7 @@ class ReactDartInteropStatics {
     void Function(Component component, InteropContextValue nextContext) handleComponentWillUpdate,
     void Function(Component component, ReactDartComponentInternal prevInternal) handleComponentDidUpdate,
     void Function(Component component) handleComponentWillUnmount,
-    dynamic Function(Component component) handleRender,
+    ReactNode Function(Component component) handleRender,
   });
 }
 

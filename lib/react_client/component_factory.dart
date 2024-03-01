@@ -12,6 +12,7 @@ import 'package:react/react_client/react_interop.dart';
 
 import 'package:react/src/js_interop_util.dart';
 import 'package:react/src/react_client/factory_util.dart';
+import 'package:react/src/typedefs.dart';
 
 // ignore: deprecated_member_use_from_same_package
 export 'package:react/src/react_client/factory_util.dart' show generateJsProps;
@@ -22,7 +23,7 @@ export 'package:react/src/react_client/factory_util.dart' show generateJsProps;
 /// Currently only involves converting a top-level non-[List] [Iterable] to
 /// a non-growable [List], but this may be updated in the future to support
 /// advanced nesting and other kinds of children.
-dynamic listifyChildren(dynamic children) {
+ReactNode listifyChildren(ReactNode children) {
   if (React.isValidElement(children)) {
     // Short-circuit if we're dealing with a ReactElement to avoid the dart2js
     // interceptor lookup involved in Dart type-checking.
@@ -213,7 +214,7 @@ class ReactJsContextComponentFactoryProxy extends ReactJsComponentFactoryProxy {
 
   @override
   ReactElement build(Map props, [List childrenArgs = const []]) {
-    dynamic children = generateChildren(childrenArgs);
+    var children = generateChildren(childrenArgs);
 
     if (isConsumer) {
       if (children is Function) {
