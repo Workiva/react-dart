@@ -12,7 +12,6 @@ import 'package:react/react_client/react_interop.dart';
 
 import 'package:react/src/js_interop_util.dart';
 import 'package:react/src/react_client/factory_util.dart';
-import 'package:react/src/typedefs.dart';
 
 // ignore: deprecated_member_use_from_same_package
 export 'package:react/src/react_client/factory_util.dart' show generateJsProps;
@@ -64,7 +63,7 @@ Map unconvertJsProps(/* ReactElement|ReactComponent */ instance) {
 /// Shared component factory proxy [build] method for components that utilize [JsBackedMap]s.
 mixin JsBackedMapComponentFactoryMixin on ReactComponentFactoryProxy {
   @override
-  ReactElement build(Map props, [List childrenArgs = const []]) {
+  ReactElement build(Map props, [List<ReactNode> childrenArgs = const []]) {
     final children = generateChildren(childrenArgs, shouldAlwaysBeList: true);
     final convertedProps = generateExtendedJsProps(props);
     return React.createElement(type, convertedProps, children);
@@ -90,7 +89,7 @@ class ReactDartComponentFactoryProxy<TComponent extends Component> extends React
   ReactClass get type => reactClass;
 
   @override
-  ReactElement build(Map props, [List childrenArgs = const []]) {
+  ReactElement build(Map props, [List<ReactNode> childrenArgs = const []]) {
     var children = convertArgsToChildren(childrenArgs);
     children = listifyChildren(children);
 
@@ -99,7 +98,7 @@ class ReactDartComponentFactoryProxy<TComponent extends Component> extends React
 
   /// Returns a JavaScript version of the specified [props], preprocessed for consumption by ReactJS and prepared for
   /// consumption by the `react` library internals.
-  static InteropProps generateExtendedJsProps(Map props, dynamic children, {Map? defaultProps}) {
+  static InteropProps generateExtendedJsProps(Map props, ReactNode children, {Map? defaultProps}) {
     if (children == null) {
       children = [];
     } else if (children is! Iterable) {
@@ -213,7 +212,7 @@ class ReactJsContextComponentFactoryProxy extends ReactJsComponentFactoryProxy {
         super(jsClass, shouldConvertDomProps: shouldConvertDomProps);
 
   @override
-  ReactElement build(Map props, [List childrenArgs = const []]) {
+  ReactElement build(Map props, [List<ReactNode> childrenArgs = const []]) {
     var children = generateChildren(childrenArgs);
 
     if (isConsumer) {
@@ -272,7 +271,7 @@ class ReactJsComponentFactoryProxy extends ReactComponentFactoryProxy {
   }
 
   @override
-  ReactElement build(Map props, [List childrenArgs = const []]) {
+  ReactElement build(Map props, [List<ReactNode> childrenArgs = const []]) {
     final children = generateChildren(childrenArgs, shouldAlwaysBeList: alwaysReturnChildrenAsList);
     final convertedProps =
         generateJsProps(props, convertCallbackRefValue: false, additionalRefPropKeys: _additionalRefPropKeys);
@@ -293,7 +292,7 @@ class ReactDomComponentFactoryProxy extends ReactComponentFactoryProxy {
   String get type => name;
 
   @override
-  ReactElement build(Map props, [List childrenArgs = const []]) {
+  ReactElement build(Map props, [List<ReactNode> childrenArgs = const []]) {
     final children = generateChildren(childrenArgs);
     final convertedProps = generateJsProps(props, convertCallbackRefValue: false, wrapWithJsify: true);
     return React.createElement(type, convertedProps, children);
