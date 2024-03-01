@@ -24,7 +24,6 @@ export 'package:react/src/react_client/event_helpers.dart';
 export 'package:react/react_client/react_interop.dart' show forwardRef2, createRef, memo2;
 export 'package:react/src/react_client/synthetic_event_wrappers.dart' hide NonNativeDataTransfer;
 export 'package:react/src/react_client/synthetic_data_transfer.dart' show SyntheticDataTransfer;
-export 'package:react/src/react_client/event_helpers.dart';
 
 /// A React component declared using a function that takes in [props] and returns rendered output.
 ///
