@@ -275,8 +275,8 @@ ReactComponentFactoryProxy memo2(ReactComponentFactoryProxy factory,
 }
 
 abstract class ReactDom {
-  static Element? findDOMNode(dynamic object) => ReactDOM.findDOMNode(object);
-  static ReactNode render(dynamic component, Element element) => ReactDOM.render(component, element);
+  static Element? findDOMNode(ReactNode object) => ReactDOM.findDOMNode(object);
+  static ReactNode render(ReactNode component, Element element) => ReactDOM.render(component, element);
   static bool unmountComponentAtNode(Element element) => ReactDOM.unmountComponentAtNode(element);
 
   /// Returns a a portal that renders [children] into a [container].
@@ -286,7 +286,7 @@ abstract class ReactDom {
   /// [children] can be any renderable React child, such as a [ReactElement], [String], or fragment.
   ///
   /// See: <https://reactjs.org/docs/portals.html>
-  static ReactPortal createPortal(dynamic children, Element container) => ReactDOM.createPortal(children, container);
+  static ReactPortal createPortal(ReactNode children, Element container) => ReactDOM.createPortal(children, container);
 }
 
 @JS('ReactDOMServer')
