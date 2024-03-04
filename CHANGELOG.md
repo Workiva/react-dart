@@ -1,3 +1,7 @@
+## 7.1.0
+
+Add a new `ReactNode` type, which aliases `Object?` to mimic [the React JS Typescript type](https://github.com/DefinitelyTyped/DefinitelyTyped/blob/master/types/react/v17/index.d.ts#L214).
+
 ## 7.0.1
 
 Breaking change - fix nullability/typings for `ReactDom.findDomNode` and `ReactDom.render` from `package:react/react_client/react_interop.dart`:
