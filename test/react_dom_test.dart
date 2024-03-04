@@ -6,6 +6,7 @@ import 'package:react/react.dart' as react;
 import 'package:react/react_client/react_interop.dart';
 import 'package:react/react_dom.dart' as react_dom;
 import 'package:react/react_test_utils.dart';
+import 'package:react/src/typedefs.dart';
 import 'package:test/test.dart';
 
 void main() {
@@ -173,14 +174,14 @@ final classComponent = react.registerComponent2(() => _ClassComponent());
 
 class _ClassComponent extends react.Component2 {
   @override
-  Object? render() => react.a({}, 'class component content');
+  ReactNode render() => react.a({}, 'class component content');
 }
 
 final classComponentThatRendersNothing = react.registerComponent2(() => _ClassComponentThatRendersNothing());
 
 class _ClassComponentThatRendersNothing extends react.Component2 {
   @override
-  Object? render() => null;
+  ReactNode render() => null;
 }
 
 final functionComponent = react.registerFunctionComponent((props) {

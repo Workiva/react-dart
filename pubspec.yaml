@@ -3,7 +3,7 @@ version: 7.0.1
 description: Bindings of the ReactJS library for building interactive interfaces.
 homepage: https://github.com/cleandart/react-dart
 environment:
-  sdk: '>=2.12.0 <3.0.0'
+  sdk: '>=2.13.0 <3.0.0'
 dependencies:
   js: ^0.6.3
   meta: ^1.6.0

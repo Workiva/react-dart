@@ -24,14 +24,13 @@ export 'package:react/src/react_client/event_helpers.dart';
 export 'package:react/react_client/react_interop.dart' show forwardRef2, createRef, memo2;
 export 'package:react/src/react_client/synthetic_event_wrappers.dart' hide NonNativeDataTransfer;
 export 'package:react/src/react_client/synthetic_data_transfer.dart' show SyntheticDataTransfer;
-export 'package:react/src/react_client/event_helpers.dart';
 
 /// A React component declared using a function that takes in [props] and returns rendered output.
 ///
 /// See <https://reactjs.org/docs/components-and-props.html#function-and-class-components>.
 ///
 /// [props] is typed as [JsBackedMap] so that dart2js can optimize props accesses.
-typedef DartFunctionComponent = dynamic Function(JsBackedMap props);
+typedef DartFunctionComponent = /*ReactNode*/ dynamic Function(JsBackedMap props);
 
 /// The callback to a React forwardRef component. See [forwardRef2] for more details.
 ///
@@ -40,7 +39,7 @@ typedef DartFunctionComponent = dynamic Function(JsBackedMap props);
 /// In the current JS implementation, the ref argument to [React.forwardRef] is usually a JsRef object no matter the input ref type,
 /// but according to React the ref argument can be any ref type: https://github.com/facebook/flow/blob/master@%7B2020-09-08%7D/lib/react.js#L305
 /// and not just a ref object, so we type [ref] as dynamic here.
-typedef DartForwardRefFunctionComponent = dynamic Function(JsBackedMap props, dynamic ref);
+typedef DartForwardRefFunctionComponent = /*ReactNode*/ dynamic Function(JsBackedMap props, dynamic ref);
 
 typedef ComponentFactory<T extends Component> = T Function();
 
@@ -543,12 +542,10 @@ abstract class Component {
 
   /// __Required.__
   ///
-  /// When called, it should examine [props] and [state] and return a single child `Element`. This child `Element` can
-  /// be either a virtual representation of a native DOM component (such as `DivElement`) or another composite
-  /// `Component` that you've defined yourself.
+  /// When called, it should examine [props] and [state] and return a [ReactNode].
   ///
-  /// See: <https://reactjs.org/docs/react-component.html#render>
-  dynamic render();
+  /// See: <https://legacy.reactjs.org/docs/react-component.html#render>
+  /*ReactNode*/ dynamic render();
 }
 
 /// Top-level ReactJS [Component class](https://reactjs.org/docs/react-component.html)
@@ -933,13 +930,7 @@ abstract class Component2 implements Component {
   /// See: <https://reactjs.org/docs/typechecking-with-proptypes.html#proptypes>
   Map<String, PropValidator<Never>> get propTypes => {};
 
-  /// Examines [props] and [state] and returns one of the following types:
-  ///
-  /// * [ReactElement] (renders a single DOM `Element`)
-  /// * [Fragment] (renders multiple elements)
-  /// * [ReactPortal] (renders children into a different DOM subtree)
-  /// * `String` / `num` (renders text nodes in the DOM)
-  /// * `bool` / `null` (renders nothing)
+  /// Examines [props] and [state] and returns a [ReactNode].
   ///
   /// This method is __required__ for class components.
   ///
@@ -950,9 +941,9 @@ abstract class Component2 implements Component {
   /// If you need to interact with the browser / DOM apis, perform your work in [componentDidMount]
   /// or the other lifecycle methods instead. Keeping `render` pure makes components easier to think about.
   ///
-  /// See: <https://reactjs.org/docs/react-component.html#render>
+  /// See: <https://legacy.reactjs.org/docs/react-component.html#render>
   @override
-  dynamic render();
+  /*ReactNode*/ dynamic render();
 
   // ******************************************************************************************************************
   //
