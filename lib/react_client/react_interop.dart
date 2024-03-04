@@ -276,7 +276,7 @@ ReactComponentFactoryProxy memo2(ReactComponentFactoryProxy factory,
 
 abstract class ReactDom {
   static Element? findDOMNode(ReactNode object) => ReactDOM.findDOMNode(object);
-  static ReactNode render(ReactNode component, Element element) => ReactDOM.render(component, element);
+  static dynamic render(ReactNode component, Element element) => ReactDOM.render(component, element);
   static bool unmountComponentAtNode(Element element) => ReactDOM.unmountComponentAtNode(element);
 
   /// Returns a a portal that renders [children] into a [container].
@@ -480,7 +480,7 @@ class ReactElement {
 @JS()
 @anonymous
 class ReactPortal {
-  external ReactNode get children;
+  external dynamic /* ReactNodeList */ get children;
   external dynamic get containerInfo;
 }
 

@@ -30,7 +30,7 @@ export 'package:react/src/react_client/synthetic_data_transfer.dart' show Synthe
 /// See <https://reactjs.org/docs/components-and-props.html#function-and-class-components>.
 ///
 /// [props] is typed as [JsBackedMap] so that dart2js can optimize props accesses.
-typedef DartFunctionComponent = ReactNode Function(JsBackedMap props);
+typedef DartFunctionComponent = /*ReactNode*/ dynamic Function(JsBackedMap props);
 
 /// The callback to a React forwardRef component. See [forwardRef2] for more details.
 ///
@@ -39,7 +39,7 @@ typedef DartFunctionComponent = ReactNode Function(JsBackedMap props);
 /// In the current JS implementation, the ref argument to [React.forwardRef] is usually a JsRef object no matter the input ref type,
 /// but according to React the ref argument can be any ref type: https://github.com/facebook/flow/blob/master@%7B2020-09-08%7D/lib/react.js#L305
 /// and not just a ref object, so we type [ref] as dynamic here.
-typedef DartForwardRefFunctionComponent = ReactNode Function(JsBackedMap props, dynamic ref);
+typedef DartForwardRefFunctionComponent = /*ReactNode*/ dynamic Function(JsBackedMap props, dynamic ref);
 
 typedef ComponentFactory<T extends Component> = T Function();
 
@@ -545,7 +545,7 @@ abstract class Component {
   /// When called, it should examine [props] and [state] and return a [ReactNode].
   ///
   /// See: <https://legacy.reactjs.org/docs/react-component.html#render>
-  ReactNode render();
+  /*ReactNode*/ dynamic render();
 }
 
 /// Top-level ReactJS [Component class](https://reactjs.org/docs/react-component.html)
@@ -943,7 +943,7 @@ abstract class Component2 implements Component {
   ///
   /// See: <https://legacy.reactjs.org/docs/react-component.html#render>
   @override
-  ReactNode render();
+  /*ReactNode*/ dynamic render();
 
   // ******************************************************************************************************************
   //

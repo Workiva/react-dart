@@ -10,7 +10,7 @@ import 'package:react/src/typedefs.dart';
 @JS()
 abstract class ReactDOM {
   external static Element? findDOMNode(ReactNode object);
-  external static ReactNode render(ReactNode component, Element element);
+  external static dynamic render(ReactNode component, Element element);
   external static bool unmountComponentAtNode(Element element);
   external static ReactPortal createPortal(ReactNode children, Element container);
 }

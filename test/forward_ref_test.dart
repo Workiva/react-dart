@@ -30,9 +30,7 @@ main() {
 
     group('sets name on the rendered component as expected', () {
       test('unless the displayName argument is not passed to forwardRef2', () {
-        final ForwardRefTestComponent = forwardRef2((props, ref) {
-          return null;
-        });
+        final ForwardRefTestComponent = forwardRef2((props, ref) {});
         expect(getProperty(getProperty(ForwardRefTestComponent.type as Object, 'render'), 'name'), anyOf('', isNull));
       });
 
