@@ -61,3 +61,7 @@ jobs:
           fi
         if: always() && steps.install.outcome == 'success'
         timeout-minutes: 5
+      - uses: anchore/sbom-action@v0
+        with:
+          path: ./
+          format: cyclonedx-json
