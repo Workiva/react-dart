@@ -6,7 +6,7 @@
 import 'dart:html' as _i2;
 import 'dart:math' as _i3;
 
-import 'package:mockito/mockito.dart' as _i1;
+import 'package:mocktail/mocktail.dart' as _i1;
 import 'package:react/src/react_client/synthetic_event_wrappers.dart' as _i4;
 
 // ignore_for_file: type=lint
