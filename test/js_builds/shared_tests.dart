@@ -14,7 +14,7 @@ import 'package:react/src/react_client/internal_react_interop.dart';
 import 'package:test/test.dart';
 
 void verifyJsFileLoaded(String filename) {
-  final isLoaded = document.getElementsByTagName('script').any()((script) {
+  final isLoaded = document.getElementsByTagName('script').any((script) {
     return Uri.parse((script as ScriptElement).src).pathSegments.last == filename;
   });
 

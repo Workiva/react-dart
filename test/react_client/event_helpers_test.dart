@@ -1,3 +1,5 @@
+// ignore_for_file: avoid_implementing_value_types
+
 @TestOn('browser')
 library react.event_helpers_test;
 
@@ -10,8 +12,6 @@ import 'package:react/react_dom.dart';
 import 'package:react/react_test_utils.dart';
 import 'package:test/test.dart';
 import 'package:mocktail/mocktail.dart';
-
-import '../mockito.mocks.dart';
 
 main() {
   group('Synthetic event helpers', () {
@@ -110,8 +110,8 @@ main() {
       when(() => nativeKeyboardEvent.cancelable).thenReturn(true);
       when(() => nativeKeyboardEvent.currentTarget).thenReturn(currentTarget);
       when(() => nativeKeyboardEvent.defaultPrevented).thenReturn(false);
-      when(() => nativeKeyboardEvent.preventDefault()).thenAnswer((_) => calls.add('preventDefault'));
-      when(() => nativeKeyboardEvent.stopPropagation()).thenAnswer((_) => calls.add('stopPropagation'));
+      when(nativeKeyboardEvent.preventDefault).thenAnswer((_) => calls.add('preventDefault'));
+      when(nativeKeyboardEvent.stopPropagation).thenAnswer((_) => calls.add('stopPropagation'));
       when(() => nativeKeyboardEvent.eventPhase).thenReturn(0);
       when(() => nativeKeyboardEvent.target).thenReturn(target);
       when(() => nativeKeyboardEvent.timeStamp).thenReturn(0);
@@ -173,8 +173,8 @@ main() {
       when(() => nativeMouseEvent.cancelable).thenReturn(true);
       when(() => nativeMouseEvent.currentTarget).thenReturn(currentTarget);
       when(() => nativeMouseEvent.defaultPrevented).thenReturn(false);
-      when(() => nativeMouseEvent.preventDefault()).thenAnswer((_) => calls.add('preventDefault'));
-      when(() => nativeMouseEvent.stopPropagation()).thenAnswer((_) => calls.add('stopPropagation'));
+      when(nativeMouseEvent.preventDefault).thenAnswer((_) => calls.add('preventDefault'));
+      when(nativeMouseEvent.stopPropagation).thenAnswer((_) => calls.add('stopPropagation'));
       when(() => nativeMouseEvent.eventPhase).thenReturn(0);
       when(() => nativeMouseEvent.target).thenReturn(target);
       when(() => nativeMouseEvent.timeStamp).thenReturn(0);
@@ -2106,6 +2106,14 @@ main() {
     });
   });
 }
+
+class MockDataTransfer extends Mock implements DataTransfer {}
+
+class MockKeyboardEvent extends Mock implements KeyboardEvent {}
+
+class MockMouseEvent extends Mock implements MouseEvent {}
+
+class MockSyntheticEvent extends Mock implements SyntheticEvent {}
 
 enum SyntheticEventType {
   syntheticClipboardEvent,
