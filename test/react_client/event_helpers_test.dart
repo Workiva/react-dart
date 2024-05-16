@@ -1,3 +1,5 @@
+// ignore_for_file: avoid_implementing_value_types
+
 @TestOn('browser')
 library react.event_helpers_test;
 
@@ -9,9 +11,7 @@ import 'package:react/react_client/js_interop_helpers.dart';
 import 'package:react/react_dom.dart';
 import 'package:react/react_test_utils.dart';
 import 'package:test/test.dart';
-import 'package:mockito/mockito.dart';
-
-import '../mockito.mocks.dart';
+import 'package:mocktail/mocktail.dart';
 
 main() {
   group('Synthetic event helpers', () {
@@ -106,24 +106,24 @@ main() {
       final target = DivElement();
       final calls = <String>[];
 
-      when(nativeKeyboardEvent.bubbles).thenReturn(true);
-      when(nativeKeyboardEvent.cancelable).thenReturn(true);
-      when(nativeKeyboardEvent.currentTarget).thenReturn(currentTarget);
-      when(nativeKeyboardEvent.defaultPrevented).thenReturn(false);
-      when(nativeKeyboardEvent.preventDefault()).thenAnswer((_) => calls.add('preventDefault'));
-      when(nativeKeyboardEvent.stopPropagation()).thenAnswer((_) => calls.add('stopPropagation'));
-      when(nativeKeyboardEvent.eventPhase).thenReturn(0);
-      when(nativeKeyboardEvent.target).thenReturn(target);
-      when(nativeKeyboardEvent.timeStamp).thenReturn(0);
-      when(nativeKeyboardEvent.type).thenReturn('type');
-      when(nativeKeyboardEvent.altKey).thenReturn(false);
-      when(nativeKeyboardEvent.charCode).thenReturn(0);
-      when(nativeKeyboardEvent.ctrlKey).thenReturn(false);
-      when(nativeKeyboardEvent.location).thenReturn(0);
-      when(nativeKeyboardEvent.keyCode).thenReturn(0);
-      when(nativeKeyboardEvent.metaKey).thenReturn(false);
-      when(nativeKeyboardEvent.repeat).thenReturn(false);
-      when(nativeKeyboardEvent.shiftKey).thenReturn(false);
+      when(() => nativeKeyboardEvent.bubbles).thenReturn(true);
+      when(() => nativeKeyboardEvent.cancelable).thenReturn(true);
+      when(() => nativeKeyboardEvent.currentTarget).thenReturn(currentTarget);
+      when(() => nativeKeyboardEvent.defaultPrevented).thenReturn(false);
+      when(nativeKeyboardEvent.preventDefault).thenAnswer((_) => calls.add('preventDefault'));
+      when(nativeKeyboardEvent.stopPropagation).thenAnswer((_) => calls.add('stopPropagation'));
+      when(() => nativeKeyboardEvent.eventPhase).thenReturn(0);
+      when(() => nativeKeyboardEvent.target).thenReturn(target);
+      when(() => nativeKeyboardEvent.timeStamp).thenReturn(0);
+      when(() => nativeKeyboardEvent.type).thenReturn('type');
+      when(() => nativeKeyboardEvent.altKey).thenReturn(false);
+      when(() => nativeKeyboardEvent.charCode).thenReturn(0);
+      when(() => nativeKeyboardEvent.ctrlKey).thenReturn(false);
+      when(() => nativeKeyboardEvent.location).thenReturn(0);
+      when(() => nativeKeyboardEvent.keyCode).thenReturn(0);
+      when(() => nativeKeyboardEvent.metaKey).thenReturn(false);
+      when(() => nativeKeyboardEvent.repeat).thenReturn(false);
+      when(() => nativeKeyboardEvent.shiftKey).thenReturn(false);
 
       expect(nativeKeyboardEvent.defaultPrevented, isFalse);
 
@@ -167,28 +167,28 @@ main() {
       final calls = <String>[];
 
       final dataTransfer = MockDataTransfer();
-      when(dataTransfer.dropEffect).thenReturn('move');
+      when(() => dataTransfer.dropEffect).thenReturn('move');
 
-      when(nativeMouseEvent.bubbles).thenReturn(true);
-      when(nativeMouseEvent.cancelable).thenReturn(true);
-      when(nativeMouseEvent.currentTarget).thenReturn(currentTarget);
-      when(nativeMouseEvent.defaultPrevented).thenReturn(false);
-      when(nativeMouseEvent.preventDefault()).thenAnswer((_) => calls.add('preventDefault'));
-      when(nativeMouseEvent.stopPropagation()).thenAnswer((_) => calls.add('stopPropagation'));
-      when(nativeMouseEvent.eventPhase).thenReturn(0);
-      when(nativeMouseEvent.target).thenReturn(target);
-      when(nativeMouseEvent.timeStamp).thenReturn(0);
-      when(nativeMouseEvent.type).thenReturn('type');
-      when(nativeMouseEvent.altKey).thenReturn(false);
-      when(nativeMouseEvent.button).thenReturn(0);
-      when(nativeMouseEvent.ctrlKey).thenReturn(false);
-      when(nativeMouseEvent.metaKey).thenReturn(false);
-      when(nativeMouseEvent.dataTransfer).thenReturn(dataTransfer);
-      when(nativeMouseEvent.relatedTarget).thenReturn(relatedTarget);
-      when(nativeMouseEvent.shiftKey).thenReturn(false);
-      when(nativeMouseEvent.client).thenReturn(Point(1, 2));
-      when(nativeMouseEvent.page).thenReturn(Point(3, 4));
-      when(nativeMouseEvent.screen).thenReturn(Point(5, 6));
+      when(() => nativeMouseEvent.bubbles).thenReturn(true);
+      when(() => nativeMouseEvent.cancelable).thenReturn(true);
+      when(() => nativeMouseEvent.currentTarget).thenReturn(currentTarget);
+      when(() => nativeMouseEvent.defaultPrevented).thenReturn(false);
+      when(nativeMouseEvent.preventDefault).thenAnswer((_) => calls.add('preventDefault'));
+      when(nativeMouseEvent.stopPropagation).thenAnswer((_) => calls.add('stopPropagation'));
+      when(() => nativeMouseEvent.eventPhase).thenReturn(0);
+      when(() => nativeMouseEvent.target).thenReturn(target);
+      when(() => nativeMouseEvent.timeStamp).thenReturn(0);
+      when(() => nativeMouseEvent.type).thenReturn('type');
+      when(() => nativeMouseEvent.altKey).thenReturn(false);
+      when(() => nativeMouseEvent.button).thenReturn(0);
+      when(() => nativeMouseEvent.ctrlKey).thenReturn(false);
+      when(() => nativeMouseEvent.metaKey).thenReturn(false);
+      when(() => nativeMouseEvent.dataTransfer).thenReturn(dataTransfer);
+      when(() => nativeMouseEvent.relatedTarget).thenReturn(relatedTarget);
+      when(() => nativeMouseEvent.shiftKey).thenReturn(false);
+      when(() => nativeMouseEvent.client).thenReturn(Point(1, 2));
+      when(() => nativeMouseEvent.page).thenReturn(Point(3, 4));
+      when(() => nativeMouseEvent.screen).thenReturn(Point(5, 6));
 
       final syntheticMouseEvent = wrapNativeMouseEvent(nativeMouseEvent);
 
@@ -2015,7 +2015,7 @@ main() {
       // *See other test with similar note to this one.*
       test('checks types correctly for Mock objects with `type` mocked', () {
         final mockEvent = MockSyntheticEvent();
-        when(mockEvent.type).thenReturn('click');
+        when(() => mockEvent.type).thenReturn('click');
         expect(mockEvent.isMouseEvent, isTrue);
         expect(mockEvent.isKeyboardEvent, false);
       });
@@ -2106,6 +2106,14 @@ main() {
     });
   });
 }
+
+class MockDataTransfer extends Mock implements DataTransfer {}
+
+class MockKeyboardEvent extends Mock implements KeyboardEvent {}
+
+class MockMouseEvent extends Mock implements MouseEvent {}
+
+class MockSyntheticEvent extends Mock implements SyntheticEvent {}
 
 enum SyntheticEventType {
   syntheticClipboardEvent,
