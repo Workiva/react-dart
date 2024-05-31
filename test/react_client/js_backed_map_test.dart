@@ -5,6 +5,7 @@ library react.js_backed_map_test.dart;
 import 'package:js/js.dart';
 import 'package:js/js_util.dart';
 import 'package:react/react_client/js_backed_map.dart';
+import 'package:react/react_client/react_interop.dart';
 import 'package:test/test.dart';
 
 import '../shared_type_tester.dart';
@@ -46,6 +47,40 @@ main() {
         test('booleans', () => sharedTest(true, 'true'));
 
         test('other objects', () => sharedTest(TestObject(), TestObject().toString()));
+      });
+    });
+
+    // Tests related to our workaround for https://github.com/dart-lang/sdk/issues/36116.
+    group(
+        'map lookup returns null instead of undefined, so that the value does not interfere with Dart function calls:',
+        () {
+      test('test setup check: getNullishValueType works as expected', () {
+        expect(getNullishValueType(jsUndefined), 'undefined');
+        expect(getNullishValueType(jsNull), 'null');
+      });
+
+      test('returns null and not undefined', () {
+        final jsBackedMap = JsBackedMap();
+        final value = jsBackedMap['missingKey'];
+        // We can't use `identical(value, jsUndefined)` (or the `same` matcher which uses `identical`)
+        // since it's special-cased to return true when passed two nullish (null or undefined) values.
+        // Instead, we'll use a custom JS interop function to classify the value
+        expect(getNullishValueType(value), 'null');
+      });
+
+      test('test setup check: triggersDdcOptionalArgumentBug works as expected to reproduce and detect the bug', () {
+        expect(triggersDdcOptionalArgumentBug(jsUndefined), isTrue,
+            reason: 'if this expectation fails in newer Dart SDKs, then this bug may have been fixed.');
+        expect(triggersDdcOptionalArgumentBug(null), isFalse);
+        // Since this bug only affects DDC, this test will fail in dart2js.
+      }, tags: 'no-dart2js');
+
+      // We only need to run this test in DDC since the bug does not effect dart2js, but it doesn't hurt to also
+      // validate behavior in dart2js, and could catch new, similar dart2js bugs.
+      test('regression test: returned value does not trigger argument issues', () {
+        final jsBackedMap = JsBackedMap();
+        final value = jsBackedMap['missingKey'];
+        expect(triggersDdcOptionalArgumentBug(value), isFalse);
       });
     });
 
@@ -209,6 +244,24 @@ main() {
 }
 
 class TestObject {}
+
+@JS()
+external String getNullishValueType(dynamic value);
+
+class _Default {
+  const _Default();
+}
+
+const _default = _Default();
+
+bool _defaultArgumentSpecifiedUsed([x = _default]) => x == _default;
+
+bool triggersDdcOptionalArgumentBug(dynamic value) {
+  // We'd expect this call to always return false,
+  // but it returns true in DDC if `value` is `undefined`.
+  // https://github.com/dart-lang/sdk/issues/36116
+  return _defaultArgumentSpecifiedUsed(value);
+}
 
 @JS('Object.freeze')
 external void _objectFreeze(JsMap object);
