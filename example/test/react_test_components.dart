@@ -129,7 +129,8 @@ class _ClockComponent extends react.Component {
 
   @override
   render() {
-    return react.span({'onClick': (event) => print('Hello World!')},
+    return react.span(
+        {'onClick': (event) => print('Hello World!')},
 //        { 'onClick': (event, [domid = null]) => print("Hello World!") },
         ['Seconds elapsed: ', "${state['secondsElapsed']}"]);
   }
