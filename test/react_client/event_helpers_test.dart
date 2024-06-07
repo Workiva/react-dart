@@ -2108,7 +2108,8 @@ main() {
 
   // See: `SafeNativeDataTransfer` extension
   group('SafeNativeDataTransfer MouseEvent extension', () {
-    test('prevents faulty Dart SDK web platform null exceptions when '
+    test(
+        'prevents faulty Dart SDK web platform null exceptions when '
         'accessing the `dataTransfer` getter on a manually constructed MouseEvent', () {
       expect(() => wrapNativeMouseEvent(MouseEvent('click')).dataTransfer, returnsNormally);
     });

@@ -838,7 +838,7 @@ extension SafeNativeDataTransfer on MouseEvent {
   /// Unexpected null value encountered in Dart web platform libraries.
   /// ```
   ///
-  /// This extension is used will catch the error within our [wrapNativeMouseEvent] function so that
+  /// This extension is used to catch the error within our [wrapNativeMouseEvent] function so that
   /// `SyntheticMouseEvent`s do not throw the null exception.
   @internal
   DataTransfer? get safeDataTransfer {
