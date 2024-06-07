@@ -4,6 +4,7 @@ library react_client.event_helpers;
 import 'dart:html';
 
 import 'package:js/js_util.dart';
+import 'package:meta/meta.dart';
 import 'package:react/react_client/js_interop_helpers.dart';
 import 'package:react/src/react_client/synthetic_data_transfer.dart';
 import 'package:react/src/react_client/synthetic_event_wrappers.dart';
@@ -72,7 +73,7 @@ SyntheticMouseEvent wrapNativeMouseEvent(MouseEvent nativeEvent) {
     'clientX': nativeEvent.client.x,
     'clientY': nativeEvent.client.y,
     'ctrlKey': nativeEvent.ctrlKey,
-    'dataTransfer': nativeEvent.dataTransfer,
+    'dataTransfer': nativeEvent.safeDataTransfer,
     'metaKey': nativeEvent.metaKey,
     'pageX': nativeEvent.page.x,
     'pageY': nativeEvent.page.y,
@@ -822,4 +823,29 @@ extension DataTransferHelper on SyntheticMouseEvent {
   ///
   /// See <https://developer.mozilla.org/en-US/docs/Web/API/DragEvent/dataTransfer>
   SyntheticDataTransfer? get dataTransfer => syntheticDataTransferFactory(getProperty(this, 'dataTransfer'));
+}
+
+extension SafeNativeDataTransfer on MouseEvent {
+  /// In Dart SDK versions with null-safety enabled,
+  /// [the interop](https://github.com/dart-lang/sdk/blob/master/sdk/lib/html/dart2js/html_dart2js.dart#L22421-L22422)
+  /// for [MouseEvent.dataTransfer] is non-nullable despite the
+  /// [JS spec for `dataTransfer`](https://developer.mozilla.org/en-US/docs/Web/API/DragEvent/dataTransfer)
+  /// clearly indicating that it can be null.
+  ///
+  /// This can cause the SDK to throw when a `MouseEvent` is manually constructed, and the `dataTransfer`
+  /// getter is then accessed when running with `sound_null_safety` enabled:
+  /// ```
+  /// Unexpected null value encountered in Dart web platform libraries.
+  /// ```
+  ///
+  /// This extension is used will catch the error within our [wrapNativeMouseEvent] function so that
+  /// `SyntheticMouseEvent`s do not throw the null exception.
+  @internal
+  DataTransfer? get safeDataTransfer {
+    DataTransfer? dataTransfer;
+    try {
+      dataTransfer = this.dataTransfer;
+    } catch (_) {}
+    return dataTransfer;
+  }
 }
