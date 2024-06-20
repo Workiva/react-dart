@@ -8,6 +8,16 @@
 
     <script>
         function JsType() {}
+
+        function getNullishValueType(value) {
+            if (typeof value === 'undefined') {
+                return 'undefined';
+            }
+            if (value === null) {
+                return 'null';
+            }
+            throw new Error('value was neither null nor undefined');
+        }
     </script>
 
     <link rel="x-dart-test" href="js_backed_map_test.dart">

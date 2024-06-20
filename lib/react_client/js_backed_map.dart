@@ -59,7 +59,9 @@ class JsBackedMap extends MapBase<dynamic, dynamic> {
 
   @override
   dynamic /*?*/ operator [](Object? key) {
-    return DartValueWrapper.unwrapIfNeeded(js_util.getProperty(jsObject, nonNullableJsPropertyName(key)));
+    // `?? null` as a workaround to `undefined` coming through and causing issues: https://github.com/dart-lang/sdk/issues/36116
+    // ignore: unnecessary_null_in_if_null_operators
+    return DartValueWrapper.unwrapIfNeeded(js_util.getProperty(jsObject, nonNullableJsPropertyName(key)) ?? null);
   }
 
   @override
