@@ -1,3 +1,13 @@
+## 7.1.3
+- Internal release tooling changes
+
+## 7.1.2
+- Internal release tooling changes
+
+## 7.1.1
+- Internal release tooling changes
+- Tests - switch from mockito to mocktail
+
 ## 7.1.0
 
 Add a new `ReactNode` type, which aliases `Object?` to mimic [the React JS Typescript type](https://github.com/DefinitelyTyped/DefinitelyTyped/blob/master/types/react/v17/index.d.ts#L214).
