@@ -47,6 +47,17 @@ function createExports(exportMappings) {
       isProduction = mapping[2] || outputFilename.includes('_prod');
       includeReact = entryFilename === 'react.js' || entryFilename.includes('react_with');
       exportObject = {
+        ...(entryFilename.includes('profiling') && {
+          resolve: {
+            // ...
+            alias: {
+              // ...
+              'react-dom$': 'react-dom/profiling',
+              'scheduler/tracing': 'scheduler/tracing-profiling',
+            },
+            // ...
+          },
+        }),
         output: {
           path: outputPath,
           filename: outputFilename,
@@ -92,4 +103,5 @@ module.exports = createExports([
   ['react_dom.js', 'react_dom_prod.js'],
   ['react_dom_server.js', 'react_dom_server_prod.js'],
   ['react_with_react_dom.js', 'react_with_react_dom_prod.js'],
+  ['react_with_react_dom_profiling.js', 'react_with_react_dom_prod_profiling.js'],
 ]);
