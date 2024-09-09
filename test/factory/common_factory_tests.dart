@@ -26,10 +26,10 @@ import '../util.dart';
 /// [dartComponentVersion] should be specified for all components with Dart render code in order to
 /// properly test `props.children`, forwardRef compatibility, etc.
 void commonFactoryTests(ReactComponentFactoryProxy factory,
-    {String? dartComponentVersion, bool skipPropValuesTest = false}) {
+    {String? dartComponentVersion, bool skipPropValuesTest = false, ReactElement Function(dynamic children)? renderWrapper}) {
   _childKeyWarningTests(
     factory,
-    renderWithUniqueOwnerName: _renderWithUniqueOwnerName,
+    renderWithUniqueOwnerName: (ReactElement Function() render) => _renderWithUniqueOwnerName(render, renderWrapper),
   );
 
   test('renders an instance with the corresponding `type`', () {
@@ -532,7 +532,7 @@ void _childKeyWarningTests(ReactComponentFactoryProxy factory,
     });
 
     test('warns when a single child is passed as a list', () {
-      _renderWithUniqueOwnerName(() => factory({}, [react.span({})]));
+      renderWithUniqueOwnerName(() => factory({}, [react.span({})]));
 
       expect(consoleErrorCalled, isTrue, reason: 'should have outputted a warning');
       expect(consoleErrorMessage, contains('Each child in a list should have a unique "key" prop.'));
@@ -577,12 +577,12 @@ int _nextFactoryId = 0;
 /// Renders the provided [render] function with a Component2 owner that will have a unique name.
 ///
 /// This prevents React JS from not printing key warnings it deems as "duplicates".
-void _renderWithUniqueOwnerName(ReactElement Function() render) {
+void _renderWithUniqueOwnerName(ReactElement Function() render, [ReactElement Function(dynamic)? wrapper]) {
   final factory = react.registerComponent2(() => _UniqueOwnerHelperComponent());
   factory.reactClass.displayName = 'OwnerHelperComponent_$_nextFactoryId';
   _nextFactoryId++;
 
-  rtu.renderIntoDocument(factory({'render': render}));
+  rtu.renderIntoDocument(factory({'render': wrapper != null ? () => wrapper(render()) : render}));
 }
 
 class _UniqueOwnerHelperComponent extends react.Component2 {

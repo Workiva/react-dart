@@ -19,6 +19,8 @@ import 'package:react/react_client/component_factory.dart' show ReactDartWrapped
 import 'package:react/src/react_client/dart2_interop_workaround_bindings.dart';
 import 'package:react/src/typedefs.dart';
 
+import '../src/js_interop_util.dart';
+
 typedef ReactJsComponentFactory = ReactElement Function(dynamic props, dynamic children);
 
 // ----------------------------------------------------------------------------
@@ -42,6 +44,7 @@ abstract class React {
     dynamic wrapperFunction, [
     bool Function(JsMap prevProps, JsMap nextProps)? areEqual,
   ]);
+  external static ReactClass lazy(Promise Function() loadFunction);
 
   external static bool isValidElement(dynamic object);
 
@@ -269,6 +272,43 @@ ReactComponentFactoryProxy memo2(ReactComponentFactoryProxy factory,
           return areEqual(dartPrevProps, dartNextProps);
         });
   final hoc = React.memo(factory.type, _areEqual);
+  setProperty(hoc, 'dartComponentVersion', ReactDartComponentVersion.component2);
+
+  return ReactDartWrappedComponentFactoryProxy(hoc);
+}
+
+
+/// Defer loading a component's code until it is rendered for the first time.
+///
+/// The `lazy` function is used to create lazy components in React Dart. Lazy components are loaded only when they are rendered for the first time, which can help improve the initial loading time of your application.
+///
+/// To use the `lazy` function, you need to wrap the lazy component with a `Suspense` widget. The `Suspense` widget allows you to specify what should be displayed while the lazy component is loading, such as a loading spinner or a placeholder.
+///
+/// Example usage:
+/// ```dart
+/// import 'package:react/react_client.dart' show lazy, Suspense;
+///
+/// final lazyComponent = lazy(() => import('./path/to/lazy_component.dart'));
+///
+/// // Wrap the lazy component with Suspense
+/// final app = Suspense(
+///   {
+///     fallback: 'Loading...',
+///   },
+///   lazyComponent(),
+/// );
+/// ```
+///
+/// Note: The `lazy` function is part of the `react_client` library in React Dart.
+/// Defer loading a component’s code until it is rendered for the first time.
+///
+/// Lazy components need to be wrapped with `Suspense` to render.
+/// `Suspense` also allows you to specify what should be displayed while the lazy component is loading.
+ReactComponentFactoryProxy lazy(Future<ReactComponentFactoryProxy> Function() loadFunction) {
+  final hoc = React.lazy(allowInterop(() => futureToPromise((() async {
+        final factory = await loadFunction();
+        return jsify({'default': factory.type});
+      })())));
   setProperty(hoc, 'dartComponentVersion', ReactDartComponentVersion.component2);
 
   return ReactDartWrappedComponentFactoryProxy(hoc);
