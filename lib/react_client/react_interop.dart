@@ -277,7 +277,6 @@ ReactComponentFactoryProxy memo2(ReactComponentFactoryProxy factory,
   return ReactDartWrappedComponentFactoryProxy(hoc);
 }
 
-
 /// Defer loading a component's code until it is rendered for the first time.
 ///
 /// The `lazy` function is used to create lazy components in React Dart. Lazy components are loaded only when they are rendered for the first time, which can help improve the initial loading time of your application.

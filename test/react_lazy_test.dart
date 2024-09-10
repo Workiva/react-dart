@@ -11,9 +11,9 @@ main() {
   group('lazy', () {
     group('- common factory behavior -', () {
       final LazyTest = react.lazy(() async => react.registerFunctionComponent((props) {
-        props['onDartRender']?.call(props);
-        return react.div({...props});
-      }));
+            props['onDartRender']?.call(props);
+            return react.div({...props});
+          }));
 
       commonFactoryTests(
         LazyTest,

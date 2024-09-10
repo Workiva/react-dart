@@ -26,7 +26,9 @@ import '../util.dart';
 /// [dartComponentVersion] should be specified for all components with Dart render code in order to
 /// properly test `props.children`, forwardRef compatibility, etc.
 void commonFactoryTests(ReactComponentFactoryProxy factory,
-    {String? dartComponentVersion, bool skipPropValuesTest = false, ReactElement Function(dynamic children)? renderWrapper}) {
+    {String? dartComponentVersion,
+    bool skipPropValuesTest = false,
+    ReactElement Function(dynamic children)? renderWrapper}) {
   _childKeyWarningTests(
     factory,
     renderWithUniqueOwnerName: (ReactElement Function() render) => _renderWithUniqueOwnerName(render, renderWrapper),
