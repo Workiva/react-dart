@@ -294,7 +294,7 @@ ReactComponentFactoryProxy memo2(ReactComponentFactoryProxy factory,
 ///   {
 ///     fallback: 'Loading...',
 ///   },
-///   lazyComponent(),
+///   lazyComponent({}),
 /// );
 /// ```
 ///
@@ -304,10 +304,17 @@ ReactComponentFactoryProxy memo2(ReactComponentFactoryProxy factory,
 /// Lazy components need to be wrapped with `Suspense` to render.
 /// `Suspense` also allows you to specify what should be displayed while the lazy component is loading.
 ReactComponentFactoryProxy lazy(Future<ReactComponentFactoryProxy> Function() loadFunction) {
-  final hoc = React.lazy(allowInterop(() => futureToPromise((() async {
-        final factory = await loadFunction();
-        return jsify({'default': factory.type});
-      })())));
+  final hoc = React.lazy(
+    allowInterop(
+      () => futureToPromise(
+        (() async {
+          final factory = await loadFunction();
+          return jsify({'default': factory.type});
+        })(),
+      ),
+    ),
+  );
+
   setProperty(hoc, 'dartComponentVersion', ReactDartComponentVersion.component2);
 
   return ReactDartWrappedComponentFactoryProxy(hoc);
