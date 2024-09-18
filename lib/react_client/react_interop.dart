@@ -44,7 +44,7 @@ abstract class React {
     dynamic wrapperFunction, [
     bool Function(JsMap prevProps, JsMap nextProps)? areEqual,
   ]);
-  external static ReactClass lazy(Promise Function() loadFunction);
+  external static ReactClass lazy(Promise Function() load);
 
   external static bool isValidElement(dynamic object);
 
@@ -306,12 +306,12 @@ ReactComponentFactoryProxy memo2(ReactComponentFactoryProxy factory,
 ///
 /// Lazy components need to be wrapped with `Suspense` to render.
 /// `Suspense` also allows you to specify what should be displayed while the lazy component is loading.
-ReactComponentFactoryProxy lazy(Future<ReactComponentFactoryProxy> Function() loadFunction) {
+ReactComponentFactoryProxy lazy(Future<ReactComponentFactoryProxy> Function() load) {
   final hoc = React.lazy(
     allowInterop(
       () => futureToPromise(
         (() async {
-          final factory = await loadFunction();
+          final factory = await load();
           return jsify({'default': factory.type});
         })(),
       ),
