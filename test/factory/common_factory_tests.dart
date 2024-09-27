@@ -28,6 +28,7 @@ import '../util.dart';
 void commonFactoryTests(ReactComponentFactoryProxy factory,
     {String? dartComponentVersion,
     bool skipPropValuesTest = false,
+    bool isNonDartComponentWithDartWrapper = false,
     ReactElement Function(dynamic children)? renderWrapper}) {
   _childKeyWarningTests(
     factory,
@@ -115,7 +116,7 @@ void commonFactoryTests(ReactComponentFactoryProxy factory,
         shouldAlwaysBeList: isDartComponent2(factory({})));
   });
 
-  if (isDartComponent(factory({}))) {
+  if (isDartComponent(factory({})) && !isNonDartComponentWithDartWrapper) {
     group('passes children to the Dart component when specified as', () {
       final notCalledSentinelValue = Object();
       dynamic childrenFromLastRender;
@@ -173,7 +174,7 @@ void commonFactoryTests(ReactComponentFactoryProxy factory,
     }
   }
 
-  if (isDartComponent2(factory({}))) {
+  if (isDartComponent2(factory({})) && !isNonDartComponentWithDartWrapper) {
     test('executes Dart render code in the component zone', () {
       final oldComponentZone = componentZone;
       addTearDown(() => componentZone = oldComponentZone);
@@ -193,7 +194,9 @@ void commonFactoryTests(ReactComponentFactoryProxy factory,
   }
 }
 
-void domEventHandlerWrappingTests(ReactComponentFactoryProxy factory) {
+void domEventHandlerWrappingTests(ReactComponentFactoryProxy factory, {
+  bool isNonDartComponentWithDartWrapper = false,
+}) {
   Element renderAndGetRootNode(ReactElement content) {
     final mountNode = Element.div();
     react_dom.render(content, mountNode);
@@ -270,7 +273,7 @@ void domEventHandlerWrappingTests(ReactComponentFactoryProxy factory) {
       }
     });
 
-    if (isDartComponent(factory({}))) {
+    if (isDartComponent(factory({})) && !isNonDartComponentWithDartWrapper) {
       group('in a way that the handlers are callable from within the Dart component:', () {
         setUpAll(() {
           expect(propsFromDartRender, isNotNull,

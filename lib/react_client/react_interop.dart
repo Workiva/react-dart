@@ -312,14 +312,27 @@ ReactComponentFactoryProxy lazy(Future<ReactComponentFactoryProxy> Function() lo
       () => futureToPromise(
         (() async {
           final factory = await load();
-          return jsify({'default': factory.type});
+          // By using a wrapper uiForwardRef it ensures that we have a matching factory proxy type given to react-dart's lazy,
+          // a `ReactDartWrappedComponentFactoryProxy`. This is necessary to have consistent prop conversions since we don't
+          // have access to the original factory proxy outside of this async block.
+          final wrapper = forwardRef2((props, ref) {
+            final children = props['children'];
+            return factory.build(
+              {...props, 'ref': ref},
+              [
+                if (children != null && !(children is List && children.isEmpty)) children,
+              ],
+            );
+          });
+          return jsify({'default': wrapper.type});
         })(),
       ),
     ),
   );
 
+  // Setting this version and wrapping with ReactDartWrappedComponentFactoryProxy
+  // is only okay because it matches the version and factory proxy of the wrapperFactory above.
   setProperty(hoc, 'dartComponentVersion', ReactDartComponentVersion.component2);
-
   return ReactDartWrappedComponentFactoryProxy(hoc);
 }
 
