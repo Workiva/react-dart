@@ -277,15 +277,22 @@ void domEventHandlerWrappingTests(ReactComponentFactoryProxy factory) {
               reason: 'test setup: component must pass props into props.onDartRender');
         });
 
-        late react.SyntheticMouseEvent event;
-        final divRef = react.createRef<DivElement>();
-        render(react.div({
-          'ref': divRef,
-          'onClick': (react.SyntheticMouseEvent e) => event = e,
-        }));
-        rtu.Simulate.click(divRef);
+        late react.SyntheticMouseEvent dummyEvent;
+        setUpAll(() {
+          final mountNode = DivElement();
+          document.body!.append(mountNode);
+          addTearDown(() {
+            react_dom.unmountComponentAtNode(mountNode);
+            mountNode.remove();
+          });
 
-        final dummyEvent = event;
+          final divRef = react.createRef<DivElement>();
+          react_dom.render(react.div({
+            'ref': divRef,
+            'onClick': (react.SyntheticMouseEvent e) => dummyEvent = e,
+          }), mountNode);
+          divRef.current!.click();
+        });
 
         for (final eventCase in eventCases.where((helper) => helper.isDart)) {
           test(eventCase.description, () {
