@@ -194,7 +194,8 @@ void commonFactoryTests(ReactComponentFactoryProxy factory,
   }
 }
 
-void domEventHandlerWrappingTests(ReactComponentFactoryProxy factory, {
+void domEventHandlerWrappingTests(
+  ReactComponentFactoryProxy factory, {
   bool isNonDartComponentWithDartWrapper = false,
 }) {
   Element renderAndGetRootNode(ReactElement content) {
@@ -290,10 +291,12 @@ void domEventHandlerWrappingTests(ReactComponentFactoryProxy factory, {
           });
 
           final divRef = react.createRef<DivElement>();
-          react_dom.render(react.div({
-            'ref': divRef,
-            'onClick': (react.SyntheticMouseEvent e) => dummyEvent = e,
-          }), mountNode);
+          react_dom.render(
+              react.div({
+                'ref': divRef,
+                'onClick': (react.SyntheticMouseEvent e) => dummyEvent = e,
+              }),
+              mountNode);
           divRef.current!.click();
         });
 
