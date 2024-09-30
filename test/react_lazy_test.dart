@@ -23,12 +23,18 @@ main() {
       const errorString = 'intentional future error';
       final errors = [];
       final errorCompleter = Completer();
-      final ThrowingLazyTest = react.lazy(() async { throw Exception(errorString);});
+      final ThrowingLazyTest = react.lazy(() async {
+        throw Exception(errorString);
+      });
       onError(error, info) {
         errors.add([error, info]);
         errorCompleter.complete();
       }
-      expect(() => rtu.renderIntoDocument(_ErrorBoundary({'onComponentDidCatch': onError}, react.Suspense({'fallback': 'Loading...'}, ThrowingLazyTest({})))), returnsNormally);
+
+      expect(
+          () => rtu.renderIntoDocument(_ErrorBoundary(
+              {'onComponentDidCatch': onError}, react.Suspense({'fallback': 'Loading...'}, ThrowingLazyTest({})))),
+          returnsNormally);
       await expectLater(errorCompleter.future, completes);
       expect(errors, hasLength(1));
       expect(errors.first.first, isA<Exception>().having((e) => e.toString(), 'message', contains(errorString)));
