@@ -18,8 +18,7 @@ import 'package:react/react_client/js_backed_map.dart';
 import 'package:react/react_client/component_factory.dart' show ReactDartWrappedComponentFactoryProxy;
 import 'package:react/src/react_client/dart2_interop_workaround_bindings.dart';
 import 'package:react/src/typedefs.dart';
-
-import '../src/js_interop_util.dart';
+import 'package:react/src/js_interop_util.dart';
 
 typedef ReactJsComponentFactory = ReactElement Function(dynamic props, dynamic children);
 
@@ -274,65 +273,6 @@ ReactComponentFactoryProxy memo2(ReactComponentFactoryProxy factory,
   final hoc = React.memo(factory.type, _areEqual);
   setProperty(hoc, 'dartComponentVersion', ReactDartComponentVersion.component2);
 
-  return ReactDartWrappedComponentFactoryProxy(hoc);
-}
-
-/// Defer loading a component's code until it is rendered for the first time.
-///
-/// The `lazy` function is used to create lazy components in react-dart. Lazy components are able to run asynchronous code only when they are trying to be rendered for the first time, allowing for deferred loading of the component's code.
-///
-/// To use the `lazy` function, you need to wrap the lazy component with a `Suspense` component. The `Suspense` component allows you to specify what should be displayed while the lazy component is loading, such as a loading spinner or a placeholder.
-///
-/// Example usage:
-/// ```dart
-/// import 'package:react/react.dart' show lazy, Suspense;
-/// import './simple_component.dart' deferred as simple;
-///
-/// final lazyComponent = lazy(() async {
-///   await simple.loadLibrary();
-///   return simple.SimpleComponent;
-/// });
-///
-/// // Wrap the lazy component with Suspense
-/// final app = Suspense(
-///   {
-///     fallback: 'Loading...',
-///   },
-///   lazyComponent({}),
-/// );
-/// ```
-///
-/// Defer loading a component’s code until it is rendered for the first time.
-///
-/// Lazy components need to be wrapped with `Suspense` to render.
-/// `Suspense` also allows you to specify what should be displayed while the lazy component is loading.
-ReactComponentFactoryProxy lazy(Future<ReactComponentFactoryProxy> Function() load) {
-  final hoc = React.lazy(
-    allowInterop(
-      () => futureToPromise(
-        (() async {
-          final factory = await load();
-          // By using a wrapper uiForwardRef it ensures that we have a matching factory proxy type given to react-dart's lazy,
-          // a `ReactDartWrappedComponentFactoryProxy`. This is necessary to have consistent prop conversions since we don't
-          // have access to the original factory proxy outside of this async block.
-          final wrapper = forwardRef2((props, ref) {
-            final children = props['children'];
-            return factory.build(
-              {...props, 'ref': ref},
-              [
-                if (children != null && !(children is List && children.isEmpty)) children,
-              ],
-            );
-          });
-          return jsify({'default': wrapper.type});
-        })(),
-      ),
-    ),
-  );
-
-  // Setting this version and wrapping with ReactDartWrappedComponentFactoryProxy
-  // is only okay because it matches the version and factory proxy of the wrapperFactory above.
-  setProperty(hoc, 'dartComponentVersion', ReactDartComponentVersion.component2);
   return ReactDartWrappedComponentFactoryProxy(hoc);
 }
 

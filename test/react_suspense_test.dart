@@ -6,7 +6,6 @@ import 'dart:html';
 
 import 'package:js/js.dart';
 import 'package:react/react.dart' as react;
-import 'package:react/react_client/react_interop.dart';
 import 'package:react/react_dom.dart' as react_dom;
 import 'package:test/test.dart';
 
@@ -15,7 +14,7 @@ import './react_suspense_lazy_component.dart' deferred as simple;
 main() {
   group('Suspense', () {
     test('renders fallback UI first followed by the real component', () async {
-      final lazyComponent = lazy(() async {
+      final lazyComponent = react.lazy(() async {
         await simple.loadLibrary();
         await Future.delayed(Duration(seconds: 1));
         return simple.SimpleFunctionComponent;
@@ -48,7 +47,7 @@ main() {
     });
 
     test('is instant after the lazy component has been loaded once', () async {
-      final lazyComponent = lazy(() async {
+      final lazyComponent = react.lazy(() async {
         await simple.loadLibrary();
         await Future.delayed(Duration(seconds: 1));
         return simple.SimpleFunctionComponent;
