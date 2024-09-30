@@ -39,7 +39,7 @@ ReactComponentFactoryProxy lazy(Future<ReactComponentFactoryProxy> Function() lo
   final hoc = React.lazy(
     allowInterop(
       () => futureToPromise(
-        (() async {
+        Future.sync(() async {
           final factory = await load();
           // By using a wrapper uiForwardRef it ensures that we have a matching factory proxy type given to react-dart's lazy,
           // a `ReactDartWrappedComponentFactoryProxy`. This is necessary to have consistent prop conversions since we don't
@@ -54,7 +54,7 @@ ReactComponentFactoryProxy lazy(Future<ReactComponentFactoryProxy> Function() lo
             );
           });
           return jsify({'default': wrapper.type});
-        })(),
+        }),
       ),
     ),
   );
