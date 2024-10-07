@@ -52,7 +52,7 @@ ReactComponentFactoryProxy lazy(Future<ReactComponentFactoryProxy> Function() lo
                 if (children != null && !(children is List && children.isEmpty)) children,
               ],
             );
-          });
+          }, displayName: 'Lazy(${getProperty(factory.type as Object, 'name') ?? 'Anonymous'})');
           return jsify({'default': wrapper.type});
         }),
       ),
