@@ -52,7 +52,7 @@ ReactComponentFactoryProxy lazy(Future<ReactComponentFactoryProxy> Function() lo
                 if (children != null && !(children is List && children.isEmpty)) children,
               ],
             );
-          }, displayName: 'Lazy(${getProperty(factory.type as Object, 'name') ?? 'Anonymous'})');
+          }, displayName: 'Lazy(${_getComponentName(factory.type) ?? 'Anonymous'})');
           return jsify({'default': wrapper.type});
         }),
       ),
@@ -64,4 +64,18 @@ ReactComponentFactoryProxy lazy(Future<ReactComponentFactoryProxy> Function() lo
   // ignore: invalid_use_of_protected_member
   setProperty(hoc, 'dartComponentVersion', ReactDartComponentVersion.component2);
   return ReactDartWrappedComponentFactoryProxy(hoc);
+}
+
+String? _getComponentName(Object? type) {
+  if (type == null) return null;
+
+  if (type is String) return type;
+
+  final name = getProperty(type, 'name');
+  if (name is String) return name;
+
+  final displayName = getProperty(type, 'displayName');
+  if (displayName is String) return displayName;
+
+  return null;
 }
