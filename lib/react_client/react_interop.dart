@@ -18,6 +18,7 @@ import 'package:react/react_client/js_backed_map.dart';
 import 'package:react/react_client/component_factory.dart' show ReactDartWrappedComponentFactoryProxy;
 import 'package:react/src/react_client/dart2_interop_workaround_bindings.dart';
 import 'package:react/src/typedefs.dart';
+import 'package:react/src/js_interop_util.dart';
 
 typedef ReactJsComponentFactory = ReactElement Function(dynamic props, dynamic children);
 
@@ -42,6 +43,7 @@ abstract class React {
     dynamic wrapperFunction, [
     bool Function(JsMap prevProps, JsMap nextProps)? areEqual,
   ]);
+  external static ReactClass lazy(Promise Function() load);
 
   external static bool isValidElement(dynamic object);
 

@@ -26,10 +26,13 @@ import '../util.dart';
 /// [dartComponentVersion] should be specified for all components with Dart render code in order to
 /// properly test `props.children`, forwardRef compatibility, etc.
 void commonFactoryTests(ReactComponentFactoryProxy factory,
-    {String? dartComponentVersion, bool skipPropValuesTest = false}) {
+    {String? dartComponentVersion,
+    bool skipPropValuesTest = false,
+    bool isNonDartComponentWithDartWrapper = false,
+    ReactElement Function(dynamic children)? renderWrapper}) {
   _childKeyWarningTests(
     factory,
-    renderWithUniqueOwnerName: _renderWithUniqueOwnerName,
+    renderWithUniqueOwnerName: (ReactElement Function() render) => _renderWithUniqueOwnerName(render, renderWrapper),
   );
 
   test('renders an instance with the corresponding `type`', () {
@@ -113,7 +116,7 @@ void commonFactoryTests(ReactComponentFactoryProxy factory,
         shouldAlwaysBeList: isDartComponent2(factory({})));
   });
 
-  if (isDartComponent(factory({}))) {
+  if (isDartComponent(factory({})) && !isNonDartComponentWithDartWrapper) {
     group('passes children to the Dart component when specified as', () {
       final notCalledSentinelValue = Object();
       dynamic childrenFromLastRender;
@@ -171,7 +174,7 @@ void commonFactoryTests(ReactComponentFactoryProxy factory,
     }
   }
 
-  if (isDartComponent2(factory({}))) {
+  if (isDartComponent2(factory({})) && !isNonDartComponentWithDartWrapper) {
     test('executes Dart render code in the component zone', () {
       final oldComponentZone = componentZone;
       addTearDown(() => componentZone = oldComponentZone);
@@ -191,7 +194,10 @@ void commonFactoryTests(ReactComponentFactoryProxy factory,
   }
 }
 
-void domEventHandlerWrappingTests(ReactComponentFactoryProxy factory) {
+void domEventHandlerWrappingTests(
+  ReactComponentFactoryProxy factory, {
+  bool isNonDartComponentWithDartWrapper = false,
+}) {
   Element renderAndGetRootNode(ReactElement content) {
     final mountNode = Element.div();
     react_dom.render(content, mountNode);
@@ -268,22 +274,31 @@ void domEventHandlerWrappingTests(ReactComponentFactoryProxy factory) {
       }
     });
 
-    if (isDartComponent(factory({}))) {
+    if (isDartComponent(factory({})) && !isNonDartComponentWithDartWrapper) {
       group('in a way that the handlers are callable from within the Dart component:', () {
         setUpAll(() {
           expect(propsFromDartRender, isNotNull,
               reason: 'test setup: component must pass props into props.onDartRender');
         });
 
-        late react.SyntheticMouseEvent event;
-        final divRef = react.createRef<DivElement>();
-        render(react.div({
-          'ref': divRef,
-          'onClick': (react.SyntheticMouseEvent e) => event = e,
-        }));
-        rtu.Simulate.click(divRef);
+        late react.SyntheticMouseEvent dummyEvent;
+        setUpAll(() {
+          final mountNode = DivElement();
+          document.body!.append(mountNode);
+          addTearDown(() {
+            react_dom.unmountComponentAtNode(mountNode);
+            mountNode.remove();
+          });
 
-        final dummyEvent = event;
+          final divRef = react.createRef<DivElement>();
+          react_dom.render(
+              react.div({
+                'ref': divRef,
+                'onClick': (react.SyntheticMouseEvent e) => dummyEvent = e,
+              }),
+              mountNode);
+          divRef.current!.click();
+        });
 
         for (final eventCase in eventCases.where((helper) => helper.isDart)) {
           test(eventCase.description, () {
@@ -532,7 +547,7 @@ void _childKeyWarningTests(ReactComponentFactoryProxy factory,
     });
 
     test('warns when a single child is passed as a list', () {
-      _renderWithUniqueOwnerName(() => factory({}, [react.span({})]));
+      renderWithUniqueOwnerName(() => factory({}, [react.span({})]));
 
       expect(consoleErrorCalled, isTrue, reason: 'should have outputted a warning');
       expect(consoleErrorMessage, contains('Each child in a list should have a unique "key" prop.'));
@@ -577,12 +592,12 @@ int _nextFactoryId = 0;
 /// Renders the provided [render] function with a Component2 owner that will have a unique name.
 ///
 /// This prevents React JS from not printing key warnings it deems as "duplicates".
-void _renderWithUniqueOwnerName(ReactElement Function() render) {
+void _renderWithUniqueOwnerName(ReactElement Function() render, [ReactElement Function(dynamic)? wrapper]) {
   final factory = react.registerComponent2(() => _UniqueOwnerHelperComponent());
   factory.reactClass.displayName = 'OwnerHelperComponent_$_nextFactoryId';
   _nextFactoryId++;
 
-  rtu.renderIntoDocument(factory({'render': render}));
+  rtu.renderIntoDocument(factory({'render': wrapper != null ? () => wrapper(render()) : render}));
 }
 
 class _UniqueOwnerHelperComponent extends react.Component2 {
