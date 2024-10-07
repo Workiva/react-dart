@@ -1,3 +1,6 @@
+## 7.2.0
+- Add Dart wrapper for React [lazy](https://react.dev/reference/react/lazy)
+
 ## 7.1.3
 - Internal release tooling changes
 
