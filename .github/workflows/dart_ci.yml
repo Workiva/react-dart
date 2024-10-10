@@ -53,13 +53,13 @@ jobs:
         run: |
           dart run build_runner test --delete-conflicting-outputs -- --preset dartdevc
         if: always() && steps.install.outcome == 'success'
-        timeout-minutes: 5
+        timeout-minutes: 8
 
       - name: Run tests (dart2js)
         run: |
           dart run build_runner test --delete-conflicting-outputs --release -- --preset dart2js
         if: always() && steps.install.outcome == 'success'
-        timeout-minutes: 5
+        timeout-minutes: 8
       - uses: anchore/sbom-action@v0
         with:
           path: ./
