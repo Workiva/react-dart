@@ -10,6 +10,23 @@ on:
       - '**'
 
 jobs:
+  # Run as a separate job outside the Dart SDK matrix below,
+  # since we can only emit a single SBOM.
+  create-sbom-release-asset:
+    name: Create SBOM Release Asset
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: dart-lang/setup-dart@v1
+        with:
+          sdk: 2.19.6 # This version doesn't matter so long as it resolves.
+      - run: dart pub get
+      - name: Publish SBOM to Release Assets
+        uses: anchore/sbom-action@v0
+        with:
+          path: ./
+          format: cyclonedx-json
+
   build:
     runs-on: ubuntu-latest
     strategy:
@@ -60,7 +77,3 @@ jobs:
           dart run build_runner test --delete-conflicting-outputs --release -- --preset dart2js
         if: always() && steps.install.outcome == 'success'
         timeout-minutes: 8
-      - uses: anchore/sbom-action@v0
-        with:
-          path: ./
-          format: cyclonedx-json
