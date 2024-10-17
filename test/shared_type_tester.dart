@@ -22,6 +22,10 @@ void sharedTypeTests(
   bool skipJsAnonInteropTypes = false,
   bool skipJsInteropTypes = true,
 }) {
+  test('null', () {
+    testTypeValue(null);
+  });
+
   if (!skipNormalDartObjects) {
     test('normal Dart objects', () {
       final object = Foo('f');
