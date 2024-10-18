@@ -525,50 +525,46 @@ void refTests<T extends Object>(
 void _childKeyWarningTests(ReactComponentFactoryProxy factory,
     {required Function(ReactElement Function()) renderWithUniqueOwnerName}) {
   group('key/children validation', () {
-    late bool consoleErrorCalled;
-    var consoleErrorMessage;
-    late JsFunction originalConsoleError;
+    late List<dynamic> consoleErrorMessages;
 
     setUp(() {
-      consoleErrorCalled = false;
-      consoleErrorMessage = null;
+      consoleErrorMessages = [];
 
-      originalConsoleError = context['console']['error'] as JsFunction;
+      final originalConsoleError = context['console']['error'] as JsFunction;
       context['console']['error'] = JsFunction.withThis((self, message, arg1, arg2, arg3) {
-        consoleErrorCalled = true;
-        consoleErrorMessage = message;
-
         originalConsoleError.apply([message], thisArg: self);
-      });
-    });
 
-    tearDown(() {
-      context['console']['error'] = originalConsoleError;
+        // Ignore unrelated messages
+        if (message.toString().contains('ReactDOM.render is no longer supported in React 18')) {
+          return;
+        }
+
+        consoleErrorMessages.add(message);
+      });
+      addTearDown(() => context['console']['error'] = originalConsoleError);
     });
 
     test('warns when a single child is passed as a list', () {
       renderWithUniqueOwnerName(() => factory({}, [react.span({})]));
-
-      expect(consoleErrorCalled, isTrue, reason: 'should have outputted a warning');
-      expect(consoleErrorMessage, contains('Each child in a list should have a unique "key" prop.'));
+      expect(consoleErrorMessages, [contains('Each child in a list should have a unique "key" prop.')]);
     });
 
     test('warns when multiple children are passed as a list', () {
       renderWithUniqueOwnerName(() => factory({}, [react.span({}), react.span({}), react.span({})]));
 
-      expect(consoleErrorCalled, isTrue, reason: 'should have outputted a warning');
+      expect(consoleErrorMessages, [contains('Each child in a list should have a unique "key" prop.')]);
     });
 
     test('does not warn when multiple children are passed as variadic args', () {
       renderWithUniqueOwnerName(() => factory({}, react.span({}), react.span({}), react.span({})));
 
-      expect(consoleErrorCalled, isFalse, reason: 'should not have outputted a warning');
+      expect(consoleErrorMessages, isEmpty, reason: 'should not have outputted a warning');
     });
 
     test('when rendering custom Dart components', () {
       renderWithUniqueOwnerName(() => factory({}, react.span({})));
 
-      expect(consoleErrorCalled, isFalse, reason: 'should not have outputted a warning');
+      expect(consoleErrorMessages, isEmpty, reason: 'should not have outputted a warning');
     });
   });
 }

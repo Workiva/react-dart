@@ -122,30 +122,29 @@ main() {
       );
 
       group('propTypes', () {
-        late bool consoleErrorCalled;
-        dynamic consoleErrorMessage;
-        late JsFunction originalConsoleError;
+        late List<dynamic> consoleErrorMessages;
+
         late DivElement mountNode;
         const expectedWarningPrefix = 'Warning: Failed prop type: Invalid argument(s): intProp should be int. ';
 
         setUp(() {
-          consoleErrorCalled = false;
-          consoleErrorMessage = null;
           mountNode = DivElement();
           react_interop.PropTypes.resetWarningCache();
-          originalConsoleError = context['console']['error'] as JsFunction;
+
+          consoleErrorMessages = [];
+          final originalConsoleError = context['console']['error'] as JsFunction;
           context['console']['error'] = JsFunction.withThis((self, message) {
-            consoleErrorCalled = true;
-            consoleErrorMessage = message;
-
             originalConsoleError.apply([message], thisArg: self);
+
+            // Ignore unrelated warnings
+            if (message.toString().contains('ReactDOM.render is no longer supported in React 18')) {
+              return;
+            }
+
+            consoleErrorMessages.add(message);
           });
+          addTearDown(() => context['console']['error'] = originalConsoleError);
         });
-
-        tearDown(() {
-          context['console']['error'] = originalConsoleError;
-        });
-
         group('fails validation with incorrect prop type', () {
           setUp(() {
             react_dom.render(components2.PropTypesTest({'intProp': 'test'}), mountNode);
@@ -153,12 +152,11 @@ main() {
 
           if (assertsEnabled()) {
             test('', () {
-              expect(consoleErrorCalled, isTrue, reason: 'should have outputted a warning');
-              expect(consoleErrorMessage, contains(expectedWarningPrefix));
+              expect(consoleErrorMessages, [contains(expectedWarningPrefix)]);
             });
           } else {
             test('unless dart2js compiler is used', () {
-              expect(consoleErrorCalled, isFalse,
+              expect(consoleErrorMessages, isEmpty,
                   reason: 'propTypes should only be present when using DDC to compile JS');
             });
           }
@@ -167,19 +165,18 @@ main() {
         if (assertsEnabled()) {
           test('passes validation with correct prop type', () {
             react_dom.render(components2.PropTypesTest({'intProp': 1}), mountNode);
-            expect(consoleErrorCalled, isFalse, reason: 'should not have outputted a warning');
+            expect(consoleErrorMessages, isEmpty);
           });
 
           test('passes through all of the expected arguments to the prop validator', () {
             react_dom.render(components2.PropTypesTest({'intProp': 'test'}), mountNode);
-            expect(consoleErrorCalled, isTrue, reason: 'should have outputted a warning');
             expect(
-              consoleErrorMessage,
-              allOf(isA<String>(), contains(expectedWarningPrefix)),
+              consoleErrorMessages,
+              [contains(expectedWarningPrefix)],
               reason: 'Did the warning message change? This test will break if the format cannot be converted to json.',
             );
             final regExp = RegExp(r'.*?({.*}).*', multiLine: true);
-            final matches = regExp.allMatches(consoleErrorMessage as String);
+            final matches = regExp.allMatches(consoleErrorMessages.single as String);
             expect(matches, hasLength(1), reason: 'Should have found a json structure in the error.');
             final match = matches.elementAt(0); // => extract the first (and only) match
             final errorArgs = json.decode(match.group(1)!) as Map;
