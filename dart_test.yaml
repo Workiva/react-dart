@@ -4,6 +4,9 @@ platforms:
   - chrome
   - vm
 
+# Work around process handing after tests finish: https://github.com/dart-lang/build/issues/3765
+concurrency: 1
+
 presets:
   dart2js-legacy:
     exclude_tags: no-dart2js
