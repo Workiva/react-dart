@@ -531,7 +531,7 @@ void _childKeyWarningTests(ReactComponentFactoryProxy factory,
       consoleErrorMessages = [];
 
       final originalConsoleError = context['console']['error'] as JsFunction;
-      context['console']['error'] = JsFunction.withThis((self, message, arg1, arg2, arg3) {
+      context['console']['error'] = JsFunction.withThis((self, [message, arg1, arg2, arg3]) {
         originalConsoleError.apply([message], thisArg: self);
 
         // Ignore unrelated messages
