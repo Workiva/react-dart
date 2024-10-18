@@ -30,9 +30,7 @@ external bool _isCompositeComponentWithType(/* [1] */ instance, dynamic type);
 
 /// Returns `true` if instance is a custom composite component created using `React.createClass()`
 /// that is of the [ReactComponentFactoryProxy.type] of the provided [componentFactory].
-bool isCompositeComponentWithTypeV2(
-    /* [1] */ instance,
-    ReactComponentFactoryProxy componentFactory) {
+bool isCompositeComponentWithTypeV2(/* [1] */ instance, ReactComponentFactoryProxy componentFactory) {
   return _isCompositeComponentWithType(instance, getComponentTypeV2(componentFactory));
 }
 

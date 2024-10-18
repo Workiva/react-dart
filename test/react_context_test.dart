@@ -103,7 +103,6 @@ int calculateChangedBits(currentValue, nextValue) {
   return result;
 }
 
-
 // ignore: deprecated_member_use_from_same_package
 var TestCalculateChangedBitsContext = react.createContext(1, calculateChangedBits);
 
