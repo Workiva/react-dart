@@ -177,15 +177,7 @@ UseContextTestComponent(Map props) {
   ]);
 }
 
-int calculateChangedBits(currentValue, nextValue) {
-  var result = 1 << 1;
-  if (nextValue['renderCount'] % 2 == 0) {
-    result |= 1 << 2;
-  }
-  return result;
-}
-
-var TestNewContext = react.createContext<Map>({'renderCount': 0}, calculateChangedBits);
+var TestNewContext = react.createContext<Map>({'renderCount': 0});
 
 var newContextProviderComponent = react.registerComponent2(() => _NewContextProviderComponent());
 

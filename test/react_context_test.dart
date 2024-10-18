@@ -39,7 +39,7 @@ main() {
       sharedTypeTests(testTypeValue);
     });
 
-    group('calculateChangeBits argument functions correctly', () {
+    group('calculateChangeBits argument does not throw when used (has no effect in React 18)', () {
       _ContextProviderWrapper? providerRef;
       _ContextConsumerWrapper? consumerEvenRef;
       _ContextConsumerWrapper? consumerOddRef;
@@ -77,15 +77,14 @@ main() {
       });
 
       test('on value updates', () {
+        // Test common behavior between React 17 (calculateChangedBits working)
+        // and React 18 (it having no effect).
         providerRef!.increment();
         expect(consumerEvenRef!.latestValue, 2);
-        expect(consumerOddRef!.latestValue, 1);
         providerRef!.increment();
-        expect(consumerEvenRef!.latestValue, 2);
         expect(consumerOddRef!.latestValue, 3);
         providerRef!.increment();
         expect(consumerEvenRef!.latestValue, 4);
-        expect(consumerOddRef!.latestValue, 3);
       });
     });
   });
@@ -104,6 +103,8 @@ int calculateChangedBits(currentValue, nextValue) {
   return result;
 }
 
+
+// ignore: deprecated_member_use_from_same_package
 var TestCalculateChangedBitsContext = react.createContext(1, calculateChangedBits);
 
 var TestContext = react.createContext();
