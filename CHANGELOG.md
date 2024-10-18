@@ -1,3 +1,20 @@
+## 7.2.0
+- Add Dart wrapper for React [lazy](https://react.dev/reference/react/lazy)
+
+## 7.1.3
+- Internal release tooling changes
+
+## 7.1.2
+- Internal release tooling changes
+
+## 7.1.1
+- Internal release tooling changes
+- Tests - switch from mockito to mocktail
+
+## 7.1.0
+
+Add a new `ReactNode` type, which aliases `Object?` to mimic [the React JS Typescript type](https://github.com/DefinitelyTyped/DefinitelyTyped/blob/master/types/react/v17/index.d.ts#L214).
+
 ## 7.0.1
 
 Breaking change - fix nullability/typings for `ReactDom.findDomNode` and `ReactDom.render` from `package:react/react_client/react_interop.dart`:

@@ -180,7 +180,7 @@ final ReactDartInteropStatics dartInteropStatics = (() {
       });
 
   /// Wrapper for [Component.render].
-  dynamic handleRender(Component component) => zone.run(() {
+  ReactNode handleRender(Component component) => zone.run(() {
         return component.render();
       });
 
@@ -317,7 +317,7 @@ abstract class ReactDartInteropStatics2 {
         }
       });
 
-  static dynamic handleRender(Component2 component, JsMap jsProps, JsMap jsState, dynamic jsContext) => // dartfmt
+  static ReactNode handleRender(Component2 component, JsMap jsProps, JsMap jsState, dynamic jsContext) => // dartfmt
       // ignore: invalid_use_of_visible_for_testing_member
       componentZone.run(() {
         _updatePropsAndStateWithJs(component, jsProps, jsState);

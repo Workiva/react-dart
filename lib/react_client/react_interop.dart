@@ -17,6 +17,8 @@ import 'package:react/react.dart';
 import 'package:react/react_client/js_backed_map.dart';
 import 'package:react/react_client/component_factory.dart' show ReactDartWrappedComponentFactoryProxy;
 import 'package:react/src/react_client/dart2_interop_workaround_bindings.dart';
+import 'package:react/src/typedefs.dart';
+import 'package:react/src/js_interop_util.dart';
 
 typedef ReactJsComponentFactory = ReactElement Function(dynamic props, dynamic children);
 
@@ -27,20 +29,21 @@ typedef ReactJsComponentFactory = ReactElement Function(dynamic props, dynamic c
 @JS()
 abstract class React {
   external static String get version;
-  external static ReactElement cloneElement(ReactElement element, [JsMap? props, Object? children]);
+  external static ReactElement cloneElement(ReactElement element, [JsMap? props, ReactNode children]);
   external static ReactContext createContext([
     dynamic defaultValue,
     int Function(dynamic currentValue, dynamic nextValue)? calculateChangedBits,
   ]);
   @Deprecated('For internal use only.')
   external static ReactClass createClass(ReactClassConfig reactClassConfig);
-  external static ReactElement createElement(dynamic type, props, [Object? children]);
+  external static ReactElement createElement(dynamic type, props, [ReactNode children]);
   external static JsRef createRef();
   external static ReactClass forwardRef(Function(JsMap props, dynamic ref) wrapperFunction);
   external static ReactClass memo(
     dynamic wrapperFunction, [
     bool Function(JsMap prevProps, JsMap nextProps)? areEqual,
   ]);
+  external static ReactClass lazy(Promise Function() load);
 
   external static bool isValidElement(dynamic object);
 
@@ -279,10 +282,10 @@ ReactComponentFactoryProxy memo2(ReactComponentFactoryProxy factory,
 
 abstract class ReactDom {
   @Deprecated('Deprecated in ReactJS v18.')
-  static Element? findDOMNode(dynamic object) => ReactDOM.findDOMNode(object);
+  static Element? findDOMNode(ReactNode object) => ReactDOM.findDOMNode(object);
   @Deprecated(
       'Deprecated in ReactJS v18. Use createRoot instead. See: https://github.com/reactwg/react-18/discussions/5')
-  static dynamic render(dynamic component, Element element) => ReactDOM.render(component, element);
+  static dynamic render(ReactNode component, Element element) => ReactDOM.render(component, element);
   @Deprecated(
       'Deprecated in ReactJS v18. Call root.unmount() after assigning root to the return value of createRoot().')
   static bool unmountComponentAtNode(Element element) => ReactDOM.unmountComponentAtNode(element);
@@ -294,7 +297,7 @@ abstract class ReactDom {
   /// [children] can be any renderable React child, such as a [ReactElement], [String], or fragment.
   ///
   /// See: <https://reactjs.org/docs/portals.html>
-  static ReactPortal createPortal(dynamic children, Element container) => ReactDOM.createPortal(children, container);
+  static ReactPortal createPortal(ReactNode children, Element container) => ReactDOM.createPortal(children, container);
 }
 
 @JS('ReactDOMServer')

@@ -10,21 +10,45 @@ on:
       - '**'
 
 jobs:
+  # Run as a separate job outside the Dart SDK matrix below,
+  # since we can only emit a single SBOM.
+  create-sbom-release-asset:
+    name: Create SBOM Release Asset
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: dart-lang/setup-dart@v1
+        with:
+          sdk: 2.19.6 # This version doesn't matter so long as it resolves.
+      - run: dart pub get
+      - name: Publish SBOM to Release Assets
+        uses: anchore/sbom-action@v0
+        with:
+          path: ./
+          format: cyclonedx-json
+
   build:
     runs-on: ubuntu-latest
     strategy:
       fail-fast: false
       matrix:
-        # Can't run on `stable` (Dart 3) until we're fully null-safe.
-        sdk: [2.18.7, 2.19.6]
+        sdk: [2.19.6, stable]
     steps:
       - uses: actions/checkout@v2
-      - uses: dart-lang/setup-dart@v1
+      - id: setup-dart
+        uses: dart-lang/setup-dart@v1
         with:
           sdk: ${{ matrix.sdk }}
 
       - name: Print Dart SDK version
         run: dart --version
+
+      - name: Delete Dart-2-only files when running on Dart 3
+        run: |
+          DART_VERSION="${{ steps.setup-dart.outputs.dart-version }}"
+          if [[ "$DART_VERSION" =~ ^3 ]]; then
+            ./tool/delete_dart_2_only_files.sh
+          fi
 
       - id: install
         name: Install dependencies
@@ -36,7 +60,7 @@ jobs:
 
       - name: Verify formatting
         run: dart run dart_dev format --check
-        if: ${{ matrix.sdk == '2.18.7' }}
+        if: ${{ matrix.sdk == '2.19.6' }}
 
       - name: Analyze project source
         run: dart analyze
@@ -44,20 +68,12 @@ jobs:
 
       - name: Run tests (DDC)
         run: |
-          if [ ${{ matrix.sdk }} = '2.13.4' ]; then 
-            dart run build_runner test --delete-conflicting-outputs -- --preset dartdevc-legacy
-          else 
-            dart run build_runner test --delete-conflicting-outputs -- --preset dartdevc
-          fi
+          dart run build_runner test --delete-conflicting-outputs -- --preset dartdevc
         if: always() && steps.install.outcome == 'success'
-        timeout-minutes: 5
+        timeout-minutes: 8
 
       - name: Run tests (dart2js)
         run: |
-          if [ ${{ matrix.sdk }} = '2.13.4' ]; then
-            dart run build_runner test --delete-conflicting-outputs --release -- --preset dart2js-legacy
-          else 
-            dart run build_runner test --delete-conflicting-outputs --release -- --preset dart2js
-          fi
+          dart run build_runner test --delete-conflicting-outputs --release -- --preset dart2js
         if: always() && steps.install.outcome == 'success'
-        timeout-minutes: 5
+        timeout-minutes: 8

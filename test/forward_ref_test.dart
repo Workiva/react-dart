@@ -36,7 +36,9 @@ main() {
 
       test('when displayName argument is passed to forwardRef2', () {
         const name = 'ForwardRefTestComponent';
-        final ForwardRefTestComponent = forwardRef2((props, ref) {}, displayName: name);
+        final ForwardRefTestComponent = forwardRef2((props, ref) {
+          return null;
+        }, displayName: name);
         expect(getProperty(getProperty(ForwardRefTestComponent.type as Object, 'render'), 'name'), name);
       });
     });

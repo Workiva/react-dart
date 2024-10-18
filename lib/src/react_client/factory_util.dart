@@ -8,6 +8,7 @@ import 'package:react/react_client/js_backed_map.dart';
 import 'package:react/react_client/js_interop_helpers.dart';
 import 'package:react/react_client/react_interop.dart';
 import 'package:react/src/react_client/internal_react_interop.dart';
+import 'package:react/src/typedefs.dart';
 
 /// Converts a list of variadic children arguments to children that should be passed to ReactJS.
 ///
@@ -16,7 +17,7 @@ import 'package:react/src/react_client/internal_react_interop.dart';
 /// - `null` if there are no args
 /// - the single child if only one was specified
 /// - otherwise, the same list of args, will all top-level children validated
-dynamic convertArgsToChildren(List childrenArgs) {
+ReactNode convertArgsToChildren(List childrenArgs) {
   if (childrenArgs.isEmpty) {
     return null;
   } else if (childrenArgs.length == 1) {
@@ -98,7 +99,7 @@ bool isRefArgumentDefinitelyNonNullable(Function(Never) callbackRef) {
 /// - `[]` if there are no args and [shouldAlwaysBeList] is true
 /// - the single child if only one was specified
 /// - otherwise, the same list of args, will all top-level children validated
-dynamic generateChildren(List childrenArgs, {bool shouldAlwaysBeList = false}) {
+ReactNode generateChildren(List childrenArgs, {bool shouldAlwaysBeList = false}) {
   var children;
 
   if (childrenArgs.isEmpty) {

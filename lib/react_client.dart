@@ -20,7 +20,7 @@ export 'package:react/react_client/component_factory.dart'
         JsBackedMapComponentFactoryMixin;
 export 'package:react/react_client/zone.dart' show componentZone;
 export 'package:react/src/react_client/chain_refs.dart' show chainRefs, chainRefList;
-export 'package:react/src/typedefs.dart' show JsFunctionComponent;
+export 'package:react/src/typedefs.dart' show JsFunctionComponent, ReactNode;
 
 /// Method used to initialize the React environment.
 ///
