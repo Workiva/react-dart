@@ -230,8 +230,7 @@ class _ParentComponent extends react.Component {
       ]);
 }
 
-var mountedNode = querySelector('#content');
 void main() {
-  final component = ParentComponent({});
-  react_dom.render(component, mountedNode);
+  final root = react_dom.createRoot(querySelector('#content')!);
+  root.render(ParentComponent({}));
 }

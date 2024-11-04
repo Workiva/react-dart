@@ -104,7 +104,8 @@ class Context<T> {
 /// Learn more: https://reactjs.org/docs/context.html#reactcreatecontext
 Context<TValue> createContext<TValue>([
   TValue? defaultValue,
-  int Function(TValue? currentValue, TValue? nextValue)? calculateChangedBits,
+  @Deprecated('This has no effect in React 18, and there is no replacement for it.')
+      int Function(TValue? currentValue, TValue? nextValue)? calculateChangedBits,
 ]) {
   final jsDefaultValue = ContextHelpers.jsifyNewContext(defaultValue);
 

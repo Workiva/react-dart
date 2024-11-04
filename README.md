@@ -1,7 +1,7 @@
 # Dart wrapper for [React JS](https://reactjs.org/)
 
 [![Pub](https://img.shields.io/pub/v/react.svg)](https://pub.dev/packages/react)
-![ReactJS v17.0.1](https://img.shields.io/badge/React_JS-v17.0.1-green.svg)
+![ReactJS v18.0.0](https://img.shields.io/badge/React_JS-v18.0.0-green.svg)
 [![Dart CI](https://github.com/Workiva/react-dart/workflows/Dart%20CI/badge.svg?branch=master)](https://github.com/Workiva/react-dart/actions?query=workflow%3A%22Dart+CI%22+branch%3Amaster)
 [![React Dart API Docs](https://img.shields.io/badge/api_docs-react-blue.svg)](https://pub.dev/documentation/react/latest/)
 
@@ -81,7 +81,8 @@ main() {
   var component = div({}, "Hello world!");
 
   // Render it into the mount node we created in our .html file.
-  react_dom.render(component, querySelector('#react_mount_point'));
+  final root = react_dom.createRoot(querySelector('#react_mount_point'));
+  root.render(component);
 }
 ```
 
@@ -141,7 +142,8 @@ var aButton = button({"onClick": (SyntheticMouseEvent event) => print(event)});
     import 'cool_widget.dart';
 
     main() {
-      react_dom.render(CoolWidget({}), querySelector('#react_mount_point'));
+      final root = react_dom.createRoot(querySelector('#react_mount_point'));
+      root.render(CoolWidget({}));
     }
     ```
 
@@ -173,7 +175,8 @@ import 'package:react/react_dom.dart' as react_dom;
 import 'cool_widget.dart';
 
 main() {
-  react_dom.render(CoolWidget({"text": "Something"}), querySelector('#react_mount_point'));
+  final root = react_dom.createRoot(querySelector('#react_mount_point'));
+  root.render(CoolWidget({"text": "Something"}));
 }
 ```
 
@@ -221,13 +224,13 @@ import 'package:react/react_dom.dart' as react_dom;
 import 'cool_widget.dart';
 
 void main() {
-  react_dom.render(
+  final root = react_dom.createRoot(querySelector('#react_mount_point'));
+  root.render(
     myComponent(
         headline: "My custom headline",
         text: "My custom text",
         counter: 3,
-    ),
-    querySelector('#react_mount_point')
+    )
   );
 }
 ```
@@ -375,7 +378,7 @@ void main() {
     expect(spanNode.text, equals('testing...'));
 
     // Click the button and trigger the onClick event
-    react_test_utils.Simulate.click(buttonNode);
+    react_dom.ReactTestUtils.act(buttonNode.click);
 
     // Span text should change to 'success'
     expect(spanNode.text, equals('success'));
