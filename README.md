@@ -407,8 +407,6 @@ So, we use a line length of 120 instead.
 dart run build_runner test --release -- --preset dart2js
 ```
 
-> NOTE: When using Dart SDK < 2.14.0, use `--preset dart2js-legacy` instead.
-
 #### Dart Dev Compiler ("DDC")
 
 ```bash
