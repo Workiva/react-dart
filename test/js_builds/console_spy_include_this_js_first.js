@@ -6,12 +6,25 @@
 (function() {
   window.consoleWarnCalls = [];
 
-  var originalConsoleWarn = console.warn;
+  const originalConsoleWarn = console.warn;
   console.warn = function spyingConsoleWarn() {
     originalConsoleWarn.apply(console, arguments);
 
     // Convert args to Array object so it interops nicely with Dart.
-    var argsArray = Array.prototype.slice.apply(arguments);
+    const argsArray = [...arguments];
     consoleWarnCalls.push(argsArray);
+  };
+})();
+
+(function() {
+  window.consoleErrorCalls = [];
+
+  const originalConsoleError = console.error;
+  console.error = function spyingConsoleError() {
+    originalConsoleError.apply(console, arguments);
+
+    // Convert args to Array object so it interops nicely with Dart.
+    const argsArray = [...arguments];
+    consoleErrorCalls.push(argsArray);
   };
 })();

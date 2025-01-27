@@ -56,15 +56,22 @@ class DummyComponent2 extends react.Component2 {
 /// The arguments corresponding to each call of `console.warn`,
 /// collected via a spy set up in console_spy_include_this_js_first.js
 @JS()
-external List<List<Object?>> get consoleWarnCalls;
+external List<List<Object?>> consoleWarnCalls;
+
+/// The arguments corresponding to each call of `console.warn`,
+/// collected via a spy set up in console_spy_include_this_js_first.js
 @JS()
-external set consoleWarnCalls(List<Object?> value);
+external List<List<Object?>> consoleErrorCalls;
 
 /// Like window.console.warn, but allows more than one argument.
 @JS('console.warn')
 external void consoleWarn([a, b, c, d]);
 
-void sharedConsoleWarnTests({required bool expectDeduplicateSyntheticEventWarnings}) {
+/// Like window.console.warn, but allows more than one argument.
+@JS('console.error')
+external void consoleError([a, b, c, d]);
+
+void sharedConsoleFilteringTests({required bool expectDeduplicateSyntheticEventWarnings}) {
   group('console.warn wrapper (or lack thereof)', () {
     void clearConsoleWarnCalls() => consoleWarnCalls = [];
 
@@ -141,6 +148,12 @@ void sharedConsoleWarnTests({required bool expectDeduplicateSyntheticEventWarnin
       }
     }, tags: ['no-dart2js', 'no-sdk-2-14-plus']);
 
+    test('filters out warnings for react_dom.render', () {
+      final mountNode = DivElement();
+      react_dom.render(react.span({}, 'test button'), mountNode);
+      expect(consoleWarnCalls, isEmpty);
+    });
+
     test('logs other duplicate messages properly', () {
       consoleWarn('foo');
       consoleWarn('foo');
@@ -148,6 +161,57 @@ void sharedConsoleWarnTests({required bool expectDeduplicateSyntheticEventWarnin
       consoleWarn('foo');
 
       expect(consoleWarnCalls, [
+        ['foo'],
+        ['foo'],
+        ['bar'],
+        ['foo'],
+      ]);
+    });
+  });
+
+  group('console.error wrapper (or lack thereof)', () {
+    void clearConsoleErrorCalls() => consoleErrorCalls = [];
+
+    setUp(clearConsoleErrorCalls);
+
+    test('errors as expected with any number of arguments', () {
+      consoleError('foo');
+      consoleError('foo', 'bar', 'baz');
+      consoleError();
+      expect(consoleErrorCalls, [
+        ['foo'],
+        ['foo', 'bar', 'baz'],
+        [],
+      ]);
+    });
+
+    // Test this explicitly since we inspect the first arg in the filtering logic
+    test('has no issues when the first arg isn\'t a string', () {
+      consoleError(); // "undefined" first arg
+      consoleError(1);
+      consoleError(null);
+      consoleError(jsify({}));
+      expect(consoleErrorCalls, [
+        [],
+        [1],
+        [null],
+        [anything],
+      ]);
+    });
+
+    test('filters out react_dom.render deprecation warnings (emitted via console.error)', () {
+      final mountNode = DivElement();
+      react_dom.render(react.span({}, 'test button'), mountNode);
+      expect(consoleErrorCalls, isEmpty);
+    });
+
+    test('logs other duplicate messages properly', () {
+      consoleError('foo');
+      consoleError('foo');
+      consoleError('bar');
+      consoleError('foo');
+
+      expect(consoleErrorCalls, [
         ['foo'],
         ['foo'],
         ['bar'],
