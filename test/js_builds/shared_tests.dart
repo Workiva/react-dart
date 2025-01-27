@@ -71,7 +71,7 @@ external void consoleWarn([a, b, c, d]);
 @JS('console.error')
 external void consoleError([a, b, c, d]);
 
-void sharedConsoleFilteringTests({required bool expectDeduplicateSyntheticEventWarnings}) {
+void sharedConsoleFilteringTests() {
   group('console.error wrapper (or lack thereof)', () {
     void clearConsoleErrorCalls() => consoleErrorCalls = [];
 
