@@ -9,7 +9,7 @@ main() {
   verifyJsFileLoaded('react_dom.js');
 
   group('React JS files (dev w/ addons build):', () {
-    sharedConsoleWarnTests(expectDeduplicateSyntheticEventWarnings: true);
+    sharedConsoleFilteringTests();
 
     sharedJsFunctionTests();
 

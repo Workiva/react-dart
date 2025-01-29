@@ -56,25 +56,32 @@ class DummyComponent2 extends react.Component2 {
 /// The arguments corresponding to each call of `console.warn`,
 /// collected via a spy set up in console_spy_include_this_js_first.js
 @JS()
-external List<List<Object?>> get consoleWarnCalls;
+external List<List<Object?>> consoleWarnCalls;
+
+/// The arguments corresponding to each call of `console.warn`,
+/// collected via a spy set up in console_spy_include_this_js_first.js
 @JS()
-external set consoleWarnCalls(List<Object?> value);
+external List<List<Object?>> consoleErrorCalls;
 
 /// Like window.console.warn, but allows more than one argument.
 @JS('console.warn')
 external void consoleWarn([a, b, c, d]);
 
-void sharedConsoleWarnTests({required bool expectDeduplicateSyntheticEventWarnings}) {
-  group('console.warn wrapper (or lack thereof)', () {
-    void clearConsoleWarnCalls() => consoleWarnCalls = [];
+/// Like window.console.warn, but allows more than one argument.
+@JS('console.error')
+external void consoleError([a, b, c, d]);
 
-    setUp(clearConsoleWarnCalls);
+void sharedConsoleFilteringTests() {
+  group('console.error wrapper (or lack thereof)', () {
+    void clearConsoleErrorCalls() => consoleErrorCalls = [];
 
-    test('warns as expected with any number of arguments', () {
-      consoleWarn('foo');
-      consoleWarn('foo', 'bar', 'baz');
-      consoleWarn();
-      expect(consoleWarnCalls, [
+    setUp(clearConsoleErrorCalls);
+
+    test('errors as expected with any number of arguments', () {
+      consoleError('foo');
+      consoleError('foo', 'bar', 'baz');
+      consoleError();
+      expect(consoleErrorCalls, [
         ['foo'],
         ['foo', 'bar', 'baz'],
         [],
@@ -83,11 +90,11 @@ void sharedConsoleWarnTests({required bool expectDeduplicateSyntheticEventWarnin
 
     // Test this explicitly since we inspect the first arg in the filtering logic
     test('has no issues when the first arg isn\'t a string', () {
-      consoleWarn(); // "undefined" first arg
-      consoleWarn(1);
-      consoleWarn(null);
-      consoleWarn(jsify({}));
-      expect(consoleWarnCalls, [
+      consoleError(); // "undefined" first arg
+      consoleError(1);
+      consoleError(null);
+      consoleError(jsify({}));
+      expect(consoleErrorCalls, [
         [],
         [1],
         [null],
@@ -95,59 +102,19 @@ void sharedConsoleWarnTests({required bool expectDeduplicateSyntheticEventWarnin
       ]);
     });
 
-    void triggerRealDdcSyntheticEventWarning<T extends react.SyntheticEvent>() {
-      if (T == react.SyntheticEvent) {
-        throw ArgumentError('T must a subclass of SyntheticEvent, not SyntheticEvent itself, for this to reproduce.');
-      }
-
-      // Adapted from reduced test case in https://github.com/dart-lang/sdk/issues/43939
-      // ignore: prefer_function_declarations_over_variables
-      final function = (react.SyntheticEvent event) {} as dynamic;
-      // ignore: unused_local_variable
-      final function2 = function as dynamic Function(T);
-    }
-
-    group('(DDC only)', () {
-      if (expectDeduplicateSyntheticEventWarnings) {
-        test(
-            'only logs DDC issues related to SyntheticEvent typing once,'
-            ' and also logs a helpful message (integration test)', () {
-          triggerRealDdcSyntheticEventWarning<react.SyntheticMouseEvent>();
-          expect(consoleWarnCalls, [
-            ['Cannot find native JavaScript type (SyntheticMouseEvent) for type check'],
-            [
-              'The above warning is expected and is the result of a workaround to https://github.com/dart-lang/sdk/issues/43939'
-            ],
-          ]);
-
-          clearConsoleWarnCalls();
-          triggerRealDdcSyntheticEventWarning<react.SyntheticMouseEvent>();
-          triggerRealDdcSyntheticEventWarning<react.SyntheticKeyboardEvent>();
-          triggerRealDdcSyntheticEventWarning<react.SyntheticKeyboardEvent>();
-          triggerRealDdcSyntheticEventWarning<react.SyntheticMouseEvent>();
-          expect(consoleWarnCalls, []);
-        });
-      } else {
-        test('does not attempt to deduplicate SyntheticEvent typing logs', () {
-          triggerRealDdcSyntheticEventWarning<react.SyntheticMouseEvent>();
-          triggerRealDdcSyntheticEventWarning<react.SyntheticKeyboardEvent>();
-          expect(consoleWarnCalls, [
-            ['Cannot find native JavaScript type (SyntheticMouseEvent) for type check'],
-            ['Cannot find native JavaScript type (SyntheticEvent) for type check'],
-            ['Cannot find native JavaScript type (SyntheticKeyboardEvent) for type check'],
-            ['Cannot find native JavaScript type (SyntheticEvent) for type check'],
-          ]);
-        });
-      }
-    }, tags: ['no-dart2js', 'no-sdk-2-14-plus']);
+    test('filters out react_dom.render deprecation warnings (emitted via console.error)', () {
+      final mountNode = DivElement();
+      react_dom.render(react.span({}, 'test button'), mountNode);
+      expect(consoleErrorCalls, isEmpty);
+    });
 
     test('logs other duplicate messages properly', () {
-      consoleWarn('foo');
-      consoleWarn('foo');
-      consoleWarn('bar');
-      consoleWarn('foo');
+      consoleError('foo');
+      consoleError('foo');
+      consoleError('bar');
+      consoleError('foo');
 
-      expect(consoleWarnCalls, [
+      expect(consoleErrorCalls, [
         ['foo'],
         ['foo'],
         ['bar'],
