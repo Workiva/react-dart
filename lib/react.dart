@@ -22,6 +22,7 @@ export 'package:react/src/context.dart';
 export 'package:react/src/prop_validator.dart';
 export 'package:react/src/react_client/event_helpers.dart';
 export 'package:react/react_client/react_interop.dart' show forwardRef2, createRef, memo2;
+export 'package:react/src/react_client/lazy.dart' show lazy;
 export 'package:react/src/react_client/synthetic_event_wrappers.dart' hide NonNativeDataTransfer;
 export 'package:react/src/react_client/synthetic_data_transfer.dart' show SyntheticDataTransfer;
 
