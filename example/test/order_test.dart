@@ -24,12 +24,12 @@ class _Item extends react.Component {
 
 var item = react.registerComponent(() => _Item());
 
-class _List extends react.Component2 {
+class _List extends react.Component {
   var items = ['item1', 'item2', 'item3'];
 
   remove() {
     items.removeAt(0);
-    setState({});
+    redraw();
   }
 
   @override
@@ -38,9 +38,8 @@ class _List extends react.Component2 {
   }
 }
 
-var list = react.registerComponent2(() => _List());
+var list = react.registerComponent(() => _List());
 
 void main() {
-  final root = react_dom.createRoot(querySelector('#content')!);
-  root.render(list({}));
+  react_dom.render(list({}), querySelector('#content'));
 }

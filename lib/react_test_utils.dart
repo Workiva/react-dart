@@ -1,17 +1,17 @@
 // Copyright (c) 2016, the Clean project authors.  Please see the AUTHORS file
 // for details. All rights reserved. Use of this source code is governed by a
 // BSD-style license that can be found in the LICENSE file.
-// ignore_for_file: deprecated_member_use_from_same_package
-@Deprecated('Use the react_testing_library package instead.')
+
 @JS()
 library react.test_utils;
+
+import 'dart:js_util' show getProperty;
 
 import 'package:js/js.dart';
 import 'package:react/react_client.dart';
 import 'package:react/react_client/js_interop_helpers.dart';
 import 'package:react/react_client/react_interop.dart';
 import 'package:react/src/react_test_utils/simulate_wrappers.dart' as sw;
-import 'package:react/src/react_test_utils/internal_test_utils.dart' as itu;
 
 // Notes
 // ---------------------------------------------------------------------------
@@ -36,10 +36,8 @@ import 'package:react/src/react_test_utils/internal_test_utils.dart' as itu;
 ///
 /// * For DOM components, this with return the String corresponding to its tagName ('div', 'a', etc.).
 /// * For custom composite components React.createClass()-based components, this will return the [ReactClass].
-@Deprecated('Use the react_testing_library package instead.')
-const getComponentTypeV2 = itu.getComponentTypeV2;
+dynamic getComponentTypeV2(ReactComponentFactoryProxy componentFactory) => componentFactory.type;
 
-@Deprecated('Use the react_testing_library package instead.')
 typedef ComponentTestFunction = bool Function(dynamic /* [1] */ component);
 
 dynamic _jsifyEventData(Map? eventData) => jsifyAndAllowInterop(eventData ?? const {});
@@ -53,7 +51,6 @@ dynamic _jsifyEventData(Map? eventData) => jsifyAndAllowInterop(eventData ?? con
 ///
 /// This should include all events documented at:
 /// https://reactjs.org/docs/events.html
-@Deprecated('Use the UserEvent or fireEvent utilities from the react_testing_library package instead.')
 class Simulate {
   static void animationEnd(/* [1] */ node, [Map? eventData]) =>
       sw.Simulate.animationEnd(node, _jsifyEventData(eventData));
@@ -125,66 +122,73 @@ class Simulate {
 ///
 /// Included in Dart for completeness
 @JS('React.addons.TestUtils.findAllInRenderedTree')
-@Deprecated('Use the react_testing_library package instead.')
 external List<dynamic> findAllInRenderedTree(/* [1] */ tree, ComponentTestFunction test);
 
 /// Like scryRenderedDOMComponentsWithClass() but expects there to be one
 /// result, and returns that one result, or throws exception if there is
 /// any other number of matches besides one.
 @JS('React.addons.TestUtils.findRenderedDOMComponentWithClass')
-@Deprecated('Use the react_testing_library package instead.')
 external dynamic /* [1] */ findRenderedDOMComponentWithClass(/* [1] */ tree, String className);
 
 /// Like scryRenderedDOMComponentsWithTag() but expects there to be one result,
 /// and returns that one result, or throws exception if there is any other
 /// number of matches besides one.
 @JS('React.addons.TestUtils.findRenderedDOMComponentWithTag')
-@Deprecated('Use the react_testing_library package instead.')
 external dynamic /* [1] */ findRenderedDOMComponentWithTag(/* [1] */ tree, String tag);
 
 @JS('React.addons.TestUtils.findRenderedComponentWithType')
-@Deprecated('Use the react_testing_library package instead.')
 external dynamic /* [1] */ _findRenderedComponentWithType(/* [1] */ tree, dynamic type);
 
 /// Same as [scryRenderedComponentsWithTypeV2] but expects there to be one result
 /// and returns that one result, or throws exception if there is any other
 /// number of matches besides one.
-@Deprecated('Use the react_testing_library package instead.')
 /* [1] */ findRenderedComponentWithTypeV2(/* [1] */ tree, ReactComponentFactoryProxy componentFactory) {
   return _findRenderedComponentWithType(tree, getComponentTypeV2(componentFactory));
 }
 
+@JS('React.addons.TestUtils.isCompositeComponent')
+external bool _isCompositeComponent(/* [1] */ instance);
+
 /// Returns true if element is a composite component.
 /// (created with React.createClass()).
-@Deprecated('Use the react_testing_library package instead.')
-const isCompositeComponent = itu.isCompositeComponent;
+bool isCompositeComponent(/* [1] */ instance) {
+  return _isCompositeComponent(instance)
+      // Workaround for DOM components being detected as composite: https://github.com/facebook/react/pull/3839
+      &&
+      getProperty(instance as Object, 'tagName') == null;
+}
+
+@JS('React.addons.TestUtils.isCompositeComponentWithType')
+external bool _isCompositeComponentWithType(/* [1] */ instance, dynamic type);
 
 /// Returns `true` if instance is a custom composite component created using `React.createClass()`
 /// that is of the [ReactComponentFactoryProxy.type] of the provided [componentFactory].
-@Deprecated('Use the react_testing_library package instead.')
-const isCompositeComponentWithTypeV2 = itu.isCompositeComponentWithTypeV2;
+bool isCompositeComponentWithTypeV2(/* [1] */ instance, ReactComponentFactoryProxy componentFactory) {
+  return _isCompositeComponentWithType(instance, getComponentTypeV2(componentFactory));
+}
 
 /// Returns true if instance is a DOM component (such as a <div> or <span>).
 @JS('React.addons.TestUtils.isDOMComponent')
-@Deprecated('Use the react_testing_library package instead.')
-const isDOMComponent = itu.isDOMComponent;
+external bool isDOMComponent(/* [1] */ instance);
 
 /// Returns true if [object] is a valid React component.
 @JS('React.addons.TestUtils.isElement')
-@Deprecated('Use the react_testing_library package instead.')
 external bool isElement(dynamic object);
+
+@JS('React.addons.TestUtils.isElementOfType')
+external bool _isElementOfType(dynamic element, dynamic componentClass);
 
 /// Returns `true` if [element] is a [ReactElement]
 /// that is of the [ReactComponentFactoryProxy.type] of the provided [componentFactory].
-@Deprecated('Use the react_testing_library package instead.')
-const isElementOfTypeV2 = itu.isElementOfTypeV2;
+bool isElementOfTypeV2(dynamic element, ReactComponentFactoryProxy componentFactory) {
+  return _isElementOfType(element, getComponentTypeV2(componentFactory));
+}
 
 @JS('React.addons.TestUtils.scryRenderedComponentsWithType')
 external List<dynamic> /* [1] */ _scryRenderedComponentsWithType(/* [1] */ tree, dynamic type);
 
 /// Finds all instances within the provided [tree]
 /// that are of the [ReactComponentFactoryProxy.type] of the provided [componentFactory].
-@Deprecated('Use the react_testing_library package instead.')
 List<dynamic> /* [1] */ scryRenderedComponentsWithTypeV2(/* [1] */ tree, ReactComponentFactoryProxy componentFactory) {
   return _scryRenderedComponentsWithType(tree, getComponentTypeV2(componentFactory));
 }
@@ -193,19 +197,16 @@ List<dynamic> /* [1] */ scryRenderedComponentsWithTypeV2(/* [1] */ tree, ReactCo
 
 /// Finds all instances of components in the rendered tree that are DOM
 /// components with the class name matching className.
-@Deprecated('Use the react_testing_library package instead.')
 external List<dynamic> scryRenderedDOMComponentsWithClass(/* [1] */ tree, String className);
 
 @JS('React.addons.TestUtils.scryRenderedDOMComponentsWithTag')
 
 /// Finds all instances of components in the rendered tree that are DOM
 /// components with the tag name matching tagName.
-@Deprecated('Use the react_testing_library package instead.')
 external List<dynamic> scryRenderedDOMComponentsWithTag(/* [1] */ tree, String tagName);
 
 /// Render a Component into a detached DOM node in the document.
 @JS('React.addons.TestUtils.renderIntoDocument')
-@Deprecated('Use the render() utility from the react_testing_library package instead.')
 external /* [1] */ renderIntoDocument(ReactElement? instance);
 
 /// Pass a mocked component module to this method to augment it with useful
@@ -213,7 +214,6 @@ external /* [1] */ renderIntoDocument(ReactElement? instance);
 /// rendering as usual, the component will become a simple <div> (or other tag
 /// if mockTagName is provided) containing any provided children.
 @JS('React.addons.TestUtils.mockComponent')
-@Deprecated('Use the react_testing_library package instead.')
 external ReactClass mockComponent(ReactClass componentClass, String mockTagName);
 
 /// Returns a ReactShallowRenderer instance
@@ -237,7 +237,6 @@ external ReactShallowRenderer createRenderer();
 /// See react_with_addons.js#ReactShallowRenderer
 @JS()
 @anonymous
-@Deprecated('Use the react_testing_library package instead.')
 class ReactShallowRenderer {
   /// Get the rendered output. [render] must be called first
   external ReactElement getRenderOutput();

@@ -461,67 +461,6 @@ Ref<T> useRefInit<T>(T initialValue) => Ref.fromJs(React.useRef(initialValue));
 T useMemo<T>(T Function() createFunction, [List<dynamic>? dependencies]) =>
     React.useMemo(allowInterop(createFunction), dependencies) as T;
 
-/// A React hook that generates and returns a unique id on both the client-side and server-side.
-///
-/// FIXME: Add unit tests
-String useId() => React.useId();
-
-/// Returns a deferred version of the [value] that may “lag behind” it because of other concurrent updates.
-///
-/// This is commonly used to keep the interface responsive when you have something that renders immediately based
-/// on user input and something that needs to wait for a data fetch. A good example of this is a text input.
-///
-/// See: https://reactjs.org/docs/concurrent-mode-reference.html#usedeferredvalue
-///
-/// FIXME: Add unit tests
-T useDeferredValue<T>(T value) => React.useDeferredValue(value) as T;
-
-/// Similar to the [useTransition] hook but allows uses where hooks are not available.
-///
-/// Accepts a _synchronous_ [callback] function which causes state updates that can be deferred.
-///
-/// FIXME: Add unit tests
-void startTransition(void Function() scope) => React.startTransition(allowInterop(scope));
-
-/// A React hook that allows components to avoid undesirable loading states by waiting for content to load
-/// before transitioning to the next screen. It also allows components to defer slower, data fetching updates
-/// until subsequent renders so that more crucial updates can be rendered immediately.
-///
-/// Returns a [TransitionHook] that contains two values:
-///
-/// * [TransitionHook.isPending] - React’s way of informing us whether we’re waiting for the transition to finish.
-/// * [TransitionHook.startTransition] - A function that takes a callback. We can use it to tell React which state we want to defer.
-///
-/// **If some state update causes a component to suspend, that state update should be wrapped in a transition.**
-///
-/// See: https://reactjs.org/docs/concurrent-mode-reference.html#usetransition
-///
-/// FIXME: Add unit tests
-TransitionHook useTransition() {
-  final result = React.useTransition();
-  final isPending = result[0] as bool;
-  final jsStartTransition = result[1] as Function(Function());
-  return TransitionHook._(
-    isPending: isPending,
-    startTransition: (start) => jsStartTransition(allowInterop(start)),
-  );
-}
-
-/// https://reactjs.org/docs/hooks-reference.html#usetransition
-class TransitionHook {
-  /// Whether we’re waiting for the transition to finish.
-  ///
-  /// See: https://reactjs.org/docs/hooks-reference.html#usetransition
-  final bool isPending;
-
-  /// A callback to use to tell React which state to defer.
-  ///
-  /// See: https://reactjs.org/docs/hooks-reference.html#usetransition
-  final void Function(Function() start) startTransition;
-
-  TransitionHook._({required this.isPending, required this.startTransition});
-}
-
 /// Runs [sideEffect] synchronously after a [DartFunctionComponent] renders, but before the screen is updated.
 ///
 /// Compare to [useEffect] which runs [sideEffect] after the screen updates.

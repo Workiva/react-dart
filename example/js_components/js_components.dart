@@ -6,15 +6,13 @@ import 'dart:html';
 import 'package:js/js.dart';
 import 'package:react/react.dart' as react;
 import 'package:react/react_client.dart';
-import 'package:react/react_client/react_interop.dart' show ReactClass;
+import 'package:react/react_client/react_interop.dart';
 import 'package:react/react_dom.dart' as react_dom;
 
 main() {
   final content = IndexComponent({});
 
-  final root = react_dom.createRoot(querySelector('#content')!);
-
-  root.render(react.StrictMode({}, content));
+  react_dom.render(content, querySelector('#content'));
 }
 
 var IndexComponent = react.registerComponent2(() => _IndexComponent());
@@ -106,7 +104,7 @@ final SimpleCustom = ReactJsComponentFactoryProxy(_SimpleCustomComponent);
 
 /// JS interop wrapper class for the component,
 /// allowing us to interact with component instances
-/// made available via refs or render calls.
+/// made available via refs or [react_dom.render] calls.
 ///
 /// This is optional, as you won't always need to access the component's API.
 @JS('_SimpleCustomComponent')

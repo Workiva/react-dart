@@ -85,6 +85,5 @@ void main() {
   for (num i = 0; i < 1000; i++) {
     data.add(['name_$i', 'value_$i']);
   }
-  final root = react_dom.createRoot(querySelector('#content')!);
-  root.render(Hello({'data': data}, []));
+  react_dom.render(Hello({'data': data}, []), querySelector('#content'));
 }

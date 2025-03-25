@@ -12,7 +12,7 @@ import './simple_component.dart' deferred as simple;
 main() {
   final content = wrapper({});
 
-  react_dom.render(content, querySelector('#content')!);
+  react_dom.render(content, querySelector('#content'));
 }
 
 final lazyComponent = react.lazy(() async {

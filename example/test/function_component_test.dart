@@ -177,7 +177,15 @@ UseContextTestComponent(Map props) {
   ]);
 }
 
-var TestNewContext = react.createContext<Map>({'renderCount': 0});
+int calculateChangedBits(currentValue, nextValue) {
+  var result = 1 << 1;
+  if (nextValue['renderCount'] % 2 == 0) {
+    result |= 1 << 2;
+  }
+  return result;
+}
+
+var TestNewContext = react.createContext<Map>({'renderCount': 0}, calculateChangedBits);
 
 var newContextProviderComponent = react.registerComponent2(() => _NewContextProviderComponent());
 
@@ -520,74 +528,79 @@ final UseDebugValueTestComponent = react.registerFunctionComponent(
     displayName: 'useDebugValueTest');
 
 void main() {
-  final root = react_dom.createRoot(querySelector('#content')!);
-  root.render(react.Fragment({}, [
-    react.h1({'key': 'functionComponentTestLabel'}, ['Function Component Tests']),
-    react.h2({'key': 'useStateTestLabel'}, ['useState & useEffect Hook Test']),
-    hookTestFunctionComponent({
-      'key': 'useStateTest',
-    }, []),
-    react.br({'key': 'br1'}),
-    react.h2({'key': 'useCallbackTestLabel'}, ['useCallback Hook Test']),
-    useCallbackTestFunctionComponent({
-      'key': 'useCallbackTest',
-    }, []),
-    react.br({'key': 'br2'}),
-    react.h2({'key': 'useContextTestLabel'}, ['useContext Hook Test']),
-    newContextProviderComponent({
-      'key': 'provider',
-    }, [
-      useContextTestFunctionComponent({
-        'key': 'useContextTest',
-      }, []),
-    ]),
-    react.br({'key': 'br3'}),
-    react.h2({'key': 'useReducerTestLabel'}, ['useReducer Hook Test']),
-    useReducerTestFunctionComponent({
-      'key': 'useReducerTest',
-      'initialCount': 10,
-    }, []),
-    react.h2({'key': 'useRefTestLabel'}, ['useRef Hook Test']),
-    useRefTestFunctionComponent({
-      'key': 'useRefTest',
-    }, []),
-    react.h2({'key': 'memoTestLabel'}, ['memo Test']),
-    newContextProviderComponent(
-      {
-        'key': 'memoContextProvider',
-      },
-      MemoTestDemoWrapper({}),
-    ),
-    react.h2({'key': 'useMemoTestLabel'}, ['useMemo Hook Test']),
-    react.h6({'key': 'h61'}, ['With useMemo:']),
-    useMemoTestFunctionComponent({
-      'key': 'useMemoTest',
-    }, []),
-    react.br({'key': 'br4'}),
-    react.br({'key': 'br5'}),
-    react.h6({'key': 'h62'}, ['Without useMemo (notice calculation done on every render):']),
-    useMemoTestFunctionComponent2({
-      'key': 'useMemoTest2',
-    }, []),
-    react.h2({'key': 'useLayoutEffectTestLabel'}, ['useLayoutEffect Hook Test']),
-    randomUseLayoutEffectTestComponent({
-      'key': 'useLayoutEffectTest',
-    }, []),
-    react.br({'key': 'br6'}),
-    randomUseEffectTestComponent({
-      'key': 'useLayoutEffectTest2',
-    }, []),
-    react.h2({'key': 'useImperativeHandleTestLabel'}, ['useImperativeHandle Hook Test']),
-    useImperativeHandleTestFunctionComponent({
-      'key': 'useImperativeHandleTest',
-    }, []),
-    useImperativeHandleTestFunctionComponent2({
-      'key': 'useImperativeHandleTest2',
-    }, []),
-    react.br({'key': 'br7'}),
-    react.h2({'key': 'useDebugValueTestLabel'}, ['useDebugValue Hook Test']),
-    UseDebugValueTestComponent({
-      'key': 'useDebugValueTest',
-    }, []),
-  ]));
+  render() {
+    react_dom.render(
+        react.Fragment({}, [
+          react.h1({'key': 'functionComponentTestLabel'}, ['Function Component Tests']),
+          react.h2({'key': 'useStateTestLabel'}, ['useState & useEffect Hook Test']),
+          hookTestFunctionComponent({
+            'key': 'useStateTest',
+          }, []),
+          react.br({'key': 'br1'}),
+          react.h2({'key': 'useCallbackTestLabel'}, ['useCallback Hook Test']),
+          useCallbackTestFunctionComponent({
+            'key': 'useCallbackTest',
+          }, []),
+          react.br({'key': 'br2'}),
+          react.h2({'key': 'useContextTestLabel'}, ['useContext Hook Test']),
+          newContextProviderComponent({
+            'key': 'provider',
+          }, [
+            useContextTestFunctionComponent({
+              'key': 'useContextTest',
+            }, []),
+          ]),
+          react.br({'key': 'br3'}),
+          react.h2({'key': 'useReducerTestLabel'}, ['useReducer Hook Test']),
+          useReducerTestFunctionComponent({
+            'key': 'useReducerTest',
+            'initialCount': 10,
+          }, []),
+          react.h2({'key': 'useRefTestLabel'}, ['useRef Hook Test']),
+          useRefTestFunctionComponent({
+            'key': 'useRefTest',
+          }, []),
+          react.h2({'key': 'memoTestLabel'}, ['memo Test']),
+          newContextProviderComponent(
+            {
+              'key': 'memoContextProvider',
+            },
+            MemoTestDemoWrapper({}),
+          ),
+          react.h2({'key': 'useMemoTestLabel'}, ['useMemo Hook Test']),
+          react.h6({'key': 'h61'}, ['With useMemo:']),
+          useMemoTestFunctionComponent({
+            'key': 'useMemoTest',
+          }, []),
+          react.br({'key': 'br4'}),
+          react.br({'key': 'br5'}),
+          react.h6({'key': 'h62'}, ['Without useMemo (notice calculation done on every render):']),
+          useMemoTestFunctionComponent2({
+            'key': 'useMemoTest2',
+          }, []),
+          react.h2({'key': 'useLayoutEffectTestLabel'}, ['useLayoutEffect Hook Test']),
+          randomUseLayoutEffectTestComponent({
+            'key': 'useLayoutEffectTest',
+          }, []),
+          react.br({'key': 'br6'}),
+          randomUseEffectTestComponent({
+            'key': 'useLayoutEffectTest2',
+          }, []),
+          react.h2({'key': 'useImperativeHandleTestLabel'}, ['useImperativeHandle Hook Test']),
+          useImperativeHandleTestFunctionComponent({
+            'key': 'useImperativeHandleTest',
+          }, []),
+          useImperativeHandleTestFunctionComponent2({
+            'key': 'useImperativeHandleTest2',
+          }, []),
+          react.br({'key': 'br7'}),
+          react.h2({'key': 'useDebugValueTestLabel'}, ['useDebugValue Hook Test']),
+          UseDebugValueTestComponent({
+            'key': 'useDebugValueTest',
+          }, []),
+        ]),
+        querySelector('#content'));
+  }
+
+  render();
 }
