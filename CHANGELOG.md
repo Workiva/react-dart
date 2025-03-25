@@ -255,14 +255,13 @@ __New Features__
     import 'some_widget.dart'; // Where your component is defined
 
     main() {
-      final root = react_dom.createRoot(querySelector('#idOfSomeNodeInTheDom'));
       final renderedWidget = SomeWidget({
         // put some props here
       }, [
         // put some children here!
       ]);
 
-      root.render(renderedWidget);
+      react_dom.render(renderedWidget, querySelector('#idOfSomeNodeInTheDom'));
     }
     ```
 

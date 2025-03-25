@@ -1,6 +1,5 @@
-const ShallowRenderer = require('react-test-renderer/shallow');
-const TestUtils = require('react-dom/test-utils');
-
+import ShallowRenderer from 'react-test-renderer/shallow';
+import TestUtils from 'react-dom/test-utils';
 
 if (!window.React.addons) {
     window.React.addons = {};

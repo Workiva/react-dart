@@ -1,26 +1,26 @@
 {
   "name": "react-dart",
   "scripts": {
-    "build": "NODE_OPTIONS=--openssl-legacy-provider pnpm webpack"
+    "build": "pnpm build:dev && pnpm build:prod",
+    "build:dev": "NODE_ENV=development pnpm vite build",
+    "build:prod": "NODE_ENV=production pnpm vite build"
   },
   "dependencies": {
-    "@babel/cli": "^7.8.4",
-    "@babel/core": "^7.9.0",
-    "@babel/preset-env": "^7.9.0",
-    "babel-loader": "^8.1.0",
-    "core-js": "^3.6.4",
+    "vite": "^6.2.3",
+    "@vitejs/plugin-react": "^4.3.4",
     "create-react-class": "^15.7.0",
-    "glob-parent": "<5.1.2",
     "prop-types": "^15.7.2",
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
-    "react-dom-factories": "^1.0.2",
     "react-redux": "7.2.2",
     "react-test-renderer": "^18.0.0",
-    "redux": "^4.1.2",
-    "regenerator-runtime": "^0.13.5",
-    "serialize-javascript": "^3.1.0",
-    "webpack": "^4.42.1",
-    "webpack-cli": "^4.9.1"
+    "redux": "^4.1.2"
+  },
+  "pnpm": {
+    "onlyBuiltDependencies": [
+      "core-js",
+      "esbuild",
+      "fsevents"
+    ]
   }
 }
