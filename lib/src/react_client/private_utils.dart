@@ -56,11 +56,9 @@ void validateJsApi() {
     // This indirectly calls createReactDartComponentClass2
     registerComponent2(() => _DummyComponent2());
     _isJsApiValid = true;
-  } on NoSuchMethodError catch (e) {
-    throw e;
+  } on NoSuchMethodError catch (_) {
     throw Exception('react.js and react_dom.js must be loaded.');
-  } catch (e) {
-    throw e;
+  } catch (_) {
     throw Exception('Loaded react.js must include react-dart JS interop helpers.');
   }
 }
