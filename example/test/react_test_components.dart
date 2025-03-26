@@ -327,8 +327,8 @@ class _NewContextProviderComponent extends react.Component2 {
 
     final newContextRefComponentProps = {
       'key': 'ref2',
-      'ref': (ref) {
-        componentRef = ref as _NewContextRefComponent;
+      'ref': (_NewContextRefComponent? ref) {
+        componentRef = ref;
       }
     };
 
@@ -442,9 +442,9 @@ class _Component2TestComponent extends react.Component2 with react.TypedSnapshot
   @override
   getSnapshotBeforeUpdate(nextProps, prevState) {
     if ((prevState['items'] as List).length > (state['items'] as List).length) {
-      return 'removed ' + (prevState['items'].last as List).toString();
+      return 'removed ' + prevState['items'].last.toString();
     } else {
-      return 'added ' + (state['items'].last as List).toString();
+      return 'added ' + state['items'].last.toString();
     }
   }
 
