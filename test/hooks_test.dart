@@ -2,7 +2,6 @@
 @JS()
 library hooks_test;
 
-import 'dart:developer';
 import 'dart:html';
 
 import 'package:js/js.dart';
@@ -71,7 +70,6 @@ main() {
       });
 
       test('initializes state correctly', () {
-        debugger();
         expect(countRef!.text, '0');
       });
 

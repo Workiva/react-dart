@@ -3,7 +3,6 @@
 @TestOn('browser')
 library react.event_helpers_test;
 
-import 'dart:developer';
 import 'dart:html';
 import 'dart:js_util';
 
@@ -2039,7 +2038,6 @@ main() {
 
         group('detects an anonymous JS object correctly', () {
           test('when all fields are filled out', () {
-            debugger();
             final files = [File([], 'name1'), File([], 'name2'), File([], 'name3')];
 
             final eventData = {
