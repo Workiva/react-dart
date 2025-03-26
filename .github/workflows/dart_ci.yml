@@ -32,6 +32,7 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
+        react: [17, 18]
         sdk: [2.19.6, stable]
     steps:
       - uses: actions/checkout@v2
@@ -49,6 +50,11 @@ jobs:
           if [[ "$DART_VERSION" =~ ^3 ]]; then
             ./tool/delete_dart_2_only_files.sh
           fi
+      - name: Switch to React 17 Test HTML
+        if: ${{ matrix.react == 17 }}
+        run: |
+          mv test/templates/html_template.html test/templates/html_template-old.html
+          mv test/templates/html_template-react17.html test/templates/html_template.html
 
       - id: install
         name: Install dependencies

@@ -4,26 +4,8 @@ targets:
       test_html_builder:
         options:
           templates:
-            "test/js_builds/templates/js_dev.html":
-              - "test/js_builds/js_dev_test.dart"
-            "test/js_builds/templates/js_dev_with_addons.html":
-              - "test/js_builds/js_dev_with_addons_test.dart"
-            "test/js_builds/templates/js_prod_combined.html":
-              - "test/js_builds/js_prod_combined_test.dart"
-            "test/js_builds/templates/js_prod.html":
-              - "test/js_builds/js_prod_test.dart"
-            "test/factory/_factory_test_template.html":
-              - "test/factory/**_test.dart"
-            "test/lifecycle/_react_lifecycle_test_template.html":
-              - "test/lifecycle/**_test.dart"
-            "test/react_client/_react_client_test_template.html":
-              - "test/react_client/**_test.dart"
-            "test/_react_test_template.html":
-              - "test/*_test.dart"
-      mockito:mockBuilder:
-        # Scope only to files declaring mocks, for performance.
-        generate_for:
-          - test/mockito.dart
+            "test/templates/html_template.html":
+              - "test/**_test.dart"
       build_web_compilers|entrypoint:
         # These are globs for the entrypoints you want to compile.
         generate_for:

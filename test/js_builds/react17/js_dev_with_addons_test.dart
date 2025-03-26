@@ -2,13 +2,13 @@
 import 'package:react/react_client.dart';
 import 'package:test/test.dart';
 
-import 'shared_tests.dart';
+import '../shared_tests.dart';
 
 main() {
-  verifyJsFileLoaded('react_prod.js');
-  verifyJsFileLoaded('react_dom_prod.js');
+  verifyJsFileLoaded('react_with_addons.js');
+  verifyJsFileLoaded('react_dom.js');
 
-  group('React JS files (prod build):', () {
+  group('React JS 17 files (dev w/ addons build):', () {
     sharedConsoleFilteringTests();
 
     sharedJsFunctionTests();
@@ -16,7 +16,7 @@ main() {
     sharedErrorBoundaryComponentNameTests();
 
     test('inReactDevMode', () {
-      expect(inReactDevMode, isFalse);
+      expect(inReactDevMode, isTrue);
     });
   });
 }

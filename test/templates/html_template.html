@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<!-- html_template.html.tpl -->
+<html>
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <meta charset="utf-8" />
+    <title>{{testName}} Test</title>
+    <!-- javascript -->
+    <script src="packages/react/js/react.dev.js"></script>
+    <script src="ReactSetStateTestComponent.js"></script>
+    <script src="ReactSetStateTestComponent2.js"></script>
+    <script src="ReactCompositeTestComponent.js"></script>
+    <script>
+      function JsType() {}
+    </script>
+    <script>
+      // Adapted from https://github.com/dart-lang/sdk/blob/e995cb5f7cd67d39c1ee4bdbe95c8241db36725f/tests/lib/js/js_util/jsify_test.dart
+      function Foo(a) {
+        this.a = a;
+      }
+      Foo.prototype.bar = function () {
+        return this.a;
+      };
+
+      function checkMap(m, key, value) {
+        if (m.hasOwnProperty(key)) return m[key] == value;
+        else return false;
+      }
+
+      function createArray() {
+        return [1, 2, 3];
+      }
+
+      _JsFoo = class JsFooComponent extends React.Component {
+        render() {
+          return React.createElement('div', this.props, this.props.children);
+        }
+      };
+
+      _JsFooFunction = React.forwardRef((props, ref) => React.createElement('div', { ...props, ref: ref }));
+
+      hasUndefinedChildren = (reactElement) => reactElement.props.children === undefined;
+    </script>
+
+    {{testScript}}
+    <script defer src="packages/test/dart.js"></script>
+  </head>
+  <body></body>
+</html>

@@ -2,13 +2,12 @@
 import 'package:react/react_client.dart';
 import 'package:test/test.dart';
 
-import 'shared_tests.dart';
+import '../shared_tests.dart';
 
 main() {
-  verifyJsFileLoaded('react.js');
-  verifyJsFileLoaded('react_dom.js');
+  verifyJsFileLoaded('react.dev.js');
 
-  group('React JS files (dev build):', () {
+  group('React 18 JS files (dev build):', () {
     sharedConsoleFilteringTests();
 
     sharedJsFunctionTests();
