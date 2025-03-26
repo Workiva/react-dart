@@ -1,10 +1,3 @@
-if (typeof window.MemoryInfo == "undefined") {
-  if (typeof window.performance.memory != "undefined") {
-    window.MemoryInfo = function () {};
-    window.MemoryInfo.prototype = window.performance.memory.__proto__;
-  }
-}
-
 // Intercept console.error calls and silence warnings for each react_dom.render call,
 // until at the very least createRoot is made available in react-dart and RTL.
 const oldConsoleError = console.error;

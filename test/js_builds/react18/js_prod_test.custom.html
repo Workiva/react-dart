@@ -1,26 +1,14 @@
 <!DOCTYPE html>
 <html>
-<head lang="en">
-    <meta charset="UTF-8">
+  <head lang="en">
+    <meta charset="UTF-8" />
     <title></title>
 
     <script src="console_spy_include_this_js_first.js"></script>
     <script src="packages/react/js/react.min.js"></script>
 
-    <script>
-      // This DDC workaround usually gets pulled in via the React dev bundles,
-      // but in this case we're running the prod bundles in DDC
-      if (typeof window.MemoryInfo == "undefined") {
-        if (typeof window.performance.memory != "undefined") {
-          window.MemoryInfo = function () {};
-          window.MemoryInfo.prototype = window.performance.memory.__proto__;
-        }
-      }
-    </script>
-
-<link rel="x-dart-test" href="js_prod_test.dart">
+    <link rel="x-dart-test" href="js_prod_test.dart" />
     <script src="packages/test/dart.js"></script>
-</head>
-<body>
-</body>
+  </head>
+  <body></body>
 </html>
