@@ -1,7 +1,7 @@
 # Dart wrapper for [React JS](https://reactjs.org/)
 
 [![Pub](https://img.shields.io/pub/v/react.svg)](https://pub.dev/packages/react)
-![ReactJS v18.0.0](https://img.shields.io/badge/React_JS-v18.0.0-green.svg)
+![ReactJS v18.2.0](https://img.shields.io/badge/React_JS-18.2.0-green.svg)
 [![Dart CI](https://github.com/Workiva/react-dart/workflows/Dart%20CI/badge.svg?branch=master)](https://github.com/Workiva/react-dart/actions?query=workflow%3A%22Dart+CI%22+branch%3Amaster)
 [![React Dart API Docs](https://img.shields.io/badge/api_docs-react-blue.svg)](https://pub.dev/documentation/react/latest/)
 
@@ -40,12 +40,11 @@ If you are not familiar with the ReactJS library, read this [react tutorial](htt
 
 #### HTML
 
-In a `.html` file, include the native javascript `react` and `react_dom` libraries
+In a `.html` file, include the javascript `react` and `react_dom` libraries
 _(provided with this library for compatibility reasons)_ within your `.html` file,
 and also add an element with an `id` to mount your React component.
 
-Lastly, add the `.js` file that Dart will generate. The file will be the name of the `.dart` file that
-contains your `main` entrypoint, with `.js` at the end.
+Lastly, add the `.js` file that Dart will generate. The file will be the name of the `.dart` file that contains your `main` entrypoint, with `.js` at the end.
 
 ```html
 <html>
@@ -55,15 +54,14 @@ contains your `main` entrypoint, with `.js` at the end.
   <body>
     <div id="react_mount_point">Here will be react content</div>
 
-    <script src="packages/react/react.js"></script>
-    <script src="packages/react/react_dom.js"></script>
+    <script src="packages/react/js/react.dev.js"></script>
     <script defer src="your_dart_file_name.dart.js"></script>
   </body>
 </html>
 ```
 
-> __Note:__ When serving your application in production, use `packages/react/react_with_react_dom_prod.js`
-  file instead of the un-minified `react.js` / `react_dom.js` files shown in the example above.
+> __Note:__ When serving your application in production, use `packages/react/js/react.min.js`
+  file instead of the un-minified `react.dev.js` shown in the example above.
 
 #### Dart App
 
@@ -81,8 +79,7 @@ main() {
   var component = div({}, "Hello world!");
 
   // Render it into the mount node we created in our .html file.
-  final root = react_dom.createRoot(querySelector('#react_mount_point'));
-  root.render(component);
+  react_dom.render(component, querySelector('#react_mount_point'));
 }
 ```
 
@@ -142,8 +139,7 @@ var aButton = button({"onClick": (SyntheticMouseEvent event) => print(event)});
     import 'cool_widget.dart';
 
     main() {
-      final root = react_dom.createRoot(querySelector('#react_mount_point'));
-      root.render(CoolWidget({}));
+      react_dom.render(CoolWidget({}), querySelector('#react_mount_point'));
     }
     ```
 
@@ -175,8 +171,7 @@ import 'package:react/react_dom.dart' as react_dom;
 import 'cool_widget.dart';
 
 main() {
-  final root = react_dom.createRoot(querySelector('#react_mount_point'));
-  root.render(CoolWidget({"text": "Something"}));
+  react_dom.render(CoolWidget({"text": "Something"}), querySelector('#react_mount_point'));
 }
 ```
 
@@ -224,13 +219,13 @@ import 'package:react/react_dom.dart' as react_dom;
 import 'cool_widget.dart';
 
 void main() {
-  final root = react_dom.createRoot(querySelector('#react_mount_point'));
-  root.render(
+  react_dom.render(
     myComponent(
         headline: "My custom headline",
         text: "My custom text",
         counter: 3,
-    )
+    ),
+    querySelector('#react_mount_point')
   );
 }
 ```
@@ -378,7 +373,7 @@ void main() {
     expect(spanNode.text, equals('testing...'));
 
     // Click the button and trigger the onClick event
-    react_dom.ReactTestUtils.act(buttonNode.click);
+    react_test_utils.Simulate.click(buttonNode);
 
     // Span text should change to 'success'
     expect(spanNode.text, equals('success'));
@@ -389,15 +384,15 @@ void main() {
 
 ## Contributing
 
-Format using 
+Format using
 ```bash
 dart format -l 120 .
 ```
 
-While we'd like to adhere to the recommended line length of 80, it's too short for much of the code 
+While we'd like to adhere to the recommended line length of 80, it's too short for much of the code
 repo written before a formatter was use, causing excessive wrapping and code that's hard to read.
 
-So, we use a line length of 120 instead. 
+So, we use a line length of 120 instead.
 
 ### Running Tests
 
@@ -406,6 +401,8 @@ So, we use a line length of 120 instead.
 ```bash
 dart run build_runner test --release -- --preset dart2js
 ```
+
+> NOTE: When using Dart SDK < 2.14.0, use `--preset dart2js-legacy` instead.
 
 #### Dart Dev Compiler ("DDC")
 
