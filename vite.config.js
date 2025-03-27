@@ -15,7 +15,7 @@ export default defineConfig({
       entry: {
         react: resolve(__dirname, 'js_src/index.mjs')
       },
-      name: "initReact",
+      name: "ReactBundle", // This doesn't do anything but is required.
       fileName: (format, entryName) => `${entryName}.${process.env.NODE_ENV == 'production' ? 'min' : 'dev'}.js`,
       formats: ['iife'],
     },
@@ -29,13 +29,12 @@ export default defineConfig({
         //
         // This line fakes any `require('redux')` calls, so that webpack will not include all of the `redux` code.
         'redux',
-        'window'
       ],
       output: {
         // Provide global variables to use in the UMD build
         // for externalized deps
         globals: {
-          // see rollupOptions `external` comment for `redux`.
+          // see comment in `rollupOptions.external` above for `redux`.
           redux: 'window.Object',
         },
       },
