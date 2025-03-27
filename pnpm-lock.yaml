@@ -18,17 +18,17 @@ importers:
         specifier: ^15.7.2
         version: 15.7.2
       react:
-        specifier: ^18.3.1
-        version: 18.3.1
+        specifier: ^18.2.0
+        version: 18.2.0
       react-dom:
-        specifier: ^18.3.1
-        version: 18.3.1(react@18.3.1)
+        specifier: ^18.2.0
+        version: 18.2.0(react@18.2.0)
       react-redux:
         specifier: 7.2.2
-        version: 7.2.2(react-dom@18.3.1(react@18.3.1))(react@18.3.1)(redux@4.1.2)
+        version: 7.2.2(react-dom@18.2.0(react@18.2.0))(react@18.2.0)(redux@4.1.2)
       react-test-renderer:
         specifier: ^18.0.0
-        version: 18.0.0(react@18.3.1)
+        version: 18.0.0(react@18.2.0)
       redux:
         specifier: ^4.1.2
         version: 4.1.2
@@ -510,10 +510,10 @@ packages:
   prop-types@15.7.2:
     resolution: {integrity: sha512-8QQikdH7//R2vurIJSutZ1smHYTcLpRWEOlHnzcWHmBYrOGUysKwSsrC89BCiFj3CbrfJ/nXFdJepOVrY1GCHQ==}
 
-  react-dom@18.3.1:
-    resolution: {integrity: sha512-5m4nQKp+rZRb09LNH59GM4BxTh9251/ylbKIbpe7TpGxfJ+9kv6BLkLBXIjjspbgbnIBNqlI23tRnTWT0snUIw==}
+  react-dom@18.2.0:
+    resolution: {integrity: sha512-6IMTriUmvsjHUjNtEDudZfuDQUoWXVxKHhlEGSk81n4YFS+r/Kl99wXiwlVXtPBtJenozv2P+hxDsw9eA7Xo6g==}
     peerDependencies:
-      react: ^18.3.1
+      react: ^18.2.0
 
   react-is@16.13.1:
     resolution: {integrity: sha512-24e6ynE2H+OKt4kqsOvNd8kBpV65zoxbA4BVsEOB3ARVWQki/DHzaUoC5KuON/BiccDaCCTZBuOcfZs70kR8bQ==}
@@ -551,8 +551,8 @@ packages:
     peerDependencies:
       react: ^18.0.0
 
-  react@18.3.1:
-    resolution: {integrity: sha512-wS+hAgJShR0KhEvPJArfuPVN1+Hz1t0Y6n5jLrGQbkb4urgPE/0Rve+1kMB1v/oWgHgm4WIcV+i7F2pTVj+2iQ==}
+  react@18.2.0:
+    resolution: {integrity: sha512-/3IjMdb2L9QbBdWiW5e3P2/npwMBaU9mHCSCUzNln0ZCYbcfTsGbTJrU/kGemdH2IWmB2ioZ+zkxtmq6g09fGQ==}
     engines: {node: '>=0.10.0'}
 
   redux@4.1.2:
@@ -1035,10 +1035,10 @@ snapshots:
       object-assign: 4.1.1
       react-is: 16.13.1
 
-  react-dom@18.3.1(react@18.3.1):
+  react-dom@18.2.0(react@18.2.0):
     dependencies:
       loose-envify: 1.4.0
-      react: 18.3.1
+      react: 18.2.0
       scheduler: 0.23.2
 
   react-is@16.13.1: {}
@@ -1047,34 +1047,34 @@ snapshots:
 
   react-is@18.0.0: {}
 
-  react-redux@7.2.2(react-dom@18.3.1(react@18.3.1))(react@18.3.1)(redux@4.1.2):
+  react-redux@7.2.2(react-dom@18.2.0(react@18.2.0))(react@18.2.0)(redux@4.1.2):
     dependencies:
       '@babel/runtime': 7.22.10
       hoist-non-react-statics: 3.3.2
       loose-envify: 1.4.0
       prop-types: 15.7.2
-      react: 18.3.1
+      react: 18.2.0
       react-is: 16.13.1
       redux: 4.1.2
     optionalDependencies:
-      react-dom: 18.3.1(react@18.3.1)
+      react-dom: 18.2.0(react@18.2.0)
 
   react-refresh@0.14.2: {}
 
-  react-shallow-renderer@16.14.1(react@18.3.1):
+  react-shallow-renderer@16.14.1(react@18.2.0):
     dependencies:
       object-assign: 4.1.1
-      react: 18.3.1
+      react: 18.2.0
       react-is: 17.0.2
 
-  react-test-renderer@18.0.0(react@18.3.1):
+  react-test-renderer@18.0.0(react@18.2.0):
     dependencies:
-      react: 18.3.1
+      react: 18.2.0
       react-is: 18.0.0
-      react-shallow-renderer: 16.14.1(react@18.3.1)
+      react-shallow-renderer: 16.14.1(react@18.2.0)
       scheduler: 0.21.0
 
-  react@18.3.1:
+  react@18.2.0:
     dependencies:
       loose-envify: 1.4.0
 
