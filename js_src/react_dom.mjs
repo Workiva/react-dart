@@ -1,8 +1,13 @@
 import ReactDOM from 'react-dom';
+import {createRoot} from 'react-dom/client';
 import * as ReactRedux from 'react-redux';
 
 Object.assign(globalThis, {
-  ReactDOM,
+  ReactDOM: {
+    ...ReactDOM,
+    // Import createRoot from react-dom/client to avoid the warning about ReactDOM.createRoot.
+    createRoot,
+  },
   ReactRedux,
 });
 
