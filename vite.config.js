@@ -20,7 +20,6 @@ export default defineConfig({
       formats: ['iife'],
     },
     minify: process.env.NODE_ENV == 'production',
-    commonjsOptions: { transformMixedEsModules: true },
     rollupOptions: {
       // make sure to externalize deps that shouldn't be bundled into your library
       external: [
