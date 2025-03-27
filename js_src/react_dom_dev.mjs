@@ -1,11 +1,12 @@
 import ShallowRenderer from 'react-test-renderer/shallow';
 import TestUtils from 'react-dom/test-utils';
+import React from 'react';
 
-if (!window.React.addons) {
-    window.React.addons = {};
+if (!React.addons) {
+    React.addons = {};
 }
-window.React.addons.TestUtils = TestUtils;
-if (!window.React.addons.TestUtils.createRenderer) {
-    window.React.addons.TestUtils.createRenderer = ShallowRenderer.createRenderer;
+React.addons.TestUtils = TestUtils;
+if (!React.addons.TestUtils.createRenderer) {
+    React.addons.TestUtils.createRenderer = ShallowRenderer.createRenderer;
 }
 

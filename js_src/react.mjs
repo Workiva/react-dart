@@ -4,8 +4,8 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import createClass from 'create-react-class';
 
-Object.assign(window, {React, ...DartHelpers});
-Object.assign(window.React, {
+Object.assign(globalThis, {React, ...DartHelpers});
+Object.assign(React, {
   createClass, // TODO: Remove this once over_react_test doesnt rely on createClass.
   PropTypes: {...PropTypes}, // Only needed to support legacy context until we update. lol jk we need it for prop validation now.
   __isDevelopment: process.env.NODE_ENV == 'development',

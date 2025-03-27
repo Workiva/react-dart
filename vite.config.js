@@ -13,7 +13,7 @@ export default defineConfig({
     sourcemap: process.env.NODE_ENV == 'production',
     lib: {
       entry: {
-        react: resolve(__dirname, 'js_src/react_with_react_dom.mjs')
+        react: resolve(__dirname, 'js_src/index.mjs')
       },
       name: "initReact",
       fileName: (format, entryName) => `${entryName}.${process.env.NODE_ENV == 'production' ? 'min' : 'dev'}.js`,
