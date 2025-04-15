@@ -74,12 +74,12 @@ jobs:
 
       - name: Run tests (DDC)
         run: |
-          dart run build_runner test --delete-conflicting-outputs --exclude-tags=react-${{ matrix.react == 18 && '17' || '18' }} -- --preset dartdevc
+          dart run build_runner test --delete-conflicting-outputs -- --preset dartdevc --preset=react${{ matrix.react }}
         if: always() && steps.install.outcome == 'success'
         timeout-minutes: 8
 
       - name: Run tests (dart2js)
         run: |
-          dart run build_runner test --delete-conflicting-outputs --release --exclude-tags=react-${{ matrix.react == 18 && '17' || '18' }} -- --preset dart2js
+          dart run build_runner test --delete-conflicting-outputs --release -- --preset dart2js --preset=react${{ matrix.react }}
         if: always() && steps.install.outcome == 'success'
         timeout-minutes: 8
