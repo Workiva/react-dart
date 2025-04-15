@@ -1,3 +1,4 @@
+@TestOn('browser')
 @JS()
 library react_version_test;
 
