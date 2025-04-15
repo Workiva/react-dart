@@ -40,11 +40,29 @@ If you are not familiar with the ReactJS library, read this [react tutorial](htt
 
 #### HTML
 
-In a `.html` file, include the javascript `react` and `react_dom` libraries
+In a `.html` file, include the javascript libraries
 _(provided with this library for compatibility reasons)_ within your `.html` file,
 and also add an element with an `id` to mount your React component.
 
+This library is in the process of migrating to React 18, but while this is happening it will continue to support both React 17 and React 18. The React 17 js files are deprecated but available to ease migration and will be removed at some point in a future major version.
+
+##### React 18
+| Mode        | Library          | JS File Name                                |
+|-------------|------------------|---------------------------------------------|
+| Development | React & ReactDOM | packages/react/js/react.dev.js              |
+| Production  | React & ReactDOM | packages/react/js/react.min.js              |
+
+##### React 17 (Deprecated)
+| Mode        | Library          | JS File Name                                |
+|-------------|------------------|---------------------------------------------|
+| Development | React            | packages/react/react.js                     |
+| Development | ReactDOM         | packages/react/react_dom.js                 |
+| Production  | React & ReactDOM | packages/react/react_with_react_dom_prod.js |
+| Production  | React            | packages/react/react_prod.js                |
+| Production  | ReactDOM         | packages/react/react_dom_prod.js            |
+
 Lastly, add the `.js` file that Dart will generate. The file will be the name of the `.dart` file that contains your `main` entrypoint, with `.js` at the end.
+
 
 ```html
 <html>
