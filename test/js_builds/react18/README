@@ -1,0 +1,6 @@
+# js_builds tests
+
+The same Dart tests in `shared_tests.dart` are run using the different HTML files in this directory.
+
+These HTML files import different combinations of the different consumable React JS files exposed by this package,
+testing that they all include the JS functions needed by Dart code, as well as testing build-specific JS functionality.

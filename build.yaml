@@ -1,10 +1,11 @@
 targets:
   $default:
     builders:
-      mockito:mockBuilder:
-        # Scope only to files declaring mocks, for performance.
-        generate_for:
-          - test/mockito.dart
+      test_html_builder:
+        options:
+          templates:
+            "test/templates/html_template.html":
+              - "test/**_test.dart"
       build_web_compilers|entrypoint:
         # These are globs for the entrypoints you want to compile.
         generate_for:

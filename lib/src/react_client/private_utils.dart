@@ -57,7 +57,7 @@ void validateJsApi() {
     registerComponent2(() => _DummyComponent2());
     _isJsApiValid = true;
   } on NoSuchMethodError catch (_) {
-    throw Exception('react.js and react_dom.js must be loaded.');
+    throw Exception('`packages/react/js/react.dev.js` or `packages/react/js/react.min.js` must be loaded.');
   } catch (_) {
     throw Exception('Loaded react.js must include react-dart JS interop helpers.');
   }

@@ -8,20 +8,21 @@ platforms:
 concurrency: 1
 
 presets:
-  dart2js-legacy:
+  dart2js:
     exclude_tags: no-dart2js
 
-  dartdevc-legacy:
+  dartdevc:
     exclude_tags: no-dartdevc
 
-  dart2js:
-    exclude_tags: "no-dart2js || no-sdk-2-14-plus"
+  react18:
+    exclude_tags: react-17
 
-  dartdevc:
-    exclude_tags: "no-dartdevc || no-sdk-2-14-plus"
+  react17:
+    exclude_tags: react-18
 
 tags:
   # Variadic children tests of >5 children that fail in Dart 2.7 for an unknown reason, seemingly an SDK bug.
   # These tests pass in later Dart SDKs, so we ignore them when running in 2.7.
   "dart-2-7-dart2js-variadic-issues":
-
+  "react-17":
+  "react-18":

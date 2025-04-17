@@ -1,7 +1,7 @@
 # Dart wrapper for [React JS](https://reactjs.org/)
 
 [![Pub](https://img.shields.io/pub/v/react.svg)](https://pub.dev/packages/react)
-![ReactJS v17.0.1](https://img.shields.io/badge/React_JS-v17.0.1-green.svg)
+![ReactJS v18.2.0](https://img.shields.io/badge/React_JS-18.2.0-green.svg)
 [![Dart CI](https://github.com/Workiva/react-dart/workflows/Dart%20CI/badge.svg?branch=master)](https://github.com/Workiva/react-dart/actions?query=workflow%3A%22Dart+CI%22+branch%3Amaster)
 [![React Dart API Docs](https://img.shields.io/badge/api_docs-react-blue.svg)](https://pub.dev/documentation/react/latest/)
 
@@ -40,12 +40,29 @@ If you are not familiar with the ReactJS library, read this [react tutorial](htt
 
 #### HTML
 
-In a `.html` file, include the native javascript `react` and `react_dom` libraries
+In a `.html` file, include the javascript libraries
 _(provided with this library for compatibility reasons)_ within your `.html` file,
 and also add an element with an `id` to mount your React component.
 
-Lastly, add the `.js` file that Dart will generate. The file will be the name of the `.dart` file that
-contains your `main` entrypoint, with `.js` at the end.
+This library is in the process of migrating to React 18, but while this is happening it will continue to support both React 17 and React 18. The React 17 js files are deprecated but available to ease migration and will be removed at some point in a future major version.
+
+##### React 18
+| Mode        | Library          | JS File Name                                |
+|-------------|------------------|---------------------------------------------|
+| Development | React & ReactDOM | packages/react/js/react.dev.js              |
+| Production  | React & ReactDOM | packages/react/js/react.min.js              |
+
+##### React 17 (Deprecated)
+| Mode        | Library          | JS File Name                                |
+|-------------|------------------|---------------------------------------------|
+| Development | React            | packages/react/react.js                     |
+| Development | ReactDOM         | packages/react/react_dom.js                 |
+| Production  | React & ReactDOM | packages/react/react_with_react_dom_prod.js |
+| Production  | React            | packages/react/react_prod.js                |
+| Production  | ReactDOM         | packages/react/react_dom_prod.js            |
+
+Lastly, add the `.js` file that Dart will generate. The file will be the name of the `.dart` file that contains your `main` entrypoint, with `.js` at the end.
+
 
 ```html
 <html>
@@ -55,15 +72,14 @@ contains your `main` entrypoint, with `.js` at the end.
   <body>
     <div id="react_mount_point">Here will be react content</div>
 
-    <script src="packages/react/react.js"></script>
-    <script src="packages/react/react_dom.js"></script>
+    <script src="packages/react/js/react.dev.js"></script>
     <script defer src="your_dart_file_name.dart.js"></script>
   </body>
 </html>
 ```
 
-> __Note:__ When serving your application in production, use `packages/react/react_with_react_dom_prod.js`
-  file instead of the un-minified `react.js` / `react_dom.js` files shown in the example above.
+> __Note:__ When serving your application in production, use `packages/react/js/react.min.js`
+  file instead of the un-minified `react.dev.js` shown in the example above.
 
 #### Dart App
 
@@ -386,15 +402,15 @@ void main() {
 
 ## Contributing
 
-Format using 
+Format using
 ```bash
 dart format -l 120 .
 ```
 
-While we'd like to adhere to the recommended line length of 80, it's too short for much of the code 
+While we'd like to adhere to the recommended line length of 80, it's too short for much of the code
 repo written before a formatter was use, causing excessive wrapping and code that's hard to read.
 
-So, we use a line length of 120 instead. 
+So, we use a line length of 120 instead.
 
 ### Running Tests
 
