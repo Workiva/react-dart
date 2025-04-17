@@ -44,7 +44,9 @@ In a `.html` file, include the javascript libraries
 _(provided with this library for compatibility reasons)_ within your `.html` file,
 and also add an element with an `id` to mount your React component.
 
-This library is in the process of migrating to React 18, but while this is happening it will continue to support both React 17 and React 18. The React 17 js files are deprecated but available to ease migration and will be removed at some point in a future major version.
+This package now supports both React 17 and React 18. To opt into React 18, replace usages of this package's JS files with their new, React 18 versions (see table below).
+
+The React 17 JS files are now deprecated, and will be removed in the next major version of this package, 8.0.0.
 
 ##### React 18
 | Mode        | Library          | JS File Name                                |
