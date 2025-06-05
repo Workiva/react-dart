@@ -56,15 +56,17 @@ void validateJsApi() {
     React.isValidElement(null);
     // ignore: deprecated_member_use_from_same_package
     ReactDom.findDOMNode(null);
-    ReactDOMClient.createRoot(document.createElement('div'));
     // This indirectly calls createReactDartComponentClass2
     registerComponent2(() => _DummyComponent2());
-    _isJsApiValid = true;
   } on NoSuchMethodError catch (_) {
-    throw Exception('react.js and react_dom.js must be loaded. This could be an indicator that React 17 is unexpectedly being loaded instead of React 18.');
-  } catch (_) {
-    throw Exception('Loaded react.js must include react-dart JS interop helpers.');
+    throw Exception('react.js and react_dom.js must be loaded.');
   }
+  try {
+    ReactDOMClient.createRoot(document.createElement('div'));
+  } on NoSuchMethodError catch (_) {
+    throw Exception('React 17 was unexpectedly loaded instead of React 18. Make sure the correct, React 18 JS files are being used.');
+  }
+  _isJsApiValid = true;
 }
 
 class _DummyComponent2 extends Component2 {
