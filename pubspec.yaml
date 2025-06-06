@@ -20,3 +20,17 @@ dev_dependencies:
   test: ^1.17.12
   workiva_analysis_options: ^1.3.0
   test_html_builder: ^3.0.12
+
+dependency_overrides:
+  react:
+    git:
+      url: https://github.com/Workiva/react-dart.git
+      ref: react-18-2-0-testing
+  react_testing_library:
+    git:
+      url: https://github.com/Workiva/react_testing_library.git
+      ref: r18
+  dart_dev_workiva:
+    git:
+      url: https://github.com/Workiva/dart_dev_workiva.git
+      ref: override-react-js-files-for-r18
