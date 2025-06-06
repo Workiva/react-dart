@@ -7,6 +7,6 @@ import 'package:js/js.dart';
 import '../create_root.dart' show JsCreateRootOptions, ReactRoot;
 
 @JS()
-abstract class ReactDOMClient {
+abstract class ReactDOM {
   external static ReactRoot createRoot(/*Element|DocumentFragment*/ Node container, [JsCreateRootOptions? options]);
 }

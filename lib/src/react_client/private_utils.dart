@@ -10,7 +10,7 @@ import 'package:react/react_client/react_interop.dart';
 import 'package:react/src/js_interop_util.dart';
 import 'package:react/src/react_client/component_registration.dart' show registerComponent2;
 import 'package:react/src/react_client/internal_react_interop.dart';
-import 'package:react/src/react_client/js_interop/react_dom_client.dart' show ReactDOMClient;
+import 'package:react/src/react_client/js_interop/react_dom_client.dart' show ReactDOM;
 
 /// A flag used to cache whether React is accessible.
 ///
@@ -62,7 +62,7 @@ void validateJsApi() {
     throw Exception('react.js and react_dom.js must be loaded.');
   }
   try {
-    ReactDOMClient.createRoot(document.createElement('div'));
+    ReactDOM.createRoot(document.createElement('div'));
   } on NoSuchMethodError catch (_) {
     throw Exception('React 17 was unexpectedly loaded instead of React 18. Make sure the correct, React 18 JS files are being used.');
   }
