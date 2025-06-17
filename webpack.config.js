@@ -91,5 +91,6 @@ module.exports = createExports([
   ['react.js', 'react_prod.js'],
   ['react_dom.js', 'react_dom_prod.js'],
   ['react_dom_server.js', 'react_dom_server_prod.js'],
+  ['react_with_react_dom.js', 'react_with_react_dom.js'],
   ['react_with_react_dom.js', 'react_with_react_dom_prod.js'],
 ]);
