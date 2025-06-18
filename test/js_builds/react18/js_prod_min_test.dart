@@ -5,9 +5,9 @@ import 'package:test/test.dart';
 import '../shared_tests.dart';
 
 main() {
-  verifyJsFileLoaded('react.js');
+  verifyJsFileLoaded('react.min.js');
 
-  group('React 18 JS files (prod build):', () {
+  group('React 18 JS files (prod minified build):', () {
     sharedConsoleFilteringTests();
 
     sharedJsFunctionTests();
