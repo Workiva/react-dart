@@ -49,10 +49,11 @@ This package now supports both React 17 and React 18. To opt into React 18, repl
 The React 17 JS files are now deprecated, and will be removed in the next major version of this package, 8.0.0.
 
 ##### React 18
-| Mode        | Library          | JS File Name                                |
-|-------------|------------------|---------------------------------------------|
-| Development | React & ReactDOM | packages/react/js/react.dev.js              |
-| Production  | React & ReactDOM | packages/react/js/react.min.js              |
+| Mode                                    | Library          | JS File Name                   |
+|-----------------------------------------|------------------|--------------------------------|
+| Development                             | React & ReactDOM | packages/react/js/react.dev.js |
+| Production                              | React & ReactDOM | packages/react/js/react.min.js |
+| Non-minified Production (for debugging) | React & ReactDOM | packages/react/js/react.js     |
 
 ##### React 17 (Deprecated)
 | Mode        | Library          | JS File Name                                |
