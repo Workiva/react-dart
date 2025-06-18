@@ -3,8 +3,6 @@
 @TestOn('browser')
 library react.dart_function_factory_test;
 
-import 'dart:js_util';
-
 import 'package:react/react.dart' as react;
 import 'package:react/react_client/react_interop.dart';
 import 'package:react/src/js_interop_util.dart';
