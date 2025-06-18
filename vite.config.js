@@ -10,16 +10,16 @@ export default defineConfig({
   build: {
     outDir: 'lib/js',
     emptyOutDir: false,
-    sourcemap: process.env.NODE_ENV == 'production',
+    sourcemap: process.env.NODE_ENV === 'production',
     lib: {
       entry: {
         react: resolve(__dirname, 'js_src/index.mjs')
       },
       name: "ReactBundle", // This doesn't do anything but is required.
-      fileName: (format, entryName) => `${entryName}.${process.env.NODE_ENV == 'production' ? 'min' : 'dev'}.js`,
+      fileName: (format, entryName) => `${entryName}${process.env.NODE_ENV === 'production' ? (process.env.MINIFY === 'true' ? '.min' : '') : '.dev'}.js`,
       formats: ['iife'],
     },
-    minify: process.env.NODE_ENV == 'production',
+    minify: process.env.NODE_ENV === 'production' && process.env.MINIFY !== 'false',
     rollupOptions: {
       // make sure to externalize deps that shouldn't be bundled into your library
       external: [

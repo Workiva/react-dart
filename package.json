@@ -1,9 +1,10 @@
 {
   "name": "react-dart",
   "scripts": {
-    "build": "pnpm build:dev && pnpm build:prod",
-    "build:dev": "NODE_ENV=development pnpm vite build",
-    "build:prod": "NODE_ENV=production pnpm vite build"
+    "build": "pnpm build:dev && pnpm build:prod && pnpm build:prod:min",
+    "build:dev": "NODE_ENV=development MINIFY=false pnpm vite build",
+    "build:prod:min": "NODE_ENV=production MINIFY=true pnpm vite build",
+    "build:prod": "NODE_ENV=production MINIFY=false pnpm vite build"
   },
   "dependencies": {
     "vite": "^6.2.3",
