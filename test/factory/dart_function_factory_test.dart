@@ -31,7 +31,10 @@ main() {
           expect(getJsFunctionName(FunctionFoo.reactFunction), '_FunctionFoo');
 
           expect(FunctionFoo.displayName, getJsFunctionName(FunctionFoo.reactFunction));
-        });
+          // There was a change in Dart 3.8.0 where `getProperty(object, 'name')` returns 'tear' for top-level functions in ddc.
+          // `getProperty` is deprecated in Dart 3 so we might move away from this functionality in the future.
+          // For now, we will just ignore this test in ddc.
+        }, tags: 'no-dartdevc');
 
         test('is populated by the provided argument', () {
           expect(NamedFunctionFoo.displayName, 'Bar');
