@@ -1,5 +1,5 @@
 import 'package:js/js_util.dart';
-import 'package:react/react.dart' as react;
+
 import 'package:react/react_client/react_interop.dart';
 import 'package:react/src/react_client/factory_util.dart';
 

@@ -1,7 +1,7 @@
 import 'dart:js';
 import 'dart:js_util';
 
-import 'package:react/react.dart';
+
 import 'package:react/react_client/component_factory.dart';
 import 'package:react/react_client/react_interop.dart';
 import 'package:react/src/js_interop_util.dart';
@@ -14,7 +14,7 @@ import 'package:react/src/js_interop_util.dart';
 ///
 /// Example usage:
 /// ```dart
-/// import 'package:react/react.dart' show lazy, Suspense;
+/// 
 /// import './simple_component.dart' deferred as simple;
 ///
 /// final lazyComponent = lazy(() async {
