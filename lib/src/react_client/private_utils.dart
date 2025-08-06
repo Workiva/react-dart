@@ -4,11 +4,12 @@ library react_client_private_utils;
 import 'dart:js_util';
 
 import 'package:js/js.dart';
-import 'package:react/react.dart' show Component2;
 import 'package:react/react_client/react_interop.dart';
 import 'package:react/src/js_interop_util.dart';
 import 'package:react/src/react_client/component_registration.dart' show registerComponent2;
 import 'package:react/src/react_client/internal_react_interop.dart';
+
+import '../../react.dart' show Component2;
 
 /// A flag used to cache whether React is accessible.
 ///

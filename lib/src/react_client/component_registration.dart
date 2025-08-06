@@ -1,6 +1,5 @@
 import 'dart:html';
 
-import 'package:react/react.dart';
 import 'package:react/react_client/bridge.dart';
 import 'package:react/react_client/js_backed_map.dart';
 import 'package:react/react_client/react_interop.dart';
@@ -9,6 +8,7 @@ import 'package:react/react_client/component_factory.dart';
 import 'package:react/src/react_client/dart_interop_statics.dart';
 import 'package:react/src/react_client/internal_react_interop.dart';
 
+import '../../react.dart';
 import '../js_interop_util.dart';
 
 /// Util used with `registerComponent2` to ensure no important lifecycle

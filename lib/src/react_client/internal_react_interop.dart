@@ -6,12 +6,14 @@ library react.src.react_client.internal_react_interop;
 
 import 'package:js/js.dart';
 import 'package:meta/meta.dart';
-import 'package:react/react.dart' show Component, Component2, ComponentFactory;
+
 import 'package:react/react_client/bridge.dart';
 import 'package:react/react_client/js_backed_map.dart';
 import 'package:react/react_client/react_interop.dart'
     show React, ReactClass, ReactComponent, ReactDartComponentInternal;
 import 'package:react/src/typedefs.dart';
+
+import '../../react.dart' show Component, Component2, ComponentFactory;
 
 /// A JavaScript interop class representing a value in a React JS `context` object.
 ///

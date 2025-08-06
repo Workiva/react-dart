@@ -1,7 +1,8 @@
 library react.typedefs;
 
-import 'package:react/react.dart';
 import 'package:react/react_client/js_backed_map.dart';
+
+import '../../react.dart';
 
 /// The type of `Component.ref` specified as a callback.
 ///
