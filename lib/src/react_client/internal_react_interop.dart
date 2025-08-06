@@ -13,6 +13,8 @@ import 'package:react/react_client/react_interop.dart'
     show React, ReactClass, ReactComponent, ReactDartComponentInternal;
 import 'package:react/src/typedefs.dart';
 
+import '../../react.dart' show Component, Component2, ComponentFactory;
+
 /// A JavaScript interop class representing a value in a React JS `context` object.
 ///
 /// Used for storing/accessing Dart [ReactDartContextInternal] objects in `context`

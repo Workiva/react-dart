@@ -6,7 +6,6 @@ import 'dart:js_util';
 
 import 'package:js/js.dart';
 import 'package:meta/meta.dart';
-
 import 'package:react/react_client/bridge.dart';
 import 'package:react/react_client/js_backed_map.dart';
 import 'package:react/react_client/js_interop_helpers.dart';
@@ -16,6 +15,8 @@ import 'package:react/src/react_client/internal_react_interop.dart';
 
 import 'package:react/src/react_client/private_utils.dart';
 import 'package:react/src/typedefs.dart';
+
+import '../../react.dart';
 
 /// The static methods that proxy JS component lifecycle methods to Dart components.
 @internal
