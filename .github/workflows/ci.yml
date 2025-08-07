@@ -28,7 +28,7 @@ jobs:
     needs: pre
     strategy:
       matrix:
-        sdk: ${{ fromJSON(needs.pre.outputs.sdk) }}
+        sdk: ${{ needs.pre.outputs.sdk }}
     uses: Workiva/gha-dart-oss/.github/workflows/checks.yaml@v0.1.11
     with:
       additional-checks: |
@@ -50,7 +50,7 @@ jobs:
       fail-fast: false
       matrix:
         react: [ 17, 18 ]
-        sdk: ${{ fromJSON(needs.pre.outputs.sdk) }}
+        sdk: ${{ needs.pre.outputs.sdk }}
     steps:
       - uses: actions/checkout@v2
       - id: setup-dart
