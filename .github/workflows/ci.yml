@@ -10,7 +10,7 @@ on:
       - '**'
 
 jobs:
-  checks:
+  pre:
     runs-on: ubuntu-latest
     strategy:
       matrix:
@@ -21,12 +21,18 @@ jobs:
         if: ${{ matrix.sdk != '2.19.6' }}
         run: |
           ./tool/delete_dart_2_only_files.sh
-      - uses: Workiva/gha-dart-oss/.github/workflows/checks.yaml@v0.1.11
-        with:
-          additional-checks: |
-            no_entrypoint_imports
-          sdk: ${{ matrix.sdk }}
-          format-check: ${{ matrix.sdk == '2.19.6' }}
+
+  checks:
+    needs: pre
+    strategy:
+      matrix:
+        sdk: ${{ steps.pre.strategy.matrix.sdk }}
+    uses: Workiva/gha-dart-oss/.github/workflows/checks.yaml@v0.1.11
+    with:
+      additional-checks: |
+        no_entrypoint_imports
+      sdk: ${{ matrix.sdk }}
+      format-check: ${{ matrix.sdk == '2.19.6' }}
 
   # Run as a separate job outside the Dart SDK matrix below,
   # since we can only emit a single SBOM.
