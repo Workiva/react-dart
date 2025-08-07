@@ -45,11 +45,12 @@ jobs:
 
   test:
     runs-on: ubuntu-latest
+    needs: pre
     strategy:
       fail-fast: false
       matrix:
         react: [ 17, 18 ]
-        sdk: [ 2.19.6, stable ]
+        sdk: ${{ fromJSON(needs.pre.outputs.sdk) }}
     steps:
       - uses: actions/checkout@v2
       - id: setup-dart
