@@ -22,4 +22,5 @@ final config = {
       // Don't format generated mockito files.
       Glob('test/mockito.mocks.dart'),
     ],
+  'analyze': AnalyzeTool(),
 };

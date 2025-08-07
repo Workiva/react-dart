@@ -19,6 +19,7 @@ jobs:
       additional-checks: |
         no_entrypoint_imports
       sdk: ${{ matrix.sdk }}
+      format-check: ${{ matrix.sdk == '2.19.6' }}
 
   # Run as a separate job outside the Dart SDK matrix below,
   # since we can only emit a single SBOM.
