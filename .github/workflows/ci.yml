@@ -1,4 +1,4 @@
-name: Dart CI
+name: CI
 
 on:
   push:
@@ -10,24 +10,24 @@ on:
       - '**'
 
 jobs:
+  checks:
+    strategy:
+      matrix:
+        sdk: [ 2.19.6, stable ]
+    uses: Workiva/gha-dart-oss/.github/workflows/checks.yaml@v0.1.11
+    with:
+      additional-checks: |
+        no_entrypoint_imports
+      sdk: ${{ matrix.sdk }}
+
   # Run as a separate job outside the Dart SDK matrix below,
   # since we can only emit a single SBOM.
-  create-sbom-release-asset:
-    name: Create SBOM Release Asset
-    runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@v4
-      - uses: dart-lang/setup-dart@v1
-        with:
-          sdk: 2.19.6 # This version doesn't matter so long as it resolves.
-      - run: dart pub get
-      - name: Publish SBOM to Release Assets
-        uses: anchore/sbom-action@v0
-        with:
-          path: ./
-          format: cyclonedx-json
-
   build:
+    uses: Workiva/gha-dart-oss/.github/workflows/build.yaml@v0.1.11
+    with:
+      sdk: 2.19.6 # This version doesn't matter so long as it resolves.
+
+  test:
     runs-on: ubuntu-latest
     strategy:
       fail-fast: false
@@ -59,18 +59,6 @@ jobs:
       - id: install
         name: Install dependencies
         run: dart pub get
-
-      - name: Validate dependencies
-        run: dart run dependency_validator
-        if: always() && steps.install.outcome == 'success'
-
-      - name: Verify formatting
-        run: dart run dart_dev format --check
-        if: ${{ matrix.sdk == '2.19.6' }}
-
-      - name: Analyze project source
-        run: dart analyze
-        if: always() && steps.install.outcome == 'success'
 
       - name: Run tests (DDC)
         run: |
