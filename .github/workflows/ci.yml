@@ -16,6 +16,7 @@ jobs:
       matrix:
         sdk: [ 2.19.6, stable ]
     steps:
+      - uses: actions/checkout@v2
       - name: Delete Dart-2-only files when running on Dart 3
         if: ${{ matrix.sdk != '2.19.6' }}
         run: |
