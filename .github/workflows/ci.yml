@@ -14,7 +14,7 @@ jobs:
     strategy:
       matrix:
         sdk: [ 2.19.6, stable ]
-    uses: ./.github/workflows/actions/test.yml
+    uses: ./.github/workflows/test.yml
     with:
       sdk: ${{ matrix.sdk }}
 
