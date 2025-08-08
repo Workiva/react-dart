@@ -14,8 +14,6 @@ jobs:
   # since we can only emit a single SBOM.
   build:
     uses: Workiva/gha-dart-oss/.github/workflows/build.yaml@v0.1.11
-    with:
-      sdk: 2.19.6 # This version doesn't matter so long as it resolves
 
   checks:
     uses: Workiva/gha-dart-oss/.github/workflows/checks.yaml@v0.1.11
@@ -23,16 +21,20 @@ jobs:
       additional-checks: |
         no_entrypoint_imports
 
+  # Run Dart 3 analysis as a separate job outside checks above in order to pre-run the
+  # Dart-2-only file removal script. Consolidate this job with checks above once checks.yaml
+  # supports a pre-run option or we upgrade to Dart 3 and remove the files.
   stable-analyze:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v2
+      - uses: actions/checkout@v4
       - uses: dart-lang/setup-dart@v1
         with:
           sdk: stable
 
       - name: Print Dart SDK version
         run: dart --version
+      - run: dart pub get
 
       - name: Delete Dart-2-only files when running on Dart 3
         run: ./tool/delete_dart_2_only_files.sh
@@ -48,7 +50,7 @@ jobs:
         react: [17, 18]
         sdk: [2.19.6, stable]
     steps:
-      - uses: actions/checkout@v2
+      - uses: actions/checkout@v4
       - id: setup-dart
         uses: dart-lang/setup-dart@v1
         with:
