@@ -1,4 +1,4 @@
-name: CI
+name: Dart CI
 
 on:
   push:
@@ -10,17 +10,78 @@ on:
       - '**'
 
 jobs:
-  checks:
-    strategy:
-      matrix:
-        sdk: [ 2.19.6, stable ]
-    uses: ./.github/workflows/test.yml
-    with:
-      sdk: ${{ matrix.sdk }}
-
   # Run as a separate job outside the Dart SDK matrix below,
   # since we can only emit a single SBOM.
   build:
     uses: Workiva/gha-dart-oss/.github/workflows/build.yaml@v0.1.11
     with:
-      sdk: 2.19.6 # This version doesn't matter so long as it resolves.
+      sdk: 2.19.6 # This version doesn't matter so long as it resolves
+
+  checks:
+    uses: Workiva/gha-dart-oss/.github/workflows/checks.yaml@v0.1.11
+    with:
+      additional-checks: |
+        no_entrypoint_imports
+
+  stable-analyze:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+      - uses: dart-lang/setup-dart@v1
+        with:
+          sdk: stable
+
+      - name: Print Dart SDK version
+        run: dart --version
+
+      - name: Delete Dart-2-only files when running on Dart 3
+        run: ./tool/delete_dart_2_only_files.sh
+
+      - name: Analyze project source
+        run: dart analyze
+
+  test:
+    runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        react: [17, 18]
+        sdk: [2.19.6, stable]
+    steps:
+      - uses: actions/checkout@v2
+      - id: setup-dart
+        uses: dart-lang/setup-dart@v1
+        with:
+          sdk: ${{ matrix.sdk }}
+
+      - name: Print Dart SDK version
+        run: dart --version
+
+      - name: Delete Dart-2-only files when running on Dart 3
+        run: |
+          DART_VERSION="${{ steps.setup-dart.outputs.dart-version }}"
+          if [[ "$DART_VERSION" =~ ^3 ]]; then
+            ./tool/delete_dart_2_only_files.sh
+          fi
+
+      - name: Switch to React 17 Test HTML
+        if: ${{ matrix.react == 17 }}
+        run: |
+          mv test/templates/html_template.html test/templates/html_template-old.html
+          mv test/templates/html_template-react17.html test/templates/html_template.html
+
+      - id: install
+        name: Install dependencies
+        run: dart pub get
+
+      - name: Run tests (DDC)
+        run: |
+          dart run build_runner test --delete-conflicting-outputs -- --preset dartdevc --preset=react${{ matrix.react }}
+        if: always() && steps.install.outcome == 'success'
+        timeout-minutes: 8
+
+      - name: Run tests (dart2js)
+        run: |
+          dart run build_runner test --delete-conflicting-outputs --release -- --preset dart2js --preset=react${{ matrix.react }}
+        if: always() && steps.install.outcome == 'success'
+        timeout-minutes: 8
