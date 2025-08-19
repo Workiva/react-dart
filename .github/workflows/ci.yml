@@ -87,3 +87,16 @@ jobs:
           dart run build_runner test --delete-conflicting-outputs --release -- --preset dart2js --preset=react${{ matrix.react }}
         if: always() && steps.install.outcome == 'success'
         timeout-minutes: 8
+
+  testing-and-checks-complete:
+    name: Testing and Checks Completed
+    needs: [ build, checks, test ]
+    if: ${{ !cancelled() && github.event_name == 'pull_request' || github.ref_type == 'tag' }}
+    runs-on: [ xs-al2023 ]
+    steps:
+      - run: |
+          if [ "${{ needs.checks.result }}" == "failure" ]; then
+            echo "Some checks have failed. Please fix the issues and try again."
+            exit 1
+          fi
+          echo 'All Testing and checks have completed.'
