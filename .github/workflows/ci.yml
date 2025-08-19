@@ -92,7 +92,7 @@ jobs:
     name: Testing and Checks Completed
     needs: [ build, checks, test ]
     if: ${{ !cancelled() && github.event_name == 'pull_request' || github.ref_type == 'tag' }}
-    runs-on: [ xs-al2023 ]
+    runs-on: ubuntu-latest
     steps:
       - run: |
           if [ "${{ needs.checks.result }}" == "failure" ]; then
