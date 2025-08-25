@@ -12,22 +12,37 @@ on:
 jobs:
   # Run as a separate job outside the Dart SDK matrix below,
   # since we can only emit a single SBOM.
-  create-sbom-release-asset:
-    name: Create SBOM Release Asset
+  build:
+    uses: Workiva/gha-dart-oss/.github/workflows/build.yaml@v0.1.11
+
+  checks:
+    uses: Workiva/gha-dart-oss/.github/workflows/checks.yaml@v0.1.11
+    with:
+      additional-checks: |
+        no_entrypoint_imports
+
+  # Run Dart 3 analysis as a separate job outside checks above in order to pre-run the
+  # Dart-2-only file removal script. Consolidate this job with checks above once checks.yaml
+  # supports a pre-run option or we upgrade to Dart 3 and remove the files.
+  stable-analyze:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
       - uses: dart-lang/setup-dart@v1
         with:
-          sdk: 2.19.6 # This version doesn't matter so long as it resolves.
-      - run: dart pub get
-      - name: Publish SBOM to Release Assets
-        uses: anchore/sbom-action@v0
-        with:
-          path: ./
-          format: cyclonedx-json
+          sdk: stable
 
-  build:
+      - name: Print Dart SDK version
+        run: dart --version
+      - run: dart pub get
+
+      - name: Delete Dart-2-only files when running on Dart 3
+        run: ./tool/delete_dart_2_only_files.sh
+
+      - name: Analyze project source
+        run: dart analyze
+
+  test:
     runs-on: ubuntu-latest
     strategy:
       fail-fast: false
@@ -35,7 +50,7 @@ jobs:
         react: [17, 18]
         sdk: [2.19.6, stable]
     steps:
-      - uses: actions/checkout@v2
+      - uses: actions/checkout@v4
       - id: setup-dart
         uses: dart-lang/setup-dart@v1
         with:
@@ -50,6 +65,7 @@ jobs:
           if [[ "$DART_VERSION" =~ ^3 ]]; then
             ./tool/delete_dart_2_only_files.sh
           fi
+
       - name: Switch to React 17 Test HTML
         if: ${{ matrix.react == 17 }}
         run: |
@@ -59,18 +75,6 @@ jobs:
       - id: install
         name: Install dependencies
         run: dart pub get
-
-      - name: Validate dependencies
-        run: dart run dependency_validator
-        if: always() && steps.install.outcome == 'success'
-
-      - name: Verify formatting
-        run: dart run dart_dev format --check
-        if: ${{ matrix.sdk == '2.19.6' }}
-
-      - name: Analyze project source
-        run: dart analyze
-        if: always() && steps.install.outcome == 'success'
 
       - name: Run tests (DDC)
         run: |
@@ -83,3 +87,16 @@ jobs:
           dart run build_runner test --delete-conflicting-outputs --release -- --preset dart2js --preset=react${{ matrix.react }}
         if: always() && steps.install.outcome == 'success'
         timeout-minutes: 8
+
+  testing-and-checks-complete:
+    name: Testing and Checks Completed
+    needs: [ build, checks, test ]
+    if: ${{ !cancelled() && github.event_name == 'pull_request' || github.ref_type == 'tag' }}
+    runs-on: ubuntu-latest
+    steps:
+      - run: |
+          if [ "${{ needs.checks.result }}" == "failure" ]; then
+            echo "Some checks have failed. Please fix the issues and try again."
+            exit 1
+          fi
+          echo 'All Testing and checks have completed.'
