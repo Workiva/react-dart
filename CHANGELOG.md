@@ -1,4 +1,4 @@
-## Unreleased
+## 7.3.1
 - Set up gha-dart-oss
 - Fix no_entrypoint_imports warnings
 
