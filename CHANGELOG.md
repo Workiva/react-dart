@@ -1,3 +1,6 @@
+## 7.3.2
+- Allow analyzer 10 by allowing build_test 3x and dependency_validator 5x
+
 ## 7.3.1
 - Set up gha-dart-oss
 - Fix no_entrypoint_imports warnings
