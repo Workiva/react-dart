@@ -3,9 +3,12 @@
 @TestOn('browser')
 library react.dart_function_factory_test;
 
+import 'dart:js_util';
+
 import 'package:react/react.dart' as react;
 import 'package:react/react_client/react_interop.dart';
 import 'package:react/src/js_interop_util.dart';
+import 'package:react/src/react_client/private_utils.dart';
 import 'package:test/test.dart';
 
 import 'common_factory_tests.dart';
@@ -22,6 +25,20 @@ main() {
           FunctionFoo,
           dartComponentVersion: ReactDartComponentVersion.component2,
         );
+      });
+
+      group('dartFunctionComponent', () {
+        test('is set to the original Dart function wrapped in a DartValueWrapper', () {
+          final wrapper = getProperty(FunctionFoo.reactFunction, 'dartFunctionComponent');
+          expect(wrapper, isA<DartValueWrapper>());
+          expect((wrapper as DartValueWrapper).value, same(_FunctionFoo));
+        });
+
+        test('is set even when displayName is provided', () {
+          final wrapper = getProperty(NamedFunctionFoo.reactFunction, 'dartFunctionComponent');
+          expect(wrapper, isA<DartValueWrapper>());
+          expect((wrapper as DartValueWrapper).value, same(_FunctionFoo));
+        });
       });
 
       group('displayName', () {

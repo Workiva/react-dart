@@ -12,6 +12,7 @@ import 'package:react/react_client/react_interop.dart';
 
 import 'package:react/src/js_interop_util.dart';
 import 'package:react/src/react_client/factory_util.dart';
+import 'package:react/src/react_client/private_utils.dart';
 
 // ignore: deprecated_member_use_from_same_package
 export 'package:react/src/react_client/factory_util.dart' show generateJsProps;
@@ -358,6 +359,7 @@ JsFunctionComponent _wrapFunctionComponent(DartFunctionComponent dartFunctionCom
   }
   // ignore: invalid_use_of_protected_member
   setProperty(interopFunction, 'dartComponentVersion', ReactDartComponentVersion.component2);
+  setProperty(interopFunction, 'dartFunctionComponent', DartValueWrapper(dartFunctionComponent));
   return interopFunction;
 }
 
