@@ -27,15 +27,16 @@ main() {
         );
       });
 
-      group('dartFunctionComponent', () {
+      const debugDartFunctionComponentKey = r'__debug$dartFunctionComponent';
+      group("'$debugDartFunctionComponentKey'", () {
         test('is set to the original Dart function wrapped in a DartValueWrapper', () {
-          final wrapper = getProperty(FunctionFoo.reactFunction, 'dartFunctionComponent');
+          final wrapper = getProperty(FunctionFoo.reactFunction, debugDartFunctionComponentKey);
           expect(wrapper, isA<DartValueWrapper>());
           expect((wrapper as DartValueWrapper).value, same(_FunctionFoo));
         });
 
         test('is set even when displayName is provided', () {
-          final wrapper = getProperty(NamedFunctionFoo.reactFunction, 'dartFunctionComponent');
+          final wrapper = getProperty(NamedFunctionFoo.reactFunction, debugDartFunctionComponentKey);
           expect(wrapper, isA<DartValueWrapper>());
           expect((wrapper as DartValueWrapper).value, same(_FunctionFoo));
         });

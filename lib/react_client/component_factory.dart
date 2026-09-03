@@ -359,7 +359,9 @@ JsFunctionComponent _wrapFunctionComponent(DartFunctionComponent dartFunctionCom
   }
   // ignore: invalid_use_of_protected_member
   setProperty(interopFunction, 'dartComponentVersion', ReactDartComponentVersion.component2);
-  setProperty(interopFunction, 'dartFunctionComponent', DartValueWrapper(dartFunctionComponent));
+  // Add a reference to the original function for debugging purposes, manually and in automated tests.
+  // With a reference to this, we can more easily map back to the original Dart function.
+  setProperty(interopFunction, r'__debug$dartFunctionComponent', DartValueWrapper(dartFunctionComponent));
   return interopFunction;
 }
 
