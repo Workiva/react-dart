@@ -40,7 +40,9 @@ ReactNode listifyChildren(ReactNode children) {
 /// If `style` is specified in props, then it too is shallow-converted and included
 /// in the returned Map.
 Map unconvertJsProps(/* ReactElement|ReactComponent */ instance) {
-  final props = Map.from(JsBackedMap.backedBy(instance.props as JsMap));
+  // Read `props` via `getProperty` rather than a dynamic `instance.props`, which dart2js has to treat as
+  // potentially targeting every `props` member in the program, slowing down global type inference.
+  final props = Map.from(JsBackedMap.backedBy(getProperty(instance as Object, 'props') as JsMap));
 
   // Catch if a Dart component has been passed in. Component (version 1) can be identified by having the "internal"
   // prop. Component2, however, does not have that but can be detected by checking whether or not the style prop is a
