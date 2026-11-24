@@ -1,3 +1,6 @@
+## Unreleased
+- Speed up dart2js compiles by avoiding a dynamic `props` access in `unconvertJsProps`
+
 ## 7.3.2
 - Allow analyzer 10 by allowing build_test 3x and dependency_validator 5x
 
