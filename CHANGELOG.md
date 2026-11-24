@@ -1,4 +1,4 @@
-## Unreleased
+## 7.3.3
 - Speed up dart2js compiles by avoiding a dynamic `props` access in `unconvertJsProps`
 
 ## 7.3.2
